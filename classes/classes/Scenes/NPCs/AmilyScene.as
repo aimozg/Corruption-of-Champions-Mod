@@ -95,6 +95,7 @@ package classes.Scenes.NPCs
 		// <savedata>
 		public static const kFLAGS_AMILY_MET:int                                                   =   35; //   (0 = not met, 1 = met)Amily Met.     0=Not Met, 1=Met
 		public static const kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED:int                           =   36; //  1=true,44=village buttonAmily Village Encounters Disabled.     1=True, 44=Village Button?
+		public static const kFLAGS_AMILY_GROSSED_OUT_BY_WORMS:int                                  =   37; //  1=freaked out-Amily encounters disabled due to worms 0=False, 1= True
 		public function hasMet():Boolean {
 			return flags[kFLAGS_AMILY_MET]>0;
 		}
@@ -114,6 +115,15 @@ package classes.Scenes.NPCs
 		}
 		public function enableVillageEncounters():void {
 			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+		}
+		public function flagGrossedOutByWorms():void {
+			flags[kFLAGS_AMILY_GROSSED_OUT_BY_WORMS] = 1;
+		}
+		public function unflagGrossedOutByWorms():void {
+			flags[kFLAGS_AMILY_GROSSED_OUT_BY_WORMS] = 0;
+		}
+		public function isGrossedOutByWorms():Boolean {
+			return flags[kFLAGS_AMILY_GROSSED_OUT_BY_WORMS] == 1;
 		}
 		// </savedata>
 
@@ -216,8 +226,8 @@ package classes.Scenes.NPCs
 				return;
 			}
 			//Remove worm block if player got rid of worms.
-			if (flags[kFLAGS.AMILY_GROSSED_OUT_BY_WORMS] == 1) {
-				if (!player.hasStatusEffect(StatusEffects.Infested)) flags[kFLAGS.AMILY_GROSSED_OUT_BY_WORMS] = 0;
+			if (isGrossedOutByWorms()) {
+				if (!player.hasStatusEffect(StatusEffects.Infested)) unflagGrossedOutByWorms();
 			}
 			//Corrupt blow up! - requires you've met Amily
 			if (flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] == 0 && hasMet() && (player.cor > (25 + player.corruptionTolerance()) || player.cor > (75 + player.corruptionTolerance()))) {
@@ -241,7 +251,7 @@ package classes.Scenes.NPCs
 				}
 			}
 			//Amily Un-encounterable (worms):
-			if (flags[kFLAGS.AMILY_GROSSED_OUT_BY_WORMS] == 1 || player.cor > (25 + player.corruptionTolerance()) || flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] > 0) {
+			if (isGrossedOutByWorms() || player.cor > (25 + player.corruptionTolerance()) || flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] > 0) {
 				outputText("You enter the ruined village cautiously. There are burnt-down houses, smashed-in doorways, ripped-off roofs... everything is covered with dust and grime. For hours you explore, but you cannot find any sign of another living being, or anything of value. The occasional footprint from an imp or a goblin turns up in the dirt, but you don't see any of the creatures themselves. It looks like time and passing demons have stripped the place bare since it was originally abandoned. Finally, you give up and leave. You feel much easier when you're outside of the village - you had the strangest sensation of being watched while you were in there.");
 				doNext(camp.returnToCampUseOneHour);
 				return;
@@ -2184,7 +2194,7 @@ package classes.Scenes.NPCs
 				outputText("\"<i>EWWWW!  You're infested!</i>\" she shrieks, \"<i>Get out!  Don't come back 'til you get rid of the worms!</i>\"\n\nYou high tail it out of there.  It looks like Amily doesn't want much to do with you until you're cured.");
 				doNext(camp.returnToCampUseOneHour);
 				flags[kFLAGS.AMILY_AFFECTION] -= 3;
-				flags[kFLAGS.AMILY_GROSSED_OUT_BY_WORMS] = 1;
+				flagGrossedOutByWorms();
 				return;
 			}
 			outputText("Now that both of you are naked, Amily takes a step back from you and begins to stroke herself - though her gestures are a little hesitant, and she clearly has never done this before, she is sincerely trying to be arousing. A finger strokes each dainty little nipple, circling around in opposite directions in order to make them perk as hard as they can. Her right hand slips away, leaving her left hand to alternate between each nipple as her nimble fingers begin to tease her most private of places. She may not be extraordinarily skilled at it, but she's definitely doing a good job of turning you on - particularly with the cute little gasp she makes when she pinches her clitoris a bit too hard.\n\n");
