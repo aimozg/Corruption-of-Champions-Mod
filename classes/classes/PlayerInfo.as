@@ -64,7 +64,7 @@ import flash.events.Event;
 			if (player.statusEffectv1(StatusEffects.Birthed) > 0)
 				childStats += "<b>Times Given Birth:</b> " + player.statusEffectv1(StatusEffects.Birthed) + "\n";
 				
-			if (flags[kFLAGS.AMILY_MET] > 0)
+			if (getGame().amilyScene.hasMet())
 				childStats += "<b>Litters With Amily:</b> " + (flags[kFLAGS.AMILY_BIRTH_TOTAL] + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS]) + "\n";
 
 			if (flags[kFLAGS.BEHEMOTH_CHILDREN] > 0)

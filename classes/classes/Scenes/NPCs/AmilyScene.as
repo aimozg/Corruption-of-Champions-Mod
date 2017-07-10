@@ -92,6 +92,16 @@ package classes.Scenes.NPCs
 		//  AMILY_X_IZMA_POTION_3SOME:int = 771;
 		//  GIVEN_AMILY_NURSE_OUTFIT:int = 775;
 
+		// <savedata>
+		private static const kFLAGS_AMILY_MET:int = 35; //   (0 = not met, 1 = met)Amily Met.     0=Not Met, 1=Met
+		public function hasMet():Boolean {
+			return flags[kFLAGS_AMILY_MET]>0;
+		}
+		public function setMet():void {
+			flags[kFLAGS_AMILY_MET] = 1;
+		}
+		// </savedata>
+
 		public var pregnancy:PregnancyStore;
 
 		public function AmilyScene()
@@ -176,7 +186,7 @@ package classes.Scenes.NPCs
 		//[Exploring the Ruined Village]
 		public function encounterAmily():void {
 			//Initialize saved gender:
-			if (flags[kFLAGS.AMILY_MET] == 0) flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
+			if (!hasMet()) flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
 			//Amily gone/hiding super hard
 			if (flags[kFLAGS.AMILY_IS_BATMAN] > 0 || flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] == 1  || flags[kFLAGS.AMILY_TREE_FLIPOUT] > 0) {
 				outputText("You enter the ruined village cautiously. There are burnt-down houses, smashed-in doorways, ripped-off roofs... everything is covered with dust and grime. You explore for an hour, but you cannot find any sign of another living being, or anything of value. The occasional footprint from an imp or a goblin turns up in the dirt, but you don't see any of the creatures themselves. It looks like time and passing demons have stripped the place bare since it was originally abandoned. Finally, you give up and leave. You feel much easier when you're outside of the village.");
@@ -195,7 +205,7 @@ package classes.Scenes.NPCs
 				if (!player.hasStatusEffect(StatusEffects.Infested)) flags[kFLAGS.AMILY_GROSSED_OUT_BY_WORMS] = 0;
 			}
 			//Corrupt blow up! - requires you've met Amily
-			if (flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] == 0 && flags[kFLAGS.AMILY_MET] > 0 && (player.cor > (25 + player.corruptionTolerance()) || player.cor > (75 + player.corruptionTolerance()))) {
+			if (flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] == 0 && hasMet() && (player.cor > (25 + player.corruptionTolerance()) || player.cor > (75 + player.corruptionTolerance()))) {
 				meetAmilyAsACorruptAsshat();
 				return;
 			}
@@ -279,11 +289,11 @@ package classes.Scenes.NPCs
 						return;
 					}
 					//[First Meeting]
-					if (flags[kFLAGS.AMILY_MET] == 0) {
+					if (!hasMet()) {
 						//Set flag for what she met the player as.
 						flags[kFLAGS.AMILY_MET_AS] = player.gender;
 						//set 'met' to true
-						flags[kFLAGS.AMILY_MET]++;
+						setMet();
 						outputText("You wind your way deep into the maze of dusty crumbling buildings and twisted saplings, looking for any sign of life - or, failing that, something that can help you in your quest.  Bending down to rummage through an old heap of rubbish, you complain aloud that this is hardly the sort of thing you expected to be doing as a champion. Suddenly, you hear a 'thwip' and something shoots past your face, embedding into the stone beside your head and trembling with the impact.\n\n");
 
 						outputText("\"<i>Don't make any sudden moves!</i>\" A voice calls out, high pitched and a little squeaky, but firm and commanding. You freeze to avoid giving your assailant a reason to shoot at you again. \"<i>Stand up and turn around, slowly,</i>\" it commands again. You do as you are told.\n\n");
@@ -345,11 +355,11 @@ package classes.Scenes.NPCs
 				//GIRL MEETINZ
 				else if (player.gender == 2) {
 					//First time
-					if (flags[kFLAGS.AMILY_MET] == 0) {
+					if (!hasMet()) {
 						//Set flag for what she met the player as.
 						flags[kFLAGS.AMILY_MET_AS] = player.gender;
 						//set 'met' to true
-						flags[kFLAGS.AMILY_MET]++;
+						setMet();
 						outputText("You wind your way deep into the maze of dusty crumbling buildings and twisted saplings, looking for any sign of life - or, failing that, something that can help you in your quest.  Bending down to rummage through an old heap of rubbish, you complain aloud that this is hardly the sort of thing you expected to be doing as a champion. Suddenly, you hear a 'thwip' and something shoots past your face, embedding into the stone beside your head and trembling with the impact.\n\n");
 
 						outputText("\"<i>Don't make any sudden moves!</i>\" A voice calls out, high pitched and a little squeaky, but firm and commanding. You freeze to avoid giving your assailant a reason to shoot at you again. \"<i>Stand up and turn around, slowly,</i>\" it commands again. You do as you are told.\n\n");
@@ -401,11 +411,11 @@ package classes.Scenes.NPCs
 				//Herm Meetinz
 				else if (player.gender == 3) {
 					//First time
-					if (flags[kFLAGS.AMILY_MET] == 0) {
+					if (!hasMet()) {
 						//Set flag for what she met the player as.
 						flags[kFLAGS.AMILY_MET_AS] = player.gender;
 						//set 'met' to true
-						flags[kFLAGS.AMILY_MET]++;
+						setMet();
 						outputText("You wind your way deep into the maze of dusty crumbling buildings and twisted saplings, looking for any sign of life - or, failing that, something that can help you in your quest.  Bending down to rummage through an old heap of rubbish, you complain aloud that this is hardly the sort of thing you expected to be doing as a champion. Suddenly, you hear a 'thwip' and something shoots past your face, embedding into the stone beside your head and trembling with the impact.\n\n");
 
 						outputText("\"<i>Don't make any sudden moves!</i>\" A voice calls out, high pitched and a little squeaky, but firm and commanding. You freeze to avoid giving your assailant a reason to shoot at you again. \"<i>Stand up and turn around, slowly,</i>\" it commands again. You do as you are told.\n\n");
@@ -454,10 +464,10 @@ package classes.Scenes.NPCs
 				//Genderless
 				else if (player.gender == 0) {
 					//[First Meeting]
-					if (flags[kFLAGS.AMILY_MET] == 0) {
+					if (!hasMet()) {
 						flags[kFLAGS.AMILY_MET_AS] = player.gender;
 						//set 'met' to true
-						flags[kFLAGS.AMILY_MET]++;
+						setMet();
 						outputText("You wind your way deep into the maze of dusty crumbling buildings and twisted saplings, looking for any sign of life - or, failing that, something that can help you in your quest.  Bending down to rummage through an old heap of rubbish, you complain aloud that this is hardly the sort of thing you expected to be doing as a champion. Suddenly, you hear a 'thwip' and something shoots past your face, embedding into the stone beside your head and trembling with the impact.\n\n");
 
 						outputText("\"<i>Don't make any sudden moves!</i>\" A voice calls out, high pitched and a little squeaky, but firm and commanding. You freeze to avoid giving your assailant a reason to shoot at you again. \"<i>Stand up and turn around, slowly,</i>\" it commands again. You do as you are told.\n\n");
