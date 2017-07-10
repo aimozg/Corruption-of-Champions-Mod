@@ -72,7 +72,7 @@ private function tellAmilyToFuckOffRuinedJojo():void {
 	//Follower off
 	flags[kFLAGS.AMILY_FOLLOWER] = 0;
 	flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-	flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+	amilyScene.enableVillageEncounters();
 	flags[kFLAGS.AMILY_VILLAGE_ACCESSIBLE] = 1;
 	dynStats("cor", 10);
 	doNext(playerMenu);
@@ -156,7 +156,7 @@ public function amilyDiscoversJojoWithTentaclesAndShitOhBoy():void {
 		//Follower off
 		flags[kFLAGS.AMILY_FOLLOWER] = 0;
 		flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-		flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+		amilyScene.enableVillageEncounters();
 		flags[kFLAGS.AMILY_VILLAGE_ACCESSIBLE] = 1;
 		//+5 corruption)
 		dynStats("cor", 5);
@@ -181,7 +181,7 @@ private function AmilyLeavesBirdJojoTentacles():void {
 	//Follower off
 	flags[kFLAGS.AMILY_FOLLOWER] = 0;
 	flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-	flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+	amilyScene.enableVillageEncounters();
 	flags[kFLAGS.AMILY_VILLAGE_ACCESSIBLE] = 1;
 	//+5 corruption)
 	dynStats("cor", 5);
@@ -394,7 +394,7 @@ private function marbleIsPissyAndYourTooDumbToTalk():void {
 		outputText("Marble moves protectively in front of you and turns to Amily.  \"<i>This " + player.race() + " is mine!  " + player.mf("He","She") + " needs me to survive, and I will do anything to protect " + player.mf("him","her") + ",</i>\"  Marble declares.  Then, in a dangerously gentle voice, says, \"<i>Leave now, or I will kill you.</i>\"  Amily tries to look at you through her tear-filled eyes, but Marble softly whispers,  \"<i>" + player.short + ", put your arms around me.</i>\"  Though soft, her words had nothing in them to suggest a request rather than a command.  You hesitate for a  moment, but, remembering that an angry Marble is a Marble that could revoke milk privileges, you decide that making her mad is something you just can't afford.  You take a deep breath and wrap your arms around Marble.  Amily gives one last anguished look at you before she turns to pack her things.  As she scurries away from the site of her former bed, you doubt that you'll see her again.\n\n");
 		//end event, Amily leave the camp for good
 		flags[kFLAGS.AMILY_FOLLOWER] = 0;
-		flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+		amilyScene.disableVillageEncounters();
 	}
 	else if (flags[kFLAGS.MARBLE_KIDS] > 0) {
 		//Silent -> PC has had kid(s) with Marble and is not addicted (A3)
@@ -402,7 +402,7 @@ private function marbleIsPissyAndYourTooDumbToTalk():void {
 		//end event, Amily and Marble leave the camp for good
 		player.removeStatusEffect(StatusEffects.CampMarble);
 		flags[kFLAGS.AMILY_FOLLOWER] = 0;
-		flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+		amilyScene.disableVillageEncounters();
 	}
 	//Silent -> Otherwise (A4)
 	else {
@@ -461,7 +461,7 @@ private function srslyPimpinGuyz():void {
 	//Follower off
 	flags[kFLAGS.AMILY_FOLLOWER] = 0;
 	flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-	flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+	amilyScene.enableVillageEncounters();
 	flags[kFLAGS.AMILY_VILLAGE_ACCESSIBLE] = 1;
 	doNext(camp.returnToCampUseEightHours);
 }
@@ -524,7 +524,7 @@ private function blameAmilysDumbMouseCunt():void {
 	outputText("You turn to Amily and tell her point blank that she's the one who is in the wrong here. She claimed to be a pure individual, free of all corruption in this world and begging you for your help, but instead she tricked you, seduced you into being unfaithful to your lover, Marble, and making you into her breeding stud and pleasure toy - and then she had the audacity to try and claim you and her had some connection, when it was nothing but trickery and lies on her part. At this tirade, Amily looks first hurt, then outraged, then livid; it's only when Marble silently and defiantly positions herself beside you, holding her hammer and ready to charge, that the female mouse-morph removes her hand from the handle of her knife. Blinking back tears, she starts scurrying around the camp as fast as she can, gathering up all of her few belongings and then heading for the edge of the camp as fast as she can. She halts at the edge, turning to face the two of you, and starts screaming a tirade of the most profane obscenities she can muster, blistering your ears with imprecations about your sexual tastes, habits and skills, your lineage, your personal hygiene and your talents before vanishing into the undergrowth whilst you're both stunned by the litany of swearing and trying to wrap your mind around some of the things she said. Particularly the one about the greasy maggots, the centaur stallion, the candied apple and the plunger. It's pretty obvious she's never coming back.");
 	//end event, Amily leaves the camp permanently
 	flags[kFLAGS.AMILY_FOLLOWER] = 0;
-	flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+	amilyScene.disableVillageEncounters();
 	doNext(camp.returnToCampUseOneHour);
 }
 

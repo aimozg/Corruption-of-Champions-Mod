@@ -88,13 +88,13 @@ package classes.Scenes.Places
 			},{
 				name: "amily",
 				when: function():Boolean {
-					return flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] != 1;
+					return getGame().amilyScene.canEncounterInVillage();
 				},
 				call: game.amilyScene.encounterAmily
 			},{
 				name:"scavenge",
 				when: function():Boolean {
-					return flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] == 1;
+					return !getGame().amilyScene.canEncounterInVillage();
 				},
 				call: scavengeTownRuinsOption
 			});

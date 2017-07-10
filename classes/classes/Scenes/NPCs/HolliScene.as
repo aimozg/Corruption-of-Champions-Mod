@@ -639,8 +639,7 @@ private function stayQuietWhileAmilyBitchesAboutFuckingArborday():void {
 	//Set - amily flipped her shit
 	flags[kFLAGS.AMILY_TREE_FLIPOUT] = 1;
 	flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
-	//Enable village encounters
-	flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+	amilyScene.enableVillageEncounters();
 	//Change to plain mouse birth!
 	if (player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
 	doNext(playerMenu);
@@ -661,7 +660,7 @@ private function slapAmilysWhoreFace():void {
 	outputText("\n\nWithout another word, she turns, gathers her things, and leaves.");
 	flags[kFLAGS.AMILY_FOLLOWER] = 0;
 	flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-	flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+	amilyScene.enableVillageEncounters();
 	flags[kFLAGS.AMILY_VILLAGE_ACCESSIBLE] = 1;
 	//no more classes, no more books; no more Amily's dirty looks
 	//bitch goes in ruined village
@@ -1573,10 +1572,7 @@ private function holliAndGenderlessSittingInATree():void {
 public function amilyComesBack():void {
 	clearOutput();
 	outputText("Amily arrives with her belongings over her shoulder and a smile on her face.  \"<i>I knew you'd do the right thing, [name].  I'll get my nest set back up.</i>\"\n\n(<b>Amily has moved back in!  She can be found in the lovers tab.</b>)");
-	//flags[kFLAGS.AMILY_TREE_FLIPOUT] = 1;
-	flags[kFLAGS.AMILY_FOLLOWER] = 1;
-	//Enable village encounters
-	flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+	amilyScene.setFollowerPure();
 	doNext(playerMenu);
 }
 }

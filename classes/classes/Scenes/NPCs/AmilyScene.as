@@ -93,12 +93,27 @@ package classes.Scenes.NPCs
 		//  GIVEN_AMILY_NURSE_OUTFIT:int = 775;
 
 		// <savedata>
-		private static const kFLAGS_AMILY_MET:int = 35; //   (0 = not met, 1 = met)Amily Met.     0=Not Met, 1=Met
+		public static const kFLAGS_AMILY_MET:int                                                   =   35; //   (0 = not met, 1 = met)Amily Met.     0=Not Met, 1=Met
+		public static const kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED:int                           =   36; //  1=true,44=village buttonAmily Village Encounters Disabled.     1=True, 44=Village Button?
 		public function hasMet():Boolean {
 			return flags[kFLAGS_AMILY_MET]>0;
 		}
 		public function setMet():void {
 			flags[kFLAGS_AMILY_MET] = 1;
+		}
+		public function setFollowerPure():void {
+			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+			flags[kFLAGS.AMILY_FOLLOWER] = 1;
+		}
+		public function canEncounterInVillage():Boolean {
+			return flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] == 0;
+		}
+		// TODO replace with state changer
+		public function disableVillageEncounters():void {
+			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+		}
+		public function enableVillageEncounters():void {
+			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
 		}
 		// </savedata>
 
@@ -188,7 +203,7 @@ package classes.Scenes.NPCs
 			//Initialize saved gender:
 			if (!hasMet()) flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
 			//Amily gone/hiding super hard
-			if (flags[kFLAGS.AMILY_IS_BATMAN] > 0 || flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] == 1  || flags[kFLAGS.AMILY_TREE_FLIPOUT] > 0) {
+			if (flags[kFLAGS.AMILY_IS_BATMAN] > 0 || !canEncounterInVillage()  || flags[kFLAGS.AMILY_TREE_FLIPOUT] > 0) {
 				outputText("You enter the ruined village cautiously. There are burnt-down houses, smashed-in doorways, ripped-off roofs... everything is covered with dust and grime. You explore for an hour, but you cannot find any sign of another living being, or anything of value. The occasional footprint from an imp or a goblin turns up in the dirt, but you don't see any of the creatures themselves. It looks like time and passing demons have stripped the place bare since it was originally abandoned. Finally, you give up and leave. You feel much easier when you're outside of the village.");
 				doNext(camp.returnToCampUseOneHour);
 				return;
@@ -246,7 +261,7 @@ package classes.Scenes.NPCs
 			//meeting scenes for when PC is the same gender as when they last met Amily
 			if (flags[kFLAGS.AMILY_PC_GENDER] == player.gender) {
 				//"bad" or "good" ends.
-				if (flags[kFLAGS.AMILY_BIRTH_TOTAL] + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] >= 5 && flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] == 0)
+				if (flags[kFLAGS.AMILY_BIRTH_TOTAL] + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] >= 5 && canEncounterInVillage())
 				{
 					if (flags[kFLAGS.AMILY_AFFECTION] < 40) thisIsAReallyShittyBadEnd();
 					else thisFunctionProbablySucksTooOhYeahAmilyFunction();
@@ -890,10 +905,7 @@ package classes.Scenes.NPCs
 			outputText("Amily goes red with rage. \"<i>Why you arrogant, puffed-up, pigheaded...!</i>\" She's livid! \"<i>The demons'll have you - see if they don't! I don't need you - you're probably infertile anyway, you—</i>\" She trails off into a stream of the most perverse profanity you have ever heard, and then runs off into the ruins.\n\n");
 
 			outputText("You spin on your heel and stalk off. You figure that she will go out of her way to avoid you in the future; there's no point coming back here.");
-			//{Amily can no longer be encountered}
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
-			//{Ruined Village removed from Places list}
-			//I think one variable can handle both these...
+			disableVillageEncounters();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -1291,7 +1303,7 @@ package classes.Scenes.NPCs
 			}
 			outputText("Feeling the weight of the empty village pressing in on you, you quickly retreat yourself. There's no point coming back here.\n\n");
 			//turn off village.
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+			disableVillageEncounters();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -1311,8 +1323,7 @@ package classes.Scenes.NPCs
 			//Player gains corruption}
 			dynStats("cor", 1);
 			//{Amily can no longer be encountered}
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
-			//{Ruined Village removed from Places list}
+			disableVillageEncounters();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -1442,10 +1453,8 @@ package classes.Scenes.NPCs
 			outputText("Amily inclines her head towards you in a respectful nod, and then joins her vast brood as they begin to march away purposefully. You watch them go until they have vanished from sight, then shake your head with a sneer. Like you need her or her brats, anyway! Spinning on your heel, you stride purposefully out of this dump of a village; you don't intend to come back here again.\n\n");
 
 			outputText("Amily has left the region with her children to found a new colony elsewhere.\n\n");
+			disableVillageEncounters();
 			doNext(camp.returnToCampUseOneHour);
-			//{Amily can no longer be encountered}
-			//{Ruined Village removed from Places list}
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
 		}
 
 
@@ -1520,8 +1529,7 @@ package classes.Scenes.NPCs
 			if (flags[kFLAGS.IZMA_FOLLOWER_STATUS] == 1) {
 				flags[kFLAGS.IZMA_AMILY_FREAKOUT_STATUS] = 1;
 			}
-			//Disable amily encounters in the village!
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+			disableVillageEncounters();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -4934,8 +4942,7 @@ package classes.Scenes.NPCs
 			outputText("You scowl and take a pointed step back. You cared about her because she was another woman, alone and lost in this twisted world full of horny freaks that seem to be nothing but dicks and lust; now she's turned herself into one of them? She couldn't accept the pure love that the two of you already had?\n\n");
 
 			outputText("Amily stops, her new cock wilting, her expression making it quite obvious that she's heartbroken. Her head falls, tears dripping from her eyes, and she turns and runs away. You glare after her as she vanishes, sobbing, into the ruins, hoping she never comes back.");
-			//no moar amily in village
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+			disableVillageEncounters();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -5096,10 +5103,7 @@ package classes.Scenes.NPCs
 			outputText("\"<i>Well, I better start moving in, huh?</i>\" she jokes. She then flops down on your sleeping roll beside you, \"<i>There we are, I'm moved in.</i>\" She grins at you, and you can't help but laugh.\n\n");
 
 			//(Amily becomes a follower; quest is over)
-			//Disable village encounters!
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
-			//Set amily follower flag
-			flags[kFLAGS.AMILY_FOLLOWER] = 1;
+			setFollowerPure();
 			flags[kFLAGS.AMILY_CUP_SIZE] = 1;
 			flags[kFLAGS.AMILY_NIPPLE_LENGTH] = .3;
 			flags[kFLAGS.AMILY_HIP_RATING] = 6;
@@ -5126,7 +5130,7 @@ package classes.Scenes.NPCs
 
 			outputText("Amily reels, heartstruck, her expression making it clear that her heart has shattered, tears rolling down her face. \"<i>I...I didn't know that was the way you felt about me. F-Fine, if that's how it is...</i>\" She bursts into sobs and runs away; you know she'll never come back.\n\n");
 			//Disable village encounters, go!
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+			disableVillageEncounters();
 			doNext(playerMenu);
 		}
 
@@ -5486,7 +5490,7 @@ package classes.Scenes.NPCs
 			outputText("Amily winces, looking deeply hurt. \"<i>I... You're right, what I said was unforgivable. I... think it's best that we part ways.</i>\"\n\n");
 
 			outputText("Looking deeply sad, she turns and walks away, vanishing into the urban wilderness in that way only she can. Instinctively, you realize that you will never see her again.");
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+			disableVillageEncounters();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -6816,8 +6820,7 @@ package classes.Scenes.NPCs
 				flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 1;
 			}
 			else flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 2;
-			//Disable amily encounters in the village!
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+			disableVillageEncounters();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -7005,8 +7008,7 @@ package classes.Scenes.NPCs
 			flags[kFLAGS.AMILY_FOLLOWER] = 0;
 			//Set - amily flipped her shit
 			flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-			//Enable village encounters
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+			enableVillageEncounters();
 			//Change to plain mouse birth!
 			if (player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
 		}
@@ -7022,12 +7024,9 @@ package classes.Scenes.NPCs
 			outputText("<b>Amily has moved back in.</b>\n");
 			//Clear amily shit flipping
 			flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 0;
-			//Move in
-			flags[kFLAGS.AMILY_FOLLOWER] = 1;
 			//Clear 'warning'
 			flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
-			//Disable village encounters
-			flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+			setFollowerPure();
 		}
 
 

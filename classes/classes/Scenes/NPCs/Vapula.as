@@ -179,8 +179,7 @@ package classes.Scenes.NPCs
 					outputText("\n\nAmily shakes her head.  \"<i>Goodbye, [name].  You've changed.  What you did is pure folly.</i>\"");
 					//Set - amily flipped her shit
 					flags[kFLAGS.AMILY_FOLLOWER] = 0;
-					//Enable village encounters
-					flags[kFLAGS.AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+					amilyScene.enableVillageEncounters();
 					//Change to plain mouse birth!
 					if (player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
 					//FLAG THAT THIS SHIT WENT DOWN
