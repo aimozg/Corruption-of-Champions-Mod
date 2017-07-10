@@ -97,6 +97,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED:int                           =   36; //  1=true,44=village buttonAmily Village Encounters Disabled.     1=True, 44=Village Button?
 		public static const kFLAGS_AMILY_GROSSED_OUT_BY_WORMS:int                                  =   37; //  1=freaked out-Amily encounters disabled due to worms 0=False, 1= True
 		public static const kFLAGS_AMILY_AFFECTION:int                                             =   38; //   (< 15 = low.  In between = medium. 40+= high affect)Amily Affection.    15 = Low.  In Between = Medium. 40+= High Affect
+		public static const kFLAGS_AMILY_OFFER_ACCEPTED:int                                        =   39; //   (1 = true, 0 = not yet)Amily Offer Accepted.    0=False, 1=True
 		public function hasMet():Boolean {
 			return flags[kFLAGS_AMILY_MET]>0;
 		}
@@ -134,6 +135,12 @@ package classes.Scenes.NPCs
 		}
 		public function affectionValue():int {
 			return flags[kFLAGS_AMILY_AFFECTION];
+		}
+		public function hasAcceptedOffer():Boolean {
+			return flags[kFLAGS_AMILY_OFFER_ACCEPTED] == 0;
+		}
+		public function flagAcceptedOffer():void {
+			flags[kFLAGS_AMILY_OFFER_ACCEPTED] = 1;
 		}
 		// </savedata>
 
@@ -368,7 +375,7 @@ package classes.Scenes.NPCs
 						return;
 					}
 					//[Remeeting if previously refused]
-					else if (player.gender == 1 && flags[kFLAGS.AMILY_OFFER_ACCEPTED] == 0) {
+					else if (player.gender == 1 && !hasAcceptedOffer()) {
 						outputText("Wandering into the ruined village, you set off in search of Amily.\n\n");
 						/*NOPE!
 						//[Player meets the requirements to stalk Amily]
@@ -787,8 +794,7 @@ package classes.Scenes.NPCs
 			outputText("She still looks disgruntled. \"<i>Very well, come on. I suppose it was too much to hope that you would be roaming this world and yet still have some decorum when it comes to sex...</i>\" She begins leading the way and you follow. She doesn't have much of a butt to stare at, but you can already think of some interesting things to do with that tail of hers...\n\n");
 
 			outputText("Your brash enthusiasm has made Amily uncomfortable, and your quick surrender to baser impulses has made you slightly more lustful.");
-			//Offer accepted
-			flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+			flagAcceptedOffer();
 			modAffection(-5);
 			//[+5 Libido]
 			dynStats("lib", 5);
@@ -813,8 +819,7 @@ package classes.Scenes.NPCs
 			outputText("She eagerly leads you down a path, her tail swishing back and forth energetically. She seems very happy by your acceptance.\n\n");
 
 			outputText("It seems you've made Amily happy by asking if this is what she wants.");
-			//Offer accepted
-			flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+			flagAcceptedOffer();
 			modAffection(5);
 			//[/ Go to [First Time Sex]]
 			doNext(amilySexHappens);
@@ -886,8 +891,7 @@ package classes.Scenes.NPCs
 			clearOutput();
 			amilySprite();
 			outputText("You tell her that, yes - you'll give her the children she wants. She smiles pleasantly and tells you to follow her.\n\n");
-			//Offer accepted
-			flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+			flagAcceptedOffer();
 			//[/ Go to [First Time Sex]]
 			doNext(amilySexHappens);
 		}
@@ -1297,8 +1301,7 @@ package classes.Scenes.NPCs
 		private function desperateAmilyPleaAcceptHer():void {
 			clearOutput();
 			amilySprite();
-			//set accepted flag
-			flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+			flagAcceptedOffer();
 			outputText("With a gentle smile, you reach out and take hold of her hand. You tell her that you do like her too; you just wanted to know her as a person before you would take something as precious to her as her virginity. If she still wants you, then you want to go with her now.\n\n");
 
 			outputText("Amily stares at you, stunned. After a moment, she embraces you fiercely and begins to drag you away.\n\n");
@@ -5241,7 +5244,7 @@ package classes.Scenes.NPCs
 						modAffection(15);
 						//FEN: If PC has had any kids with her, set as good to go!
 						if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0) {
-							flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+							flagAcceptedOffer();
 							amilyVillageMenu();
 							return;
 						} // otherwise leave and proceed next time
@@ -5254,7 +5257,7 @@ package classes.Scenes.NPCs
 						modAffection(5);
 						//FEN: If PC has had any kids with her, set as good to go!
 						if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0) {
-							flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+							flagAcceptedOffer();
 							amilyVillageMenu();
 							return;
 						} // otherwise leave and proceed next time
@@ -5262,8 +5265,7 @@ package classes.Scenes.NPCs
 					//High Affection:
 					else {
 						outputText("She looks pleased, but then adopts an exaggerated expression of irritation. \"<i>You go to all the hard work of seducing me as a woman, and now you turn into a man? Why do you put me through these things?</i>\" She heaves a similarly exaggerated sigh, then smiles again. \"<i>Ah, well, now we can start things over, can't we? Let's see what the new you is like in bed.</i>\" She makes a 'come hither' expression, then playfully starts running off into the ruins, making sure you follow her.\n\n");
-						//mark as agreed to preg-quest!
-						flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+						flagAcceptedOffer();
 						//(Play High Affection Male sex scene.)
 						doNext(amilySexHappens);
 						return;
@@ -5328,14 +5330,13 @@ package classes.Scenes.NPCs
 						//(Begin the male variant of Amily's quest, +5 affection.)
 						modAffection(5);
 						//if engaged in herm-quest autoenable male quest!
-						if (flags[kFLAGS.AMILY_HERM_QUEST] == 2) flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+						if (flags[kFLAGS.AMILY_HERM_QUEST] == 2) flagAcceptedOffer();
 					}
 					//Medium Affection:
 					else if (affectionValue() < 40) {
 						outputText("\"<i>And here I was starting to get used to you like that... but I'm happy you made such a change for me.</i>\" She tells you, smiling.\n\n");
 						modAffection(2);
-						//mark as agreed to preg-quest!
-						flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+						flagAcceptedOffer();
 						//(Use the Remeeting scene options.)
 						amilyVillageMenu();
 						return;
@@ -5345,8 +5346,7 @@ package classes.Scenes.NPCs
 						 outputText("\"<i>I was comfortable with who you were, you didn't have to change on my account...</i>\" Amily says, clearly looking guilty. When you assure her that you did this voluntarily, she brightens up. \"<i>Well, I am happy to have you all man - so, what were you wanting to speak about?</i>\"");
 						//(Use the Remeeting scene options.)
 						modAffection(2);
-						//mark as agreed to preg-quest!
-						flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+						flagAcceptedOffer();
 						//(Use the Remeeting scene options.)
 						amilyVillageMenu();
 						return;
@@ -7082,7 +7082,7 @@ package classes.Scenes.NPCs
 			else player.consumeItem(consumables.P_S_MLK);
 			flags[kFLAGS.AMILY_OFFERED_DEFURRY] = 2; // We're now completing this dumb little quest.
 			flags[kFLAGS.AMILY_NOT_FURRY] = 1;
-			flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
+			flagAcceptedOffer();
 			amilySprite();
 			clearOutput();
 			outputText("It's not long after arriving in the ruins, darting about to announce your presence, before Amily steps out from a dilapidated alley.  She squares up to you with a hand planted on her slender hip, looking to you expectantly.");

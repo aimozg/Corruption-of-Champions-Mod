@@ -44,7 +44,7 @@ public static const PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE:int                     
 //public static const AMILY_VILLAGE_ENCOUNTERS_DISABLED:int                           =   36; //  1=true,44=village buttonAmily Village Encounters Disabled.     1=True, 44=Village Button?
 //public static const AMILY_GROSSED_OUT_BY_WORMS:int                                  =   37; //  1=freaked out-Amily encounters disabled due to worms 0=False, 1= True
 //public static const AMILY_AFFECTION:int                                             =   38; //   (< 15 = low.  In between = medium. 40+= high affect)Amily Affection.    15 = Low.  In Between = Medium. 40+= High Affect
-public static const AMILY_OFFER_ACCEPTED:int                                        =   39; //   (1 = true, 0 = not yet)Amily Offer Accepted.    0=False, 1=True
+//public static const AMILY_OFFER_ACCEPTED:int                                        =   39; //   (1 = true, 0 = not yet)Amily Offer Accepted.    0=False, 1=True
 public static const AMILY_BIRTH_TOTAL:int                                           =   40; // Amily Birth Total.
 public static const AMILY_INCUBATION:int                                            =   41; //    0 = not pregnant, otherwise hours till birth 168Amily Incubation.    0=Not Pregnant, Otherwise Hours Till Birth Starting From 168
 public static const AMILY_FUCK_COUNTER:int                                          =   42; // Amily Fuck Counter.

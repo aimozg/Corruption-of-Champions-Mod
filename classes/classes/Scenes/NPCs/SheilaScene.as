@@ -3908,7 +3908,7 @@ private function talkToDemonSheilaAboutWhatNow():void {
 	
 	outputText("\n\nShe's so fixated on having children now, more so than anyone you've met");
 	//[(PC has been propositioned by Amily)]
-	if (flags[kFLAGS.AMILY_OFFER_ACCEPTED] > 0) outputText(" save one.  Actually, the two are a bit reminiscent of each other..");
+	if (amilyScene.hasAcceptedOffer()) outputText(" save one.  Actually, the two are a bit reminiscent of each other..");
 	outputText(".  Yet, any offspring a demon makes will be imps, right?");
 	
 	outputText("\n\n\"<i>Imps are trustworthy, like dogs,</i>\" she retorts, frowning.  \"<i>Count on them to care about exactly one thing, and they're always honest about it.  Not so with the rest of the pretentious trash dirtying this world, lying with a smile like they know what's best for the others around them.</i>\"  Sheila begins tracing meaningless shapes on your arm.  \"<i>It's what I like about you too, mate");
