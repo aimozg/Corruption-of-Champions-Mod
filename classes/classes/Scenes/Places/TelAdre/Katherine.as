@@ -1515,7 +1515,7 @@ private function talkLovers():void {
 private function playerLovers():int {
 	//This function exists so that both talkLovers and talkToKatherine can use the same code to determine who else the player is fucking.
 	var loverSet:int = 0;
-	if (flags[kFLAGS.AMILY_FOLLOWER] == 1) loverSet |= KBIT_LOVER_AMILY; //Not > 0; probably don’t want to admit having corrupt Amily follower to Katherine
+	if (getGame().amilyScene.isPureFollower()) loverSet |= KBIT_LOVER_AMILY; //Not > 0; probably don’t want to admit having corrupt Amily follower to Katherine
 	if (flags[kFLAGS.COTTON_MET_FUCKED] >= 2) loverSet |= KBIT_LOVER_COTTON;
 	if ((flags[kFLAGS.EDRYN_NEVER_SEE_AGAIN] == 0) && (player.statusEffectv1(StatusEffects.Edryn) > 3)) loverSet |= KBIT_LOVER_EDRYN;
 	if ((flags[kFLAGS.HELIA_FOLLOWER_DISABLED] != 1) && kGAMECLASS.helScene.followerHel()) loverSet |= KBIT_LOVER_HELIA;

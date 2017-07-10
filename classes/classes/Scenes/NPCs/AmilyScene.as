@@ -98,31 +98,78 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_GROSSED_OUT_BY_WORMS:int                                  =   37; //  1=freaked out-Amily encounters disabled due to worms 0=False, 1= True
 		public static const kFLAGS_AMILY_AFFECTION:int                                             =   38; //   (< 15 = low.  In between = medium. 40+= high affect)Amily Affection.    15 = Low.  In Between = Medium. 40+= High Affect
 		public static const kFLAGS_AMILY_OFFER_ACCEPTED:int                                        =   39; //   (1 = true, 0 = not yet)Amily Offer Accepted.    0=False, 1=True
-		public function hasMet():Boolean {
-			return flags[kFLAGS_AMILY_MET]>0;
-		}
-		public function setMet():void {
+		public static const kFLAGS_AMILY_FOLLOWER:int                                              =   43; // Amily Follower. 0=Not Follower, 1=Follower 2=Corrupted Follower?
+
+		// Global state: Not met / Met / Met, accepted offer / Follower pure / Follower corrupt / Run away (corrupt or worms flipout) / Completely Removed
+		public function flagMet():void {
 			flags[kFLAGS_AMILY_MET] = 1;
 		}
-		public function setFollowerPure():void {
+		public function flagAcceptedOffer():void {
+			flags[kFLAGS_AMILY_OFFER_ACCEPTED] = 1;
+		}
+		public function flagFollowerPure():void {
 			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
-			flags[kFLAGS.AMILY_FOLLOWER] = 1;
+			flags[kFLAGS_AMILY_FOLLOWER] = 1;
 		}
-		public function canEncounterInVillage():Boolean {
-			return flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] == 0;
-		}
-		// TODO replace with state changer
-		public function disableVillageEncounters():void {
+		public function flagFollowerCorrupt():void {
 			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
-		}
-		public function enableVillageEncounters():void {
-			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+			flags[kFLAGS_AMILY_FOLLOWER] = 2;
 		}
 		public function flagGrossedOutByWorms():void {
 			flags[kFLAGS_AMILY_GROSSED_OUT_BY_WORMS] = 1;
 		}
 		public function unflagGrossedOutByWorms():void {
 			flags[kFLAGS_AMILY_GROSSED_OUT_BY_WORMS] = 0;
+		}
+		public function flagCorruptFlipout():void {
+			unflagFollower();
+			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+			flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
+		}
+		public function flagTreeFlipout():void {
+			unflagFollower();
+			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
+			flags[kFLAGS.AMILY_TREE_FLIPOUT] = 1;
+		}
+		public function unflagFollower():void {
+			flags[kFLAGS_AMILY_FOLLOWER] = 0;
+			//Switch to less lovey pregnancy!
+			if (player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
+		}
+		public function flagRemoved():void {
+			unflagFollower();
+			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
+		}
+		public function hasMet():Boolean {
+			return flags[kFLAGS_AMILY_MET]>0;
+		}
+		public function hasAcceptedOffer():Boolean {
+			return flags[kFLAGS_AMILY_OFFER_ACCEPTED] == 0;
+		}
+		public function isFollowerOrSlave():Boolean {
+			return flags[kFLAGS_AMILY_FOLLOWER] > 0;
+		}
+		public function isPureFollower():Boolean {
+			return flags[kFLAGS_AMILY_FOLLOWER] == 1;
+		}
+		public function isCorrupt():Boolean {
+			return flags[kFLAGS_AMILY_FOLLOWER] == 2;
+		}
+		override public function amilyInCamp():Boolean {
+			if (isFollowerOrSlave()) {
+				//Amily not a follower while visiting Urta
+				return !(flags[kFLAGS.AMILY_VISITING_URTA] == 1 || flags[kFLAGS.AMILY_VISITING_URTA] == 2);
+			}
+			else return false;
+		}
+		override public function amilyInCampPure():Boolean {
+			return amilyInCamp() && !isCorrupt();
+		}
+		override public function amilyInCampCorrupt():Boolean {
+			return amilyInCamp() && isCorrupt();
+		}
+		public function canEncounterInVillage():Boolean {
+			return flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] == 0;
 		}
 		public function isGrossedOutByWorms():Boolean {
 			return flags[kFLAGS_AMILY_GROSSED_OUT_BY_WORMS] == 1;
@@ -135,12 +182,6 @@ package classes.Scenes.NPCs
 		}
 		public function affectionValue():int {
 			return flags[kFLAGS_AMILY_AFFECTION];
-		}
-		public function hasAcceptedOffer():Boolean {
-			return flags[kFLAGS_AMILY_OFFER_ACCEPTED] == 0;
-		}
-		public function flagAcceptedOffer():void {
-			flags[kFLAGS_AMILY_OFFER_ACCEPTED] = 1;
 		}
 		// </savedata>
 
@@ -163,7 +204,7 @@ package classes.Scenes.NPCs
 			trace("\nAmily time change: butt type: " + pregnancy.buttType + ", butt incubation: " + pregnancy.buttIncubation + ", butt event: " + pregnancy.buttEvent);
 			if (flags[kFLAGS.AMILY_BLOCK_COUNTDOWN_BECAUSE_CORRUPTED_JOJO] > 0) flags[kFLAGS.AMILY_BLOCK_COUNTDOWN_BECAUSE_CORRUPTED_JOJO]--;
 			if (flags[kFLAGS.AMILY_INCEST_COUNTDOWN_TIMER] > 0 && flags[kFLAGS.AMILY_INCEST_COUNTDOWN_TIMER] < 30 * 24) flags[kFLAGS.AMILY_INCEST_COUNTDOWN_TIMER]++;
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				if (pregnancy.isPregnant && pregnancy.incubation == 0) {
 					outputText("\n");
 					amilyPopsOutKidsInCamp();
@@ -179,12 +220,12 @@ package classes.Scenes.NPCs
 			}
 			if (model.time.hours == 6) {
 				//Pure amily flips her shit and moves out!
-				if (flags[kFLAGS.AMILY_FOLLOWER] == 1 && player.cor >= (66 + player.corruptionTolerance()) && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] > 0) {
+				if (isPureFollower() && player.cor >= (66 + player.corruptionTolerance()) && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] > 0) {
 					amilyScene.farewellNote();
 					needNext = true;
 				}
 				//Amily moves back in once uncorrupt.
-				if (flags[kFLAGS.AMILY_TREE_FLIPOUT] == 0 && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] > 0 && player.cor <= (25 + player.corruptionTolerance()) && flags[kFLAGS.AMILY_FOLLOWER] == 0) {
+				if (flags[kFLAGS.AMILY_TREE_FLIPOUT] == 0 && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] > 0 && player.cor <= (25 + player.corruptionTolerance()) && !isFollowerOrSlave()) {
 					amilyScene.amilyReturns();
 					needNext = true;
 				}
@@ -200,7 +241,7 @@ package classes.Scenes.NPCs
 				kGAMECLASS.followerInteractions.amilyUrtaMorningAfter();
 				return true;
 			}
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1 && model.time.hours == 6 && flags[kFLAGS.CAMP_WALL_PROGRESS] >= 100 && flags[kFLAGS.CAMP_WALL_SKULLS] < 100 && rand(3) == 0) {
+			if (isPureFollower() && model.time.hours == 6 && flags[kFLAGS.CAMP_WALL_PROGRESS] >= 100 && flags[kFLAGS.CAMP_WALL_SKULLS] < 100 && rand(3) == 0) {
 				flags[kFLAGS.CAMP_WALL_SKULLS]++;
 			}
 			return false;
@@ -210,16 +251,6 @@ package classes.Scenes.NPCs
 		// NEW EVENTS:
 		// 3172 = Ask to defur Amily
 		// 3174 = Defur Amily at camp (both corrupt/noncorrupt)
-		override public function amilyFollower():Boolean {
-			if (flags[kFLAGS.AMILY_FOLLOWER] > 0) {
-				//Amily not a follower while visiting Urta
-				return !(flags[kFLAGS.AMILY_VISITING_URTA] == 1 || flags[kFLAGS.AMILY_VISITING_URTA] == 2);
-			}
-			else return false;
-		}
-		public function amilyCorrupt():Boolean {
-			return flags[kFLAGS.AMILY_FOLLOWER] == 2;
-		}
 		public function amilySprite():void {
 			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) spriteSelect(SpriteDb.s_amily);
 			else spriteSelect(SpriteDb.s_amily_defurr);
@@ -236,7 +267,7 @@ package classes.Scenes.NPCs
 				return;
 			}
 			//Schrödinger Amily corrupted that damn place!
-			else if (flags[kFLAGS.AMILY_FOLLOWER] == 2) {
+			else if (isCorrupt()) {
 				amilySprite();
 				outputText("You enter the ruined village, still laughing at your past nefarious deeds. Maybe it's just your imagination, but you feel like this entire place reeks of corruption now... You explore for an hour, then go back to your camp, knowing your tainted slave will be more than happy to satisfy your urges.");
 				doNext(camp.returnToCampUseOneHour);
@@ -335,7 +366,7 @@ package classes.Scenes.NPCs
 						//Set flag for what she met the player as.
 						flags[kFLAGS.AMILY_MET_AS] = player.gender;
 						//set 'met' to true
-						setMet();
+						flagMet();
 						outputText("You wind your way deep into the maze of dusty crumbling buildings and twisted saplings, looking for any sign of life - or, failing that, something that can help you in your quest.  Bending down to rummage through an old heap of rubbish, you complain aloud that this is hardly the sort of thing you expected to be doing as a champion. Suddenly, you hear a 'thwip' and something shoots past your face, embedding into the stone beside your head and trembling with the impact.\n\n");
 
 						outputText("\"<i>Don't make any sudden moves!</i>\" A voice calls out, high pitched and a little squeaky, but firm and commanding. You freeze to avoid giving your assailant a reason to shoot at you again. \"<i>Stand up and turn around, slowly,</i>\" it commands again. You do as you are told.\n\n");
@@ -401,7 +432,7 @@ package classes.Scenes.NPCs
 						//Set flag for what she met the player as.
 						flags[kFLAGS.AMILY_MET_AS] = player.gender;
 						//set 'met' to true
-						setMet();
+						flagMet();
 						outputText("You wind your way deep into the maze of dusty crumbling buildings and twisted saplings, looking for any sign of life - or, failing that, something that can help you in your quest.  Bending down to rummage through an old heap of rubbish, you complain aloud that this is hardly the sort of thing you expected to be doing as a champion. Suddenly, you hear a 'thwip' and something shoots past your face, embedding into the stone beside your head and trembling with the impact.\n\n");
 
 						outputText("\"<i>Don't make any sudden moves!</i>\" A voice calls out, high pitched and a little squeaky, but firm and commanding. You freeze to avoid giving your assailant a reason to shoot at you again. \"<i>Stand up and turn around, slowly,</i>\" it commands again. You do as you are told.\n\n");
@@ -457,7 +488,7 @@ package classes.Scenes.NPCs
 						//Set flag for what she met the player as.
 						flags[kFLAGS.AMILY_MET_AS] = player.gender;
 						//set 'met' to true
-						setMet();
+						flagMet();
 						outputText("You wind your way deep into the maze of dusty crumbling buildings and twisted saplings, looking for any sign of life - or, failing that, something that can help you in your quest.  Bending down to rummage through an old heap of rubbish, you complain aloud that this is hardly the sort of thing you expected to be doing as a champion. Suddenly, you hear a 'thwip' and something shoots past your face, embedding into the stone beside your head and trembling with the impact.\n\n");
 
 						outputText("\"<i>Don't make any sudden moves!</i>\" A voice calls out, high pitched and a little squeaky, but firm and commanding. You freeze to avoid giving your assailant a reason to shoot at you again. \"<i>Stand up and turn around, slowly,</i>\" it commands again. You do as you are told.\n\n");
@@ -509,7 +540,7 @@ package classes.Scenes.NPCs
 					if (!hasMet()) {
 						flags[kFLAGS.AMILY_MET_AS] = player.gender;
 						//set 'met' to true
-						setMet();
+						flagMet();
 						outputText("You wind your way deep into the maze of dusty crumbling buildings and twisted saplings, looking for any sign of life - or, failing that, something that can help you in your quest.  Bending down to rummage through an old heap of rubbish, you complain aloud that this is hardly the sort of thing you expected to be doing as a champion. Suddenly, you hear a 'thwip' and something shoots past your face, embedding into the stone beside your head and trembling with the impact.\n\n");
 
 						outputText("\"<i>Don't make any sudden moves!</i>\" A voice calls out, high pitched and a little squeaky, but firm and commanding. You freeze to avoid giving your assailant a reason to shoot at you again. \"<i>Stand up and turn around, slowly,</i>\" it commands again. You do as you are told.\n\n");
@@ -927,7 +958,7 @@ package classes.Scenes.NPCs
 			outputText("Amily goes red with rage. \"<i>Why you arrogant, puffed-up, pigheaded...!</i>\" She's livid! \"<i>The demons'll have you - see if they don't! I don't need you - you're probably infertile anyway, you—</i>\" She trails off into a stream of the most perverse profanity you have ever heard, and then runs off into the ruins.\n\n");
 
 			outputText("You spin on your heel and stalk off. You figure that she will go out of her way to avoid you in the future; there's no point coming back here.");
-			disableVillageEncounters();
+			flagRemoved();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -1324,7 +1355,7 @@ package classes.Scenes.NPCs
 			}
 			outputText("Feeling the weight of the empty village pressing in on you, you quickly retreat yourself. There's no point coming back here.\n\n");
 			//turn off village.
-			disableVillageEncounters();
+			flagRemoved();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -1344,7 +1375,7 @@ package classes.Scenes.NPCs
 			//Player gains corruption}
 			dynStats("cor", 1);
 			//{Amily can no longer be encountered}
-			disableVillageEncounters();
+			flagRemoved();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -1474,7 +1505,7 @@ package classes.Scenes.NPCs
 			outputText("Amily inclines her head towards you in a respectful nod, and then joins her vast brood as they begin to march away purposefully. You watch them go until they have vanished from sight, then shake your head with a sneer. Like you need her or her brats, anyway! Spinning on your heel, you stride purposefully out of this dump of a village; you don't intend to come back here again.\n\n");
 
 			outputText("Amily has left the region with her children to found a new colony elsewhere.\n\n");
-			disableVillageEncounters();
+			flagRemoved();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -1533,7 +1564,7 @@ package classes.Scenes.NPCs
 			//Oh boy.  So excited.  wee.  Blech.
 			outputText("\\[<b>Amily has joined you as a lover.</b>\\]\n\n");
 			//Set amily follower flag
-			flags[kFLAGS.AMILY_FOLLOWER] = 1;
+			flagFollowerPure();
 			flags[kFLAGS.AMILY_CUP_SIZE] = 1;
 			flags[kFLAGS.AMILY_NIPPLE_LENGTH] = .3;
 			flags[kFLAGS.AMILY_HIP_RATING] = 6;
@@ -1550,7 +1581,6 @@ package classes.Scenes.NPCs
 			if (flags[kFLAGS.IZMA_FOLLOWER_STATUS] == 1) {
 				flags[kFLAGS.IZMA_AMILY_FREAKOUT_STATUS] = 1;
 			}
-			disableVillageEncounters();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -1561,7 +1591,7 @@ package classes.Scenes.NPCs
 			var convo:Number = rand(15);
 			
 			// Bump past convo #12 if she's already at camp because it doesn't make much sense by this point.
-			if (convo == 12 && amilyFollower()) convo++;
+			if (convo == 12 && amilyInCamp()) convo++;
 			
 			//Girls dont get to listen to amily talk about being knocked up.
 			//Herms either unless she's okay'ed them for dad-hood.
@@ -1780,7 +1810,7 @@ package classes.Scenes.NPCs
 				if (sexAfter) outputText("and regains her composure.\n\n");
 				else {
 					outputText("and leaves.");
-					if (flags[kFLAGS.AMILY_FOLLOWER] == 0) outputText("  As you set off back to camp,");
+					if (!isFollowerOrSlave()) outputText("  As you set off back to camp,");
 					else outputText("  As you sit back down in camp,");
 					outputText(" you have little doubt that she's gone to find and kill an imp.\n\n");
 				}
@@ -1811,7 +1841,7 @@ package classes.Scenes.NPCs
 				outputText("\"<i>Not particularly... but, if you're female, they may get territorial and attack without warning, and if you've got a penis, they'll want to have sex with you, even if that means beating you into submission.  They're... honestly kind of puny.  If you can dodge the lust potions and poisons they throw, they basically can't do anything to you.</i>\"\n\n");
 
 				if (!sexAfter) {
-					if (flags[kFLAGS.AMILY_FOLLOWER] == 0) outputText("Thanking her for her time, and the warning, you head back to your own camp.\n\n");
+					if (!isFollowerOrSlave()) outputText("Thanking her for her time, and the warning, you head back to your own camp.\n\n");
 					else outputText("Thanking her for her time, and the warning, you sit back down in your camp.\n\n");
 				}
 				else outputText("You thank her for her time as the conversation winds down.\n\n");
@@ -1911,7 +1941,7 @@ package classes.Scenes.NPCs
 
 				outputText("You shake your head \"<i>no</i>");
 				if (!sexAfter) {
-					if (flags[kFLAGS.AMILY_FOLLOWER] == 0) outputText("\", politely excuse yourself, and head back to your own camp. It sounds like she's doing better at keeping a steady supply of food and water going than you are.  But if that's the case... why does she look so thin?\n\n");
+					if (!isFollowerOrSlave()) outputText("\", politely excuse yourself, and head back to your own camp. It sounds like she's doing better at keeping a steady supply of food and water going than you are.  But if that's the case... why does she look so thin?\n\n");
 					else outputText("\", politely excuse yourself, and sit back down in camp.  It sounds like she's doing better at keeping a steady supply of food and water going than you are.  But if that's the case... why does she look so thin?\n\n");
 				}
 				else outputText(".\"");
@@ -1970,7 +2000,7 @@ package classes.Scenes.NPCs
 
 				outputText("Amily looks surprised... but pleased.  \"<i>I...  You're really interested in hearing about me?  Well... okay.  What do you want to know?</i>\"\n\n");
 
-				if (flags[kFLAGS.AMILY_FOLLOWER] == 0)
+				if (!isFollowerOrSlave())
 				{
 					outputText("You pause for a few moments, trying to think of a way to phrase this delicately, then ask her how she plans on caring for her children.\n\n");
 
@@ -1991,7 +2021,7 @@ package classes.Scenes.NPCs
 
 				outputText("\"<i>That's... that's sweet of you,</i>\" Amily says, clearly shocked.  \"<i>I didn't think you would actually care...</i>\" she trails off, looking thoughtful.");
 				if (!sexAfter) {
-					if (flags[kFLAGS.AMILY_FOLLOWER] == 0) outputText("  Then, as if realising you are still here, she waves at you to go, getting up and leaving herself.  Wondering what that was about, you return to camp.\n\n");
+					if (!isFollowerOrSlave()) outputText("  Then, as if realising you are still here, she waves at you to go, getting up and leaving herself.  Wondering what that was about, you return to camp.\n\n");
 					else outputText("  Then, as if realising you are still here, she waves at you to go, getting up and leaving herself.  Wondering what that was about, you sit down in camp.\n\n");
 				}
 			}
@@ -2539,7 +2569,7 @@ package classes.Scenes.NPCs
 
 		public function amilyPreggoChance():void {
 			//Is amily a chaste follower?
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				//If pregnancy not enabled, GTFO
 				if (flags[kFLAGS.AMILY_ALLOWS_FERTILITY] == 0) return;
 			}
@@ -2563,25 +2593,25 @@ package classes.Scenes.NPCs
 		//Approach Amily:
 		// EVENT 2427
 		public function amilyFollowerEncounter():void {
-			if (!amilyCorrupt() && player.eggs() >= 20 && player.canOviposit() && flags[kFLAGS.AMILY_OVIPOSITION_UNLOCKED] == 0) {
+			if (!isCorrupt() && player.eggs() >= 20 && player.canOviposit() && flags[kFLAGS.AMILY_OVIPOSITION_UNLOCKED] == 0) {
 				amilyEggStuff();
 				return;
 			}
-			if (flags[kFLAGS.AMILY_INCEST_COUNTDOWN_TIMER] == 30 * 24 && flags[kFLAGS.AMILY_FOLLOWER] == 2 && (model.time.hours >= 11 && model.time.hours <= 13)) {
+			if (flags[kFLAGS.AMILY_INCEST_COUNTDOWN_TIMER] == 30 * 24 && isCorrupt() && (model.time.hours >= 11 && model.time.hours <= 13)) {
 				amilyIncest();
 				return;
 			}
 			amilySprite();
 			if (flags[kFLAGS.AMILY_CLOTHING] == 0) flags[kFLAGS.AMILY_CLOTHING] = "rags";
 			//Amily freakout
-			if (player.cor >= (50 + player.corruptionTolerance()) && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] == 0 && flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (player.cor >= (50 + player.corruptionTolerance()) && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] == 0 && isPureFollower()) {
 				amilyTaintWarning();
 				return;
 			}
 			//Clear warning if PC is good!
 			if (player.cor < (50 + player.corruptionTolerance()) && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] > 0) flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
 			//Preggo birthing!
-			if (pregnancy.isPregnant && pregnancy.incubation == 0 && flags[kFLAGS.AMILY_FOLLOWER] == 2) {
+			if (pregnancy.isPregnant && pregnancy.incubation == 0 && isCorrupt()) {
 				clearOutput();
 				amilyPopsOutKidsInCamp();
 				pregnancy.knockUpForce(); //Clear Pregnancy
@@ -2589,19 +2619,19 @@ package classes.Scenes.NPCs
 				return;
 			}
 			//Jojo + Amily Spar
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1 && flags[kFLAGS.AMILY_MET_PURE_JOJO] == 1 && flags[kFLAGS.AMILY_SPAR_WITH_PURE_JOJO] == 0 && player.hasStatusEffect(StatusEffects.PureCampJojo)) {
+			if (isPureFollower() && flags[kFLAGS.AMILY_MET_PURE_JOJO] == 1 && flags[kFLAGS.AMILY_SPAR_WITH_PURE_JOJO] == 0 && player.hasStatusEffect(StatusEffects.PureCampJojo)) {
 				finter.pureJojoAndAmilySpar();
 				return;
 			}
 			//Amily
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1 && flags[kFLAGS.AMILY_WAIT_FOR_PC_FIX_JOJO] == 1 && player.hasItem(consumables.PURHONY) && flags[kFLAGS.AMILY_BLOCK_COUNTDOWN_BECAUSE_CORRUPTED_JOJO] == 0 && flags[kFLAGS.JOJO_FIXED_STATUS] == 0)
+			if (isPureFollower() && flags[kFLAGS.AMILY_WAIT_FOR_PC_FIX_JOJO] == 1 && player.hasItem(consumables.PURHONY) && flags[kFLAGS.AMILY_BLOCK_COUNTDOWN_BECAUSE_CORRUPTED_JOJO] == 0 && flags[kFLAGS.JOJO_FIXED_STATUS] == 0)
 			{
 				finter.fixJojoOOOOHYEEEEAHSNAPINTOASLIMJIM();
 				return;
 			}
 			clearOutput();
 			//Non corrupt!
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) outputText("As you approach the mouse-woman, her big, hairless ears twitch and she turns to face you with a smile. \"<i>Hi, " + player.short + "! What's up?</i>\" She grins at you.\n\n");
+			if (isPureFollower()) outputText("As you approach the mouse-woman, her big, hairless ears twitch and she turns to face you with a smile. \"<i>Hi, " + player.short + "! What's up?</i>\" She grins at you.\n\n");
 			//Corrupt!
 			else
 			{
@@ -2632,7 +2662,7 @@ package classes.Scenes.NPCs
 			}
 			
 			switch (pregnancy.event) {
-				case 2: if (flags[kFLAGS.AMILY_FOLLOWER] == 1) { //Pure
+				case 2: if (isPureFollower()) { //Pure
 							outputText("You notice that Amily seems to be ill. Of course, you at once go to her and ask her what's wrong, but she only smiles at you and says that it's all right. Your incomprehension must show on your face, since Amily giggles, puts her arms around you and kisses you. \"<i>Silly " + player.mf("boy", "girl") + "... You're going to be a father... again...</i>\"\n\n");
 						}
 						else { //Corrupt
@@ -2645,14 +2675,14 @@ package classes.Scenes.NPCs
 				case 5:
 				case 6: outputText("Amily's belly has gotten very big. She must be carrying more than one child.\n\n");
 						break;
-				case 7: if (flags[kFLAGS.AMILY_FOLLOWER] == 1) { //Pure
+				case 7: if (isPureFollower()) { //Pure
 							outputText("Amily's swollen stomach moves on occasion, warranting an unthinking pat from her to calm the restless children within.\n\n");
 						}
 						else { //Corrupt
 							outputText("Amily's swollen stomach moves on occasion, warranting a stroke from her to urge the restless children within to come out soon.\n\n");
 						}
 						break;
-				case 8: outputText("Amily's bulge frequently wriggles and squirms, though this doesn't seem to bother her. " + (flags[kFLAGS.AMILY_FOLLOWER] == 1 ? "T" : "She smiles with glee, t") + "he children mustn't have too much longer until they are born.\n\n");
+				case 8: outputText("Amily's bulge frequently wriggles and squirms, though this doesn't seem to bother her. " + (isPureFollower() ? "T" : "She smiles with glee, t") + "he children mustn't have too much longer until they are born.\n\n");
 				default:
 			}
 			amilyMenu(true);
@@ -2661,7 +2691,7 @@ package classes.Scenes.NPCs
 		private function amilyMenu(output:Boolean = true):void {
 			menu();
 			//Innocent
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				//outputText("Options:\nAppearance\nTalk\nMake Love\n");
 				//MOAR OPTIONS: Give Present\nAlchemy\nTeach Blowpipe
 				addButton(0, "Appearance", amilyAppearance);
@@ -2670,7 +2700,7 @@ package classes.Scenes.NPCs
 				addButton(3, "Give Present", giveAmilyAPresent);
 				addButton(4, (flags[kFLAGS.AMILY_NOT_FURRY] == 0 ? "Defur" : "Refuzz"), (flags[kFLAGS.AMILY_NOT_FURRY] == 0 ? amilyDefurryOfferAtCamp: refuzzAmily));
 				//If no fight yet, have option to introduce Urta and Amily
-				if (player.gender > 0 && flags[kFLAGS.AMILY_FOLLOWER] == 1 && flags[kFLAGS.AMILY_VISITING_URTA] == 0 && (flags[kFLAGS.URTA_COMFORTABLE_WITH_OWN_BODY] >= 5 || urtaLove()) && !kGAMECLASS.urtaQuest.urtaBusy())
+				if (player.gender > 0 && isPureFollower() && flags[kFLAGS.AMILY_VISITING_URTA] == 0 && (flags[kFLAGS.URTA_COMFORTABLE_WITH_OWN_BODY] >= 5 || urtaLove()) && !kGAMECLASS.urtaQuest.urtaBusy())
 				{
 					if (output) outputText("<b>You could take Amily on a date to Tel'Adre, and perhaps even introduce her to Urta!</b>\n\n");
 					addButton(5, "Date", dateNightFirstTime, null, null, null, "Take Amily on a date to Tel'Adre?");
@@ -2761,8 +2791,7 @@ package classes.Scenes.NPCs
 			//FURRAH
 			if (flags[kFLAGS.AMILY_NOT_FURRY]==0) {
 				//Corrupt
-				if (flags[kFLAGS.AMILY_FOLLOWER] == 2)
-				{
+				if (isCorrupt()) {
 					furDesc = "She is covered in fur, except on her hands, feet, ears and tail.";
 					feetDesc = "surprisingly hand-like pink paws instead of feet";
 				}
@@ -2770,11 +2799,11 @@ package classes.Scenes.NPCs
 			}
 			//NONFURR
 			else {
-				if (flags[kFLAGS.AMILY_FOLLOWER] == 2) feetDesc = "a trademark succubus high-heel";
+				if (isCorrupt()) feetDesc = "a trademark succubus high-heel";
 				furDesc = "Her face is framed by a stylish bob of auburn hair, large mouse-ears jutting from her 'do.  She has small, dainty feet and";
 			}
 			//PUR
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				//(Start [horsecock]
 				outputText("Amily is a 5' 2\" tall "+what+", with a lean and wiry build. Her pink eyes normally twinkle merrily, but they can turn hard and cold if the circumstances warrant, just as the normally friendly grin "+onHerMuzzle+"can turn cruel and harsh when she is angry. "+furDesc+" a long, hairless mouse's tail that sways and twitches constantly from her behind. She is currently wearing " + flags[kFLAGS.AMILY_CLOTHING] + ". She has " + amilyHips() + " and a " + amilyButt() + ".\n\n");
 				//(End [horsecock]
@@ -2880,7 +2909,7 @@ package classes.Scenes.NPCs
 			amilySprite();
 			clearOutput();
 			//Corrupt Amily has her own shit
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 2) {
+			if (isCorrupt()) {
 				amilyCorruptSexMenu();
 				return;
 			}
@@ -2930,7 +2959,7 @@ package classes.Scenes.NPCs
 			addButton(1, "Amily Leads", letAmilyLead, null, null, null, "Let Amily choose how she's going to have sex with you.");
 			addButton(2, bText, babies, null, null, null, bTooltip);
 			if (flags[kFLAGS.AMILY_VISITING_URTA] == 4 && flags[kFLAGS.URTA_COMFORTABLE_WITH_OWN_BODY] >= 0 && !getGame().urtaQuest.urtaBusy()) addButton(3, "Urta", getGame().followerInteractions.amilyUrtaSex, null, null, null, "Take Amily for a visit to Urta in Tel'Adre for some threesome sexy times.");
-			if (flags[kFLAGS.AMILY_OWNS_BIKINI] > 0 && player.hasCock() && !amilyCorrupt()) addButton(4, "Swim", amilySwimFuckIntro, null, null, null, "What's a better pleasure than to take Amily for a swim and do some fuck?");
+			if (flags[kFLAGS.AMILY_OWNS_BIKINI] > 0 && player.hasCock() && !isCorrupt()) addButton(4, "Swim", amilySwimFuckIntro, null, null, null, "What's a better pleasure than to take Amily for a swim and do some fuck?");
 			if (izmaFollower() && flags[kFLAGS.AMILY_X_IZMA_POTION_3SOME] > 0 && player.hasCock()) {
 				outputText("You could see if Amily and Izma are up for another round of Amily's fertility potion, though contraceptives won't matter at all once she takes that.\n");
 				addButton(5, "Izma3Some", drinkThePotion, null, null, null, "Get into a threesome with Amily and Izma. This will pretty much get them pregnant.");
@@ -3336,7 +3365,7 @@ package classes.Scenes.NPCs
 			menu();
 			var haveGift:Boolean = false;
 			var button:int = 0;
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				outputText("You tell Amily that you have something you want to give her.\n\n");
 				
 				outputText("\"<i>Aw, how sweet of you.</i>\" She smiles, delighted and full of love.\n\n");
@@ -3344,7 +3373,7 @@ package classes.Scenes.NPCs
 			else {
 				outputText("You look at the horny cum-bucket and wonder what you should make her take this time.\n\n");
 			}
-			if (player.hasItem(consumables.INCUBID) && flags[kFLAGS.AMILY_FOLLOWER] == 2) {
+			if (player.hasItem(consumables.INCUBID) && isCorrupt()) {
 				addButton(button++, "Incubus D.", giveAmilyPureIncubusDraft);
 				haveGift = true;
 			}
@@ -3352,7 +3381,7 @@ package classes.Scenes.NPCs
 				addButton(button++, "P. Incubus D.", giveAmilyPureIncubusDraft);
 				haveGift = true;
 			}
-			if (player.hasItem(consumables.P_S_MLK) || (player.hasItem(consumables.SUCMILK) && flags[kFLAGS.AMILY_FOLLOWER] == 2)) {
+			if (player.hasItem(consumables.P_S_MLK) || (player.hasItem(consumables.SUCMILK) && isCorrupt())) {
 				addButton(button++, "Succ Milk", giveAmilyPurifiedSuccubusMilk);
 				haveGift = true;
 			}
@@ -3380,12 +3409,12 @@ package classes.Scenes.NPCs
 				addButton(button++, "Lactaid", makeTheMouseAMilkCowMoo);
 				haveGift = true;
 			}
-			if (player.hasItem(consumables.SDELITE) && flags[kFLAGS.AMILY_FOLLOWER] == 2) {
+			if (player.hasItem(consumables.SDELITE) && isCorrupt()) {
 				addButton(button++, "Suc. Delite", giveCorruptAmilySuccubusDelight);
 				haveGift = true;
 			}
 			if (player.hasItem(consumables.PSDELIT)) {
-				if (flags[kFLAGS.AMILY_FOLLOWER] == 1) addButton(7, "P. Suc. Delite", giveAmilyPureSuccubusDelight);
+				if (isPureFollower()) addButton(7, "P. Suc. Delite", giveAmilyPureSuccubusDelight);
 				else addButton(button++, "P. Suc. Delite", giveCorruptAmilySuccubusDelight);
 				haveGift = true;
 			}
@@ -3393,12 +3422,12 @@ package classes.Scenes.NPCs
 				addButton(button++, "Clothes", giveAmilySomePants);
 				haveGift = true;
 			}
-			else if (player.hasItem(armors.S_SWMWR) && flags[kFLAGS.AMILY_OWNS_BIKINI] == 0 && player.hasCock() && player.cockThatFits(61) >= 0 && !amilyCorrupt()) {
+			else if (player.hasItem(armors.S_SWMWR) && flags[kFLAGS.AMILY_OWNS_BIKINI] == 0 && player.hasCock() && player.cockThatFits(61) >= 0 && !isCorrupt()) {
 				outputText("You could give her a bikini, then invite her for a swim in the stream to show it off.\n\n");
 				addButton(button++, "Bikini", amilySwimFuckIntro);
 				haveGift = true;
 			}
-			else if (flags[kFLAGS.GIVEN_AMILY_NURSE_OUTFIT] == 0 && !amilyCorrupt()) {
+			else if (flags[kFLAGS.GIVEN_AMILY_NURSE_OUTFIT] == 0 && !isCorrupt()) {
 				if (player.hasItem(armors.NURSECL) && player.hasCock() && player.cockThatFits(61) >= 0) {
 					outputText("You could give Amily the nurse's outfit you got, though it barely covers anything at all, and would likely be inviting some roleplay from the kinky mouse-girl.\n\n");
 					addButton(button++, "NurseClothes", amilyNurseCheckup);
@@ -3416,7 +3445,7 @@ package classes.Scenes.NPCs
 			if (haveGift)
 				addButton(14, "Back", amilyFollowerEncounter);
 			else {
-				if (flags[kFLAGS.AMILY_FOLLOWER] == 1)
+				if (isPureFollower())
 					outputText("You realize that you don't have any items she would be interested in, and apologize.");
 				else outputText("You realize you don't have any items worth using on her.");
 				addButton(0, "Next", amilyFollowerEncounter);
@@ -3433,7 +3462,7 @@ package classes.Scenes.NPCs
 			var maxSizeHypr:Number = 23;
 
 			//PURE AMILY
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				//Herm amily is different
 				if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) {
 					//[Purified Incubus Draft - If Amily is Herm and has a 13" penis]
@@ -3622,7 +3651,7 @@ package classes.Scenes.NPCs
 			var maxSizePure:Number = 5;
 			var maxSizeHypr:Number = 22;
 
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				outputText("You offer her a vial of demonic milk, assuring her as you do so that the corruptive elements have been removed from it.\n\n");
 
 				//(If Amily's breast size is smaller than DD-cup):
@@ -3684,7 +3713,7 @@ package classes.Scenes.NPCs
 			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0)
 				footpaw += "paw";
 			if (flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] == 0) {
-				if (flags[kFLAGS.AMILY_FOLLOWER] == 2) {
+				if (isCorrupt()) {
 					if (player.hasItem(consumables.SDELITE)) player.consumeItem(consumables.SDELITE);
 					else player.consumeItem(consumables.PSDELIT);
 					outputText("You tell her you need her to be able to cum more, so balls would help with that. Amily smiles and says, \"<i>Of course, " + player.mf("master","mistress") + ". Forgive your stupid mouse slut for questioning you.</i>\"\n\n");
@@ -3787,7 +3816,7 @@ package classes.Scenes.NPCs
 			clearOutput();
 			amilySprite();
 			//PUREZ
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				outputText("You offer her a pink egg, explaining that it will remove her penis. You barely have time to finish before she snatches it from your hands and bites into it savagely; the shell crunches audibly as she fiercely masticates it, messily devouring it whole in her eagerness. Once she has finished, she drops her pants to watch as <b>her penis shrinks and blurs, eventually resolving itself once more into the dainty form of her clitoris</b>. She sighs, softly.\n\n");
 				outputText("\"<i>Thank you, that's such a relief. So, anything else you wanted?</i>\" she squeaks merrily, quite clearly feeling very cheerful now.");
 			}
@@ -3814,7 +3843,7 @@ package classes.Scenes.NPCs
 
 			outputText("You hold out a white egg, telling her that it will make her nipples grow.\n\n");
 			//Pure
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				//(If Nipples are smaller than 4 inches:
 				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] < maxSizePure || ( flags[kFLAGS.AMILY_NIPPLE_LENGTH] < maxSizeHypr && flags[kFLAGS.HYPER_HAPPY]) ) {
 					outputText("She looks at it skeptically. \"<i>I guess bigger nipples would be more sensitive...</i>\" She mutters, but she takes it from you all the same. Unthinkingly biting off the top, she sucks down the contents in a practiced gulp. Crushing the shell in her hand, she pulls at her top, allowing you to see her nipples swell and grow until they stop. She experimentally tweaks one, squeaking in shock at the sensation. \"<i>Well... I guess that they do feel kind of nice... Was there anything else?</i>\"\n\n");
@@ -3868,7 +3897,7 @@ package classes.Scenes.NPCs
 			var maxSizeHypr:Number = 35;
 
 			outputText("You hold out a brown egg, telling her that it will make her butt grow.\n\n");
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				//(If Amily's butt size is smaller than "jiggles with every step":
 				if (flags[kFLAGS.AMILY_ASS_SIZE] < maxSizePure || ( flags[kFLAGS.AMILY_ASS_SIZE] < maxSizeHypr && flags[kFLAGS.HYPER_HAPPY])) {
 					outputText("\"<i>So, you want me to have a little more junk in the trunk, huh?</i>\" She giggles. \"<i>Well, I guess a little padding down there wouldn't hurt...</i>\" She takes the egg from you, her prominent front-teeth effortlessly biting off the top, whereupon she sucks down the contents in a practiced gulp. Crushing the shell in her hand, her hands then press themselves to her butt as she spins around so that it faces you, trying to look over her shoulder as it visibly swells, straining her pants. She pats it a few times, then shakes her head. \"<i>I'm going to have to go and let these pants out a little now.</i>\" She apologizes, and then walks away.\n\n");
@@ -3932,7 +3961,7 @@ package classes.Scenes.NPCs
 			var maxSizeHypr:Number = 20; //Realistically, the maximum supported hip size in the game is 20.
 
 			outputText("You hold out a purple egg, telling her that it will make her hips grow.\n\n");
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				//(If Amily doesn't have "full, womanly hips":
 				if (flags[kFLAGS.AMILY_HIP_RATING] < maxSizePure || ( flags[kFLAGS.AMILY_HIP_RATING] < maxSizeCorr && flags[kFLAGS.HYPER_HAPPY]))
 				{
@@ -4066,10 +4095,10 @@ package classes.Scenes.NPCs
 			clearOutput();
 			player.consumeItem(consumables.LACTAID);
 			//--PURITY--
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) { //Pure
+			if (isPureFollower()) { //Pure
 				outputText("\"<i>Lactaid? You really want to try drinking mouse milk?</i>\" Amily asks, a little uncertainly, a little playfully.  You nod and assure that you do.  \"<i>Alright, if you insist.</i>\" She proclaims, taking the pink bottle from you and drinking the creaminess to be found within.");
 			}
-			else if (flags[kFLAGS.AMILY_FOLLOWER] == 2) { //Corrupt
+			else if (isCorrupt()) { //Corrupt
 				outputText("\"<i>Lactaid? You really want to try drinking mouse milk?</i>\" Amily teases, seductively, a little playfully.  You nod and assure that you do.  \"<i>Alright, my " + player.mf("master", "mistress") + "!</i>\" She proclaims, taking the pink bottle from you and drinking the creaminess to be found within.");
 			}
 			//--LACTATION--
@@ -4085,10 +4114,10 @@ package classes.Scenes.NPCs
 				}
 			}
 			else { //Already lactating
-				if (flags[kFLAGS.AMILY_FOLLOWER] == 1) { //Pure
+				if (isPureFollower()) { //Pure
 					outputText("\n\nQuickly she pulls her breasts out of her top; she doesn't want to make a mess on herself.  Beads of milk begin to form at the tip of her " + amilyNipples() + ", soon giving way to a steady trickle of fluid.  \"<i>More milk for thirsty Champions, hmm?</i>\" She teases you.  \"<i>I'm going to go and take care of this...  unless you want to help me now?</i>\" She trills.");
 				}
-				if (flags[kFLAGS.AMILY_FOLLOWER] == 2) { //Corrupt
+				if (isCorrupt()) { //Corrupt
 					outputText("\n\nQuickly she pulls her breasts out of her top; she doesn't want to make a mess on herself.  Beads of milk begin to form at the tip of her " + amilyNipples() + ", soon giving way to a steady trickle of fluid.  \"<i>More milk for my" + player.mf("Master", "Mistress") + ", hmm?</i>\" She teases you.  \"<i>I'm going to go and take care of this...  unless you want to help me now?</i>\" She trills, seductively.");
 				}
 			}
@@ -4962,7 +4991,7 @@ package classes.Scenes.NPCs
 			outputText("You scowl and take a pointed step back. You cared about her because she was another woman, alone and lost in this twisted world full of horny freaks that seem to be nothing but dicks and lust; now she's turned herself into one of them? She couldn't accept the pure love that the two of you already had?\n\n");
 
 			outputText("Amily stops, her new cock wilting, her expression making it quite obvious that she's heartbroken. Her head falls, tears dripping from her eyes, and she turns and runs away. You glare after her as she vanishes, sobbing, into the ruins, hoping she never comes back.");
-			disableVillageEncounters();
+			flagRemoved();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -5057,7 +5086,7 @@ package classes.Scenes.NPCs
 			amilySprite();
 			flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS]++;
 			//In camp version:
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				playerBirthsWifAmilyMiceInCamp();
 				return;
 			}
@@ -5123,7 +5152,7 @@ package classes.Scenes.NPCs
 			outputText("\"<i>Well, I better start moving in, huh?</i>\" she jokes. She then flops down on your sleeping roll beside you, \"<i>There we are, I'm moved in.</i>\" She grins at you, and you can't help but laugh.\n\n");
 
 			//(Amily becomes a follower; quest is over)
-			setFollowerPure();
+			flagFollowerPure();
 			flags[kFLAGS.AMILY_CUP_SIZE] = 1;
 			flags[kFLAGS.AMILY_NIPPLE_LENGTH] = .3;
 			flags[kFLAGS.AMILY_HIP_RATING] = 6;
@@ -5150,7 +5179,7 @@ package classes.Scenes.NPCs
 
 			outputText("Amily reels, heartstruck, her expression making it clear that her heart has shattered, tears rolling down her face. \"<i>I...I didn't know that was the way you felt about me. F-Fine, if that's how it is...</i>\" She bursts into sobs and runs away; you know she'll never come back.\n\n");
 			//Disable village encounters, go!
-			disableVillageEncounters();
+			flagRemoved();
 			doNext(playerMenu);
 		}
 
@@ -5507,7 +5536,7 @@ package classes.Scenes.NPCs
 			outputText("Amily winces, looking deeply hurt. \"<i>I... You're right, what I said was unforgivable. I... think it's best that we part ways.</i>\"\n\n");
 
 			outputText("Looking deeply sad, she turns and walks away, vanishing into the urban wilderness in that way only she can. Instinctively, you realize that you will never see her again.");
-			disableVillageEncounters();
+			flagRemoved();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -5574,7 +5603,7 @@ package classes.Scenes.NPCs
 			flags[kFLAGS.AMILY_BIRTH_TOTAL]++;
 			if (prison.inPrison) return;
 			//Uncorrupt
-			if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+			if (isPureFollower()) {
 				outputText("\nThe peace of your camp is suddenly disrupted by a loud squeal of distress. \"<i>" + player.short + "! It's time!</i>\" Amily cries out, then shrieks again - there is no question at all in your mind that she's gone into labor.  You race over to find her squatting naked over her nest, squealing softly with exertion as her swollen abdomen visibly ripples, fluid dripping from her swollen, naked, pink vagina. She is definitely in labor.\n\n");
 
 				outputText("Falling into routine, you kneel beside her, reaching out to touch her swollen middle, one hand on either side of its globular mass. You gently start to massage it, trying to relax and soothe the muscles after each time they clench and to lower the pain when they do experience another contraction. She starts to thank you, then clenches her teeth, "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"turns her little "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"lips") +" skywards and ":"") +"hisses in pain as the strongest contraction yet hits - she's crowning! Immediately your hands dive down to hover under her vagina as a small, pink, naked, wriggling thing slips between their parted lips. The little body is surprisingly light in your hands, but it squeaks loudly as it draws its first breath.\n\n");
@@ -6818,11 +6847,7 @@ package classes.Scenes.NPCs
 			outputText("Amily grins and replies seductively, \"<i>Yes, " + player.mf("master","mistress") + "... Your orders are my pleasure.</i>\"\n\n");
 			outputText("<b>(Corrupted Amily added to slaves)</b>");
 			//Add corrupted amily flag here
-			flags[kFLAGS.AMILY_FOLLOWER] = 2;
-			//Switch to less lovey pregnancy!
-			if (player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
-			//Make babies disappear
-			//pregnancyStore.knockUpForce(); //Clear Pregnancy - though this seems unneccessary to me. Maybe it was needed in an older version of the code?
+			flagFollowerCorrupt();
 			//Set other flags if Amily is moving in for the first time
 			if (flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] == 0) {
 				flags[kFLAGS.AMILY_CUP_SIZE] = 5;
@@ -6837,7 +6862,6 @@ package classes.Scenes.NPCs
 				flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 1;
 			}
 			else flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 2;
-			disableVillageEncounters();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -7022,10 +7046,7 @@ package classes.Scenes.NPCs
 			else outputText("You think about some of the more interesting potions you found while exploring; perhaps you could use some of them...");
 
 			outputText("  Maybe she had a point though?  You are getting pretty corrupt... these thoughts are proof enough.\n");
-			flags[kFLAGS.AMILY_FOLLOWER] = 0;
-			//Set - amily flipped her shit
-			flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-			enableVillageEncounters();
+			flagCorruptFlipout();
 			//Change to plain mouse birth!
 			if (player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
 		}
@@ -7043,7 +7064,7 @@ package classes.Scenes.NPCs
 			flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 0;
 			//Clear 'warning'
 			flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
-			setFollowerPure();
+			flagFollowerPure();
 		}
 
 
@@ -7067,7 +7088,7 @@ package classes.Scenes.NPCs
 			&& flags[kFLAGS.AMILY_OFFERED_DEFURRY]==1  // Amily has been offered to be dehaired
 			&& player.hasItem(consumables.GLDSEED)     // And we have all the shit we need
 			&& (player.hasItem(consumables.BLACKEG) || player.hasItem(consumables.L_BLKEG))
-			&& (player.hasItem(consumables.P_S_MLK) || (amilyCorrupt() && player.hasItem(consumables.SUCMILK)));
+			&& (player.hasItem(consumables.P_S_MLK) || (isCorrupt() && player.hasItem(consumables.SUCMILK)));
 		}
 		// Arrive with all the stuff you need to make Amily not look completely rediculous.
 		private function amilyDefurrify():void
@@ -7075,7 +7096,7 @@ package classes.Scenes.NPCs
 			player.consumeItem(consumables.GLDSEED);
 			if (player.hasItem(consumables.BLACKEG)) player.consumeItem(consumables.BLACKEG);
 			else player.consumeItem(consumables.L_BLKEG);
-			if (amilyCorrupt()) {
+			if (isCorrupt()) {
 				if (player.hasItem(consumables.SUCMILK)) player.consumeItem(consumables.SUCMILK);
 				else player.consumeItem(consumables.P_S_MLK);
 			}
@@ -7120,13 +7141,13 @@ package classes.Scenes.NPCs
 			player.consumeItem(consumables.GLDSEED);
 			if (player.hasItem(consumables.BLACKEG)) player.consumeItem(consumables.BLACKEG);
 			else player.consumeItem(consumables.L_BLKEG);
-			if (amilyCorrupt()) {
+			if (isCorrupt()) {
 				if (player.hasItem(consumables.SUCMILK)) player.consumeItem(consumables.SUCMILK);
 				else player.consumeItem(consumables.P_S_MLK);
 			}
 			else player.consumeItem(consumables.P_S_MLK);
 
-			if (amilyCorrupt())
+			if (isCorrupt())
 			{
 				var master:String = player.mf("master","mistress");
 				clearOutput();
@@ -7166,7 +7187,7 @@ package classes.Scenes.NPCs
 				return;
 			}
 			player.consumeItem(consumables.MOUSECO, 2);
-			if (amilyCorrupt()) {
+			if (isCorrupt()) {
 				var master:String = player.mf("master","mistress");
 				clearOutput();
 				outputText("Beckoning your furry little slut over to you, you inform her that she should be changed back to the way she was before you've even met her. You produce the two batches of mouse cocoa and give them to Amily, telling her to just suck on it. \n\nEagerly, she sucks on the mouse cocoa and her eyes widen. Her face changes, rodent snout and whiskers grow. Fur grows all over her body and her hands warp into more paw-like. <b>Amily is now back to her former mouse self albeit corrupted.</b>");

@@ -235,10 +235,10 @@ package classes.Scenes.Seasonal {
 			}
 			//Amily
 			//less than 5!
-			else if (getGame().amilyScene.amilyFollower() && flags[kFLAGS.JACK_FROST_PROGRESS] <= 5) {
+			else if (getGame().amilyScene.amilyInCamp() && flags[kFLAGS.JACK_FROST_PROGRESS] <= 5) {
 				flags[kFLAGS.JACK_FROST_PROGRESS] = 6;
 				//Pure
-				if (!getGame().amilyScene.amilyCorrupt()) {
+				if (!getGame().amilyScene.isCorrupt()) {
 					outputText("Amily is warily prowling across the icy surface, occasionally glancing all around as if trying to spot an ambush.  Other times, she suddenly leaps up in a flurry, whirling around in mid-air as something catches her over-large ears.  All in all, it's quite obvious she's scared.");
 					outputText("\n\nApproaching her, you ask what's gotten her so worried?");
 					outputText("\n\n\"<i>Can't you see all this snow?  There hasn't been snow in Mareth since I was a little baby girl - the demons must have something to do with this!</i>\"  Amily hisses, clearly expecting an attack to come at any moment.");

@@ -2276,7 +2276,7 @@ package classes.Scenes.NPCs
 		public function joyTakesTheBabiesAway():void {
 			clearOutput();
 			outputText("You wander back into your camp, but notice something seems to be amiss...");
-			if (camp.amilyFollower()) { //Bonus points if Amily is in camp!
+			if (camp.amilyInCamp()) { //Bonus points if Amily is in camp!
 				outputText("\n\n\"<i>Like, looking for our babies, [name]?</i>\" Joy asks, appearing at your side.");
 				outputText("\n\nOnce you get over the shock of Joy's sudden appearance, you realize that this is exactly what's been amiss... you ask her what happened to the children.");
 				outputText("\n\n\"<i>Like, I was talking about them to Amily and we decided it'd be safer for them and us if they, like, went to live with their half-brothers and sisters. You know? The ones that, like, you've had with Amily?</i>\" Joy states cheerfully.");
@@ -2299,7 +2299,7 @@ package classes.Scenes.NPCs
 				outputText("\n\nYou can't help but chuckle at Joy's lewd offer, and you tell her that maybe you can make more later... right now you're just not in the mood.");
 				outputText("\n\n\"<i>Okay! But, if you, like, change your mind, you know where to find me.</i>\" Joy coos, then strides away, tail swishing merrily.");
 			}
-			if (camp.amilyFollower()) flags[kFLAGS.JOY_TAKES_BABIES_AWAY_COUNTER] = -1; //Doesn't proc again if Amily explained.
+			if (camp.amilyInCamp()) flags[kFLAGS.JOY_TAKES_BABIES_AWAY_COUNTER] = -1; //Doesn't proc again if Amily explained.
 			else flags[kFLAGS.JOY_TAKES_BABIES_AWAY_COUNTER] = 0;
 			doNext(playerMenu);
 		}

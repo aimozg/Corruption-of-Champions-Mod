@@ -1207,7 +1207,7 @@ private function acceptIzmaAsYourBitch():void {
 	spriteSelect(SpriteDb.s_izma);
 	clearOutput();
 	//[If Pure Amily is in the camp first]
-	if (flags[kFLAGS.IZMA_AMILY_FREAKOUT_STATUS] == 0 && flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+	if (flags[kFLAGS.IZMA_AMILY_FREAKOUT_STATUS] == 0 && amilyInCampPure()) {
 		outputText("You smile warmly and place your hands on her shoulders, before pulling her in and kissing her deeply.  Practically melting at your touch and moaning into your mouth, she wraps her arms and tail around your waist.\n\n");
 
 		outputText("By the time you pull away from the kiss, both of you are gasping for breath.  Strands of saliva still link the two of you.  You brush her silver hair behind her ears and tell her you'd be more than happy to have her in your camp.  She makes a gleeful noise and hugs you tight, before rushing for her meager supplies and packing them up.\n\n");

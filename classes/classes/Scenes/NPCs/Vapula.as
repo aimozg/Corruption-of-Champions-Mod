@@ -112,7 +112,7 @@ package classes.Scenes.NPCs
 				}
 			}
 			if (choice == 8) {
-				if (flags[kFLAGS.VAPULA_HAREM_FUCK] == 0 || !(amilyScene.amilyFollower() && amilyScene.amilyCorrupt())) choice = 9;
+				if (flags[kFLAGS.VAPULA_HAREM_FUCK] == 0 || !(amilyScene.amilyInCampCorrupt())) choice = 9;
 				//if C. Amily and harem fucking on)
 				else outputText("Vapula is busy caressing your corrupted mousette, Amily while softly kissing her breasts.  Her fingers are buried in your fuck-toy's pussy, and Amily is moaning whorishly and doesn't even bother to stop when she looks at you, her helpless eyes betraying her lack of control over her own lust.");
 			}
@@ -177,13 +177,7 @@ package classes.Scenes.NPCs
 				}
 				if (amily) {
 					outputText("\n\nAmily shakes her head.  \"<i>Goodbye, [name].  You've changed.  What you did is pure folly.</i>\"");
-					//Set - amily flipped her shit
-					flags[kFLAGS.AMILY_FOLLOWER] = 0;
-					amilyScene.enableVillageEncounters();
-					//Change to plain mouse birth!
-					if (player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
-					//FLAG THAT THIS SHIT WENT DOWN
-					flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
+					amilyScene.flagCorruptFlipout();
 					//Make sure the camp warning thing is off so she never moves back in.  Bitch be mad.
 					flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
 				}
@@ -472,7 +466,7 @@ package classes.Scenes.NPCs
 			clearOutput();
 			outputText("Who do you invite?");
 			if (player.hasCock() || (player.hasVagina() && player.hasKeyItem("Demonic Strap-On") >= 0)) {
-				if (amilyScene.amilyFollower() && amilyScene.amilyCorrupt() && player.hasCock()) {
+				if (amilyScene.amilyInCampCorrupt() && player.hasCock()) {
 					addButton(0, "Amily", vapulaAndAmilyThreesome);
 				}
 				if (ceraphFollowerScene.ceraphIsFollower() && player.hasCock()) {

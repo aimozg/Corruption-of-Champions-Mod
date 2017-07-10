@@ -634,12 +634,7 @@ private function stayQuietWhileAmilyBitchesAboutFuckingArborday():void {
 	outputText("\n\n\"<i>I'm not staying here anymore.  Maybe if you move or clean this place up, I'll return... maybe not.  Depends how many demons you insist on bringing home and fucking, I suspect.</i>\"");
 	outputText("\n\nCurtly, she turns and departs, tail lashing past you.  You wonder just how sincere her last words were.");
 	//put her in ruined village
-	//maybe flag her to re-add if plant dies
-	flags[kFLAGS.AMILY_FOLLOWER] = 0;
-	//Set - amily flipped her shit
-	flags[kFLAGS.AMILY_TREE_FLIPOUT] = 1;
-	flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
-	amilyScene.enableVillageEncounters();
+	amilyScene.flagTreeFlipout();
 	//Change to plain mouse birth!
 	if (player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
 	doNext(playerMenu);
@@ -658,10 +653,7 @@ private function slapAmilysWhoreFace():void {
 	outputText("girl says, eyes wet with tears, \"<i>but I don't.  Goodbye.</i>\"");
 	
 	outputText("\n\nWithout another word, she turns, gathers her things, and leaves.");
-	flags[kFLAGS.AMILY_FOLLOWER] = 0;
-	flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-	amilyScene.enableVillageEncounters();
-	flags[kFLAGS.AMILY_VILLAGE_ACCESSIBLE] = 1;
+	amilyScene.flagCorruptFlipout();
 	//no more classes, no more books; no more Amily's dirty looks
 	//bitch goes in ruined village
 	doNext(playerMenu);
@@ -1572,7 +1564,7 @@ private function holliAndGenderlessSittingInATree():void {
 public function amilyComesBack():void {
 	clearOutput();
 	outputText("Amily arrives with her belongings over her shoulder and a smile on her face.  \"<i>I knew you'd do the right thing, [name].  I'll get my nest set back up.</i>\"\n\n(<b>Amily has moved back in!  She can be found in the lovers tab.</b>)");
-	amilyScene.setFollowerPure();
+	amilyScene.flagFollowerPure();
 	doNext(playerMenu);
 }
 }

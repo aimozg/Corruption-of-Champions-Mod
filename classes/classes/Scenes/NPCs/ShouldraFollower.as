@@ -1481,7 +1481,7 @@ public function shouldraWakesUpOrPokesPCsForShitsAndGigglesIdunnoHowLongCanIMake
 	//13 (is Naga)
 	if (player.isNaga()) choices[choices.length] = 13;
 	//14 (Amily is a follower)
-	if (kGAMECLASS.amilyScene.amilyFollower()) choices[choices.length] = 14;
+	if (kGAMECLASS.amilyScene.amilyInCamp()) choices[choices.length] = 14;
 	//15 (Pure Jojo is a follower)
 	if (player.hasStatusEffect(StatusEffects.PureCampJojo)) choices[choices.length] = 15;
 	//16 (has any of Marae's gift perks)

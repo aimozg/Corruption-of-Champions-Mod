@@ -157,10 +157,10 @@ private function acceptBimboSophie():void {
 	{
 		outputText("  Afterwards, she offers to suck Izma's cock.  Izma looks at you for a moment before shaking her head, no.  Her skirt rises visibly in spite of her negative response.  Maybe she'll like having someone lower on the food chain to boss around?");
 	}
-	else if (flags[kFLAGS.AMILY_FOLLOWER] > 0 && flags[kFLAGS.AMILY_BLOCK_COUNTDOWN_BECAUSE_CORRUPTED_JOJO] == 0) 
+	else if (amilyInCamp() && flags[kFLAGS.AMILY_BLOCK_COUNTDOWN_BECAUSE_CORRUPTED_JOJO] == 0)
 	{
 		outputText("  Afterwards, she offers to lick Amily's twat, if Amily will do the same to her.  Amily ");
-		if (flags[kFLAGS.AMILY_FOLLOWER] == 1) outputText("flushes hotly and denies the bimbo's request with a terse 'no'.");
+		if (amilyInCampPure()) outputText("flushes hotly and denies the bimbo's request with a terse 'no'.");
 		else outputText("flushes hotly and wiggles her hips Sophie's way.  The slutty, corrupted mouse and Sophie will clearly be helping to sate each other's needs in your absence.");
 	}
 	else if (flags[kFLAGS.JOJO_STATUS] >= 5 && !player.hasStatusEffect(StatusEffects.NoJojo) && flags[kFLAGS.JOJO_DEAD_OR_GONE] == 0)

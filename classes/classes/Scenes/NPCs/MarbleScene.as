@@ -234,7 +234,7 @@ Special abilities: A lightly corrupted creature with most of the corruption cent
 						flags[kFLAGS.FOLLOWER_AT_FARM_MARBLE] = 0;
 						if (kGAMECLASS.isabellaFollowerScene.isabellaFollower() && flags[kFLAGS.FOLLOWER_AT_FARM_ISABELLA] == 0) flags[kFLAGS.ISABELLA_MURBLE_BLEH] = 1;
 						//if amily is there, tag it for freakout
-						if (flags[kFLAGS.AMILY_FOLLOWER] > 0 && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0) {
+						if (amilyInCamp() && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0) {
 							flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 2;
 						}
 						else flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 1;
@@ -276,7 +276,7 @@ Special abilities: A lightly corrupted creature with most of the corruption cent
 						flags[kFLAGS.FOLLOWER_AT_FARM_MARBLE] = 0;
 						if (kGAMECLASS.isabellaFollowerScene.isabellaFollower() && flags[kFLAGS.FOLLOWER_AT_FARM_ISABELLA] == 0) flags[kFLAGS.ISABELLA_MURBLE_BLEH] = 1;
 						//if amily is there, tag it for freakout
-						if (flags[kFLAGS.AMILY_FOLLOWER] > 0 && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0) {
+						if (amilyInCamp() && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0) {
 							flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 2;
 						}
 						else flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 1;
@@ -342,7 +342,7 @@ Special abilities: A lightly corrupted creature with most of the corruption cent
 						player.createStatusEffect(StatusEffects.NoMoreMarble,0,0,0,0);
 						//(every morning, the player goes to Marble for milk, since she is at the camp, it does not cost them the first hour of the day)
 						//if amily is there, tag it for freakout
-						if (flags[kFLAGS.AMILY_FOLLOWER] > 0 && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0) {
+						if (amilyInCamp() && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0) {
 							flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 2;
 						}
 						else flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 1;
@@ -381,7 +381,7 @@ Special abilities: A lightly corrupted creature with most of the corruption cent
 						player.createStatusEffect(StatusEffects.NoMoreMarble,0,0,0,0);
 						//(every morning, the player goes to Marble for milk, since she is at the camp, it does not cost them the first hour of the day)
 						//if amily is there, tag it for freakout
-						if (flags[kFLAGS.AMILY_FOLLOWER] > 0 && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0) {
+						if (amilyInCamp() && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0) {
 							flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 2;
 						}
 						else flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 1;

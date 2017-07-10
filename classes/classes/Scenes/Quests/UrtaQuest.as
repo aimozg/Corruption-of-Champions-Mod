@@ -2905,8 +2905,8 @@ private function getKnockedUpWithGodChild():void {
 	outputText(" balls, slathering them with slick spunk.");
 
 	var ballWorship:Array = [];
-	if ((amilyScene.amilyFollower() && flags[kFLAGS.AMILY_FOLLOWER] == 2) && jojoScene.campCorruptJojo()) ballWorship[ballWorship.length] = 0;
-	if ((amilyScene.amilyFollower() && flags[kFLAGS.AMILY_FOLLOWER] == 2) || jojoScene.campCorruptJojo()) ballWorship[ballWorship.length] = 1;
+	if ((amilyScene.amilyInCampCorrupt()) && jojoScene.campCorruptJojo()) ballWorship[ballWorship.length] = 0;
+	if ((amilyScene.amilyInCampCorrupt()) || jojoScene.campCorruptJojo()) ballWorship[ballWorship.length] = 1;
 	if (sophieBimbo.bimboSophie()) ballWorship[ballWorship.length] = 2;
 	if (helFollower.followerHel()) ballWorship[ballWorship.length] = 3;
 	if (latexGirl.latexGooFollower()) ballWorship[ballWorship.length] = 4;

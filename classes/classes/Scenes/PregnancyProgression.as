@@ -593,7 +593,7 @@ package classes.Scenes
 					}
 					if (player.pregnancyIncubation == 216) {
 						outputText("\n<b>There is no question you're pregnant; your belly is already as big as that of any pregnant woman back home.");
-						if (flags[kFLAGS.AMILY_FOLLOWER] == 1) outputText("  Amily smiles at you reassuringly. \"<i>We do have litters, dear, this is normal.</i>\"");
+						if (getGame().amilyScene.isPureFollower()) outputText("  Amily smiles at you reassuringly. \"<i>We do have litters, dear, this is normal.</i>\"");
 						outputText("</b>");
 						outputText("\n");
 						dynStats("spe", -1, "lib", 1, "sen", 1, "lus", 2);
@@ -1830,7 +1830,9 @@ package classes.Scenes
 			//Amily failsafe - converts PC with pure babies to mouse babies if Amily is corrupted
 			if (player.pregnancyIncubation == 1 && player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) 
 			{
-				if (flags[kFLAGS.AMILY_FOLLOWER] == 2 || flags[kFLAGS.AMILY_CORRUPTION] > 0) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
+				if (getGame()
+								.amilyScene
+								.isCorrupt() || flags[kFLAGS.AMILY_CORRUPTION] > 0) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
 			}
 			//Amily failsafe - converts PC with pure babies to mouse babies if Amily is with Urta
 			if (player.pregnancyIncubation == 1 && player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) 

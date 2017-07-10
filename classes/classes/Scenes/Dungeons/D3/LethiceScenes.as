@@ -982,7 +982,7 @@ package classes.Scenes.Dungeons.D3
 				levelOfFuckedness += 10;
 			if(player.hasStatusEffect(StatusEffects.WandererDemon))
 				levelOfFuckedness += 10;
-			if(flags[kFLAGS.AMILY_FOLLOWER] == 2)
+			if (getGame().amilyScene.isCorrupt())
 				levelOfFuckedness += 10;
 			if(flags[kFLAGS.PUMPKIN_FUCK_YEAR_DONE] != 0)
 				levelOfFuckedness += 10;

@@ -41,9 +41,17 @@ package classes.Scenes.NPCs
 			return kGAMECLASS.amilyScene;
 		}
 
-		public function amilyFollower():Boolean
+		public function amilyInCamp():Boolean
 		{
-			return kGAMECLASS.amilyScene.amilyFollower();
+			return kGAMECLASS.amilyScene.amilyInCamp();
+		}
+		public function amilyInCampPure():Boolean
+		{
+			return kGAMECLASS.amilyScene.amilyInCampPure();
+		}
+		public function amilyInCampCorrupt():Boolean
+		{
+			return kGAMECLASS.amilyScene.amilyInCampCorrupt();
 		}
 		// Anemone
 		protected function get anemoneScene():AnemoneScene

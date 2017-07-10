@@ -61,10 +61,10 @@ package classes.Scenes.NPCs {
 		else outputText("bovine");
 	 	outputText(" head still in her hands, and sighs loudly. <i>\"I’m sorry, sweetie, I just... I’ve tried to ignore it, but I just don’t feel comfortable here.\"</i>");
 	 	outputText("\n\nYou ask her what’s wrong; doesn’t she like being with you?");
-		if (amilyScene.amilyFollower() && !amilyScene.amilyCorrupt() || followerKiha() || flags[kFLAGS.IZMA_FOLLOWER_STATUS] == 1)
+		if (amilyScene.amilyInCampPure() || followerKiha() || flags[kFLAGS.IZMA_FOLLOWER_STATUS] == 1)
 		{
 		 	outputText("  ...Has she been fighting with ");
-			if (amilyScene.amilyFollower() && !amilyScene.amilyCorrupt()) outputText("Amily");
+			if (amilyScene.amilyInCampPure()) outputText("Amily");
 			else if (followerKiha()) outputText("Kiha");
 			else outputText("Izma");
 		 	outputText("?");
@@ -282,7 +282,7 @@ package classes.Scenes.NPCs {
 		 	outputText("\n\nMarble suggests that you should gather up the others while Clara is still making it, it shouldn’t take too long.  You nod, and head off, leaving Clara and Marble at the campfire.");
 			//Go to each of the followers you have in turn, and ask them if they want some morning tea.  All followers capable of fighting must agree to the tea, non-fighters can agree or refuse.  Remember that this scene cannot come up if the PC is very corrupted, and scenes for the very corrupt followers don’t necessarily need to be written.
 			//(Amily is in camp)
-			if (amilyScene.amilyFollower() && !amilyScene.amilyCorrupt())
+			if (amilyScene.amilyInCampPure())
 			{
 				//Amily’s response to being asked to have tea
 			 	outputText("\n\nWhen you approach Amily about having tea with Clara, she smiles brightly. \"<i>I haven’t enjoyed something like that in ages... it kind of reminds me of the old days.</i>\" She trails off, looking a little sad, but then shakes it off. \"<i>Sure, I’m game.</i>\"");
@@ -534,7 +534,7 @@ package classes.Scenes.NPCs {
 		{
 		 	outputText("\n\nClara starts to advance on you with her mace out, and eyes in rage, but hesitates when she realizes that other guests to the tea party have stood up as well, and readied their weapons.");
 			//if (Amily is in camp)
-			if (amilyScene.amilyFollower())
+			if (amilyScene.amilyInCamp())
 			{
 			 	outputText("\n\nSnarling with a surprisingly savage expression for such a normally meek mouse, Amily whips out her familiar blowgun and loads it with a dart from somewhere about her person, falling back to ensure she is a safe distance for firing.");
 			}

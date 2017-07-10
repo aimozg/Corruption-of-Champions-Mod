@@ -157,15 +157,15 @@ public function campRathazul():void {
 			finter.jojoOffersRathazulMeditation();
 			return;
 		}
-		if (flags[kFLAGS.AMILY_MET_RATHAZUL] == 0 && flags[kFLAGS.AMILY_FOLLOWER] == 1 && amilyScene.amilyFollower()) {
+		if (flags[kFLAGS.AMILY_MET_RATHAZUL] == 0 && amilyScene.amilyInCampPure()) {
 			finter.AmilyIntroducesSelfToRathazul();
 			return;
 		}
-		if (flags[kFLAGS.AMILY_MET_RATHAZUL] == 1 && flags[kFLAGS.AMILY_FOLLOWER] == 1 && amilyScene.amilyFollower()) {
+		if (flags[kFLAGS.AMILY_MET_RATHAZUL] == 1 && amilyScene.amilyInCampPure()) {
 			finter.amilyIngredientDelivery();
 			return;
 		}
-		if (flags[kFLAGS.AMILY_MET_RATHAZUL] == 2 && flags[kFLAGS.AMILY_FOLLOWER] == 1 && amilyScene.amilyFollower()) {
+		if (flags[kFLAGS.AMILY_MET_RATHAZUL] == 2 && amilyScene.amilyInCampPure()) {
 			finter.amilyAsksAboutRathazulsVillage();
 			return;
 		}

@@ -70,10 +70,7 @@ private function tellAmilyToFuckOffRuinedJojo():void {
 	if (player.inte >= 45) outputText("  Goblin ale and lust drafts might do the trick.");
 	
 	//Follower off
-	flags[kFLAGS.AMILY_FOLLOWER] = 0;
-	flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-	amilyScene.enableVillageEncounters();
-	flags[kFLAGS.AMILY_VILLAGE_ACCESSIBLE] = 1;
+	amilyScene.flagCorruptFlipout();
 	dynStats("cor", 10);
 	doNext(playerMenu);
 }
@@ -148,16 +145,9 @@ public function amilyDiscoversJojoWithTentaclesAndShitOhBoy():void {
 	if (player.cor > (66 + player.corruptionTolerance())) {
 		outputText("You flip her the bird.  She was a shitty fuck anyways.  Amily's eyes flood with tears, but her expression hardens with rage.  The mouse yells, \"<i>Like I'd want to stay with a demon like you anyway!</i>\"  She turns and jogs off into the distance.  Amily stops just before you lose sight of her and looks over her shoulder with tears in her eyes.  You've utterly crushed her heart.  She starts jogging again and disappears from your life forever.  Meanwhile, Jojo begins to stir.  It appears he'll be ready to serve soon...\n\n");
 		//(No amily, back to camp)
-		//Follower off
-		flags[kFLAGS.AMILY_FOLLOWER] = 0;
 		outputText("No doubt she ran back to the ruins.  Perhaps you could gather some appropriate drugs to teach her a lesson?");
 		if (player.inte >= 45) outputText("  Goblin ale and lust drafts might do the trick.");
-
-		//Follower off
-		flags[kFLAGS.AMILY_FOLLOWER] = 0;
-		flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-		amilyScene.enableVillageEncounters();
-		flags[kFLAGS.AMILY_VILLAGE_ACCESSIBLE] = 1;
+		amilyScene.flagCorruptFlipout();
 		//+5 corruption)
 		dynStats("cor", 5);
 		doNext(playerMenu);
@@ -178,11 +168,7 @@ private function AmilyLeavesBirdJojoTentacles():void {
 		
 	outputText("No doubt she ran back to the ruins.  Perhaps you could gather some appropriate drugs to teach her a lesson?");
 	if (player.inte >= 45) outputText("  Goblin ale and lust drafts might do the trick.");
-	//Follower off
-	flags[kFLAGS.AMILY_FOLLOWER] = 0;
-	flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-	amilyScene.enableVillageEncounters();
-	flags[kFLAGS.AMILY_VILLAGE_ACCESSIBLE] = 1;
+	amilyScene.flagCorruptFlipout();
 	//+5 corruption)
 	dynStats("cor", 5);
 	doNext(playerMenu);
@@ -393,16 +379,14 @@ private function marbleIsPissyAndYourTooDumbToTalk():void {
 		//outputText("Marble moves in front of you and faces towards Amily.  \"<i>This " + player.mf("man","woman") + " is mine!  " + player.mf("He","She") + " needs me to survive, and I will do anything to protect them.</i>\" Marble declares before saying in a dangerous low voice towards Amily \"<i>Leave now, or I will kill you.</i>\" Amily tries to look at you through her tear filled eyes for a moment, but Marble softly says to you \"<i>" + player.short + ", put your arms around me.</i>\"  It wasn't a request, and without hesitation you put your arms around her.  Amily gives one last horrified look at you before grabbing her things and running away from the camp.  You doubt that you'll see her again.\n\n");
 		outputText("Marble moves protectively in front of you and turns to Amily.  \"<i>This " + player.race() + " is mine!  " + player.mf("He","She") + " needs me to survive, and I will do anything to protect " + player.mf("him","her") + ",</i>\"  Marble declares.  Then, in a dangerously gentle voice, says, \"<i>Leave now, or I will kill you.</i>\"  Amily tries to look at you through her tear-filled eyes, but Marble softly whispers,  \"<i>" + player.short + ", put your arms around me.</i>\"  Though soft, her words had nothing in them to suggest a request rather than a command.  You hesitate for a  moment, but, remembering that an angry Marble is a Marble that could revoke milk privileges, you decide that making her mad is something you just can't afford.  You take a deep breath and wrap your arms around Marble.  Amily gives one last anguished look at you before she turns to pack her things.  As she scurries away from the site of her former bed, you doubt that you'll see her again.\n\n");
 		//end event, Amily leave the camp for good
-		flags[kFLAGS.AMILY_FOLLOWER] = 0;
-		amilyScene.disableVillageEncounters();
+		amilyScene.flagRemoved();
 	}
 	else if (flags[kFLAGS.MARBLE_KIDS] > 0) {
 		//Silent -> PC has had kid(s) with Marble and is not addicted (A3)
 		outputText("Marble suddenly bursts into tears herself and, between sobs, yells \"<i>Why " + player.short + "?  Did none of our kids mean anything to you?</i>\"  In frustration she slams her hammer against the ground, causing a tremor that almost knocks you and Amily onto your asses.  However, at this point the two of them have broken down and collapsed on their knees sobbing.  You have no idea what you can say at this point, or what you should do.  After a few minutes pass, the two of them each give you a sad look in turn before collecting their things (and in Marble's case, her kids) and leaving the camp.  You doubt that you'll ever see either of them again.");
 		//end event, Amily and Marble leave the camp for good
 		player.removeStatusEffect(StatusEffects.CampMarble);
-		flags[kFLAGS.AMILY_FOLLOWER] = 0;
-		amilyScene.disableVillageEncounters();
+		amilyScene.flagRemoved();
 	}
 	//Silent -> Otherwise (A4)
 	else {
@@ -458,11 +442,7 @@ private function srslyPimpinGuyz():void {
 	player.removeStatusEffect(StatusEffects.CampMarble);
 	outputText("\n\nNo doubt Amily ran back to the ruins.  Perhaps you could gather some appropriate drugs to teach her a lesson?");
 	if (player.inte >= 45) outputText("  Goblin ale and lust drafts might do the trick.");
-	//Follower off
-	flags[kFLAGS.AMILY_FOLLOWER] = 0;
-	flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
-	amilyScene.enableVillageEncounters();
-	flags[kFLAGS.AMILY_VILLAGE_ACCESSIBLE] = 1;
+	amilyScene.flagCorruptFlipout();
 	doNext(camp.returnToCampUseEightHours);
 }
 //Pimp -> PC is not addicted -> just joking (B5)
@@ -522,9 +502,7 @@ private function blameAmilysDumbMouseCunt():void {
 	//----Quiet Browser should write this part----
 	clearOutput();
 	outputText("You turn to Amily and tell her point blank that she's the one who is in the wrong here. She claimed to be a pure individual, free of all corruption in this world and begging you for your help, but instead she tricked you, seduced you into being unfaithful to your lover, Marble, and making you into her breeding stud and pleasure toy - and then she had the audacity to try and claim you and her had some connection, when it was nothing but trickery and lies on her part. At this tirade, Amily looks first hurt, then outraged, then livid; it's only when Marble silently and defiantly positions herself beside you, holding her hammer and ready to charge, that the female mouse-morph removes her hand from the handle of her knife. Blinking back tears, she starts scurrying around the camp as fast as she can, gathering up all of her few belongings and then heading for the edge of the camp as fast as she can. She halts at the edge, turning to face the two of you, and starts screaming a tirade of the most profane obscenities she can muster, blistering your ears with imprecations about your sexual tastes, habits and skills, your lineage, your personal hygiene and your talents before vanishing into the undergrowth whilst you're both stunned by the litany of swearing and trying to wrap your mind around some of the things she said. Particularly the one about the greasy maggots, the centaur stallion, the candied apple and the plunger. It's pretty obvious she's never coming back.");
-	//end event, Amily leaves the camp permanently
-	flags[kFLAGS.AMILY_FOLLOWER] = 0;
-	amilyScene.disableVillageEncounters();
+	amilyScene.flagRemoved();
 	doNext(camp.returnToCampUseOneHour);
 }
 
@@ -620,9 +598,7 @@ private function endThisMadness():void {
 	if (rand(2) == 0) {
 		outputText("\"<i>" + player.short + ", I did this for you!  I loved you so much I worked to see what you liked in Urta!</i>\" cries Amily.  Her face blushes, not in shame, but in anger as her temper flares.  She actually says, \"<i>Everything, all of this, it was me wanting things to be perfect for YOU!  FOR US!  You... you... asshole!</i>\"\n\n");
 		outputText("The mouse scurries past you and disappears into the night.  Somehow you know you won't see her again.\n\n");
-		//No more amily follower
-		flags[kFLAGS.AMILY_FOLLOWER] = 0;
-		flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
+		amilyScene.flagRemoved();
 	}
 	//(Chance of Urta rage) 
 	else {
@@ -670,9 +646,7 @@ private function beADickToAmily():void {
 	//plus PC corruption a little
 	dynStats("cor", 5);
 	flags[kFLAGS.AMILY_VISITING_URTA] = 3;
-	//No more amily follower
-	flags[kFLAGS.AMILY_FOLLOWER] = 0;
-	flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
+	amilyScene.flagRemoved();
 	
 	//no more Puru Amily, corruption path only
 	doNext(playerMenu);

@@ -150,19 +150,19 @@ public function corruptCampJojo():void {
 	if (flags[kFLAGS.FOLLOWER_AT_FARM_JOJO] == 0)
 	{
 		//Corrupt Amily and Jojo sexings
-		if (flags[kFLAGS.AMILY_FOLLOWER] == 2 && amilyScene.amilyFollower() && campCorruptJojo() && flags[kFLAGS.AMILY_X_JOJO_COOLDOWN] <= 0 && rand(5) == 0 && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0) {
+		if (amilyScene.amilyInCampCorrupt() && campCorruptJojo() && flags[kFLAGS.AMILY_X_JOJO_COOLDOWN] <= 0 && rand(5) == 0 && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0) {
 			flags[kFLAGS.AMILY_X_JOJO_COOLDOWN] = 7;
 			hideMenus();
 			amilyTeachingJojoBJ();
 			return;
 		}
 		//Oh shit goes down! (Wiv Tentacles)
-		if (amilyScene.amilyFollower && flags[kFLAGS.AMILY_DISCOVERED_TENTATLE_JOJO] == 0 && rand(10) <= 1 && flags[kFLAGS.AMILY_FOLLOWER] == 1 && player.hasStatusEffect(StatusEffects.TentacleJojo)) {
+		if (amilyScene.amilyInCampPure() && flags[kFLAGS.AMILY_DISCOVERED_TENTATLE_JOJO] == 0 && rand(10) <= 1 && player.hasStatusEffect(StatusEffects.TentacleJojo)) {
 			finter.amilyDiscoversJojoWithTentaclesAndShitOhBoy();
 			return;
 		}
 		//Oh shit goes down! (No tentacles)
-		else if (flags[kFLAGS.AMILY_PISSED_PC_CORRUPED_JOJO] == 0 && rand(10) <= 1 && flags[kFLAGS.AMILY_FOLLOWER] == 1 && amilyScene.amilyFollower() && !player.hasStatusEffect(StatusEffects.TentacleJojo)) {
+		else if (flags[kFLAGS.AMILY_PISSED_PC_CORRUPED_JOJO] == 0 && rand(10) <= 1 && amilyScene.amilyInCampPure() && !player.hasStatusEffect(StatusEffects.TentacleJojo)) {
 			finter.amilyIsPissedAtYouForRuiningJojo();
 			return;
 		}
@@ -2502,7 +2502,7 @@ public function refuseOfferOfHelp():void
 public function jojoCamp():void {
 	clearOutput();
 	jojoSprite();
-	if (flags[kFLAGS.AMILY_MET_PURE_JOJO] == 0 && flags[kFLAGS.AMILY_FOLLOWER] == 1 && amilyScene.amilyFollower()) {
+	if (flags[kFLAGS.AMILY_MET_PURE_JOJO] == 0 && amilyScene.amilyInCampPure()) {
 		getGame().followerInteractions.amilyMeetsPureJojo();
 		return;
 	}
@@ -3131,7 +3131,7 @@ public function apparantlyJojoDOESlift():void
 
 		// Lookit all these different ways followers are tracked! fml.
 		if (player.hasStatusEffect(StatusEffects.CampMarble)) enlightenedBlurbs.push("You can hear Marble humming a song to herself you can’t place.");
-		if (flags[kFLAGS.AMILY_FOLLOWER] > 0) enlightenedBlurbs.push("You can hear Amily changing the bedding to her nest.");
+		if (amilyInCamp()) enlightenedBlurbs.push("You can hear Amily changing the bedding to her nest.");
 		if (kGAMECLASS.emberScene.followerEmber()) enlightenedBlurbs.push("You can hear Ember cleaning" + emberScene.emberMF("his", "her") + "scales.");
 		if (player.hasStatusEffect(StatusEffects.CampRathazul)) enlightenedBlurbs.push("You can hear Rathazul experimenting with surprisingly nimble fingers.");
 		if (sophieFollower()) enlightenedBlurbs.push("You can hear Sophie breathing as she sleeps.");
@@ -3390,7 +3390,7 @@ private function getVagFuckedByMouse():void {
 public function giveBirthToPureJojoBabies():void {
 	outputText("Pain shoots through you as they pull open your cervix forcefully, causing you to cry out involuntarily. Jojo comes running to you and says, \"<i>I sense something happening, is it time?</i>\" You scream, \"<i>No, I just like screaming in pain. YES, IT'S TIME!\" You grip the ground and pant and push as the pains of labor overwhelm you. Jojo grips your hand tightly and seemed to be saying some prayers. You feel comforted for a second by the prayers before the pain brings you back to reality. You feel your hips being forcibly widened by the collective mass of the creatures moving down your birth canal. You spread your legs wide, laying your head back with groans and cries of agony as the first child moves out of your womb, through your cervix, down and into your twat. Your lips part and, with a grunt, you expel the first child into Jojo’s waiting hand. Jojo looks at it was if it the most beautiful thing he’s ever seen. He holds it up to you so you can see your firstborn; it’s a little mouselet with large innocent eyes, even larger ears, a cute, sniffling nose, and a long slender pink tail. Jojo helps hold it to your [chest], where it eagerly takes hold of your [nipples] and starts to suckle. As it drinks, it starts to grow larger, and fur the same color as your own hair starts to cover its body. It quickly drinks its fill and then detaches, its father putting it aside, which is good, because by this time there’s another baby waiting for its turn... and another... and another...\n\n");
 	outputText("Soon, you are back to your old self again, lying down in exhaustion with Jojo sitting nearby, your many rambunctious offspring already starting to walk and play around you.\n\n");
-	if (flags[kFLAGS.AMILY_FOLLOWER] == 1) {
+	if (amilyInCampPure()) {
 		if (flags[kFLAGS.JOJO_LITTERS_AMILY_REACTION_COUNTER] == 0) {
 			outputText("Amily comes running to you and shouts \"<i>What happened, why were you screaming?</i>\" then looks at the litter of mice in awe and says, \"<i>[name], those aren't mine...who's are they.</i>\" Jojo bites his lips and says, \"<i>They're mine.</i>\" Amily just stares at Jojo for a second. Jojo trys to placate her \"<i>I was..I was just trying to help [name] and it just happened and...</i>\" He stops and Amily starts to laugh. \"<i>I haven't seen you so worried since we were mouselets... I'm fine with it. I'm glad you found someone as great as [name]. If you want, I can takes these kids to a secret settlement my kids have erected.</i>\" Jojo seemed surprised at Amily's lack of anger, but quickly joy transforms his face. \"<i>Thanks Amily. We been worried about where we can send them, and you have solved all our problems. Thank you.</i>\" Amily smiles and says, \"<i>It's the least I can do.</i>\"\n\n");
 			outputText("Exhausted, you start slipping into slumber. As your eyes close, you get a glimpse of Amily taking your litter away.\n\n");

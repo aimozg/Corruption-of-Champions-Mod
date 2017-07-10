@@ -33,7 +33,7 @@ package classes.Scenes.Places.Farm
 			var count:int = 0;
 			
 			if (kGAMECLASS.jojoScene.campCorruptJojo()) count++;
-			if (kGAMECLASS.amilyScene.amilyCorrupt()) count++;
+			if (kGAMECLASS.amilyScene.isCorrupt()) count++;
 			if (kGAMECLASS.izmaScene.izmaFollower()) count++;
 			if (kGAMECLASS.sophieBimbo.bimboSophie()) count++;
 			if (kGAMECLASS.vapula.vapulaSlave()) count++;
@@ -557,10 +557,10 @@ package classes.Scenes.Places.Farm
 			outputText("\n\nNow you feel nothing but contempt. How <b>dare</b> that bitch kick you off her land as if you were some common vagrant, simply because you took your rightful revenge on the centaur cunt she allowed to hang around and do as he pleased? Would she have stepped in if he had done to you what you have done to him? You think not, no, not Whitney, she’d have quite happily sat on the hill and read her book whilst her pet asshole raped the hell out of you.");
 			
 			outputText("\n\nOnce it affects her, well skies above, we can’t be doing with that can we? Does she have any idea how lucky she is? Who she is dealing with? How easy it would be to do to her as you have done to Kelt");
-			if (kGAMECLASS.amilyScene.amilyCorrupt() || kGAMECLASS.jojoScene.campCorruptJojo())
+			if (kGAMECLASS.amilyScene.isCorrupt() || kGAMECLASS.jojoScene.campCorruptJojo())
 			{
 				outputText(" and the rodent slut");
-				if (kGAMECLASS.amilyScene.amilyCorrupt() && kGAMECLASS.jojoScene.campCorruptJojo())
+				if (kGAMECLASS.amilyScene.isCorrupt() && kGAMECLASS.jojoScene.campCorruptJojo())
 				{
 					outputText("s");
 				}
@@ -576,10 +576,10 @@ package classes.Scenes.Places.Farm
 			outputText("\n\nNow you feel nothing but contempt. How <b>dare</b> that bitch kick you off her land, as if you were some common vagrant, simply because you took what was rightfully yours from the cow bitch. Would Whitney have stepped in if Marble had done to you what you did to her? You think not, no, not Whitney, she’d have quite happily sat on the hill and read her book whilst the cow bitch did what she felt like to you, probably forcing her damn milk down your throat. But once it affects her, well skies above, we can’t be doing with that can we?");
 			
 			outputText("\n\nDoes she have any idea how lucky she is? Who she is dealing with? How easy it would be to break her will and make her your willing slave");
-			if (kGAMECLASS.amilyScene.amilyCorrupt() || kGAMECLASS.jojoScene.campCorruptJojo())
+			if (kGAMECLASS.amilyScene.isCorrupt() || kGAMECLASS.jojoScene.campCorruptJojo())
 			{
 				outputText(" and the rodent slut");
-				if (kGAMECLASS.amilyScene.amilyCorrupt() && kGAMECLASS.jojoScene.campCorruptJojo())
+				if (kGAMECLASS.amilyScene.isCorrupt() && kGAMECLASS.jojoScene.campCorruptJojo())
 				{
 					outputText("s");
 				}
