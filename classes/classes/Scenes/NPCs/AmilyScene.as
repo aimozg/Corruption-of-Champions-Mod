@@ -1,5 +1,5 @@
-/**
- * Created by aimozg on 02.01.14.
+/*
+ * Class file created by aimozg on 02.01.14.
  */
 package classes.Scenes.NPCs
 {
@@ -96,6 +96,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_MET:int                                                   =   35; //   (0 = not met, 1 = met)Amily Met.     0=Not Met, 1=Met
 		public static const kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED:int                           =   36; //  1=true,44=village buttonAmily Village Encounters Disabled.     1=True, 44=Village Button?
 		public static const kFLAGS_AMILY_GROSSED_OUT_BY_WORMS:int                                  =   37; //  1=freaked out-Amily encounters disabled due to worms 0=False, 1= True
+		public static const kFLAGS_AMILY_AFFECTION:int                                             =   38; //   (< 15 = low.  In between = medium. 40+= high affect)Amily Affection.    15 = Low.  In Between = Medium. 40+= High Affect
 		public function hasMet():Boolean {
 			return flags[kFLAGS_AMILY_MET]>0;
 		}
@@ -124,6 +125,15 @@ package classes.Scenes.NPCs
 		}
 		public function isGrossedOutByWorms():Boolean {
 			return flags[kFLAGS_AMILY_GROSSED_OUT_BY_WORMS] == 1;
+		}
+		public function modAffection(delta:int):void {
+			flags[kFLAGS_AMILY_AFFECTION] += delta;
+		}
+		public function setAffection(value:int):void {
+			flags[kFLAGS_AMILY_AFFECTION] = value;
+		}
+		public function affectionValue():int {
+			return flags[kFLAGS_AMILY_AFFECTION];
 		}
 		// </savedata>
 
@@ -273,7 +283,7 @@ package classes.Scenes.NPCs
 				//"bad" or "good" ends.
 				if (flags[kFLAGS.AMILY_BIRTH_TOTAL] + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] >= 5 && canEncounterInVillage())
 				{
-					if (flags[kFLAGS.AMILY_AFFECTION] < 40) thisIsAReallyShittyBadEnd();
+					if (affectionValue() < 40) thisIsAReallyShittyBadEnd();
 					else thisFunctionProbablySucksTooOhYeahAmilyFunction();
 
 					return;
@@ -284,7 +294,7 @@ package classes.Scenes.NPCs
 					//Desperate Plea
 					//(Amily reach Affection 50 without having had sex with the PC once.)
 					//Requires the PC have been male last time.
-					if (flags[kFLAGS.AMILY_AFFECTION] >= 50 && flags[kFLAGS.AMILY_FUCK_COUNTER] == 0 && flags[kFLAGS.AMILY_PC_GENDER] == 1) {
+					if (affectionValue() >= 50 && flags[kFLAGS.AMILY_FUCK_COUNTER] == 0 && flags[kFLAGS.AMILY_PC_GENDER] == 1) {
 						outputText("Wandering into the ruined village, you set off in search of Amily.\n\n");
 						/*NOPE!
 						[Player meets the requirements to stalk Amily]
@@ -417,7 +427,7 @@ package classes.Scenes.NPCs
 						return;
 					}
 					//Lesbo lovin confession!
-					if (flags[kFLAGS.AMILY_CONFESSED_LESBIAN] == 0 && flags[kFLAGS.AMILY_AFFECTION] >= 25) {
+					if (flags[kFLAGS.AMILY_CONFESSED_LESBIAN] == 0 && affectionValue() >= 25) {
 						amilyIsTotallyALesbo();
 						return;
 					}
@@ -427,8 +437,8 @@ package classes.Scenes.NPCs
 						return;
 					}
 					//If PC shot down love confession, cap affection at 35 and re-offer?
-					if (flags[kFLAGS.AMILY_AFFECTION] > 35 && flags[kFLAGS.AMILY_CONFESSED_LESBIAN] == 1) {
-						flags[kFLAGS.AMILY_AFFECTION] = 35;
+					if (affectionValue() > 35 && flags[kFLAGS.AMILY_CONFESSED_LESBIAN] == 1) {
+						setAffection(35);
 						amilyIsTotallyALesbo();
 						return;
 					}
@@ -477,7 +487,7 @@ package classes.Scenes.NPCs
 					}
 					//Medium affection 33% chance, guaranteed by 20.
 					//Requires she hasn't yet given this scene!
-					if (((flags[kFLAGS.AMILY_AFFECTION] >= 15 && rand(3) == 0) || flags[kFLAGS.AMILY_AFFECTION] >= 20) && flags[kFLAGS.AMILY_HERM_QUEST] == 0) {
+					if (((affectionValue() >= 15 && rand(3) == 0) || affectionValue() >= 20) && flags[kFLAGS.AMILY_HERM_QUEST] == 0) {
 						whyNotHerms();
 						return;
 					}
@@ -582,7 +592,7 @@ package classes.Scenes.NPCs
 			//Alternatively: get bitched at
 			if (flags[kFLAGS.AMILY_PC_GENDER] != player.gender) {
 			//Stripped this out since it was making her flip out weirdly at genderless folks
-			//|| (player.gender == 0 && flags[kFLAGS.AMILY_AFFECTION] < 15)) {
+			//|| (player.gender == 0 && affectionValue() < 15)) {
 				amilyNewGenderConfrontation();
 				return;
 			}
@@ -596,9 +606,9 @@ package classes.Scenes.NPCs
 				case 5: //Amily is slightly pregnant
 						outputText("Amily materializes out of the ruins somewhat slower than usual. You can see that your efforts together have taken; an undeniable bulge pokes out of her midriff, pushing up her tattered shirt slightly and seriously straining her belt. She idly rubs it with one hand, as if confirming its presence to herself.\n\n");
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15 || player.gender == 0) outputText("\"<i>Well, I guess despite whatever other faults you may have, you can get the job done.</i>\" She says, not looking directly at you.\n\n");
+						if (affectionValue() < 15 || player.gender == 0) outputText("\"<i>Well, I guess despite whatever other faults you may have, you can get the job done.</i>\" She says, not looking directly at you.\n\n");
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) outputText("\"<i>Thank you. With your help, my people will soon live again.</i>\" She strokes her belly, grinning happily. \"<i>Is there something you want to talk about?</i>\"\n\n");
+						else if (affectionValue() < 40) outputText("\"<i>Thank you. With your help, my people will soon live again.</i>\" She strokes her belly, grinning happily. \"<i>Is there something you want to talk about?</i>\"\n\n");
 						//[High Affection]
 						else outputText("\"<i>Thank you, thank you! I couldn't have done this without you!</i>\" She exclaims. \"<i>You've done a wonderful, noble thing, and I'm glad I found you to be their father. So, not that it isn't great to see you again, but why did you come to visit?</i>\"\n\n");
 						break;
@@ -607,21 +617,21 @@ package classes.Scenes.NPCs
 				case 8: //Amily is heavily pregnant
 						outputText("It takes several minutes before Amily appears, but when you see her, you marvel at how she got to you as quickly as she did. Her stomach is hugely swollen; one of her hands actually cradles underneath its rounded expanse, as if trying to hold it up. She is pants-less, evidently no longer able to fit into them. Her shirt drapes loosely, barely managing to cover the upper half of her firm orb of a belly. The belt where she hangs her blowpipe and dagger has been tied around her upper chest like a sash - between her breasts and her bulge - so she can still carry her weapons effectively.\n\n");
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15 || player.gender == 0) outputText("She seems to be paying more attention to her gravid midriff than to you, and it's several long moments before she finally speaks. \"<i>These children will be born soon. I guess I owe you my thanks for being willing to father them.</i>\"\n\n");
+						if (affectionValue() < 15 || player.gender == 0) outputText("She seems to be paying more attention to her gravid midriff than to you, and it's several long moments before she finally speaks. \"<i>These children will be born soon. I guess I owe you my thanks for being willing to father them.</i>\"\n\n");
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) outputText("She groans softly. \"<i>This isn't an easy task, you know. But I still want to thank you. Maybe, when these ones are born, you'll be willing to help me make some more?</i>\" She asks, her tail gently waving behind her.\n\n");
+						else if (affectionValue() < 40) outputText("She groans softly. \"<i>This isn't an easy task, you know. But I still want to thank you. Maybe, when these ones are born, you'll be willing to help me make some more?</i>\" She asks, her tail gently waving behind her.\n\n");
 						//[High Affection]
 						else outputText("\"<i>I should have known you were coming; they always start kicking up a storm when you're here - did you know that?</i>\" She smiles beatifically. \"<i>They know their daddy already, they do. With your help, a new generation of my people will have a chance to grow up free from the taint of demons. Was there something on your mind?</i>\"\n\n");
 						break;
 				default: //Amily is not pregnant
 					outputText("It doesn't take long for Amily to materialize out of the ruins. Her blowpipe and dagger are both thrust into her belt, and she's still wearing the same tattered clothes as before.\n\n");
 					//[Low Affection]
-					if (flags[kFLAGS.AMILY_AFFECTION] < 15 || player.gender == 0) {
+					if (affectionValue() < 15 || player.gender == 0) {
 						if (flags[kFLAGS.AMILY_MET_AS] == 2 && player.gender == 2) outputText("She crosses her arms and smiles at you. \"<i>So you came back huh?  Did you want to chat with little old me?</i>\" she asks.\n\n");
 						else outputText("She crosses her arms and taps her fingers on her shoulder. \"<i>So, why are you here? What do you want?</i>\" she asks.\n\n");
 					}
 					//[Medium Affection]
-					else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+					else if (affectionValue() < 40) {
 						outputText("She smiles softly upon seeing you. \"<i>It's always good to see somebody else who hasn't given in to corruption. Did you have something on your mind?</i>\"\n\n");
 					}
 					//[High Affection]
@@ -673,7 +683,7 @@ package classes.Scenes.NPCs
 			addButton(1, "Talk", talkToAmily);
 			//Amily is not a herm but is ok with herm-daddying!
 			if (flags[kFLAGS.AMILY_WANG_LENGTH] == 0) {
-				if (player.hasItem(consumables.P_DRAFT) && flags[kFLAGS.AMILY_WANG_LENGTH] == 0 && flags[kFLAGS.AMILY_HERM_QUEST] == 2 && flags[kFLAGS.AMILY_AFFECTION] >= 40 && player.gender == 3) {
+				if (player.hasItem(consumables.P_DRAFT) && flags[kFLAGS.AMILY_WANG_LENGTH] == 0 && flags[kFLAGS.AMILY_HERM_QUEST] == 2 && affectionValue() >= 40 && player.gender == 3) {
 					outputText("You could probably bring up the efficiency of having two hermaphrodite mothers, particularly since you have this purified incubi draft handy.\n\n");
 					addButton(3, "Efficiency", makeAmilyAHerm);
 				} else {
@@ -779,8 +789,7 @@ package classes.Scenes.NPCs
 			outputText("Your brash enthusiasm has made Amily uncomfortable, and your quick surrender to baser impulses has made you slightly more lustful.");
 			//Offer accepted
 			flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
-			//[-5 Affection]
-			flags[kFLAGS.AMILY_AFFECTION] -= 5;
+			modAffection(-5);
 			//[+5 Libido]
 			dynStats("lib", 5);
 			//[/ Go to [First Time Sex]]
@@ -806,8 +815,7 @@ package classes.Scenes.NPCs
 			outputText("It seems you've made Amily happy by asking if this is what she wants.");
 			//Offer accepted
 			flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
-			//{+5 Affection}
-			flags[kFLAGS.AMILY_AFFECTION] += 5;
+			modAffection(5);
 			//[/ Go to [First Time Sex]]
 			doNext(amilySexHappens);
 		}
@@ -828,7 +836,7 @@ package classes.Scenes.NPCs
 
 			outputText("You have impressed Amily considerably, and reigning in your sexual impulses has helped to calm your libido.\n\n");
 			//{+10 Affection}
-			flags[kFLAGS.AMILY_AFFECTION] += 10;
+			modAffection(10);
 			//{-5 Libido}
 			dynStats("lib", -2);
 			doNext(camp.returnToCampUseOneHour);
@@ -933,15 +941,15 @@ package classes.Scenes.NPCs
 				case 4: 
 				case 5: //Amily is slightly pregnant
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+						if (affectionValue() < 15) {
 							outputText("She stares at you, puzzled. \"<i>Why? I'm already pregnant,</i>\" she tells you. \"<i>...Forget it. You can have sex when I need to get pregnant again. Go find a goblin if you want to fuck some brainless baby-stuffed whore!</i>\"\n\n");
 							outputText("Amily can still move quickly despite her pregnancy, and you are very promptly left all alone. Perhaps it would be better not to broach the subject that bluntly with her while she's in this state.\n\n");
 							//Reduce affection. DERP
-							flags[kFLAGS.AMILY_AFFECTION] -= 3;
+							modAffection(-3);
 							doNext(camp.returnToCampUseOneHour);
 						}
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+						else if (affectionValue() < 40) {
 							outputText("She is clearly surprised, putting a hand to her swelling midriff. But then she shrugs and says, \"<i>Well, I guess I do owe you that much for helping me.</i>\"\n\n");
 							outputText("Though she does set off and indicate for you to follow, you realize that she's not too happy about your reason for being here.\n\n");
 							//[/ Go to [Medium Affection Sex]]
@@ -958,22 +966,22 @@ package classes.Scenes.NPCs
 				case 7: 
 				case 8: //Amily is heavily pregnant
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+						if (affectionValue() < 15) {
 							outputText("Her disbelief is quite obvious. She stares at her belly, then at you, then at your crotch, then back at her belly again. She shakes her head, clearly looking disgusted. \"<i>What kind of sicko are you? Look at the state of me - I'm in no shape to have sex! Come back after I've given birth, if that's all I mean to you!</i>\"\n\n");
 							outputText("Annoyed, she turns and waddles off. You do not give chase; you can tell that you've offended her.\n\n");
 							//Reduce affection
-							flags[kFLAGS.AMILY_AFFECTION] -= 3;
+							modAffection(-3);
 							doNext(camp.returnToCampUseOneHour);
 						}
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+						else if (affectionValue() < 40) {
 							outputText("She boggles as if she can't believe you. \"<i>You can't be that desperate you'd want somebody as fat and knocked up as I am!</i>\" she protests.\n\n");
 							outputText("You insist to her that you're not joking - you really do think she's sexy enough to make love to.\n\n");
 							outputText("\"<i>...Well, I guess I'm flattered, but... do you have the faintest idea how to make love to a woman who is pregnant? Especially one as far along as I am?</i>\"\n\n");
 							outputText("You are forced to concede that, actually, you don't.\n\n");
 							outputText("\"<i>It's not that I don't like you, " + player.short + ", it's just... well, I don't feel comfortable doing that,</i>\" she explains apologetically.\n\n");
 							outputText("You apologize back for confronting her with something she's uncomfortable with, and leave for your own camp, lest you insult her seriously.");
-							flags[kFLAGS.AMILY_AFFECTION] -= 3;
+							modAffection(-3);
 							doNext(camp.returnToCampUseOneHour);
 						}
 						//[High Affection]
@@ -985,14 +993,14 @@ package classes.Scenes.NPCs
 						break;
 				default: //Amily is not pregnant
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+						if (affectionValue() < 15) {
 							outputText("\"<i>Of course you did. Well, come on, I guess I can oblige you. It's the only way I'm going to get pregnant.</i>\"\n\n");
 							outputText("She sets off, clearly leading the way as you follow her.\n\n");
 							//[/ Go to [Low Affection Sex]]
 							doNext(amilySexHappens);
 						}
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+						else if (affectionValue() < 40) {
 							outputText("\"<i>Well, I guess you'll do. I mean, I still need to get pregnant,</i>\" she teases you, tail waving merrily. \"<i>Follow me.</i>\"\n\n");
 							outputText("You have to push yourself to keep up with her, but she's clearly just playing with you by moving so quickly rather than seriously trying to escape you.\n\n");
 							//[/ Go to [Low Affection Sex]]
@@ -1015,7 +1023,7 @@ package classes.Scenes.NPCs
 			else outputText("You tell Amily that you came here because you wanted to talk with her, and you have no desire to approach her sexually on this encounter.\n\n");
 
 			//[Low Affection]
-			if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+			if (affectionValue() < 15) {
 				switch (pregnancy.event) {
 					case 1:
 					case 2:
@@ -1035,7 +1043,7 @@ package classes.Scenes.NPCs
 				}
 			}
 			//[Medium Affection]
-			else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+			else if (affectionValue() < 40) {
 				outputText("\"<i>Of course, " + player.short + ", I always enjoy our talks.  What shall we discuss this time?</i>\" she asks happily.\n\n");
 			}
 			//[High Affection]
@@ -1058,13 +1066,13 @@ package classes.Scenes.NPCs
 				case 4: 
 				case 5: //Amily is slightly pregnant
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+						if (affectionValue() < 15) {
 							outputText("She rubs her belly thoughtfully. \"<i>I guess a bit of conversation would be nice, after all this time. Sex, though? Maybe if you're lucky.</i>\" She's already heading off, encouraging you to follow her.\n\n");
 							//[/ Go to random [Conversation], then small chance of [Low Affection Sex]]
 							doNext(talkWithCuntIMeanAmily);
 						}
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+						else if (affectionValue() < 40) {
 							outputText("\"<i>Talking to you is always nice... and, why the hell not? I'm not that big yet, I don't think?</i>\"\n\n");
 							outputText("You assure her that she still looks trim and lean to you.\n\n");
 							outputText("\"<i>Flatterer. Come on, I have something to eat back in my den.</i>\"\n\n");
@@ -1083,14 +1091,14 @@ package classes.Scenes.NPCs
 				case 7:
 				case 8: //Amily is heavily pregnant
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+						if (affectionValue() < 15) {
 							outputText("She stares at you, then smiles faintly. \"<i>Talk? Talk is good... it's so quiet here; I spent so many years without anybody to talk to. But sex? In my condition? No, I don't think so.</i>\"\n\n");
 							outputText("Despite her refusing the prospect of sex, she happily takes a seat on a toppled column and invites you to join her.\n\n");
 							//[/ Go to random [Conversation]]
 							doNext(talkWithCuntIMeanAmily);
 						}
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+						else if (affectionValue() < 40) {
 							outputText("She blinks in surprise. \"<i>The talk would be wonderful... but do you really want to have sex with me when I look like this? It gets kind of lonely around here without you, but isn't this,</i>\" she loudly claps her hand against her belly and continues, \"<i>Something of an obstacle? I mean, I don't know how we'd actually make it work.</i>\"\n\n");
 							outputText("You are forced to concede that you don't have any real ideas how sex between you would work with her in her current state.\n\n");
 							outputText("Amily smiles and pulls up a seat on a mound of leaf litter. \"<i>That's all right; you meant well. And even if we can't have sex, we can still talk. Anything on your mind in particular?</i>\"\n\n");
@@ -1107,14 +1115,14 @@ package classes.Scenes.NPCs
 						break;
 				default: //Amily is not pregnant
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+						if (affectionValue() < 15) {
 							outputText("\"<i>...Well, maybe you're not like everyone else in this world after all,</i>\" she finally answers. Though she walks away without a second word, she seems rather pleased by your answer.\n\n");
 							outputText("\"<i>Hey, hurry up!</i>\" she calls back over her shoulder. You snap out of your musings and follow her.\n\n");
 							//[/ Go to random [Conversation], then to [Low Affection Sex]]
 							doNext(talkToAmilyWithSexAfter);
 						}
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+						else if (affectionValue() < 40) {
 							outputText("She smiles at you. \"<i>Well... I was feeling a little tired, a little lonely, and... maybe a little horny. Why not?</i>\"\n\n");
 							outputText("She crooks a finger at you as a gesture to follow her.\n\n");
 							//[/ Go to random [Conversation], then to [Medium Affection Sex]]
@@ -1142,9 +1150,9 @@ package classes.Scenes.NPCs
 				case 4:
 				case 5: //Amily is slightly pregnant
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15) outputText("\"<i>I guess maybe I'm starting to slow down with this hanging off of me,</i>\" she grumbles. \"<i>Something you wanted?</i>\"\n\n");
+						if (affectionValue() < 15) outputText("\"<i>I guess maybe I'm starting to slow down with this hanging off of me,</i>\" she grumbles. \"<i>Something you wanted?</i>\"\n\n");
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) outputText("\"<i>Be honest - did this make me easier to find?</i>\" she asks, pushing out her belly for emphasis. Then, seemingly uncaring about the answer, she changes the subject. \"<i>Is there a reason you wanted to see me?</i>\"\n\n");
+						else if (affectionValue() < 40) outputText("\"<i>Be honest - did this make me easier to find?</i>\" she asks, pushing out her belly for emphasis. Then, seemingly uncaring about the answer, she changes the subject. \"<i>Is there a reason you wanted to see me?</i>\"\n\n");
 						//High Affection
 						else outputText("\"<i>I may be pregnant, but I didn't make this any easier on you now, did I?</i>\" She smirks. \"<i>It takes great skill to find me... but what is your reason?</i>\"\n\n");
 						break;
@@ -1152,17 +1160,17 @@ package classes.Scenes.NPCs
 				case 7:
 				case 8: //Amily is heavily pregnant
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15) outputText("\"<i>The only reason you could possibly find me is because this huge belly makes me too slow to move quickly and too big to hide. You know that, don't you?</i>\" she proclaims defensively, before changing her tone and asking curiously, \"<i>...Why are you here, anyway?</i>\"\n\n");
+						if (affectionValue() < 15) outputText("\"<i>The only reason you could possibly find me is because this huge belly makes me too slow to move quickly and too big to hide. You know that, don't you?</i>\" she proclaims defensively, before changing her tone and asking curiously, \"<i>...Why are you here, anyway?</i>\"\n\n");
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) outputText("\"<i>I guess it's not as easy for me to hide as it once was. So, why are you here?</i>\"\n\n");
+						else if (affectionValue() < 40) outputText("\"<i>I guess it's not as easy for me to hide as it once was. So, why are you here?</i>\"\n\n");
 						//[High Affection]
 						else outputText("\"<i>It's not easy for me to run and hide anymore, these days. I'm glad you decided to do the guardian angel act. So, how can I thank you for coming to check on me?</i>\"\n\n");
 						break;
 				default: //Amily is not pregnant
 						//[Low Affection]
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15) outputText("\"<i>How on earth did you get here? Nobody's ever been able to track me!</i>\" she protests. Then she shakes her head. \"<i>Ah well, I guess if it's you, it's no matter. So, whaddya want?</i>\"\n\n");
+						if (affectionValue() < 15) outputText("\"<i>How on earth did you get here? Nobody's ever been able to track me!</i>\" she protests. Then she shakes her head. \"<i>Ah well, I guess if it's you, it's no matter. So, whaddya want?</i>\"\n\n");
 						//[Medium Affection]
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) outputText("\"<i>Hmm... I'll have to work on that; I can't let just any bozo trail me,</i>\" she proclaims, smiling mischievously. \"<i>What's up?</i>\"\n\n");
+						else if (affectionValue() < 40) outputText("\"<i>Hmm... I'll have to work on that; I can't let just any bozo trail me,</i>\" she proclaims, smiling mischievously. \"<i>What's up?</i>\"\n\n");
 						//[High Affection]
 						else outputText("\"<i>You're coming along nicely, lover mine.</i>\" She smiles, proud as can be at your display of skill. \"<i>So, what brings you running to me?</i>\" she teases.\n\n");
 			}
@@ -1188,11 +1196,11 @@ package classes.Scenes.NPCs
 				//{Player takes minor HP damage}
 				outputText("You scramble backwards, but it still cuts a nasty gash into your flesh. Amily looks poised to strike again, but stops when she sees that it's you.\n\n");
 				//[Low Affection]
-				if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+				if (affectionValue() < 15) {
 					outputText("\"<i>Oh... It's you. Well, that was a dumb thing to do,</i>\" she says, surprisingly collected. She roughly grabs hold of you and painfully probes your injury, causing you to yelp in pain. \"<i>Big baby, you'll live. And let that serve a reminder not to sneak up on a survivor with a knife - not here, at least. So, what made you come here, anyway?</i>\" she asks, disinterested.\n\n");
 				}
 				//[Medium Affection]
-				else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+				else if (affectionValue() < 40) {
 					outputText("\"<i>That's what happens when you surprise someone with a knife,</i>\" she says, though clearly worried. \"<i>Hey, are you all right?</i>\" she asks.\n\n");
 
 					outputText("You assure her that, while it hurts, it's nothing serious.\n\n");
@@ -1215,13 +1223,13 @@ package classes.Scenes.NPCs
 			else {
 				outputText("You manage to leap backwards just in time to avoid a strike that could have seriously hurt you. Amily recovers quickly and readies her knife again, only to realize that it's you.\n\n");
 				//[Low Affection]
-				if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+				if (affectionValue() < 15) {
 					outputText("Her expression is fierce. \"<i>Idiot! Don't sneak up on me! If you had been a little slower, I might have killed you!</i>\" Amily spits indignantly. She shakes her head and mutters imprecations about your intelligence and lineage, and you wonder for a second if she's going to storm off. But then she calms down. \"<i>Well? Spit it out! Why are you here?</i>\"\n\n");
 
 					outputText("Okay, maybe she hasn't entirely calmed down yet.\n\n");
 				}
 				//[Medium Affection]
-				else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+				else if (affectionValue() < 40) {
 					outputText("An irritated expression crosses her face. \"<i>Are you insane!? Do you have any idea how stupid that was? I could have killed you!</i>\" she bellows, before slowly calming down. \"<i>Ah, well... no harm, no foul, I guess...</i>\"\n\n");
 				}
 				//[High Affection]
@@ -1242,7 +1250,7 @@ package classes.Scenes.NPCs
 				addButton(2, "Both", talkThenSexWithAmily);
 			}
 			//Affection -1;
-			flags[kFLAGS.AMILY_AFFECTION] -= 1;
+			modAffection(-1);
 		}
 
 		//[Desperate Plea]
@@ -1360,7 +1368,7 @@ package classes.Scenes.NPCs
 
 			outputText("The next morning, you find a note scratched onto a slab of bark beside your sleeping roll, reading, \"<i>The babies and I are both fine. No thanks to you!</i>\"\n\n");
 			//{Affection goes down}
-			flags[kFLAGS.AMILY_AFFECTION] -= 10;
+			modAffection(-10);
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -1438,7 +1446,7 @@ package classes.Scenes.NPCs
 			outputText("Amily is tired, but she smiles at you happily. \"<i>I... thank you. For being here. For me - and them,</i>\" she says. You assure her that it was no problem. You sit there with her, letting your inquisitive offspring examine you and tussle with you while their mother regains her strength.\n\n");
 			outputText("As the rambunctious little mouselets burn up their energy and curl up beside Amily to sleep, you gently excuse yourself and return to camp.");
 			//{Affection goes up}
-			flags[kFLAGS.AMILY_AFFECTION] += 5;
+			modAffection(5);
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -1556,7 +1564,7 @@ package classes.Scenes.NPCs
 			//Herms either unless she's okay'ed them for dad-hood.
 			if (player.gender == 2 || (player.gender == 3 && flags[kFLAGS.AMILY_HERM_QUEST] < 2)) convo = rand(12);
 			//Boost affection!
-			flags[kFLAGS.AMILY_AFFECTION] += 2 + rand(3);
+			modAffection(2 + rand(3));
 			dynStats("cor", -.34);
 			//Conversation: Items
 			if (convo == 0) {
@@ -2058,7 +2066,7 @@ package classes.Scenes.NPCs
 			outputText("\"<i>I'll be happy to come back and do it again if you need.</i>\" You jeer back, finishing dressing yourself and leaving her without so much as a backwards glance.\n\n");
 			player.orgasm('Generic');
 			//Affection downer
-			flags[kFLAGS.AMILY_AFFECTION] -= 5;
+			modAffection(-5);
 			amilyPreggoChance();
 			doNext(camp.returnToCampUseOneHour);
 		}
@@ -2078,7 +2086,7 @@ package classes.Scenes.NPCs
 			else outputText("At the sight of your member, she grins and begins stroking it. \"<i>You are obviously the right size for me...</i>\" Before long, you're hard and almost desperately waiting for her to start doing 'it' for real. Never losing her grin, she slowly lowers herself onto you and guides your penis into her netherlips. The feeling is better than you imagined, but still, something doesn't feel quite right... However, as soon as the mouse-girl starts moving up and down, you forget anything but the pleasure you feel. It doesn't take long before you can't hold back anymore. Afterwards, Amily looks into your eyes for a moment before standing up and putting on her clothes again. You get the distinct feeling that she's somehow disappointed.\n\n");
 
 			outputText("Seeing as how she clearly has no further need for you, you quietly excuse yourself, get dressed and leave.");
-			flags[kFLAGS.AMILY_AFFECTION] -= 2;
+			modAffection(-2);
 			amilyPreggoChance();
 			player.orgasm('Generic');
 			doNext(camp.returnToCampUseOneHour);
@@ -2109,7 +2117,7 @@ package classes.Scenes.NPCs
 				outputText("she nearly resembles an imp!");
 			outputText("  Excusing yourself, you get dressed, receiving a lazy wave goodbye and a happy smile as you head out of the door and head for the main street, from there finding the way back to your camp.\n\n");
 			//Affection boost?
-			flags[kFLAGS.AMILY_AFFECTION] += 3;
+			modAffection(3);
 			player.orgasm('Generic');
 			doNext(camp.returnToCampUseOneHour);
 			amilyPreggoChance();
@@ -2122,7 +2130,7 @@ package classes.Scenes.NPCs
 			//If too big
 			if (x == -1 && player.hasCock()) {
 				outputText("Amily looks between your legs and doubles over laughing, \"<i>There is no way that thing is fitting inside of me!  You need to find a way to shrink that thing down before we get in bed!</i>\"");
-				flags[kFLAGS.AMILY_AFFECTION]--;
+				modAffection(-1);
 				doNext(camp.returnToCampUseOneHour);
 				return;
 			}
@@ -2132,7 +2140,7 @@ package classes.Scenes.NPCs
 				return;
 			}
 			//Low Affection Sex:
-			if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+			if (affectionValue() < 15) {
 				outputText("Amily's efforts at leading you through the ruined village are brisk and efficient. You don't really think she's looking forward to doing this all that much. No, that might be overstating things. It's more like she's under the impression that, details aside, this encounter between the two of you will be pure business.\n\n");
 
 				outputText("It's hard for you to say if you were led by a different route this time, but soon you are in what Amily has to offer for a private bedchamber, and she begins to reach for her clothes, obviously expecting you to do the same thing.\n\n");
@@ -2141,7 +2149,7 @@ package classes.Scenes.NPCs
 				addButton(1, "Playtime 1st", amilySexPlaytimeFirst);
 			}
 			//Moderate Affection Sex:
-			else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+			else if (affectionValue() < 40) {
 				var pregEvent:int = pregnancy.event;
 				outputText("Amily leads you to her nest as quickly as ever, but things are a little different this time. You can tell Amily has what can only be described as a 'spring in her step'. She moves just a little bit quicker, she seems more enthusiastic about the prospect - her tail even waves slowly from side to side, a bit of body language you haven't seen from her before. And you're certain there's a bit of a seductive wiggle to her hips - which you definitely haven't seen from her before.");
 				//(If Amily is Slightly Pregnant:
@@ -2193,7 +2201,7 @@ package classes.Scenes.NPCs
 			if (player.hasStatusEffect(StatusEffects.Infested)) {
 				outputText("\"<i>EWWWW!  You're infested!</i>\" she shrieks, \"<i>Get out!  Don't come back 'til you get rid of the worms!</i>\"\n\nYou high tail it out of there.  It looks like Amily doesn't want much to do with you until you're cured.");
 				doNext(camp.returnToCampUseOneHour);
-				flags[kFLAGS.AMILY_AFFECTION] -= 3;
+				modAffection(-3);
 				flagGrossedOutByWorms();
 				return;
 			}
@@ -2228,8 +2236,7 @@ package classes.Scenes.NPCs
 			amilySprite();
 			outputText("You pull your mind back from that thought. That's taking things in directions you're not sure that either you or Amily are actually comfortable with.\n\n");
 			continueAmilySmex();
-			//Affection hit!
-			flags[kFLAGS.AMILY_AFFECTION] -= 3;
+			modAffection(-3);
 		}
 		//[Take the Kiss]
 		private function AmilyTakeTheKiss():void {
@@ -2242,7 +2249,7 @@ package classes.Scenes.NPCs
 			continueAmilySmex();
 			dynStats("lus", 5);
 			//AffectionGAIN!
-			flags[kFLAGS.AMILY_AFFECTION] += 1+rand(3);
+			modAffection(1+rand(3));
 		}
 
 		private function continueAmilySmex():void {
@@ -2269,7 +2276,7 @@ package classes.Scenes.NPCs
 			flags[kFLAGS.AMILY_FUCK_COUNTER]++;
 			amilyPreggoChance();
 			//Slight affection gain?
-			flags[kFLAGS.AMILY_AFFECTION] += 1 + rand(2);
+			modAffection(1 + rand(2));
 			player.orgasm('Generic');
 			dynStats("sen", -1);
 			doNext(camp.returnToCampUseOneHour);
@@ -2356,7 +2363,7 @@ package classes.Scenes.NPCs
 			outputText("Quite spent from your lovemaking, Amily sinks down on your breast, smiles at you and slowly dozes off. You also drift off to sleep soon after. Some time later, you wake up to find her already putting on her clothes again.\n\n");
 			//Affection gain here?
 			amilyPreggoChance();
-			flags[kFLAGS.AMILY_AFFECTION] += 3 + rand(4);
+			modAffection(3 + rand(4));
 			flags[kFLAGS.AMILY_FUCK_COUNTER]++;
 			menu();
 			addButton(0, "Say Goodbye", sayGoodByeToAmilyPostSecks);
@@ -2377,7 +2384,7 @@ package classes.Scenes.NPCs
 			clearOutput();
 			outputText("You decide you'd rather stay with her a little longer, so you get up, go to her and with a kiss and some caresses draw her down again. She doesn't really put up any resistance, so you both lie there kissing and caressing each other for some time before you finally say goodbye and return to your camp.");
 			//Bonus affection mayhapz?
-			flags[kFLAGS.AMILY_AFFECTION] += 3;
+			modAffection(3);
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -2474,7 +2481,7 @@ package classes.Scenes.NPCs
 			outputText("</i>\" Amily says, rubbing her stomach. You smile at her and nod, promising you'll come back, before setting off for your own camp.");
 			*/
 			//boost affection
-			flags[kFLAGS.AMILY_AFFECTION] += 2 + rand(4);
+			modAffection(2 + rand(4));
 			flags[kFLAGS.AMILY_FUCK_COUNTER]++;
 			player.orgasm('Generic');
 			dynStats("sen", -1);
@@ -2518,7 +2525,7 @@ package classes.Scenes.NPCs
 
 			outputText("Eventually, with great sadness and regret, you leave your lover's side and head off back to camp, vowing to return.");
 			//boost affection
-			flags[kFLAGS.AMILY_AFFECTION] += 2 + rand(4);
+			modAffection(2 + rand(4));
 			flags[kFLAGS.AMILY_FUCK_COUNTER]++;
 			player.orgasm('Generic');
 			dynStats("sen", -1);
@@ -3162,7 +3169,7 @@ package classes.Scenes.NPCs
 				//Too big
 				if (x == -1) outputText("Amily glances down at the beast between your legs and says, \"<i>I was going to ride you, but since you're SOOO big I think I'll have to get creative...</i>\"\n\n");
 				//Add 'get ridden' if it fits.
-				else choices[choices.length] = 3
+				else choices[choices.length] = 3;
 				//All males get tailjobs
 				choices[choices.length] = 0;
 				//HJs
@@ -4911,7 +4918,7 @@ package classes.Scenes.NPCs
 			}*/
 			outputText("You watch her go, feeling a little guilty, but you just don't swing that way. You can only hope she'll be all right.\n\n");
 			//(Amily's affection drops back down to Low)
-			if (flags[kFLAGS.AMILY_AFFECTION] > 10) flags[kFLAGS.AMILY_AFFECTION] = 10;
+			if (affectionValue() > 10) setAffection(10);
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -5162,12 +5169,12 @@ package classes.Scenes.NPCs
 				//[Male To Female]
 				if (player.gender == 2) {
 					//Low Affection:
-					if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+					if (affectionValue() < 15) {
 						outputText("\"<i>Oh, great. Now what am I going to do with you? Why on earth would you stuff this up?</i>\" Amily complains. She shakes her head. \"<i>Come back later - I'm too frustrated to talk to you now.</i>\" She storms away and you decide it would be best to take her advice.\n\n");
 						//(Player must now begin the Female Quest from the beginning.)
 					}
 					//Medium Affection:
-					else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+					else if (affectionValue() < 40) {
 						outputText("\"<i>I... I... why would you do that?</i>\" Amily asks, looking hurt. \"<i>I... no, This wasn't an effort by you to hurt me, I'm sorry, I was being selfish.</i>\" She apologizes. \"<i>But... I don't know what we can do any more. I... I need time to think.</i>\" She turns and walks away, and you decide to give her what she asks for.");
 						//(When next the PC encounters Amily, they will receive the "confession of love" scene.)
 					}
@@ -5182,12 +5189,12 @@ package classes.Scenes.NPCs
 				//[Male To Herm]
 				else if (player.gender == 3) {
 					//Low Affection:
-					if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+					if (affectionValue() < 15) {
 						outputText("\"<i>...Are you a herm, now?</i>\" She asks, sounding appalled. When you confirm it, she grimaces in disgust. \"<i>Stay away from me! You're not coming near my bed again until you're all man again!</i>\" She orders, and then storms off.\n\n");
 						//(Player must now begin the Herm Quest from the beginning.)
 					}
 					//Medium Affection:
-					else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+					else if (affectionValue() < 40) {
 						outputText("She looks intimidated. \"<i>I... I'm sorry, but I don't think I can share my bed with you, not any more. Please, find a way to become male again, then come back to me?</i>\" She pleads, then slips away.\n\n");
 						//(Amily's affection score remains unchanged, but the player must make the "What's Wrong With Herms" scene.)
 					}
@@ -5203,11 +5210,11 @@ package classes.Scenes.NPCs
 				//[Any to Genderless]
 				else {
 					//Low Affection:
-					if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+					if (affectionValue() < 15) {
 						outputText("She looks at you in disdain. \"<i>How can you be so stupid as to completely remove all gender from yourself? Get out of my sight and don't come back until you're one gender or the other again!</i>\" She then proceeds to storm off.\n\n");
 						//(Amily will repeat this scene on each remeeting until the player becomes a gender other than Genderless.)
 					}
-					else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+					else if (affectionValue() < 40) {
 						outputText("She shakes her head sadly. \"<i>I guess this kind of puts a kink in our relationship, doesn't it? Still, I'll always be willing to talk with you.</i>\"\n\n");
 						//(The player can only Talk with Amily on each remeeting until they have become a gender other than Genderless.)
 						amilyVillageMenu();
@@ -5227,11 +5234,11 @@ package classes.Scenes.NPCs
 				// to Male]
 				if (player.gender == 1) {
 					//Low Affection:
-					if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+					if (affectionValue() < 15) {
 						outputText("Amily looks deeply surprised. \"<i>You... you turned yourself from a woman into a man? ...For me?</i>\" She scuffs her foot at the ground in embarrassment. \"<i>I... I don't know what to say. But... will you hear me out, now that you have changed?</i>\"\n\n");
 						//(Begin Male variant of Amily's quest.)
 						//FEN: Increase affection!
-						flags[kFLAGS.AMILY_AFFECTION] += 15;
+						modAffection(15);
 						//FEN: If PC has had any kids with her, set as good to go!
 						if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0) {
 							flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
@@ -5240,11 +5247,11 @@ package classes.Scenes.NPCs
 						} // otherwise leave and proceed next time
 					}
 					//Medium Affection:
-					else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+					else if (affectionValue() < 40) {
 						outputText("She looks surprised, unsure of what to say. \"<i>I... thank you. I do feel we've grown closer, but this will make things much easier...</i>\"");
 						//(Begin Male variant of Amily's quest.)
 						//FEN: Increase affection!
-						flags[kFLAGS.AMILY_AFFECTION] += 5;
+						modAffection(5);
 						//FEN: If PC has had any kids with her, set as good to go!
 						if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0) {
 							flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
@@ -5267,12 +5274,12 @@ package classes.Scenes.NPCs
 					//Amily has no dick.
 					if (flags[kFLAGS.AMILY_WANG_LENGTH] == 0) {
 						//Low Affection:
-						if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+						if (affectionValue() < 15) {
 							outputText("She looks at you for a long time, then shakes her head in disbelief. \"<i>What woman in her right mind would grow a dick? Ah, well, get rid of the pussy, and then you and I may have something to talk about. But, for now, we'll just talk.</i>\"");
 							//(Begin herm variant of Amily's quest.)
 						}
 						//Medium Affection:
-						else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+						else if (affectionValue() < 40) {
 							outputText("\"<i>I... don't take this the wrong way, " + player.short + ", but... I'm not so sure we can be together any more while you have that. Be one thing or the other, not both.</i>\" Amily states. \"<i>But we can still talk, this time.</i>\"");
 							//(Next encounter with Amily is the "Maybe Herms Aren't So Bad" scenes.)
 						}
@@ -5296,11 +5303,11 @@ package classes.Scenes.NPCs
 				//[Any to Genderless]
 				else {
 					//Low Affection:
-					if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+					if (affectionValue() < 15) {
 						outputText("She looks at you in disdain. \"<i>How can you be so stupid as to completely remove all gender from yourself? Get out of my sight and don't come back until you're one gender or the other again!</i>\" She then proceeds to storm off.\n\n");
 						//(Amily will repeat this scene on each remeeting until the player becomes a gender other than Genderless.)
 					}
-					else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+					else if (affectionValue() < 40) {
 						outputText("She shakes her head sadly. \"<i>I guess this kind of puts a kink in our relationship, doesn't it? Still, I'll always be willing to talk with you.</i>\"\n\n");
 						//(The player can only Talk with Amily on each remeeting until they have become a gender other than Genderless.)
 					}
@@ -5316,17 +5323,17 @@ package classes.Scenes.NPCs
 				//[Herm to Male]
 				if (player.gender == 1) {
 					//Low Affection:
-					if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+					if (affectionValue() < 15) {
 						outputText("She looks you over and smiles. \"<i>Well, now that's more like it. You and I, we need to talk...</i>\"");
 						//(Begin the male variant of Amily's quest, +5 affection.)
-						flags[kFLAGS.AMILY_AFFECTION] += 5;
+						modAffection(5);
 						//if engaged in herm-quest autoenable male quest!
 						if (flags[kFLAGS.AMILY_HERM_QUEST] == 2) flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
 					}
 					//Medium Affection:
-					else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+					else if (affectionValue() < 40) {
 						outputText("\"<i>And here I was starting to get used to you like that... but I'm happy you made such a change for me.</i>\" She tells you, smiling.\n\n");
-						flags[kFLAGS.AMILY_AFFECTION] += 2;
+						modAffection(2);
 						//mark as agreed to preg-quest!
 						flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
 						//(Use the Remeeting scene options.)
@@ -5337,7 +5344,7 @@ package classes.Scenes.NPCs
 					else {
 						 outputText("\"<i>I was comfortable with who you were, you didn't have to change on my account...</i>\" Amily says, clearly looking guilty. When you assure her that you did this voluntarily, she brightens up. \"<i>Well, I am happy to have you all man - so, what were you wanting to speak about?</i>\"");
 						//(Use the Remeeting scene options.)
-						flags[kFLAGS.AMILY_AFFECTION] += 2;
+						modAffection(2);
 						//mark as agreed to preg-quest!
 						flags[kFLAGS.AMILY_OFFER_ACCEPTED] = 1;
 						//(Use the Remeeting scene options.)
@@ -5348,15 +5355,15 @@ package classes.Scenes.NPCs
 				//[Herm to Female]
 				else if (player.gender == 2) {
 					//Low Affection:
-					if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+					if (affectionValue() < 15) {
 						outputText("\"<i>Well, I guess it's nice to see another woman around... though I could have used you as all male. So, do you want to talk?</i>\" Amily asks.\n\n");
 						//(Amily gains a small amount of Affection, begin the Female variant of Amily's quest.)
-						flags[kFLAGS.AMILY_AFFECTION] += 2;
+						modAffection(2);
 						amilyVillageMenu();
 						return;
 					}
 					//Medium Affection:
-					else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+					else if (affectionValue() < 40) {
 						outputText("\"<i>You didn't need to change yourself for my sake... but, I do like having somebody who can really understand what life in this world is like.</i>\" Amily notes.");
 						//(Amily's affection remains unchanged, but the quest switches to the female variant.)
 						amilyVillageMenu();
@@ -5374,11 +5381,11 @@ package classes.Scenes.NPCs
 				//[Any to Genderless]
 				else {
 					//Low Affection:
-					if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+					if (affectionValue() < 15) {
 						outputText("She looks at you in disdain. \"<i>How can you be so stupid as to completely remove all gender from yourself? Get out of my sight and don't come back until you're one gender or the other again!</i>\" She then proceeds to storm off.\n\n");
 						//(Amily will repeat this scene on each remeeting until the player becomes a gender other than Genderless.)
 					}
-					else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+					else if (affectionValue() < 40) {
 						outputText("She shakes her head sadly. \"<i>I guess this kind of puts a kink in our relationship, doesn't it? Still, I'll always be willing to talk with you.</i>\"\n\n");
 						//(The player can only Talk with Amily on each remeeting until they have become a gender other than Genderless.)
 						amilyVillageMenu();
@@ -5396,7 +5403,7 @@ package classes.Scenes.NPCs
 			//Genderless tooo
 			else {
 				//[Low Affection]
-				if (flags[kFLAGS.AMILY_AFFECTION] < 15) {
+				if (affectionValue() < 15) {
 					outputText("Amily looks at you with disdain, but you can't help but notice just a small tinge of relief at seeing you have a ");
 					if (player.hasCock()) {
 						outputText(player.cockDescript(0));
@@ -5407,7 +5414,7 @@ package classes.Scenes.NPCs
 					//{player normal encounter options}
 				}
 				//[Medium Affection]
-				else if (flags[kFLAGS.AMILY_AFFECTION] < 40) {
+				else if (affectionValue() < 40) {
 					outputText("She notices you have a ");
 					if (player.hasCock()) {
 						outputText(player.cockDescript(0));
@@ -5912,7 +5919,7 @@ package classes.Scenes.NPCs
 			//Herms either unless she's okay'ed them for dad-hood.
 			// if (player.gender == 2 || (player.gender == 3 && flags[kFLAGS.AMILY_HERM_QUEST] < 2)) convo = rand(12); <-- I think this is likely a copypaste issue from the original talk menu.
 			//Boost affection!
-			flags[kFLAGS.AMILY_AFFECTION] += 2 + rand(3);
+			modAffection(2 + rand(3));
 			dynStats("cor", .34);
 			//Conversation: Items
 			if (convo == 0) {
