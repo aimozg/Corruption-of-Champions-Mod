@@ -1034,7 +1034,7 @@ package classes.Scenes.Dungeons.D3
 		{
 			if(player.statusEffectv1(StatusEffects.Birthed) > 0)
 				return true;
-			if(flags[kFLAGS.AMILY_BIRTH_TOTAL] > 0 || flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0)
+			if(getGame().amilyScene.getBirthedByAmily() > 0 || flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0)
 				return true;
 			if(flags[kFLAGS.BEHEMOTH_CHILDREN] > 0)
 				return true;

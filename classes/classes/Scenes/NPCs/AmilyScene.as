@@ -98,6 +98,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_GROSSED_OUT_BY_WORMS:int                                  =   37; //  1=freaked out-Amily encounters disabled due to worms 0=False, 1= True
 		public static const kFLAGS_AMILY_AFFECTION:int                                             =   38; //   (< 15 = low.  In between = medium. 40+= high affect)Amily Affection.    15 = Low.  In Between = Medium. 40+= High Affect
 		public static const kFLAGS_AMILY_OFFER_ACCEPTED:int                                        =   39; //   (1 = true, 0 = not yet)Amily Offer Accepted.    0=False, 1=True
+		public static const kFLAGS_AMILY_BIRTH_TOTAL:int                                           =   40; // Amily Birth Total.
 		public static const kFLAGS_AMILY_FUCK_COUNTER:int                                          =   42; // Amily Fuck Counter.
 		public static const kFLAGS_AMILY_FOLLOWER:int                                              =   43; // Amily Follower. 0=Not Follower, 1=Follower 2=Corrupted Follower?
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
@@ -203,6 +204,12 @@ package classes.Scenes.NPCs
 		}
 		public function affectionValue():int {
 			return flags[kFLAGS_AMILY_AFFECTION];
+		}
+		public function getBirthedByAmily():int {
+			return flags[kFLAGS_AMILY_BIRTH_TOTAL];
+		}
+		public function addBirthedByAmily(mod:int =1):void {
+			flags[kFLAGS_AMILY_BIRTH_TOTAL]+=mod;
 		}
 		public function getFuckCounter():int {
 			return flags[kFLAGS_AMILY_FUCK_COUNTER];
@@ -358,7 +365,7 @@ package classes.Scenes.NPCs
 			//meeting scenes for when PC is the same gender as when they last met Amily
 			if (flags[kFLAGS.AMILY_PC_GENDER] == player.gender) {
 				//"bad" or "good" ends.
-				if (flags[kFLAGS.AMILY_BIRTH_TOTAL] + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] >= 5 && canEncounterInVillage())
+				if (getBirthedByAmily() + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] >= 5 && canEncounterInVillage())
 				{
 					if (affectionValue() < 40) thisIsAReallyShittyBadEnd();
 					else thisFunctionProbablySucksTooOhYeahAmilyFunction();
@@ -1425,7 +1432,7 @@ package classes.Scenes.NPCs
 
 			outputText("What will you do?");
 			//Increase baby count here rather than in 3 places.
-			flags[kFLAGS.AMILY_BIRTH_TOTAL]++;
+			addBirthedByAmily();
 			//Leave / Watch / Help
 			menu();
 			addButton(0, "Leave", pregnancyIsScaryGoddamnMousePregnancyImNotWatchingThisShit);
@@ -1571,17 +1578,17 @@ package classes.Scenes.NPCs
 
 			outputText("“<i>Our children, yours and mine");
 			// Mix
-			if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0 && flags[kFLAGS.AMILY_BIRTH_TOTAL] > 0)
+			if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0 && getBirthedByAmily() > 0)
 			{
 				outputText(".</i>”");
 			}
 			// Only PC birth
-			else if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0 && flags[kFLAGS.AMILY_BIRTH_TOTAL] == 0)
+			else if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0 && getBirthedByAmily() == 0)
 			{
 				outputText(", planted by me inside of you.</i>”");
 			}
 			// Only Amily birth
-			else if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] == 0 && flags[kFLAGS.AMILY_BIRTH_TOTAL] > 0)
+			else if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] == 0 && getBirthedByAmily() > 0)
 			{
 				outputText(", planted by you inside of me.</i>”");
 			}
@@ -3025,7 +3032,7 @@ package classes.Scenes.NPCs
 				addButton(3, "Scissor", takeChargeAmilyScissorMeTimbers, null, null, null, "Get into some girly fun-times by rubbing your girl-bits against Amily's.");
 				if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) addButton(4, "Mount Her", takeChargeAmilyMountHer, null, null, null, "Ride Amily's cock until she cums!");
 			}
-			if (flags[kFLAGS.AMILY_BIRTH_TOTAL] > 0 || flags[kFLAGS.AMILY_LACTATION_RATE] >= 1) addButton(5, "Drink Milk", takeChargeAmilyMouseMilk, null, null, null, "Drink some of Amily's yummy mouse-milk.");
+			if (getBirthedByAmily() > 0 || flags[kFLAGS.AMILY_LACTATION_RATE] >= 1) addButton(5, "Drink Milk", takeChargeAmilyMouseMilk, null, null, null, "Drink some of Amily's yummy mouse-milk.");
 			addButton(6, "Eat Out", takeChargeAmilyEatOut, null, null, null, "Get a taste of Amily's pussy.");
 			if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) addButton(7, "Catch Anal", pureAmilyPutsItInYourRectumDamnNearKilledEm, null, null, null, "Have Amily put her cock to a good use by taking you from behind.");
 			addButton(14, "Nevermind", fuckTheMouseBitch);
@@ -5131,7 +5138,7 @@ package classes.Scenes.NPCs
 			}
 			//Quest Ending: Herm Amily Variant
 			//Requirements: Player must have given birth to a litter of Amily's children at least five times before.
-			if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] + flags[kFLAGS.AMILY_BIRTH_TOTAL] >= 5) {
+			if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] + getBirthedByAmily() >= 5) {
 				outputText("You wake up suddenly to strong pains and pressures in your gut. As your eyes shoot wide open, you look down to see your belly absurdly full and distended. You can feel movement underneath the skin, and watch as it is pushed out in many places, roiling and squirming in disturbing ways. The feelings you get from inside are just as disconcerting. You count not one, but many little things moving around inside you. There are so many, you can't keep track of them.\n\n");
 
 				outputText("Pain shoots through you as they pull open your cervix forcefully, causing you to cry out involuntarily. At once, Amily suddenly appears, racing out from the undergrowth. \"<i>Is it time? Are you going into labor?</i>\" She asks, worry evident in her voice. Your pain is momentarily forgotten by your surprise and you ask where she came from. She snorts disdainfully at the question. \"<i>I've been shadowing you for a couple of days, now. Did you really think I'd let the mother of my children go through this alone?</i>\"\n\n");
@@ -5639,7 +5646,7 @@ package classes.Scenes.NPCs
 		//Amily gives Birth (camp follower version):
 		public function amilyPopsOutKidsInCamp():void {
 			amilySprite();
-			flags[kFLAGS.AMILY_BIRTH_TOTAL]++;
+			addBirthedByAmily(1);
 			if (prison.inPrison) return;
 			//Uncorrupt
 			if (isPureFollower()) {

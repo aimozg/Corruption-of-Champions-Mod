@@ -2414,7 +2414,7 @@ private function promptAscend():void {
 }
 private function totalChildrenForAscension():int { //Sorted alphabetically
 	var amount:int = 0;
-	amount += flags[kFLAGS.AMILY_BIRTH_TOTAL] + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS]; //Amily
+	amount += amilyScene.getBirthedByAmily() + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS]; //Amily
 	amount += flags[kFLAGS.BEHEMOTH_CHILDREN]; //Behemoth
 	amount += flags[kFLAGS.BENOIT_EGGS] + flags[kFLAGS.FEMOIT_EGGS_LAID]; //Benoit(e)
 	amount += flags[kFLAGS.COTTON_KID_COUNT]; //Cotton

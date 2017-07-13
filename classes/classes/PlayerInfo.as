@@ -65,7 +65,7 @@ import flash.events.Event;
 				childStats += "<b>Times Given Birth:</b> " + player.statusEffectv1(StatusEffects.Birthed) + "\n";
 				
 			if (getGame().amilyScene.hasMet())
-				childStats += "<b>Litters With Amily:</b> " + (flags[kFLAGS.AMILY_BIRTH_TOTAL] + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS]) + "\n";
+				childStats += "<b>Litters With Amily:</b> " + (getGame().amilyScene.getBirthedByAmily() + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS]) + "\n";
 
 			if (flags[kFLAGS.BEHEMOTH_CHILDREN] > 0)
 				childStats += "<b>Children With Behemoth:</b> " + flags[kFLAGS.BEHEMOTH_CHILDREN] + "\n";
