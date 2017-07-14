@@ -98,6 +98,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_GROSSED_OUT_BY_WORMS:int                                  =   37; //  1=freaked out-Amily encounters disabled due to worms 0=False, 1= True
 		public static const kFLAGS_AMILY_AFFECTION:int                                             =   38; //   (< 15 = low.  In between = medium. 40+= high affect)Amily Affection.    15 = Low.  In Between = Medium. 40+= High Affect
 		public static const kFLAGS_AMILY_OFFER_ACCEPTED:int                                        =   39; //   (1 = true, 0 = not yet)Amily Offer Accepted.    0=False, 1=True
+		public static const kFLAGS_AMILY_FUCK_COUNTER:int                                          =   42; // Amily Fuck Counter.
 		public static const kFLAGS_AMILY_FOLLOWER:int                                              =   43; // Amily Follower. 0=Not Follower, 1=Follower 2=Corrupted Follower?
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
@@ -202,6 +203,12 @@ package classes.Scenes.NPCs
 		}
 		public function affectionValue():int {
 			return flags[kFLAGS_AMILY_AFFECTION];
+		}
+		public function getFuckCounter():int {
+			return flags[kFLAGS_AMILY_FUCK_COUNTER];
+		}
+		public function incFuckCounter():void {
+			flags[kFLAGS_AMILY_FUCK_COUNTER]++;
 		}
 		public function isTreeFlipoutActive():Boolean {
 			return flags[kFLAGS_AMILY_TREE_FLIPOUT] == 1;
@@ -364,7 +371,7 @@ package classes.Scenes.NPCs
 					//Desperate Plea
 					//(Amily reach Affection 50 without having had sex with the PC once.)
 					//Requires the PC have been male last time.
-					if (affectionValue() >= 50 && flags[kFLAGS.AMILY_FUCK_COUNTER] == 0 && flags[kFLAGS.AMILY_PC_GENDER] == 1) {
+					if (affectionValue() >= 50 && getFuckCounter() == 0 && flags[kFLAGS.AMILY_PC_GENDER] == 1) {
 						outputText("Wandering into the ruined village, you set off in search of Amily.\n\n");
 						/*NOPE!
 						[Player meets the requirements to stalk Amily]
@@ -1754,7 +1761,7 @@ package classes.Scenes.NPCs
 
 				outputText("\"<i>I fought it off and ran,</i>\" she insists, looking a little insulted, ");
 				//(If player hasn't had sex with Amily:
-				if (flags[kFLAGS.AMILY_FUCK_COUNTER] == 0) outputText("\"<i>I am still a virgin, after all.</i>\"\n\n");
+				if (getFuckCounter() == 0) outputText("\"<i>I am still a virgin, after all.</i>\"\n\n");
 				//(If player has had sex with Amily:
 				else outputText("\"<i>I was a virgin when we met, in case you forgot.</i>\"\n\n");
 
@@ -2199,9 +2206,9 @@ package classes.Scenes.NPCs
 				doNext(camp.returnToCampUseOneHour);
 				return;
 			}
-			if (flags[kFLAGS.AMILY_FUCK_COUNTER] == 0) {
+			if (getFuckCounter() == 0) {
 				stickItInMouseTwatForTheFirstTimeNOTWORTHALLBULLSHIT();
-				flags[kFLAGS.AMILY_FUCK_COUNTER]++;
+				incFuckCounter();
 				return;
 			}
 			//Low Affection Sex:
@@ -2338,7 +2345,7 @@ package classes.Scenes.NPCs
 
 			outputText("She seems surprised that she actually enjoyed it (at least a little), but she's definitely willing to repeat the experience. You assure her that you'll come back, and then resume your travels.");
 			//Knock up, PC stats, etc.
-			flags[kFLAGS.AMILY_FUCK_COUNTER]++;
+			incFuckCounter();
 			amilyPreggoChance();
 			//Slight affection gain?
 			modAffection(1 + rand(2));
@@ -2429,7 +2436,7 @@ package classes.Scenes.NPCs
 			//Affection gain here?
 			amilyPreggoChance();
 			modAffection(3 + rand(4));
-			flags[kFLAGS.AMILY_FUCK_COUNTER]++;
+			incFuckCounter();
 			menu();
 			addButton(0, "Say Goodbye", sayGoodByeToAmilyPostSecks);
 			addButton(1, "Stay A While", stayAfterAmilyMiddleGradeSecks);
@@ -2547,7 +2554,7 @@ package classes.Scenes.NPCs
 			*/
 			//boost affection
 			modAffection(2 + rand(4));
-			flags[kFLAGS.AMILY_FUCK_COUNTER]++;
+			incFuckCounter();
 			player.orgasm('Generic');
 			dynStats("sen", -1);
 			doNext(camp.returnToCampUseOneHour);
@@ -2591,7 +2598,7 @@ package classes.Scenes.NPCs
 			outputText("Eventually, with great sadness and regret, you leave your lover's side and head off back to camp, vowing to return.");
 			//boost affection
 			modAffection(2 + rand(4));
-			flags[kFLAGS.AMILY_FUCK_COUNTER]++;
+			incFuckCounter();
 			player.orgasm('Generic');
 			dynStats("sen", -1);
 			doNext(camp.returnToCampUseOneHour);
@@ -5109,7 +5116,7 @@ package classes.Scenes.NPCs
 			outputText("</i>\"  Chuckling softly, you lay there and embrace your lover for a time and then, reluctantly, you get dressed and leave.");
 			player.orgasm('Generic');
 			flags[kFLAGS.AMILY_HERM_TIMES_FUCKED_BY_FEMPC]++;
-			flags[kFLAGS.AMILY_FUCK_COUNTER]++;
+			incFuckCounter();
 			doNext(camp.returnToCampUseOneHour);
 		}
 

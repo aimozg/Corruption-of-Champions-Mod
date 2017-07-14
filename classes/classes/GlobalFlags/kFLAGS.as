@@ -47,7 +47,7 @@ public static const PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE:int                     
 //public static const AMILY_OFFER_ACCEPTED:int                                        =   39; //   (1 = true, 0 = not yet)Amily Offer Accepted.    0=False, 1=True
 public static const AMILY_BIRTH_TOTAL:int                                           =   40; // Amily Birth Total.
 public static const AMILY_INCUBATION:int                                            =   41; //    0 = not pregnant, otherwise hours till birth 168Amily Incubation.    0=Not Pregnant, Otherwise Hours Till Birth Starting From 168
-public static const AMILY_FUCK_COUNTER:int                                          =   42; // Amily Fuck Counter.
+//public static const AMILY_FUCK_COUNTER:int                                          =   42; // Amily Fuck Counter.
 //public static const AMILY_FOLLOWER:int                                              =   43; // Amily Follower. 0=Not Follower, 1=Follower 2=Corrupted Follower?
 public static const AMILY_VILLAGE_ACCESSIBLE:int                                    =   44; // Amily Village Accessible.    Related To 36]
 public static const AMILY_WANG_LENGTH:int                                           =   45; // Amily's Wang Length" Description="Starts 4x1, maxes @ 13x2
