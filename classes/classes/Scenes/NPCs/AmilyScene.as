@@ -100,6 +100,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_OFFER_ACCEPTED:int                                        =   39; //   (1 = true, 0 = not yet)Amily Offer Accepted.    0=False, 1=True
 		public static const kFLAGS_AMILY_FOLLOWER:int                                              =   43; // Amily Follower. 0=Not Follower, 1=Follower 2=Corrupted Follower?
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
+		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
 		public static const kFLAGS_AMILY_TREE_FLIPOUT:int                                          =  599; //
 
 		// Global state: Not met / Met / Met, accepted offer / Follower pure / Follower corrupt / Run away (corrupt, worms, or tree flipout) / Completely Removed
@@ -131,8 +132,12 @@ package classes.Scenes.NPCs
 		public function unflagCorruptFlipout():void {
 			//Clear amily shit flipping
 			flags[kFLAGS_AMILY_CORRUPT_FLIPOUT] = 0;
-			//Clear 'warning'
-			flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
+		}
+		public function flagCorruptionWarning():void {
+			flags[kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED] = 1;
+		}
+		public function unflagCorruptionWarning():void {
+			flags[kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED] = 0;
 		}
 		public function flagTreeFlipoutActive():void {
 			unflagFollower();
@@ -207,6 +212,9 @@ package classes.Scenes.NPCs
 		public function wasTreeFlipout():Boolean {
 			return flags[kFLAGS_AMILY_TREE_FLIPOUT] > 0;
 		}
+		public function wasCorruptionWarning():Boolean {
+			return flags[kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED] == 1;
+		}
 		// </savedata>
 
 		public var pregnancy:PregnancyStore;
@@ -244,12 +252,12 @@ package classes.Scenes.NPCs
 			}
 			if (model.time.hours == 6) {
 				//Pure amily flips her shit and moves out!
-				if (isPureFollower() && player.cor >= (66 + player.corruptionTolerance()) && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] > 0) {
+				if (isPureFollower() && player.cor >= (66 + player.corruptionTolerance()) && wasCorruptionWarning()) {
 					amilyScene.farewellNote();
 					needNext = true;
 				}
 				//Amily moves back in once uncorrupt.
-				if (!wasTreeFlipout() && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] > 0 && player.cor <= (25 + player.corruptionTolerance()) && !isFollowerOrSlave()) {
+				if (!wasTreeFlipout() && wasCorruptionWarning() && player.cor <= (25 + player.corruptionTolerance()) && !isFollowerOrSlave()) {
 					amilyScene.amilyReturns();
 					needNext = true;
 				}
@@ -2628,12 +2636,12 @@ package classes.Scenes.NPCs
 			amilySprite();
 			if (flags[kFLAGS.AMILY_CLOTHING] == 0) flags[kFLAGS.AMILY_CLOTHING] = "rags";
 			//Amily freakout
-			if (player.cor >= (50 + player.corruptionTolerance()) && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] == 0 && isPureFollower()) {
+			if (player.cor >= (50 + player.corruptionTolerance()) && !wasCorruptionWarning() && isPureFollower()) {
 				amilyTaintWarning();
 				return;
 			}
 			//Clear warning if PC is good!
-			if (player.cor < (50 + player.corruptionTolerance()) && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] > 0) flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
+			if (player.cor < (50 + player.corruptionTolerance()) && wasCorruptionWarning()) unflagCorruptionWarning();
 			//Preggo birthing!
 			if (pregnancy.isPregnant && pregnancy.incubation == 0 && isCorrupt()) {
 				clearOutput();
@@ -6873,7 +6881,7 @@ package classes.Scenes.NPCs
 			//Add corrupted amily flag here
 			flagFollowerCorrupt();
 			//Set other flags if Amily is moving in for the first time
-			if (flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] == 0) {
+			if (!wasCorruptionWarning()) {
 				flags[kFLAGS.AMILY_CUP_SIZE] = 5;
 				flags[kFLAGS.AMILY_NIPPLE_LENGTH] = .5;
 				flags[kFLAGS.AMILY_HIP_RATING] = 12;
@@ -7049,7 +7057,7 @@ package classes.Scenes.NPCs
 			clearOutput();
 			amilySprite();
 			outputText("Amily approaches you, looking concerned.  \"<i>Darling... I don't know what's been going on, but you need to start taking better care of yourself.  I can smell the corruption taking root in you - if you don't stop, you'll soon start acting like any other demon.</i>\"\n\n");
-			flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 1;
+			flagCorruptionWarning();
 			doNext(camp.returnToCampUseOneHour);
 		}
 
@@ -7085,6 +7093,7 @@ package classes.Scenes.NPCs
 			outputText("She squeezes you tightly, then gets up to start making breakfast.\n\n");
 			outputText("<b>Amily has moved back in.</b>\n");
 			unflagCorruptFlipout();
+			unflagCorruptionWarning();
 			flagFollowerPure();
 		}
 

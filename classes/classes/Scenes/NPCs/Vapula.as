@@ -179,7 +179,7 @@ package classes.Scenes.NPCs
 					outputText("\n\nAmily shakes her head.  \"<i>Goodbye, [name].  You've changed.  What you did is pure folly.</i>\"");
 					amilyScene.flagCorruptFlipout();
 					//Make sure the camp warning thing is off so she never moves back in.  Bitch be mad.
-					flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
+					amilyScene.unflagCorruptionWarning();
 				}
 				//[(if PC corr > 70)
 				if (player.cor > (70 + player.corruptionTolerance()) && !(jojo && flags[kFLAGS.JOJO_BIMBO_STATE] >= 3)) outputText("\n\n\"<i><i>Fine. Go fuck off then, I don't need you.  I have a much better and hotter slut now. Don't hesitate to come back if you want some sweet pussy, though.</i>\"");
