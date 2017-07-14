@@ -604,7 +604,7 @@ public static const TIMES_RIDDEN_FLOWER:int                                     
 public static const FUCK_FLOWER_LEVEL:int                                           =  596; // 
 public static const FUCK_FLOWER_GROWTH_COUNTER:int                                  =  597; // 
 public static const FUCK_FLOWER_KILLED:int                                          =  598; // 
-public static const AMILY_TREE_FLIPOUT:int                                          =  599; // 
+//public static const AMILY_TREE_FLIPOUT:int                                          =  599; //
 public static const HOLLI_FRUIT:int                                                 =  600; // 
 public static const HOLLI_FRUIT_EXPLAINED:int                                       =  601; // 
 public static const HOLLI_DEFENSE_ON:int                                            =  602; // 

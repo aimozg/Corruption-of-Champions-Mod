@@ -370,9 +370,8 @@ private function doCamp():void { //Only called by playerMenu
 		hideMenus();
 		return;
 	}
-	if (flags[kFLAGS.FUCK_FLOWER_KILLED] == 1 && flags[kFLAGS.AMILY_TREE_FLIPOUT] == 1 && !amilyScene.amilyInCamp() && flags[kFLAGS.AMILY_VISITING_URTA] == 0) {
+	if (flags[kFLAGS.FUCK_FLOWER_KILLED] == 1 && amilyScene.isTreeFlipoutActive() && !amilyScene.amilyInCamp() && flags[kFLAGS.AMILY_VISITING_URTA] == 0) {
 		holliScene.amilyComesBack();
-		flags[kFLAGS.AMILY_TREE_FLIPOUT] = 2;
 		hideMenus();
 		return;
 	}

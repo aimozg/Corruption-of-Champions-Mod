@@ -99,6 +99,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_AFFECTION:int                                             =   38; //   (< 15 = low.  In between = medium. 40+= high affect)Amily Affection.    15 = Low.  In Between = Medium. 40+= High Affect
 		public static const kFLAGS_AMILY_OFFER_ACCEPTED:int                                        =   39; //   (1 = true, 0 = not yet)Amily Offer Accepted.    0=False, 1=True
 		public static const kFLAGS_AMILY_FOLLOWER:int                                              =   43; // Amily Follower. 0=Not Follower, 1=Follower 2=Corrupted Follower?
+		public static const kFLAGS_AMILY_TREE_FLIPOUT:int                                          =  599; //
 
 		// Global state: Not met / Met / Met, accepted offer / Follower pure / Follower corrupt / Run away (corrupt or worms flipout) / Completely Removed
 		public function flagMet():void {
@@ -126,10 +127,14 @@ package classes.Scenes.NPCs
 			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
 			flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
 		}
-		public function flagTreeFlipout():void {
+		public function flagTreeFlipoutActive():void {
 			unflagFollower();
 			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
-			flags[kFLAGS.AMILY_TREE_FLIPOUT] = 1;
+			flags[kFLAGS_AMILY_TREE_FLIPOUT] = 1;
+		}
+		public function flagTreeFlipoutResolved():void {
+			amilyScene.flagFollowerPure();
+			flags[kFLAGS_AMILY_TREE_FLIPOUT] = 2;
 		}
 		public function unflagFollower():void {
 			flags[kFLAGS_AMILY_FOLLOWER] = 0;
@@ -183,6 +188,15 @@ package classes.Scenes.NPCs
 		public function affectionValue():int {
 			return flags[kFLAGS_AMILY_AFFECTION];
 		}
+		public function isTreeFlipoutActive():Boolean {
+			return flags[kFLAGS_AMILY_TREE_FLIPOUT] == 1;
+		}
+		public function isTreeFlipoutResolved():Boolean {
+			return flags[kFLAGS_AMILY_TREE_FLIPOUT] == 2;
+		}
+		public function wasTreeFlipout():Boolean {
+			return flags[kFLAGS_AMILY_TREE_FLIPOUT] > 0;
+		}
 		// </savedata>
 
 		public var pregnancy:PregnancyStore;
@@ -225,7 +239,7 @@ package classes.Scenes.NPCs
 					needNext = true;
 				}
 				//Amily moves back in once uncorrupt.
-				if (flags[kFLAGS.AMILY_TREE_FLIPOUT] == 0 && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] > 0 && player.cor <= (25 + player.corruptionTolerance()) && !isFollowerOrSlave()) {
+				if (!wasTreeFlipout() && flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] > 0 && player.cor <= (25 + player.corruptionTolerance()) && !isFollowerOrSlave()) {
 					amilyScene.amilyReturns();
 					needNext = true;
 				}
@@ -261,7 +275,7 @@ package classes.Scenes.NPCs
 			//Initialize saved gender:
 			if (!hasMet()) flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
 			//Amily gone/hiding super hard
-			if (flags[kFLAGS.AMILY_IS_BATMAN] > 0 || !canEncounterInVillage()  || flags[kFLAGS.AMILY_TREE_FLIPOUT] > 0) {
+			if (flags[kFLAGS.AMILY_IS_BATMAN] > 0 || !canEncounterInVillage()  || wasTreeFlipout()) {
 				outputText("You enter the ruined village cautiously. There are burnt-down houses, smashed-in doorways, ripped-off roofs... everything is covered with dust and grime. You explore for an hour, but you cannot find any sign of another living being, or anything of value. The occasional footprint from an imp or a goblin turns up in the dirt, but you don't see any of the creatures themselves. It looks like time and passing demons have stripped the place bare since it was originally abandoned. Finally, you give up and leave. You feel much easier when you're outside of the village.");
 				doNext(camp.returnToCampUseOneHour);
 				return;
