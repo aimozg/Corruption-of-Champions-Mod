@@ -99,9 +99,10 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_AFFECTION:int                                             =   38; //   (< 15 = low.  In between = medium. 40+= high affect)Amily Affection.    15 = Low.  In Between = Medium. 40+= High Affect
 		public static const kFLAGS_AMILY_OFFER_ACCEPTED:int                                        =   39; //   (1 = true, 0 = not yet)Amily Offer Accepted.    0=False, 1=True
 		public static const kFLAGS_AMILY_FOLLOWER:int                                              =   43; // Amily Follower. 0=Not Follower, 1=Follower 2=Corrupted Follower?
+		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 		public static const kFLAGS_AMILY_TREE_FLIPOUT:int                                          =  599; //
 
-		// Global state: Not met / Met / Met, accepted offer / Follower pure / Follower corrupt / Run away (corrupt or worms flipout) / Completely Removed
+		// Global state: Not met / Met / Met, accepted offer / Follower pure / Follower corrupt / Run away (corrupt, worms, or tree flipout) / Completely Removed
 		public function flagMet():void {
 			flags[kFLAGS_AMILY_MET] = 1;
 		}
@@ -125,7 +126,13 @@ package classes.Scenes.NPCs
 		public function flagCorruptFlipout():void {
 			unflagFollower();
 			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 0;
-			flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
+			flags[kFLAGS_AMILY_CORRUPT_FLIPOUT] = 1;
+		}
+		public function unflagCorruptFlipout():void {
+			//Clear amily shit flipping
+			flags[kFLAGS_AMILY_CORRUPT_FLIPOUT] = 0;
+			//Clear 'warning'
+			flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
 		}
 		public function flagTreeFlipoutActive():void {
 			unflagFollower();
@@ -178,6 +185,9 @@ package classes.Scenes.NPCs
 		}
 		public function isGrossedOutByWorms():Boolean {
 			return flags[kFLAGS_AMILY_GROSSED_OUT_BY_WORMS] == 1;
+		}
+		public function isCorruptFlipout():Boolean {
+			return flags[kFLAGS_AMILY_CORRUPT_FLIPOUT] == 1;
 		}
 		public function modAffection(delta:int):void {
 			flags[kFLAGS_AMILY_AFFECTION] += delta;
@@ -292,12 +302,12 @@ package classes.Scenes.NPCs
 				if (!player.hasStatusEffect(StatusEffects.Infested)) unflagGrossedOutByWorms();
 			}
 			//Corrupt blow up! - requires you've met Amily
-			if (flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] == 0 && hasMet() && (player.cor > (25 + player.corruptionTolerance()) || player.cor > (75 + player.corruptionTolerance()))) {
+			if (!isCorruptFlipout() && hasMet() && (player.cor > (25 + player.corruptionTolerance()) || player.cor > (75 + player.corruptionTolerance()))) {
 				meetAmilyAsACorruptAsshat();
 				return;
 			}
 			//CORRUPTIONZ
-			if (flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] > 0 && player.cor > (25 + player.corruptionTolerance())) {
+			if (isCorruptFlipout() && player.cor > (25 + player.corruptionTolerance())) {
 				//Cook amily a snack if player doesnt have key item for it.
 				if (player.hasKeyItem("Potent Mixture") < 0 && flags[kFLAGS.AMILY_CORRUPTION] < 3) {
 					cookAmilyASnack();
@@ -313,7 +323,7 @@ package classes.Scenes.NPCs
 				}
 			}
 			//Amily Un-encounterable (worms):
-			if (isGrossedOutByWorms() || player.cor > (25 + player.corruptionTolerance()) || flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] > 0) {
+			if (isGrossedOutByWorms() || player.cor > (25 + player.corruptionTolerance()) || isCorruptFlipout()) {
 				outputText("You enter the ruined village cautiously. There are burnt-down houses, smashed-in doorways, ripped-off roofs... everything is covered with dust and grime. For hours you explore, but you cannot find any sign of another living being, or anything of value. The occasional footprint from an imp or a goblin turns up in the dirt, but you don't see any of the creatures themselves. It looks like time and passing demons have stripped the place bare since it was originally abandoned. Finally, you give up and leave. You feel much easier when you're outside of the village - you had the strangest sensation of being watched while you were in there.");
 				doNext(camp.returnToCampUseOneHour);
 				return;
@@ -5777,7 +5787,7 @@ package classes.Scenes.NPCs
 			dynStats("lus", 25);
 			doNext(camp.returnToCampUseOneHour);
 			//FLAG THAT THIS SHIT WENT DOWN
-			flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 1;
+			flagCorruptFlipout();
 		}
 
 		//[Cooking the drug]
@@ -7074,10 +7084,7 @@ package classes.Scenes.NPCs
 
 			outputText("She squeezes you tightly, then gets up to start making breakfast.\n\n");
 			outputText("<b>Amily has moved back in.</b>\n");
-			//Clear amily shit flipping
-			flags[kFLAGS.AMILY_CORRUPT_FLIPOUT] = 0;
-			//Clear 'warning'
-			flags[kFLAGS.AMILY_CAMP_CORRUPTION_FREAKED] = 0;
+			unflagCorruptFlipout();
 			flagFollowerPure();
 		}
 

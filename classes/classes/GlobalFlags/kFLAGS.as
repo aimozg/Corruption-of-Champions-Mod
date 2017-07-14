@@ -173,7 +173,7 @@ public static const AMILY_PC_GENDER:int                                         
 public static const AMILY_HERM_QUEST:int                                            =  165; //  1=amily flipped out, 2=accepted as amily's dad1=Amily Flipped Out, 2=Accepted As Amily'S Dad
 public static const AMILY_ALLOWS_FERTILITY:int                                      =  166; // 
 public static const LIFETIME_GYM_MEMBER:int                                         =  167; // Permanent Gym Membership? (1 = yes)
-public static const AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
+//public static const AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 public static const AMILY_DRUG_MADE_COUNTER:int                                     =  169; // Times cooked Amily's Drug
 public static const AMILY_CORRUPTION:int                                            =  170; // Amily's Corruption Value
 public static const AMILY_HAS_BALLS_AND_SIZE:int                                    =  171; // Amily's Balls: 1 = yes, higher numbers = bigger balls.
