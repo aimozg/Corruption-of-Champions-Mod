@@ -622,11 +622,11 @@ package classes.Scenes.Seasonal {
 			if (x < 0) x = player.smallestCockIndex();
 			outputText("Stripping down your [armor] and indicating Amily should do the same... you tell her that you were hoping for some good old-fashioned sex between a horny " + player.mf("man","herm") + " and " + player.mf("his","her") + " lovely mousette.  You playfully ask Amily if she has any objections?");
 			outputText("\n\n\"<i>Well, it's a little counterproductive to take your clothes off if you want to get warm,</i>\" Amily notes.  Despite her words, she's stripping off without the slightest hesitation.  You reply that just the sight of her getting nude is already making you a little warmer... thrusting your hips so she can see your erect " + player.multiCockDescriptLight() + ".  \"<i>Flattering flirt; you always think with your dick, don't you?</i>\" the mouse laughs.  That's rich; you can see her pussy dripping from here");
-			if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText(", not to mention her dick's pretty hard, too");
+			if (getGame().amilyScene.hasCock()) outputText(", not to mention her dick's pretty hard, too");
 			outputText(".");
 			
 			outputText("\n\nSitting down on your bedroll, you open your arms, inviting Amily over.  The mouse promptly approaches");
-			if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText(", her own " + getGame().amilyScene.amilyCock() + " jutting out in anticipation");
+			if (getGame().amilyScene.hasCock()) outputText(", her own " + getGame().amilyScene.amilyCock() + " jutting out in anticipation");
 			outputText(", wriggling into your arms and angling her pussy over your " + player.cockDescript(x) + ".  With the ease of long practice, she slides smoothly down its length, her warm, wet depths greedily inhaling your masculinity.  \"<i>Ah, nothing like a nice hard cock in your cunt to make you feel warmer,</i>\" she coos.");
 			
 			outputText("\n\nYou simply grin and begin bucking your hips against her, suppressing your moans by kissing her, hugging her tightly against you, holding your bodies flush together.  The mouse hugs you as tightly as she can, smothering you with kisses as her hands roam nimbly across your back, slinking down to squeeze your ass with an obvious hunger to molest you.");
@@ -634,7 +634,7 @@ package classes.Scenes.Seasonal {
 			outputText("\n\nYou guide your hands down her sides, towards her behind, taking it into your hands and helping her rise and fall on your shaft.  She breaks the kiss with a loud exclamation.  \"<i>Oh, this feels so good, [name]!  And it's certainly warming... why, I think I'm starting to break a sweat... and I think you are too,</i>\" she grins.");
 			
 			outputText("\n\nYou ask her to tell you how much she wants this... how much she wants your seed... how much she wants you?  \"<i>I want you!  I want you with everything I have, I want everything you have to give!</i>\" she cries out.  Then she can have all of you... with one last thrust, you bury your shaft deeply into her quivering cunny and blast your liquid lust straight into her waiting womb.  She moans loudly, making no effort to hide her delight at your treatment, and shudders violently in your grip as orgasm rocks her body, flooding your crotch with her rodent fem-cum");
-			if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText(" and painting your belly white with futa-spooge");
+			if (getGame().amilyScene.hasCock()) outputText(" and painting your belly white with futa-spooge");
 			outputText(".");
 			
 			outputText("\n\nYou tell Amily, \"<i>Happy Holidays,</i>\" hugging her in post-coital affection.  \"<i>Happy Holidays, [name]... whatever that is,</i>\" she giggles.  \"<i>But, you know, we might just have a little late Winterfest present brewing after that bit of fun.</i>\"  She bats her eyes at you flirtatiously, patting her cum-stuffed belly.");
@@ -657,7 +657,7 @@ package classes.Scenes.Seasonal {
 			outputText("\n\nSilly mouse, you remark with a smirk.  That's the best way to share body heat... you're still a bit cold... and you're willing to bet so is she... you wink.  \"<i>Ah, so that's your game,</i>\" Amily chuckles.  \"<i>Well, I'm game if you are.</i>\"");
 			
 			outputText("\n\nYou open your arms in a clear invitation for the mousette to sit with you.  ");
-			if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText("Smiling sheepishly you  tell her to mind the erection... though you're not actually looking for sex, you can't help with how cute she looks...  \"<i>Flirt.</i>\"  Amily giggles, but otherwise doesn't comment on it.  ");
+			if (getGame().amilyScene.hasCock()) outputText("Smiling sheepishly you  tell her to mind the erection... though you're not actually looking for sex, you can't help with how cute she looks...  \"<i>Flirt.</i>\"  Amily giggles, but otherwise doesn't comment on it.  ");
 			outputText("The mouse promptly walks over and sits down just in front of you, her back facing you and giving you a perfect opportunity to hug her.  Not keen on missing such an opportunity, you do so.");
 			
 			if (player.hasCock()) outputText("\n\n\"<i>You know I can feel your dick poking me in the back, right?</i>\" Amily giggles, wriggling back against your jutting shaft for emphasis.  You chuckle and tell her to lay off your man-parts... this is just a natural reaction.  \"<i>Oh yeah?  Maybe you wanna see my natural reaction to this situation, hmm?</i>\" she croons.  Maybe later... right now you just want to enjoy her like this.");

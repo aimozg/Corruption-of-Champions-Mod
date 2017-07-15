@@ -1401,7 +1401,7 @@ private function swimInStream():void {
 	if (rand(2) == 0 && camp.amilyInCampPure() && flags[kFLAGS.AMILY_OWNS_BIKINI] > 0)
 	{
 		outputText("\n\nYour mouse-girl lover Amily is standing at the riverbank. She looks flattering in her bikini");
-		if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText(", especially when her penis is exposed");
+		if (amilyScene.hasCock()) outputText(", especially when her penis is exposed");
 		outputText(". She walks into the waters and swims.  ");
 		amilyJoinsStream = true;
 	}

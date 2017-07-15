@@ -547,7 +547,7 @@ public function askAboutAmily():void {
 		outputText("This is met with a chittering squeal you distinctly recognize as Amily's.  \"<i>Oooohhh... I see why " + player.short + " - yeah, gimme all you got! - fell for you!</i>\"\n\n");
 
 		outputText("Curious, you ease open the door.  Inside, you see Urta and Amily, both naked, sitting on one of the cushioned couches along the wall.  Well, Urta is sitting there; Amily is perched in her lap, Urta's girthy prick visibly stuffed into her folds, with");
-		if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText(" her " + amilyScene.amilyCock() + " half-erect and drooling pre and");
+		if (amilyScene.hasCock()) outputText(" her " + amilyScene.amilyCock() + " half-erect and drooling pre and");
 		outputText(" her stomach swollen from the fox-morph's prodigious cum output to the point she looks ");
 		if (amilyScene.pregnancy.event >= 3) outputText("almost twice as ");
 		outputText("pregnant.  The mouse is holding a half-full bottle of what you think is Barkardi 151, waving it enthusiastically through the air even as she thumps up and down in Urta's lap, trying to coax one last orgasm from the visibly-drained hermaphrodite.  She giggles with delight and takes a messy swig from her bottle, spilling some of the booze onto her " + amilyScene.amilyTits() + " before twisting around and sloppily kissing Urta, trying to feed the contents of her mouth to the fox but dribbling half down her neck.\n\n");
@@ -673,7 +673,7 @@ public function amilyUrtaSex():void {
 	flags[kFLAGS.URTA_AMILY_FOLLOWUP_NEEDED] = 2;
 	clearOutput();
 	outputText("With a knowing smirk, you ask how Amily would feel about going to see Urta and maybe having a little fun with her.  The mouse-girl flushes with embarrassment, but you can see the eagerness in her body language.  \"<i>Okay, sure; I kind of like going to the city... besides, between you and me?  I think Urta needs all the friends she can get... never thought I'd feel sorry for a hermaphrodite.</i>\"  She mumbles this last part to herself, but you can still hear her.");
-	if (player.cor > (50 + player.corruptionTolerance()) && flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText("  Privately, you note that it's bullshit; she's nothing <b>but</b> self-pity.");
+	if (player.cor > (50 + player.corruptionTolerance()) && amilyScene.hasCock()) outputText("  Privately, you note that it's bullshit; she's nothing <b>but</b> self-pity.");
 	outputText("\n\n");
 	
 	outputText("With a gesture, the two of you set off.  As soon as you pass through the gates, you head towards the Wet Bitch.  Sure enough, Urta is at her usual table, and she smiles in delight to see you.  \"<i>" + player.short + ", Amily, hello!</i>\"  You take seats at the same table, as she ");
@@ -717,11 +717,11 @@ private function amilyUrtaSexWatch():void {
 	outputText("Amily smiles back and approaches Urta, giving her a small peck on the lips and gently stroking her cock.\n\n");
 
 	outputText("Urta groans, unable to resist groping Amily's " + amilyScene.amilyTits() + ".  \"<i>Let me sit down, first, squeaky; I've never been one for sex while standing up</i>\".  She slowly lowers herself to the ground and then pulls Amily down into her lap, idly grinding her mare-cock against Amily's torso");
-	if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText(", up the underside of her penis,");
+	if (amilyScene.hasCock()) outputText(", up the underside of her penis,");
 	outputText(" and between her " + amilyScene.amilyTits() + ".\n\n");
 
 	outputText("Amily slides her cleavage down Urta's length to gently give her flared tip a small lick, before rising");
-	if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText(", a bead of pre-cum stretching into a line connecting their two members");
+	if (amilyScene.hasCock()) outputText(", a bead of pre-cum stretching into a line connecting their two members");
 	outputText(".  Straddling Urta and aligning the heavy horse-cock with her moist snatch, Amily teases, \"<i>Ready for this, foxy?</i>\"  Her eyes dart towards you for a split second.\n\n");
 
 	outputText("You just smile gently and watch Urta, who swallows hard, tongue lolling out with anticipation before she remembers herself.  \"<i>Anytime, little mouse; if you can handle all of this.</i>\"  She's obviously trying to be bold about this - maybe your presence is unnerving her more than you thought.\n\n");
