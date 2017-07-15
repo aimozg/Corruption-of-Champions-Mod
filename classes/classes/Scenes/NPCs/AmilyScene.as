@@ -103,6 +103,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_FOLLOWER:int                                              =   43; // Amily Follower. 0=Not Follower, 1=Follower 2=Corrupted Follower?
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
+		public static const kFLAGS_AMILY_NOT_FURRY:int                                             =  337; //  1 = Amily is no longer a flea-ridden furry who stinks up your carpet.
 		public static const kFLAGS_AMILY_TREE_FLIPOUT:int                                          =  599; //
 
 		// Global state: Not met / Met / Met, accepted offer / Follower pure / Follower corrupt / Run away (corrupt, worms, or tree flipout) / Completely Removed
@@ -159,6 +160,18 @@ package classes.Scenes.NPCs
 			unflagFollower();
 			flags[kFLAGS_AMILY_VILLAGE_ENCOUNTERS_DISABLED] = 1;
 		}
+		public function flagNotFurry():void {
+			flags[kFLAGS_AMILY_NOT_FURRY] = 1;
+		}
+		public function flagReFurry():void {
+			flags[kFLAGS_AMILY_NOT_FURRY] = 0;
+		}
+		public function isNotFurry():Boolean {
+			return flags[kFLAGS_AMILY_NOT_FURRY] == 1;
+		}
+		public function isFurry():Boolean {
+			return !isNotFurry();
+		}
 		public function hasMet():Boolean {
 			return flags[kFLAGS_AMILY_MET]>0;
 		}
@@ -208,8 +221,8 @@ package classes.Scenes.NPCs
 		public function getBirthedByAmily():int {
 			return flags[kFLAGS_AMILY_BIRTH_TOTAL];
 		}
-		public function addBirthedByAmily(mod:int =1):void {
-			flags[kFLAGS_AMILY_BIRTH_TOTAL]+=mod;
+		public function incBirthedByAmily():void {
+			flags[kFLAGS_AMILY_BIRTH_TOTAL]++;
 		}
 		public function getFuckCounter():int {
 			return flags[kFLAGS_AMILY_FUCK_COUNTER];
@@ -298,7 +311,7 @@ package classes.Scenes.NPCs
 		// 3172 = Ask to defur Amily
 		// 3174 = Defur Amily at camp (both corrupt/noncorrupt)
 		public function amilySprite():void {
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) spriteSelect(SpriteDb.s_amily);
+			if (isFurry()) spriteSelect(SpriteDb.s_amily);
 			else spriteSelect(SpriteDb.s_amily_defurr);
 		}
 
@@ -398,7 +411,7 @@ package classes.Scenes.NPCs
 						//Accept her / Turn her down gently / Turn her down bluntly
 						menu();
 						addButton(0, "Accept Her", desperateAmilyPleaAcceptHer);
-						if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) {
+						if (isFurry()) {
 							addButton(1, "RejectFurry", amilyNoFur);
 						} else {
 							addDisabledButton(1, "RejectFurry");
@@ -1432,7 +1445,7 @@ package classes.Scenes.NPCs
 
 			outputText("What will you do?");
 			//Increase baby count here rather than in 3 places.
-			addBirthedByAmily();
+			incBirthedByAmily();
 			//Leave / Watch / Help
 			menu();
 			addButton(0, "Leave", pregnancyIsScaryGoddamnMousePregnancyImNotWatchingThisShit);
@@ -1459,17 +1472,17 @@ package classes.Scenes.NPCs
 			amilySprite();
 			outputText("You don't want to just run away and leave her, but at the same time you think it would be best to respect her privacy. You stand a respectful distance away, watching as she strains. Her pink nether lips part and a small");
 			//([horsecock]
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText(", mousy figure - pink, hairless and ");
+			if (isFurry()) outputText(", mousy figure - pink, hairless and ");
 			else outputText(" figure -");
 			outputText(" maybe six inches tall - slips out, falling to the ground with a squeak. Fortunately, Amily has prepared a pile of rags and soft leaves to cushion its landing. It rolls around a bit, and then scrambles with surprising speed; which is good, as it is joined by company very quickly. A second infant falls onto the padding beside it, and then a third... a fourth...\n\n");
 
 			outputText("You watch as baby after baby slips free of its mother's womb and into the wider world. ");
 			//([horsecock]
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText(" Though hairless like regular infant mice,");
+			if (isFurry()) outputText(" Though hairless like regular infant mice,");
 			else outputText(" Though remarkably similar to a regular infant - minus the ears and tail, of course -");
 			outputText(" they can already crawl around at high speed; even totter unsteadily on two legs. The first of them begin to instinctively make its way up its mother's body to latch onto one of her nipples and suckle. You lose count somewhere after a dozen, but Amily finally gives an exhausted sigh of relief as the afterbirth slips free of her body. Each infant has nursed from her by this point. They now seem more confident about standing on two legs,");
 			//([horsecock]
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText(" and fur has already begun to cover their formerly-naked bodies.");
+			if (isFurry()) outputText(" and fur has already begun to cover their formerly-naked bodies.");
 			else outputText(" maturing dramatically as you watch.");
 			outputText("  Their color patterns vary considerably; white, black and brown are most common, and you even see one or two with your hair color. Amily flops back onto her rump and then topples over onto her back, clearly too tired to stand up. Her offspring crowd around, cuddling up to her, and she gives them a tired but happy smile.\n\n");
 
@@ -1485,7 +1498,7 @@ package classes.Scenes.NPCs
 			outputText("\"<i>Hghnn... " + player.short + "? What are you doing?</i>\" Amily asks, before groaning again as another contraction hits her. You reassure her that you're here to help as you kneel beside her, and reach out to touch her swollen middle, placing one hand on either side of its globular mass. Unsure of what else to do, you start to gently massage it, trying to relax and soothe the muscles after every time they clench and lower the pain when she goes through another contraction. She starts to thank you, then clenches her teeth,");
 
 			//([horsecock]
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0)
+			if (isFurry())
 				outputText("turns her little muzzle skywards and hisses in pain");
 			else
 				outputText("hissing in pain"); // This sound a bit wrong for what should look like a human...
@@ -1501,7 +1514,7 @@ package classes.Scenes.NPCs
 			outputText("Uncertain, you do as you are told; your daughter latches onto her mother's ");
 
 			//([horsecock]
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0)
+			if (isFurry())
 				outputText("fur");
 			else
 				outputText("bosom");
@@ -1509,7 +1522,7 @@ package classes.Scenes.NPCs
 			outputText(", rooting eagerly for her nipple as your hands dart down to catch her first sibling. It almost becomes a rhythm; catch a baby, place her or him at Amily's breast to nurse, catch the next baby... Well over a dozen babies are born - you think it might be as many as two dozen - before Amily finally stops, the afterbirth gushing out to signal the end of her labors. Gently, you catch her and lower her onto a soft piece of ground to rest. Around you, your many children play; though born only a short time ago, they can now stand strong and proud on their two legs.");
 
 			//([horsecock]
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0)
+			if (isFurry())
 				outputText("Their fur has come in too, something triggered by the first drink of their mother's milk.");
 			else
 				outputText("Their hair is also starting to grow in an accelerated rate.");
@@ -1517,7 +1530,7 @@ package classes.Scenes.NPCs
 			outputText("  Your firstborn daughter is already asserting herself as the leader of the pack, and you can't help but notice that her ");
 
 			//([horsecock]
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0)
+			if (isFurry())
 				outputText("fur");
 			else
 				outputText("hair");
@@ -2190,7 +2203,7 @@ package classes.Scenes.NPCs
 
 			outputText("You smile, and tell her that you're happy to do it with her as often as it takes. She blushes so red ");
 			//([horsecock]
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0)
+			if (isFurry())
 				outputText("it's almost like the fur on her cheeks has turned red.");
 			else
 				outputText("she nearly resembles an imp!");
@@ -2322,7 +2335,7 @@ package classes.Scenes.NPCs
 			clearOutput();
 			amilySprite();
 			outputText("Slowly, doing your best to convey that you will stop or back away if Amily is uncomfortable with this, you press your lips tenderly to Amily's.");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0)
+			if (isFurry())
 				outputText("  It's quite an unusual experience; though her lips proper are as naked as your own, there is fur around them, soft and fine and just close enough to tickle the edges of your own lips, to say nothing of the unusual sensation of kissing someone with a muzzle.  Amily doesn't seem bothered at all. In fact, she kisses you back, and quite eagerly so, too.");
 			outputText("\n\n");
 			continueAmilySmex();
@@ -2341,7 +2354,7 @@ package classes.Scenes.NPCs
 			{
 				outputText("Determined to make this good for Amily too, you resume stroking and caressing her, doing your best to meet her thrusts with your own, and planting the odd kiss on the nape of her neck");
 				//([horsecock]
-				if (flags[kFLAGS.AMILY_NOT_FURRY]==0)
+				if (isFurry())
 					outputText(" - not actually an unpleasant experience, despite the fur");
 				outputText(". She is surprised, and tenses warily at first, but then melts under your ministrations, squeaking softly in her appreciation of your efforts.");
 			}
@@ -2744,7 +2757,7 @@ package classes.Scenes.NPCs
 				addButton(1, "Talk", talkToAmilyCamp);
 				addButton(2, "Make Love", fuckTheMouseBitch);
 				addButton(3, "Give Present", giveAmilyAPresent);
-				addButton(4, (flags[kFLAGS.AMILY_NOT_FURRY] == 0 ? "Defur" : "Refuzz"), (flags[kFLAGS.AMILY_NOT_FURRY] == 0 ? amilyDefurryOfferAtCamp: refuzzAmily));
+				addButton(4, (isFurry() ? "Defur" : "Refuzz"), (isFurry() ? amilyDefurryOfferAtCamp: refuzzAmily));
 				//If no fight yet, have option to introduce Urta and Amily
 				if (player.gender > 0 && isPureFollower() && flags[kFLAGS.AMILY_VISITING_URTA] == 0 && (flags[kFLAGS.URTA_COMFORTABLE_WITH_OWN_BODY] >= 5 || urtaLove()) && !kGAMECLASS.urtaQuest.urtaBusy())
 				{
@@ -2766,7 +2779,7 @@ package classes.Scenes.NPCs
 				addButton(1, "Talk", talkWithCORRUPTCUNT);
 				addButton(2, "Sex", fuckTheMouseBitch);
 				addButton(3, "Give Item", giveAmilyAPresent);
-				addButton(4, (flags[kFLAGS.AMILY_NOT_FURRY] == 0 ? "Defur" : "Refuzz"), (flags[kFLAGS.AMILY_NOT_FURRY] == 0 ? amilyDefurryOfferAtCamp: refuzzAmily));
+				addButton(4, (isFurry() ? "Defur" : "Refuzz"), (isFurry() ? amilyDefurryOfferAtCamp: refuzzAmily));
 				addButton(14, "Leave", camp.campSlavesMenu);
 				if (!pregnancy.isPregnant && flags[kFLAGS.FOLLOWER_AT_FARM_AMILY] == 0 && flags[kFLAGS.FARM_CORRUPTION_STARTED] == 1)
 				{
@@ -2786,7 +2799,7 @@ package classes.Scenes.NPCs
 			mainView.bottomButtons[1].toolTipText = "Discuss with Amily about something";
 			mainView.bottomButtons[2].toolTipText = "Proposition Amily for some sexy-times.";
 			mainView.bottomButtons[3].toolTipText = "Give Amily something to give her clothes or possibly alter how she looks.";
-			mainView.bottomButtons[4].toolTipText = (flags[kFLAGS.AMILY_NOT_FURRY] == 0 ? "Give Amily something to remove her fur." : "Give Amily something to re-grow her fur.");
+			mainView.bottomButtons[4].toolTipText = (isFurry() ? "Give Amily something to remove her fur." : "Give Amily something to re-grow her fur.");
 		}
 
 		//Corrupt Amily Sex Options
@@ -2827,15 +2840,15 @@ package classes.Scenes.NPCs
 			clearOutput();
 			// [HORSECOCK]
 			var stopSayingNetherlipsFuck:String = "its hairless netherlips seem to shine in between her fur";
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 1)
+			if (isNotFurry())
 				stopSayingNetherlipsFuck="its netherlips seem to shine in contrast to her thighs";
 
-			var what:String = (flags[kFLAGS.AMILY_NOT_FURRY] == 0) ? "mouse-morph":"mouse girl";
-			var onHerMuzzle:String = (flags[kFLAGS.AMILY_NOT_FURRY] == 0)?"on her furry little muzzle ":"";
+			var what:String = (isFurry()) ? "mouse-morph":"mouse girl";
+			var onHerMuzzle:String = (isFurry())?"on her furry little muzzle ":"";
 			var furDesc:String = "";
 			var feetDesc:String = "";
 			//FURRAH
-			if (flags[kFLAGS.AMILY_NOT_FURRY]==0) {
+			if (isFurry()) {
 				//Corrupt
 				if (isCorrupt()) {
 					furDesc = "She is covered in fur, except on her hands, feet, ears and tail.";
@@ -2858,10 +2871,10 @@ package classes.Scenes.NPCs
 				//(If Amily has a penis:
 				if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) {
 					//([horsecock]
-					var dickDesc:String = (flags[kFLAGS.AMILY_NOT_FURRY] == 0) ? "naked and hairless and pink and throbbing":"pink and throbbing";
+					var dickDesc:String = (isFurry()) ? "naked and hairless and pink and throbbing":"pink and throbbing";
 					outputText("She has a " + flags[kFLAGS.AMILY_WANG_LENGTH] + "-inch penis growing from her crotch, replacing the clitoris that would normally jut from her vulva. It is surprisingly human looking, " + dickDesc + "");
 					if (flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] == 0) outputText(" - it even has a foreskin, not a sheath.");
-					else outputText(", though it does have a" + ((flags[kFLAGS.AMILY_NOT_FURRY] == 1) ? " little sheath.":" fuzzy little sheath.") + "");
+					else outputText(", though it does have a" + ((isNotFurry()) ? " little sheath.":" fuzzy little sheath.") + "");
 					outputText("\n\n")
 				}
 				if (flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] > 0) {
@@ -2880,9 +2893,9 @@ package classes.Scenes.NPCs
 
 				//(If Amily has a penis:
 				if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) {
-					outputText("She has a half-erect " + flags[kFLAGS.AMILY_WANG_LENGTH] + "-inch penis growing from her crotch. It is surprisingly human looking, "+((flags[kFLAGS.AMILY_NOT_FURRY]==0) ? "naked and hairless ":"") +"and pink and throbbing");
+					outputText("She has a half-erect " + flags[kFLAGS.AMILY_WANG_LENGTH] + "-inch penis growing from her crotch. It is surprisingly human looking, "+((isFurry()) ? "naked and hairless ":"") +"and pink and throbbing");
 					if (flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] == 0) outputText(" - it even has a foreskin, not a sheath.\n\n");
-					else outputText(", though it does have a" + ((flags[kFLAGS.AMILY_NOT_FURRY]==1) ? " little sheath.":" fuzzy little sheath.") + "\n\n");
+					else outputText(", though it does have a" + ((isNotFurry()) ? " little sheath.":" fuzzy little sheath.") + "\n\n");
 				}
 				if (flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] > 0) {
 					outputText("She has " + amilyBalls() + " dangling ");
@@ -3137,7 +3150,7 @@ package classes.Scenes.NPCs
 		//Take Charge 4 - amily sucks off
 		private function takeChargeAmilyGetSucked():void {
 			amilySprite();
-			var hands:String = (flags[kFLAGS.AMILY_NOT_FURRY] == 0) ? "paws":"hands"; // [Horsecocks]
+			var hands:String = (isFurry()) ? "paws":"hands"; // [Horsecocks]
 			clearOutput();
 			outputText("You stand up and undo your clothes, allowing ");
 			if (player.totalCocks() > 1) outputText("each of ");
@@ -3146,7 +3159,7 @@ package classes.Scenes.NPCs
 			outputText("You can't say that she looks too eager to do so, but she diligently sits up and takes hold of your ");
 			if (player.cockTotal() > 1) outputText("largest ");
 			// [Horsecocks]
-			outputText(player.cockDescript(0) + ", stroking it with her "+hands+" and starting to lick the tip. You moan encouragingly and she takes it into her mouth, starting to suck on just the head, her tongue continuing to stroke and lick the head and part of the shaft. Seeing that you are clearly enjoying her ministrations, she gets bolder and starts taking more and more of it in"+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?" - the experience is hard to describe, as there's quite a difference between getting a blowjob and getting a blowjob from someone with a muzzle":"") +". Soon, you can feel that your " + player.cockDescript(0) + " is bumping against her throat, and you try to back away a little to avoid choking her. To your surprise, though, she firmly pulls you back in, and the two of you make something of a game of it, you pulling out, and her pulling you back in.  All the while, she sucks and licks and delicately scrapes your shaft with her teeth - the stimulus is incredible. You groan and moan as the warmth fills you, the churning pleasure growing deep inside your ");
+			outputText(player.cockDescript(0) + ", stroking it with her "+hands+" and starting to lick the tip. You moan encouragingly and she takes it into her mouth, starting to suck on just the head, her tongue continuing to stroke and lick the head and part of the shaft. Seeing that you are clearly enjoying her ministrations, she gets bolder and starts taking more and more of it in"+((isFurry())?" - the experience is hard to describe, as there's quite a difference between getting a blowjob and getting a blowjob from someone with a muzzle":"") +". Soon, you can feel that your " + player.cockDescript(0) + " is bumping against her throat, and you try to back away a little to avoid choking her. To your surprise, though, she firmly pulls you back in, and the two of you make something of a game of it, you pulling out, and her pulling you back in.  All the while, she sucks and licks and delicately scrapes your shaft with her teeth - the stimulus is incredible. You groan and moan as the warmth fills you, the churning pleasure growing deep inside your ");
 			if (player.balls > 0) outputText(player.ballsDescriptLight());
 			else outputText("body");
 			outputText(" as you ready yourself for release.\n\n");
@@ -3219,7 +3232,7 @@ package classes.Scenes.NPCs
 			//(if herm:
 			if (player.hasCock()) outputText(", spraying your own herm-cum onto Amily's face");
 			outputText(", splattering mixed fluids below your " + player.legs() + " and Amily's ");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("furry ");
+			if (isFurry()) outputText("furry ");
 			outputText("thighs.\n\n");
 
 			outputText("You collapse backwards off of Amily, waiting to regain your breath and your strength, then compliment Amily on just how good she is with her extra appendage.\n\n");
@@ -3756,7 +3769,7 @@ package classes.Scenes.NPCs
 			amilySprite();
 			// [HORSECOCKS] - Since I'm fucking lazy, that's why
 			var footpaw:String = "foot";
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0)
+			if (isFurry())
 				footpaw += "paw";
 			if (flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] == 0) {
 				if (isCorrupt()) {
@@ -3782,9 +3795,9 @@ package classes.Scenes.NPCs
 						outputText("You focus your corruptive powers, imagining Amily with huge balls, producing delicious cum that she will spill at your command. The mouse cumslut becoming more and more of a toy; the only purpose in her life, to obey and pleasure you. You order her to withdraw; she complies reluctantly, and watches as you finish yourself off. A veritable tide of black juices spills from your " + player.vaginaDescript(0) + " to hit her groin. Amily moans with every jet that is spilled on her corrupt form, relishing in the warmth that spreads throughout her.\n\n");
 
 					}
-					outputText("You watch, smiling, as a couple of " + ((flags[kFLAGS.AMILY_NOT_FURRY]==0) ? "lumps begin forming" :"fuzzy lumps begin forming"));
-					if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText("right under her cock. Her skin grows and covers the base of her cock, pulling it in; giving her what looks like a sheath. It continues to expand and is finally complimented by a couple of orbs falling into her " + ((flags[kFLAGS.AMILY_NOT_FURRY]==0) ? "fuzzy " :"") + "sack, giving it the weight it needs to produce more cum. ");
-					else outputText("between her legs. Her skin expands with the lumps, forming into a small sack. It continues to expand and is finally complimented by a couple of orbs falling into her " + ((flags[kFLAGS.AMILY_NOT_FURRY]==0) ? "fuzzy " :"") + " nutsack, giving it the weight it needs to produce cum, though how it will ever expel it is a mystery to you. ");
+					outputText("You watch, smiling, as a couple of " + ((isFurry()) ? "lumps begin forming" :"fuzzy lumps begin forming"));
+					if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText("right under her cock. Her skin grows and covers the base of her cock, pulling it in; giving her what looks like a sheath. It continues to expand and is finally complimented by a couple of orbs falling into her " + ((isFurry()) ? "fuzzy " :"") + "sack, giving it the weight it needs to produce more cum. ");
+					else outputText("between her legs. Her skin expands with the lumps, forming into a small sack. It continues to expand and is finally complimented by a couple of orbs falling into her " + ((isFurry()) ? "fuzzy " :"") + " nutsack, giving it the weight it needs to produce cum, though how it will ever expel it is a mystery to you. ");
 					outputText("\"<i>Good. Now, I want you to practice walking with these. I can't have you hurting yourself as you walk about,</i>\" you tell her. \"<i>Yes, " + player.mf("master","mistress") + "</i>\,\" she replies, panting slightly; you leave her prone on the ground.");
 					player.orgasm('Generic');
 					flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE]++;
@@ -4323,7 +4336,7 @@ package classes.Scenes.NPCs
 				if (flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] >= 15 && flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] < 18) desc += "beachball-sized ";
 				if (flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] >= 18) desc += "hideously swollen and oversized ";
 			}
-			else if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) desc += "fuzzy ";
+			else if (isFurry()) desc += "fuzzy ";
 			rando = rand(9);
 			if (rando < 4) {
 				desc += "balls";
@@ -4556,11 +4569,11 @@ package classes.Scenes.NPCs
 			outputText("\"<i>Come and suck me off,</i>\" you order. Amily wastes no time and scrambles to nuzzle your crotch affectionately");
 			//[(if PC has a pussy)
 			if (player.hasVagina()) {
-				outputText("; getting some of your juices on her "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"lips"));
+				outputText("; getting some of your juices on her "+((isFurry())?"muzzle":"lips"));
 				if (player.balls > 0) outputText(" and ");
 			}
 			else if (player.balls > 0) outputText("; ");
-			if (player.balls > 0) outputText("tickling your balls with her "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"fur":"skin"));
+			if (player.balls > 0) outputText("tickling your balls with her "+((isFurry())?"fur":"skin"));
 			outputText(".  She rubs her head all over your crotch, making sure to catch as much of your musk as possible; as well as exciting you further. Finally when she's done she begins saying, \"<i>Thank you for allowing this worthless cunt to taste your wonderful essence, my " + player.mf("master","mistress") + ".</i>\" Amily gives your shaft a small lick and then continues, \"<i>Blessed be, oh great Marae, for granting this slutty cumdumpster mercy and allowing me to have and serve my " + player.mf("master","mistress") + " so fully. Amen.</i>\"  ");
 			outputText("With that said, she grins widely and dives into her task, brutally shoving as much of your shaft into her mouth as she can.");
 			//[(if PC is huge)
@@ -4609,7 +4622,7 @@ package classes.Scenes.NPCs
 				if (!player.hasCock()) outputText(", ");
 				outputText("your " + player.ballsDescriptLight() + " gently resting atop her head, supported by her small horns");
 			}
-			outputText(".  She moves her head back, a thin strand of girlcum linking her nose to your " + player.vaginaDescript() + ".  Amily "+((flags[kFLAGS.AMILY_NOT_FURRY]==0) ? "licks":"wipes") +" her nose "+((flags[kFLAGS.AMILY_NOT_FURRY]==0) ? "off and licks it all up":"") +", savoring the taste of the juices, \"<i>Wonderful, mistress, just wonderful,</i>\" Amily grins; then she bows and says, \"<i>Thank you for allowing this worthless cunt to taste your wonderful essence, my mistress.</i>\"  She gives your clit a quick lick and continues, \"<i>Blessed be, oh great Marae.  For granting this slutty cumdumpster mercy and allowing me to have serve my " + player.mf("master","mistress") + " so fully.  Amen.</i>\" With that said, she licks her lips, ");
+			outputText(".  She moves her head back, a thin strand of girlcum linking her nose to your " + player.vaginaDescript() + ".  Amily "+((isFurry()) ? "licks":"wipes") +" her nose "+((isFurry()) ? "off and licks it all up":"") +", savoring the taste of the juices, \"<i>Wonderful, mistress, just wonderful,</i>\" Amily grins; then she bows and says, \"<i>Thank you for allowing this worthless cunt to taste your wonderful essence, my mistress.</i>\"  She gives your clit a quick lick and continues, \"<i>Blessed be, oh great Marae.  For granting this slutty cumdumpster mercy and allowing me to have serve my " + player.mf("master","mistress") + " so fully.  Amen.</i>\" With that said, she licks her lips, ");
 			//[(if PC has balls)
 			if (player.balls > 0) outputText("lifts your " + player.ballsDescriptLight() + " to set them gently atop her head, ");
 			outputText("then she dives into her task.\n\n");
@@ -4617,37 +4630,37 @@ package classes.Scenes.NPCs
 			outputText("Amily excitedly slathers your netherlips with her saliva, licking all around your " + player.vaginaDescript() + "; every once in a while she'll stop her ministrations to give your ");
 			if (player.balls > 0) outputText("balls");
 			else outputText(player.clitDescript());
-			outputText(" a quick kiss.  You pat her head, letting her know you're pleased with her ministrations, but also urging her to get on with it and start eating you out properly.  The silent order does not go unnoticed and Amily plunges her tongue as far into your love-hole as she can"+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"; her fur tickles your labia pleasurably":""));
+			outputText(" a quick kiss.  You pat her head, letting her know you're pleased with her ministrations, but also urging her to get on with it and start eating you out properly.  The silent order does not go unnoticed and Amily plunges her tongue as far into your love-hole as she can"+((isFurry())?"; her fur tickles your labia pleasurably":""));
 			//[(if PC has balls)
 			if (player.balls > 0) outputText(" and her small horns gently massage your " + player.ballsDescriptLight());
 			//[(if PC has a cock)
 			if (player.hasCock()) outputText("; " + player.sMultiCockDesc() + " throbs and begins leaking pre; it forms small rivulets that run down onto Amily's head");
-			outputText(".  The "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"mousette":"succubus") +" jumps slightly and you can almost imagine her grinning as she eats out her meal.\n\n");
+			outputText(".  The "+((isFurry())?"mousette":"succubus") +" jumps slightly and you can almost imagine her grinning as she eats out her meal.\n\n");
 
 			outputText("You wonder, just how has Amily been practicing her pussy eating skills - she's really good at this, and her intimate knowledge of your insides combined with her agile tongue means she can lick your special spot frequently.  Each time her tongue brushes over your g-spot, you reward her with increasingly bigger streams of femcum.  Amily remains in a constant rhythm, and while it is pleasurable you're going to need more if you're to ever reach orgasm; when you look down to order her to get serious you see she's looking back at you with a mischievous look; you giggle and say, \"<i>So that's how it's gonna be huh? Clever little bitch.</i>\"\n\n");
 			// More [Horsecock]
-			outputText("You move back and push Amily back into the ground, she hits the ground with a <b>THUD</b> and grins at you.  You move quickly, sitting on top of Amily's face and beginning using her mousy "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"nose") +" like a dildo, rubbing it all over your pussy; her tongue darts out to give little licks and enhance your pleasure.\n\n");
+			outputText("You move back and push Amily back into the ground, she hits the ground with a <b>THUD</b> and grins at you.  You move quickly, sitting on top of Amily's face and beginning using her mousy "+((isFurry())?"muzzle":"nose") +" like a dildo, rubbing it all over your pussy; her tongue darts out to give little licks and enhance your pleasure.\n\n");
 			//(if PC is loose enough [Horsecock] and has a muzzle to fuck with)
-			if (player.vaginalCapacity() >= 45 && flags[kFLAGS.AMILY_NOT_FURRY]==0) {
+			if (player.vaginalCapacity() >= 45 && isFurry()) {
 				outputText("You giggle and decide to take things one step further; you shove Amily's muzzle into your " + player.vaginaDescript() + "; Amily's eyes bulge with surprise once she feels her muzzle begin to slide inside you and you voice your pleasure with a long moan, \"<i>I'm not letting you breathe until you make me come, slut.</i>\"  With those words, you begin rising and lowering yourself into Amily's muzzle; her tongue darts out to taste your walls once in a while, but most of the time your clenching vagina keeps her muzzle shut, so Amily settles for muzzle-fucking you like the good little cumslut slave she is.\n\n");
 			}
 			else {
 				// BEGIN [Horsecock]
 				outputText("You giggle and decide to take things one step further; you ");
-				if (flags[kFLAGS.AMILY_NOT_FURRY] == 0)
+				if (isFurry())
 					outputText("hold Amily's muzzle tightly closed and shove Amily's muzzle against your ");
 				else
 					outputText("bury her nose as far as it will go into your ");
-				outputText(player.vaginaDescript() + " , holding her " + ((flags[kFLAGS.AMILY_NOT_FURRY] == 0)?"nose":"mouth") + " closed; Amily's eyes bulge with surprise and you voice your pleasure with a long moan, \"<i>I'm not letting you breathe until you make me come slut. </i>\" With those words, you begin frigging yourself against Amily's ");
-				outputText(((flags[kFLAGS.AMILY_NOT_FURRY] == 0)?"mousy muzzle":"face") + ", intent on driving yourself to orgasm as you feel her cheeks bulge with air and need.\n\n");
+				outputText(player.vaginaDescript() + " , holding her " + ((isFurry())?"nose":"mouth") + " closed; Amily's eyes bulge with surprise and you voice your pleasure with a long moan, \"<i>I'm not letting you breathe until you make me come slut. </i>\" With those words, you begin frigging yourself against Amily's ");
+				outputText(((isFurry())?"mousy muzzle":"face") + ", intent on driving yourself to orgasm as you feel her cheeks bulge with air and need.\n\n");
 				// END [Horsecock]
 			}
 
 			//Both variations link here
 			outputText("Amily's rather desperate and eager ministrations are effective and you feel yourself on the edge of orgasm.  ");
 			//[(if PC is loose enough)
-			if (player.vaginalCapacity() >= 45) outputText("You pull yourself off Amily's "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"face") +" and moan deeply.");
-			else outputText("You let go of Amily's "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"face") +" and moan deeply.");
+			if (player.vaginalCapacity() >= 45) outputText("You pull yourself off Amily's "+((isFurry())?"muzzle":"face") +" and moan deeply.");
+			else outputText("You let go of Amily's "+((isFurry())?"muzzle":"face") +" and moan deeply.");
 			outputText("  Amily gasps for air, just in time to receive a faceful of your girlcum; she quickly latches her mouth onto your " + player.vaginaDescript() + ", sealing it to avoid losing any more of your delicious juices; and you're more than happy to feed her as much as you can. Amily never stops drinking, though some droplets inevitably escape her and splatter against her wet face. Once you're done you rise and look down at your handywork.\n\n");
 
 			outputText("Amily coughs, but gathers as much of your spilled juice as she can and licks if off her hands.  When she's settled down, you look at her, as if waiting for something.  \"<i>Oh! Of course, forgive me mistress,</i>\" Amily says, quickly scrambling up onto her knees to begin licking your pussy and thighs clean. Once you're satisfied, you get dressed and walk away.  \"<i>Mistress!</i>\" Amily calls out to you; you turn to see the smiling corrupt mousette rubbing her belly and licking her lips.  \"<i>Thank you for the wonderful meal.</i>\"\n\n");
@@ -4700,7 +4713,7 @@ package classes.Scenes.NPCs
 			//[(if Amily's a squirter)
 			if (flags[kFLAGS.AMILY_VAGINAL_WETNESS] >= 5) outputText(" and a jet of warm juices splashes against your " + player.vaginaDescript());
 			// [Horsecock]
-			outputText("; her "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"claws":"feet") +" curl in pleasure and she begins panting, eager to pleasure you and enjoying being used so. Amily looks at you, awaiting your next move or command with lusty eyes; you grin and wonder how much teasing she can take before she starts begging for release. You rub Amily's little wethole with your own gently, barely touching and taking care to ensure your clit pokes hers; Amily moans in pleasure, but you can see this is not enough to get her to cum. Still you continue with your light teasing until Amily says, \"<i>Please mistress! I-I need... I can't... Ah!</i>\"\n\n");
+			outputText("; her "+((isFurry())?"claws":"feet") +" curl in pleasure and she begins panting, eager to pleasure you and enjoying being used so. Amily looks at you, awaiting your next move or command with lusty eyes; you grin and wonder how much teasing she can take before she starts begging for release. You rub Amily's little wethole with your own gently, barely touching and taking care to ensure your clit pokes hers; Amily moans in pleasure, but you can see this is not enough to get her to cum. Still you continue with your light teasing until Amily says, \"<i>Please mistress! I-I need... I can't... Ah!</i>\"\n\n");
 
 			outputText("Watching the slutty little succu-mouse buck and writhe under you is so fun, but you've got a needy pussy");
 			if (player.hasCock()) outputText(" and an aching " + player.cockDescript(0));
@@ -4709,7 +4722,7 @@ package classes.Scenes.NPCs
 			outputText("You give her a patronizing smile and then pat her gently on the head. \"<i>There, there, my little slut; it's all right. After all, how can you be expected to think about anything other then sex? That's not what you're made for - you're my little sextoy. I made you to fuck and fuck; and that's what you're going to do.</i>\" You smile sweetly, then finally lower your pussy back to her own now-sopping fuckhole. It squelches and slurps as your netherlips mesh together, her little clit rubbing against your own " + player.clitDescript() + " in a way that sends the most delightful tingles of pleasure racing through your lips. Smiling fiercely, you begin to squeeze and fondle her big mouse-tits, feeling their weight, their delightfully grippable balance between softness and firmness, even as you start to rock back and forth.\n\n");
 
 			// [Horsecock]
-			outputText("\"<i>Thank you so much mistress! I love to fuck! I love to be fucked! I love to be used! I love being your sextoy! I love the way your pussy feels against mine! I love you, mistress!</i>\" Amily screams as an orgasm rocks her. She presses against you with all her strength, legs wrapping themselves around you, "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"claws":"feet") +" curled in pleasure, eyes rolled back.");
+			outputText("\"<i>Thank you so much mistress! I love to fuck! I love to be fucked! I love to be used! I love being your sextoy! I love the way your pussy feels against mine! I love you, mistress!</i>\" Amily screams as an orgasm rocks her. She presses against you with all her strength, legs wrapping themselves around you, "+((isFurry())?"claws":"feet") +" curled in pleasure, eyes rolled back.");
 			//[(if Amily's a squirter)
 			if (flags[kFLAGS.AMILY_VAGINAL_WETNESS] >= 5) outputText("  A veritable jet of juices shoots up, splashing against your netherlips, some of it even making it inside.");
 			else outputText("  Wet squelches and splats resound around you, as the results of Amily's orgasm flood what little space remains between the two of you.");
@@ -4718,7 +4731,7 @@ package classes.Scenes.NPCs
 			outputText("\n\n");
 
 			// [Horsecock]
-			outputText("You grin wickedly; the former puritan "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"mouse":"") +", now turned into another horny little beast, your horny little beast. The irony is so delicious... but not as delicious as the feelings she's eliciting inside you. You grind, hump, and thrust, brutally shoving your pelvises together, craving the friction and almost feeling upset with the copious amounts of femcum helping you slide back and forth. Amily's grinds against you even as you viciously attack her, riding out her orgasm as well as trying to pleasure you. Her tail pokes your " + player.hipDescript() + " as it seeks entry between your tightly mashed pussies; eventually it manages to do so and it slowly snakes itself in and out, the tip flicking against your clit and providing the additional friction to bring you ever closer to the edge.");
+			outputText("You grin wickedly; the former puritan "+((isFurry())?"mouse":"") +", now turned into another horny little beast, your horny little beast. The irony is so delicious... but not as delicious as the feelings she's eliciting inside you. You grind, hump, and thrust, brutally shoving your pelvises together, craving the friction and almost feeling upset with the copious amounts of femcum helping you slide back and forth. Amily's grinds against you even as you viciously attack her, riding out her orgasm as well as trying to pleasure you. Her tail pokes your " + player.hipDescript() + " as it seeks entry between your tightly mashed pussies; eventually it manages to do so and it slowly snakes itself in and out, the tip flicking against your clit and providing the additional friction to bring you ever closer to the edge.");
 			//[(if PC has a cock)
 			if (player.hasCock()) outputText("  Amily's hands shoot out to grab " + player.sMultiCockDesc() + " and begin masturbating you; the corrupt succu-mouse doing all she can to give you the release that you crave.");
 			outputText("\n\n");
@@ -4729,7 +4742,7 @@ package classes.Scenes.NPCs
 			outputText(".\n\n");
 
 			// [Horsecock] - Someone missed the "mouse". - Harb
-			outputText("Amily goes limp while your juices continue dripping on her.  She pants as she looks at you with mixed desire and adoration, moving into a kneeling position to say, \"<i>Thank you for letting this worthless cumslut pleasure you.</i>\" You just smirk at her before reaching down to scoop up some of the pooled sexual fluids.  You plaster it in a crude pattern onto the "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"mouse":"succubi") +"'s "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"face") +". \"<i>Never forget; you belong to me, my little toy,</i>\" you tell her. Then, feeling generous, you decide to give her the honor of your kiss, tongue fiercely probing to help emphasize that Amily is yours. Then, standing up, you see the state you are in and frown. \"<i>Clean me off, slut; I don't need to be reeking of juices all day,</i>\" you order her imperiously.\n\n");
+			outputText("Amily goes limp while your juices continue dripping on her.  She pants as she looks at you with mixed desire and adoration, moving into a kneeling position to say, \"<i>Thank you for letting this worthless cumslut pleasure you.</i>\" You just smirk at her before reaching down to scoop up some of the pooled sexual fluids.  You plaster it in a crude pattern onto the "+((isFurry())?"mouse":"succubi") +"'s "+((isFurry())?"muzzle":"face") +". \"<i>Never forget; you belong to me, my little toy,</i>\" you tell her. Then, feeling generous, you decide to give her the honor of your kiss, tongue fiercely probing to help emphasize that Amily is yours. Then, standing up, you see the state you are in and frown. \"<i>Clean me off, slut; I don't need to be reeking of juices all day,</i>\" you order her imperiously.\n\n");
 
 			outputText("Amily beams with happiness, \"<i>Yes mistress!</i>\" then proceeds to clean you up, licking every single drop she can out of your body.  To finish it all up, she licks your " + player.feet() + " clean of whatever juices remained on them. Satisfied, you dismiss Amily with a wave, heading back to the camp, while Amily rubs the results of your coupling on her body.");
 			player.orgasm('Generic');
@@ -4747,7 +4760,7 @@ package classes.Scenes.NPCs
 			outputText("You tell Amily to spread her legs and begin undressing, peeling off your " + player.armorName + " piece by piece. Amily doesn't even bother to speak to you; she simply grins in delight, moisture already beginning to flow from her gaping pink vagina.\n\n");
 			//(If pregnant:
 			if (pregnancy.event >= 3) outputText("  Her gravid state doesn't faze her; indeed, she thrusts her bump forward proudly, a visible sign of your mastery over her.");
-			outputText("  She flops down onto her " + amilyButt() + " and rolls backwards, spreading her legs out eagerly for you to have access and waving them like hungry, groping limbs, reaching for you in her impatience to start.  You grin in delight, but decide to tease the slutty "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"mousette":"succubus") +" by staying just out of the reach of her "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"foot-claws":"shapely feet") +".  \"<i>If you want it, then tell me just how much you want it slut,</i>\" you tease her mockingly, stroking your " + player.cockDescript(0) + " into erection. "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?" Just watch the heels, and don't dare injure your master.":""));
+			outputText("  She flops down onto her " + amilyButt() + " and rolls backwards, spreading her legs out eagerly for you to have access and waving them like hungry, groping limbs, reaching for you in her impatience to start.  You grin in delight, but decide to tease the slutty "+((isFurry())?"mousette":"succubus") +" by staying just out of the reach of her "+((isFurry())?"foot-claws":"shapely feet") +".  \"<i>If you want it, then tell me just how much you want it slut,</i>\" you tease her mockingly, stroking your " + player.cockDescript(0) + " into erection. "+((isFurry())?" Just watch the heels, and don't dare injure your master.":""));
 			//[(if PC has a vagina)
 			if (player.hasVagina()) outputText("  Your other hand probes your moist fuck-hole for lube to help with your stroking.");
 			outputText("\n\n");
@@ -4918,7 +4931,7 @@ package classes.Scenes.NPCs
 			outputText("You press your cockhead against Amily's throbbing ass and, with a groan, push inside. Amily moans lewdly, the pain of having her ass penetrated not even registering beyond the pleasure of the act. \"<i>Yesssss... " + player.mf("Master","Mistress") + ", fuck your mousy slut's ass! Fuck me until my ass is gaping wide. Oh! " + player.mf("master","mistress") + ", I love being your fucktoy!</i>\" Amily screams in praise as you fill her insides.\n\n");
 
 			//[(if PC is huge)
-			if (player.cockArea(0) >= 61) outputText("You force as much of your shaft in as you can; until you reach a point where pushing against Amily just rocks her and your shaft won't go deeper. Amily "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"squeaks":"squeals") +" desperately. \"<i>No, no, no! I want all of " + player.mf("master","mistress") + ". Please " + player.mf("master","mistress") + "! Push harder!</i>\" Amily says, gripping the floor with her "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"claws":"hands") +" and pushing back herself. But no matter how much you try, you're unable to drive any more of your " + player.cockDescript(0) + " inside.");
+			if (player.cockArea(0) >= 61) outputText("You force as much of your shaft in as you can; until you reach a point where pushing against Amily just rocks her and your shaft won't go deeper. Amily "+((isFurry())?"squeaks":"squeals") +" desperately. \"<i>No, no, no! I want all of " + player.mf("master","mistress") + ". Please " + player.mf("master","mistress") + "! Push harder!</i>\" Amily says, gripping the floor with her "+((isFurry())?"claws":"hands") +" and pushing back herself. But no matter how much you try, you're unable to drive any more of your " + player.cockDescript(0) + " inside.");
 			else {
 				outputText("You push until your hips meet her cushiony ass ");
 				if (player.balls > 0) outputText("and your " + player.ballsDescriptLight() + " slap against her pussy, causing her juices to squirt all over them.");
@@ -5061,7 +5074,7 @@ package classes.Scenes.NPCs
 
 			outputText("You stroke her pussy's walls with your tongue as slowly and as intensely as possible, even as Amily licks you in return. Her taste begins to fill your mouth, the unmistakable taste of sex and girlcum. Amily does her best to mirror your actions; when you suck playfully on her little clit, Amily sucks on your own " + player.clitDescript() + ".  When you go faster, she goes faster, when you go slower, she goes slower.\n\n");
 
-			outputText("Her juices are flowing strong and thick, now, leaving you lapping at the wetness with audible slurps. Your tongue reaches into every crevice, every fold that you can find, and Amily moans and squeaks incoherently as she savors your ministrations. Emboldened, she suddenly thrusts her "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"lips") +" into your " + player.vaginaDescript(0) + ", using her pointed nose as a phallic substitute to reach deeper and hit spots of yours that her tongue just isn't hitting strongly enough. You bite back your own squeal of pleasure, and start licking as hard as you can.\n\n");
+			outputText("Her juices are flowing strong and thick, now, leaving you lapping at the wetness with audible slurps. Your tongue reaches into every crevice, every fold that you can find, and Amily moans and squeaks incoherently as she savors your ministrations. Emboldened, she suddenly thrusts her "+((isFurry())?"muzzle":"lips") +" into your " + player.vaginaDescript(0) + ", using her pointed nose as a phallic substitute to reach deeper and hit spots of yours that her tongue just isn't hitting strongly enough. You bite back your own squeal of pleasure, and start licking as hard as you can.\n\n");
 
 			outputText("Under such ministrations, it is no surprise that, inevitably, both of you cum, leaving each other's faces splattered with your juices. Sighing with relief, you roll off of Amily's body and lay there in her bed, breathing heavily from your exertions.\n\n");
 
@@ -5096,12 +5109,12 @@ package classes.Scenes.NPCs
 			outputText(" Amily kneels down in between them, easily able to tell what you want.\n\n");
 
 			//(If first time:
-			if (flags[kFLAGS.AMILY_HERM_TIMES_FUCKED_BY_FEMPC] == 0) outputText("\"<i>Er... are you really sure about this? I mean...</i>\" Amily murmurs uncertainly, until, irritated, you suddenly wrap your " + player.legs() + " around her waist and pull her the last few inches needed to slam her dick into your needy pussy. She "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"squeaks":"gasps") +" in shock and tries to pull out, but you still have your grip on her and pull her back, a process that repeats several times until the rhythm of it sinks in and Amily starts to thrust back and forth on her own.\n\n");
+			if (flags[kFLAGS.AMILY_HERM_TIMES_FUCKED_BY_FEMPC] == 0) outputText("\"<i>Er... are you really sure about this? I mean...</i>\" Amily murmurs uncertainly, until, irritated, you suddenly wrap your " + player.legs() + " around her waist and pull her the last few inches needed to slam her dick into your needy pussy. She "+((isFurry())?"squeaks":"gasps") +" in shock and tries to pull out, but you still have your grip on her and pull her back, a process that repeats several times until the rhythm of it sinks in and Amily starts to thrust back and forth on her own.\n\n");
 			else outputText("Amily grips your " + player.hipDescript() + ", gathering her courage, and then plunges her penis into your depths. Cautiously at first, she begins to thrust herself back and forth, growing faster and harder as her resolve builds.");
 			player.cuntChange((flags[kFLAGS.AMILY_WANG_LENGTH] * flags[kFLAGS.AMILY_WANG_GIRTH]), true, true, false);
 			outputText("\n\n");
 
-			outputText("Amily's ministrations are hardly the most expert of sexual techniques you've seen in Mareth, but her intentions to make it as pleasant as possible for you are obvious, and what she lacks in expertise she makes up for in enthusiasm, "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"squeaking":"panting") +" and moaning as the unfamiliar sensations of your " + player.vaginaDescript() + " gripping her newfound penis fill her. You work your hardest to make it good as well, but Amily's inexperience with having a male sexual organ is evident in that she soon loses control and, with a loud "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"squeak":"groan") +", you feel her shooting cum into your thirsty " + player.vaginaDescript() + ". The hot fluid gushes from her futa-member, and when the last few drops have dripped from her, she collapses onto you, panting.\n\n");
+			outputText("Amily's ministrations are hardly the most expert of sexual techniques you've seen in Mareth, but her intentions to make it as pleasant as possible for you are obvious, and what she lacks in expertise she makes up for in enthusiasm, "+((isFurry())?"squeaking":"panting") +" and moaning as the unfamiliar sensations of your " + player.vaginaDescript() + " gripping her newfound penis fill her. You work your hardest to make it good as well, but Amily's inexperience with having a male sexual organ is evident in that she soon loses control and, with a loud "+((isFurry())?"squeak":"groan") +", you feel her shooting cum into your thirsty " + player.vaginaDescript() + ". The hot fluid gushes from her futa-member, and when the last few drops have dripped from her, she collapses onto you, panting.\n\n");
 
 			//(First time:
 			if (flags[kFLAGS.AMILY_HERM_TIMES_FUCKED_BY_FEMPC] == 0) outputText("\"<i>...I had no idea it would feel like that,</i>\" she gasps softly.\n\n");
@@ -5145,7 +5158,7 @@ package classes.Scenes.NPCs
 
 				outputText("Any reply you may have been inclined to make to that is swallowed by another cry of pain as yet another contraction wrings its way through you. Amily takes your hand in hers and you cling to the lifeline of comfort it offers, thankful to not be alone for this. You can feel the first child moving out of your womb, through your cervix, down and into your " + player.vaginaDescript() + ". Your lips part and, with a grunt, you expel the first child into Amily's waiting hand. She holds it up to you so that you can see your firstborn; it's a little mouselet");
 				//(if player is female: 1 in 3 chance of it being boy, girl or herm, if player is herm, 100% chance of it being a herm)"
-				outputText(((flags[kFLAGS.AMILY_NOT_FURRY]==0)?", naked, pink, and totally hairless":"") +". Amily helps hold it to your " + player.breastDescript(0) + ", where it eagerly takes hold of your " + player.nippleDescript(0) + " and starts to suckle. As it drinks, it starts to grow larger, and "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"fur the same color as your own hair starts to cover its body":"") +". It quickly drinks its fill and then detaches, its 'father' putting it aside, which is good, because by this time there's another baby waiting for its turn... and another... and another...\n\n");
+				outputText(((isFurry())?", naked, pink, and totally hairless":"") +". Amily helps hold it to your " + player.breastDescript(0) + ", where it eagerly takes hold of your " + player.nippleDescript(0) + " and starts to suckle. As it drinks, it starts to grow larger, and "+((isFurry())?"fur the same color as your own hair starts to cover its body":"") +". It quickly drinks its fill and then detaches, its 'father' putting it aside, which is good, because by this time there's another baby waiting for its turn... and another... and another...\n\n");
 
 				outputText("Soon, you are back to your old self again, lying down in exhaustion with Amily sitting nearby, your many rambunctious offspring already starting to walk and play around you.\n\n");
 
@@ -5163,7 +5176,7 @@ package classes.Scenes.NPCs
 
 			outputText("Any reply you may have been inclined to make to that is swallowed by another cry of pain as yet another contraction wrings its way through you. Amily takes your hand in hers and you cling to the lifeline of comfort it offers, thankful to not be alone for this. You can feel the first child moving out of your womb, through your cervix, down and into your " + player.vaginaDescript() + ". Your lips part and, with a grunt, you expel the first child into Amily's waiting hand. She holds it up to you so that you can see your firstborn; it's a little mouselet");
 			//(if player is female: 1 in 3 chance of it being boy, girl or herm, if player is herm, 100% chance of it being a herm)
-			outputText(((flags[kFLAGS.AMILY_NOT_FURRY]==0)?", naked, pink, and totally hairless":"") +". Amily helps hold it to your " + player.chestDesc() + ", where it eagerly takes hold of your " + player.nippleDescript(0) + " and starts to suckle. As it drinks, it starts to grow larger, and "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"fur the same color as your own hair starts to cover its body":"") +". It quickly drinks its fill and then detaches, its 'father' putting it aside, which is good, because by this time there's another baby waiting for its turn... and another... and another...\n\n");
+			outputText(((isFurry())?", naked, pink, and totally hairless":"") +". Amily helps hold it to your " + player.chestDesc() + ", where it eagerly takes hold of your " + player.nippleDescript(0) + " and starts to suckle. As it drinks, it starts to grow larger, and "+((isFurry())?"fur the same color as your own hair starts to cover its body":"") +". It quickly drinks its fill and then detaches, its 'father' putting it aside, which is good, because by this time there's another baby waiting for its turn... and another... and another...\n\n");
 
 			outputText("Soon, you are back to your old self again, lying down in exhaustion with Amily sitting nearby, your many rambunctious offspring already starting to walk and play around you.\n\n");
 
@@ -5559,7 +5572,7 @@ package classes.Scenes.NPCs
 			menu();
 			addButton(0, "Yes", beAmilysDadAsAHerm);
 			addButton(1, "No", fuckNoYouWontBeAmilysHermDaddy);
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) {
+			if (isFurry()) {
 				addButton(2, "NoFurry", amilyNoFur);
 			}
 		}
@@ -5569,7 +5582,7 @@ package classes.Scenes.NPCs
 			amilySprite();
 			clearOutput();
 			flags[kFLAGS.AMILY_HERM_QUEST] = 2;
-			outputText("You tell her that you'll forgive her, and you will help her breed the "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"free mousemorphs that she wants so badly. She looks a bit confused by you using the term 'mouse-morphs', but otherwise seems happy.":"") +" \"<i>Wonderful! Come with me!</i>\" She says, grabbing your hand and pulling you down the street.\n\n");
+			outputText("You tell her that you'll forgive her, and you will help her breed the "+((isFurry())?"free mousemorphs that she wants so badly. She looks a bit confused by you using the term 'mouse-morphs', but otherwise seems happy.":"") +" \"<i>Wonderful! Come with me!</i>\" She says, grabbing your hand and pulling you down the street.\n\n");
 			//(Play out "First Sex" scene, with whatever tweaks are needed to account for the PC's hermaphroditic nature.)
 			doNext(amilySexHappens);
 		}
@@ -5628,17 +5641,17 @@ package classes.Scenes.NPCs
 			if (flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] > 0) outputText("this is hardly the first time you've given birth to her offspring before, after all");
 			//First time!
 			else outputText("she's probably just glad you're the one that has to push them all out");
-			outputText(". However, any more detailed reply you may have been inclined to make to that is swallowed by another cry of pain as yet another contraction wrings its way through you. Amily takes your hand in hers and you cling to the lifeline of comfort it offers, thankful to not be alone for this. You can feel the first child moving out of your womb, through your cervix, down and into your " + player.vaginaDescript() + ". Your lips part and, with a grunt, you expel the first child into Amily's waiting hand. She holds it up to you so that you can see your firstborn; it's a little mouselet"+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?", naked, pink, and totally hairless":"") +". Amily helps hold it to your " + player.chestDesc() + ", where it eagerly takes hold of your " + player.nippleDescript(0) + " and starts to suckle. As it drinks, it starts to grow larger"+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?", and fur the same color as your own hair starts to cover its body":"") +". It quickly drinks its fill and then detaches, its 'father' putting it aside, which is good, because by this time there's another baby waiting for its turn... and another... and another...\n\n");
+			outputText(". However, any more detailed reply you may have been inclined to make to that is swallowed by another cry of pain as yet another contraction wrings its way through you. Amily takes your hand in hers and you cling to the lifeline of comfort it offers, thankful to not be alone for this. You can feel the first child moving out of your womb, through your cervix, down and into your " + player.vaginaDescript() + ". Your lips part and, with a grunt, you expel the first child into Amily's waiting hand. She holds it up to you so that you can see your firstborn; it's a little mouselet"+((isFurry())?", naked, pink, and totally hairless":"") +". Amily helps hold it to your " + player.chestDesc() + ", where it eagerly takes hold of your " + player.nippleDescript(0) + " and starts to suckle. As it drinks, it starts to grow larger"+((isFurry())?", and fur the same color as your own hair starts to cover its body":"") +". It quickly drinks its fill and then detaches, its 'father' putting it aside, which is good, because by this time there's another baby waiting for its turn... and another... and another...\n\n");
 
 			outputText("Soon, you are back to your old self again, lying down in exhaustion with Amily sitting nearby, your many rambunctious offspring already starting to walk and play around you. However, you notice that they are a little less large and energetic than the other times you have seen them born and grow in such a fashion.\n\n");
 
 			outputText("\"<i>Because there are only trace elements of those chemicals left in our bodies, they should age normally from this point on.</i>\" Amily notes.\n\n");
 
-			outputText("Worry fills you; how on earth are you going to take care of such small, defenseless creatures in a place like this? Before you can voice such concerns to Amily, though, rustling in the bushes catches your attention. As you watch, a pair of young "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"mouse-morphs":"mouse fellows") +" appear and walk confidently into your camp. They're two of your children, the ones who Amily told you had left the area.\n\n");
+			outputText("Worry fills you; how on earth are you going to take care of such small, defenseless creatures in a place like this? Before you can voice such concerns to Amily, though, rustling in the bushes catches your attention. As you watch, a pair of young "+((isFurry())?"mouse-morphs":"mouse fellows") +" appear and walk confidently into your camp. They're two of your children, the ones who Amily told you had left the area.\n\n");
 
 			outputText("\"<i>I hope you don't mind, " + player.short + ", but I contacted them to come and take their new siblings back with them shortly after you told me you were pregnant.</i>\" Amily says, sheepishly. \"<i>We just can't really care for them here, and they'll be safer and happier with all their siblings.</i>\"\n\n");
 
-			outputText("You nod your head and admit that you agree. Once you have regained your strength, you spend some time talking with your fully adult children and playing with your overdeveloped newborns. Then, with a final wave goodbye, the "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"mouse-morphs":"family of mice") +" disappear into the wilderness once more.");
+			outputText("You nod your head and admit that you agree. Once you have regained your strength, you spend some time talking with your fully adult children and playing with your overdeveloped newborns. Then, with a final wave goodbye, the "+((isFurry())?"mouse-morphs":"family of mice") +" disappear into the wilderness once more.");
 			//Add to brood size count
 			flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS]++;
 		}
@@ -5646,13 +5659,13 @@ package classes.Scenes.NPCs
 		//Amily gives Birth (camp follower version):
 		public function amilyPopsOutKidsInCamp():void {
 			amilySprite();
-			addBirthedByAmily(1);
+			incBirthedByAmily();
 			if (prison.inPrison) return;
 			//Uncorrupt
 			if (isPureFollower()) {
 				outputText("\nThe peace of your camp is suddenly disrupted by a loud squeal of distress. \"<i>" + player.short + "! It's time!</i>\" Amily cries out, then shrieks again - there is no question at all in your mind that she's gone into labor.  You race over to find her squatting naked over her nest, squealing softly with exertion as her swollen abdomen visibly ripples, fluid dripping from her swollen, naked, pink vagina. She is definitely in labor.\n\n");
 
-				outputText("Falling into routine, you kneel beside her, reaching out to touch her swollen middle, one hand on either side of its globular mass. You gently start to massage it, trying to relax and soothe the muscles after each time they clench and to lower the pain when they do experience another contraction. She starts to thank you, then clenches her teeth, "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"turns her little "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"lips") +" skywards and ":"") +"hisses in pain as the strongest contraction yet hits - she's crowning! Immediately your hands dive down to hover under her vagina as a small, pink, naked, wriggling thing slips between their parted lips. The little body is surprisingly light in your hands, but it squeaks loudly as it draws its first breath.\n\n");
+				outputText("Falling into routine, you kneel beside her, reaching out to touch her swollen middle, one hand on either side of its globular mass. You gently start to massage it, trying to relax and soothe the muscles after each time they clench and to lower the pain when they do experience another contraction. She starts to thank you, then clenches her teeth, "+((isFurry())?"turns her little "+((isFurry())?"muzzle":"lips") +" skywards and ":"") +"hisses in pain as the strongest contraction yet hits - she's crowning! Immediately your hands dive down to hover under her vagina as a small, pink, naked, wriggling thing slips between their parted lips. The little body is surprisingly light in your hands, but it squeaks loudly as it draws its first breath.\n\n");
 
 				outputText("You favor your lover with a reassuring smile, placing the baby to her breast with the practice of experience, then resume catching the next one to emerge from her.\n\n");
 
@@ -5660,11 +5673,11 @@ package classes.Scenes.NPCs
 
 				outputText("\"<i>Because there are only trace elements of those chemicals left in my bloodstream, they developed and grew a little faster than normal, but they should age normally from this point on.</i>\" Amily notes.\n\n");
 
-				outputText("Worry fills you; how on earth are you going to take care of such small, defenseless creatures in a place like this? Before you can voice such concerns to Amily, though, rustling in the bushes catches your attention. As you watch, a pair of young "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"mouse-morphs":"mouse fellows") +" appear and walk confidently into your camp. They're two of your children, the ones who Amily told you had left the area.\n\n");
+				outputText("Worry fills you; how on earth are you going to take care of such small, defenseless creatures in a place like this? Before you can voice such concerns to Amily, though, rustling in the bushes catches your attention. As you watch, a pair of young "+((isFurry())?"mouse-morphs":"mouse fellows") +" appear and walk confidently into your camp. They're two of your children, the ones who Amily told you had left the area.\n\n");
 
 				outputText("\"<i>I hope you don't mind, " + player.short + ", but I contacted them to come and take their new siblings back with them shortly after we confirmed I was pregnant.</i>\" Amily says, sheepishly. \"<i>We just can't really care for them here, and they'll be safer and happier with all their siblings.</i>\"\n\n");
 
-				outputText("You nod your head and admit that you agree. Once you have regained your strength, you spend some time talking with your fully adult children and playing with your overdeveloped newborns. Then, with a final wave goodbye, the "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"mouse-morphs":"family of mice") +" disappear into the wilderness once more.");
+				outputText("You nod your head and admit that you agree. Once you have regained your strength, you spend some time talking with your fully adult children and playing with your overdeveloped newborns. Then, with a final wave goodbye, the "+((isFurry())?"mouse-morphs":"family of mice") +" disappear into the wilderness once more.");
 			}
 			//CORRUPT!
 			else {
@@ -5687,7 +5700,7 @@ package classes.Scenes.NPCs
 				if (flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] > 0) outputText(" it grabs Amily's balls and uses them to try and pull itself out;");
 				outputText(" its efforts to leave its mother's leaking canal are finally paid off when a jet of fluids slicken its lower half, making its exit easier. As soon as it's out, another mousy head starts showing; Amily moans and screams her pleasure as the process repeats itself over and over.\n\n");
 
-				outputText("When the last "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"mouse":"mouse-girl") +" is finally free of the confines of its slutty mother's cunt, they all crawl up towards their mother's breasts and each takes their turn drinking from their mother's corrupt milk. You just smile and observe; Amily's babies come in various flavors, some are girls, some are boys, and some are even both; they all share the same lewd purple "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"fur":"skin tone") +" of their mother; you can't help but wonder if they'll be wonderful cum-sluts like their mother. As they drink, you see the little babies grow bigger; and that's not all, you see little cocks getting bigger, balls developing, breasts expanding, pussies juicing up.  The sight fills you with joy.\n\n");
+				outputText("When the last "+((isFurry())?"mouse":"mouse-girl") +" is finally free of the confines of its slutty mother's cunt, they all crawl up towards their mother's breasts and each takes their turn drinking from their mother's corrupt milk. You just smile and observe; Amily's babies come in various flavors, some are girls, some are boys, and some are even both; they all share the same lewd purple "+((isFurry())?"fur":"skin tone") +" of their mother; you can't help but wonder if they'll be wonderful cum-sluts like their mother. As they drink, you see the little babies grow bigger; and that's not all, you see little cocks getting bigger, balls developing, breasts expanding, pussies juicing up.  The sight fills you with joy.\n\n");
 
 				outputText("Several children have their fill, but some are still in line.  \"<i>" + player.mf("Master","Mistress") + "...</i>\" You hear Amily call between pants and moans of delight. You give her an inquisitive look. \"<i>Can I drink from you? Your sexy fucktoy bitch needs more food to turn into delicious milk for your newly born sluts.</i>\"\n\n");
 
@@ -5716,7 +5729,7 @@ package classes.Scenes.NPCs
 						outputText("your erect " + player.cockDescript(0) + " and ");
 					}
 					outputText(player.vaginaDescript());
-					outputText("; Amily licks her lips in anticipation. You squat above Amily, hovering over her "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"face") +".");
+					outputText("; Amily licks her lips in anticipation. You squat above Amily, hovering over her "+((isFurry())?"muzzle":"face") +".");
 					//[(if PC has balls)
 					if (player.balls > 0) outputText("  She gives your balls a teasing lick, tickling you; impatient, you tell her to get on with it before you change your mind and go fuck something else.");
 					outputText("  Amily wastes no time and digs right into her task. Her tongue explores every cranny and nook of your " + player.vaginaDescript() + "; it's as if she had a map of every little detail of your pleasure hole; no doubt a result of all the practice you've given her. Every once in a while her nose bumps against your " + player.clitDescript() + ", sending shocks of pleasure running through your body and extracting a moan of pleasure from you, as you edge ever closer to orgasm.");
@@ -6449,7 +6462,7 @@ package classes.Scenes.NPCs
 
 			outputText("\"<i>Fine, but you'd better do it right this time.</i>\" You say; she beams and licks her lips as you lower yourself towards her mouth yet again.\n\n");
 
-			outputText("She pushes her "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"nose") +" against you " + player.vaginaDescript() + ", tightly sealing her around your dripping snatch before working her tongue in. You moan and grip her ears tightly; she just keeps licking, not even feeling pain as you begin bucking into her "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"lips") +".\n\n");
+			outputText("She pushes her "+((isFurry())?"muzzle":"nose") +" against you " + player.vaginaDescript() + ", tightly sealing her around your dripping snatch before working her tongue in. You moan and grip her ears tightly; she just keeps licking, not even feeling pain as you begin bucking into her "+((isFurry())?"muzzle":"lips") +".\n\n");
 
 			outputText("This feels so good... Amily's licking you like a pro. You imagine her thirsty for more of you; eager to lap every little drop of femcum that spills from you; growing hornier with each lap. The thought is too much for you, and you finally hit a ferocious orgasm; a flood of juices entering her mouth and going straight into her belly.\n\n");
 
@@ -6524,7 +6537,7 @@ package classes.Scenes.NPCs
 			clearOutput();
 			outputText("You roughly grab ahold of Amily's ears and shove her face on your " + player.vaginaDescript() + ".");
 			//[(if PC is a squirter)
-			if (player.wetness() >= 5) outputText("  Your juices rocket into her face, painting her "+((flags[kFLAGS.AMILY_NOT_FURRY]==0)?"muzzle":"face") +" in your femcum as she giggles with happiness and pleasure.");
+			if (player.wetness() >= 5) outputText("  Your juices rocket into her face, painting her "+((isFurry())?"muzzle":"face") +" in your femcum as she giggles with happiness and pleasure.");
 			outputText("  Amily begins licking and slurping, her nose bumping into your clit every once in a while; she eats your " + player.vaginaDescript() + " like her life depended on it. You can only moan in pleasure as the previously prudish mousette gorges herself on your tasty juices.\n\n");
 
 			outputText("You gently pat her head and say, \"<i>Good girl.</i>\"\n\n");
@@ -6578,7 +6591,7 @@ package classes.Scenes.NPCs
 			outputText("\n\n");
 
 			outputText("Amily begins moving her ");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("furry ");
+			if (isFurry()) outputText("furry ");
 			outputText("breasts along your shaft, causing pleasurable chills to run along your body; the pre-cum that seeps down your cock only serves to lube up Amily's breasts, making the act all the more pleasurable. You can feel yourself getting ready to blow your load and order Amily to lay down and stay still.\n\n");
 
 			outputText("Amily complies without a word; then you drive your " + player.cockDescript(0) + " between her breasts and begin pumping vigorously.You blow your load then and there, right on Amily's breasts, covering them in a layer of white hot spunk, while Amily smiles contentedly.\n\n");
@@ -6880,8 +6893,8 @@ package classes.Scenes.NPCs
 			amilySprite();
 			outputText("Your cum is completely absorbed by her and she doubles over in pleasure as she screams. Her biggest orgasm yet rocks her to the core; her eyes roll back and you see her begin to change.\n\n");
 
-			outputText("Her " + ((flags[kFLAGS.AMILY_NOT_FURRY] == 0)?"fur turns to a lewd purple":"hair turns into a lewd purple, skin fading to a light lavender") + "; her small horns grow and become more defined; small bat-like wing sprout from her shoulders; the spade-like tip of her tail grows bigger and more defined; ");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0)
+			outputText("Her " + ((isFurry())?"fur turns to a lewd purple":"hair turns into a lewd purple, skin fading to a light lavender") + "; her small horns grow and become more defined; small bat-like wing sprout from her shoulders; the spade-like tip of her tail grows bigger and more defined; ");
+			if (isFurry())
 			outputText("her feet warp into a mix of mousy foot-paws and demonic claws, complete with ebony claws and a fourth joint");
 			else outputText("her feet are forced into a perpetual tip-toe as the trademark demonic bone juts from her heel");
 			outputText("; her hands grow small black claws.  Finally, her eyes focus back on you, now with a seductive glow.\n\n");
@@ -7128,7 +7141,7 @@ package classes.Scenes.NPCs
 			//<b>golden seed</b> for a human face
 			// <b>black egg</b> to get rid of the fur
 			// some purified <b>succubus milk</b> to round things off
-			return flags[kFLAGS.AMILY_NOT_FURRY] == 0  // Amily isn't already defurried
+			return isFurry()  // Amily isn't already defurried
 			&& flags[kFLAGS.AMILY_OFFERED_DEFURRY]==1  // Amily has been offered to be dehaired
 			&& player.hasItem(consumables.GLDSEED)     // And we have all the shit we need
 			&& (player.hasItem(consumables.BLACKEG) || player.hasItem(consumables.L_BLKEG))
@@ -7146,7 +7159,7 @@ package classes.Scenes.NPCs
 			}
 			else player.consumeItem(consumables.P_S_MLK);
 			flags[kFLAGS.AMILY_OFFERED_DEFURRY] = 2; // We're now completing this dumb little quest.
-			flags[kFLAGS.AMILY_NOT_FURRY] = 1;
+			flagNotFurry();
 			flagAcceptedOffer();
 			amilySprite();
 			clearOutput();
@@ -7165,7 +7178,7 @@ package classes.Scenes.NPCs
 		private function amilySufferNotTheFurryToLive():void
 		{
 			amilySprite();
-			flags[kFLAGS.AMILY_NOT_FURRY] = 1;
+			flagNotFurry();
 			flags[kFLAGS.AMILY_IS_BATMAN] = 1;
 			outputText("You laugh spitefully as you look at the now humanized mouse girl. You tell her, with a grin on your face, that you did all this to screw with her; she should really trust her gut next time. Continuing with your tirade, you tell her that she's a complete fool, as well as a hypocrite that pretends to be noble, but is just a whore deep down inside. Pausing only to savor the look of betrayal on her face, you remark that her clinging to some twisted ideal of repopulating her people is just a depraved pipe dream; one that will never happen. You smirk and taunt her, implying that she should \"enjoy\" her new body as you depart, leaving your words to ring through her as she visibly tears up. The faint sounds of sniffling are all that echo behind you as you head back to camp.");
 		}
@@ -7218,7 +7231,7 @@ package classes.Scenes.NPCs
 				outputText("Finally, the process comes to a close.  You break from each other and stand at arm's length, both of you studying the changes to her previously-animalistic self.  Her auburn-colored ears and bare tail remain unchanged, but other than that, Amily's completely human.  Though a bit conflicted, Amily seems happy enough with her decision.  \"<i>Well, I guess that's all there is to it,</i>\" she says, scratching her newly bare cheek idly.  \"<i>This is what you wanted, right?  Now, is there anything else you'd like to discuss?</i>\"\n\n");
 			}
 			// Back to Amily's camp controls
-			flags[kFLAGS.AMILY_NOT_FURRY] = 1;
+			flagNotFurry();
 			flags[kFLAGS.AMILY_OFFERED_DEFURRY] = 2;
 			amilySprite();
 			doNext(amilyFollowerEncounter);
@@ -7240,7 +7253,7 @@ package classes.Scenes.NPCs
 				outputText("She squares up to you with a hand planted on her slender hip, looking to you expectantly.  Without words, you reach into your pack and produce the batches of mouse cocoa.  You pass them to the mouse girl, and she looks over them curiously.  \"<i>Are you sure you want me to change back?</i>\" she asks somewhat nervously.  Your nod is the only urging she needs.  She sucks on the mouse cocoa, savouring the chocolatey taste.\n\n");
 				outputText("Her face changes, rodent snout and whiskers grow. Fur grows all over her body and her hands warp into more paw-like. <b>Amily is now back to her former mouse self.</b>");
 			}
-			flags[kFLAGS.AMILY_NOT_FURRY] = 0;
+			flagReFurry();
 			flags[kFLAGS.AMILY_OFFERED_DEFURRY] = 1;
 			amilySprite();
 			doNext(amilyFollowerEncounter);
@@ -7334,7 +7347,7 @@ package classes.Scenes.NPCs
 			outputText("Grinning, you saunter over to the bar, rent a room, and lead the girls upstairs.  Half-drunk yourself, you stumble up the last few stairs and hurriedly unlock the door.  The room is sparsely decorated, sporting a single large bed.\n\n");
 
 			outputText("Urta and Amily flop down on the bed, already undressing and teasing each other - Urta running her hands ");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("through the mouse's fur ");
+			if (isFurry()) outputText("through the mouse's fur ");
 			else outputText("over the mouse's skin ");
 			outputText("and Amily wrapping her lithe little tail around Urta's massive endowment.  You strip off your " + player.armorName + " and, looming over the girls, decide on how you want to go about this.");
 			//(Display Appropriate Options: [Use Cock] [Use Vag])
@@ -7603,14 +7616,14 @@ package classes.Scenes.NPCs
 			//AKA:
 			//outputText(Fen gets donated to write something that makes him moderately uncomfortable.)
 			outputText("When you go looking for Amily, you find her on the edge of camp, talking with three of her offspring.  The purple-");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("furred");
+			if (isFurry()) outputText("furred");
 			else outputText("haired");
 			outputText(", heavily corrupted mice have matured into adults, as evidenced by their larger size and MUCH bigger endowments.  The whole spectrum of genders is represented - a well hung male, a huge-breasted female, and a herm who seems to have picked up a giant, knotty dog-dick at some point.  The male has long hair and a goatee, lending him an air of wisdom, even as he struggles not to jack off his foot-long, phimotic cock at the sight of his slutty mother.  The sister is completely nude, and she doesn't seem to mind in the slightest.  Her massive breasts sway pendulously, and with a start, you realize she's got a visible baby-bump half hidden underneath the well-developed mammaries.  She keeps glancing the herm's way and rubbing her fingers across the taut ");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("fur");
+			if (isFurry()) outputText("fur");
 			else outputText("skin");
 			outputText(".  You suppose that with so much corruption coursing through them, incest really wouldn't bother them in the slightest.");
 			outputText("\n\nThe herm is cuddling up next to Amily and smearing ropes of doggie cum ");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("through her mother's fur");
+			if (isFurry()) outputText("through her mother's fur");
 			else outputText("over her mother's thigh");
 			outputText(" as the latter lectures about pleasing her [master].  Amily, for her part, just seems to be getting wetter and wetter, but she somehow controls herself.  When her three children aren't casting anxious, lewd glances at themselves or their mother, they're nodding vigorously at her words.  Clearly, the trio is as excited with the prospect of serving you as their mom.");
 			outputText("\n\nNone of them are aware of you yet.  You could duck out before they find you and avoid any potential incest, or you could take the sluts for a ride.  What do you do?");
@@ -7640,7 +7653,7 @@ package classes.Scenes.NPCs
 			if (player.tallness >= 48) outputText("up ");
 			outputText("at you and says, \"<i>Hey, " + player.mf("Dad","other Mom") + ", go ahead and put it in.  I've been wanting this since the first time I saw you.</i>\"");
 			outputText("\n\nYou shrug out of your [armor] to let [eachCock] spring free.  Your assembled offspring gasp as one.  You see ");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("muzzles");
+			if (isFurry()) outputText("muzzles");
 			else outputText("mouths");
 			outputText(" watering with tongues hanging lewdly as they take in your [cock all].  Your daughter rubs up against you, her tail encircling [oneCock] as she dances and grinds into you.  Female lubricant spatters the ground beneath her as you reach forward to take her huge melons in your hands.  The nipples are big enough to grab, like tiny cow-teats, and when you take hold, they both let out large streamers of milk, to the delight of their owner.  Your daughter moans out loud and begins jerking [oneCock] with slow, practiced motions of her tail.  Crushing against you, the mousette's thick, soft ass heats against your " + player.skinFurScales() + ".");
 			outputText("\n\n\"<i>That's a good girl,</i>\" Amily whispers encouragingly into her daughter's large ears.  The young, pregnant slut nods and pulls away, leaning forward to properly present her soaked twat to you.  Her tail wraps a few more loops around your [cock " + y + "] and gently tugs as she looks back over her shoulder, eyes lidded and her tongue drooling.  She asks, \"<i>Please, take me... " + player.mf("daddy","mommy") + ".</i>\"");
@@ -7663,7 +7676,7 @@ package classes.Scenes.NPCs
 			//{Phimosis boy buttfuck optional)
 			if (all) {
 				outputText("\n\nYou realize you haven't been entirely drained, and you beckon for the male mouse.  His hole ought to be tight enough to milk the last of your seed from your [balls].  He looks at you hopefully, but you sit up and point at him, then your slightly-flagging dick.  The recently-of-age male sighs and kneels between your legs and gets to work.  Though he clearly wants nothing better than to masturbate or start fucking you, he proves as obedient as his mother and slurps his sister's filth from your dick.  A trickle of boy-slime dribbles onto your leg as he bobs up and down, his purple hair obscuring most of his ");
-				if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("muzzle");
+				if (isFurry()) outputText("muzzle");
 				else outputText("face");
 				outputText(" from your view as he sucks you.");
 				outputText("\n\nSoon, your erection is nice and hard, gently throbbing on your boy's tongue.  He wraps his soft, pink fingers around your shaft and starts stroking you - it's clear he thinks he's going to be giving you a blowjob to completion.  Well, none of that; you've got at least one more jizz-bomb to drop, and you want something tighter!  You grab your vermin progeny by his purplish hair and yank him back, shoving so hard he falls onto all fours and gasps in distress.  As you'd expect, his ass is cute and pert, with a puckered pink hole just begging for you to violate it.  His giant, foreskin-clad cock drags through the dirt, smearing his pre-cum behind it as he begins trying to crawl away from you.");
@@ -7868,7 +7881,7 @@ package classes.Scenes.NPCs
 				if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) outputText("  D-don't laugh, okay?");
 				outputText("</i>\"");
 				outputText("\n\nAmily strides around the rocks nervously, hands on her hips.  Her soft ");
-				if (flags[kFLAGS.AMILY_NOT_FURRY] > 0) outputText("skin");
+				if (isNotFurry()) outputText("skin");
 				else outputText("fur");
 				outputText(" is almost totally exposed, left unbound by the skimpy fabric that barely covers her most sensitive places.  The mousette's toned legs and thighs draw your eye, right up to her " + amilyHips() + " and " + amilyButt() + ", divided by a narrow strip of black fabric.  Between those survival-honed limbs is a tiny triangle that barely covers Amily's nether-lips, clinging gently to her clearly visible camel toe.");
 				if (flags[kFLAGS.AMILY_WANG_LENGTH] > 0) {
@@ -7918,13 +7931,13 @@ package classes.Scenes.NPCs
 			else outputText("base");
 			outputText(".");
 			outputText("\n\nYou knead her supple cheeks, admiring ");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("her silky coat ");
+			if (isFurry()) outputText("her silky coat ");
 			else outputText("her smooth skin ");
 			outputText("with all ten fingers.  The mousette's tail curls around your [hips] to pull you closer, grinding herself into you with all her might.  You can feel the ");
 			if (flags[kFLAGS.AMILY_WANG_LENGTH] == 0) outputText("engorged bud that is her clit");
 			else outputText("slippery member");
 			outputText(" sliding back and forth between your drenched bellies.  Amily gasps, \"<i>I love you,</i>\" and her slippery tunnel hugs tight, just like the rest of her body.");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("  Her whiskers tickle your cheeks as s");
+			if (isFurry()) outputText("  Her whiskers tickle your cheeks as s");
 			else outputText("  S");
 			outputText("he comes up for a kiss.  Slender lips meet your own, her narrow, skillful tongue slipping into your mouth.");
 			outputText("\n\nBurning with desire, you walk out of the water with your lover speared on your shaft, and as soon as you're on solid ground, you begin to fuck her.  Your hands pull her up, almost off your " + player.cockHead(x) + " before you let gravity pull her back down, slightly inclining your [hips] to speed the pleasurable friction along. Amily squeaks when she hits rock bottom, breaking the kiss before she plants it again with renewed vigor.");
@@ -8089,7 +8102,7 @@ package classes.Scenes.NPCs
 			outputText("\n\nAmily squeaks in surprise at the sudden intrusion before stabbing her tail tip into the shark's rectum as well, turning Izma's demands into a lewd moan.  \"<i>Come on, [name].  I'm the one that figured out-ooouuuhhhh... uh, how to make the potion.  ");
 			if (!pregnancy.isPregnant) outputText("Give me your babies...  Mmmm, we'll make such smart babies.  ");
 			outputText("Just, ahhh... put it inside me and cum, cum in me again and again and fuck me till I'm pregnant with your spunk!</i>\"  She's ");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("actually blushing so hard that you can see it through her fur, a crimson tint that looks even better on her with the way her tongue is hanging out");
+			if (isFurry()) outputText("actually blushing so hard that you can see it through her fur, a crimson tint that looks even better on her with the way her tongue is hanging out");
 			else outputText("blushing so hard her whole face is almost beet-red, a fine look on her with her tongue dangling so erotically out of her gasping mouth");
 			outputText(".");
 			outputText("\n\nYou push and pull on the two girls, fucking both sets of mons without care for who eventually gets jizz inside them.  You're definitely going to flood a ");
@@ -8301,7 +8314,7 @@ package classes.Scenes.NPCs
 			outputText("\n\n\"<i>Please, take off your clothes, [name].</i>\" she playfully recites, holding a flat piece of wood she must have found in a hurry like a clipboard.  \"<i>Now, it says here you are feeling feverish around females, particularly young, healthy mice.  I also see mentions of an out-of-control libido.  Is this right?</i>\"");
 
 			outputText("\n\nYou listen as you undress, sitting down on the stone when instructed and nodding along with the list of symptoms.  They sound pretty accurate to your ears.  A soft ");
-			if (flags[kFLAGS.AMILY_NOT_FURRY] == 1) outputText("hand");
+			if (isNotFurry()) outputText("hand");
 			else outputText("paw");
 			outputText(" touches your thigh as Amily sets the 'clipboard' aside.");
 

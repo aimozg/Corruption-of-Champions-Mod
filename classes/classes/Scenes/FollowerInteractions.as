@@ -249,7 +249,7 @@ public function amilyIngredientDelivery():void {
 	clearOutput();
 	outputText("As you make your way to Rathazul's lab, a ");
 	
-	if (flags[kFLAGS.AMILY_NOT_FURRY] == 1) outputText("big-eared blur whizzes past you");
+	if (amilyScene.isNotFurry()) outputText("big-eared blur whizzes past you");
 	else outputText("blur of fur whizzes past you");
 	
 	outputText(".  Amily sprints into the rat's lab with an armful of flowers, plants, and other ingredients.  Rathazul says, \"<i>Thank you, child - these will be a huge help.  It is fortunate you knew where to find some of these.  Purchasing them is difficult and expensive.</i>\"\n\n");

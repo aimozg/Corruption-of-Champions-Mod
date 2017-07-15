@@ -342,7 +342,7 @@ public static const PC_COCK_MILKED_COUNTER:int                                  
 public static const FAP_ARENA_SESSIONS:int                                          =  334; // Times fap arena'ed
 public static const FAP_ARENA_VICTORIES:int                                         =  335; // Fap Arena victories
 public static const AMILY_OFFERED_DEFURRY:int                                       =  336; //  1 = Offered to defurry Amily
-public static const AMILY_NOT_FURRY:int                                             =  337; //  1 = Amily is no longer a flea-ridden furry who stinks up your carpet.
+//public static const AMILY_NOT_FURRY:int                                             =  337; //  1 = Amily is no longer a flea-ridden furry who stinks up your carpet.
 public static const AMILY_IS_BATMAN:int                                             =  338; //  1 = You turned Amily into a human and then pissed all over her happy thoughts.  She now stalks you from rooftops while buying graphite helmets, utility belts, and a sweet, jetpowered car in the theme of a rat.
 public static const FAP_ARENA_RULES_EXPLAINED:int                                   =  339; // Fap Arena - rules been explaned?
 public static const MINOTAUR_CUM_INTAKE_COUNT:int                                   =  340; // came in with minotaur cum

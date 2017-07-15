@@ -644,12 +644,12 @@ private function stayQuietWhileAmilyBitchesAboutFuckingArborday():void {
 private function slapAmilysWhoreFace():void {
 	clearOutput();
 	outputText("You slap Amily across the ");
-	if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("nose");
+	if (amilyScene.isFurry()) outputText("nose");
 	else outputText("face");
 	outputText("\n\n\"<i>What I do and whom I do it with is none of your business,</i>\" you declare.  \"<i>If you don't trust me not to fall prey to the demons after everything we've had together, that's too bad.</i>\"");
 	
 	outputText("\n\nShe looks wounded and irate, but mostly unhappy.  \"<i>I'm sorry,</i>\" the ");
-	if (flags[kFLAGS.AMILY_NOT_FURRY] == 0) outputText("mouse-");
+	if (amilyScene.isFurry()) outputText("mouse-");
 	outputText("girl says, eyes wet with tears, \"<i>but I don't.  Goodbye.</i>\"");
 	
 	outputText("\n\nWithout another word, she turns, gathers her things, and leaves.");
