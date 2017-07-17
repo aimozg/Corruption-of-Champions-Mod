@@ -104,6 +104,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_WANG_LENGTH:int                                           =   45; // Amily's Wang Length" Description="Starts 4x1, maxes @ 13x2
 		public static const kFLAGS_AMILY_WANG_GIRTH:int                                            =   46; // Amily Penis Gith.    Default=0
 		public static const kFLAGS_AMILY_CUP_SIZE:int                                              =   47; //  5-JanAmily's Cup Size (1 to 5)
+		public static const kFLAGS_AMILY_NIPPLE_LENGTH:int                                         =   48; //  0.3-4Nipple Length from .3 to 4"
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
 		public static const kFLAGS_AMILY_NOT_FURRY:int                                             =  337; //  1 = Amily is no longer a flea-ridden furry who stinks up your carpet.
@@ -193,8 +194,14 @@ package classes.Scenes.NPCs
 		public function setCupSize(value:int):void {
 			flags[kFLAGS_AMILY_CUP_SIZE] = value;
 		}
-		public function modCupSize(value:int):void {
+		public function modCupSize(delta:int):void {
 			flags[kFLAGS_AMILY_CUP_SIZE] = Math.max(1,flags[kFLAGS_AMILY_CUP_SIZE]);
+		}
+		public function setNippleLength(value:Number):void {
+			flags[kFLAGS_AMILY_NIPPLE_LENGTH] = value;
+		}
+		public function modNippleLength(delta:Number):void {
+			flags[kFLAGS_AMILY_NIPPLE_LENGTH] = int(Math.max(0.5,flags[kFLAGS_AMILY_NIPPLE_LENGTH])*100)/100;
 		}
 		public function isNotFurry():Boolean {
 			return flags[kFLAGS_AMILY_NOT_FURRY] == 1;
@@ -286,6 +293,9 @@ package classes.Scenes.NPCs
 		}
 		public function getCupSize():int {
 			return flags[kFLAGS_AMILY_CUP_SIZE];
+		}
+		public function getNippleLength():Number {
+			return flags[kFLAGS_AMILY_NIPPLE_LENGTH];
 		}
 		// </savedata>
 
@@ -1670,7 +1680,7 @@ package classes.Scenes.NPCs
 			//Set amily follower flag
 			flagFollowerPure();
 			setCupSize(1);
-			flags[kFLAGS.AMILY_NIPPLE_LENGTH] = .3;
+			setNippleLength(.3);
 			flags[kFLAGS.AMILY_HIP_RATING] = 6;
 			flags[kFLAGS.AMILY_ASS_SIZE] = 6;
 			flags[kFLAGS.AMILY_VAGINAL_WETNESS] = 1;
@@ -2911,7 +2921,7 @@ package classes.Scenes.NPCs
 				//(Start [horsecock]
 				outputText("Amily is a 5' 2\" tall "+what+", with a lean and wiry build. Her pink eyes normally twinkle merrily, but they can turn hard and cold if the circumstances warrant, just as the normally friendly grin "+onHerMuzzle+"can turn cruel and harsh when she is angry. "+furDesc+" a long, hairless mouse's tail that sways and twitches constantly from her behind. She is currently wearing " + flags[kFLAGS.AMILY_CLOTHING] + ". She has " + amilyHips() + " and a " + amilyButt() + ".\n\n");
 				//(End [horsecock]
-				outputText("She has a pair of " + amilyTits() + " on her chest. They have " + flags[kFLAGS.AMILY_NIPPLE_LENGTH] + "-inch nipples at their tips and must be at least " + Appearance.breastCup(getCupSize()) + "s.\n\n");
+				outputText("She has a pair of " + amilyTits() + " on her chest. They have " + getNippleLength() + "-inch nipples at their tips and must be at least " + Appearance.breastCup(getCupSize()) + "s.\n\n");
 
 				//(If Amily has a penis:
 				if (hasCock()) {
@@ -2934,7 +2944,7 @@ package classes.Scenes.NPCs
 				//Start [horsecock]
 				outputText("Amily, your personal cumslut, is a 5' 2\" tall "+what+", with quite the voluptuous build.  Her pink eyes normally glow with desire and adoration every time she looks at you, and a lusty smile adorns her face.  " + furDesc + " " + feetDesc + ", and a long, hairless mouse tail with a spaded tip that sways and coils around her legs seductively at every opportunity.  She is currently wearing " + flags[kFLAGS.AMILY_CLOTHING] + ".  She has " + amilyHips() + " and a " + amilyButt() + ".\n\n");
 				// End [horsecock]
-				outputText("She has a pair of " + amilyTits() + " on her chest. They have " + flags[kFLAGS.AMILY_NIPPLE_LENGTH] + "-inch nipples at their tips and must be at least DD-cups.\n\n");
+				outputText("She has a pair of " + amilyTits() + " on her chest. They have " + getNippleLength() + "-inch nipples at their tips and must be at least DD-cups.\n\n");
 
 				//(If Amily has a penis:
 				if (hasCock()) {
@@ -3941,21 +3951,19 @@ package classes.Scenes.NPCs
 			//Pure
 			if (isPureFollower()) {
 				//(If Nipples are smaller than 4 inches:
-				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] < maxSizePure || ( flags[kFLAGS.AMILY_NIPPLE_LENGTH] < maxSizeHypr && flags[kFLAGS.HYPER_HAPPY]) ) {
+				if (getNippleLength() < maxSizePure || ( getNippleLength() < maxSizeHypr && flags[kFLAGS.HYPER_HAPPY]) ) {
 					outputText("She looks at it skeptically. \"<i>I guess bigger nipples would be more sensitive...</i>\" She mutters, but she takes it from you all the same. Unthinkingly biting off the top, she sucks down the contents in a practiced gulp. Crushing the shell in her hand, she pulls at her top, allowing you to see her nipples swell and grow until they stop. She experimentally tweaks one, squeaking in shock at the sensation. \"<i>Well... I guess that they do feel kind of nice... Was there anything else?</i>\"\n\n");
 					if (player.hasItem(consumables.WHITEEG)) {
 						player.consumeItem(consumables.WHITEEG);
-						flags[kFLAGS.AMILY_NIPPLE_LENGTH] += .25;
-						flags[kFLAGS.AMILY_NIPPLE_LENGTH] = int(flags[kFLAGS.AMILY_NIPPLE_LENGTH] * 100) / 100;
+						modNippleLength(.25);
 					}
 					else {
 						player.consumeItem(consumables.L_WHTEG);
-						flags[kFLAGS.AMILY_NIPPLE_LENGTH] += .7;
-						flags[kFLAGS.AMILY_NIPPLE_LENGTH] = int(flags[kFLAGS.AMILY_NIPPLE_LENGTH] * 100) / 100;
+						modNippleLength(.7);
 					}
-					if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] > maxSizePure && !flags[kFLAGS.HYPER_HAPPY])
+					if (getNippleLength() > maxSizePure && !flags[kFLAGS.HYPER_HAPPY])
 					{
-						flags[kFLAGS.AMILY_NIPPLE_LENGTH] = maxSizePure;
+						setNippleLength(maxSizePure);
 					}
 				}
 				//(If Nipples are 4 inches:
@@ -3966,17 +3974,15 @@ package classes.Scenes.NPCs
 			//Corrupt!
 			else {
 				//(If Nipples are smaller than 4 inches:
-				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] < maxSizeCorr) outputText("She looks at it and smiles knowingly. \"<i>Is " + player.mf("master","mistress") + " going to make this one's nipples into obscene toys?</i>\" she asks while accepting the egg.  She bites off the top and sucks down the contents in a practiced gulp.  Crushing the shell in her hand, she pulls at her top, allowing you to see her nipples swell and grow until they stop. She experimentally tweaks one, squeaking in shock at the sensation. \"<i>Thank you " + player.mf("master","mistress") + " for giving your slut such wonderful nipple-toys.  Would you like to abuse your slut's needy fuck-hole now?</i>\"\n\n");
+				if (getNippleLength() < maxSizeCorr) outputText("She looks at it and smiles knowingly. \"<i>Is " + player.mf("master","mistress") + " going to make this one's nipples into obscene toys?</i>\" she asks while accepting the egg.  She bites off the top and sucks down the contents in a practiced gulp.  Crushing the shell in her hand, she pulls at her top, allowing you to see her nipples swell and grow until they stop. She experimentally tweaks one, squeaking in shock at the sensation. \"<i>Thank you " + player.mf("master","mistress") + " for giving your slut such wonderful nipple-toys.  Would you like to abuse your slut's needy fuck-hole now?</i>\"\n\n");
 				else outputText("She looks at it and moans lewdly, \"<i>My nipples are going to be sure huge for you " + player.mf("master","mistress") + ".  No, nipples isn't right.  They're teats now.  Huge, swollen cow-teats on your mousey fuck-pet.  Lets make them bigger!</i>\" She bites off the top and sucks down the contents in a practiced gulp.  Crushing the shell in her hand, she pulls at her top, allowing you to see her nipples swell and hang even lower. She experimentally tweaks one, squeaking in shock at the sensation. \"<i>Thank you " + player.mf("master","mistress") + " for making your slut's body useless for anything but sex.  Would you like to abuse your slut's needy fuck-hole now?</i>\"\n\n");
 				if (player.hasItem(consumables.WHITEEG)) {
 					player.consumeItem(consumables.WHITEEG);
-					flags[kFLAGS.AMILY_NIPPLE_LENGTH] += .25;
-					flags[kFLAGS.AMILY_NIPPLE_LENGTH] = int(flags[kFLAGS.AMILY_NIPPLE_LENGTH] * 100) / 100;
+					modNippleLength(0.25);
 				}
 				else {
 					player.consumeItem(consumables.L_WHTEG);
-					flags[kFLAGS.AMILY_NIPPLE_LENGTH] += .7;
-					flags[kFLAGS.AMILY_NIPPLE_LENGTH] = int(flags[kFLAGS.AMILY_NIPPLE_LENGTH] * 100) / 100;
+					modNippleLength(0.7);
 				}
 			}
 			doNext(amilyFollowerEncounter);
@@ -4123,7 +4129,7 @@ package classes.Scenes.NPCs
 			outputText("She wrinkles her nose at the awful smell of the paste you are showing her, even as you explain it's able to shrink down oversized bodyparts, and you can use this to reduce any parts that she thinks are oversized.");
 			menu();
 			if (getCupSize() > 1) addButton(0, "Breasts", amilyReducto, 0);
-			if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] > 0.5) addButton(1, "Nipples", amilyReducto, 1);
+			if (getNippleLength() > 0.5) addButton(1, "Nipples", amilyReducto, 1);
 			if (flags[kFLAGS.AMILY_HIP_RATING] > 6) addButton(2, "Hips", amilyReducto, 2);
 			if (getCockLength() > 4) addButton(3, "Penis", amilyReducto, 3);
 			if (flags[kFLAGS.AMILY_ASS_SIZE] > 6) addButton(4, "Butt", amilyReducto, 4);
@@ -4138,9 +4144,7 @@ package classes.Scenes.NPCs
 			}
 			else if (part == 1) { //Nipples
 				chosenPart = "nipples";
-				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] > 3) flags[kFLAGS.AMILY_NIPPLE_LENGTH] -= 0.5; //Large nipples shrink more!
-				flags[kFLAGS.AMILY_NIPPLE_LENGTH] -= 0.5;
-				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] < 0.5) flags[kFLAGS.AMILY_NIPPLE_LENGTH] = 0.5;
+				modNippleLength(getNippleLength()>3?-1:-0.5);
 			}
 			else if (part == 2) { //Hips
 				chosenPart = "hips";
@@ -4502,7 +4506,7 @@ package classes.Scenes.NPCs
 			//Size descriptors 33% chance
 			if (rand(4) == 0) {
 				//TINAHHHH
-				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] < .25) {
+				if (getNippleLength() < .25) {
 					temp = rand(3);
 					if (temp == 0) description += "tiny ";
 					if (temp == 1) description += "itty-bitty ";
@@ -4510,7 +4514,7 @@ package classes.Scenes.NPCs
 					if (temp == 3) description += "dainty ";
 				}
 				//Prominant
-				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] >= .4 && flags[kFLAGS.AMILY_NIPPLE_LENGTH] < 1) {
+				else if (getNippleLength() >= .4 && getNippleLength() < 1) {
 					temp = rand(5);
 					if (temp == 0) description += "prominent ";
 					if (temp == 1) description += "pencil eraser-sized ";
@@ -4519,7 +4523,7 @@ package classes.Scenes.NPCs
 					if (temp == 4) description += "striking ";
 				}
 				//Big 'uns
-				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] >= 1 && flags[kFLAGS.AMILY_NIPPLE_LENGTH] < 2) {
+				else if (getNippleLength() < 2) {
 					temp = rand(4);
 					if (temp == 0) description += "forwards-jutting ";
 					if (temp == 1) description += "over-sized ";
@@ -4527,7 +4531,7 @@ package classes.Scenes.NPCs
 					if (temp == 3) description += "large protruding ";
 				}
 				//'Uge
-				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] >= 2 && flags[kFLAGS.AMILY_NIPPLE_LENGTH] < 3.2) {
+				else if (getNippleLength() < 3.2) {
 					temp = rand(5);
 					if (temp == 0) description += "enlongated ";
 					if (temp == 1) description += "massive ";
@@ -4536,7 +4540,7 @@ package classes.Scenes.NPCs
 					if (temp == 4) description += "hefty ";
 				}
 				//Massive
-				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] >= 3.2) {
+				else  {
 					temp = rand(4);
 					if (temp == 0) description += "bulky ";
 					if (temp == 1) description += "ponderous ";
@@ -4580,15 +4584,15 @@ package classes.Scenes.NPCs
 			temp = rand(5);
 			if (temp == 0) description += "nipple";
 			if (temp == 1) {
-				if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] < .5) description += "perky nipple";
+				if (getNippleLength() < .5) description += "perky nipple";
 				else description += "cherry-like nub";
 			}
 			if (temp == 2) {
-				if (flags[kFLAGS.AMILY_LACTATION_RATE] >= 1 && flags[kFLAGS.AMILY_NIPPLE_LENGTH] >= 1) description += "teat";
+				if (flags[kFLAGS.AMILY_LACTATION_RATE] >= 1 && getNippleLength() >= 1) description += "teat";
 				else description += "nipple";
 			}
 			if (temp == 3) {
-				if (flags[kFLAGS.AMILY_LACTATION_RATE] >= 1 && flags[kFLAGS.AMILY_NIPPLE_LENGTH] >= 1) description += "teat";
+				if (flags[kFLAGS.AMILY_LACTATION_RATE] >= 1 && getNippleLength() >= 1) description += "teat";
 				else description += "nipple";
 			}
 			if (temp == 4) {
@@ -5247,7 +5251,7 @@ package classes.Scenes.NPCs
 			//(Amily becomes a follower; quest is over)
 			flagFollowerPure();
 			setCupSize(1);
-			flags[kFLAGS.AMILY_NIPPLE_LENGTH] = .3;
+			setNippleLength(0.3);
 			flags[kFLAGS.AMILY_HIP_RATING] = 6;
 			flags[kFLAGS.AMILY_ASS_SIZE] = 6;
 			doNext(playerMenu);
@@ -6943,7 +6947,7 @@ package classes.Scenes.NPCs
 			//Set other flags if Amily is moving in for the first time
 			if (!wasCorruptionWarning()) {
 				setCupSize(5);
-				flags[kFLAGS.AMILY_NIPPLE_LENGTH] = .5;
+				setNippleLength(0.5);
 				flags[kFLAGS.AMILY_HIP_RATING] = 12;
 				flags[kFLAGS.AMILY_ASS_SIZE] = 12;
 				flags[kFLAGS.AMILY_VAGINAL_WETNESS] = 1;
