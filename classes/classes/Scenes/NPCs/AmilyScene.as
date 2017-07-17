@@ -105,6 +105,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_WANG_GIRTH:int                                            =   46; // Amily Penis Gith.    Default=0
 		public static const kFLAGS_AMILY_CUP_SIZE:int                                              =   47; //  5-JanAmily's Cup Size (1 to 5)
 		public static const kFLAGS_AMILY_NIPPLE_LENGTH:int                                         =   48; //  0.3-4Nipple Length from .3 to 4"
+		public static const kFLAGS_AMILY_HIP_RATING:int                                            =   49; //  girly-womanlyAmily Hip Rating - girly to womanly - Default=12
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
 		public static const kFLAGS_AMILY_NOT_FURRY:int                                             =  337; //  1 = Amily is no longer a flea-ridden furry who stinks up your carpet.
@@ -203,6 +204,12 @@ package classes.Scenes.NPCs
 		public function modNippleLength(delta:Number):void {
 			flags[kFLAGS_AMILY_NIPPLE_LENGTH] = int(Math.max(0.5,flags[kFLAGS_AMILY_NIPPLE_LENGTH])*100)/100;
 		}
+		public function setHipRating(value:int):void {
+			flags[kFLAGS_AMILY_HIP_RATING] = value;
+		}
+		public function modHipRating(delta:int):void {
+			flags[kFLAGS_AMILY_HIP_RATING] = Math.max(6,flags[kFLAGS_AMILY_NIPPLE_LENGTH]);
+		}
 		public function isNotFurry():Boolean {
 			return flags[kFLAGS_AMILY_NOT_FURRY] == 1;
 		}
@@ -296,6 +303,9 @@ package classes.Scenes.NPCs
 		}
 		public function getNippleLength():Number {
 			return flags[kFLAGS_AMILY_NIPPLE_LENGTH];
+		}
+		public function getHipRating():int {
+			return flags[kFLAGS_AMILY_HIP_RATING];
 		}
 		// </savedata>
 
@@ -1681,7 +1691,7 @@ package classes.Scenes.NPCs
 			flagFollowerPure();
 			setCupSize(1);
 			setNippleLength(.3);
-			flags[kFLAGS.AMILY_HIP_RATING] = 6;
+			setHipRating(6);
 			flags[kFLAGS.AMILY_ASS_SIZE] = 6;
 			flags[kFLAGS.AMILY_VAGINAL_WETNESS] = 1;
 
@@ -4065,25 +4075,25 @@ package classes.Scenes.NPCs
 			outputText("You hold out a purple egg, telling her that it will make her hips grow.\n\n");
 			if (isPureFollower()) {
 				//(If Amily doesn't have "full, womanly hips":
-				if (flags[kFLAGS.AMILY_HIP_RATING] < maxSizePure || ( flags[kFLAGS.AMILY_HIP_RATING] < maxSizeCorr && flags[kFLAGS.HYPER_HAPPY]))
+				if (getHipRating() < maxSizePure || ( getHipRating() < maxSizeCorr && flags[kFLAGS.HYPER_HAPPY]))
 				{
 					outputText("She looks at it thoughtfully. \"<i>Wider hips...? Well, if you really want, I guess I can try it.</i>\" She takes the egg from you, her prominent front-teeth effortlessly biting off the top, whereupon she sucks down the contents in a practiced gulp. Crushing the shell in her hand, she almost loses her balance as her hips suddenly jut wider, the growth happening much faster than she expected. \"<i>I'm going to have to get used to walking like this, now.</i>\" She mutters, and then she awkwardly walks away.\n\n");
 					if (player.hasItem(consumables.PURPLEG)) {
 						player.consumeItem(consumables.PURPLEG);
-						flags[kFLAGS.AMILY_HIP_RATING] += 1 + rand(2);
+						modHipRating(1 + rand(2));
 					}
 					else {
 						player.consumeItem(consumables.L_PRPEG);
-						flags[kFLAGS.AMILY_HIP_RATING] += 2+rand(3);
+						modHipRating(2+rand(3));
 					}
 
-					if (flags[kFLAGS.AMILY_HIP_RATING] > maxSizeHypr && flags[kFLAGS.HYPER_HAPPY])
+					if (getHipRating() > maxSizeHypr && flags[kFLAGS.HYPER_HAPPY])
 					{
-						flags[kFLAGS.AMILY_HIP_RATING] = maxSizeHypr;
+						setHipRating(maxSizeHypr);
 					}
-					else if (flags[kFLAGS.AMILY_HIP_RATING] > maxSizePure)
+					else if (getHipRating() > maxSizePure)
 					{
-						flags[kFLAGS.AMILY_HIP_RATING] = maxSizePure;
+						setHipRating(maxSizePure);
 					}
 				}
 				//(If Amily has "full, womanly hips":
@@ -4095,23 +4105,23 @@ package classes.Scenes.NPCs
 			//Corrupt
 			else {
 				//(If Amily doesn't have "full, womanly hips":
-				if (flags[kFLAGS.AMILY_HIP_RATING] < maxSizeCorr) {
+				if (getHipRating() < maxSizeCorr) {
 					outputText("She looks at it thoughtfully. \"<i>" + player.mf("Master","Mistress") + " wants my hips even wider?  Are you going to use me as your private breeding stock?  Mmm, that turns me on!</i>\" She takes the egg from you, her prominent front-teeth effortlessly biting off the top, whereupon she sucks down the contents in a practiced gulp. Crushing the shell in her hand, she almost loses her balance as her hips suddenly jut wider, the growth happening much faster than she expected. \"<i>Gods that made me wet!  Take me... let's fuck right now, please!</i>\" she begs.\n\n");
 					if (player.hasItem(consumables.PURPLEG)) {
 						player.consumeItem(consumables.PURPLEG);
-						flags[kFLAGS.AMILY_HIP_RATING] += 1 + rand(2);
+						modHipRating(1 + rand(2));
 					}
 					else {
 						player.consumeItem(consumables.L_PRPEG);
-						flags[kFLAGS.AMILY_HIP_RATING] += 2+rand(3);
+						modHipRating(2+rand(3));
 					}
 
-					if (flags[kFLAGS.AMILY_HIP_RATING] > maxSizeHypr && flags[kFLAGS.HYPER_HAPPY]) {
-						flags[kFLAGS.AMILY_HIP_RATING] = maxSizeHypr;
+					if (getHipRating() > maxSizeHypr && flags[kFLAGS.HYPER_HAPPY]) {
+						setHipRating(maxSizeHypr);
 					}
-					else if (flags[kFLAGS.AMILY_HIP_RATING] > maxSizeCorr)
+					else if (getHipRating() > maxSizeCorr)
 					{
-						flags[kFLAGS.AMILY_HIP_RATING] = maxSizeCorr;
+						setHipRating(maxSizeCorr);
 					}
 				}
 				//(If Amily has "full, womanly hips":
@@ -4130,7 +4140,7 @@ package classes.Scenes.NPCs
 			menu();
 			if (getCupSize() > 1) addButton(0, "Breasts", amilyReducto, 0);
 			if (getNippleLength() > 0.5) addButton(1, "Nipples", amilyReducto, 1);
-			if (flags[kFLAGS.AMILY_HIP_RATING] > 6) addButton(2, "Hips", amilyReducto, 2);
+			if (getHipRating() > 6) addButton(2, "Hips", amilyReducto, 2);
 			if (getCockLength() > 4) addButton(3, "Penis", amilyReducto, 3);
 			if (flags[kFLAGS.AMILY_ASS_SIZE] > 6) addButton(4, "Butt", amilyReducto, 4);
 			addButton(14, "Nevermind", amilyFollowerEncounter);
@@ -4148,9 +4158,7 @@ package classes.Scenes.NPCs
 			}
 			else if (part == 2) { //Hips
 				chosenPart = "hips";
-				if (flags[kFLAGS.AMILY_HIP_RATING] > 12) flags[kFLAGS.AMILY_HIP_RATING]--; //Large hips shrink more!
-				flags[kFLAGS.AMILY_HIP_RATING]--;
-				if (flags[kFLAGS.AMILY_HIP_RATING] < 6) flags[kFLAGS.AMILY_HIP_RATING] = 6;
+				modHipRating(getHipRating() > 12 ? -2 : -1); //Large hips shrink more!
 			}
 			else if (part == 3) { //Penis
 				if (getCockLength() > 10) modCockLength(-1); //Large cock shrinks more!
@@ -4235,44 +4243,44 @@ package classes.Scenes.NPCs
 		private function amilyHips():String {
 			var desc:String = "";
 			var rando:Number = 0;
-			if (flags[kFLAGS.AMILY_HIP_RATING] <= 1)
+			if (getHipRating() <= 1)
 			{
 				if (rand(2) == 0) desc = "boyish ";
 				else desc = "tiny ";
 				if (flags[kFLAGS.AMILY_ASS_SIZE] >= 6) desc = "waspish ";
 			}
-			if (flags[kFLAGS.AMILY_HIP_RATING] > 1 && flags[kFLAGS.AMILY_HIP_RATING] < 4) {
+			else if (getHipRating() < 4) {
 				rando = rand(3);
 				if (rando == 0) desc = "slender ";
 				if (rando == 1) desc = "narrow ";
 				if (rando == 2) desc = "thin ";
 				if (flags[kFLAGS.AMILY_ASS_SIZE] >= 6) desc = "waspish ";
 			}
-			if (flags[kFLAGS.AMILY_HIP_RATING] >= 4 && flags[kFLAGS.AMILY_HIP_RATING] < 6) {
+			else if (getHipRating() < 6) {
 				rando = rand(3);
 				if (rando == 0) desc = "average ";
 				if (rando == 1) desc = "normal ";
 				if (rando == 2) desc = "plain ";
 			}
-			if (flags[kFLAGS.AMILY_HIP_RATING] >= 6 && flags[kFLAGS.AMILY_HIP_RATING] < 10) {
+			else if (getHipRating() < 10) {
 				rando = rand(3);
 				if (rando == 0) desc = "ample ";
 				if (rando == 1) desc = "noticeable ";
 				if (rando == 2) desc = "girly ";
 			}
-			if (flags[kFLAGS.AMILY_HIP_RATING] >= 10 && flags[kFLAGS.AMILY_HIP_RATING] < 15) {
+			else if (getHipRating() < 15) {
 				rando = rand(3);
 				if (rando == 0) desc = "flared ";
 				if (rando == 1) desc = "curvy ";
 				if (rando == 2) desc = "wide ";
 			}
-			if (flags[kFLAGS.AMILY_HIP_RATING] >= 15 && flags[kFLAGS.AMILY_HIP_RATING] < 20) {
+			else if (getHipRating() < 20) {
 				rando = rand(3);
 				if (rando == 0) desc = "fertile ";
 				if (rando == 1) desc = "child-bearing ";
 				if (rando == 2) desc = "voluptuous ";
 			}
-			if (flags[kFLAGS.AMILY_HIP_RATING] >= 20) {
+			else  {
 				rando = rand(3);
 				if (rando == 0) desc = "broodmother-sized ";
 				if (rando == 1) desc = "cow-like ";
@@ -4280,11 +4288,11 @@ package classes.Scenes.NPCs
 			}
 			rando = rand(2);
 			if (rando == 0) {
-				if (rand(2) == 0 && flags[kFLAGS.AMILY_HIP_RATING] >= 15) desc += "flanks";
+				if (rand(2) == 0 && getHipRating() >= 15) desc += "flanks";
 				else desc += "hips";
 			}
-			if (rando == 1) {
-				if (rand(2) == 0 && flags[kFLAGS.AMILY_HIP_RATING] >= 15) desc += "flanks";
+			else if (rando == 1) {
+				if (rand(2) == 0 && getHipRating() >= 15) desc += "flanks";
 				else desc += "thighs";
 			}
 
@@ -5252,7 +5260,7 @@ package classes.Scenes.NPCs
 			flagFollowerPure();
 			setCupSize(1);
 			setNippleLength(0.3);
-			flags[kFLAGS.AMILY_HIP_RATING] = 6;
+			setHipRating(6);
 			flags[kFLAGS.AMILY_ASS_SIZE] = 6;
 			doNext(playerMenu);
 		}
@@ -6948,7 +6956,7 @@ package classes.Scenes.NPCs
 			if (!wasCorruptionWarning()) {
 				setCupSize(5);
 				setNippleLength(0.5);
-				flags[kFLAGS.AMILY_HIP_RATING] = 12;
+				setHipRating(12);
 				flags[kFLAGS.AMILY_ASS_SIZE] = 12;
 				flags[kFLAGS.AMILY_VAGINAL_WETNESS] = 1;
 				flags[kFLAGS.AMILY_CLOTHING] = "sexy rags";

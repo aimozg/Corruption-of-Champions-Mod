@@ -54,7 +54,7 @@ public static const AMILY_VILLAGE_ACCESSIBLE:int                                
 //public static const AMILY_WANG_GIRTH:int                                            =   46; // Amily Penis Gith.    Default=0
 //public static const AMILY_CUP_SIZE:int                                              =   47; //  5-JanAmily's Cup Size (1 to 5)
 //public static const AMILY_NIPPLE_LENGTH:int                                         =   48; //  0.3-4Nipple Length from .3 to 4"
-public static const AMILY_HIP_RATING:int                                            =   49; //  girly-womanlyAmily Hip Rating - girly to womanly - Default=12
+//public static const AMILY_HIP_RATING:int                                            =   49; //  girly-womanlyAmily Hip Rating - girly to womanly - Default=12
 public static const AMILY_ASS_SIZE:int                                              =   50; // Can increase ass from "unremarkable ass" to "delightfully jiggly" - Default=12
 public static const AMILY_LACTATION_RATE:int                                        =   51; // Amily Lactation Rate. Default=0
 public static const AMILY_CLOTHING:int                                              =   52; // Amily Clothing. Default="sexy rags"
