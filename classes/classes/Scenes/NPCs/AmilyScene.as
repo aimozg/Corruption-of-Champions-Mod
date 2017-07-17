@@ -102,11 +102,12 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_FUCK_COUNTER:int                                          =   42; // Amily Fuck Counter.
 		public static const kFLAGS_AMILY_FOLLOWER:int                                              =   43; // Amily Follower. 0=Not Follower, 1=Follower 2=Corrupted Follower?
 		public static const kFLAGS_AMILY_WANG_LENGTH:int                                           =   45; // Amily's Wang Length" Description="Starts 4x1, maxes @ 13x2
+		public static const kFLAGS_AMILY_WANG_GIRTH:int                                            =   46; // Amily Penis Gith.    Default=0
+		public static const kFLAGS_AMILY_CUP_SIZE:int                                              =   47; //  5-JanAmily's Cup Size (1 to 5)
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
 		public static const kFLAGS_AMILY_NOT_FURRY:int                                             =  337; //  1 = Amily is no longer a flea-ridden furry who stinks up your carpet.
 		public static const kFLAGS_AMILY_TREE_FLIPOUT:int                                          =  599; //
-		public static const kFLAGS_AMILY_WANG_GIRTH:int                                            =   46; // Amily Penis Gith.    Default=0
 
 		// Global state: Not met / Met / Met, accepted offer / Follower pure / Follower corrupt / Run away (corrupt, worms, or tree flipout) / Completely Removed
 		public function flagMet():void {
@@ -188,6 +189,12 @@ package classes.Scenes.NPCs
 			flags[kFLAGS_AMILY_WANG_LENGTH] = 0;
 			flags[kFLAGS_AMILY_WANG_GIRTH] = 0;
 			flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] = 0;
+		}
+		public function setCupSize(value:int):void {
+			flags[kFLAGS_AMILY_CUP_SIZE] = value;
+		}
+		public function modCupSize(value:int):void {
+			flags[kFLAGS_AMILY_CUP_SIZE] = Math.max(1,flags[kFLAGS_AMILY_CUP_SIZE]);
 		}
 		public function isNotFurry():Boolean {
 			return flags[kFLAGS_AMILY_NOT_FURRY] == 1;
@@ -276,6 +283,9 @@ package classes.Scenes.NPCs
 		}
 		public function getCockArea():Number {
 			return getCockLength()*getCockGirth();
+		}
+		public function getCupSize():int {
+			return flags[kFLAGS_AMILY_CUP_SIZE];
 		}
 		// </savedata>
 
@@ -1659,7 +1669,7 @@ package classes.Scenes.NPCs
 			outputText("\\[<b>Amily has joined you as a lover.</b>\\]\n\n");
 			//Set amily follower flag
 			flagFollowerPure();
-			flags[kFLAGS.AMILY_CUP_SIZE] = 1;
+			setCupSize(1);
 			flags[kFLAGS.AMILY_NIPPLE_LENGTH] = .3;
 			flags[kFLAGS.AMILY_HIP_RATING] = 6;
 			flags[kFLAGS.AMILY_ASS_SIZE] = 6;
@@ -2901,7 +2911,7 @@ package classes.Scenes.NPCs
 				//(Start [horsecock]
 				outputText("Amily is a 5' 2\" tall "+what+", with a lean and wiry build. Her pink eyes normally twinkle merrily, but they can turn hard and cold if the circumstances warrant, just as the normally friendly grin "+onHerMuzzle+"can turn cruel and harsh when she is angry. "+furDesc+" a long, hairless mouse's tail that sways and twitches constantly from her behind. She is currently wearing " + flags[kFLAGS.AMILY_CLOTHING] + ". She has " + amilyHips() + " and a " + amilyButt() + ".\n\n");
 				//(End [horsecock]
-				outputText("She has a pair of " + amilyTits() + " on her chest. They have " + flags[kFLAGS.AMILY_NIPPLE_LENGTH] + "-inch nipples at their tips and must be at least " + Appearance.breastCup(flags[kFLAGS.AMILY_CUP_SIZE]) + "s.\n\n");
+				outputText("She has a pair of " + amilyTits() + " on her chest. They have " + flags[kFLAGS.AMILY_NIPPLE_LENGTH] + "-inch nipples at their tips and must be at least " + Appearance.breastCup(getCupSize()) + "s.\n\n");
 
 				//(If Amily has a penis:
 				if (hasCock()) {
@@ -3143,7 +3153,7 @@ package classes.Scenes.NPCs
 
 				outputText("\"<i>All that came out of me?</i>\" She asks, curious. She gently rubs your belly, and you moan as the milk sloshes uncomfortably inside your sensitive stomach. Amily sits down, your head in her lap, and lets you rest there until you recover your strength and digest a good portion of the milk. Still feeling uncomfortably full, you get up and go for a walk to help work off your titanic liquid meal.\n\n");
 			}
-			var refillAmount:int = (10 + (flags[kFLAGS.AMILY_CUP_SIZE] * 2)) * flags[kFLAGS.AMILY_LACTATION_RATE];
+			var refillAmount:int = (10 + getCupSize() * 2) * flags[kFLAGS.AMILY_LACTATION_RATE];
 			if (refillAmount > 100) refillAmount = 100;
 			player.refillHunger(refillAmount, false);
 			player.changeFatigue(-refillAmount / 2);
@@ -3743,9 +3753,9 @@ package classes.Scenes.NPCs
 				outputText("You offer her a vial of demonic milk, assuring her as you do so that the corruptive elements have been removed from it.\n\n");
 
 				//(If Amily's breast size is smaller than DD-cup):
-				if ((flags[kFLAGS.AMILY_CUP_SIZE] < maxSizePure) || ( flags[kFLAGS.AMILY_CUP_SIZE] < maxSizeHypr && flags[kFLAGS.HYPER_HAPPY]) ){
+				if ((getCupSize() < maxSizePure) || (getCupSize() < maxSizeHypr && flags[kFLAGS.HYPER_HAPPY]) ){
 					outputText("She smiles at you. \"<i>I always did kind of want bigger breasts.</i>\" She admits, sheepishly. She takes it from you and eagerly chugs. She then drops the empty bottle, allowing it to smash on the ground, clutching her breasts and moaning ecstatically as they visibly swell, her clothes growing tighter as they do. When they finish, she squeezes them with glee. \"<i>Mmm... That feels nice. Did you want something else?</i>\"\n\n");
-					flags[kFLAGS.AMILY_CUP_SIZE]++;
+					modCupSize(1);
 					player.consumeItem(consumables.P_S_MLK);
 				}
 				//(If Amily's breast size is DD-cup):
@@ -4112,7 +4122,7 @@ package classes.Scenes.NPCs
 			clearOutput();
 			outputText("She wrinkles her nose at the awful smell of the paste you are showing her, even as you explain it's able to shrink down oversized bodyparts, and you can use this to reduce any parts that she thinks are oversized.");
 			menu();
-			if (flags[kFLAGS.AMILY_CUP_SIZE] > 1) addButton(0, "Breasts", amilyReducto, 0);
+			if (getCupSize() > 1) addButton(0, "Breasts", amilyReducto, 0);
 			if (flags[kFLAGS.AMILY_NIPPLE_LENGTH] > 0.5) addButton(1, "Nipples", amilyReducto, 1);
 			if (flags[kFLAGS.AMILY_HIP_RATING] > 6) addButton(2, "Hips", amilyReducto, 2);
 			if (getCockLength() > 4) addButton(3, "Penis", amilyReducto, 3);
@@ -4124,9 +4134,7 @@ package classes.Scenes.NPCs
 			var chosenPart:String = "";
 			if (part == 0) { //Breasts
 				chosenPart = "breasts";
-				if (flags[kFLAGS.AMILY_CUP_SIZE] > 6) flags[kFLAGS.AMILY_CUP_SIZE]--; //Large breasts shrink more!
-				flags[kFLAGS.AMILY_CUP_SIZE]--;
-				if (flags[kFLAGS.AMILY_CUP_SIZE] < 1) flags[kFLAGS.AMILY_CUP_SIZE] = 1;
+				modCupSize(getCupSize() > 6 ? 2 : 1); //Large breasts shrink more!
 			}
 			else if (part == 1) { //Nipples
 				chosenPart = "nipples";
@@ -4190,12 +4198,12 @@ package classes.Scenes.NPCs
 			//--LACTATION--
 			if (flags[kFLAGS.AMILY_LACTATION_RATE] == 0) { //Not lactating
 				//Less than C-cup
-				if (flags[kFLAGS.AMILY_CUP_SIZE] < BREAST_CUP_C) {
-					outputText("\n\nIt's quite obvious when the lactaid kicks in; her " + Appearance.breastCup(flags[kFLAGS.AMILY_CUP_SIZE]) + " breasts suddenly puff out, swelling into proud C-cup breasts, milk flowing freely from her nipples, leaving her shirt both severely strained and soaked in milk.  She squeaks in dismay, and races away, clearly going to try and clean herself up.");
-					flags[kFLAGS.AMILY_CUP_SIZE] = BREAST_CUP_C;
+				if (getCupSize() < BREAST_CUP_C) {
+					outputText("\n\nIt's quite obvious when the lactaid kicks in; her " + Appearance.breastCup(getCupSize()) + " breasts suddenly puff out, swelling into proud C-cup breasts, milk flowing freely from her nipples, leaving her shirt both severely strained and soaked in milk.  She squeaks in dismay, and races away, clearly going to try and clean herself up.");
+					setCupSize(BREAST_CUP_C);
 				}
 				//C-cup or greater
-				else if (flags[kFLAGS.AMILY_CUP_SIZE] >= BREAST_CUP_C) {
+				else if (getCupSize() >= BREAST_CUP_C) {
 					outputText("\n\n\"<i>So...  when is this supposed to start - yeek</i>!\" She suddenly squeaks in shock as she realizes her shirt is growing damp.  She hastily pulls her top open, grabbing at her dripping breasts.  \"<i>I, I just gotta go take care of this.</i>\" She explains, blushing and then scampering away.");
 				}
 			}
@@ -4381,18 +4389,18 @@ package classes.Scenes.NPCs
 			var descript:String = "";
 			//50% of the time size-descript them
 			if (rand(2) == 0) {
-				if (flags[kFLAGS.AMILY_CUP_SIZE] <= 2)
+				if (getCupSize() <= 2)
 				{
 					temp = rand(3);
 					if (temp == 0) descript += "small ";
 					if (temp == 1) descript += "little ";
 					if (temp == 2) descript += "perky ";
 				}
-				if (flags[kFLAGS.AMILY_CUP_SIZE] > 2 && flags[kFLAGS.AMILY_CUP_SIZE] <= 4)
+				else if (getCupSize() <= 4)
 				{
 					descript += "ample ";
 				}
-				if (flags[kFLAGS.AMILY_CUP_SIZE] > 4 && flags[kFLAGS.AMILY_CUP_SIZE] <= 6)
+				else if (getCupSize() <= 6)
 				{
 					temp = rand(4);
 					if (temp == 0) descript += "big ";
@@ -4400,18 +4408,17 @@ package classes.Scenes.NPCs
 					if (temp == 2) descript += "pillowy ";
 					if (temp == 3) descript += "jiggly ";
 				}
-				if (flags[kFLAGS.AMILY_CUP_SIZE] > 6 && flags[kFLAGS.AMILY_CUP_SIZE] < 13) {
+				else if (getCupSize() < 13) {
 					temp = rand(4);
 					if (temp == 0) descript += "basketball-sized ";
 					if (temp == 1) descript += "whorish ";
 					if (temp == 2) descript += "pornstar-like ";
 					if (temp == 3) descript += "jiggling ";
 				}
-				if (flags[kFLAGS.AMILY_CUP_SIZE] >= 13) {
+				else if (getCupSize() < 18) {
 					descript += "beach-ball sized ";
-
 				}
-				if (flags[kFLAGS.AMILY_CUP_SIZE] >= 18) {
+				else {
 					temp = rand(2);
 					if (temp == 1) descript += "mountainous ";
 					else descript += "immense ";
@@ -4426,7 +4433,7 @@ package classes.Scenes.NPCs
 			}
 			if (temp == 2) {
 				if (flags[kFLAGS.AMILY_LACTATION_RATE] > 1.5) descript += "milky ";
-				if (flags[kFLAGS.AMILY_CUP_SIZE] > 4) descript += "tits";
+				if (getCupSize() > 4) descript += "tits";
 				else descript += "breasts";
 			}
 			if (temp == 3) {
@@ -4442,11 +4449,11 @@ package classes.Scenes.NPCs
 				if (flags[kFLAGS.AMILY_LACTATION_RATE] < 1) descript += "jugs";
 			}
 			if (temp == 8) {
-				if (flags[kFLAGS.AMILY_CUP_SIZE] > 6) descript += "love-pillows";
+				if (getCupSize() > 6) descript += "love-pillows";
 				else descript += "boobs";
 			}
 			if (temp == 9) {
-				if (flags[kFLAGS.AMILY_CUP_SIZE] > 6) descript += "tits";
+				if (getCupSize() > 6) descript += "tits";
 				else descript += "breasts";
 			}
 			return descript;
@@ -5239,7 +5246,7 @@ package classes.Scenes.NPCs
 
 			//(Amily becomes a follower; quest is over)
 			flagFollowerPure();
-			flags[kFLAGS.AMILY_CUP_SIZE] = 1;
+			setCupSize(1);
 			flags[kFLAGS.AMILY_NIPPLE_LENGTH] = .3;
 			flags[kFLAGS.AMILY_HIP_RATING] = 6;
 			flags[kFLAGS.AMILY_ASS_SIZE] = 6;
@@ -6935,7 +6942,7 @@ package classes.Scenes.NPCs
 			flagFollowerCorrupt();
 			//Set other flags if Amily is moving in for the first time
 			if (!wasCorruptionWarning()) {
-				flags[kFLAGS.AMILY_CUP_SIZE] = 5;
+				setCupSize(5);
 				flags[kFLAGS.AMILY_NIPPLE_LENGTH] = .5;
 				flags[kFLAGS.AMILY_HIP_RATING] = 12;
 				flags[kFLAGS.AMILY_ASS_SIZE] = 12;
