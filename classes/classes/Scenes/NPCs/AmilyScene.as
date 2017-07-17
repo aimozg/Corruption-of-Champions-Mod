@@ -107,6 +107,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_NIPPLE_LENGTH:int                                         =   48; //  0.3-4Nipple Length from .3 to 4"
 		public static const kFLAGS_AMILY_HIP_RATING:int                                            =   49; //  girly-womanlyAmily Hip Rating - girly to womanly - Default=12
 		public static const kFLAGS_AMILY_ASS_SIZE:int                                              =   50; // Can increase ass from "unremarkable ass" to "delightfully jiggly" - Default=12
+		public static const kFLAGS_AMILY_LACTATION_RATE:int                                        =   51; // Amily Lactation Rate. Default=0
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
 		public static const kFLAGS_AMILY_NOT_FURRY:int                                             =  337; //  1 = Amily is no longer a flea-ridden furry who stinks up your carpet.
@@ -217,6 +218,12 @@ package classes.Scenes.NPCs
 		public function modAssSize(delta:int):void {
 			flags[kFLAGS_AMILY_ASS_SIZE] = Math.max(6,flags[kFLAGS_AMILY_ASS_SIZE]);
 		}
+		public function setLactationRate(value:Number):void {
+			flags[kFLAGS_AMILY_LACTATION_RATE] = value;
+		}
+		public function modLactationRate(delta:Number):void {
+			flags[kFLAGS_AMILY_LACTATION_RATE] = Math.max(0,flags[kFLAGS_AMILY_LACTATION_RATE]);
+		}
 		public function isNotFurry():Boolean {
 			return flags[kFLAGS_AMILY_NOT_FURRY] == 1;
 		}
@@ -316,6 +323,9 @@ package classes.Scenes.NPCs
 		}
 		public function getAssSize():int {
 			return flags[kFLAGS_AMILY_ASS_SIZE];
+		}
+		public function getLactationRate():int {
+			return flags[kFLAGS_AMILY_LACTATION_RATE];
 		}
 		// </savedata>
 
@@ -3120,7 +3130,7 @@ package classes.Scenes.NPCs
 				addButton(3, "Scissor", takeChargeAmilyScissorMeTimbers, null, null, null, "Get into some girly fun-times by rubbing your girl-bits against Amily's.");
 				if (hasCock()) addButton(4, "Mount Her", takeChargeAmilyMountHer, null, null, null, "Ride Amily's cock until she cums!");
 			}
-			if (getBirthedByAmily() > 0 || flags[kFLAGS.AMILY_LACTATION_RATE] >= 1) addButton(5, "Drink Milk", takeChargeAmilyMouseMilk, null, null, null, "Drink some of Amily's yummy mouse-milk.");
+			if (getBirthedByAmily() > 0 || getLactationRate() >= 1) addButton(5, "Drink Milk", takeChargeAmilyMouseMilk, null, null, null, "Drink some of Amily's yummy mouse-milk.");
 			addButton(6, "Eat Out", takeChargeAmilyEatOut, null, null, null, "Get a taste of Amily's pussy.");
 			if (hasCock()) addButton(7, "Catch Anal", pureAmilyPutsItInYourRectumDamnNearKilledEm, null, null, null, "Have Amily put her cock to a good use by taking you from behind.");
 			addButton(14, "Nevermind", fuckTheMouseBitch);
@@ -3168,11 +3178,11 @@ package classes.Scenes.NPCs
 			outputText("The taste is unique, distinctly unlike anything you have ever drank before, and yet somehow so very much like Amily. It is thick and creamy and piquant, putting you somewhat in mind of well-aged cheddar, warm from her body-heat and very nourishing.\n\n");
 
 			//Low Amily Milk:
-			if (flags[kFLAGS.AMILY_LACTATION_RATE] < 2) {
+			if (getLactationRate() < 2) {
 				outputText("You drink eagerly, suckling and nursing with all the erotic skill you can muster, and soon her breast is empty. Without further ado, you turn to the next one, and repeat the experience there. Amily moans softly, disappointed, when you drink it dry as well, and you give each nipple in turn a teasing last loving lick before withdrawing. Your mousy lover smiles at you. \"<i>I hope you enjoyed your drink.</i>\" You assure her that you did, and then you help her get dressed, having had enough fun for now.\n\n");
 			}
 			//Moderate Amily Milk:
-			else if (flags[kFLAGS.AMILY_LACTATION_RATE] < 4) {
+			else if (getLactationRate() < 4) {
 				outputText("You drink eagerly, suckling and nursing with all the erotic skill you can muster, and the milk flows thick and freely. You drink and drink, and then, when her breast is empty, you feel compelled to empty the other one. By the time you're finished, you're quite relieved; you feel uncomfortably full, and your stomach gurgles softly as it strains to start digesting your liquid meal. \"<i>Well, they do say milk is good for you, but try not to overdo it, okay?</i>\" Amily teases you. You stick your tongue out at her - which prompts her to pull you into a kiss, her tongue wriggling against yours as she does her best to wring the taste of her own milk from your mouth. Eventually, you push her off... not trying too hard... and she gets dressed, walking away with a jaunty wave of her tail.\n\n");
 			}
 			//High Amily Milk:
@@ -3183,7 +3193,7 @@ package classes.Scenes.NPCs
 
 				outputText("\"<i>All that came out of me?</i>\" She asks, curious. She gently rubs your belly, and you moan as the milk sloshes uncomfortably inside your sensitive stomach. Amily sits down, your head in her lap, and lets you rest there until you recover your strength and digest a good portion of the milk. Still feeling uncomfortably full, you get up and go for a walk to help work off your titanic liquid meal.\n\n");
 			}
-			var refillAmount:int = (10 + getCupSize() * 2) * flags[kFLAGS.AMILY_LACTATION_RATE];
+			var refillAmount:int = (10 + getCupSize() * 2) * getLactationRate();
 			if (refillAmount > 100) refillAmount = 100;
 			player.refillHunger(refillAmount, false);
 			player.changeFatigue(-refillAmount / 2);
@@ -3539,7 +3549,7 @@ package classes.Scenes.NPCs
 				addButton(button++, "Reducto", giveAmilySomeReducto);
 				haveGift = true;
 			}
-			if (player.hasItem(consumables.LACTAID) && flags[kFLAGS.AMILY_LACTATION_RATE] < 5) { //IMPLEMENTED! W00T!
+			if (player.hasItem(consumables.LACTAID) && getLactationRate() < 5) { //IMPLEMENTED! W00T!
 				addButton(button++, "Lactaid", makeTheMouseAMilkCowMoo);
 				haveGift = true;
 			}
@@ -4216,7 +4226,7 @@ package classes.Scenes.NPCs
 				outputText("\"<i>Lactaid? You really want to try drinking mouse milk?</i>\" Amily teases, seductively, a little playfully.  You nod and assure that you do.  \"<i>Alright, my " + player.mf("master", "mistress") + "!</i>\" She proclaims, taking the pink bottle from you and drinking the creaminess to be found within.");
 			}
 			//--LACTATION--
-			if (flags[kFLAGS.AMILY_LACTATION_RATE] == 0) { //Not lactating
+			if (getLactationRate() == 0) { //Not lactating
 				//Less than C-cup
 				if (getCupSize() < BREAST_CUP_C) {
 					outputText("\n\nIt's quite obvious when the lactaid kicks in; her " + Appearance.breastCup(getCupSize()) + " breasts suddenly puff out, swelling into proud C-cup breasts, milk flowing freely from her nipples, leaving her shirt both severely strained and soaked in milk.  She squeaks in dismay, and races away, clearly going to try and clean herself up.");
@@ -4235,7 +4245,7 @@ package classes.Scenes.NPCs
 					outputText("\n\nQuickly she pulls her breasts out of her top; she doesn't want to make a mess on herself.  Beads of milk begin to form at the tip of her " + amilyNipples() + ", soon giving way to a steady trickle of fluid.  \"<i>More milk for my" + player.mf("Master", "Mistress") + ", hmm?</i>\" She teases you.  \"<i>I'm going to go and take care of this...  unless you want to help me now?</i>\" She trills, seductively.");
 				}
 			}
-			flags[kFLAGS.AMILY_LACTATION_RATE]++;
+			modLactationRate(1);
 			doYesNo(takeChargeAmilyMouseMilk, amilyFollowerEncounter);
 		}
 
@@ -4448,11 +4458,11 @@ package classes.Scenes.NPCs
 			temp = rand(10);
 			if (temp == 0) descript += "breasts";
 			if (temp == 1) {
-				if (flags[kFLAGS.AMILY_LACTATION_RATE] > 2) descript += "milk-udders";
+				if (getLactationRate() > 2) descript += "milk-udders";
 				else descript += "breasts";
 			}
 			if (temp == 2) {
-				if (flags[kFLAGS.AMILY_LACTATION_RATE] > 1.5) descript += "milky ";
+				if (getLactationRate() > 1.5) descript += "milky ";
 				if (getCupSize() > 4) descript += "tits";
 				else descript += "breasts";
 			}
@@ -4464,9 +4474,9 @@ package classes.Scenes.NPCs
 			if (temp == 5) descript += "tits";
 			if (temp == 6) descript += "tits";
 			if (temp == 7) {
-				if (flags[kFLAGS.AMILY_LACTATION_RATE] >= 1 && flags[kFLAGS.AMILY_LACTATION_RATE] < 2.5) descript += "milk jugs";
-				if (flags[kFLAGS.AMILY_LACTATION_RATE] >= 2.5) descript += "udders";
-				if (flags[kFLAGS.AMILY_LACTATION_RATE] < 1) descript += "jugs";
+				if (getLactationRate() >= 1 && getLactationRate() < 2.5) descript += "milk jugs";
+				if (getLactationRate() >= 2.5) descript += "udders";
+				if (getLactationRate() < 1) descript += "jugs";
 			}
 			if (temp == 8) {
 				if (getCupSize() > 6) descript += "love-pillows";
@@ -4570,23 +4580,23 @@ package classes.Scenes.NPCs
 			//Milkiness/Arousal/Wetness Descriptors 33% of the time
 			if (rand(3) == 0 && !descripted) {
 				//Just lactating!
-				if (flags[kFLAGS.AMILY_LACTATION_RATE] > 0) {
+				if (getLactationRate() > 0) {
 					//Light lactation
-					if (flags[kFLAGS.AMILY_LACTATION_RATE] <= 1) {
+					if (getLactationRate() <= 1) {
 						temp = rand(3);
 						if (temp == 0) description += "milk moistened ";
 						if (temp == 1) description += "slightly lactating ";
 						if (temp == 2) description += "milk-dampened ";
 					}
 					//Moderate lactation
-					if (flags[kFLAGS.AMILY_LACTATION_RATE] > 1 && flags[kFLAGS.AMILY_LACTATION_RATE] <= 2) {
+					if (getLactationRate() > 1 && getLactationRate() <= 2) {
 						temp = rand(3);
 						if (temp == 0) description += "lactating ";
 						if (temp == 1) description += "milky ";
 						if (temp == 2) description += "milk-seeping ";
 					}
 					//Heavy lactation
-					if (flags[kFLAGS.AMILY_LACTATION_RATE] > 2) {
+					if (getLactationRate() > 2) {
 						temp = rand(4);
 						if (temp == 0) description += "dripping ";
 						if (temp == 1) description += "dribbling ";
@@ -4604,11 +4614,11 @@ package classes.Scenes.NPCs
 				else description += "cherry-like nub";
 			}
 			if (temp == 2) {
-				if (flags[kFLAGS.AMILY_LACTATION_RATE] >= 1 && getNippleLength() >= 1) description += "teat";
+				if (getLactationRate() >= 1 && getNippleLength() >= 1) description += "teat";
 				else description += "nipple";
 			}
 			if (temp == 3) {
-				if (flags[kFLAGS.AMILY_LACTATION_RATE] >= 1 && getNippleLength() >= 1) description += "teat";
+				if (getLactationRate() >= 1 && getNippleLength() >= 1) description += "teat";
 				else description += "nipple";
 			}
 			if (temp == 4) {

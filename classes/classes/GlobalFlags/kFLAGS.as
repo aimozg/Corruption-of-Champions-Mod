@@ -56,7 +56,7 @@ public static const AMILY_VILLAGE_ACCESSIBLE:int                                
 //public static const AMILY_NIPPLE_LENGTH:int                                         =   48; //  0.3-4Nipple Length from .3 to 4"
 //public static const AMILY_HIP_RATING:int                                            =   49; //  girly-womanlyAmily Hip Rating - girly to womanly - Default=12
 //public static const AMILY_ASS_SIZE:int                                              =   50; // Can increase ass from "unremarkable ass" to "delightfully jiggly" - Default=12
-public static const AMILY_LACTATION_RATE:int                                        =   51; // Amily Lactation Rate. Default=0
+//public static const AMILY_LACTATION_RATE:int                                        =   51; // Amily Lactation Rate. Default=0
 public static const AMILY_CLOTHING:int                                              =   52; // Amily Clothing. Default="sexy rags"
 public static const LUMI_MET:int                                                    =   53; // Lumi Met
 public static const NUMBER_OF_TIMES_MET_SCYLLA:int                                  =   54; // Met Scylla:   -1 = decline.  0 = not met.  1 = sucked once, 2 = sucked twice, etc
