@@ -7,7 +7,6 @@ package classes.Scenes.NPCs
 	import classes.GlobalFlags.kFLAGS;
 	import classes.GlobalFlags.kGAMECLASS;
 	import classes.display.SpriteDb;
-	import classes.internals.*;
 
 	public class AmilyScene extends NPCAwareContent implements TimeAwareInterface
 	{
@@ -108,6 +107,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_HIP_RATING:int                                            =   49; //  girly-womanlyAmily Hip Rating - girly to womanly - Default=12
 		public static const kFLAGS_AMILY_ASS_SIZE:int                                              =   50; // Can increase ass from "unremarkable ass" to "delightfully jiggly" - Default=12
 		public static const kFLAGS_AMILY_LACTATION_RATE:int                                        =   51; // Amily Lactation Rate. Default=0
+		public static const kFLAGS_AMILY_CLOTHING:int                                              =   52; // Amily Clothing. Default="sexy rags"
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
 		public static const kFLAGS_AMILY_NOT_FURRY:int                                             =  337; //  1 = Amily is no longer a flea-ridden furry who stinks up your carpet.
@@ -224,6 +224,9 @@ package classes.Scenes.NPCs
 		public function modLactationRate(delta:Number):void {
 			flags[kFLAGS_AMILY_LACTATION_RATE] = Math.max(0,flags[kFLAGS_AMILY_LACTATION_RATE]);
 		}
+		public function setClothing(name:String):void {
+			flags[kFLAGS_AMILY_CLOTHING] = name;
+		}
 		public function isNotFurry():Boolean {
 			return flags[kFLAGS_AMILY_NOT_FURRY] == 1;
 		}
@@ -324,8 +327,11 @@ package classes.Scenes.NPCs
 		public function getAssSize():int {
 			return flags[kFLAGS_AMILY_ASS_SIZE];
 		}
-		public function getLactationRate():int {
+		public function getLactationRate():Number {
 			return flags[kFLAGS_AMILY_LACTATION_RATE];
+		}
+		public function getClothing():String {
+			return flags[kFLAGS_AMILY_CLOTHING] == 0 ? 'rags' : flags[kFLAGS_AMILY_CLOTHING];
 		}
 		// </savedata>
 
@@ -1715,7 +1721,7 @@ package classes.Scenes.NPCs
 			setAssSize(6);
 			flags[kFLAGS.AMILY_VAGINAL_WETNESS] = 1;
 
-			flags[kFLAGS.AMILY_CLOTHING] = "rags";
+			setClothing("rags");
 			//if marble is there, tag it for freakout
 			if (player.hasStatusEffect(StatusEffects.CampMarble)) {
 				flags[kFLAGS.MARBLE_OR_AMILY_FIRST_FOR_FREAKOUT] = 1;
@@ -2746,7 +2752,6 @@ package classes.Scenes.NPCs
 				return;
 			}
 			amilySprite();
-			if (flags[kFLAGS.AMILY_CLOTHING] == 0) flags[kFLAGS.AMILY_CLOTHING] = "rags";
 			//Amily freakout
 			if (player.cor >= (50 + player.corruptionTolerance()) && !wasCorruptionWarning() && isPureFollower()) {
 				amilyTaintWarning();
@@ -2949,7 +2954,7 @@ package classes.Scenes.NPCs
 			//PUR
 			if (isPureFollower()) {
 				//(Start [horsecock]
-				outputText("Amily is a 5' 2\" tall "+what+", with a lean and wiry build. Her pink eyes normally twinkle merrily, but they can turn hard and cold if the circumstances warrant, just as the normally friendly grin "+onHerMuzzle+"can turn cruel and harsh when she is angry. "+furDesc+" a long, hairless mouse's tail that sways and twitches constantly from her behind. She is currently wearing " + flags[kFLAGS.AMILY_CLOTHING] + ". She has " + amilyHips() + " and a " + amilyButt() + ".\n\n");
+				outputText("Amily is a 5' 2\" tall "+what+", with a lean and wiry build. Her pink eyes normally twinkle merrily, but they can turn hard and cold if the circumstances warrant, just as the normally friendly grin "+onHerMuzzle+"can turn cruel and harsh when she is angry. "+furDesc+" a long, hairless mouse's tail that sways and twitches constantly from her behind. She is currently wearing " + getClothing() + ". She has " + amilyHips() + " and a " + amilyButt() + ".\n\n");
 				//(End [horsecock]
 				outputText("She has a pair of " + amilyTits() + " on her chest. They have " + getNippleLength() + "-inch nipples at their tips and must be at least " + Appearance.breastCup(getCupSize()) + "s.\n\n");
 
@@ -2972,7 +2977,7 @@ package classes.Scenes.NPCs
 			}
 			else {
 				//Start [horsecock]
-				outputText("Amily, your personal cumslut, is a 5' 2\" tall "+what+", with quite the voluptuous build.  Her pink eyes normally glow with desire and adoration every time she looks at you, and a lusty smile adorns her face.  " + furDesc + " " + feetDesc + ", and a long, hairless mouse tail with a spaded tip that sways and coils around her legs seductively at every opportunity.  She is currently wearing " + flags[kFLAGS.AMILY_CLOTHING] + ".  She has " + amilyHips() + " and a " + amilyButt() + ".\n\n");
+				outputText("Amily, your personal cumslut, is a 5' 2\" tall "+what+", with quite the voluptuous build.  Her pink eyes normally glow with desire and adoration every time she looks at you, and a lusty smile adorns her face.  " + furDesc + " " + feetDesc + ", and a long, hairless mouse tail with a spaded tip that sways and coils around her legs seductively at every opportunity.  She is currently wearing " + getClothing() + ".  She has " + amilyHips() + " and a " + amilyButt() + ".\n\n");
 				// End [horsecock]
 				outputText("She has a pair of " + amilyTits() + " on her chest. They have " + getNippleLength() + "-inch nipples at their tips and must be at least DD-cups.\n\n");
 
@@ -4197,16 +4202,14 @@ package classes.Scenes.NPCs
 		public function giveAmilySomePants():void {
 			clearOutput();
 			amilySprite();
-			outputText("You offer her a set of comfortable clothes, asking if she'd like to wear these instead of her " + flags[kFLAGS.AMILY_CLOTHING] + " she's wearing.\n\n");
-			//If you played an early build that didnt initialize clothes.
-			if (flags[kFLAGS.AMILY_CLOTHING] == 0) flags[kFLAGS.AMILY_CLOTHING] = "rags";
+			outputText("You offer her a set of comfortable clothes, asking if she'd like to wear these instead of her " + getClothing() + " she's wearing.\n\n");
 			//(If Amily is wearing Tattered Rags:
-			if (flags[kFLAGS.AMILY_CLOTHING] == "rags" || flags[kFLAGS.AMILY_CLOTHING] == "sexy rags") {
+			if (getClothing() == "rags" || getClothing() == "sexy rags") {
 				outputText("Her eyes light up with glee. \"<i>Oh, I've always wanted some more clothes! Please, let me have them!</i>\" she squeaks with delight as you hand them over, carelessly stripping herself and throwing her old clothes aside before pulling on her new gear. She spins idly in place as she strives to examine how she looks, then she runs off to the stream to get a better view of her reflection.");
-				flags[kFLAGS.AMILY_CLOTHING] = "comfortable clothes";
+				setClothing("comfortable clothes");
 			}
 			//(If Amily is wearing anything other than Tattered Rags:
-			else if (flags[kFLAGS.AMILY_CLOTHING] != "comfortable clothes") {
+			else if (getClothing() != "comfortable clothes") {
 				outputText("\"<i>More new clothes? Ooh, you're spoiling me, " + player.short + "</i>!\" she teases you. Unabashed in the slightest at being naked in front of you, she strips down, doing her best to give you a little show as she does so. She then redresses herself in her new offering. \"<i>How do I look?</i>\" she giggles.\n\n");
 				outputText("You assure her that she looks beautiful. \"<i>Flatterer.</i>\" She smirks, and then wanders off to the stream.");
 			}
@@ -6977,7 +6980,7 @@ package classes.Scenes.NPCs
 				setHipRating(12);
 				setAssSize(12);
 				flags[kFLAGS.AMILY_VAGINAL_WETNESS] = 1;
-				flags[kFLAGS.AMILY_CLOTHING] = "sexy rags";
+				setClothing("sexy rags");
 			}
 			//if marble is there, tag it for freakout
 			if (player.hasStatusEffect(StatusEffects.CampMarble)) {
@@ -7636,7 +7639,7 @@ package classes.Scenes.NPCs
 			//Merge):
 			outputText("As she touches the cool salve to your shaft, you let out a small shiver.  Her hands work delicately, spreading a thin layer across your entire length, until your " + player.cockDescript(x) + " glistens with a glossy, greenish sheen.\n\n");
 
-			outputText("She wipes her hand off on a discreet corner of her " + flags[kFLAGS.AMILY_CLOTHING] + " and begins to shimmy out of them.");
+			outputText("She wipes her hand off on a discreet corner of her " + getClothing() + " and begins to shimmy out of them.");
 			if (flags[kFLAGS.TIMES_FUCKED_AMILYBUTT] == 0) outputText("  \"<i>I'm... not really sure how this goes... I guess... like this?</i>\"");
 			outputText("  Turning around, she lowers herself onto the ground carefully, her whiplike tail raising out of the way as she slides onto her knees and elbows.\n\n");
 
@@ -8337,7 +8340,7 @@ package classes.Scenes.NPCs
 				outputText("\n\nShe rounds on you, her tail rubbing on your leg as she steps closer, holding the thin fabric tight to her lithe body.  \"<i>Did you want me to look obscene for you?  To look like a naughty nurse?</i>\"  Her ears twitch as she mulls it over.");
 				outputText("\n\nYou try to answer, but before you get a half-dozen words out, Amily prances off behind some rocks, warning, \"<i>No peeking!</i>\"  The rustling of clothing can be heard as she changes, underscored by mischievous humming noises.  You do your best to wait patiently, but [eachCock] is warm and anxious.");
 				outputText("\n\nA sultry voice purrs, \"<i>Ah, [name].  Come on in, it's time for your check-up.</i>\"");
-				flags[kFLAGS.AMILY_CLOTHING] = "a naughty nurse's outfit";
+				setClothing("a naughty nurse's outfit");
 				menu();
 				addButton(0,"Next",amilyNurseCheckupV2,false);
 			}
