@@ -51,7 +51,7 @@ public static const AMILY_INCUBATION:int                                        
 //public static const AMILY_FOLLOWER:int                                              =   43; // Amily Follower. 0=Not Follower, 1=Follower 2=Corrupted Follower?
 public static const AMILY_VILLAGE_ACCESSIBLE:int                                    =   44; // Amily Village Accessible.    Related To 36]
 //public static const AMILY_WANG_LENGTH:int                                           =   45; // Amily's Wang Length" Description="Starts 4x1, maxes @ 13x2
-public static const AMILY_WANG_GIRTH:int                                            =   46; // Amily Penis Gith.    Default=0
+//public static const AMILY_WANG_GIRTH:int                                            =   46; // Amily Penis Gith.    Default=0
 public static const AMILY_CUP_SIZE:int                                              =   47; //  5-JanAmily's Cup Size (1 to 5)
 public static const AMILY_NIPPLE_LENGTH:int                                         =   48; //  0.3-4Nipple Length from .3 to 4"
 public static const AMILY_HIP_RATING:int                                            =   49; //  girly-womanlyAmily Hip Rating - girly to womanly - Default=12

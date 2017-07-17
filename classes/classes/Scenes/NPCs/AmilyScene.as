@@ -106,6 +106,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
 		public static const kFLAGS_AMILY_NOT_FURRY:int                                             =  337; //  1 = Amily is no longer a flea-ridden furry who stinks up your carpet.
 		public static const kFLAGS_AMILY_TREE_FLIPOUT:int                                          =  599; //
+		public static const kFLAGS_AMILY_WANG_GIRTH:int                                            =   46; // Amily Penis Gith.    Default=0
 
 		// Global state: Not met / Met / Met, accepted offer / Follower pure / Follower corrupt / Run away (corrupt, worms, or tree flipout) / Completely Removed
 		public function flagMet():void {
@@ -171,21 +172,21 @@ package classes.Scenes.NPCs
 			flags[kFLAGS_AMILY_WANG_LENGTH] = length;
 		}
 		public function setCockGirth(girth:Number):void {
-			flags[kFLAGS.AMILY_WANG_GIRTH] = girth;
+			flags[kFLAGS_AMILY_WANG_GIRTH] = girth;
 		}
 		public function modCockLength(dLength:Number,dGirth:Number=0):void {
 			flags[kFLAGS_AMILY_WANG_LENGTH] = Math.max(0,flags[kFLAGS_AMILY_WANG_LENGTH]+dLength);
 		}
 		public function modCockGirth(dLength:Number,dGirth:Number=0):void {
-			flags[kFLAGS.AMILY_WANG_GIRTH] = boundFloat(0,flags[kFLAGS.AMILY_WANG_GIRTH]+dGirth,3);
+			flags[kFLAGS_AMILY_WANG_GIRTH] = boundFloat(0,flags[kFLAGS_AMILY_WANG_GIRTH]+dGirth,3);
 		}
 		public function doGrowCock():void {
 			flags[kFLAGS_AMILY_WANG_LENGTH] = 4;
-			flags[kFLAGS.AMILY_WANG_GIRTH] = 1;
+			flags[kFLAGS_AMILY_WANG_GIRTH] = 1;
 		}
 		public function doRemoveCock():void {
 			flags[kFLAGS_AMILY_WANG_LENGTH] = 0;
-			flags[kFLAGS.AMILY_WANG_GIRTH] = 0;
+			flags[kFLAGS_AMILY_WANG_GIRTH] = 0;
 			flags[kFLAGS.AMILY_HAS_BALLS_AND_SIZE] = 0;
 		}
 		public function isNotFurry():Boolean {
@@ -269,6 +270,12 @@ package classes.Scenes.NPCs
 		}
 		public function getCockLength():Number {
 			return flags[kFLAGS_AMILY_WANG_LENGTH];
+		}
+		public function getCockGirth():Number {
+			return flags[kFLAGS_AMILY_WANG_GIRTH];
+		}
+		public function getCockArea():Number {
+			return getCockLength()*getCockGirth();
 		}
 		// </savedata>
 
@@ -3237,7 +3244,7 @@ package classes.Scenes.NPCs
 			outputText("Amily groans beneath you. \"<i>Please... stop teasing me. Let me put it in!</i>\" She pleads.\n\n");
 
 			outputText("You reach down and stroke her cheek, a little worried that you may have seriously upset her, but happy to comply and fully impale yourself upon her length. ");
-			player.cuntChange((getCockLength() * flags[kFLAGS.AMILY_WANG_GIRTH]), true, false, true);
+			player.cuntChange((getCockArea()), true, false, true);
 			//(If pussy is gaping:
 			if (player.looseness() >= 5) outputText("You can barely feel it within your stretched out depths, but you determine to do your best, for your sake and for hers.");
 			//Otherwise:
@@ -3417,7 +3424,7 @@ package classes.Scenes.NPCs
 				outputText("\n\n");
 
 				outputText("Once you are sufficiently wet for her tastes, Amily plunges her mouse-futa cock into you. ");
-				player.cuntChange((getCockLength() * flags[kFLAGS.AMILY_WANG_GIRTH]), true, false, true);
+				player.cuntChange(getCockArea(), true, false, true);
 				//(If player has a gaping pussy:
 				if (player.looseness() >= 4) outputText("You are so large that you barely feel it, but Amily is determined to take what pleasure she can all the same.");
 				//Otherwise:
@@ -3612,7 +3619,7 @@ package classes.Scenes.NPCs
 					doGrowCock();
 					doYesNo(corruptAmilyGetsDickMaxxedOut,corruptAmilyYouDeclineMaxxingHerDick);
 				}
-				else if (getCockLength() < maxSizeCorr && flags[kFLAGS.AMILY_WANG_GIRTH] < 3)
+				else if (getCockLength() < maxSizeCorr && getCockGirth() < 3)
 				{
 					//Consume dah goodies!
 					if (player.hasItem(consumables.INCUBID)) player.consumeItem(consumables.INCUBID);
@@ -3667,7 +3674,7 @@ package classes.Scenes.NPCs
 			{
 				setCockLength(maxSizeCorr);
 			}
-			flags[kFLAGS.AMILY_WANG_GIRTH] = 3;
+			setCockGirth(3);
 			doNext(amilyFollowerEncounter);
 		}
 
@@ -4137,7 +4144,7 @@ package classes.Scenes.NPCs
 				if (getCockLength() > 10) modCockLength(-1); //Large cock shrinks more!
 				modCockLength(-1);
 				if (getCockLength() < 4) setCockLength(4);
-				flags[kFLAGS.AMILY_WANG_GIRTH] = 1 + ((getCockLength() - 4) / 9); //Re-adjust girth for length.
+				modCockGirth(1 + ((getCockLength() - 4) / 9)); //Re-adjust girth for length.
 			}
 			else if (part == 4) { //Butt
 				if (flags[kFLAGS.AMILY_ASS_SIZE] > 10) flags[kFLAGS.AMILY_ASS_SIZE]--; //Large butt shrinks more!
@@ -4465,11 +4472,12 @@ package classes.Scenes.NPCs
 			//Discuss girth one in 3 times.
 			if (int(Math.random()*3) == 0) {
 				//narrow, thin, ample, broad, distended, voluminous
-				if (flags[kFLAGS.AMILY_WANG_GIRTH] <= .75) descript += "narrow ";
-				if (flags[kFLAGS.AMILY_WANG_GIRTH] > 1 && flags[kFLAGS.AMILY_WANG_GIRTH] <= 1.4) descript += "ample ";
-				if (flags[kFLAGS.AMILY_WANG_GIRTH] > 1.4 && flags[kFLAGS.AMILY_WANG_GIRTH] <= 2) descript += "broad ";
-				if (flags[kFLAGS.AMILY_WANG_GIRTH] > 2 && flags[kFLAGS.AMILY_WANG_GIRTH] <= 3.5) descript += "fat ";
-				if (flags[kFLAGS.AMILY_WANG_GIRTH] > 3.5) descript += "distended ";
+				if (getCockGirth() <= .75) descript += "narrow ";
+				else if (getCockGirth() <= 1) descript += "thin ";
+				else if (getCockGirth() <= 1.4) descript += "ample ";
+				else if (getCockGirth() <= 2) descript += "broad ";
+				else if (getCockGirth() <= 3.5) descript += "fat ";
+				else descript += "distended ";
 				descripted = true;
 			}
 			rando=int(Math.random()*10);
@@ -4888,9 +4896,9 @@ package classes.Scenes.NPCs
 
 			outputText("\"<i>Poor little bitch... you really do live for nothing but sex, don't you?</i>\" You taunt her, swiping up a stray drop of pre with your finger and slowly taking it inside your " + player.vaginaDescript() + ". Amily watches every little detail as it goes in. Finally, with a groan and an almost bestial scream, Amily loses her composure and pounces you.  As you hit the ground hard, you begin forming the words to scold her, but one glimpse of her eyes is enough to realize she's no longer thinking - the only things running through her head right now are fuck and breed. Amily rants and gibbers atop you, eyes blazing with unsated lust and the need, dearer to her than life itself, to fuck and breed. Her cock is as hard as an iron bar, slapping hard against your belly as she, made clumsy with her desires, struggles to position herself right to aim. She stabs clumsily against your " + player.vaginaDescript() + "'s lips, then, finally managing to hit the correct alignment, wastes no time in driving forward with a howl, impaling herself in you to her very hilt.");
 			//(Play virginity lost message if appropriate.)
-			player.cuntChange((getCockLength()*flags[kFLAGS.AMILY_WANG_GIRTH]),true,true,false);
+			player.cuntChange((getCockArea()),true,true,false);
 			//[(If Amily's cock area > PC's capacity)
-			if (getCockLength()*flags[kFLAGS.AMILY_WANG_GIRTH] > player.vaginalCapacity()) outputText("  You growl at her rough penetration, Amily stretches you out without regards for your pleasure; you'll definitely have to punish her for this later...");
+			if (getCockArea() > player.vaginalCapacity()) outputText("  You growl at her rough penetration, Amily stretches you out without regards for your pleasure; you'll definitely have to punish her for this later...");
 			outputText("\n\n");
 
 			outputText("Amily is overwhelmed by the feeling of your " + player.vaginaDescript() + ", and immediately goes berserk with lust. She doesn't speak, she grunts and snarls, thrusting into you as hard and fast as she can. There is nothing between you but the friction of flesh on flesh");
@@ -5130,7 +5138,7 @@ package classes.Scenes.NPCs
 			//(If first time:
 			if (flags[kFLAGS.AMILY_HERM_TIMES_FUCKED_BY_FEMPC] == 0) outputText("\"<i>Er... are you really sure about this? I mean...</i>\" Amily murmurs uncertainly, until, irritated, you suddenly wrap your " + player.legs() + " around her waist and pull her the last few inches needed to slam her dick into your needy pussy. She "+((isFurry())?"squeaks":"gasps") +" in shock and tries to pull out, but you still have your grip on her and pull her back, a process that repeats several times until the rhythm of it sinks in and Amily starts to thrust back and forth on her own.\n\n");
 			else outputText("Amily grips your " + player.hipDescript() + ", gathering her courage, and then plunges her penis into your depths. Cautiously at first, she begins to thrust herself back and forth, growing faster and harder as her resolve builds.");
-			player.cuntChange((getCockLength() * flags[kFLAGS.AMILY_WANG_GIRTH]), true, true, false);
+			player.cuntChange((getCockArea()), true, true, false);
 			outputText("\n\n");
 
 			outputText("Amily's ministrations are hardly the most expert of sexual techniques you've seen in Mareth, but her intentions to make it as pleasant as possible for you are obvious, and what she lacks in expertise she makes up for in enthusiasm, "+((isFurry())?"squeaking":"panting") +" and moaning as the unfamiliar sensations of your " + player.vaginaDescript() + " gripping her newfound penis fill her. You work your hardest to make it good as well, but Amily's inexperience with having a male sexual organ is evident in that she soon loses control and, with a loud "+((isFurry())?"squeak":"groan") +", you feel her shooting cum into your thirsty " + player.vaginaDescript() + ". The hot fluid gushes from her futa-member, and when the last few drops have dripped from her, she collapses onto you, panting.\n\n");
@@ -7504,7 +7512,7 @@ package classes.Scenes.NPCs
 			outputText("  The ointment does its job admirably, allowing Amily to penetrate you fully with no pain whatsoever");
 			if (player.analCapacity() > 60) outputText(", though you are sure you could easily handle her without it");
 			outputText(".  Slowly, she begins to rock her hips back and forth, placing her hands on your " + player.hipDescript() + " for support.");
-			player.buttChange(getCockLength() * flags[kFLAGS.AMILY_WANG_GIRTH], true, true, false);
+			player.buttChange(getCockArea(), true, true, false);
 			outputText("\n\n");
 
 			if (flags[kFLAGS.AMILY_TIMES_BUTTFUCKED_PC] == 0) outputText("\"<i>Is this okay? Ah... it feels... really good...</i>\" she says with a low moan, to which you reply with a pleasure-filled groan of your own.\n\n");
