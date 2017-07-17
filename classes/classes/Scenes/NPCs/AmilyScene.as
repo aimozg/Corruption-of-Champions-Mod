@@ -106,6 +106,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_CUP_SIZE:int                                              =   47; //  5-JanAmily's Cup Size (1 to 5)
 		public static const kFLAGS_AMILY_NIPPLE_LENGTH:int                                         =   48; //  0.3-4Nipple Length from .3 to 4"
 		public static const kFLAGS_AMILY_HIP_RATING:int                                            =   49; //  girly-womanlyAmily Hip Rating - girly to womanly - Default=12
+		public static const kFLAGS_AMILY_ASS_SIZE:int                                              =   50; // Can increase ass from "unremarkable ass" to "delightfully jiggly" - Default=12
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
 		public static const kFLAGS_AMILY_NOT_FURRY:int                                             =  337; //  1 = Amily is no longer a flea-ridden furry who stinks up your carpet.
@@ -210,6 +211,12 @@ package classes.Scenes.NPCs
 		public function modHipRating(delta:int):void {
 			flags[kFLAGS_AMILY_HIP_RATING] = Math.max(6,flags[kFLAGS_AMILY_NIPPLE_LENGTH]);
 		}
+		public function setAssSize(value:int):void {
+			flags[kFLAGS_AMILY_ASS_SIZE] = value;
+		}
+		public function modAssSize(delta:int):void {
+			flags[kFLAGS_AMILY_ASS_SIZE] = Math.max(6,flags[kFLAGS_AMILY_ASS_SIZE]);
+		}
 		public function isNotFurry():Boolean {
 			return flags[kFLAGS_AMILY_NOT_FURRY] == 1;
 		}
@@ -306,6 +313,9 @@ package classes.Scenes.NPCs
 		}
 		public function getHipRating():int {
 			return flags[kFLAGS_AMILY_HIP_RATING];
+		}
+		public function getAssSize():int {
+			return flags[kFLAGS_AMILY_ASS_SIZE];
 		}
 		// </savedata>
 
@@ -1692,7 +1702,7 @@ package classes.Scenes.NPCs
 			setCupSize(1);
 			setNippleLength(.3);
 			setHipRating(6);
-			flags[kFLAGS.AMILY_ASS_SIZE] = 6;
+			setAssSize(6);
 			flags[kFLAGS.AMILY_VAGINAL_WETNESS] = 1;
 
 			flags[kFLAGS.AMILY_CLOTHING] = "rags";
@@ -4011,25 +4021,25 @@ package classes.Scenes.NPCs
 			outputText("You hold out a brown egg, telling her that it will make her butt grow.\n\n");
 			if (isPureFollower()) {
 				//(If Amily's butt size is smaller than "jiggles with every step":
-				if (flags[kFLAGS.AMILY_ASS_SIZE] < maxSizePure || ( flags[kFLAGS.AMILY_ASS_SIZE] < maxSizeHypr && flags[kFLAGS.HYPER_HAPPY])) {
+				if (getAssSize() < maxSizePure || ( getAssSize() < maxSizeHypr && flags[kFLAGS.HYPER_HAPPY])) {
 					outputText("\"<i>So, you want me to have a little more junk in the trunk, huh?</i>\" She giggles. \"<i>Well, I guess a little padding down there wouldn't hurt...</i>\" She takes the egg from you, her prominent front-teeth effortlessly biting off the top, whereupon she sucks down the contents in a practiced gulp. Crushing the shell in her hand, her hands then press themselves to her butt as she spins around so that it faces you, trying to look over her shoulder as it visibly swells, straining her pants. She pats it a few times, then shakes her head. \"<i>I'm going to have to go and let these pants out a little now.</i>\" She apologizes, and then walks away.\n\n");
 					dynStats("lus", 5);
 					if (player.hasItem(consumables.BROWNEG)) {
 						player.consumeItem(consumables.BROWNEG);
-						flags[kFLAGS.AMILY_ASS_SIZE] += 1 + rand(2);
+						modAssSize(1 + rand(2));
 					}
 					else {
 						player.consumeItem(consumables.L_BRNEG);
-						flags[kFLAGS.AMILY_ASS_SIZE] += 2+rand(3);
+						modAssSize(2+rand(3));
 					}
-					if (flags[kFLAGS.HYPER_HAPPY] && flags[kFLAGS.AMILY_ASS_SIZE] > maxSizeHypr)
+					if (flags[kFLAGS.HYPER_HAPPY] && getAssSize() > maxSizeHypr)
 					{
-						flags[kFLAGS.AMILY_ASS_SIZE] = maxSizeHypr;
+						setAssSize(maxSizeHypr);
 					}
 					else
 					{
-						if (flags[kFLAGS.AMILY_ASS_SIZE] > maxSizePure)
-							flags[kFLAGS.AMILY_ASS_SIZE] = maxSizePure;
+						if (getAssSize() > maxSizePure)
+							setAssSize(maxSizePure);
 					}
 				}
 				//(If Amily's butt is "delightfully jiggly":
@@ -4040,20 +4050,20 @@ package classes.Scenes.NPCs
 			//IMPURE
 			else {
 				//(If Amily's butt size is smaller than "jiggles with every step":
-				if (flags[kFLAGS.AMILY_ASS_SIZE] < maxSizeCorr || ( flags[kFLAGS.AMILY_ASS_SIZE] < maxSizeHypr && flags[kFLAGS.HYPER_HAPPY])) {
+				if (getAssSize() < maxSizeCorr || ( getAssSize() < maxSizeHypr && flags[kFLAGS.HYPER_HAPPY])) {
 					outputText("\"<i>So, " + player.mf("master","mistress") + " would like " + player.mf("his","her") + " toy to have a little more padding around her horny puss and asshole?</i>\" she giggles. \"<i>I obey.</i>\" She takes the egg from you, her prominent front-teeth effortlessly biting off the top, whereupon she sucks down the contents in a practiced gulp. Crushing the shell in her hand, her hands then press themselves to her butt as she spins around so that it faces you, trying to look over her shoulder as it visibly swells, jiggling slightly. She pats it a few times, then shakes her head. \"<i>Will you be using your newly-improved cum-dumpster now?</i>\" she asks.\n\n");
 					dynStats("lus", 5);
 					if (player.hasItem(consumables.BROWNEG)) {
 						player.consumeItem(consumables.BROWNEG);
-						flags[kFLAGS.AMILY_ASS_SIZE] += 1 + rand(2);
+						modAssSize(1 + rand(2));
 					}
 					else {
 						player.consumeItem(consumables.L_BRNEG);
-						flags[kFLAGS.AMILY_ASS_SIZE] += 2+rand(3);
+						modAssSize(2+rand(3));
 					}
-					if (flags[kFLAGS.AMILY_ASS_SIZE] > maxSizeHypr)
+					if (getAssSize() > maxSizeHypr)
 					{
-						flags[kFLAGS.AMILY_ASS_SIZE] = maxSizeHypr;
+						setAssSize(maxSizeHypr);
 					}
 				}
 				//(If Amily's butt is "delightfully jiggly":
@@ -4142,7 +4152,7 @@ package classes.Scenes.NPCs
 			if (getNippleLength() > 0.5) addButton(1, "Nipples", amilyReducto, 1);
 			if (getHipRating() > 6) addButton(2, "Hips", amilyReducto, 2);
 			if (getCockLength() > 4) addButton(3, "Penis", amilyReducto, 3);
-			if (flags[kFLAGS.AMILY_ASS_SIZE] > 6) addButton(4, "Butt", amilyReducto, 4);
+			if (getAssSize() > 6) addButton(4, "Butt", amilyReducto, 4);
 			addButton(14, "Nevermind", amilyFollowerEncounter);
 		}
 		private function amilyReducto(part:int):void {
@@ -4167,9 +4177,7 @@ package classes.Scenes.NPCs
 				modCockGirth(1 + ((getCockLength() - 4) / 9)); //Re-adjust girth for length.
 			}
 			else if (part == 4) { //Butt
-				if (flags[kFLAGS.AMILY_ASS_SIZE] > 10) flags[kFLAGS.AMILY_ASS_SIZE]--; //Large butt shrinks more!
-				flags[kFLAGS.AMILY_ASS_SIZE]--;
-				if (flags[kFLAGS.AMILY_ASS_SIZE] < 6) flags[kFLAGS.AMILY_ASS_SIZE] = 6;
+				modAssSize(getAssSize() > 10 ? -2 : -1); //Large butt shrinks more!
 			}
 			outputText("Grimacing at the smell - it must be awful, for her sensitive nose - she starts smearing it over the " + chosenPart + ", and you step forward to help her. As the last of it wicks away, the part begins to shrink before your eyes. \"<i>Hmm. Not bad, I guess. So, was there something else you wanted?</i>\" She asks.");
 			doNext(amilyFollowerEncounter);
@@ -4247,14 +4255,14 @@ package classes.Scenes.NPCs
 			{
 				if (rand(2) == 0) desc = "boyish ";
 				else desc = "tiny ";
-				if (flags[kFLAGS.AMILY_ASS_SIZE] >= 6) desc = "waspish ";
+				if (getAssSize() >= 6) desc = "waspish ";
 			}
 			else if (getHipRating() < 4) {
 				rando = rand(3);
 				if (rando == 0) desc = "slender ";
 				if (rando == 1) desc = "narrow ";
 				if (rando == 2) desc = "thin ";
-				if (flags[kFLAGS.AMILY_ASS_SIZE] >= 6) desc = "waspish ";
+				if (getAssSize() >= 6) desc = "waspish ";
 			}
 			else if (getHipRating() < 6) {
 				rando = rand(3);
@@ -4302,53 +4310,53 @@ package classes.Scenes.NPCs
 		private function amilyButt():String {
 			var desc:String = "";
 			var rando:Number = 0;
-			if (flags[kFLAGS.AMILY_ASS_SIZE] <= 1)
+			if (getAssSize() <= 1)
 			{
 				if (rand(2) == 0) desc = "pixie-like ";
 				else desc = "very small ";
 			}
-			if (flags[kFLAGS.AMILY_ASS_SIZE] > 1 && flags[kFLAGS.AMILY_ASS_SIZE] < 4) {
+			if (getAssSize() > 1 && getAssSize() < 4) {
 				rando = rand(3);
 				if (rando == 0) desc = "tight ";
 				if (rando == 1) desc = "firm ";
 				if (rando == 2) desc = "compact ";
 			}
-			if (flags[kFLAGS.AMILY_ASS_SIZE] >= 4 && flags[kFLAGS.AMILY_ASS_SIZE] < 6) {
+			if (getAssSize() >= 4 && getAssSize() < 6) {
 				rando = rand(2);
 				if (rando == 0) desc = "fair ";
 				if (rando == 1) desc = "nice ";
 			}
-			if (flags[kFLAGS.AMILY_ASS_SIZE] >= 6 && flags[kFLAGS.AMILY_ASS_SIZE] < 8) {
+			if (getAssSize() >= 6 && getAssSize() < 8) {
 				rando = rand(3);
 				if (rando == 0) return "handful of ass";
 				if (rando == 1) desc = "full ";
 				if (rando == 2) desc = "shapely ";
 			}
-			if (flags[kFLAGS.AMILY_ASS_SIZE] >= 8 && flags[kFLAGS.AMILY_ASS_SIZE] < 10) {
+			if (getAssSize() >= 8 && getAssSize() < 10) {
 				rando = rand(3);
 				if (rando == 0) desc = "squeezable ";
 				if (rando == 1) desc = "large ";
 				if (rando == 2) desc = "substantial ";
 			}
-			if (flags[kFLAGS.AMILY_ASS_SIZE] >= 10 && flags[kFLAGS.AMILY_ASS_SIZE] < 13) {
+			if (getAssSize() >= 10 && getAssSize() < 13) {
 				rando = rand(3);
 				if (rando == 0) desc = "jiggling ";
 				if (rando == 1) desc = "spacious ";
 				if (rando == 2) desc = "heavy ";
 			}
-			if (flags[kFLAGS.AMILY_ASS_SIZE] >= 13 && flags[kFLAGS.AMILY_ASS_SIZE] < 16) {
+			if (getAssSize() >= 13 && getAssSize() < 16) {
 				rando = rand(3);
 				if (rando == 0) desc = "hand-devouring ";
 				if (rando == 1) return "generous amount of ass";
 				if (rando == 2) desc = "voluminous ";
 			}
-			if (flags[kFLAGS.AMILY_ASS_SIZE] >= 16 && flags[kFLAGS.AMILY_ASS_SIZE] < 20) {
+			if (getAssSize() >= 16 && getAssSize() < 20) {
 				rando = rand(3);
 				if (rando == 0) desc = "huge ";
 				if (rando == 1) desc = "vast ";
 				if (rando == 2) return "jiggling expanse of ass";
 			}
-			if (flags[kFLAGS.AMILY_ASS_SIZE] >= 20) {
+			if (getAssSize() >= 20) {
 				rando = rand(3);
 				if (rando == 0) desc = "ginormous ";
 				if (rando == 1) desc = "colossal ";
@@ -5261,7 +5269,7 @@ package classes.Scenes.NPCs
 			setCupSize(1);
 			setNippleLength(0.3);
 			setHipRating(6);
-			flags[kFLAGS.AMILY_ASS_SIZE] = 6;
+			setAssSize(6);
 			doNext(playerMenu);
 		}
 
@@ -6957,7 +6965,7 @@ package classes.Scenes.NPCs
 				setCupSize(5);
 				setNippleLength(0.5);
 				setHipRating(12);
-				flags[kFLAGS.AMILY_ASS_SIZE] = 12;
+				setAssSize(12);
 				flags[kFLAGS.AMILY_VAGINAL_WETNESS] = 1;
 				flags[kFLAGS.AMILY_CLOTHING] = "sexy rags";
 			}
