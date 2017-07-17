@@ -176,7 +176,7 @@ public static const LIFETIME_GYM_MEMBER:int                                     
 //public static const AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 public static const AMILY_DRUG_MADE_COUNTER:int                                     =  169; // Times cooked Amily's Drug
 public static const AMILY_CORRUPTION:int                                            =  170; // Amily's Corruption Value
-public static const AMILY_HAS_BALLS_AND_SIZE:int                                    =  171; // Amily's Balls: 1 = yes, higher numbers = bigger balls.
+//public static const AMILY_HAS_BALLS_AND_SIZE:int                                    =  171; // Amily's Balls: 1 = yes, higher numbers = bigger balls.
 public static const AMILY_VAGINAL_WETNESS:int                                       =  172; // Amily's Wetness
 //public static const AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
 public static const DOMINIKA_SUCKED_OFF_HORSECOCKS:int                              =  174; // Times Dominika Sucked off horsecocks
