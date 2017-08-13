@@ -9,6 +9,7 @@ public class CorruptedGlade extends BaseContent implements TimeAwareInterface,En
 
 
 		public function encounterChance():Number {
+			if (flags[kFLAGS.CORRUPTED_GLADES_DESTROYED] >= 100) return 0;
 			return (100 - ((flags[kFLAGS.CORRUPTED_GLADES_DESTROYED] * 0.9) || 0)) / 100;
 		}
 
