@@ -169,7 +169,7 @@ public static const AMILY_TIMES_FUCKED_FEMPC:int                                
 public static const AMILY_HERM_TIMES_FUCKED_BY_FEMPC:int                            =  161; // 
 public static const PC_TIMES_BIRTHED_AMILYKIDS:int                                  =  162; // Times PC has birthed Amily's brood - Pc_Times_Birthed_Amilykids:Int=162;
 public static const PC_PENDING_PREGGERS:int                                         =  163; //  1=yes,2=finished1=Yes,2=Finished
-public static const AMILY_PC_GENDER:int                                             =  164; // 
+//public static const AMILY_PC_GENDER:int                                             =  164; //
 public static const AMILY_HERM_QUEST:int                                            =  165; //  1=amily flipped out, 2=accepted as amily's dad1=Amily Flipped Out, 2=Accepted As Amily'S Dad
 public static const AMILY_ALLOWS_FERTILITY:int                                      =  166; // 
 public static const LIFETIME_GYM_MEMBER:int                                         =  167; // Permanent Gym Membership? (1 = yes)

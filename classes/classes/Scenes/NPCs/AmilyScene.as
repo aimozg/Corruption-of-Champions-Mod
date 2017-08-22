@@ -108,6 +108,7 @@ package classes.Scenes.NPCs
 		public static const kFLAGS_AMILY_ASS_SIZE:int                                              =   50; // Can increase ass from "unremarkable ass" to "delightfully jiggly" - Default=12
 		public static const kFLAGS_AMILY_LACTATION_RATE:int                                        =   51; // Amily Lactation Rate. Default=0
 		public static const kFLAGS_AMILY_CLOTHING:int                                              =   52; // Amily Clothing. Default="sexy rags"
+		public static const kFLAGS_AMILY_PC_GENDER:int                                             =  164; // PC gender at first visit
 		public static const kFLAGS_AMILY_CORRUPT_FLIPOUT:int                                       =  168; // Amily flip out about corruption yet?
 		public static const kFLAGS_AMILY_HAS_BALLS_AND_SIZE:int                                    =  171; // Amily's Balls: 1 = yes, higher numbers = bigger balls.
 		public static const kFLAGS_AMILY_CAMP_CORRUPTION_FREAKED:int                               =  173; // In camp amily warns you!  DUN DUN DUN! - Amily Freaked out about your corruption.    0=Not freaked out, 1=Freaked out
@@ -233,6 +234,12 @@ package classes.Scenes.NPCs
 		}
 		public function setClothing(name:String):void {
 			flags[kFLAGS_AMILY_CLOTHING] = name;
+		}
+		public function getAmilysLastPlayerGender():int {
+			return flags[kFLAGS_AMILY_PC_GENDER];
+		}
+		public function setAmilysLastPlayerGender(gender:int):void {
+			flags[kFLAGS_AMILY_PC_GENDER] = gender;
 		}
 		public function isNotFurry():Boolean {
 			return flags[kFLAGS_AMILY_NOT_FURRY] == 1;
@@ -422,7 +429,7 @@ package classes.Scenes.NPCs
 		//[Exploring the Ruined Village]
 		public function encounterAmily():void {
 			//Initialize saved gender:
-			if (!hasMet()) flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
+			if (!hasMet()) setAmilysLastPlayerGender(player.gender);
 			//Amily gone/hiding super hard
 			if (flags[kFLAGS.AMILY_IS_BATMAN] > 0 || !canEncounterInVillage()  || wasTreeFlipout()) {
 				outputText("You enter the ruined village cautiously. There are burnt-down houses, smashed-in doorways, ripped-off roofs... everything is covered with dust and grime. You explore for an hour, but you cannot find any sign of another living being, or anything of value. The occasional footprint from an imp or a goblin turns up in the dirt, but you don't see any of the creatures themselves. It looks like time and passing demons have stripped the place bare since it was originally abandoned. Finally, you give up and leave. You feel much easier when you're outside of the village.");
@@ -480,7 +487,7 @@ package classes.Scenes.NPCs
 				return;
 			}
 			//meeting scenes for when PC is the same gender as when they last met Amily
-			if (flags[kFLAGS.AMILY_PC_GENDER] == player.gender) {
+			if (getAmilysLastPlayerGender() == player.gender) {
 				//"bad" or "good" ends.
 				if (getBirthedByAmily() + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] >= 5 && canEncounterInVillage())
 				{
@@ -491,11 +498,11 @@ package classes.Scenes.NPCs
 				}
 
 				//Man Meetinz!
-				if (player.gender == 1) {
+				if (player.gender == GENDER_MALE) {
 					//Desperate Plea
 					//(Amily reach Affection 50 without having had sex with the PC once.)
 					//Requires the PC have been male last time.
-					if (affectionValue() >= 50 && getFuckCounter() == 0 && flags[kFLAGS.AMILY_PC_GENDER] == 1) {
+					if (affectionValue() >= 50 && getFuckCounter() == 0 && getAmilysLastPlayerGender() == GENDER_MALE) {
 						outputText("Wandering into the ruined village, you set off in search of Amily.\n\n");
 						/*NOPE!
 						[Player meets the requirements to stalk Amily]
@@ -565,11 +572,11 @@ package classes.Scenes.NPCs
 						addButton(2, "NoFurries", amilyNoFur);
 						addButton(3, "Refuse", refuseAmilysOffer);
 						//Set flag for 'last gender met as'
-						flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
+						setAmilysLastPlayerGender(player.gender);
 						return;
 					}
 					//[Remeeting if previously refused]
-					else if (player.gender == 1 && !hasAcceptedOffer()) {
+					else if (player.gender == GENDER_MALE && !hasAcceptedOffer()) {
 						outputText("Wandering into the ruined village, you set off in search of Amily.\n\n");
 						/*NOPE!
 						//[Player meets the requirements to stalk Amily]
@@ -584,12 +591,12 @@ package classes.Scenes.NPCs
 						outputText("After wondering for a while how on earth you are going to track down Amily, you hear a whistle. Looking around, you see her waving cheekily at you from around a corner; it's pretty obvious that you have a long way to go before you'll be able to beat her at this kind of game.\n\n");
 						amilyRemeetingContinued();
 						//Set flag for 'last gender met as'
-						flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
+						setAmilysLastPlayerGender(player.gender);
 						return;
 					}
 				}
 				//GIRL MEETINZ
-				else if (player.gender == 2) {
+				else if (player.gender == GENDER_FEMALE) {
 					//First time
 					if (!hasMet()) {
 						//Set flag for what she met the player as.
@@ -623,7 +630,7 @@ package classes.Scenes.NPCs
 
 						outputText("\"<i>Hey, us girls gotta stick together, right?</i>\" She winks at you then wanders off behind a partially collapsed wall, disappearing into the rubble.");
 						//Set flag for 'last gender met as'
-						flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
+						setAmilysLastPlayerGender(player.gender);
 						doNext(camp.returnToCampUseOneHour);
 						return;
 					}
@@ -645,7 +652,7 @@ package classes.Scenes.NPCs
 					}
 				}
 				//Herm Meetinz
-				else if (player.gender == 3) {
+				else if (player.gender == GENDER_HERM) {
 					//First time
 					if (!hasMet()) {
 						//Set flag for what she met the player as.
@@ -682,7 +689,7 @@ package classes.Scenes.NPCs
 
 						outputText("She turns and walks away, vanishing into the dust and the rubble like magic.");
 						//Set flag for 'last gender met as'
-						flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
+						setAmilysLastPlayerGender(player.gender);
 						doNext(camp.returnToCampUseOneHour);
 						return;
 					}
@@ -698,7 +705,7 @@ package classes.Scenes.NPCs
 					}
 				}
 				//Genderless
-				else if (player.gender == 0) {
+				else if (player.gender == GENDER_NONE) {
 					//[First Meeting]
 					if (!hasMet()) {
 						flags[kFLAGS.AMILY_MET_AS] = player.gender;
@@ -760,7 +767,7 @@ package classes.Scenes.NPCs
 							outputText("Having evidently regained her confidence, she winks and then vanishes behind a tumbled-down wall, leaving you alone.");
 						}
 						//Set flag for 'last gender met as'
-						flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
+						setAmilysLastPlayerGender(player.gender);
 						doNext(camp.returnToCampUseOneHour);
 						return;
 					}
@@ -791,7 +798,7 @@ package classes.Scenes.NPCs
 			//[Normal Remeeting]
 			//Did the PC genderchange?  OH SHIT SON!
 			//Alternatively: get bitched at
-			if (flags[kFLAGS.AMILY_PC_GENDER] != player.gender) {
+			if (getAmilysLastPlayerGender() != player.gender) {
 			//Stripped this out since it was making her flip out weirdly at genderless folks
 			//|| (player.gender == 0 && affectionValue() < 15)) {
 				amilyNewGenderConfrontation();
@@ -807,7 +814,7 @@ package classes.Scenes.NPCs
 				case 5: //Amily is slightly pregnant
 						outputText("Amily materializes out of the ruins somewhat slower than usual. You can see that your efforts together have taken; an undeniable bulge pokes out of her midriff, pushing up her tattered shirt slightly and seriously straining her belt. She idly rubs it with one hand, as if confirming its presence to herself.\n\n");
 						//[Low Affection]
-						if (affectionValue() < 15 || player.gender == 0) outputText("\"<i>Well, I guess despite whatever other faults you may have, you can get the job done.</i>\" She says, not looking directly at you.\n\n");
+						if (affectionValue() < 15 || player.gender == GENDER_NONE) outputText("\"<i>Well, I guess despite whatever other faults you may have, you can get the job done.</i>\" She says, not looking directly at you.\n\n");
 						//[Medium Affection]
 						else if (affectionValue() < 40) outputText("\"<i>Thank you. With your help, my people will soon live again.</i>\" She strokes her belly, grinning happily. \"<i>Is there something you want to talk about?</i>\"\n\n");
 						//[High Affection]
@@ -818,7 +825,7 @@ package classes.Scenes.NPCs
 				case 8: //Amily is heavily pregnant
 						outputText("It takes several minutes before Amily appears, but when you see her, you marvel at how she got to you as quickly as she did. Her stomach is hugely swollen; one of her hands actually cradles underneath its rounded expanse, as if trying to hold it up. She is pants-less, evidently no longer able to fit into them. Her shirt drapes loosely, barely managing to cover the upper half of her firm orb of a belly. The belt where she hangs her blowpipe and dagger has been tied around her upper chest like a sash - between her breasts and her bulge - so she can still carry her weapons effectively.\n\n");
 						//[Low Affection]
-						if (affectionValue() < 15 || player.gender == 0) outputText("She seems to be paying more attention to her gravid midriff than to you, and it's several long moments before she finally speaks. \"<i>These children will be born soon. I guess I owe you my thanks for being willing to father them.</i>\"\n\n");
+						if (affectionValue() < 15 || player.gender == GENDER_NONE) outputText("She seems to be paying more attention to her gravid midriff than to you, and it's several long moments before she finally speaks. \"<i>These children will be born soon. I guess I owe you my thanks for being willing to father them.</i>\"\n\n");
 						//[Medium Affection]
 						else if (affectionValue() < 40) outputText("She groans softly. \"<i>This isn't an easy task, you know. But I still want to thank you. Maybe, when these ones are born, you'll be willing to help me make some more?</i>\" She asks, her tail gently waving behind her.\n\n");
 						//[High Affection]
@@ -827,8 +834,8 @@ package classes.Scenes.NPCs
 				default: //Amily is not pregnant
 					outputText("It doesn't take long for Amily to materialize out of the ruins. Her blowpipe and dagger are both thrust into her belt, and she's still wearing the same tattered clothes as before.\n\n");
 					//[Low Affection]
-					if (affectionValue() < 15 || player.gender == 0) {
-						if (flags[kFLAGS.AMILY_MET_AS] == 2 && player.gender == 2) outputText("She crosses her arms and smiles at you. \"<i>So you came back huh?  Did you want to chat with little old me?</i>\" she asks.\n\n");
+					if (affectionValue() < 15 || player.gender == GENDER_NONE) {
+						if (flags[kFLAGS.AMILY_MET_AS] == 2 && player.gender == GENDER_FEMALE) outputText("She crosses her arms and smiles at you. \"<i>So you came back huh?  Did you want to chat with little old me?</i>\" she asks.\n\n");
 						else outputText("She crosses her arms and taps her fingers on her shoulder. \"<i>So, why are you here? What do you want?</i>\" she asks.\n\n");
 					}
 					//[Medium Affection]
@@ -858,7 +865,7 @@ package classes.Scenes.NPCs
 			amilyVillageMenu();
 			
 			//Set flag for 'last gender met as'
-			flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
+			setAmilysLastPlayerGender(player.gender);
 
 			/*FAILSAFE - ALL GENDERS HAVE HAD THERE GO AN NOTHING HAPPENED!
 			outputText("You enter the ruined village cautiously. There are burnt-down houses, smashed-in doorways, ripped-off roofs... everything is covered with dust and grime. You explore for an hour, but you cannot find any sign of another living being, or anything of value. The occasional footprint from an imp or a goblin turns up in the dirt, but you don't see any of the creatures themselves. It looks like time and passing demons have stripped the place bare since it was originally abandoned. Finally, you give up and leave. You feel much easier when you're outside of the village - you had the strangest sensation of being watched while you were in there.");
@@ -884,7 +891,7 @@ package classes.Scenes.NPCs
 			addButton(1, "Talk", talkToAmily);
 			//Amily is not a herm but is ok with herm-daddying!
 			if (!hasCock()) {
-				if (player.hasItem(consumables.P_DRAFT) && !hasCock() && flags[kFLAGS.AMILY_HERM_QUEST] == 2 && affectionValue() >= 40 && player.gender == 3) {
+				if (player.hasItem(consumables.P_DRAFT) && !hasCock() && flags[kFLAGS.AMILY_HERM_QUEST] == 2 && affectionValue() >= 40 && player.gender == GENDER_HERM) {
 					outputText("You could probably bring up the efficiency of having two hermaphrodite mothers, particularly since you have this purified incubi draft handy.\n\n");
 					addButton(3, "Efficiency", makeAmilyAHerm);
 				} else {
@@ -898,7 +905,7 @@ package classes.Scenes.NPCs
 			var sex:Function = null;
 			if (!forced && player.lust < 35) return null;
 			//If Amily is lesbo lover!
-			if (flags[kFLAGS.AMILY_CONFESSED_LESBIAN] > 0 && player.gender == 2) {
+			if (flags[kFLAGS.AMILY_CONFESSED_LESBIAN] > 0 && player.gender == GENDER_FEMALE) {
 				//Futa amily!
 				if (hasCock()) {
 					//If not pregnant, always get fucked!
@@ -913,7 +920,7 @@ package classes.Scenes.NPCs
 				else sex = girlyGirlMouseSex;
 			}
 			//If Amily is a herm lover!
-			if (player.gender == 3 && flags[kFLAGS.AMILY_HERM_QUEST] == 2) {
+			if (player.gender == GENDER_HERM && flags[kFLAGS.AMILY_HERM_QUEST] == 2) {
 				//Amily is herm too!
 				if (hasCock()) {
 					//If Amily is not pregnant
@@ -968,7 +975,7 @@ package classes.Scenes.NPCs
 				}
 			}
 			//Dudesex!
-			if (player.gender == 1) {
+			if (player.gender == GENDER_MALE) {
 				if (forced) sex = amilySexHappens;
 				else sex = sexWithAmily;
 			}
@@ -1217,7 +1224,7 @@ package classes.Scenes.NPCs
 		private function talkToAmily():void {
 			clearOutput();
 			amilySprite();
-			if (flags[kFLAGS.AMILY_MET_AS] == 2 && player.gender == 2) outputText("You tell Amily that you came here because you wanted to talk with her.\n\n");
+			if (flags[kFLAGS.AMILY_MET_AS] == 2 && player.gender == GENDER_FEMALE) outputText("You tell Amily that you came here because you wanted to talk with her.\n\n");
 			else outputText("You tell Amily that you came here because you wanted to talk with her, and you have no desire to approach her sexually on this encounter.\n\n");
 
 			//[Low Affection]
@@ -1236,7 +1243,7 @@ package classes.Scenes.NPCs
 							outputText("\"<i>Oh, NOW you want to get to know me,</i>\" she complains, but her tone is gentle - amused even, and she clearly isn't as unhappy as her words may imply. Heavily, she sits herself down unceremoniously. \"<i>But... there are things weighing on my mind. I really could use somebody to talk to.</i>\"\n\n");
 							break;
 					default: //Amily is not pregnant
-							if (flags[kFLAGS.AMILY_MET_AS] == 2 && player.gender == 2) outputText("\"<i>A chat would be lovely,</i>\" she says, clearly enjoying herself.  \"<i>I... I hardly ever get a chance to find someone to chat with.  Sometimes it seems like everyone in Mareth just wants to breed non-stop...</i>\" she murmurs to herself.  \"<i>Well, what shall we talk about?</i>\" she asks, seemingly quite happy with your presence.\n\n");
+							if (flags[kFLAGS.AMILY_MET_AS] == 2 && player.gender == GENDER_FEMALE) outputText("\"<i>A chat would be lovely,</i>\" she says, clearly enjoying herself.  \"<i>I... I hardly ever get a chance to find someone to chat with.  Sometimes it seems like everyone in Mareth just wants to breed non-stop...</i>\" she murmurs to herself.  \"<i>Well, what shall we talk about?</i>\" she asks, seemingly quite happy with your presence.\n\n");
 							else outputText("\"<i>You want to talk? No sex?</i>\" she asks, clearly having a hard time believing it. \"<i>I... I haven't had the chance to talk to anyone in years. It's been so long...</i>\" she murmurs to herself, and you think you see the start of a tear glinting in her eye. \"<i>Well, what do you want to talk about?</i>\" she asks, seemingly quite happy that's what you're here for.\n\n");
 				}
 			}
@@ -1609,8 +1616,8 @@ package classes.Scenes.NPCs
 
 			outputText(" as the strongest contraction yet hits - she's crowning! Immediately your hands dive down to hover under her vagina as a small, pink, naked and wriggling thing slips between their parted lips. The little body is surprisingly light in your hands, but it squeaks loudly as it draws its first breath - correction, HER first breath. It's a ");
 			var amilyKid:String = "girl";
-			if ((player.gender == 3 || hasCock()) && rand(2) == 0) amilyKid = "herm";
-			if (player.gender == 3 && hasCock()) amilyKid = "herm";
+			if ((player.gender == GENDER_HERM || hasCock()) && rand(2) == 0) amilyKid = "herm";
+			if (player.gender == GENDER_HERM && hasCock()) amilyKid = "herm";
 			outputText(amilyKid + ".\n\n");
 
 			outputText("Awestruck, you tell Amily that she's beautiful and you really mean it. Even though she's a different species, she's your daughter and she's gorgeous to you.\n\n");
@@ -1758,7 +1765,7 @@ package classes.Scenes.NPCs
 			
 			//Girls dont get to listen to amily talk about being knocked up.
 			//Herms either unless she's okay'ed them for dad-hood.
-			if (player.gender == 2 || (player.gender == 3 && flags[kFLAGS.AMILY_HERM_QUEST] < 2)) convo = rand(12);
+			if (player.gender == GENDER_FEMALE || (player.gender == GENDER_HERM && flags[kFLAGS.AMILY_HERM_QUEST] < 2)) convo = rand(12);
 			//Boost affection!
 			modAffection(2 + rand(3));
 			dynStats("cor", -.34);
@@ -3880,7 +3887,7 @@ package classes.Scenes.NPCs
 					outputText("You decide she needs a little push if she's going to have balls. \"<i>Lay down bitch,</i>\" you order her; being called a bitch only makes her smile as she complies.\n\n");
 
 					//[=Cock=]
-					if (player.hasCock() && (player.gender == 1 || rand(2) == 0)) {
+					if (player.hasCock() && (player.gender == GENDER_MALE || rand(2) == 0)) {
 						outputText("You drop your pants and stand over her, your cock hardening at what you're about to do. \"<i>Pleasure me.</i>\" You order Amily. She lifts a "+footpaw+" and begins stroking your exposed " + player.cockDescript(0) + "; she takes utmost care not to hurt you with her claws as she grips your shaft expertly between her toes. Her first "+footpaw+" is soon joined by her other one and together she begins nimbly masturbating you, giving you an expert footjob. No doubt she's been practicing; you'll have to reward her for this later.\n\n");
 
 						outputText("You focus your corruptive powers, and a dollop of black pre forms on your tip; it slides over your shaft and lubes your " + player.cockDescript(0) + ", allowing Amily to better stroke you. You can feel your orgasm coming fast, and you tell Amily to stop and open wide. She spreads her legs as far as they will go and watches, panting, as you finish yourself off. You shoot jet after jet of black cum all over her crotch. Amily moans with every jet that is spilled onto her corrupt form, relishing in the warmth that spreads throughout her.\n\n");
@@ -5177,7 +5184,7 @@ package classes.Scenes.NPCs
 			else outputText("\"<i>I still can't believe that I'm burying this hot, throbbing thing in another woman's pussy... More than that, I think I'm actually starting to like it.</i>\" Amily comments to herself, staring unabashedly at your curves.\n\n");
 
 			//(If first time & player is herm:
-			if (player.gender == 3) {
+			if (player.gender == GENDER_HERM) {
 				if (flags[kFLAGS.AMILY_HERM_TIMES_FUCKED_BY_FEMPC] == 0) outputText("\"<i>How on earth did I let myself get talked into this? If you've got both a cock and a pussy, then what's wrong with you just filling me with that cock?</i>\" Amily mutters to herself. Despite her words, though, her gaze is fixed squarely on your " + player.vaginaDescript() + ".\n\n");
 				//else
 				else outputText("\"<i>You know, it's not all bad, us both being this way... but remember that I want a turn at that, too.</i>\" She states, staring hungrily at your " + player.multiCockDescriptLight() + ".\n\n");
@@ -5270,7 +5277,7 @@ package classes.Scenes.NPCs
 
 			outputText("\"<i>You know that this... well, this isn't how I saw my future going. I wanted a human mate to help me make pure children, to revive my race, that's true, but... I kind of always saw myself as the mother to those children. But, being the father... well, it's not so bad.</i>\" She takes your hands in hers, looking deep into your eyes. \"<i>I... I never dreamed I'd say this to ");
 			//(if player is female:
-			if (player.gender == 2) outputText("another woman");
+			if (player.gender == GENDER_FEMALE) outputText("another woman");
 			//, if player is herm:
 			else outputText("a hermaphrodite");
 			outputText(", but... I love you. The children, they're going to leave here now, and set up a new village somewhere else. But I... I want to stay here with you. Forever. Please, say yes.</i>\"\n\n");
@@ -5328,17 +5335,17 @@ package classes.Scenes.NPCs
 			clearOutput();
 			var sex:Function = null;
 			//Remember old gender.
-			var oldGender:Number = flags[kFLAGS.AMILY_PC_GENDER];
+			var oldGender:Number = getAmilysLastPlayerGender();
 			//Re-init old gender so we don't get caught in a loop!
-			flags[kFLAGS.AMILY_PC_GENDER] = player.gender;
+			setAmilysLastPlayerGender(player.gender);
 			//Called from mid-way through remeeting's intro!
 			outputText("Suddenly, Amily stops and looks puzzled, her nose twitching. \"<i>Have you changed...? Yes, you have! You've been messing with some of those weird potions and things that show up here and there - you've altered your gender, haven't you?</i>\"\n\n");
 
 			outputText("You nod your head and admit you have.\n\n");
 			//Male tooo
-			if (oldGender == 1) {
+			if (oldGender == GENDER_MALE) {
 				//[Male To Female]
-				if (player.gender == 2) {
+				if (player.gender == GENDER_FEMALE) {
 					//Low Affection:
 					if (affectionValue() < 15) {
 						outputText("\"<i>Oh, great. Now what am I going to do with you? Why on earth would you stuff this up?</i>\" Amily complains. She shakes her head. \"<i>Come back later - I'm too frustrated to talk to you now.</i>\" She storms away and you decide it would be best to take her advice.\n\n");
@@ -5358,7 +5365,7 @@ package classes.Scenes.NPCs
 					}
 				}
 				//[Male To Herm]
-				else if (player.gender == 3) {
+				else if (player.gender == GENDER_HERM) {
 					//Low Affection:
 					if (affectionValue() < 15) {
 						outputText("\"<i>...Are you a herm, now?</i>\" She asks, sounding appalled. When you confirm it, she grimaces in disgust. \"<i>Stay away from me! You're not coming near my bed again until you're all man again!</i>\" She orders, and then storms off.\n\n");
@@ -5401,9 +5408,9 @@ package classes.Scenes.NPCs
 				}
 			}
 			//[Female...
-			else if (oldGender == 2) {
+			else if (oldGender == GENDER_FEMALE) {
 				// to Male]
-				if (player.gender == 1) {
+				if (player.gender == GENDER_MALE) {
 					//Low Affection:
 					if (affectionValue() < 15) {
 						outputText("Amily looks deeply surprised. \"<i>You... you turned yourself from a woman into a man? ...For me?</i>\" She scuffs her foot at the ground in embarrassment. \"<i>I... I don't know what to say. But... will you hear me out, now that you have changed?</i>\"\n\n");
@@ -5440,7 +5447,7 @@ package classes.Scenes.NPCs
 					}
 				}
 				//[Female to Herm]
-				else if (player.gender == 3) {
+				else if (player.gender == GENDER_HERM) {
 					//Amily has no dick.
 					if (!hasCock()) {
 						//Low Affection:
@@ -5489,9 +5496,9 @@ package classes.Scenes.NPCs
 				}
 			}
 			//Herm toooooooo
-			else if (oldGender == 3) {
+			else if (oldGender == GENDER_HERM) {
 				//[Herm to Male]
-				if (player.gender == 1) {
+				if (player.gender == GENDER_MALE) {
 					//Low Affection:
 					if (affectionValue() < 15) {
 						outputText("She looks you over and smiles. \"<i>Well, now that's more like it. You and I, we need to talk...</i>\"");
@@ -5521,7 +5528,7 @@ package classes.Scenes.NPCs
 					}
 				}
 				//[Herm to Female]
-				else if (player.gender == 2) {
+				else if (player.gender == GENDER_FEMALE) {
 					//Low Affection:
 					if (affectionValue() < 15) {
 						outputText("\"<i>Well, I guess it's nice to see another woman around... though I could have used you as all male. So, do you want to talk?</i>\" Amily asks.\n\n");
@@ -5784,7 +5791,7 @@ package classes.Scenes.NPCs
 				outputText("Several children have their fill, but some are still in line.  \"<i>" + player.mf("Master","Mistress") + "...</i>\" You hear Amily call between pants and moans of delight. You give her an inquisitive look. \"<i>Can I drink from you? Your sexy fucktoy bitch needs more food to turn into delicious milk for your newly born sluts.</i>\"\n\n");
 
 				//(if PC is genderless)
-				if (player.gender == 0) {
+				if (player.gender == GENDER_NONE) {
 					outputText("You tell Amily that right now you can't feed her, so she'll have to make do with what she has. Amily pouts, but carries on. You chuckle and leave her with an order. \"<i>Make sure to train them into proper sluts, Amily, then let them go so they can gain some field experience,</i>\" You say, \"<i>Yes, " + player.mf("master","mistress") + ".</i>\" Amily says. You turn and leave them to their own devices.");
 					return;
 				}
@@ -5792,7 +5799,7 @@ package classes.Scenes.NPCs
 				//Herm get to pick if they want to use their pussies or dicks.
 				//Should Amily drink from your cock or your pussy?
 				//[=Cock=]
-				if (player.hasCock() && (player.gender == 1 || rand(2) == 0)) {
+				if (player.hasCock() && (player.gender == GENDER_MALE || rand(2) == 0)) {
 					outputText("You smile and undress, showing Amily ");
 					outputText("your erect " + player.cockDescript(0));
 					if (player.hasVagina()) outputText(" and " + player.vaginaDescript(0));
@@ -5924,7 +5931,7 @@ package classes.Scenes.NPCs
 					return;
 				}
 				//(if PC is genderless and has the ingredients.)
-				else if (player.gender == 0) {
+				else if (player.gender == GENDER_NONE) {
 					outputText("You think about going into the Ruined Village, but without a cock or a pussy you can't complete the mixture. You return to your camp.");
 					doNext(camp.returnToCampUseOneHour);
 					return;
@@ -5969,7 +5976,7 @@ package classes.Scenes.NPCs
 					return;
 				}
 				//(else if the PC is genderless)
-				else if (player.gender == 0) {
+				else if (player.gender == GENDER_NONE) {
 					outputText("You think about going into the Ruined Village, but decide to turn back; right now, you just don't have the proper 'parts' to get the job done, and so you return to your camp.\n\n");
 					doNext(camp.returnToCampUseOneHour);
 					return;
@@ -6425,9 +6432,9 @@ package classes.Scenes.NPCs
 			}
 			//2nd rape scene
 			else if (flags[kFLAGS.AMILY_CORRUPTION] == 1) {
-				if (player.gender == 1) doNext(rapeCorruptAmily2Male);
-				else if (player.gender == 2) doNext(rapeCorruptAmily2Female);
-				else if (player.gender == 3) {
+				if (player.gender == GENDER_MALE) doNext(rapeCorruptAmily2Male);
+				else if (player.gender == GENDER_FEMALE) doNext(rapeCorruptAmily2Female);
+				else if (player.gender == GENDER_HERM) {
 					menu();
 					addButton(0, "MaleFocus", rapeCorruptAmily2Male);
 					addButton(1, "FemaleFocus", rapeCorruptAmily2Female);
@@ -6435,9 +6442,9 @@ package classes.Scenes.NPCs
 			}
 			//3nd rape scene
 			else if (flags[kFLAGS.AMILY_CORRUPTION] == 2) {
-				if (player.gender == 1) doNext(rapeCorruptAmily3Male);
-				else if (player.gender == 2) doNext(rapeCorruptAmily3Female);
-				else if (player.gender == 3) {
+				if (player.gender == GENDER_MALE) doNext(rapeCorruptAmily3Male);
+				else if (player.gender == GENDER_FEMALE) doNext(rapeCorruptAmily3Female);
+				else if (player.gender == GENDER_HERM) {
 					menu();
 					addButton(0, "MaleFocus", rapeCorruptAmily3Male);
 					addButton(1, "FemaleFocus", rapeCorruptAmily3Female);
@@ -6484,14 +6491,14 @@ package classes.Scenes.NPCs
 			outputText("You chuckle at her spontaneous orgasm; no doubt she must've loved the little drink you gave her. Her eyes regain their focus and she looks at you; not in anger or panic, as you would expect, but in lust. \"<i>S-So hot... So gooooood...</i>\" Amily says, moaning as she cums yet again. You laugh and begin molesting her; groping her breasts, massaging her pussy and pinching her clit. Each touch brings a wave of fluids as Amily orgasms. \"<i>I need...</i>\" You hear Amily mutter. \"<i>I need more! Give me more... Whatever was in that bottle!</i>\" the mouse says with a sense of urgency. You laugh and tell her. \"<i>There isn't any more, you drank everything.</i>\" Amily's face changes to one of desperation. \"<i>No! But I-</i>\" You silence her with a finger, then say. \"<i>I can, however, let you drink some of my juices. There was some in that potion you just drank.</i>\" Amily's face lights up and she says excitedly. \"<i>Yes! Please yes! Give it to me!</i>\"\n\n");
 
 			//[(if herm)
-			if (player.gender == 3) {
+			if (player.gender == GENDER_HERM) {
 				outputText("Which part of you should Amily lick?");
 				menu();
 				addButton(0, "Cock", rapeCorruptAmily1Male);
 				addButton(1, "Pussy", rapeCorruptAmily1Female);
 			}
 			//Cocks!
-			else if (player.gender == 1) doNext(rapeCorruptAmily1Male);
+			else if (player.gender == GENDER_MALE) doNext(rapeCorruptAmily1Male);
 			//Cunts!
 			else doNext(rapeCorruptAmily1Female);
 		}
@@ -6787,7 +6794,7 @@ package classes.Scenes.NPCs
 			amilySprite();
 			clearOutput();
 			//(if PC is genderless)
-			if (player.gender == 0) {
+			if (player.gender == GENDER_NONE) {
 				outputText("You would love to play with your mouse bitch, but you don't have the parts for that; so you return to the camp.");
 				doNext(camp.returnToCampUseOneHour);
 				return;
@@ -6799,14 +6806,14 @@ package classes.Scenes.NPCs
 			outputText("You smile and scratch her behind one ear, drawing a pleasured sigh from the corrupted mouse. You can't help but recall how prudish she was, refusing and attacking you; now she's really come a long way, begging for a drop of cum at the very sight of you.  \"<i>Let's see if you're ready,</i>\" you say, roughly grabbing her ear and pulling her away.\n\n");
 
 			//[(if herm)
-			if (player.gender == 3) {
+			if (player.gender == GENDER_HERM) {
 				outputText("Which part should you use to finish off the mousette?");
 				//[Cock] [Pussy]
 				menu();
 				addButton(0, "Cock", rapeCorruptAmily4Male);
 				addButton(1, "Pussy", rapeCorruptAmily4Female);
 			}
-			else if (player.gender == 2) doNext(rapeCorruptAmily4Female);
+			else if (player.gender == GENDER_FEMALE) doNext(rapeCorruptAmily4Female);
 			else doNext(rapeCorruptAmily4Male);
 		}
 
@@ -7060,7 +7067,7 @@ package classes.Scenes.NPCs
 		private function stalkingZeAmiliez2():void {
 			clearOutput();
 			//(if PC is genderless)
-			if (player.gender == 0) {
+			if (player.gender == GENDER_NONE) {
 				outputText("You think about going into the ruined village, but playing with Amily is not going to be possible if you don't have the parts for it... You return to your camp.");
 				doNext(camp.returnToCampUseOneHour);
 			}
@@ -7122,7 +7129,7 @@ package classes.Scenes.NPCs
 		private function stalkingZeAmiliez3():void {
 			clearOutput();
 			//(if PC is genderless)
-			if (player.gender == 0) {
+			if (player.gender == GENDER_NONE) {
 				outputText("You think about going into the ruined village, but playing with Amily is not going to be possible if you don't have the parts for it... You return to your camp.");
 				doNext(camp.returnToCampUseOneHour);
 				return;
@@ -7291,10 +7298,10 @@ package classes.Scenes.NPCs
 				// See, fen, this is why smart people use constants instead of just guessing what each fucking number means.
 				switch(player.gender)
 				{
-				case 1:  // Male
+				case GENDER_MALE:  // Male
 					outputText("hardening " + player.multiCockDescriptLight() + " ");
 					break;
-				case 2: // Female
+				case GENDER_FEMALE: // Female
 					outputText("moistening " + player.clitDescript() + " ");
 					break;
 				default: // Fallback
@@ -7820,7 +7827,7 @@ package classes.Scenes.NPCs
 			else outputText("unbelievably swollen");
 			outputText(" abdomen stir your mind drifts back to Amily's offer.  Dipping into her neck, you start to kiss her softly as your ovipositor begins to thicken, slowly peeking out into the air.  She shivers in your arms, your hands sliding around her sides to pull her close.  Barely able to pull your lips away, you nip along her jaw as you ask her if she's up for a little egging.");
 			outputText("\n\n\"<i>I suppose I could be persuaded, you <b>do</b> look like you need a little attention...</i>\"  You feel a hand slipping down into your [armor] as she cranes her neck, moaning quietly as her searching fingers find their way to your [if (hasCock = true) stiffening shaft][if (isHerm = true)  and ][if (hasVagina = true) slick snatch]");
-			if (player.gender == 0) outputText("blank groin");
+			if (player.gender == GENDER_NONE) outputText("blank groin");
 			outputText(", teasing you into unconsciously humping against her slender digits.");
 			if (pregnancy.isPregnant) outputText("  \"<i>But try to remember that I'm already carrying.  I don't want it getting too cramped in there; so make sure you don't miss, alright?</i>\"");
 			outputText("\n\nYour try to clear your mind as the pleasure starts to overwhelm you, ovipositor extending fully whilst you attempt to focus and decide how to proceed.");
@@ -7832,7 +7839,7 @@ package classes.Scenes.NPCs
 			clearOutput();
 			outputText("Still groaning as Amily caresses your body, you make sure that you have a good grip around her waist before suddenly pulling her down to the ground.  She squeaks as you descend, though her hand doesn't leave your leggings.  Lying on your back, Amily props herself up on your chest with her free arm, trying to frown but unable to keep a playful smile off her lips.");
 			outputText("\n\nYou set to work freeing her from her trousers whilst she loosens your own leggings, dragging them down to reveal your [if (hasCock = true) \"rock-hard cock\"][if (isHerm = true)  and your ][if (hasVagina = true) swollen pussy]");
-			if (player.gender == 0) outputText("featureless mound");
+			if (player.gender == GENDER_NONE) outputText("featureless mound");
 			outputText(", your bulging ovipositor fully emerging at the same time.");
 
 			outputText("\n\n\"<i>Looks like someone's excited; you must really enjoy the idea of filling me with eggs.</i>\"  Amily's voice is playful as her fingers trace over your lower stomach, clouding your mind with bliss as she avoids caressing your needy nethers.  However, as you finally strip her leggings it quickly becomes clear that she's as ready as you are, the sight of her flushed labia glistening with a wet sheen");
