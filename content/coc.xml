@@ -2,7 +2,7 @@
 <extend-story name="/" xmlns="xxc-story">
     <!--Areas-->
     <!-- Not integrated yet <include path="coc/desert.xml"/>-->
-    <!-- Not integrated yet <include path="coc/forest.xml"/>-->
+    <include path="coc/forest.xml"/>
 
     <!-- Monsters -->
     <!-- Not integrated yet <include path="coc/monsters/goblin.xml"/>-->
