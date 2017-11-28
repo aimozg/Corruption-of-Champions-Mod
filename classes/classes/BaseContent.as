@@ -15,6 +15,8 @@
 	import coc.model.TimeModel;
 	import coc.view.CoCButton;
 	import coc.view.MainView;
+	import coc.xxc.StoryContext;
+
 	/**
 	 * Quick hacky method to wrap new content in a class-based structure
 	 * BaseContent acts as an access wrapper around CoC, enabling children of BaseContent to interact with
@@ -574,18 +576,12 @@
 			return kGAMECLASS.buttonIsVisible(index);
 		}
 				
-		/**
-		 * PRIMO BULLSHIT FUNCTION ACCESS
-		 */
-		// Need to work out a better way of doing this -- I THINK maybe treating external functions as a string and calling
-		// addButton like "addButton(0, "thing", "thisFunc");" might be a way to do it -- check if Func var is a Func type in this.addbutton args
-		// if it is, pass it into kGAMECLASS, if it isn't, check if string. If it is, use the string to pull the func from kGAMECLASS
-		// before passing it into addbutton etc.
-		// Going the string route also makes it... not awful to call into other content classes too - split string on . and chain
-		// lookups into objects ie "umasShop.firstVisitPart1" -> kGAMECLASS["umasShop"].["firstVisitPart1"]()
-		// @aimozg: but kGAMECLASS.umasShop.firstVisistPart1 instead of String is compile-time safe.
-		// Clearly this isn't going to fly long term, but it's... functional for now.
-
+		protected static function onGameInit(f:Function):void {
+			CoC.onGameInit(f);
+		}
+		protected function get context():StoryContext {
+			return kGAMECLASS.context;
+		}
 	}
 
 }

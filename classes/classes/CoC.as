@@ -24,6 +24,7 @@ package classes
 	import classes.PerkLib;
 	import classes.Player;
 	import classes.Scenes.*;
+	import classes.Scenes.API.GroupEncounter;
 	import classes.Scenes.Areas.*;
 	import classes.Scenes.Areas.Desert.*;
 	import classes.Scenes.Areas.Forest.*;
@@ -59,6 +60,11 @@ package classes
 	import coc.model.GameModel;
 	import coc.model.TimeModel;
 	import coc.view.MainView;
+	import coc.xxc.Story;
+	import coc.xxc.StoryCompiler;
+	import coc.xxc.StoryContext;
+	import coc.xxc.stmts.ZoneStmt;
+	
 	import fl.data.DataProvider;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
@@ -297,6 +303,9 @@ package classes
 		private var _updateHack:Sprite = new Sprite();
 		
 		public var mainViewManager:MainViewManager = new MainViewManager();
+		public var rootStory:Story = new Story("story",null,"root",true);
+		public var compiler:StoryCompiler = new StoryCompiler("content/").attach(rootStory);
+		public var context:StoryContext;
 		//Scenes in includes folder GONE! Huzzah!
 		
 		public var bindings:Bindings = new Bindings();
@@ -436,6 +445,7 @@ package classes
 			
 			// Cheatmode.
 			kGAMECLASS = this;
+			context = new StoryContext(this);
 			
 			useables = new UseableLib();
 			
@@ -616,10 +626,32 @@ package classes
 			mainView.hideSprite();
 			//Hide up/down arrows
 			mainView.statsView.hideUpDown();
+			// Create story structure
+			createStoryLib("/","monsters");
+			execPostInit();
+			loadStory();
 			
 			this.addFrameScript(0, this.run);
 		}
+		public function createStory(parentPath:String,name:String):Story {
+			var parent:Story = rootStory.locate(parentPath);
+			if (parent == null) throw new Error("Cannot locate story '"+parentPath+"'");
+			return new Story("story",parent,name,false);
+		}
+		public function createStoryLib(parentPath:String,name:String):Story {
+			var parent:Story = rootStory.locate(parentPath);
+			if (parent == null) throw new Error("Cannot locate story '"+parentPath+"'");
+			return new Story("lib",parent,name,true);
+		}
+		public function createStoryZone(encounters:GroupEncounter,parentPath:String,rename:String=""):ZoneStmt {
+			var parent:Story = rootStory.locate(parentPath);
+			if (parent == null) throw new Error("Cannot locate story '"+parentPath+"'");
+			return ZoneStmt.wrap(encounters,parent,rename);
+		}
 		
+		private function loadStory():void {
+			compiler.includeFile("coc.xml", true);
+		}
 		public function run():void
 		{
 			mainMenu.mainMenu();
@@ -674,6 +706,15 @@ package classes
 					mainViewManager.hideSprite();
 				}
 			}
+		}
+
+		private static var initQueue:/*Function*/Array      = [];
+		public static function onGameInit(f:Function):void {
+			initQueue.push(f);
+		}
+		private static function execPostInit():void {
+			var f:Function;
+			while ((f = initQueue.shift())) f();
 		}
 	}
 }

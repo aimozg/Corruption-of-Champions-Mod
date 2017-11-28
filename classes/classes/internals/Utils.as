@@ -96,6 +96,14 @@ package classes.internals
 			return Math.floor(value*factor)/factor;
 		}
 		/**
+		 * Mimics JS Object.keys
+		 */
+		public static function keys(o:Object):/*String*/Array {
+			var r:/*String*/Array = [];
+			for (var k:String in o) r.push(k);
+			return r;
+		}
+		/**
 		 * Deleting obj[key] with default.
 		 *
 		 * If `key` in `obj`: return `obj[key]` and delete `obj[key]`
@@ -415,6 +423,15 @@ package classes.internals
 			var rslt:String = "";
 			while (n-->0) rslt += s;
 			return rslt;
+		}
+		public static function trimLeft(s:String):String {
+			return s.replace(/^\s+/g,'');
+		}
+		public static function trimRight(s:String):String {
+			return s.replace(/\s+$/g,'');
+		}
+		public static function trimSides(s:String):String {
+			return trimLeft(trimRight(s));
 		}
 
 		/* None of these functions are called anymore
