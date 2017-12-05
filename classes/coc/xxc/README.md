@@ -125,19 +125,19 @@ Outputs its content, processing whitespace __in XML text during compilation__ (i
 
 This _story_ is saved in the outer text block as `name`.
 
-##### <string>
+##### &lt;string&gt;
 
 As `<text>` but no whitespace processing is done.
 
-##### <lib>
+##### &lt;lib&gt;
 
 Used for grouping. Can only contain named display elements 
 
-##### <macro>
+##### &lt;macro&gt;
 
 Skipped when iterated from outer element, but can be displayed by name
 
-##### <story>
+##### &lt;story&gt;
 
 Same as `<text>`  
 
