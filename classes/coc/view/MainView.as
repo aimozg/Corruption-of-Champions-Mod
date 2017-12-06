@@ -114,14 +114,14 @@ public class MainView extends Block {
 
 	internal static const TOPROW_W:Number = STATBAR_W + 2 * GAP + TEXTZONE_W;
 
-	internal static const BOTTOM_X:Number         = STATBAR_W + GAP;
-	internal static const BOTTOM_COLS:Number      = 5;
-	internal static const BOTTOM_ROWS:Number      = 3;
-	internal static const BOTTOM_BUTTON_COUNT:int = BOTTOM_COLS * BOTTOM_ROWS;
-	internal static const BOTTOM_H:Number         = (GAP + BTN_H) * BOTTOM_ROWS;
-	internal static const BOTTOM_W:Number         = TEXTZONE_W;
-	internal static const BOTTOM_HGAP:Number      = (BOTTOM_W - BTN_W * BOTTOM_COLS) / (2 * BOTTOM_COLS);
-	internal static const BOTTOM_Y:Number         = SCREEN_H - BOTTOM_H;
+	public static const BOTTOM_X:Number         = STATBAR_W + GAP;
+	public static const BOTTOM_COLS:Number      = 5;
+	public static const BOTTOM_ROWS:Number      = 3;
+	public static const BOTTOM_BUTTON_COUNT:int = BOTTOM_COLS * BOTTOM_ROWS;
+	public static const BOTTOM_H:Number         = (GAP + BTN_H) * BOTTOM_ROWS;
+	public static const BOTTOM_W:Number         = TEXTZONE_W;
+	public static const BOTTOM_HGAP:Number      = (BOTTOM_W - BTN_W * BOTTOM_COLS) / (2 * BOTTOM_COLS);
+	public static const BOTTOM_Y:Number         = SCREEN_H - BOTTOM_H;
 
 	private var blackBackground:BitmapDataSprite;
 	public var textBGWhite:BitmapDataSprite;

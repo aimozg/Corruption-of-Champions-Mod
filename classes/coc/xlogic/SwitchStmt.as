@@ -9,7 +9,7 @@ public class SwitchStmt extends Statement{
 	public var cases:/*CaseStmt*/Array = [];
 	public var defaults:StmtList = new StmtList();
 
-	public function SwitchStmt(valueAttr:String =null) {
+	public function SwitchStmt(valueAttr:String=null) {
 		if (valueAttr) valueExpr = Eval.compile(valueAttr);
 	}
 

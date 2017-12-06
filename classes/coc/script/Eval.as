@@ -11,7 +11,7 @@ public class Eval {
 			return condition() ? then() : elze();
 		};
 	}
-	
+
 	private var scopes:/*Object*/Array;
 	private var expr:String;
 	private var _src:String;
@@ -27,19 +27,24 @@ public class Eval {
 		try {
 			return _call();
 		} catch (e:Error){
-			error(_src,"",e.message,false);
+			throw error(_src,"",e.message,false);
 		}
 	}
-	
+	public function bind(scopes:/*Object*/Array):Function {
+		return function():* {
+			return vcall(scopes);
+		}
+	}
+
 	public function Eval(thiz:*, expr:String) {
 		this.scopes = [thiz];
 		this._src   = expr;
 		this.expr   = expr;
 	}
-	
+
 	private static const RX_FLOAT:RegExp = /^[+\-]?(\d+(\.\d+)?|\.\d+)(e[+\-]?\d+)?$/;
 	private static const RX_INT:RegExp = /^[+\-]?(0x)?\d+$/;
-	
+
 	private static const LA_BLOCK_COMMENT:RegExp = /^\/\*([^*\/]|\*[^\/]|[^\*]\/)*\*+\//;
 	private static const LA_FLOAT:RegExp = /^[+\-]?(\d+(\.\d+)?|\.\d+)(e[+\-]?\d+)?/;
 	private static const LA_INT:RegExp = /^[+\-]?(0x)?\d+/;
@@ -89,7 +94,12 @@ public class Eval {
 		} else {
 			e._call = e.evalUntil("");
 		}
-		
+
+		return e;
+	}
+	public static function wrapAsEval(fn:Function,src:String):Eval {
+		var e:Eval = new Eval({},src);
+		e._call = fn;
 		return e;
 	}
 	private static function error(src:String, expr:String, msg:String, tail:Boolean = true):Error {
@@ -234,8 +244,8 @@ public class Eval {
 				if (eatStr('\\')) {
 					var c:String = eatN(1);
 					s += {
-							 'n':'\n','t':'\t','r':'','"':'"',"'":"'"
-						 }[c] || '';
+						'n':'\n','t':'\t','r':'','"':'"',"'":"'"
+					}[c] || '';
 				} else if (eatStr(delim)) {
 					break
 				} else if ((m = eat(rex))) {
@@ -303,6 +313,7 @@ public class Eval {
 		return function():*{ return evalId(id); };
 	}
 	private function evalDot(obj:Object,key:String):* {
+		if (obj === null) throw new Error("Null before ."+key);
 		if (!(key in obj)) return undefined;
 		var y:* = obj[key];
 		if (y is Function) {
@@ -310,7 +321,7 @@ public class Eval {
 		}
 		return y;
 	}
-	
+
 	private function wrapVal(x:*):Function {
 		return function ():* { return x; };
 	}
@@ -341,7 +352,7 @@ public class Eval {
 			})
 		};
 	}
-	
+
 	public static function escapeString(s:String):String {
 		return s.replace(/\n/g,'\n').replace(/\r/g,'\r').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\\/g,'\\\\');
 	}

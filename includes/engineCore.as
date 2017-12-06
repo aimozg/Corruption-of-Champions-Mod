@@ -1,4 +1,8 @@
 ﻿import classes.*;
+
+import coc.view.ButtonData;
+import coc.view.ButtonDataList;
+
 import flash.text.TextFormat;
 
 import coc.view.CoCButton;
@@ -599,4 +603,28 @@ public function isPeaceful():Boolean {
 
 public function doNothing():void {
 	//This literally does nothing.
+}
+public function submenu(buttons:ButtonDataList, back:Function = null, page:int = 0):void {
+	var list:/*ButtonData*/Array = buttons.list.filter(function (e:ButtonData, i:int, a:Array):Boolean {
+		return e.visible;
+	}).sortOn('text');
+	menu();
+	var total:int = list.length;
+	var n:int;
+	if (page == 0 && total <= (back == null ? 15 : 14)) {
+		for (var i:int = 0; i < total; i++) {
+			var pos:int = list[i].pos;
+			// if -1 pick first free button
+			while (pos < 0 || button(pos).visible) pos++;
+			list[i].applyTo(button(pos));
+		}
+	} else {
+		n = Math.min(total, (page + 1) * 12);
+		button(12).show("Prev Page", Utils.curry(submenu, buttons, back, page - 1)).disableIf(page == 0);
+		button(13).show("Next Page", Utils.curry(submenu, buttons, back, page + 1)).disableIf(n >= total);
+		for (var bi:int = 0, li:int = page * 12; li < n; li++, bi++) {
+			list[li].applyTo(button(bi % 12));
+		}
+	}
+	if (back != null) button(14).show("Back", back);
 }

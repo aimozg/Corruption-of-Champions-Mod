@@ -3,7 +3,11 @@
     <extend-zone name="forest">
         <lib name="strings">
             <text name="trip">
+                <output>images.showImage("minomob-falling")</output>
                 You trip on an exposed root, scraping yourself somewhat, but otherwise the hour is uneventful.
+                <menu>
+                    <button label="Next" call="camp.returnToCampUseOneHour()"/>
+                </menu>
             </text>
             <text name="truffle">
                 You spot something unusual. Taking a closer look, it's definitely a truffle of some sort.

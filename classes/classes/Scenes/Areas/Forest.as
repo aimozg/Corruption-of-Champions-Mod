@@ -146,10 +146,8 @@ use namespace kGAMECLASS;
 		}
 
 		public function tripOnARoot():void {
-			outputText(images.showImage("minomob-falling"));
 			story.display("strings/trip");
 			player.takeDamage(10);
-			doNext(camp.returnToCampUseOneHour);
 		}
 
 		public function findTruffle():void {
