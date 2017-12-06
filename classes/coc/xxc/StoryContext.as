@@ -53,7 +53,10 @@ public class StoryContext extends ExecContext{
 	}
 	public function display(ref:String):void {
 		var story:Story = locate(ref);
-		if (!story) throw new Error("Unable to locate "+ref+" from "+_storyStack[0].path);
+		if (!story) {
+			throw new Error("Unable to locate " + ref +
+							" from " + (_storyStack[0] ? _storyStack[0].path : "broken context"));
+		}
 		forceExecute(story);
 	}
 	

@@ -1581,9 +1581,7 @@ import classes.Items.*
 			clearOutput();
 			outputText("You are inspecting <font face=\"_typewriter\">" + story.path + "</font>.\n");
 			var buttons:ButtonDataList = new ButtonDataList();
-			if (!story.isLib) {
-				buttons.add("(Execute)",curry(storyExplorer,story,true),"Display/execute the story");
-			}
+			buttons.add("(Execute)",curry(storyExplorer,story,true),"Display/execute the story");
 			if (story.parent) {
 				buttons.add("..",curry(storyExplorer,story.parent),"Go 1 level up to "+story.parent.path);
 			}
@@ -1600,7 +1598,7 @@ import classes.Items.*
 			
 			if (execute) {
 				try {
-					story.execute(context);
+					context.forceExecute(story);
 					output.flush();
 					return;
 				} catch (e:Error) {
