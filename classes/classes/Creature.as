@@ -1418,6 +1418,11 @@ package classes
 			}
 			return cockIndex;
 		}
+		//Find the biggest cock that fits inside a given value
+		public function cockThatFitsOrSmallest(i_fits:Number = 0, type:String = "area"):Number {
+			var i:int = cockThatFits(i_fits,type);
+			return i < 0 ? smallestCockIndex() : i;
+		}
 		
 		//Find the 2nd biggest cock that fits inside a given value
 		public function cockThatFits2(fits:Number = 0):Number

@@ -52,7 +52,9 @@ public class StoryContext extends ExecContext{
 		return story ? story.locate(ref) : null;
 	}
 	public function display(ref:String):void {
-		execute(locate(ref));
+		var story:Story = locate(ref);
+		if (!story) throw new Error("Unable to locate "+ref+" from "+_storyStack[0].path);
+		forceExecute(story);
 	}
 	
 	override public function clone():ExecContext {

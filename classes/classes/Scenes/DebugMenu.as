@@ -8,6 +8,10 @@ import classes.Items.*
 	import classes.MainViewManager;
 	import classes.internals.Profiling;
 
+	import coc.view.ButtonDataList;
+	
+	import coc.xxc.Story;
+	
 	import flash.utils.describeType;
 	import flash.utils.*
 	
@@ -57,6 +61,7 @@ import classes.Items.*
 				if (player.isPregnant()) addButton(4, "Abort Preg", abortPregnancy);
 				addButton(5, "DumpEffects", dumpEffectsMenu).hint("Display your status effects");
 				addButton(7, "HACK STUFFZ", styleHackMenu).hint("H4X0RZ");
+				addButton(10, "Story Explorer", storyExplorer).hint("XXC Story explorer");
 				addButton(14, "Exit", playerMenu);
 			}
 			if (getGame().inCombat) {
@@ -1569,6 +1574,42 @@ import classes.Items.*
 			if (temp is Number || temp is int) flags[flagId] = temp;
 			else flags[flagId] = mainView.nameBox.text;
 			flagEditor();
+		}
+		
+		public function storyExplorer(story:Story=null,execute:Boolean=false):void {
+			if (!story) story = kGAMECLASS.rootStory;
+			clearOutput();
+			outputText("You are inspecting <font face=\"_typewriter\">" + story.path + "</font>.\n");
+			var buttons:ButtonDataList = new ButtonDataList();
+			if (!story.isLib) {
+				buttons.add("(Execute)",curry(storyExplorer,story,true),"Display/execute the story");
+			}
+			if (story.parent) {
+				buttons.add("..",curry(storyExplorer,story.parent),"Go 1 level up to "+story.parent.path);
+			}
+			var sss:String = "";
+			for (var key:String in story.lib) {
+				var substory:Story = story.lib[key] as Story;
+				if (!substory) continue;
+				buttons.add(substory.name,curry(storyExplorer,substory),"Explore "+substory.path);
+				sss += "<li><font face=\"_typewriter\">" +
+					   "./"+(substory.name ? substory.name : "(unnamed " + substory.tagname + ")")+
+					   "</font></li>";
+			}
+			if (sss) outputText("Substories:\n<ul>"+sss+"</ul>");
+			
+			if (execute) {
+				try {
+					story.execute(context);
+					output.flush();
+					return;
+				} catch (e:Error) {
+					trace(e);
+					outputText("Error: "+e.message);
+				}
+			}
+			
+			submenu(buttons,accessDebugMenu);
 		}
 
 	}

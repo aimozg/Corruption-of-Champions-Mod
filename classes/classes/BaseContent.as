@@ -13,6 +13,7 @@
 
 	import coc.model.GameModel;
 	import coc.model.TimeModel;
+	import coc.view.ButtonDataList;
 	import coc.view.CoCButton;
 	import coc.view.MainView;
 	import coc.xxc.StoryContext;
@@ -581,6 +582,9 @@
 		}
 		protected function get context():StoryContext {
 			return kGAMECLASS.context;
+		}
+		public function submenu(buttons:ButtonDataList, back:Function = null, page:int = 0):void {
+			kGAMECLASS.submenu(buttons,back,page);
 		}
 	}
 

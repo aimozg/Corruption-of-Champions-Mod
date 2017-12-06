@@ -79,6 +79,8 @@ public class StoryCompiler extends Compiler {
 				return compileMenu(x);
 			case "button":
 				return compileButton(x);
+			case "next":
+				return compileNext(x);
 			default:
 				return super.compileTag(tag, x);
 		}
@@ -146,6 +148,17 @@ public class StoryCompiler extends Compiler {
 		if ('disableIf' in attrs) button.disableIf = Eval.compile(x.@disableIf);
 		if ('pos' in attrs) button.pos = parseInt(x.@pos);
 		return button;
+	}
+	protected function compileNext(x:XML):NextStmt {
+		var button:NextStmt = new NextStmt();
+		var attrs:* = attrMap(x);
+		if ('call' in attrs) button.call = Eval.compile(x.@call);
+		else if ('goto' in attrs) button.goto_ref = x.@goto;
+		else if (x.elements().length()==0) throw new Error("<button> has no call, goto, or child elements!");
+		else {
+			compileChildrenInto(x,button.body);
+		}
+		return button
 	}
 	protected function compileStory(x:XML, isLib:Boolean = false):Story {
 		return compileStoryBody(new Story(x.localName(),stack[0], x.@name, isLib), x);

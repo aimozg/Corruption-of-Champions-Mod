@@ -409,66 +409,12 @@ public class CorruptedGlade extends BaseContent implements TimeAwareInterface,En
 	//Will be standalone
 	private function trappedSatyr():void {
 		clearOutput();
-		outputText(images.showImage("cGlade-satyr"));
 		spriteSelect(SpriteDb.s_stuckSatyr);
-		story.display("satyr/0-intro");
+		story.display("satyr");
 		if (flags[kFLAGS.CODEX_ENTRY_SATYRS] <= 0) {
 			flags[kFLAGS.CODEX_ENTRY_SATYRS] = 1;
 			outputText("<b>New codex entry unlocked: Satyrs!</b>\n\n")
 		}
-		//(Player lacks a penis:
-		if (!player.hasCock()) {
-			story.display("satyr/1-nocock");
-			doNext(camp.returnToCampUseOneHour);
-		}
-		//Player returns to camp)
-		//(Player has penis:
-		else {
-			story.display("satyr/1-prompt");
-			//[Yes] [No]
-			menu();
-			addButton(0, "Ravage", rapeSatyr);
-			addButton(14, "Leave", ignoreSatyr);
-		}
-	}
-
-	//[=No=]
-	private function ignoreSatyr():void {
-		clearOutput();
-		spriteSelect(SpriteDb.s_stuckSatyr);
-		story.display("satyr/2-leave");
-		dynStats("lus", 5+player.lib/20);
-		doNext(camp.returnToCampUseOneHour);
-	}
-	//Player returns to camp
-	private function rapeSatyr():void {
-		clearOutput();
-		spriteSelect(SpriteDb.s_stuckSatyr);
-		var x:Number = player.biggestCockIndex();
-		story.display("satyr/2-ravage",{$x:x});
-		player.orgasm('Dick');
-		//[Again][Leave]
-		menu();
-		addButton(0, "Again", secondSatyrFuck);
-		addButton(14, "Leave", dontRepeatFuckSatyr);
-	}
-
-	//[=Leave=]
-	private function dontRepeatFuckSatyr():void {
-		clearOutput();
-		spriteSelect(SpriteDb.s_stuckSatyr);
-		story.display("satyr/3-leave");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	//[=Again=]
-	private function secondSatyrFuck():void {
-		var x:int = player.cockThatFits(monster.analCapacity());
-		if (x < 0) x = player.smallestCockIndex();
-		clearOutput();
-		story.display("satyr/3-again",{$x:x});
-		player.orgasm('Dick');
-		dynStats("lib", 1, "sen", -5);
-		doNext(camp.returnToCampUseOneHour);
 	}
 	}
 }

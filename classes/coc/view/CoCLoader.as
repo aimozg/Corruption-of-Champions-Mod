@@ -42,6 +42,10 @@ public class CoCLoader {
 	public static const BUNDLE_CONTENT_COC_FOREST_XML:Class;
 	bundleText("content/coc/forest.xml", BUNDLE_CONTENT_COC_FOREST_XML);
 
+	[Embed(source="../../../content/coc/forest/corrglade.xml", mimeType="application/octet-stream")]
+	public static const BUNDLE_CONTENT_COC_FOREST_CORRGLADE_XML:Class;
+	bundleText("content/coc/forest/corrglade.xml", BUNDLE_CONTENT_COC_FOREST_CORRGLADE_XML);
+
 	public static function bundleText(key:String,c:Class):void {
 		if (c) TEXT_BUNDLE[key] = new c();
 	}

@@ -48,7 +48,7 @@ font = element font {
 xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone
 xcc-content = xcc-named-content
     | display | dynStats | output | Include
-    | menu
+    | menu | next
     | set
 namedBlock = attribute name { text }?, content*
 Text = element text { namedBlock }
@@ -111,4 +111,7 @@ button = element button {
     (attribute call { text } | attribute goto { text } | content*),
     (attribute disableIf { text } | attribute enableIf { text }),
     attribute pos { text }?
+}
+next = element next {
+    (attribute call { text } | attribute goto { text } | content*)
 }
