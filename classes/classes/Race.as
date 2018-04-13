@@ -3,17 +3,19 @@
  */
 package classes {
 import classes.BodyParts.*;
+import classes.internals.MongoQuery;
 import classes.internals.Utils;
 
 public class Race {
 	public var name:String;
-	
+
 	public static var RegisteredRaces:/*Race*/Array = [];
 	public static var MetricNames:/*String*/Array   = [
 		'skin',
 		'skin.coverage',
 		'skin.tone',
 		'skin.adj',
+		'skinPlainOnly',
 		'face',
 		'eyes',
 		'ears',
@@ -36,6 +38,7 @@ public class Race {
 			'skin.coverage': ch.skin.coverage,
 			'skin.tone'    : ch.skinTone,
 			'skin.adj'     : ch.skinAdj,
+			'skinPlainOnly': ch.hasPlainSkinOnly(),
 			'face'         : ch.facePart.type,
 			'eyes'         : ch.eyes.type,
 			'ears'         : ch.ears.type,
@@ -57,17 +60,17 @@ public class Race {
 	 * @param metrics object{metricName:metricValue}
 	 * @return object{raceName:raceScore}
 	 */
-	public static function AllScoresFor(ch:Creature,metrics:*=null):* {
-		Utils.Begin("Race","AllScoresFor");
+	public static function AllScoresFor(ch:Creature, metrics:* = null):* {
+		Utils.Begin("Race", "AllScoresFor");
 		if (metrics == null) metrics = MetricsFor(ch);
 		var result:* = {};
 		for each (var race:Race in RegisteredRaces) {
-			result[race.name] = race.scoreFor(ch,metrics);
+			result[race.name] = race.scoreFor(ch, metrics);
 		}
-		Utils.End("Race","AllScoresFor");
+		Utils.End("Race", "AllScoresFor");
 		return result;
 	}
-	
+
 	public static var HUMAN:Race = new Race("human")
 			.simpleScores({
 				'face'       : [Face.HUMAN, +1],
@@ -84,6 +87,19 @@ public class Race {
 				'tail'       : [Tail.NONE, +1],
 				'arms'       : [Arms.HUMAN, +1],
 				'legs'       : [LowerBody.HUMAN, +1]
+			}).complexScore(+1, {
+				'skinPlainOnly': true,
+				'skin.adj'     : {$ne: 'slippery'}
+			}).complexScore(+1, {
+				$or: [{
+					'cocks/human': {$gte: 1}
+				}, {
+					'vagina': true
+				}]
+			}).complexScore(+1, {
+				'breastRows'   : 1,
+				'plainSkinOnly': true,
+				'skin.adj'     : {$ne: 'slippery'}
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.normalCocks() >= 1 || (ch.hasVagina() && ch.vaginaType() == 0))
@@ -133,7 +149,7 @@ public class Race {
 					}
 			);
 	*/
-	
+
 	/**
 	 * object{metricName:object{metricValue:racialBonus}}
 	 */
@@ -142,7 +158,12 @@ public class Race {
 	 * (ch:Creature, metrics:{name:value}, score:int)=>int
 	 */
 	private var finalizerScript:Function = null;
-	
+	/**
+	 * array[pair[score:int, queryObject]]
+	 * @param name
+	 */
+	private var complexScores:/*Array*/Array = [];
+
 	public function Race(name:String) {
 		this.name          = name;
 		this.simpleMetrics = {};
@@ -151,7 +172,7 @@ public class Race {
 		}
 		RegisteredRaces.push(this);
 	}
-	
+
 	/**
 	 * @param metrics object{metricName:array[metricValue,racialBonus,...]]}
 	 * @return this
@@ -162,15 +183,21 @@ public class Race {
 				throw "Not a simple metric name '" + metricName + "' in race " + name;
 			}
 			var src:Array = metrics[metricName];
-			if (src.length%2 != 0) {
-				throw "Odd number of simple metric descriptors in race "+name;
+			if (src.length % 2 != 0) {
+				throw "Odd number of simple metric descriptors in race " + name;
 			}
-			var values:*  = {};
-			for (var i:int=0;i<src.length;i+=2) {
-				values[src[i]] = src[i+1];
+			var values:* = {};
+			for (var i:int = 0; i < src.length; i += 2) {
+				values[src[i]] = src[i + 1];
 			}
 			simpleMetrics[metricName] = values;
 		}
+		return this;
+	}
+	private function complexScore(score:int,query:*):Race {
+		var error:String = MongoQuery.findError(query);
+		if (error) throw "Bad complex score "+error+" in race "+name;
+		complexScores.push([score,query]);
 		return this;
 	}
 	/**
@@ -182,12 +209,12 @@ public class Race {
 		return this;
 	}
 	public function scoreFor(ch:Creature, metrics:*):int {
-		Utils.Begin("Race","scoreFor");
+		Utils.Begin("Race", "scoreFor");
 		var score:int = 0;
 		score += calcSimpleScore(metrics);
 		score += calcComplexScore(ch, metrics);
-		if (finalizerScript) score = finalizerScript(ch, metrics, score);
-		Utils.End("Race","scoreFor");
+		if (finalizerScript != null) score = finalizerScript(ch, metrics, score);
+		Utils.End("Race", "scoreFor");
 		return score;
 	}
 	public function calcSimpleScore(metrics:*):int {
@@ -199,6 +226,9 @@ public class Race {
 		return score;
 	}
 	public function calcComplexScore(ch:Creature, metrics:*):int {
+		for each(var scoreQueryPair:Array in complexScores) {
+			var score:int = scoreQueryPair[0];
+		}
 		return 0;
 	}
 }

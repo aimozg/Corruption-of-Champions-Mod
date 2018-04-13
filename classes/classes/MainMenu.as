@@ -4,8 +4,9 @@ package classes {
 	import classes.Scenes.Achievements;
 	import classes.Scenes.Changelog;
 	import classes.Scenes.SceneLib;
+import classes.internals.MongoQuery;
 
-	import coc.view.BitmapDataSprite;
+import coc.view.BitmapDataSprite;
 
 	import coc.view.Block;
 
@@ -30,6 +31,7 @@ package classes {
 			hideStats();
 			hideMenus();
 			menu();
+			MongoQuery.demo();
 			//Sets game state to 3, used for determining back functionality of save/load menu.
 			CoC.instance.resetGameState();
 			mainView.hideMainText();
