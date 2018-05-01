@@ -1,6 +1,11 @@
 package classes.Stats {
 import classes.internals.EnumValue;
 
+/**
+ * BaseStat is aggregation (sum/min/max) of effects.
+ * Effect is tuple `[value:Number, tag:*, data:*]` where tag is used as a unique key and data can be anything
+ * Total value is maintained as a cache
+ */
 public class BaseStat {
 	private static const AggregateTypes:/*EnumValue*/Array = [];
 	public static const AGGREGATE_SUM:int = EnumValue.add(AggregateTypes, 0, 'AGGREGATE_SUM', {short:'sum'});
@@ -13,7 +18,7 @@ public class BaseStat {
 	private var _min:Number;
 	private var _max:Number;
 	private var _value:Number;
-	private var _effects:/*Array*/Array = []; // Array of pairs [value, tag]
+	private var _effects:/*Array*/Array = []; // Array of tuples [value, tag, data]
 	
 	public function get name():String {
 		return _name;
@@ -90,12 +95,31 @@ public class BaseStat {
 	public function hasEffect(tag:Object):Boolean {
 		return indexOfEffect(tag) != -1;
 	}
-	public function addOrIncreaseEffect(tag:Object, effectValue:Number):void {
+	/**
+	 * @return tuple [value, tag, data] or null
+	 */
+	public function findEffect(tag:Object):Array {
+		var i:int = indexOfEffect(tag);
+		if (i==-1) return null;
+		return _effects[i].slice();
+	}
+	public function valueOfEffect(tag:Object,defaultValue:Number=0.0):Number {
+		var i:int = indexOfEffect(tag);
+		if (i==-1) return defaultValue;
+		return _effects[i][0];
+	}
+	public function dataOfEffect(tag:Object,defaultData:Object=null):Object {
+		var i:int = indexOfEffect(tag);
+		if (i==-1) return defaultData;
+		return _effects[i][2];
+	}
+	public function addOrIncreaseEffect(tag:Object, effectValue:Number, newData:Object=null):void {
 		var i:int = indexOfEffect(tag);
 		if (i == -1) {
-			_effects.push([effectValue,tag]);
+			_effects.push([effectValue,tag,newData]);
 		} else {
 			_effects[i][0] += effectValue;
+			if (newData!==null) _effects[i][2] = newData;
 		}
 		if (_aggregate == AGGREGATE_SUM) {
 			_value += effectValue;
@@ -114,11 +138,6 @@ public class BaseStat {
 			_value = calculate();
 		}
 	}
-	public function valueOfEffect(tag:Object,defaultValue:Number=0.0):Number {
-		var i:int = indexOfEffect(tag);
-		if (i==-1) return defaultValue;
-		return _effects[i][0];
-	}
 	public function listEffects():/*Array*/Array {
 		var result:Array = [];
 		// copy of depth=1
@@ -130,7 +149,8 @@ public class BaseStat {
 		for each(var effect:Array in _effects) {
 			var effectValue:Number = effect[0];
 			value = aggregateStep(value, effectValue);
-			
+			// copy of depth=1
+			_effects.push(effect.slice());
 		}
 		this._value = value;
 	}
