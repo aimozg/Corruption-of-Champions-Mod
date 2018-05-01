@@ -16,5 +16,11 @@ public dynamic class EnumValue {
 		new EnumValue(list,value,id,properties);
 		return value;
 	}
+	public static function findByProperty(list:/*EnumValue*/Array, propertyName:String, propertyValue:*):EnumValue {
+		for each(var p:EnumValue in list) {
+			if (p[propertyName] == propertyValue) return p;
+		}
+		return null;
+	}
 }
 }
