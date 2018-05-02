@@ -24,6 +24,7 @@ import classes.BodyParts.Wings;
 import classes.GlobalFlags.kFLAGS;
 import classes.Items.JewelryLib;
 import classes.Scenes.Places.TelAdre.UmasShop;
+import classes.Stats.BaseStat;
 import classes.StatusEffects.Combat.CombatInteBuff;
 import classes.StatusEffects.Combat.CombatSpeBuff;
 import classes.StatusEffects.Combat.CombatStrBuff;
@@ -161,13 +162,20 @@ public class Creature extends Utils
 		   [   S T A T S   ]
 		
 		 */
+		public var stats:Object = {};// [index:string]:BaseStat
 		
 		//Primary stats
 		public var str:Number = 0;
 		public var tou:Number = 0;
 		public var spe:Number = 0;
 		public var inte:Number = 0;
-		public var wis:Number = 0;
+//		public var wis:Number = 0;
+		public var wisCore:Number = 0;
+		public var wisMult:BaseStat = new BaseStat('wisMult',{base:1.0,min:0.0},stats);
+		public var wisBonus:BaseStat = new BaseStat('wisBonus',{},stats);
+		public function get wis():Number {
+			return wisCore * wisMult.value + wisBonus.value;
+		}
 		public var lib:Number = 0;
 		public var sens:Number = 0;
 		public var cor:Number = 0;

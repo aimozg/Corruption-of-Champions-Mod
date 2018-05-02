@@ -156,7 +156,9 @@
 			player.tou = 15;
 			player.spe = 15;
 			player.inte = 15;
-			player.wis = 15;
+			player.wisCore = 15;
+			player.wisMult.removeAllEffects();
+			player.wisBonus.removeAllEffects();
 			player.sens = 15;
 			player.lib = 15;
 			player.cor = 15;

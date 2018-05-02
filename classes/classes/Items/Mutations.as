@@ -63,16 +63,13 @@ public final class Mutations extends MutationsHelper
 			outputText("You use the incense and sit to meditate as the perfume of flowers and fruits fill the area. You see visions of things you could do and things you could’ve done good and bad, and when you open your eyes you realise you found new insight on your goals.");
 			if (rand(3) == 0) outputText(player.modTone(15, 1));
 			if (player.wis < 50) {
-				player.wis += 1 + rand(4);
-				dynStats();
+				dynStats('wis',1+rand(4));
 			}
 			else if (player.wis < 100) {
-				player.wis += 1 + rand(3);
-				dynStats();
+				dynStats('wis',1+rand(3));
 			}
 			else {
-				player.wis += 1 + rand(2);
-				dynStats();
+				dynStats('wis',1+rand(2));
 			}
 		}
 /*

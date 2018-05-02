@@ -1511,11 +1511,17 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		player.nosePLong = saveFile.data.nosePLong;
 		
 		//MAIN STATS
+		// TODO @aimozg/@Oxdeception properly import stats... Suggestion:
+		// 1) Check saved sum of all stats vs possible sum on current level
+		// 2) If saved < possible, add stat points
+		// 3) If saved
 		player.str = saveFile.data.str;
 		player.tou = saveFile.data.tou;
 		player.spe = saveFile.data.spe;
 		player.inte = saveFile.data.inte;
-		player.wis = saveFile.data.wis;
+		player.wisCore = 15;//saveFile.data.wis;
+		player.wisMult.removeAllEffects();
+		player.wisBonus.removeAllEffects();
 		player.lib = saveFile.data.lib;
 		player.sens = saveFile.data.sens;
 		player.cor = saveFile.data.cor;
@@ -2191,7 +2197,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		//Set soulforce
 		if (saveFile.data.soulforce == undefined) player.soulforce = 25;
 		//Set wisdom
-		if (saveFile.data.wis == undefined) player.wis = 15;
+		if (saveFile.data.wis == undefined) player.wisCore = 15;
 		//Set wrath
 		if (saveFile.data.wrath == undefined) player.wrath = 0;
 		//Set mana

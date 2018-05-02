@@ -1002,7 +1002,7 @@ import flash.utils.getQualifiedClassName;
 
 		protected function initWisLibSensCor(wis:Number, lib:Number, sens:Number, cor:Number):void
 		{
-			this.wis = wis;
+			this.wisCore = wis;
 			this.lib = lib;
 			this.sens = sens;
 			this.cor = cor;
@@ -2019,7 +2019,7 @@ import flash.utils.getQualifiedClassName;
 			var bonusStatsAmp:Number = 0.2;
 			if (hasPerk(PerkLib.JobCourtesan)) lib += (15 * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.JobDefender)) tou += (15 * (1 + newGamePlusMod()));
-			if (hasPerk(PerkLib.JobElementalConjurer)) wis += (5 * (1 + newGamePlusMod()));
+			if (hasPerk(PerkLib.JobElementalConjurer)) wisCore += (5 * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.JobEnchanter)) inte += (15 * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.JobEromancer)) {
 				inte += (5 * (1 + newGamePlusMod()));
@@ -2031,7 +2031,7 @@ import flash.utils.getQualifiedClassName;
 				inte += (5 * (1 + newGamePlusMod()));
 			}
 			if (hasPerk(PerkLib.JobKnight)) tou += (10 * (1 + newGamePlusMod()));
-			if (hasPerk(PerkLib.JobMonk)) wis += (15 * (1 + newGamePlusMod()));
+			if (hasPerk(PerkLib.JobMonk)) wisCore += (15 * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.JobRanger)) spe += (5 * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.JobSeducer)) lib += (5 * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.JobSorcerer)) inte += (5 * (1 + newGamePlusMod()));
@@ -2046,7 +2046,7 @@ import flash.utils.getQualifiedClassName;
 			}
 			if (hasPerk(PerkLib.PrestigeJobKiArtMaster)) {
 				str += (40 * (1 + newGamePlusMod()));
-				wis += (40 * (1 + newGamePlusMod()));
+				wisCore += (40 * (1 + newGamePlusMod()));
 			}
 			if (level > 25) bonusStatsAmp += 0.1*((int)(level-1)/25);
 			bonusAscStr += bonusStatsAmp * str * newGamePlusMod();
@@ -2067,7 +2067,7 @@ import flash.utils.getQualifiedClassName;
 			this.tou += bonusAscTou;
 			this.spe += bonusAscSpe;
 			this.inte += bonusAscInt;
-			this.wis += bonusAscWis;
+			this.wisCore += bonusAscWis;
 			this.lib += bonusAscLib;
 			this.sens += bonusAscSen;
 			bonusAscMaxHP += bonusAscStr + bonusAscTou + bonusAscSpe + bonusAscInt + bonusAscWis + bonusAscLib + bonusAscSen;

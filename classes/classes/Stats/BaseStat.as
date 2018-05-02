@@ -1,5 +1,6 @@
 package classes.Stats {
 import classes.internals.EnumValue;
+import classes.internals.Utils;
 
 /**
  * BaseStat is aggregation (sum/min/max) of effects.
@@ -50,19 +51,26 @@ public class BaseStat {
 	 * @param saveInto If present, saveInto[this.name] = this
 	 */
 	public function BaseStat(name:String,
-							 options:*,
+							 options:*=null,
 							 saveInto:*=null) {
 		this._name = name;
-		var a:* = options['aggregate'];
-		if (typeof a == 'string') a = EnumValue.findByProperty(AggregateTypes,'short',a).value;
-		if (typeof a == 'undefined') a = AGGREGATE_SUM;
-		this._aggregate = a;
+		options = Utils.extend({
+			aggregate:AGGREGATE_SUM,
+			base:0.0,
+			min:-Infinity,
+			max:+Infinity
+		},options);
+		if (options.aggregate is String) {
+			options.aggregate = EnumValue.findByProperty(AggregateTypes,'short',options.aggregate).value;
+		}
+		this._aggregate = options.aggregate;
+		this._base = options['base'];
+		this._min = options['min'];
+		this._max = options['max'];
+		if (saveInto) saveInto[name] = this;
+
 		if (!(this._aggregate in AggregateTypes)) throw new Error("Invalid aggregate type");
 		// TODO validate other arguments
-		this._base = 'base' in options ? options['base'] : 0.0;
-		this._min = 'min' in options ? options['min'] : -Infinity;
-		this._max = 'max' in options ? options['max'] : +Infinity;
-		if (saveInto) saveInto[name] = this;
 	}
 	
 	private function aggregateStep(accumulator:Number,value:Number):Number {
@@ -126,6 +134,16 @@ public class BaseStat {
 		} else {
 			_value = calculate();
 		}
+	}
+	public function addOrReplaceEffect(tag:Object, effectValue:Number, newData:Object=null):void {
+		var i:int = indexOfEffect(tag);
+		if (i == -1) {
+			_effects.push([effectValue,tag,newData]);
+		} else {
+			_effects[i][0] += effectValue;
+			if (newData!==null) _effects[i][2] = newData;
+		}
+		_value = calculate();
 	}
 	public function removeEffect(tag:Object):void {
 		var i:int = indexOfEffect(tag);
