@@ -2710,7 +2710,6 @@ use namespace CoC;
 			var minTou:int = 1;
 			var minSpe:int = 1;
 			var minInt:int = 1;
-			var minWis:int = 1;
 			var minLib:int = 0;
 			var minSen:int = 10;
 			var minCor:int = 0;
@@ -2755,7 +2754,7 @@ use namespace CoC;
 				tou:minTou,
 				spe:minSpe,
 				inte:minInt,
-				wis:minWis,
+				wis:wisStat.min,
 				lib:minLib,
 				sens:minSen,
 				cor:minCor
@@ -2846,7 +2845,6 @@ use namespace CoC;
 			var maxTou:int = 100;
 			var maxSpe:int = 100;
 			var maxInt:int = 100;
-			var maxWis:int = 100;
 			var maxLib:int = 100;
 			var maxSen:int = 100;
 			var maxCor:int = 100;
@@ -2906,7 +2904,6 @@ use namespace CoC;
 			maxTou += racials[Race.BonusName_maxtou] * newGamePlusMod;
 			maxSpe += racials[Race.BonusName_maxspe] * newGamePlusMod;
 			maxInt += racials[Race.BonusName_maxint] * newGamePlusMod;
-			maxWis += racials[Race.BonusName_maxwis] * newGamePlusMod;
 			maxLib += racials[Race.BonusName_maxlib] * newGamePlusMod;
 			maxSen += racials[Race.BonusName_maxsen] * newGamePlusMod;
 
@@ -2937,7 +2934,7 @@ use namespace CoC;
 				maxTou += (5 * internalChimeraScore() * newGamePlusMod);
 				maxSpe += (5 * internalChimeraScore() * newGamePlusMod);
 				maxInt += (5 * internalChimeraScore() * newGamePlusMod);
-				maxWis += (5 * internalChimeraScore() * newGamePlusMod);
+				// TODO @aimozg/stats maxWis += (5 * internalChimeraScore() * newGamePlusMod);
 				maxLib += (5 * internalChimeraScore() * newGamePlusMod);
 				maxSen += (5 * internalChimeraScore() * newGamePlusMod);
 			}
@@ -2945,7 +2942,6 @@ use namespace CoC;
 			if (maxTou < 25) maxTou = 25;
 			if (maxSpe < 25) maxSpe = 25;
 			if (maxInt < 25) maxInt = 25;
-			if (maxWis < 25) maxWis = 25;
 			if (maxLib < 25) maxLib = 25;
 			if (maxSen < 25) maxSen = 25;
 			End("Player","getAllMaxStats.racial");
@@ -2958,7 +2954,7 @@ use namespace CoC;
 				maxStr += (5 * newGamePlusMod);
 				maxSpe += (5 * newGamePlusMod);
 				maxInt += (5 * newGamePlusMod);
-				maxWis += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxWis += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ChimericalBodyAdvancedStage)) {
 				maxStr += (10 * newGamePlusMod);
@@ -2967,7 +2963,7 @@ use namespace CoC;
 			}
 			if (hasPerk(PerkLib.ChimericalBodyPerfectStage)) {
 				maxInt += (10 * newGamePlusMod);
-				maxWis += (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxWis += (10 * newGamePlusMod);
 				maxLib += (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ChimericalBodyUltimateStage)) {
@@ -2975,7 +2971,7 @@ use namespace CoC;
 				maxTou += (10 * newGamePlusMod);
 				maxSpe += (10 * newGamePlusMod);
 				maxInt += (10 * newGamePlusMod);
-				maxWis += (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxWis += (10 * newGamePlusMod);
 				maxLib += (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.SalamanderAdrenalGlands)) {
@@ -3015,25 +3011,25 @@ use namespace CoC;
 			}
 			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved)) {
 				maxSpe += (5 * newGamePlusMod);
-				maxWis += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxWis += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.CatlikeNimblenessEvolved)) {
 				maxSpe += (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.GargoylePure)) {
-				maxWis += (80 * newGamePlusMod);
+				// TODO @aimozg/stats maxWis += (80 * newGamePlusMod);
 				maxLib -= (10 * newGamePlusMod);
 				maxSen -= (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.GargoyleCorrupted)) {
-				maxWis -= (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxWis -= (10 * newGamePlusMod);
 				maxLib += (80 * newGamePlusMod);
 			}
 			//Perks
 			if (hasPerk(PerkLib.JobCourtesan)) maxLib += (15 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobDervish)) maxSpe += (10 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobDefender)) maxTou += (15 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobElementalConjurer)) maxWis += (5 * newGamePlusMod);
+			// TODO @aimozg/stats if (hasPerk(PerkLib.JobElementalConjurer)) maxWis += (5 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobEnchanter)) maxInt += (15 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobEromancer)) {
 				maxInt += (5 * newGamePlusMod);
@@ -3045,7 +3041,7 @@ use namespace CoC;
 				maxInt += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.JobKnight)) maxTou += (10 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobMonk)) maxWis += (15 * newGamePlusMod);
+			// TODO @aimozg/stats if (hasPerk(PerkLib.JobMonk)) maxWis += (15 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobRanger)) maxSpe += (5 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobSeducer)) maxLib += (5 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobSorcerer)) maxInt += (5 * newGamePlusMod);
@@ -3064,7 +3060,7 @@ use namespace CoC;
 			}
 			if (hasPerk(PerkLib.PrestigeJobKiArtMaster)) {
 				maxStr += (40 * newGamePlusMod);
-				maxWis += (40 * newGamePlusMod);
+				// TODO @aimozg/stats maxWis += (40 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.WeaponMastery)) maxStr += (5 * newGamePlusMod);
 			if (hasPerk(PerkLib.ElementalConjurerResolve)) {
@@ -3072,21 +3068,21 @@ use namespace CoC;
 				maxTou -= (15 * newGamePlusMod);
 				maxSpe -= (15 * newGamePlusMod);
 				maxInt += (20 * newGamePlusMod);
-				maxWis += (30 * newGamePlusMod);
+				// TODO @aimozg/stats maxWis += (30 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ElementalConjurerDedication)) {
 				maxStr -= (30 * newGamePlusMod);
 				maxTou -= (30 * newGamePlusMod);
 				maxSpe -= (30 * newGamePlusMod);
 				maxInt += (40 * newGamePlusMod);
-				maxWis += (60 * newGamePlusMod);
+				// TODO @aimozg/stats maxWis += (60 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ElementalConjurerSacrifice)) {
 				maxStr -= (45 * newGamePlusMod);
 				maxTou -= (45 * newGamePlusMod);
 				maxSpe -= (45 * newGamePlusMod);
 				maxInt += (60 * newGamePlusMod);
-				maxWis += (90 * newGamePlusMod);
+				// TODO @aimozg/stats maxWis += (90 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.Lycanthropy)) {
 				if (flags[kFLAGS.LUNA_MOON_CYCLE] == 3 || flags[kFLAGS.LUNA_MOON_CYCLE] == 5) {
@@ -3117,7 +3113,7 @@ use namespace CoC;
 			maxTou += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			maxSpe += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			maxInt += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			maxWis += 5 * perkv1(PerkLib.AscensionTranshumanism);
+			// TODO @aimozg/stats maxWis += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			maxLib += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			maxSen += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			//Might
@@ -3189,7 +3185,7 @@ use namespace CoC;
 			maxTou = Math.max(maxTou,1);
 			maxSpe = Math.max(maxSpe,1);
 			maxInt = Math.max(maxInt,1);
-			maxWis = Math.max(maxWis,1);
+			// TODO @aimozg/stats maxWis = Math.max(maxWis,1);
 			maxLib = Math.max(maxLib,1);
 			maxSen = Math.max(maxSen,1);
 			maxCor = Math.max(maxCor,1);
@@ -3198,7 +3194,7 @@ use namespace CoC;
 				tou:maxTou,
 				spe:maxSpe,
 				inte:maxInt,
-				wis:maxWis,
+				wis:wisStat.max,
 				lib:maxLib,
 				sens:maxSen,
 				cor:maxCor
@@ -3881,6 +3877,8 @@ use namespace CoC;
 				game.oldStats.oldSoulforce = soulforce;
 				game.oldStats.oldHunger = hunger;
 			}
+			var racials:* = racialBonuses();
+			wisStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_maxwis]/100);
 			if (scale) {
 				//MOD CHANGES FOR PERKS
 				//Bimbos learn slower

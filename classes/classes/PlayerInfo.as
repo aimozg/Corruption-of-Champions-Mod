@@ -900,7 +900,7 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 		player.tou += player.tempTou;
 		player.spe += player.tempSpe;
 		player.inte += player.tempInt;
-		player.wisCore += player.tempWis;
+		player.wisStat.core.value += player.tempWis;
 		player.lib += player.tempLib;
 		player.tempStr = 0;
 		player.tempTou = 0;

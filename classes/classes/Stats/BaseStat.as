@@ -6,8 +6,9 @@ import classes.internals.Utils;
  * BaseStat is aggregation (sum/min/max) of effects.
  * Effect is tuple `[value:Number, tag:*, data:*]` where tag is used as a unique key and data can be anything
  * Total value is maintained as a cache
+ * TODO @aimozg/stats with introductioon of IStat, consider renaming (BuffableStat?)
  */
-public class BaseStat {
+public class BaseStat implements IStat {
 	private static const AggregateTypes:/*EnumValue*/Array = [];
 	public static const AGGREGATE_SUM:int = EnumValue.add(AggregateTypes, 0, 'AGGREGATE_SUM', {short:'sum'});
 	public static const AGGREGATE_MAX:int = EnumValue.add(AggregateTypes, 1, 'AGGREGATE_MAX', {short:'max'});
@@ -43,11 +44,12 @@ public class BaseStat {
 	}
 	
 	/**
-	 * @param options Options object:
-	 * <b>aggregate</b>: how to aggregate multiple effects, AGGREGATE_constant or 'sum'/'min'/'max';
-	 * <b>base</b>: default 0;
-	 * min: default -Infinity
-	 * max: default +Infinity
+	 * @param options Options object: {
+	 *     aggregate: how to aggregate multiple effects, AGGREGATE_constant or 'sum'/'min'/'max';
+	 *     base: default 0;
+	 *     min: default -Infinity;
+	 *     max: default +Infinity;
+	 * }
 	 * @param saveInto If present, saveInto[this.name] = this
 	 */
 	public function BaseStat(name:String,
@@ -85,6 +87,7 @@ public class BaseStat {
 				accumulator = (accumulator < value) ? accumulator : value;
 				break;
 		}
+		return accumulator;
 	}
 	private function calculate():Number {
 		var value:Number = _base;
@@ -105,6 +108,7 @@ public class BaseStat {
 	}
 	/**
 	 * @return tuple [value, tag, data] or null
+	 * This array is a copy; changing the value won't affect the stat
 	 */
 	public function findEffect(tag:Object):Array {
 		var i:int = indexOfEffect(tag);
@@ -140,7 +144,7 @@ public class BaseStat {
 		if (i == -1) {
 			_effects.push([effectValue,tag,newData]);
 		} else {
-			_effects[i][0] += effectValue;
+			_effects[i][0] = effectValue;
 			if (newData!==null) _effects[i][2] = newData;
 		}
 		_value = calculate();
@@ -156,6 +160,10 @@ public class BaseStat {
 			_value = calculate();
 		}
 	}
+	/**
+	 * @return array of tuples [value, tag, data] or null
+	 * This array is a copy; changing it won't affect the stat
+	 */
 	public function listEffects():/*Array*/Array {
 		var result:Array = [];
 		// copy of depth=1

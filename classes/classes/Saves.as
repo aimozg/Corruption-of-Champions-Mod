@@ -1519,9 +1519,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		player.tou = saveFile.data.tou;
 		player.spe = saveFile.data.spe;
 		player.inte = saveFile.data.inte;
-		player.wisCore = 15;//saveFile.data.wis;
-		player.wisMult.removeAllEffects();
-		player.wisBonus.removeAllEffects();
+		player.wisStat.reset(15);
 		player.lib = saveFile.data.lib;
 		player.sens = saveFile.data.sens;
 		player.cor = saveFile.data.cor;
@@ -2197,7 +2195,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		//Set soulforce
 		if (saveFile.data.soulforce == undefined) player.soulforce = 25;
 		//Set wisdom
-		if (saveFile.data.wis == undefined) player.wisCore = 15;
+		if (saveFile.data.wis == undefined) player.wisStat.reset(15);
 		//Set wrath
 		if (saveFile.data.wrath == undefined) player.wrath = 0;
 		//Set mana
@@ -2346,6 +2344,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 			}
 		}
 		
+		player.dynStats();
 		doNext(playerMenu);
 	}
 }

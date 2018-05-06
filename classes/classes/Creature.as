@@ -25,6 +25,7 @@ import classes.GlobalFlags.kFLAGS;
 import classes.Items.JewelryLib;
 import classes.Scenes.Places.TelAdre.UmasShop;
 import classes.Stats.BaseStat;
+import classes.Stats.PrimaryStat;
 import classes.StatusEffects.Combat.CombatInteBuff;
 import classes.StatusEffects.Combat.CombatSpeBuff;
 import classes.StatusEffects.Combat.CombatStrBuff;
@@ -169,12 +170,9 @@ public class Creature extends Utils
 		public var tou:Number = 0;
 		public var spe:Number = 0;
 		public var inte:Number = 0;
-//		public var wis:Number = 0;
-		public var wisCore:Number = 0;
-		public var wisMult:BaseStat = new BaseStat('wisMult',{base:1.0,min:0.0},stats);
-		public var wisBonus:BaseStat = new BaseStat('wisBonus',{},stats);
+		public var wisStat:PrimaryStat = new PrimaryStat("wis",stats);
 		public function get wis():Number {
-			return wisCore * wisMult.value + wisBonus.value;
+			return wisStat.value;
 		}
 		public var lib:Number = 0;
 		public var sens:Number = 0;
@@ -331,7 +329,7 @@ public class Creature extends Utils
 				tou:100,
 				spe:100,
 				inte:100,
-				wis:100,
+				wis:wisStat.max,
 				lib:100,
 				sens:100,
 				cor:100
@@ -343,7 +341,7 @@ public class Creature extends Utils
 				tou:1,
 				spe:1,
 				inte:1,
-				wis:1,
+				wis:wisStat.min,
 				lib:10,
 				sens:10,
 				cor:0
@@ -387,6 +385,13 @@ public class Creature extends Utils
 				cor:cor-prevCor
 			};
 		}
+		public function drainStat(statname:String, damage:Number):Number {
+			var stat:BaseStat = stats[statname+'Bonus'];
+			var current:Number = -stat.valueOfEffect('drain');
+			damage = Math.max(-current, current+damage);
+			stat.addOrIncreaseEffect('drain', -damage);
+			return damage;
+		}
 		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean, max:Boolean):void {
 			var maxes:Object;
 			if (max) {
@@ -412,7 +417,7 @@ public class Creature extends Utils
 			tou  = Utils.boundFloat(mins.tou, tou + dtou, maxes.tou);
 			spe  = Utils.boundFloat(mins.spe, spe + dspe, maxes.spe);
 			inte = Utils.boundFloat(mins.inte, inte + dinte, maxes.inte);
-			wis  = Utils.boundFloat(mins.wis, wis + dwis, maxes.wis);
+			drainStat('wis', dwis);
 			lib  = Utils.boundFloat(mins.lib, lib + dlib, maxes.lib);
 			sens = Utils.boundFloat(mins.sens, sens + dsens, maxes.sens);
 			lust = Utils.boundFloat(mins.lust, lust + dlust, maxes.lust);

@@ -206,23 +206,41 @@ public class Race {
 		Utils.End("Race", "AllScoresFor");
 		return result;
 	}
+	/**
+	 * @param scores AllScoresFor(ch)
+	 * @return object { key=(bonus name), value=(total bonus) }
+	 */
 	public static function AllBonusesFor(ch:Creature, scores:* = null):* {
+		return AllBonusesDetailedFor(ch,scores)[0];
+	}
+	/**
+	 * @param scores AllScoresFor(ch)
+	 * @return pair
+	 * [
+	 *     object { key=(bonus name), value=(total bonus) },
+	 *     object { key=(bonus name), value=object { key=(race name), value=(bonus value) } }
+	 * ]
+	 */
+	public static function AllBonusesDetailedFor(ch:Creature, scores:* = null):Array {
 		Utils.Begin("Race", "AllBonusesFor");
 		if (scores == null) scores = ch.racialScores();
-		var result:* = {};
+		var totals:* = {};
+		var racials:* = {};
 		for each (var bonus:String in BonusNames) {
-			result[bonus] = 0;
+			totals[bonus] = 0;
+			racials[bonus] = {};
 		}
 		for each(var race:Race in RegisteredRaces) {
 			var bonuses:* = race.bonusesForScore(scores[race.name]);
 			for (bonus in bonuses) {
-				var value:int = result[bonus];
+				var value:int = totals[bonus];
 				value += bonuses[bonus];
-				result[bonus] = value;
+				totals[bonus] = value;
+				racials[bonus][race.name] = value;
 			}
 		}
 		Utils.End("Race", "AllBonusesFor");
-		return result;
+		return [totals, racials];
 	}
 	/**
 	 * Returns list of perks that not present but should be added because enouch score,

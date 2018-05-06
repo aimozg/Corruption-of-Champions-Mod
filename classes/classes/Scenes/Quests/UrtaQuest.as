@@ -255,7 +255,7 @@ public function startUrtaQuest():void {
 	player.tou = 110;
 	player.spe = 120;
 	player.inte = 60;
-	player.wis = 50;
+	player.wisStat.reset(50);
 	player.lib = 90;
 	player.sens = 50;
 	player.cor = 30;
@@ -270,7 +270,6 @@ public function startUrtaQuest():void {
 	player.tou += (player.newGamePlusMod() * 33);
 	player.spe += (player.newGamePlusMod() * 36);
 	player.inte += (player.newGamePlusMod() * 18);
-	player.wis += (player.newGamePlusMod() * 15);
 	player.lib += (player.newGamePlusMod() * 27);
 
 	//PERKS
