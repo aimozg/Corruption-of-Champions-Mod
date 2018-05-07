@@ -332,7 +332,7 @@ public class Creature extends Utils
 		public function getAllMaxStats():Object {
 			return {
 				str:strStat.max,
-				tou:100,
+				tou:touStat.max,
 				spe:100,
 				inte:100,
 				wis:wisStat.max,
@@ -344,7 +344,7 @@ public class Creature extends Utils
 		public function getAllMinStats():Object {
 			return {
 				str:strStat.min,
-				tou:1,
+				tou:touStat.min,
 				spe:1,
 				inte:1,
 				wis:wisStat.min,

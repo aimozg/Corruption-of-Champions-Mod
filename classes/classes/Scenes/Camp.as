@@ -2984,7 +2984,11 @@ public function setLevelButton(allowAutoLevelTransition:Boolean):Boolean {
 		mainView.showMenuButton( MainView.MENU_LEVEL );
 		mainView.statsView.showLevelUp();
 		if (player.strStat.core.value >= player.strStat.core.max &&
-			player.tou >= player.getMaxStats("tou") && player.inte >= player.getMaxStats("int") && player.spe >= player.getMaxStats("spe") && (player.perkPoints <= 0 || PerkTree.availablePerks(CoC.instance.player).length <= 0) && (player.XP < player.requiredXP() || player.level >= CoC.instance.levelCap)) {
+			player.touStat.core.value >= player.touStat.core.max &&
+			player.inte >= player.getMaxStats("int") &&
+			player.spe >= player.getMaxStats("spe") &&
+			player.wisStat.core.value >= player.wisStat.core.max &&
+			(player.perkPoints <= 0 || PerkTree.availablePerks(CoC.instance.player).length <= 0) && (player.XP < player.requiredXP() || player.level >= CoC.instance.levelCap)) {
 			mainView.statsView.hideLevelUp();
 		}
 	}
