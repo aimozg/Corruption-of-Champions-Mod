@@ -3217,7 +3217,7 @@ use namespace CoC;
 		{
 			if(CoC.instance.monster.hasStatusEffect(StatusEffects.Sandstorm)) CoC.instance.monster.removeStatusEffect(StatusEffects.Sandstorm);
 			if(hasStatusEffect(StatusEffects.DwarfRage)) {
-				dynStats("tou", -statusEffectv2(StatusEffects.DwarfRage),"spe", -statusEffectv2(StatusEffects.DwarfRage), "scale", false);
+				dynStats("spe", -statusEffectv2(StatusEffects.DwarfRage), "scale", false);
 				removeStatusEffect(StatusEffects.DwarfRage);
 			}
 			if(hasStatusEffect(StatusEffects.Berzerking)) {
@@ -3243,10 +3243,8 @@ use namespace CoC;
 				removeStatusEffect(StatusEffects.NagaVenom);
 			}
 			if(hasStatusEffect(StatusEffects.MedusaVenom)) {
-				tou += statusEffectv2(StatusEffects.MedusaVenom);
 				spe += statusEffectv3(StatusEffects.MedusaVenom);
 				inte += statusEffectv4(StatusEffects.MedusaVenom);
-				CoC.instance.mainView.statsView.showStatUp( 'tou' );
 				CoC.instance.mainView.statsView.showStatUp( 'spe' );
 				CoC.instance.mainView.statsView.showStatUp( 'inte' );
 				removeStatusEffect(StatusEffects.MedusaVenom);
@@ -3260,7 +3258,6 @@ use namespace CoC;
 			}
 			if(hasStatusEffect(StatusEffects.Might)) {
 				if (hasStatusEffect(StatusEffects.FortressOfIntellect)) dynStats("int", -statusEffectv1(StatusEffects.Might), "scale", false);
-				dynStats("tou", -statusEffectv2(StatusEffects.Might), "scale", false);
 				removeStatusEffect(StatusEffects.Might);
 			}
 			if(hasStatusEffect(StatusEffects.Blink)) {
@@ -3271,12 +3268,7 @@ use namespace CoC;
 				dynStats("spe", -statusEffectv2(StatusEffects.UnderwaterCombatBoost), "scale", false);
 				removeStatusEffect(StatusEffects.UnderwaterCombatBoost);
 			}
-			if(hasStatusEffect(StatusEffects.TranceTransformation)) {
-				dynStats("tou", -statusEffectv1(StatusEffects.TranceTransformation), "scale", false);
-				removeStatusEffect(StatusEffects.TranceTransformation);
-			}
 			if(hasStatusEffect(StatusEffects.CrinosShape)) {
-				dynStats("tou", -statusEffectv2(StatusEffects.CrinosShape), "scale", false);
 				dynStats("spe", -statusEffectv3(StatusEffects.CrinosShape), "scale", false);
 				removeStatusEffect(StatusEffects.CrinosShape);
 			}

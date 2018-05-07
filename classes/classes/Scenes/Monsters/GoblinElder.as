@@ -103,7 +103,7 @@ public class GoblinElder extends Goblin
 				var mightPower:Number = 15 * spellMultiplier();
 				var sec:StatusEffectClass = createStatusEffect(StatusEffects.Might, mightPower, mightPower, 0, 0);
 				sec.buffHost('str',mightPower);
-				tou += mightPower;
+				sec.buffHost('tou',mightPower);
 				fatigue += spellCostMight;
 			}
 		}

@@ -19,7 +19,8 @@ public class VampireThirstEffect extends StatusEffectClass {
         value1 = boundFloat(-10, value1 + delta, 30);
         var change:Number = currentBoost - oldBoost;
         
-        host.dynStats("str", change,
+        buffHost('str',change);
+        host.dynStats(
                 "spe", change,
                 "int", change,
                 "lib", change,
@@ -36,7 +37,7 @@ public class VampireThirstEffect extends StatusEffectClass {
     }
     
     override public function onRemove():void {
-        host.dynStats("str", -currentBoost,
+        host.dynStats(
                 "spe", -currentBoost,
                 "int", -currentBoost,
                 "lib", -currentBoost,

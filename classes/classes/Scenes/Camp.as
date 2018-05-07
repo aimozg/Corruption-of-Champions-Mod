@@ -154,7 +154,6 @@ CoC.instance.saves.saveGame(player.slotName);
 	fixFlags();
 	if(player.hasStatusEffect(StatusEffects.Might)) {
 		if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) player.dynStats("int", -player.statusEffectv1(StatusEffects.Might));
-		player.dynStats("tou", -player.statusEffectv2(StatusEffects.Might));
 		player.removeStatusEffect(StatusEffects.Might);
 	}
 	if(player.hasStatusEffect(StatusEffects.Blink)) {

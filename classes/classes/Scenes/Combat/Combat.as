@@ -1594,13 +1594,9 @@ public function multiArrowsStrike():void {
 				else damage += 80;
 				lustdamage *= 0.14;
 				monster.teased(monster.lustVuln * lustdamage);
-				monster.tou -= 2;
-				if (monster.tou < 1) monster.tou = 1;
-				if (monster.hasStatusEffect(StatusEffects.NagaVenom))
-				{
-					monster.addStatusValue(StatusEffects.NagaVenom,3,1);
-				}
-				else monster.createStatusEffect(StatusEffects.NagaVenom, 0, 0, 1, 0);
+				var sec:StatusEffectClass = monster.createOrFindStatusEffect(StatusEffects.NagaVenom);
+				sec.buffHost('tou',-2);
+				sec.value3 += 1;
 				player.tailVenom -= 5;
 			}
 			if (player.faceType == Face.SNAKE_FANGS) {
@@ -3564,24 +3560,14 @@ private function combatStatusesUpdate():void {
 		outputText("You wince in pain and try to collect yourself, [monster a] [monster name]'s venom still plaguing you.\n\n");
 		player.takePhysDamage(2);
 	}
-	if(player.hasStatusEffect(StatusEffects.MedusaVenom)) {
+	var medusaVenom:StatusEffectClass = player.statusEffectByType(StatusEffects.MedusaVenom);
+	if(medusaVenom) {
 		if (player.str <= 5 && player.tou <= 5 && player.spe <= 5 && player.inte <= 5) player.takePhysDamage(5);
 		else {
-			if(player.str > 5) {
-			player.statusEffectByType(StatusEffects.MedusaVenom).buffHost('str',-1);
-			}
-			if(player.tou > 5) {
-			player.addStatusValue(StatusEffects.MedusaVenom,2,1);
-			player.tou -= 1;
-			}
-			if(player.spe > 5) {
-			player.addStatusValue(StatusEffects.MedusaVenom,3,1);
-			player.spe -= 1;
-			}
-			if(player.inte > 5) {
-			player.addStatusValue(StatusEffects.MedusaVenom,4,1);
-			player.inte -= 1;
-			}
+			medusaVenom.buffHost('str',-1);
+			medusaVenom.buffHost('tou',-1);
+			medusaVenom.buffHost('spe',-1);
+			medusaVenom.buffHost('inte',-1);
 		}
 		outputText("You wince in pain and try to collect yourself, [monster a] [monster name]'s venom still plaguing you.\n\n");
 		player.takePhysDamage(2);
@@ -3660,7 +3646,7 @@ private function combatStatusesUpdate():void {
 	}
 	if (player.hasStatusEffect(StatusEffects.DwarfRage)) {
 		if (player.statusEffectv3(StatusEffects.DwarfRage) <= 0) {
-			player.dynStats("tou", -player.statusEffectv2(StatusEffects.DwarfRage),"spe", -player.statusEffectv2(StatusEffects.DwarfRage), "scale", false);
+			player.dynStats("spe", -player.statusEffectv2(StatusEffects.DwarfRage), "scale", false);
 			player.removeStatusEffect(StatusEffects.DwarfRage);
 			outputText("<b>Dwarf Rage effect wore off!</b>\n\n");
 		}
@@ -3698,8 +3684,6 @@ private function combatStatusesUpdate():void {
 	if (player.hasStatusEffect(StatusEffects.Might)) {
 		if (player.statusEffectv3(StatusEffects.Might) <= 0) {
 			if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) player.dynStats("int", -player.statusEffectv1(StatusEffects.Might), "scale", false);
-			else player.dynStats("str", -player.statusEffectv1(StatusEffects.Might), "scale", false);
-			player.dynStats("tou", -player.statusEffectv2(StatusEffects.Might), "scale", false);
 			player.removeStatusEffect(StatusEffects.Might);
 		//	statScreenRefresh();
 			outputText("<b>Might effect wore off!</b>\n\n");
@@ -3764,7 +3748,6 @@ private function combatStatusesUpdate():void {
 	//Trance Transformation
 	if (player.hasStatusEffect(StatusEffects.TranceTransformation)) {
 		if (player.soulforce < 50) {
-			player.dynStats("tou", -player.statusEffectv1(StatusEffects.TranceTransformation));
 			player.removeStatusEffect(StatusEffects.TranceTransformation);
 			outputText("<b>The flow of power through you suddenly stops, as you no longer have the soul energy to sustain it.  You drop roughly to the floor, the crystal coating your [skin] cracking and fading to nothing.</b>\n\n");
 		}
@@ -3775,7 +3758,6 @@ private function combatStatusesUpdate():void {
 	//Crinos Shape
 	if (player.hasStatusEffect(StatusEffects.CrinosShape)) {
 		if (player.wrath < mspecials.crinosshapeCost()) {
-			player.dynStats("tou", -player.statusEffectv2(StatusEffects.CrinosShape));
 			player.dynStats("spe", -player.statusEffectv3(StatusEffects.CrinosShape));
 			player.removeStatusEffect(StatusEffects.CrinosShape);
 			outputText("<b>The flow of power through you suddenly stops, as you no longer have the wrath to sustain it.  You drop roughly to the floor, the bestial chanches slowly fading away leaving you in your normal form.</b>\n\n");

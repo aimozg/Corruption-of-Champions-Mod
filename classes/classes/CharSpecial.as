@@ -226,7 +226,7 @@ import classes.Items.*;
 			player.createStatusEffect(StatusEffects.KnowsWhitefire,0,0,0,0);
 			//magic, 50 Int, 50 tough, Speed 15, Str 10, 30 corruption, 30 libido, 10 sensitivity.
 			player.inte = 50;
-			player.tou = 50;
+			player.touStat.core.value = 50;
 			player.spe = 15;
 			player.strStat.core.value = 10;
 			player.cor = 30;
@@ -283,7 +283,7 @@ import classes.Items.*;
 		
 		private function customCharlie():void {
 			outputText("You're strong, smart, fast, and tough.  It also helps that you've got four dongs well beyond what others have lurking in their trousers.  With your wings, bow, weapon, and tough armor, you're a natural for protecting the town.");
-			player.tou +=2;
+			player.touStat.core.value +=2;
 			player.strStat.core.value += 3;
 			player.fertility = 5;
 			player.hairLength= 26;
@@ -323,7 +323,7 @@ import classes.Items.*;
 			player.inte = 50;
 			//Str/Tou/Spd 25 (if possible)
 			player.strStat.core.value = 25;
-			player.tou = 25;
+			player.touStat.core.value = 25;
 			player.spe = 25;
 			//Bow
 			//player.createKeyItem("Bow",0,0,0,0);
@@ -539,7 +539,7 @@ import classes.Items.*;
 			player.hips.type = 8;
 			player.butt.type = 8;
 			player.strStat.core.value = 15;
-			player.tou = 15;
+			player.touStat.core.value = 15;
 			player.spe = 18;
 			player.inte = 17;
 			player.sens = 15;
@@ -619,7 +619,7 @@ import classes.Items.*;
 			player.cumMultiplier = 4;
 			player.ballSize = 2;
 			player.strStat.core.value = 18;
-			player.tou = 17;
+			player.touStat.core.value = 17;
 			player.spe = 15;
 			player.inte = 15;
 			player.sens = 15;
@@ -699,7 +699,7 @@ import classes.Items.*;
 			outputText("The portal is not something you fear, not with your imposing armor and inscribed spellblade.  You're much faster and stronger than every champion that came before you, but will it be enough?");
 			//Core Stats:
 			player.strStat.core.value = 40;
-			player.tou = 20;
+			player.touStat.core.value = 20;
 			player.spe = 100;
 			player.inte = 80;
 			player.lib = 25;
@@ -864,7 +864,7 @@ import classes.Items.*;
 			player.inte = 40;
 			player.strStat.core.value = 20;
 			player.spe = 25;
-			player.tou = 15;
+			player.touStat.core.value = 15;
 			
 			clearOutput();
 			outputText("Your exotic appearance caused you some trouble growing up, but you buried your nose in books until it came time to go through the portal.");
@@ -1002,7 +1002,7 @@ import classes.Items.*;
 			player.hips.type = 6;
 			player.butt.type = 6;
 			player.strStat.core.value = 15;
-			player.tou = 15;
+			player.touStat.core.value = 15;
 			player.spe = 18;
 			player.inte = 17;
 			player.sens = 15;
@@ -1115,7 +1115,7 @@ import classes.Items.*;
 		
 		private function customSera():void {
 			outputText("You're something of a shemale - three rows of C-cup breasts matched with three, plump, juicy cocks.  Some decent sized balls, bat wings, and cat-like ears round out the package.");
-			player.tou +=2;
+			player.touStat.core.value +=2;
 			player.strStat.core.value += 3;
 			player.fertility = 5;
 			player.hairLength= 26;
@@ -1204,7 +1204,7 @@ import classes.Items.*;
 			//no tail, fur, or scales"
 			flags[kFLAGS.HISTORY_PERK_SELECTED] = 0;
 			player.strStat.core.value = 25;
-			player.tou = 25;
+			player.touStat.core.value = 25;
 			player.inte = 25;
 			player.spe = 25;
 			outputText("You are a literal angel from beyond, and you take the place of a vilage's champion for your own reasons...");
@@ -1236,7 +1236,7 @@ import classes.Items.*;
 			player.hips.type = 6;
 			player.butt.type = 6;
 			player.strStat.core.value = 100;
-			player.tou = 100;
+			player.touStat.core.value = 100;
 			player.spe = 100;
 			player.inte = 100;
 			player.sens = 100;
@@ -1444,7 +1444,7 @@ import classes.Items.*;
 			player.hips.type = 6;
 			player.butt.type = 6;
 			player.strStat.core.value = 15;
-			player.tou = 15;
+			player.touStat.core.value = 15;
 			player.spe = 18;
 			player.inte = 17;
 			player.sens = 15;
@@ -1538,7 +1538,7 @@ import classes.Items.*;
 			player.itemSlot5.unlocked = true;
 			player.createPerk(PerkLib.HistorySlacker,0,0,0,0);
 			player.strStat.core.value += 4;
-			player.tou += 4;
+			player.touStat.core.value += 4;
 			player.inte += 2;
 			player.spe += 2;
 			player.gems += 300;
@@ -1581,7 +1581,7 @@ import classes.Items.*;
 			player.createStatusEffect(StatusEffects.KnowsBlind,0,0,0,0);
 			player.createStatusEffect(StatusEffects.KnowsWhitefire,0,0,0,0);
 			player.inte = 40;
-			player.tou = 25;
+			player.touStat.core.value = 25;
 			player.spe = 20;
 			player.strStat.core.value = 15;
 			player.cor = 30;
@@ -1653,7 +1653,7 @@ import classes.Items.*;
 			player.wings.desc = "large, draconic";
 			
 			player.strStat.core.value += -10; // strength? not a kitsune way, besides, you are small and really neglected physical training
-			player.tou += 0; // still, your dragon blood makes you surprisingly tough for your size and condition
+			player.touStat.core.value += 0; // still, your dragon blood makes you surprisingly tough for your size and condition
 			player.spe += 5; // can take some advantage from small frame
 			player.inte += 55; // your mind is your power!
 			player.lib += 85; // yes, you have problems
@@ -1832,7 +1832,7 @@ import classes.Items.*;
 			
 			// wrecked body and obsessed mind...
 			player.strStat.core.value -= 15;
-			player.tou -= 15;
+			player.touStat.core.value -= 15;
 			player.spe -= 15;
 			player.inte += 60;
 			//player.sens = 15;

@@ -666,7 +666,7 @@ public class CombatSoulskills extends BaseCombatContent {
 			TranceBoost = Math.round(TranceBoost);
 			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.TranceTransformation, TranceBoost, 0, 0, 0);
 			sec.buffHost('str',TranceBoost);
-			player.tou += player.statusEffectv1(StatusEffects.TranceTransformation);
+			sec.buffHost('tou',TranceBoost);
 			statScreenRefresh();
 		};
 		outputText("You focus the power of your mind and soul, letting the mystic energy fill you. Your [skin] begins to crystalize as the power within you takes form. The power whirls within you like a hurricane, the force of it lifting you off your feet. This power...  You will use it to reach victory!\n");
@@ -676,7 +676,6 @@ public class CombatSoulskills extends BaseCombatContent {
 	public function DeactivateTranceTransformation():void {
 		clearOutput();
 		outputText("You disrupt the flow of power within you, softly falling to the ground as the crystal sheathing your [skin] dissipates into nothingness.");
-		player.dynStats("tou", -player.statusEffectv1(StatusEffects.TranceTransformation));
 		player.removeStatusEffect(StatusEffects.TranceTransformation);
 		enemyAI();
 	}

@@ -871,7 +871,7 @@ public class CombatMagic extends BaseCombatContent {
 				sec.buffHost('str',tempStr);
 			}
 			sec.value2 = tempTou;
-			player.tou += tempTou;
+			sec.buffHost('tou',tempTou);
 			player.HP = oldHPratio*player.maxHP();
 			statScreenRefresh();
 		};

@@ -153,7 +153,7 @@
 
 			model.player = player;
 			player.strStat.reset(15);
-			player.tou = 15;
+			player.touStat.reset(15);
 			player.spe = 15;
 			player.inte = 15;
 			player.wisStat.reset(15);
@@ -509,7 +509,7 @@
 			//Attributes
 			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) {
 				player.strStat.core.value += 3;
-				player.tou += 2;
+				player.touStat.core.value += 2;
 			}
 			//Body attributes
 			player.fertility = 5;
@@ -567,7 +567,7 @@
 			//Attributes
 			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) {
 				player.strStat.core.value+=1;
-				player.tou+=1;
+				player.touStat.core.value +=1;
 				player.spe+=1;
 				player.inte+= 1;
 			}
@@ -654,7 +654,7 @@
 		private function buildThickMale():void {
 			player.spe -= 4;
 			player.strStat.core.value += 2;
-			player.tou += 2;
+			player.touStat.core.value += 2;
 			
 			player.femininity = 29;
 			player.thickness = 70;
@@ -669,7 +669,7 @@
 		private function buildCurvyFemale():void {
 			player.spe -= 2;
 			player.strStat.core.value += 1;
-			player.tou += 1;
+			player.touStat.core.value += 1;
 			
 			player.femininity = 71;
 			player.thickness = 70;
@@ -1181,7 +1181,7 @@
 		}
 		
 		private function setEndowmentToughness():void {
-			player.tou += 5;
+			player.touStat.core.value += 5;
 			player.tone += 5;
 			player.thickness += 5;
 			if (!player.hasPerk(PerkLib.Tough)) player.createPerk(PerkLib.Tough, 0.25, 0, 0, 0);

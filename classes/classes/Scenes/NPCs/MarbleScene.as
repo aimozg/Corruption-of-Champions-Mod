@@ -125,7 +125,6 @@ Special abilities: A lightly corrupted creature with most of the corruption cent
 				//Remove the status and stat boosts when time runs out on the milk
 				if (player.statusEffectv1(StatusEffects.MarblesMilk) <= 0) {
 					needNext = true;
-					dynStats("tou", (-1 * player.statusEffectv3(StatusEffects.MarblesMilk)));
 					player.removeStatusEffect(StatusEffects.MarblesMilk);
 					//Text for when Marble's Milk effect wears off:
 					//[addiction is 10 or less] 
@@ -1940,11 +1939,7 @@ private function applyMarblesMilk():void {
 	if(!sec) {
 		sec = player.createStatusEffect(StatusEffects.MarblesMilk,12,0,0,0);
 		sec.buffHost('str',5);
-		if(player.tou + 10 > 100) {
-			tou = 100 - player.tou;
-			if(tou < 0) tou = 0;
-		}
-		dynStats("tou", tou);
+		sec.buffHost('tou',10);
 		player.changeStatusValue(StatusEffects.MarblesMilk,3,tou);
 	}
 	else {

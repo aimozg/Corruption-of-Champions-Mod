@@ -167,7 +167,7 @@ public class Creature extends Utils
 		
 		//Primary stats
 		public var strStat:PrimaryStat = new PrimaryStat("str",stats);
-		public var tou:Number = 0;
+		public var touStat:PrimaryStat = new PrimaryStat("tou",stats);
 		public var spe:Number = 0;
 		public var inte:Number = 0;
 		public var wisStat:PrimaryStat = new PrimaryStat("wis",stats);
@@ -176,6 +176,9 @@ public class Creature extends Utils
 		}
 		public function get wis():Number {
 			return wisStat.value;
+		}
+		public function get tou():Number {
+			return touStat.value;
 		}
 		public var lib:Number = 0;
 		public var sens:Number = 0;
@@ -428,7 +431,7 @@ public class Creature extends Utils
 			mins.lust = minLust();
 			var oldHPratio:Number = hp100/100;
 			drainStat('str', -dstr);
-			tou  = Utils.boundFloat(mins.tou, tou + dtou, maxes.tou);
+			drainStat('tou', -dtou);
 			spe  = Utils.boundFloat(mins.spe, spe + dspe, maxes.spe);
 			inte = Utils.boundFloat(mins.inte, inte + dinte, maxes.inte);
 			drainStat('wis', -dwis);
@@ -888,6 +891,10 @@ public class Creature extends Utils
 					return counter;
 			}
 			return -1;
+		}
+		public function perkByType(ptype:PerkType):PerkClass {
+			var i:int = findPerk(ptype);
+			return (i >= 0) ? perk(i) : null;
 		}
 		public function hasPerk(ptype:PerkType):Boolean {
 			return findPerk(ptype) >= 0;

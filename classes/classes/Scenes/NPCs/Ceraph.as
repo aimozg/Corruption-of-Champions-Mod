@@ -136,7 +136,7 @@ public class Ceraph extends Monster
 				XP += 20;
 				level += 2;
 				strStat.bonus.addOrIncreaseEffect('Mini-cum',15);
-				tou += 15;
+				touStat.bonus.addOrIncreaseEffect('Mini-cum',15);
 				HP += 100;
 				lust = (maxLust() * 0.33);
 				player.dynStats("lus", 30);

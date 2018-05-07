@@ -252,7 +252,7 @@ public function startUrtaQuest():void {
 	player.vaginas[0].vaginalLooseness = VaginaClass.LOOSENESS_NORMAL;
 	player.clitLength = 1;
 	player.strStat.reset(100);
-	player.tou = 110;
+	player.touStat.reset(110);
 	player.spe = 120;
 	player.inte = 60;
 	player.wisStat.reset(50);
@@ -267,7 +267,7 @@ public function startUrtaQuest():void {
 	player.level = 26;
 	player.teaseLevel = 5;
 	player.strStat.core.value += (player.newGamePlusMod() * 30);
-	player.tou += (player.newGamePlusMod() * 33);
+	player.touStat.core.value += (player.newGamePlusMod() * 33);
 	player.spe += (player.newGamePlusMod() * 36);
 	player.inte += (player.newGamePlusMod() * 18);
 	player.lib += (player.newGamePlusMod() * 27);
@@ -1600,7 +1600,7 @@ private function gnollAlphaBitchIntro():void {
     CoC.instance.player.clearStatuses(false);
     startCombat(new GnollSpearThrower());
 	monster.strStat.core.value += 20 + (4 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.tou += 25 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+	monster.touStat.core.value += 25 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.spe += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.inte += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);			
 	monster.lib += 5 + (1 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);

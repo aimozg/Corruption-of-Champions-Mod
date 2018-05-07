@@ -897,7 +897,7 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 			outputText("\nYou may allocate your remaining stat points later.");
 		}
 		player.strStat.core.value += player.tempStr;
-		player.tou += player.tempTou;
+		player.touStat.core.value += player.tempTou;
 		player.spe += player.tempSpe;
 		player.inte += player.tempInt;
 		player.wisStat.core.value += player.tempWis;

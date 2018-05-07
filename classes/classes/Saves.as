@@ -1516,7 +1516,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		// 2) If saved < possible, add stat points
 		// 3) If saved > possible - ???
 		player.strStat.reset(15);
-		player.tou = saveFile.data.tou;
+		player.touStat.reset(15);
 		player.spe = saveFile.data.spe;
 		player.inte = saveFile.data.inte;
 		player.wisStat.reset(15);

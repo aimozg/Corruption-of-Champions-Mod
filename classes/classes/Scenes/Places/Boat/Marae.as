@@ -146,7 +146,7 @@ public class Marae extends Monster
 				if (game.flags[kFLAGS.MINERVA_TOWER_TREE] > 0) {
 					this.armorDef = 2000;
 					this.strStat.core.value += 120;
-					this.tou += 120;
+					this.touStat.core.value += 120;
 					this.bonusHP += 4000;
 					this.additionalXP = 6000;
 					this.createPerk(PerkLib.MonsterRegeneration, 5, 0, 0, 0);

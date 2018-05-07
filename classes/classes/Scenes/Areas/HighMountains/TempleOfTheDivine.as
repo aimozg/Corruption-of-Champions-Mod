@@ -141,11 +141,7 @@ use namespace CoC;
 			if (player.hasStatusEffect(StatusEffects.BlessingOfDivineFenrir)) {
 				outputText("You chose to pray a different Deity losing the favor of the first to gain the bonus of the other.\n");
 				outputText("<b>You lost the Blessing of Divine Agency - Fenrir</b>\n");
-				var tempStr:int = player.statusEffectv2(StatusEffects.BlessingOfDivineFenrir);
-				var tempTou:int = player.statusEffectv3(StatusEffects.BlessingOfDivineFenrir);
 				player.removeStatusEffect(StatusEffects.BlessingOfDivineFenrir);
-				dynStats("str", -tempStr);
-				dynStats("tou", -tempTou);
 			}
 		}
 		public function loosingFeraBlessing():void {
@@ -222,7 +218,7 @@ use namespace CoC;
 			sec.value2 = tempStr;
 			sec.value3 = tempTou;
 			sec.buffHost('str',tempStr);
-			player.tou += sec.value3;
+			sec.buffHost('tou',tempTou);
 			if (player.HP < player.maxHP()) player.HP = player.maxHP();
 			dynStats("cor", -10);
 			statScreenRefresh();

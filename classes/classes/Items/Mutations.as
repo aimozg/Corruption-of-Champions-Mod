@@ -4182,7 +4182,7 @@ public final class Mutations extends MutationsHelper
 			player.refillHunger(100);
 			player.strStat.removeAllEffects();
 			player.spe = 30;
-			player.tou = 30;
+			player.touStat.removeAllEffects();
 			player.inte = 30;
 			player.wisStat.removeAllEffects();
 			player.sens = 20;
