@@ -152,20 +152,6 @@ CoC.instance.saves.saveGame(player.slotName);
 		return;
 	}
 	fixFlags();
-	if(player.hasStatusEffect(StatusEffects.Might)) {
-		if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) player.dynStats("int", -player.statusEffectv1(StatusEffects.Might));
-		player.removeStatusEffect(StatusEffects.Might);
-	}
-	if(player.hasStatusEffect(StatusEffects.Blink)) {
-		player.dynStats("spe", -player.statusEffectv1(StatusEffects.Blink));
-		player.removeStatusEffect(StatusEffects.Blink);
-	}
-	if(player.hasStatusEffect(StatusEffects.ChargeWeapon)) {
-		player.removeStatusEffect(StatusEffects.ChargeWeapon);
-	}
-	if(player.hasStatusEffect(StatusEffects.ChargeArmor)) {
-		player.removeStatusEffect(StatusEffects.ChargeArmor);
-	}
 	if(player.hasItem(useables.SOULGEM, 1) && player.hasStatusEffect(StatusEffects.CampRathazul) && flags[kFLAGS.DEN_OF_DESIRE_QUEST] < 1) {
 		campUniqueScenes.playsRathazulAndSoulgemScene();
 		return;
@@ -2985,8 +2971,8 @@ public function setLevelButton(allowAutoLevelTransition:Boolean):Boolean {
 		mainView.statsView.showLevelUp();
 		if (player.strStat.core.value >= player.strStat.core.max &&
 			player.touStat.core.value >= player.touStat.core.max &&
-			player.inte >= player.getMaxStats("int") &&
-			player.spe >= player.getMaxStats("spe") &&
+			player.intStat.core.value >= player.intStat.core.max &&
+			player.speStat.core.value >= player.speStat.core.max &&
 			player.wisStat.core.value >= player.wisStat.core.max &&
 			(player.perkPoints <= 0 || PerkTree.availablePerks(CoC.instance.player).length <= 0) && (player.XP < player.requiredXP() || player.level >= CoC.instance.levelCap)) {
 			mainView.statsView.hideLevelUp();

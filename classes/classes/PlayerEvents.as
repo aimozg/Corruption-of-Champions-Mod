@@ -369,11 +369,7 @@ public class PlayerEvents extends BaseContent implements TimeAwareInterface {
 				player.addStatusValue(StatusEffects.AndysSmoke, 1, -1);
 				if (player.statusEffectv1(StatusEffects.AndysSmoke) <= 0) {
 					outputText("\n<b>The change in your mental prowess confirms that the effects of Nepenthe must have worn off.</b>\n");
-					var tempSpe:int = player.statusEffectv2(StatusEffects.AndysSmoke);
-					var tempInt:int = player.statusEffectv3(StatusEffects.AndysSmoke);
 					player.removeStatusEffect(StatusEffects.AndysSmoke);
-					dynStats("spe", -tempSpe); //Properly revert speed and intelligence.
-					dynStats("inte", -tempInt);
 					needNext = true;
 				}
 			}
@@ -415,9 +411,7 @@ public class PlayerEvents extends BaseContent implements TimeAwareInterface {
 				player.addStatusValue(StatusEffects.BlessingOfDivineTaoth, 1, -1);
 				if (player.statusEffectv1(StatusEffects.BlessingOfDivineTaoth) <= 0) {
 					outputText("\n<b>The divine blessing starts to fade. You think it’s high time you go back to the temple and pray.</b>\n");
-					var temporalSpeed:int = player.statusEffectv2(StatusEffects.BlessingOfDivineTaoth);
 					player.removeStatusEffect(StatusEffects.BlessingOfDivineTaoth);
-					dynStats("spe", -temporalSpeed);
 					needNext = true;
 				}
 			}
@@ -599,31 +593,31 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 							outputText("\n\nYou feel your might increasing as the moon draws closer to fullness.</b>\n");
 							lycan.buffHost(player,'str',changeV);
 							lycan.buffHost(player,'tou',changeV);
-							dynStats("spe", changeV);
-							player.setPerkValue(PerkLib.Lycanthropy,1,10);
+							lycan.buffHost(player,'spe',changeV);
+							lycan.value1 = 10;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 6) {
 							outputText("<b>\nWhen the almost-full moon appears it causes your heart to race with excitement.  You hearing seems better than ever.  Every breath brings a rush of smells through your nose that seem much more pronounced than they should.");
 							outputText("\n\nYou feel your might increasing as the moon draws closer to fullness.</b>\n");
 							lycan.buffHost(player,'str',changeV);
 							lycan.buffHost(player,'tou',changeV);
-							dynStats("spe", changeV);
-							player.setPerkValue(PerkLib.Lycanthropy,1,20);
+							lycan.buffHost(player,'spe',changeV);
+							lycan.value1 = 20;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 7) {
 							outputText("<b>\nYou gaze at the moon and it seems to gaze back into you.   Something is coming and it won’t be long now.   You feel like you are crawling in your skin.  It feels like tear out of your body and be born anew.");
 							outputText("\n\nYou feel your might increasing as the moon draws closer to fullness. It's almost time.</b>\n");
 							lycan.buffHost(player,'str',changeV);
 							lycan.buffHost(player,'tou',changeV);
-							dynStats("spe", changeV);
-							player.setPerkValue(PerkLib.Lycanthropy,1,30);
+							lycan.buffHost(player,'spe',changeV);
+							lycan.value1 = 30;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 8) {
 							outputText("<b>\nYou are at the peak of your strength, it's a full moon tonight and you feel yourself burning with maddening desire as you go into " + player.mf("rut","heat") + ".</b>\n");
 							lycan.buffHost(player,'str',changeV);
 							lycan.buffHost(player,'tou',changeV);
-							dynStats("spe", changeV);
-							player.setPerkValue(PerkLib.Lycanthropy,1,40);
+							lycan.buffHost(player,'spe',changeV);
+							lycan.value1 = 40;
 							if (player.hasCock() || (player.gender == 3 && rand(2) == 0)) player.goIntoRut(false);
 							else if (player.hasVagina()) player.goIntoHeat(false);
 						}
@@ -631,29 +625,29 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 							outputText("<b>\nThe moon is waning, you are feeling less powerful.</b>\n");
 							lycan.buffHost(player,'str',-changeV);
 							lycan.buffHost(player,'tou',-changeV);
-							dynStats("spe", -changeV);
-							player.setPerkValue(PerkLib.Lycanthropy,1,30);
+							lycan.buffHost(player,'spe',-changeV);
+							lycan.value1 = 30;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 2) {
 							outputText("<b>\nThe moon is waning, you are feeling less powerful.</b>\n");
 							lycan.buffHost(player,'str',-changeV);
 							lycan.buffHost(player,'tou',-changeV);
-							dynStats("spe", -changeV);
-							player.setPerkValue(PerkLib.Lycanthropy,1,20);
+							lycan.buffHost(player,'spe',-changeV);
+							lycan.value1 = 20;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 3) {
 							outputText("<b>\nThe moon is waning, you are feeling less powerful.</b>\n");
 							lycan.buffHost(player,'str',-changeV);
 							lycan.buffHost(player,'tou',-changeV);
-							dynStats("spe", -changeV);
-							player.setPerkValue(PerkLib.Lycanthropy,1,10);
+							lycan.buffHost(player,'spe',-changeV);
+							lycan.value1 = 10;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 4) {
 							outputText("<b>\nIt's a new moon tonight, you feel somewhat weak.</b>\n");
 							lycan.buffHost(player,'str',-changeV);
 							lycan.buffHost(player,'tou',-changeV);
-							dynStats("spe", -changeV);
-							player.setPerkValue(PerkLib.Lycanthropy,1,0);
+							lycan.buffHost(player,'spe',-changeV);
+							lycan.value1 = 0;
 						}
 						needNext = true;
 					}
@@ -1180,14 +1174,6 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 			}
 			if (player.statusEffectv1(StatusEffects.ShiraOfTheEastFoodBuff1) >= 1) {
 				if (player.statusEffectv1(StatusEffects.ShiraOfTheEastFoodBuff1) == 1) {
-					if (player.statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) {
-						var tempSpeed:int = player.statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2);
-						dynStats("spe", -tempSpeed);
-					}
-					if (player.statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) {
-						var tempIntelligence:int = player.statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2);
-						dynStats("inte", -tempIntelligence);
-					}
 					player.removeStatusEffect(StatusEffects.ShiraOfTheEastFoodBuff1);
 					player.removeStatusEffect(StatusEffects.ShiraOfTheEastFoodBuff2);
 					outputText("\n<b>Effect of eating in 'Shira of the east' restaurant wears off.</b>\n");

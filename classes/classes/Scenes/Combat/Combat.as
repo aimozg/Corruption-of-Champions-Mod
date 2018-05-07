@@ -1576,13 +1576,9 @@ public function multiArrowsStrike():void {
 			}
 			if (player.tailType == Tail.SCORPION) {
 				outputText("  [monster he] seems to be effected by the poison, its movement turning sluggish.");
-				monster.spe -= 2;
-				if (monster.spe < 1) monster.spe = 1;
-				if (monster.hasStatusEffect(StatusEffects.NagaVenom))
-				{
-					monster.addStatusValue(StatusEffects.NagaVenom,3,1);
-				}
-				else monster.createStatusEffect(StatusEffects.NagaVenom, 0, 0, 1, 0);
+				var sec:StatusEffectClass = monster.createOrFindStatusEffect(StatusEffects.NagaVenom);
+				sec.buffHost('spe',-2);
+				sec.value3 += 1;
 				player.tailVenom -= 5;
 			}
 			if (player.tailType == Tail.MANTICORE_PUSSYTAIL) {
@@ -1594,23 +1590,17 @@ public function multiArrowsStrike():void {
 				else damage += 80;
 				lustdamage *= 0.14;
 				monster.teased(monster.lustVuln * lustdamage);
-				var sec:StatusEffectClass = monster.createOrFindStatusEffect(StatusEffects.NagaVenom);
+				sec = monster.createOrFindStatusEffect(StatusEffects.NagaVenom);
 				sec.buffHost('tou',-2);
 				sec.value3 += 1;
 				player.tailVenom -= 5;
 			}
 			if (player.faceType == Face.SNAKE_FANGS) {
 				outputText("  [monster he] seems to be effected by the poison, its movement turning sluggish.");
-				monster.spe -= 0.4;
-				monster.spe -= 0.4;
-				if (monster.spe < 1) monster.spe = 1;
-				if (monster.spe < 1) monster.spe = 1;
-				if (monster.hasStatusEffect(StatusEffects.NagaVenom))
-				{
-					monster.addStatusValue(StatusEffects.NagaVenom,2,0.4);
-					monster.addStatusValue(StatusEffects.NagaVenom,1,0.4);
-				}
-				else monster.createStatusEffect(StatusEffects.NagaVenom, 0.4, 0.4, 0, 0);
+				sec = monster.createOrFindStatusEffect(StatusEffects.NagaVenom);
+				sec.buffHost('spe',-0.4);
+				sec.value1 += 0.4;
+				sec.value2 += 0.4;
 				player.tailVenom -= 5;
 			}
 			if (player.faceType == Face.SPIDER_FANGS) {
@@ -3551,10 +3541,11 @@ private function combatStatusesUpdate():void {
 		if(monster.plural) outputText("our [cocks] dribbles pre-cum as you think about plowing [monster a] [monster name] right here and now, fucking [monster his] " + monster.vaginaDescript() + "s until they're totally fertilized and pregnant.\n\n");
 		else outputText("our [cocks] dribbles pre-cum as you think about plowing [monster a] [monster name] right here and now, fucking [monster his] " + monster.vaginaDescript() + " until it's totally fertilized and pregnant.\n\n");
 	}
-	if(player.hasStatusEffect(StatusEffects.NagaVenom)) {
+	var nagaVenom:StatusEffectClass = player.statusEffectByType(StatusEffects.NagaVenom);
+	if(nagaVenom) {
 		if(player.spe > 3) {
-			player.addStatusValue(StatusEffects.NagaVenom,1,2);
-			player.spe -= 2;
+			nagaVenom.buffHost('spe',-2);
+			nagaVenom.value1 += 2;
 		}
 		else player.takePhysDamage(5);
 		outputText("You wince in pain and try to collect yourself, [monster a] [monster name]'s venom still plaguing you.\n\n");
@@ -3646,7 +3637,6 @@ private function combatStatusesUpdate():void {
 	}
 	if (player.hasStatusEffect(StatusEffects.DwarfRage)) {
 		if (player.statusEffectv3(StatusEffects.DwarfRage) <= 0) {
-			player.dynStats("spe", -player.statusEffectv2(StatusEffects.DwarfRage), "scale", false);
 			player.removeStatusEffect(StatusEffects.DwarfRage);
 			outputText("<b>Dwarf Rage effect wore off!</b>\n\n");
 		}
@@ -3692,9 +3682,7 @@ private function combatStatusesUpdate():void {
 	}
 	if (player.hasStatusEffect(StatusEffects.Blink)) {
 		if (player.statusEffectv3(StatusEffects.Blink) <= 0) {
-			player.dynStats("spe", -player.statusEffectv1(StatusEffects.Blink), "scale", false);
 			player.removeStatusEffect(StatusEffects.Blink);
-		//	statScreenRefresh();
 			outputText("<b>Blink effect wore off!</b>\n\n");
 		}
 		else player.addStatusValue(StatusEffects.Blink,3,-1);
@@ -3758,7 +3746,6 @@ private function combatStatusesUpdate():void {
 	//Crinos Shape
 	if (player.hasStatusEffect(StatusEffects.CrinosShape)) {
 		if (player.wrath < mspecials.crinosshapeCost()) {
-			player.dynStats("spe", -player.statusEffectv3(StatusEffects.CrinosShape));
 			player.removeStatusEffect(StatusEffects.CrinosShape);
 			outputText("<b>The flow of power through you suddenly stops, as you no longer have the wrath to sustain it.  You drop roughly to the floor, the bestial chanches slowly fading away leaving you in your normal form.</b>\n\n");
 		}
@@ -4411,9 +4398,8 @@ public function showMonsterLust():void {
 				outputText("You notice [monster he] is obviously affected by your venom, [monster his] movements become unsure, and [monster his] balance begins to fade. Sweat is beginning to roll on [monster his] skin. You wager [monster he] is probably beginning to regret provoking you.  ");
 			}
 		}
-		monster.spe -= nagaVenom.value1;
 		nagaVenom.buffHost('str',-nagaVenom.value1);
-		if (monster.spe < 1) monster.spe = 1;
+		nagaVenom.buffHost('spe',-nagaVenom.value1);
 		if (monster.statusEffectv3(StatusEffects.NagaVenom) >= 1) monster.lust += monster.statusEffectv3(StatusEffects.NagaVenom);
 		if (combatIsOver()) return;
 	}

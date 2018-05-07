@@ -1655,10 +1655,9 @@ public class MagicSpecials extends BaseCombatContent {
 		tempTouSpe = DwarfRageBoost;
 		sec.value1 = tempStr;
 		sec.value2 = tempTouSpe;
-		mainView.statsView.showStatUp('spe');
 		sec.buffHost('str',tempStr);
 		sec.buffHost('tou',tempTouSpe);
-		player.spe += player.statusEffectv2(StatusEffects.DwarfRage);
+		sec.buffHost('spe',tempTouSpe);
 		statScreenRefresh();
 		enemyAI();
 	}
@@ -1701,17 +1700,15 @@ public class MagicSpecials extends BaseCombatContent {
 		var tempSpe:Number = Math.round(player.spe * 0.2);
 		outputText("You roar and unleash your inner beast assuming Crinos Shape in order to destroy your foe!\n\n");
 		var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.CrinosShape, tempStr,tempTou,tempSpe,0);
-		mainView.statsView.showStatUp('spe');
 		sec.buffHost('str',tempStr);
 		sec.buffHost('tou',tempTou);
-		player.spe += player.statusEffectv3(StatusEffects.CrinosShape);
+		sec.buffHost('spe',tempSpe);
 		statScreenRefresh();
 		enemyAI();
 	}
 	public function returnToNormalShape():void {
 		clearOutput();
 		outputText("Gathering all you willpower you forcefully subduing your inner beast and returning to your normal shape.");
-		player.dynStats("spe", -player.statusEffectv3(StatusEffects.CrinosShape));
 		player.removeStatusEffect(StatusEffects.CrinosShape);
 		enemyAI();
 	}

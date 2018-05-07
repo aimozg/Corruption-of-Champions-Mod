@@ -44,22 +44,16 @@ import classes.lists.Gender;
 		}
 		
 		private function applyAndysSmokeEffect():void {
-			if (player.hasStatusEffect(StatusEffects.AndysSmoke)) {
-				if (player.statusEffectv2(StatusEffects.AndysSmoke) > -15) { //Maximum speed loss is -15.
-					player.addStatusValue(StatusEffects.AndysSmoke, 2, -5);
-					dynStats("spe", -5);
-				}
-				if (player.statusEffectv3(StatusEffects.AndysSmoke) < 15) { //Maximum intelligence boost is 15.
-					player.addStatusValue(StatusEffects.AndysSmoke, 3, 5);
-					dynStats("int", 5);
-				}
-				player.changeStatusValue(StatusEffects.AndysSmoke, 1, 8);
+			var sec:StatusEffectClass = player.createOrFindStatusEffect(StatusEffects.AndysSmoke);
+			if (sec.value2 > -15) { //Maximum speed loss is -15.
+				sec.value2 += -5;
+				sec.buffHost("spe", -5);
 			}
-			else {
-				player.createStatusEffect(StatusEffects.AndysSmoke, 8, -5, 5, 0);
-				dynStats("spe", -5, "int", 5);
+			if (sec.value3 < 15) { //Maximum intelligence boost is 15.
+				sec.value3 += 5;
+				sec.buffHost("int", 5);
 			}
-			
+			sec.value1 = 8;
 		}
 		
 		public function blackCockDescription():void {

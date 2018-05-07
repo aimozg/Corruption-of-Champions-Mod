@@ -221,7 +221,6 @@ public class CombatSoulskills extends BaseCombatContent {
 		damage *= (monster.damagePercent() / 100);
 		damage = doDamage(damage);
 		if (monster.hasStatusEffect(StatusEffects.Frozen)) {
-			monster.spe += monster.statusEffectv1(StatusEffects.Frozen);
 			monster.removeStatusEffect(StatusEffects.Frozen);
 			outputText("Your [weapon] hits the ice in three specific points, making it explode along with your frozen adversary! <b><font color=\"#800000\">" + damage + "</font></b> damage!");
 		}
@@ -429,30 +428,10 @@ public class CombatSoulskills extends BaseCombatContent {
 		//final touches
 		damage *= (monster.damagePercent() / 100);
 		damage = doDamage(damage);
-		monster.spe -= 20;
 		outputText("Air seems to lose all temperature around your fist as you dash at " + monster.a + monster.short + " and shove your palm on " + monster.pronoun2 + ", " + monster.pronoun3 + " body suddenly is frozen solid, encased in a thick block of ice! (<b><font color=\"#800000\">" + damage + "</font></b>)");
 		if (crit == true) outputText(" <b>*Critical Hit!*</b>");
-		if (monster.hasStatusEffect(StatusEffects.Frozen)) {
-			if (monster.spe - 20 >= 0) {
-				monster.addStatusValue(StatusEffects.Frozen, 1, 20);
-				monster.spe -= 20;
-			}
-			else {
-				monster.addStatusValue(StatusEffects.Frozen, 1, monster.spe);
-				monster.spe -= monster.spe;
-			}
-		}
-		else {
-			monster.createStatusEffect(StatusEffects.Frozen, 0, 0, 0, 0);
-			if (monster.spe - 20 >= 0) {
-				monster.addStatusValue(StatusEffects.Frozen, 1, 20);
-				monster.spe -= 20;
-			}
-			else {
-				monster.addStatusValue(StatusEffects.Frozen, 1, monster.spe);
-				monster.spe -= monster.spe;
-			}
-		}
+		var sec:StatusEffectClass = monster.createOrFindStatusEffect(StatusEffects.Frozen);
+		sec.buffHost('spe',-20);
 		if (!monster.hasPerk(PerkLib.Resolute)) monster.createStatusEffect(StatusEffects.Stunned, 2, 0, 0, 0);
 		else {
 			outputText("  <b>" + monster.capitalA + monster.short + " ");

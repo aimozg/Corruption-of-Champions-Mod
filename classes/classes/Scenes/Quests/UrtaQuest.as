@@ -253,8 +253,8 @@ public function startUrtaQuest():void {
 	player.clitLength = 1;
 	player.strStat.reset(100);
 	player.touStat.reset(110);
-	player.spe = 120;
-	player.inte = 60;
+	player.speStat.reset(120);
+	player.intStat.reset(60);
 	player.wisStat.reset(50);
 	player.lib = 90;
 	player.sens = 50;
@@ -268,8 +268,8 @@ public function startUrtaQuest():void {
 	player.teaseLevel = 5;
 	player.strStat.core.value += (player.newGamePlusMod() * 30);
 	player.touStat.core.value += (player.newGamePlusMod() * 33);
-	player.spe += (player.newGamePlusMod() * 36);
-	player.inte += (player.newGamePlusMod() * 18);
+	player.speStat.core.value += (player.newGamePlusMod() * 36);
+	player.intStat.core.value += (player.newGamePlusMod() * 18);
 	player.lib += (player.newGamePlusMod() * 27);
 
 	//PERKS
@@ -1601,8 +1601,8 @@ private function gnollAlphaBitchIntro():void {
     startCombat(new GnollSpearThrower());
 	monster.strStat.core.value += 20 + (4 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.touStat.core.value += 25 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.spe += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.inte += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);			
+	monster.speStat.core.value += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+	monster.intStat.core.value += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.lib += 5 + (1 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.bonusHP = 750;
 	monster.level += 11;

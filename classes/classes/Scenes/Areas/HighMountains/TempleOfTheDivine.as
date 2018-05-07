@@ -23,6 +23,7 @@ import classes.GlobalFlags.kFLAGS;
 import classes.Items.WeaponLib;
 import classes.Scenes.SceneLib;
 import classes.StatusEffectClass;
+import classes.StatusEffectClass;
 
 use namespace CoC;
 	
@@ -132,9 +133,7 @@ use namespace CoC;
 			if (player.hasStatusEffect(StatusEffects.BlessingOfDivineTaoth)) {
 				outputText("You chose to pray a different Deity losing the favor of the first to gain the bonus of the other.\n");
 				outputText("<b>You lost the Blessing of Divine Agency - Taoth</b>\n");
-				var tempSpe:int = player.statusEffectv2(StatusEffects.BlessingOfDivineTaoth);
 				player.removeStatusEffect(StatusEffects.BlessingOfDivineTaoth);
-				dynStats("spe", -tempSpe);
 			}
 		}
 		public function loosingFenrirBlessing():void {
@@ -187,11 +186,10 @@ use namespace CoC;
 			var tempSpe:Number = 0;
 			temp1 += player.spe * 0.1;
 			temp1 = Math.round(temp1);
-			player.createStatusEffect(StatusEffects.BlessingOfDivineTaoth, 169, 0, 0, 0);
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.BlessingOfDivineTaoth, 169, 0, 0, 0);
 			tempSpe = temp1;
-			player.changeStatusValue(StatusEffects.BlessingOfDivineTaoth,2,tempSpe);
-			mainView.statsView.showStatUp('spe');
-			player.spe += player.statusEffectv2(StatusEffects.BlessingOfDivineTaoth);
+			sec.value2 = tempSpe;
+			sec.buffHost('spe',tempSpe);
 			if (player.HP < player.maxHP()) player.HP = player.maxHP();
 			dynStats("cor", -10);
 			statScreenRefresh();

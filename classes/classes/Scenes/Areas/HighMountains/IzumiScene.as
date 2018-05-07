@@ -327,18 +327,16 @@ import classes.GlobalFlags.kFLAGS;
 				lustMod *= 2;
 			}
 
-			player.createStatusEffect(StatusEffects.IzumisPipeSmoke, SMOKE_DURATION, deltaSpd, deltaSns, deltaLib);
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.IzumisPipeSmoke, SMOKE_DURATION, deltaSpd, deltaSns, deltaLib);
 			
 			// Can't use dynStats for this, because stats() has a chained modifier to incoming sens changes that could turn this value into 8x what we expected it to be
-			player.spe += deltaSpd;
+			sec.buffHost('spe',deltaSpd);
 			player.sens += deltaSns;
 			player.lib += deltaLib;
 			
-			if (player.spe <= 0) player.spe = 1;
 			if (player.sens >= 100) player.sens = 100;
 			if (player.lib >= 100) player.lib = 100;
 			
-			showStatDown('spe');
 			showStatUp('sens');
 			showStatUp('lib');
 			
@@ -368,16 +366,12 @@ import classes.GlobalFlags.kFLAGS;
 
 			if (sac)
 			{
-				player.spe += Math.abs(sac.value2);
 				player.sens -= sac.value3;
 				player.lib -= sac.value4;
 				
 				if (player.sens > 100) player.sens = 100;
-				var max:int = player.getMaxStats("spe");
-				if (player.spe > max) player.spe = max;
 				if (player.lib <= 0) player.lib = 1;
 				
-				showStatUp('spe');
 				showStatDown('sens');
 				showStatDown('lib');
 				

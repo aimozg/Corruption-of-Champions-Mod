@@ -225,9 +225,9 @@ import classes.Items.*;
 			player.createStatusEffect(StatusEffects.KnowsBlind,0,0,0,0);
 			player.createStatusEffect(StatusEffects.KnowsWhitefire,0,0,0,0);
 			//magic, 50 Int, 50 tough, Speed 15, Str 10, 30 corruption, 30 libido, 10 sensitivity.
-			player.inte = 50;
+			player.intStat.core.value = 50;
 			player.touStat.core.value = 50;
-			player.spe = 15;
+			player.speStat.core.value = 15;
 			player.strStat.core.value = 10;
 			player.cor = 30;
 			player.lib = 30;
@@ -320,11 +320,11 @@ import classes.Items.*;
 			//Tone 90
 			player.tone = 90;
 			//Int 50 (if possible)
-			player.inte = 50;
+			player.intStat.core.value = 50;
 			//Str/Tou/Spd 25 (if possible)
 			player.strStat.core.value = 25;
 			player.touStat.core.value = 25;
-			player.spe = 25;
+			player.speStat.core.value = 25;
 			//Bow
 			//player.createKeyItem("Bow",0,0,0,0);
 			player.setWeaponRange(weaponsrange.BOWOLD_);
@@ -440,7 +440,7 @@ import classes.Items.*;
 		private function customIsaac():void {
 			outputText("Born of a disgraced priestess, Isaac was raised alone until she was taken by illness.  He worked a number of odd jobs until he was eventually chosen as champion.");
 			//- gift: fast
-			player.spe += 5;
+			player.speStat.core.value += 5;
 			player.tone += 10;
 			player.createPerk(PerkLib.Fast, 0.25, 0, 0, 0);
 			//- history: religion 
@@ -540,8 +540,8 @@ import classes.Items.*;
 			player.butt.type = 8;
 			player.strStat.core.value = 15;
 			player.touStat.core.value = 15;
-			player.spe = 18;
-			player.inte = 17;
+			player.speStat.core.value = 18;
+			player.intStat.core.value = 17;
 			player.sens = 15;
 			player.lib = 15;
 			player.cor = 0;
@@ -620,8 +620,8 @@ import classes.Items.*;
 			player.ballSize = 2;
 			player.strStat.core.value = 18;
 			player.touStat.core.value = 17;
-			player.spe = 15;
-			player.inte = 15;
+			player.speStat.core.value = 15;
+			player.intStat.core.value = 15;
 			player.sens = 15;
 			player.lib = 15;
 			player.cor = 0;
@@ -665,8 +665,8 @@ import classes.Items.*;
 			//#226096893686530
 			//For the custom PC Profile can you make a Bimbo Bunny girl (no bunny feet) (named Mara) dont really care about clothes i can get what i want pretty quickly and I change from time to time.
 			outputText("You're a bunny-girl with bimbo-tier curves, jiggly and soft, a curvy, wet girl with a bit of a flirty past.");
-			player.spe+=3;
-			player.inte+=2;
+			player.speStat.core.value +=3;
+			player.intStat.core.value +=2;
 			player.clitLength = .5;
 			player.tone = 30;
 			player.fertility = 10;
@@ -700,8 +700,8 @@ import classes.Items.*;
 			//Core Stats:
 			player.strStat.core.value = 40;
 			player.touStat.core.value = 20;
-			player.spe = 100;
-			player.inte = 80;
+			player.speStat.core.value = 100;
+			player.intStat.core.value = 80;
 			player.lib = 25;
 			player.sens = 15;
 			
@@ -753,8 +753,8 @@ import classes.Items.*;
 		private function customMirvanna():void {
 			//Any equine or dragonny attributes accompanying it a big plus! As I'm a dragon-unicorn furry (Qilin~). Bonus points if you add a horns type for unicorn horns.
 			outputText("You're an equine dragon-herm with a rather well-proportioned body.  Ingnam is certainly going to miss having you whoring yourself out around town.  You don't think they'll miss cleaning up all the messy sex, though.");
-			player.spe+=3;
-			player.inte+=2;
+			player.speStat.core.value +=3;
+			player.intStat.core.value +=2;
 			player.strStat.core.value += 3;
 			player.clitLength = .5;
 			player.fertility = 20;
@@ -861,9 +861,9 @@ import classes.Items.*;
 			player.femininity = 75;
 			player.butt.type = 7;
 			player.hips.type = 7;
-			player.inte = 40;
+			player.intStat.core.value = 40;
 			player.strStat.core.value = 20;
-			player.spe = 25;
+			player.speStat.core.value = 25;
 			player.touStat.core.value = 15;
 			
 			clearOutput();
@@ -1003,8 +1003,8 @@ import classes.Items.*;
 			player.butt.type = 6;
 			player.strStat.core.value = 15;
 			player.touStat.core.value = 15;
-			player.spe = 18;
-			player.inte = 17;
+			player.speStat.core.value = 18;
+			player.intStat.core.value = 17;
 			player.sens = 15;
 			player.lib = 15;
 			player.cor = 0;
@@ -1061,7 +1061,7 @@ import classes.Items.*;
 			player.createVagina();
 			player.clitLength = 0.25;
 			player.fertility = 4;
-			player.spe += 20;
+			player.speStat.core.value += 20;
 			outputText("You're more of a scout than a fighter, but you still feel confident you can handle your responsibilities as champion.  After all, what's to worry about when you can outrun everything you encounter?  You have olive skin, deep red hair, and a demonic tail and wings to blend in with the locals.");
 			//Perk is speed, she was a scout, and it'd be neat (if possible) to give her something akin to the Runner perk. She might not start out very strong or tough, but at least she's fast.
 			player.createPerk(PerkLib.Fast, 0.25, 0, 0, 0);
@@ -1205,8 +1205,8 @@ import classes.Items.*;
 			flags[kFLAGS.HISTORY_PERK_SELECTED] = 0;
 			player.strStat.core.value = 25;
 			player.touStat.core.value = 25;
-			player.inte = 25;
-			player.spe = 25;
+			player.intStat.core.value = 25;
+			player.speStat.core.value = 25;
 			outputText("You are a literal angel from beyond, and you take the place of a vilage's champion for your own reasons...");
 		}
 		
@@ -1217,7 +1217,7 @@ import classes.Items.*;
 			player.ears.type = Ears.FOX;
 			player.tailType = Tail.FOX;
 			player.tailCount = 2;
-			player.inte = 30;
+			player.intStat.core.value = 30;
 			if(!player.hasStatusEffect(StatusEffects.BonusVCapacity)) player.createStatusEffect(StatusEffects.BonusVCapacity,0,0,0,0);
 			else player.addStatusValue(StatusEffects.BonusVCapacity,1, 5 + rand(10));
 			outputText("As a Kitsune, you always got weird looks, but none could doubt your affinity for magic...");
@@ -1237,8 +1237,8 @@ import classes.Items.*;
 			player.butt.type = 6;
 			player.strStat.core.value = 100;
 			player.touStat.core.value = 100;
-			player.spe = 100;
-			player.inte = 100;
+			player.speStat.core.value = 100;
+			player.intStat.core.value = 100;
 			player.sens = 100;
 			player.lib = 30;
 			player.cor = 71;
@@ -1427,8 +1427,8 @@ import classes.Items.*;
 			player.nippleLength = 3.5;
 			//Perks: Slut and Fertile"	
 			
-			player.spe+=3;
-			player.inte+=2;
+			player.speStat.core.value +=3;
+			player.intStat.core.value +=2;
 	
 			player.createPerk(PerkLib.HistorySlut, 0, 0, 0, 0);
 			player.createPerk(PerkLib.Fertile, 1.5, 0, 0, 0);
@@ -1445,8 +1445,8 @@ import classes.Items.*;
 			player.butt.type = 6;
 			player.strStat.core.value = 15;
 			player.touStat.core.value = 15;
-			player.spe = 18;
-			player.inte = 17;
+			player.speStat.core.value = 18;
+			player.intStat.core.value = 17;
 			player.sens = 15;
 			player.lib = 15;
 			player.cor = 0;
@@ -1539,8 +1539,8 @@ import classes.Items.*;
 			player.createPerk(PerkLib.HistorySlacker,0,0,0,0);
 			player.strStat.core.value += 4;
 			player.touStat.core.value += 4;
-			player.inte += 2;
-			player.spe += 2;
+			player.intStat.core.value += 2;
+			player.speStat.core.value += 2;
 			player.gems += 300;
 			outputText("You're something of a powerhouse, and you wager that between your odd mutations, power strong enough to threaten the village order, and talents, you're the natural choice to send through the portal.");
 		}
@@ -1580,9 +1580,9 @@ import classes.Items.*;
 			player.createStatusEffect(StatusEffects.KnowsManyBirds,0,0,0,0);
 			player.createStatusEffect(StatusEffects.KnowsBlind,0,0,0,0);
 			player.createStatusEffect(StatusEffects.KnowsWhitefire,0,0,0,0);
-			player.inte = 40;
+			player.intStat.core.value = 40;
 			player.touStat.core.value = 25;
-			player.spe = 20;
+			player.speStat.core.value = 20;
 			player.strStat.core.value = 15;
 			player.cor = 30;
 			player.lib = 30;
@@ -1654,8 +1654,8 @@ import classes.Items.*;
 			
 			player.strStat.core.value += -10; // strength? not a kitsune way, besides, you are small and really neglected physical training
 			player.touStat.core.value += 0; // still, your dragon blood makes you surprisingly tough for your size and condition
-			player.spe += 5; // can take some advantage from small frame
-			player.inte += 55; // your mind is your power!
+			player.speStat.core.value += 5; // can take some advantage from small frame
+			player.intStat.core.value += 55; // your mind is your power!
 			player.lib += 85; // yes, you have problems
 			player.cor += 31; // have high initial corruption, but also have religious history to meditate
 			
@@ -1833,8 +1833,8 @@ import classes.Items.*;
 			// wrecked body and obsessed mind...
 			player.strStat.core.value -= 15;
 			player.touStat.core.value -= 15;
-			player.spe -= 15;
-			player.inte += 60;
+			player.speStat.core.value -= 15;
+			player.intStat.core.value += 60;
 			//player.sens = 15;
 			//player.lib = 15;
 			player.cor += 2;

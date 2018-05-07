@@ -1415,13 +1415,11 @@ private function goJogging():void {
 		if (sec.value1 >= 1) {
 			sec.buffHost("str", sec.value1);
 		}
-		if (player.statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) {
-			var tempSpeed:int = player.statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2);
-			dynStats("spe", tempSpeed);
+		if (sec.value2 >= 1) {
+			sec.buffHost("spe", sec.value2);
 		}
-		if (player.statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) {
-			var tempIntelligence:int = player.statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2);
-			dynStats("inte", tempIntelligence);
+		if (sec.value3 >= 1) {
+			sec.buffHost("int", sec.value3);
 		}
 		sec.buffHost("tou", sec.value4);
 		player.gems -= 5;

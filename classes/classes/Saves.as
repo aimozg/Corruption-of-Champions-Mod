@@ -1517,8 +1517,8 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		// 3) If saved > possible - ???
 		player.strStat.reset(15);
 		player.touStat.reset(15);
-		player.spe = saveFile.data.spe;
-		player.inte = saveFile.data.inte;
+		player.speStat.reset(15);
+		player.intStat.reset(15);
 		player.wisStat.reset(15);
 		player.lib = saveFile.data.lib;
 		player.sens = saveFile.data.sens;

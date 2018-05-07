@@ -168,17 +168,23 @@ public class Creature extends Utils
 		//Primary stats
 		public var strStat:PrimaryStat = new PrimaryStat("str",stats);
 		public var touStat:PrimaryStat = new PrimaryStat("tou",stats);
-		public var spe:Number = 0;
-		public var inte:Number = 0;
+		public var speStat:PrimaryStat = new PrimaryStat("spe",stats);
+		public var intStat:PrimaryStat = new PrimaryStat("int",stats);
 		public var wisStat:PrimaryStat = new PrimaryStat("wis",stats);
 		public function get str():Number {
 			return strStat.value;
 		}
-		public function get wis():Number {
-			return wisStat.value;
-		}
 		public function get tou():Number {
 			return touStat.value;
+		}
+		public function get spe():Number {
+			return speStat.value;
+		}
+		public function get inte():Number {
+			return intStat.value;
+		}
+		public function get wis():Number {
+			return wisStat.value;
 		}
 		public var lib:Number = 0;
 		public var sens:Number = 0;
@@ -432,8 +438,8 @@ public class Creature extends Utils
 			var oldHPratio:Number = hp100/100;
 			drainStat('str', -dstr);
 			drainStat('tou', -dtou);
-			spe  = Utils.boundFloat(mins.spe, spe + dspe, maxes.spe);
-			inte = Utils.boundFloat(mins.inte, inte + dinte, maxes.inte);
+			drainStat('spe', -dspe);
+			drainStat('int', -dinte);
 			drainStat('wis', -dwis);
 			lib  = Utils.boundFloat(mins.lib, lib + dlib, maxes.lib);
 			sens = Utils.boundFloat(mins.sens, sens + dsens, maxes.sens);

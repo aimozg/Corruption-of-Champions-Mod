@@ -4181,9 +4181,9 @@ public final class Mutations extends MutationsHelper
 			outputText("You shovel the stuff into your face, not sure WHY you're eating it, but once you start, you just can't stop.  It tastes incredibly bland, and with a slight hint of cheese.");
 			player.refillHunger(100);
 			player.strStat.removeAllEffects();
-			player.spe = 30;
+			player.speStat.removeAllEffects();
 			player.touStat.removeAllEffects();
-			player.inte = 30;
+			player.intStat.removeAllEffects();
 			player.wisStat.removeAllEffects();
 			player.sens = 20;
 			player.lib = 25;

@@ -60,8 +60,6 @@ WIN:
 				else {
 					outputText("\n<b>Your head finally clears as your hangover wears off.  Drinking with the shemale lizard was definitely a bad idea.</b>\n");
 					//Restore stats
-					player.spe += player.statusEffectv3(StatusEffects.Hangover);
-					player.inte += player.statusEffectv4(StatusEffects.Hangover);
 					dynStats("cor", 0);
 					//Clear status
 					player.removeStatusEffect(StatusEffects.Hangover);

@@ -154,8 +154,8 @@
 			model.player = player;
 			player.strStat.reset(15);
 			player.touStat.reset(15);
-			player.spe = 15;
-			player.inte = 15;
+			player.speStat.core.value = 15;
+			player.intStat.core.value = 15;
 			player.wisStat.reset(15);
 			player.sens = 15;
 			player.lib = 15;
@@ -539,8 +539,8 @@
 		private function isAWoman():void {
 			//Attributes
 			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) {
-				player.spe += 3;
-				player.inte += 2;
+				player.speStat.core.value += 3;
+				player.intStat.core.value += 2;
 			}
 			//Body attributes
 			player.fertility = 10;
@@ -568,8 +568,8 @@
 			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) {
 				player.strStat.core.value+=1;
 				player.touStat.core.value +=1;
-				player.spe+=1;
-				player.inte+= 1;
+				player.speStat.core.value +=1;
+				player.intStat.core.value += 1;
 			}
 			//Body attributes
 			player.fertility = 10;
@@ -605,7 +605,7 @@
 		
 		private function buildLeanMale():void {
 			player.strStat.core.value -= 1;
-			player.spe += 1;
+			player.speStat.core.value += 1;
 			
 			player.femininity = 34;
 			player.thickness = 30;
@@ -619,7 +619,7 @@
 
 		private function buildSlenderFemale():void {
 			player.strStat.core.value -= 1;
-			player.spe += 1;
+			player.speStat.core.value += 1;
 			
 			player.femininity = 66;
 			player.thickness = 30;
@@ -652,7 +652,7 @@
 		}
 
 		private function buildThickMale():void {
-			player.spe -= 4;
+			player.speStat.core.value -= 4;
 			player.strStat.core.value += 2;
 			player.touStat.core.value += 2;
 			
@@ -667,7 +667,7 @@
 		}
 
 		private function buildCurvyFemale():void {
-			player.spe -= 2;
+			player.speStat.core.value -= 2;
 			player.strStat.core.value += 1;
 			player.touStat.core.value += 1;
 			
@@ -682,7 +682,7 @@
 
 		private function buildGirlyMale():void {
 			player.strStat.core.value -= 2;
-			player.spe += 2;
+			player.speStat.core.value += 2;
 			
 			player.femininity = 50;
 			player.thickness = 50;
@@ -696,7 +696,7 @@
 
 		private function buildTomboyishFemale():void {
 			player.strStat.core.value += 1;
-			player.spe -= 1;
+			player.speStat.core.value -= 1;
 			
 			player.femininity = 56;
 			player.thickness = 50;
@@ -1190,14 +1190,14 @@
 		}
 		
 		private function setEndowmentSpeed():void {
-			player.spe += 5;
+			player.speStat.core.value += 5;
 			player.tone += 10;
 			if (!player.hasPerk(PerkLib.Fast)) player.createPerk(PerkLib.Fast, 0.25, 0, 0, 0);
 			chooseHistory();
 		}
 		
 		private function setEndowmentSmarts():void {
-			player.inte += 5;
+			player.intStat.core.value += 5;
 			player.thickness -= 5;
 			if (!player.hasPerk(PerkLib.Smart)) player.createPerk(PerkLib.Smart, 0.25, 0, 0, 0);
 			chooseHistory();

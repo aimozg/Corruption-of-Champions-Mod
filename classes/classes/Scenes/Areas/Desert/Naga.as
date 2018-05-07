@@ -16,17 +16,12 @@ public class Naga extends Monster
 			//(Deals damage over 4-5 turns, invariably reducing 
 			//your speed. It wears off once combat is over.)
 			outputText("The " + this.short + " strikes with the speed of a cobra, sinking her fangs into your flesh!  ");
-			if(!player.hasStatusEffect(StatusEffects.NagaVenom)) {
+			var sec:StatusEffectClass = player.statusEffectByType(StatusEffects.NagaVenom);
+			if(!sec) {
 				outputText("The venom's effects are almost instantaneous; your vision begins to blur and it becomes increasingly harder to stand.");
 				if(player.spe > 4) {
-					player.spe -= 3;
-					showStatDown( 'spe' );
-					// speUp.visible = false;
-					// speDown.visible = true;
-					player.createStatusEffect(StatusEffects.NagaVenom,3,0,0,0);
-				}
-				else {
-					player.createStatusEffect(StatusEffects.NagaVenom,0,0,0,0);
+					sec.buffHost('spe',-3);
+				} else {
 					player.takeMagicDamage(5+rand(5));
 				}
 				player.takeMagicDamage(5+rand(5));
@@ -34,11 +29,7 @@ public class Naga extends Monster
 			else {
 				outputText("The venom's effects intensify as your vision begins to blur and it becomes increasingly harder to stand.");
 				if(player.spe > 3) {
-					player.spe -= 2;
-					showStatDown( 'spe' );
-					// speUp.visible = false;
-					// speDown.visible = true;
-					player.addStatusValue(StatusEffects.NagaVenom,1,2);
+					sec.buffHost('spe',-2);
 				}
 				else player.takeMagicDamage(5+rand(5));
 				player.takeMagicDamage(5+rand(5));

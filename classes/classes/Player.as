@@ -3187,64 +3187,12 @@ use namespace CoC;
 		public function clearStatuses(visibility:Boolean):void
 		{
 			if(CoC.instance.monster.hasStatusEffect(StatusEffects.Sandstorm)) CoC.instance.monster.removeStatusEffect(StatusEffects.Sandstorm);
-			if(hasStatusEffect(StatusEffects.DwarfRage)) {
-				dynStats("spe", -statusEffectv2(StatusEffects.DwarfRage), "scale", false);
-				removeStatusEffect(StatusEffects.DwarfRage);
-			}
-			if(hasStatusEffect(StatusEffects.Berzerking)) {
-				removeStatusEffect(StatusEffects.Berzerking);
-			}
-			if(hasStatusEffect(StatusEffects.Lustzerking)) {
-				removeStatusEffect(StatusEffects.Lustzerking);
-			}
-			if(hasStatusEffect(StatusEffects.EverywhereAndNowhere)) {
-				removeStatusEffect(StatusEffects.EverywhereAndNowhere);
-			}
-			if(CoC.instance.monster.hasStatusEffect(StatusEffects.TailWhip)) {
-				CoC.instance.monster.removeStatusEffect(StatusEffects.TailWhip);
-			}
-			if(CoC.instance.monster.hasStatusEffect(StatusEffects.TwuWuv)) {
-				inte += CoC.instance.monster.statusEffectv1(StatusEffects.TwuWuv);
-				EngineCore.statScreenRefresh();
-				CoC.instance.mainView.statsView.showStatUp( 'inte' );
-			}
-			if(hasStatusEffect(StatusEffects.NagaVenom)) {
-				spe += statusEffectv1(StatusEffects.NagaVenom);
-				CoC.instance.mainView.statsView.showStatUp( 'spe' );
-				removeStatusEffect(StatusEffects.NagaVenom);
-			}
-			if(hasStatusEffect(StatusEffects.MedusaVenom)) {
-				spe += statusEffectv3(StatusEffects.MedusaVenom);
-				inte += statusEffectv4(StatusEffects.MedusaVenom);
-				CoC.instance.mainView.statsView.showStatUp( 'spe' );
-				CoC.instance.mainView.statsView.showStatUp( 'inte' );
-				removeStatusEffect(StatusEffects.MedusaVenom);
-			}
 			if(hasStatusEffect(StatusEffects.Flying)) {
 				removeStatusEffect(StatusEffects.Flying);
 				if(hasStatusEffect(StatusEffects.FlyingNoStun)) {
 					removeStatusEffect(StatusEffects.FlyingNoStun);
 					removePerk(PerkLib.Resolute);
 				}
-			}
-			if(hasStatusEffect(StatusEffects.Might)) {
-				if (hasStatusEffect(StatusEffects.FortressOfIntellect)) dynStats("int", -statusEffectv1(StatusEffects.Might), "scale", false);
-				removeStatusEffect(StatusEffects.Might);
-			}
-			if(hasStatusEffect(StatusEffects.Blink)) {
-				dynStats("spe", -statusEffectv1(StatusEffects.Blink), "scale", false);
-				removeStatusEffect(StatusEffects.Blink);
-			}
-			if(hasStatusEffect(StatusEffects.UnderwaterCombatBoost)) {
-				dynStats("spe", -statusEffectv2(StatusEffects.UnderwaterCombatBoost), "scale", false);
-				removeStatusEffect(StatusEffects.UnderwaterCombatBoost);
-			}
-			if(hasStatusEffect(StatusEffects.CrinosShape)) {
-				dynStats("spe", -statusEffectv3(StatusEffects.CrinosShape), "scale", false);
-				removeStatusEffect(StatusEffects.CrinosShape);
-			}
-			if(hasStatusEffect(StatusEffects.EzekielCurse)) {
-				removeStatusEffect(StatusEffects.EzekielCurse);
 			}
 			if(hasStatusEffect(StatusEffects.DragonBreathCooldown) && hasPerk(PerkLib.DraconicLungsEvolved)) {
 				removeStatusEffect(StatusEffects.DragonBreathCooldown);
@@ -3261,12 +3209,6 @@ use namespace CoC;
 			if(hasStatusEffect(StatusEffects.DragonLightningBreathCooldown) && hasPerk(PerkLib.DraconicLungs)) {
 				removeStatusEffect(StatusEffects.DragonLightningBreathCooldown);
 			}
-			if(hasStatusEffect(StatusEffects.HeroBane)) {
-				removeStatusEffect(StatusEffects.HeroBane);
-			}
-			if(hasStatusEffect(StatusEffects.PlayerRegenerate)) {
-				removeStatusEffect(StatusEffects.PlayerRegenerate);
-			}
 			if(hasStatusEffect(StatusEffects.Disarmed)) {
 				removeStatusEffect(StatusEffects.Disarmed);
 				if (weapon == WeaponLib.FISTS) {
@@ -3277,10 +3219,6 @@ use namespace CoC;
 				else {
 					flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] = flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID];
 				}
-			}
-			if (hasStatusEffect(StatusEffects.DriderIncubusVenom))
-			{
-				removeStatusEffect(StatusEffects.DriderIncubusVenom);
 			}
 			
 			// All CombatStatusEffects are removed here
