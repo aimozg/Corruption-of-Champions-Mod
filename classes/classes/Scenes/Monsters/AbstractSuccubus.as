@@ -5,8 +5,9 @@ package classes.Scenes.Monsters
 {
 	import classes.*;
 	import classes.Items.*
-	
-	public class AbstractSuccubus extends Monster
+import classes.StatusEffectClass;
+
+public class AbstractSuccubus extends Monster
 	{
 		protected function whipAttack():void
 		{
@@ -118,8 +119,8 @@ package classes.Scenes.Monsters
 				if (this.short == "omnibus") outputText("omnibus");
 				else outputText("succubus");
 				outputText(" flicks her wrist, allowing a whip-like cord to slither out from the palm of her clawed hand.  She cracks the whip experimentally, cackling with glee.");
-				createStatusEffect(StatusEffects.WhipReady, 0, 0, 0, 0);
-				str += 20;
+				var sac:StatusEffectClass = createStatusEffect(StatusEffects.WhipReady, 0, 0, 0, 0);
+				strStat.bonus.addOrReplaceEffect(sac.stype.id,20,sac);
 				this.weaponName = "whip";
 				this.weaponVerb = "brutal whip-crack";
 			}

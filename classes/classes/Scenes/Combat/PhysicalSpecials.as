@@ -19,6 +19,7 @@ import classes.Scenes.Camp.CampMakeWinions;
 import classes.Scenes.Dungeons.D3.LivingStatue;
 import classes.Scenes.NPCs.Anemone;
 import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
 import classes.StatusEffects;
 
 import coc.view.ButtonData;
@@ -1054,9 +1055,9 @@ public class PhysicalSpecials extends BaseCombatContent {
 		var EntangleSpeNerf:Number = 0;
 		EntangleStrNerf = Math.round(monster.str * .5);
 		EntangleSpeNerf = Math.round(monster.spe * .5);
-		monster.str -= EntangleStrNerf;
+		// TODO @aimozg/stats replace with a proper 50% debuff
+		monster.drainStat('str',EntangleStrNerf);
 		monster.spe -= EntangleSpeNerf;
-		if(monster.str < 1) monster.str = 1;
 		if(monster.spe < 1) monster.spe = 1;
 		player.createStatusEffect(StatusEffects.AlrauneEntangle,EntangleStrNerf,EntangleSpeNerf,0,0);
 		enemyAI();
@@ -1621,16 +1622,11 @@ public class PhysicalSpecials extends BaseCombatContent {
 			//(Otherwise)
 			else outputText("You lunge at the foe headfirst, fangs bared. You manage to catch " + monster.a + monster.short + " off guard, your needle-like fangs penetrating deep into " + monster.pronoun3 + " body. You quickly release your venom, and retreat before " + monster.pronoun1 + " manages to react.");
 			//The following is how the enemy reacts over time to poison. It is displayed after the description paragraph,instead of lust
-			monster.str -= 2;
+			var nagaVenom:StatusEffectClass = monster.createOrFindStatusEffect(StatusEffects.NagaVenom);
+			nagaVenom.buffHost('str',-2);
 			monster.spe -= 2;
-			if(monster.str < 1) monster.str = 1;
-			if(monster.spe < 1) monster.spe = 1;
-			if(monster.hasStatusEffect(StatusEffects.NagaVenom))
-			{
-				monster.addStatusValue(StatusEffects.NagaVenom,2,2);
-				monster.addStatusValue(StatusEffects.NagaVenom,1,2);
-			}
-			else monster.createStatusEffect(StatusEffects.NagaVenom,2,2,0,0);
+			nagaVenom.value1 += 2;
+			nagaVenom.value2 += 2;
 		}
 		else {
 			outputText("You lunge headfirst, fangs bared. Your attempt fails horrendously, as " + monster.a + monster.short + " manages to counter your lunge, knocking your head away with enough force to make your ears ring.");
@@ -1720,15 +1716,10 @@ public class PhysicalSpecials extends BaseCombatContent {
 			//(Otherwise)
 			else outputText("You lunge at the foe headfirst, maw open for a bite. You manage to catch the " + monster.a + monster.short + " off guard, biting it viciously. The merciless cold of your bite transfer to your foe weakening it as you retreat before " + monster.pronoun1 + " manages to react.");
 			//The following is how the enemy reacts over time to poison. It is displayed after the description paragraph,instead of lust
-			monster.str -= 5 + rand(5);
+			var frostbite:StatusEffectClass = monster.createOrFindStatusEffect(StatusEffects.Frostbite);
+			frostbite.buffHost('str',-(5 + rand(5)));
 			monster.spe -= 5 + rand(5);
-			if(monster.str < 1) monster.str = 1;
 			if(monster.spe < 1) monster.spe = 1;
-			if(monster.hasStatusEffect(StatusEffects.Frostbite))
-			{
-				monster.addStatusValue(StatusEffects.Frostbite,1,1);
-			}
-			else monster.createStatusEffect(StatusEffects.Frostbite,1,0,0,0);
 		}
 		else {
 			outputText("You lunge headfirst, maw open for a bite. Your attempt fails horrendously, as " + monster.a + monster.short + " manages to counter your lunge, knocking your head away with enough force to make your ears ring.");

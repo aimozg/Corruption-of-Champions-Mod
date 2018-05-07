@@ -154,7 +154,6 @@ CoC.instance.saves.saveGame(player.slotName);
 	fixFlags();
 	if(player.hasStatusEffect(StatusEffects.Might)) {
 		if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) player.dynStats("int", -player.statusEffectv1(StatusEffects.Might));
-		else player.dynStats("str", -player.statusEffectv1(StatusEffects.Might));
 		player.dynStats("tou", -player.statusEffectv2(StatusEffects.Might));
 		player.removeStatusEffect(StatusEffects.Might);
 	}
@@ -2985,7 +2984,8 @@ public function setLevelButton(allowAutoLevelTransition:Boolean):Boolean {
 		}
 		mainView.showMenuButton( MainView.MENU_LEVEL );
 		mainView.statsView.showLevelUp();
-		if (player.str >= player.getMaxStats("str") && player.tou >= player.getMaxStats("tou") && player.inte >= player.getMaxStats("int") && player.spe >= player.getMaxStats("spe") && (player.perkPoints <= 0 || PerkTree.availablePerks(CoC.instance.player).length <= 0) && (player.XP < player.requiredXP() || player.level >= CoC.instance.levelCap)) {
+		if (player.strStat.core.value >= player.strStat.core.max &&
+			player.tou >= player.getMaxStats("tou") && player.inte >= player.getMaxStats("int") && player.spe >= player.getMaxStats("spe") && (player.perkPoints <= 0 || PerkTree.availablePerks(CoC.instance.player).length <= 0) && (player.XP < player.requiredXP() || player.level >= CoC.instance.levelCap)) {
 			mainView.statsView.hideLevelUp();
 		}
 	}

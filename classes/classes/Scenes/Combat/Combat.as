@@ -2649,10 +2649,8 @@ public function meleeDamageAcc():void {
 		}
 	}
 	if (player.weapon == weapons.DSSPEAR) {
-	monster.str -= 2;
-	monster.spe -= 2;
-	if(monster.str < 1) monster.str = 1;
-	if(monster.spe < 1) monster.spe = 1;
+	monster.drainStat('str',2);
+	monster.drainStat('spe',2);
 	if(monster.hasStatusEffect(StatusEffects.NagaVenom))
 	{
 		monster.addStatusValue(StatusEffects.NagaVenom,2,2);
@@ -3570,8 +3568,7 @@ private function combatStatusesUpdate():void {
 		if (player.str <= 5 && player.tou <= 5 && player.spe <= 5 && player.inte <= 5) player.takePhysDamage(5);
 		else {
 			if(player.str > 5) {
-			player.addStatusValue(StatusEffects.MedusaVenom,1,1);
-			player.str -= 1;
+			player.statusEffectByType(StatusEffects.MedusaVenom).buffHost('str',-1);
 			}
 			if(player.tou > 5) {
 			player.addStatusValue(StatusEffects.MedusaVenom,2,1);
@@ -3619,9 +3616,7 @@ private function combatStatusesUpdate():void {
 		player.addStatusValue(StatusEffects.DriderIncubusVenom, 1, -1);
 		if (player.statusEffectv1(StatusEffects.DriderIncubusVenom) <= 0)
 		{
-			player.str += player.statusEffectv2(StatusEffects.DriderIncubusVenom);
 			player.removeStatusEffect(StatusEffects.DriderIncubusVenom);
-			CoC.instance.mainView.statsView.showStatUp('str');
 			outputText("The drider incubus’ venom wanes, the effects of the poision weakening as strength returns to your limbs!\n\n");
 		}
 		else
@@ -3665,7 +3660,7 @@ private function combatStatusesUpdate():void {
 	}
 	if (player.hasStatusEffect(StatusEffects.DwarfRage)) {
 		if (player.statusEffectv3(StatusEffects.DwarfRage) <= 0) {
-			player.dynStats("str", -player.statusEffectv1(StatusEffects.DwarfRage),"tou", -player.statusEffectv2(StatusEffects.DwarfRage),"spe", -player.statusEffectv2(StatusEffects.DwarfRage), "scale", false);
+			player.dynStats("tou", -player.statusEffectv2(StatusEffects.DwarfRage),"spe", -player.statusEffectv2(StatusEffects.DwarfRage), "scale", false);
 			player.removeStatusEffect(StatusEffects.DwarfRage);
 			outputText("<b>Dwarf Rage effect wore off!</b>\n\n");
 		}
@@ -3769,7 +3764,6 @@ private function combatStatusesUpdate():void {
 	//Trance Transformation
 	if (player.hasStatusEffect(StatusEffects.TranceTransformation)) {
 		if (player.soulforce < 50) {
-			player.dynStats("str", -player.statusEffectv1(StatusEffects.TranceTransformation));
 			player.dynStats("tou", -player.statusEffectv1(StatusEffects.TranceTransformation));
 			player.removeStatusEffect(StatusEffects.TranceTransformation);
 			outputText("<b>The flow of power through you suddenly stops, as you no longer have the soul energy to sustain it.  You drop roughly to the floor, the crystal coating your [skin] cracking and fading to nothing.</b>\n\n");
@@ -3781,7 +3775,6 @@ private function combatStatusesUpdate():void {
 	//Crinos Shape
 	if (player.hasStatusEffect(StatusEffects.CrinosShape)) {
 		if (player.wrath < mspecials.crinosshapeCost()) {
-			player.dynStats("str", -player.statusEffectv1(StatusEffects.CrinosShape));
 			player.dynStats("tou", -player.statusEffectv2(StatusEffects.CrinosShape));
 			player.dynStats("spe", -player.statusEffectv3(StatusEffects.CrinosShape));
 			player.removeStatusEffect(StatusEffects.CrinosShape);
@@ -4417,9 +4410,10 @@ public function showMonsterLust():void {
 		outputText(monster.capitalA + monster.short + " is currently wrapped up in your tail-coils!  ");
 	}
 	//Venom stuff!
-	if(monster.hasStatusEffect(StatusEffects.NagaVenom)) {
+	var nagaVenom:StatusEffectClass = monster.statusEffectByType(StatusEffects.NagaVenom);
+	if(nagaVenom) {
 		if(monster.plural) {
-			if(monster.statusEffectv1(StatusEffects.NagaVenom) <= 1) {
+			if(nagaVenom.value1 <= 1) {
 				outputText("You notice [monster he] are beginning to show signs of weakening, but there still appears to be plenty of fight left in [monster him].  ");
 			}
 			else {
@@ -4428,17 +4422,16 @@ public function showMonsterLust():void {
 		}
 		//Not plural
 		else {
-			if(monster.statusEffectv1(StatusEffects.NagaVenom) <= 1) {
+			if(nagaVenom.value1 <= 1) {
 				outputText("You notice [monster he] is beginning to show signs of weakening, but there still appears to be plenty of fight left in [monster him].  ");
 			}
 			else {
 				outputText("You notice [monster he] is obviously affected by your venom, [monster his] movements become unsure, and [monster his] balance begins to fade. Sweat is beginning to roll on [monster his] skin. You wager [monster he] is probably beginning to regret provoking you.  ");
 			}
 		}
-		monster.spe -= monster.statusEffectv1(StatusEffects.NagaVenom);
-		monster.str -= monster.statusEffectv1(StatusEffects.NagaVenom);
+		monster.spe -= nagaVenom.value1;
+		nagaVenom.buffHost('str',-nagaVenom.value1);
 		if (monster.spe < 1) monster.spe = 1;
-		if (monster.str < 1) monster.str = 1;
 		if (monster.statusEffectv3(StatusEffects.NagaVenom) >= 1) monster.lust += monster.statusEffectv3(StatusEffects.NagaVenom);
 		if (combatIsOver()) return;
 	}

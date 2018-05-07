@@ -993,7 +993,7 @@ import flash.utils.getQualifiedClassName;
 
 		protected function initStrTouSpeInte(str:Number, tou:Number, spe:Number, inte:Number):void
 		{
-			this.str = str;
+			this.strStat.core.value = str;
 			this.tou = tou;
 			this.spe = spe;
 			this.inte = inte;
@@ -2033,17 +2033,12 @@ import flash.utils.getQualifiedClassName;
 			if (hasPerk(PerkLib.JobRanger)) spe += (5 * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.JobSeducer)) lib += (5 * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.JobSorcerer)) inte += (5 * (1 + newGamePlusMod()));
-			if (hasPerk(PerkLib.JobWarrior)) str += (5 * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.PrestigeJobArcaneArcher)) {
 				spe += (40 * (1 + newGamePlusMod()));
 				inte += (40 * (1 + newGamePlusMod()));
 			}
 			if (hasPerk(PerkLib.PrestigeJobBerserker)) {
-				str += (60 * (1 + newGamePlusMod()));
 				tou += (20 * (1 + newGamePlusMod()));
-			}
-			if (hasPerk(PerkLib.PrestigeJobKiArtMaster)) {
-				str += (40 * (1 + newGamePlusMod()));
 			}
 			if (level > 25) bonusStatsAmp += 0.1*((int)(level-1)/25);
 			bonusAscStr += bonusStatsAmp * str * newGamePlusMod();
@@ -2060,7 +2055,7 @@ import flash.utils.getQualifiedClassName;
 			bonusAscWis = Math.round(bonusAscWis);
 			bonusAscLib = Math.round(bonusAscLib);
 			bonusAscSen = Math.round(bonusAscSen);
-			this.str += bonusAscStr;
+			this.strStat.core.value += bonusAscStr;
 			this.tou += bonusAscTou;
 			this.spe += bonusAscSpe;
 			this.inte += bonusAscInt;

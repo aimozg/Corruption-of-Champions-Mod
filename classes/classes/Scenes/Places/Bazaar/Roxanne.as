@@ -60,7 +60,6 @@ WIN:
 				else {
 					outputText("\n<b>Your head finally clears as your hangover wears off.  Drinking with the shemale lizard was definitely a bad idea.</b>\n");
 					//Restore stats
-					player.str += player.statusEffectv2(StatusEffects.Hangover);
 					player.spe += player.statusEffectv3(StatusEffects.Hangover);
 					player.inte += player.statusEffectv4(StatusEffects.Hangover);
 					dynStats("cor", 0);
@@ -566,46 +565,13 @@ private function applyHangover():void {
 	if(player.hasStatusEffect(StatusEffects.Hangover)) player.changeStatusValue(StatusEffects.Hangover,1,8);
 	//No hangover yet?  Create and yoink stats
 	else {
-		player.createStatusEffect(StatusEffects.Hangover,8,0,0,0);
+		var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.Hangover,8,5,10,15);
 		//Strength minus 5
-		var index:int = 5;
-		while(index > 0) {
-			index--;
-			//If PC has strength to lose
-			if(player.str >= 2) {
-				mainView.statsView.showStatDown( 'str' );
-				// strDown.visible = true;
-				// strUp.visible = false;
-				player.str--;
-				player.addStatusValue(StatusEffects.Hangover,2,1);
-			}
-		}
+		sec.buffHost('str',-5);
 		//speed minus 10
-		index = 10;
-		while(index > 0) {
-			index--;
-			//If PC has speed to lose
-			if(player.spe >= 2) {
-				mainView.statsView.showStatDown( 'spe' );
-				// speDown.visible = true;
-				// speUp.visible = false;
-				player.spe--;
-				player.addStatusValue(StatusEffects.Hangover,3,1);
-			}
-		}
+		sec.buffHost('spe',-10);
 		//int minus 15
-		index = 15;
-		while(index > 0) {
-			index--;
-			//If PC has intelligence to lose
-			if(player.inte >= 2) {
-				mainView.statsView.showStatDown( 'inte' );
-				// inteDown.visible = true;
-				// inteUp.visible = false;
-				player.inte--;
-				player.addStatusValue(StatusEffects.Hangover,4,1);
-			}
-		}
+		sec.buffHost('int',-15);
 	}
 	statScreenRefresh();
 }

@@ -71,7 +71,6 @@ public class StatsView extends Block {
 	private var gemsBar:StatBar;
 
 	private var allStats:/*StatBar*/Array;
-	private var allBaseStats:/*[String,StatBar]*/Array;
 
 	private var mainView:MainView;
 
@@ -106,19 +105,36 @@ public class StatsView extends Block {
 			text: 'Core stats:',
 			defaultTextFormat: LABEL_FORMAT
 		},{before:1});
-		allBaseStats = [];
-		addElement(strBar = new StatBar({statName: "Strength:"}));
-		addElement(touBar = new StatBar({statName: "Toughness:"}));
-		addElement(speBar = new StatBar({statName: "Speed:"}));
-		addElement(intBar = new StatBar({statName: "Intelligence:"}));
+		addElement(strBar = new StatBar({
+			statName: "Strength:",
+			dataset: { statname: 'str' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
+		addElement(touBar = new StatBar({
+			statName: "Toughness:",
+			dataset: { statname: 'tou' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
+		addElement(speBar = new StatBar({
+			statName: "Speed:",
+			dataset: { statname: 'spe' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
+		addElement(intBar = new StatBar({
+			statName: "Intelligence:",
+			dataset: { statname: 'int' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
 		addElement(wisBar = new StatBar({
 			statName: "Wisdom:",
-			dataset: {
-				statname: 'wis'
-			}
+			dataset: { statname: 'wis' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
 		}));
-		wisBar.addEventListener(MouseEvent.ROLL_OVER, hoverStat);
-		wisBar.addEventListener(MouseEvent.ROLL_OUT, hoverStat);
 		addElement(libBar = new StatBar({statName: "Libido:"}));
 		addElement(senBar = new StatBar({statName: "Sensitivity:"}));
 		addElement(corBar = new StatBar({statName: "Corruption:"}));
@@ -205,47 +221,47 @@ public class StatsView extends Block {
 		switch (event.type) {
 			case MouseEvent.ROLL_OVER:
 				var bar:StatBar = event.target as StatBar;
-				if (bar) {
-					var statname:String = bar.dataset.statname;
-					var stat:PrimaryStat = player.stats[statname];
-					var text:String = '';
-					text += '<b>Base value:</b> '+Utils.floor(stat.core.value,1)+'\n';
-					var effects:/*Array*/Array = stat.mult.listEffects();
-					for each(var effect:Array in effects) {
-						var value:Number = effect[0];
-						if (value >= 0.0 && value < 0.01) continue;
-						var s:String;
-						if (effect[1] == 'race') {
-							s = 'Racial bonus'
-						} else {
-							// cause unknown, reply with tag
-							s = effect[1];
-						}
-						text += '<b>'+s+':</b> ';
-						text += (value >= 0 ? '+' : '') + Utils.floor(value * 100) + '%';
-						text += '\n';
+				if (!bar) return;
+				var statname:String  = bar.dataset.statname;
+				var stat:PrimaryStat = player.stats[statname];
+				if (!stat) return;
+				var text:String            = '';
+				text += '<b>Base value:</b> ' + Utils.floor(stat.core.value, 1) + '\n';
+				var effects:/*Array*/Array = stat.mult.listEffects();
+				for each(var effect:Array in effects) {
+					var value:Number = effect[0];
+					if (value >= 0.0 && value < 0.01) continue;
+					var s:String;
+					if (effect[1] == 'race') {
+						s = 'Racial bonus'
+					} else {
+						// cause unknown, reply with tag
+						s = effect[1];
 					}
-					effects = stat.bonus.listEffects();
-					for each(effect in effects) {
-						value = effect[0];
-						if (value >= 0.0 && value < 0.1) continue;
-						if (effect[1] == 'drain') {
-							s = 'Drain'
-						} else {
-							// cause unknown, reply with tag
-							s = Utils.capitalizeFirstLetter(effect[1]);
-						}
-						text += '<b>'+s+':</b> '+(value>=0?'+':'')+Utils.floor(value,1)+'\n';
-					}
+					text += '<b>' + s + ':</b> ';
+					text += (value >= 0 ? '+' : '') + Utils.floor(value * 100) + '%';
 					text += '\n';
-					text += '<b>Total:</b> '+Utils.floor(stat.value,1);
-					mainView.toolTipView.header = bar.nameLabel.text.replace(':','') + ' ' +
-												  Utils.floor(stat.value)+' / '+
-												  Utils.floor(stat.max);
-					mainView.toolTipView.text   = text;
-					
-					mainView.toolTipView.showForElement(bar);
 				}
+				effects = stat.bonus.listEffects();
+				for each(effect in effects) {
+					value = effect[0];
+					if (value >= 0.0 && value < 0.1) continue;
+					if (effect[1] == 'drain') {
+						s = 'Drain'
+					} else {
+						// cause unknown, reply with tag
+						s = Utils.capitalizeFirstLetter(effect[1]);
+					}
+					text += '<b>' + s + ':</b> ' + (value >= 0 ? '+' : '') + Utils.floor(value, 1) + '\n';
+				}
+				text += '\n';
+				text += '<b>Total:</b> ' + Utils.floor(stat.value, 1);
+				mainView.toolTipView.header = bar.nameLabel.text.replace(':', '') + ' ' +
+											  Utils.floor(stat.value) + ' / ' +
+											  Utils.floor(stat.max);
+				mainView.toolTipView.text   = text;
+				
+				mainView.toolTipView.showForElement(bar);
 				break;
 			case MouseEvent.ROLL_OUT:
 				mainView.toolTipView.hide();

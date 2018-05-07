@@ -9,8 +9,8 @@ public class CombatStrBuff extends CombatBuff {
 	public function CombatStrBuff() {
 		super(TYPE, "str");
 	}
-	public function applyEffect(strBuff:Number):Number {
-		return buffHost("str", strBuff).str;
+	public function applyEffect(strBuff:Number):void {
+		buffHost("str", strBuff);
 	}
 }
 }

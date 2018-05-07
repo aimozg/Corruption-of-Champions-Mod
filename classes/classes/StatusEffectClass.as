@@ -1,6 +1,10 @@
 ﻿package classes
 {
 import classes.CoC;
+import classes.Stats.BaseStat;
+import classes.Stats.IStat;
+import classes.Stats.PrimaryStat;
+import classes.Stats.PrimaryStat;
 import classes.internals.Utils;
 
 public class StatusEffectClass extends Utils
@@ -65,13 +69,34 @@ public class StatusEffectClass extends Utils
 	public function onCombatRound():void {
 		// do nothing
 	}
+	// ==============================
+	// Utilities
+	// ===============================
+	
+	/**
+	 * Attach a (de)buff to this status effect, will be removed with it
+	 */
+	public function buffHost(stat:String,amount:Number):void {
+		var s:IStat = host.stats[stat];
+		if (s is PrimaryStat) {
+			(s as PrimaryStat).bonus.addOrIncreaseEffect(stype.id,amount,this);
+		} else if (s is BaseStat) {
+			(s as BaseStat).addOrIncreaseEffect(stype.id,amount,this);
+		} else {
+			trace("/!\\ buffHost("+stat+", "+amount+") in "+stype.id);
+		}
+	}
+	
 	public function remove(/*fireEvent:Boolean = true*/):void {
 		if (_host == null) return;
 		_host.removeStatusEffectInstance(this/*,fireEvent*/);
 		_host = null;
 	}
 	public function removedFromHostList(fireEvent:Boolean):void {
-		if (fireEvent) onRemove();
+		if (fireEvent) {
+			onRemove();
+			_host.removeStatEffects(stype.id);
+		}
 		_host = null;
 	}
 	public function addedToHostList(host:Creature,fireEvent:Boolean):void {

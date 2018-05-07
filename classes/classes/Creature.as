@@ -166,11 +166,14 @@ public class Creature extends Utils
 		public var stats:Object = {};// [index:string]:BaseStat
 		
 		//Primary stats
-		public var str:Number = 0;
+		public var strStat:PrimaryStat = new PrimaryStat("str",stats);
 		public var tou:Number = 0;
 		public var spe:Number = 0;
 		public var inte:Number = 0;
 		public var wisStat:PrimaryStat = new PrimaryStat("wis",stats);
+		public function get str():Number {
+			return strStat.value;
+		}
 		public function get wis():Number {
 			return wisStat.value;
 		}
@@ -325,7 +328,7 @@ public class Creature extends Utils
 		 */
 		public function getAllMaxStats():Object {
 			return {
-				str:100,
+				str:strStat.max,
 				tou:100,
 				spe:100,
 				inte:100,
@@ -337,7 +340,7 @@ public class Creature extends Utils
 		}
 		public function getAllMinStats():Object {
 			return {
-				str:1,
+				str:strStat.min,
 				tou:1,
 				spe:1,
 				inte:1,
@@ -372,7 +375,7 @@ public class Creature extends Utils
 			var prevCor:Number  = cor;
 			modStats(argz.str, argz.tou, argz.spe, argz.inte, argz.wis, argz.lib, argz.sens, argz.lust, argz.cor, argz.scale, argz.max);
 			End("Creature","dynStats");
-			//trace("dynStats("+args.join(", ")+") => ("+[str,tou,spe,inte,wis,lib,sens,lust,cor].join(", ")+")");
+			trace("dynStats("+args.join(", ")+") => ("+[str,tou,spe,inte,wis,lib,sens,lust,cor].join(", ")+")");
 			return {
 				str:str-prevStr,
 				tou:tou-prevTou,
@@ -387,10 +390,21 @@ public class Creature extends Utils
 		}
 		public function drainStat(statname:String, damage:Number):Number {
 			var stat:BaseStat = stats[statname+'Bonus'];
+			if (!stat) {
+				// TODO report error
+				return NaN;
+			}
 			var current:Number = -stat.valueOfEffect('drain');
 			damage = Math.max(-current, current+damage);
 			stat.addOrIncreaseEffect('drain', -damage);
 			return damage;
+		}
+		public function removeStatEffects(tag:String):void {
+			for (var statname:String in stats) {
+				var stat:BaseStat = stats[statname] as BaseStat;
+				if (!stat) continue;
+				stat.removeEffect(tag);
+			}
 		}
 		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean, max:Boolean):void {
 			var maxes:Object;
@@ -413,11 +427,11 @@ public class Creature extends Utils
 			var mins:Object = getAllMinStats();
 			mins.lust = minLust();
 			var oldHPratio:Number = hp100/100;
-			str  = Utils.boundFloat(mins.str, str + dstr, maxes.str);
+			drainStat('str', -dstr);
 			tou  = Utils.boundFloat(mins.tou, tou + dtou, maxes.tou);
 			spe  = Utils.boundFloat(mins.spe, spe + dspe, maxes.spe);
 			inte = Utils.boundFloat(mins.inte, inte + dinte, maxes.inte);
-			drainStat('wis', dwis);
+			drainStat('wis', -dwis);
 			lib  = Utils.boundFloat(mins.lib, lib + dlib, maxes.lib);
 			sens = Utils.boundFloat(mins.sens, sens + dsens, maxes.sens);
 			lust = Utils.boundFloat(mins.lust, lust + dlust, maxes.lust);
@@ -822,86 +836,16 @@ public class Creature extends Utils
 		//Functions
 
 		//Create a perk
-		public function createPerk(ptype:PerkType, value1:Number, value2:Number, value3:Number, value4:Number):void
+		public function createPerk(ptype:PerkType, value1:Number, value2:Number, value3:Number, value4:Number):PerkClass
 		{
-			var newKeyItem:PerkClass = new PerkClass(ptype);
-			//used to denote that the array has already had its new spot pushed on.
-			var arrayed:Boolean = false;
-			//used to store where the array goes
-			var keySlot:Number = 0;
-			var counter:Number = 0;
-			//Start the array if its the first bit
-			if (perks.length == 0)
-			{
-				//trace("New Perk Started Array! " + keyName);
-				perks.push(newKeyItem);
-				arrayed = true;
-				keySlot = 0;
-			}
-			//If it belongs at the end, push it on
-			if (perk(perks.length - 1).perkName < ptype.name && !arrayed)
-			{
-				//trace("New Perk Belongs at the end!! " + keyName);
-				perks.push(newKeyItem);
-				arrayed = true;
-				keySlot = perks.length - 1;
-			}
-			//If it belongs in the beginning, splice it in
-			if (perk(0).perkName > ptype.name && !arrayed)
-			{
-				//trace("New Perk Belongs at the beginning! " + keyName);
-				perks.splice(0, 0, newKeyItem);
-				arrayed = true;
-				keySlot = 0;
-			}
-			//Find the spot it needs to go in and splice it in.
-			if (!arrayed)
-			{
-				//trace("New Perk using alphabetizer! " + keyName);
-				counter = perks.length;
-				while (counter > 0 && !arrayed)
-				{
-					counter--;
-					//If the current slot is later than new key
-					if (perk(counter).perkName > ptype.name)
-					{
-						//If the earlier slot is earlier than new key && a real spot
-						if (counter - 1 >= 0)
-						{
-							//If the earlier slot is earlier slot in!
-							if (perk(counter - 1).perkName <= ptype.name)
-							{
-								arrayed = true;
-								perks.splice(counter, 0, newKeyItem);
-								keySlot = counter;
-							}
-						}
-						//If the item after 0 slot is later put here!
-						else
-						{
-							//If the next slot is later we are go
-							if (perk(counter).perkName <= ptype.name) {
-								arrayed = true;
-								perks.splice(counter, 0, newKeyItem);
-								keySlot = counter;
-							}
-						}
-					}
-				}
-			}
-			//Fallback
-			if (!arrayed)
-			{
-				//trace("New Perk Belongs at the end!! " + keyName);
-				perks.push(newKeyItem);
-				keySlot = perks.length - 1;
-			}
-			
-			perk(keySlot).value1 = value1;
-			perk(keySlot).value2 = value2;
-			perk(keySlot).value3 = value3;
-			perk(keySlot).value4 = value4;
-			//trace("NEW PERK FOR PLAYER in slot " + keySlot + ": " + perk(keySlot).perkName);
+			var pc:PerkClass = new PerkClass(ptype);
+			perks.push(pc);
+			perks.sortOn("perkName");
+			pc.value1 = value1;
+			pc.value2 = value2;
+			pc.value3 = value3;
+			pc.value4 = value4;
+			return pc;
 		}
 
 		/**
@@ -1191,29 +1135,27 @@ public class Creature extends Utils
 		 * to check for _specific_ debuff source (poison etc) mid-battle
 		 * @param stat 'str','spe','tou','inte','wis'
 		 * @param buff Creature stat is decremented by this value.
-		 * @return (oldStat-newStat)
 		 */
-		public function addCombatBuff(stat:String, buff:Number):Number {
+		public function addCombatBuff(stat:String, buff:Number):void {
 			switch(stat) {
 				case 'str':
-					return (createOrFindStatusEffect(StatusEffects.GenericCombatStrBuff)
+					(createOrFindStatusEffect(StatusEffects.GenericCombatStrBuff)
 							as CombatStrBuff).applyEffect(buff);
 				case 'spe':
-					return (createOrFindStatusEffect(StatusEffects.GenericCombatSpeBuff)
+					(createOrFindStatusEffect(StatusEffects.GenericCombatSpeBuff)
 							as CombatSpeBuff).applyEffect(buff);
 				case 'tou':
-					return (createOrFindStatusEffect(StatusEffects.GenericCombatTouBuff)
+					(createOrFindStatusEffect(StatusEffects.GenericCombatTouBuff)
 							as CombatTouBuff).applyEffect(buff);
 				case 'int':
 				case 'inte':
-					return (createOrFindStatusEffect(StatusEffects.GenericCombatInteBuff)
+					(createOrFindStatusEffect(StatusEffects.GenericCombatInteBuff)
 							as CombatInteBuff).applyEffect(buff);
 				case 'wis':
-					return (createOrFindStatusEffect(StatusEffects.GenericCombatWisBuff)
+					(createOrFindStatusEffect(StatusEffects.GenericCombatWisBuff)
 							as CombatWisBuff).applyEffect(buff);
 			}
 			trace("/!\\ ERROR: addCombatBuff('"+stat+"', "+buff+")");
-			return 0;
 		}
 		/*
 		

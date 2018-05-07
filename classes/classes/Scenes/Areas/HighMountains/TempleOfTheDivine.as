@@ -22,6 +22,7 @@ import classes.BodyParts.Wings;
 import classes.GlobalFlags.kFLAGS;
 import classes.Items.WeaponLib;
 import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
 
 use namespace CoC;
 	
@@ -215,15 +216,13 @@ use namespace CoC;
 			temp2 += player.tou * 0.1;
 			temp1 = Math.round(temp1);
 			temp2 = Math.round(temp2);
-			player.createStatusEffect(StatusEffects.BlessingOfDivineFenrir, 169, 0, 0, 0);
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.BlessingOfDivineFenrir, 169, 0, 0, 0);
 			tempStr = temp1;
 			tempTou = temp2;
-			player.changeStatusValue(StatusEffects.BlessingOfDivineFenrir,2,tempStr);
-			player.changeStatusValue(StatusEffects.BlessingOfDivineFenrir,3,tempTou);
-			mainView.statsView.showStatUp('str');
-			mainView.statsView.showStatUp('tou');
-			player.str += player.statusEffectv2(StatusEffects.BlessingOfDivineFenrir);
-			player.tou += player.statusEffectv3(StatusEffects.BlessingOfDivineFenrir);
+			sec.value2 = tempStr;
+			sec.value3 = tempTou;
+			sec.buffHost('str',tempStr);
+			player.tou += sec.value3;
 			if (player.HP < player.maxHP()) player.HP = player.maxHP();
 			dynStats("cor", -10);
 			statScreenRefresh();

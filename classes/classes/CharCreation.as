@@ -152,7 +152,7 @@
             }
 
 			model.player = player;
-			player.str = 15;
+			player.strStat.reset(15);
 			player.tou = 15;
 			player.spe = 15;
 			player.inte = 15;
@@ -508,7 +508,7 @@
 		private function isAMan():void {
 			//Attributes
 			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) {
-				player.str += 3;
+				player.strStat.core.value += 3;
 				player.tou += 2;
 			}
 			//Body attributes
@@ -566,7 +566,7 @@
 		private function isAHerm():void {
 			//Attributes
 			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) {
-				player.str+=1;
+				player.strStat.core.value+=1;
 				player.tou+=1;
 				player.spe+=1;
 				player.inte+= 1;
@@ -604,7 +604,7 @@
 		
 		
 		private function buildLeanMale():void {
-			player.str -= 1;
+			player.strStat.core.value -= 1;
 			player.spe += 1;
 			
 			player.femininity = 34;
@@ -618,7 +618,7 @@
 		}
 
 		private function buildSlenderFemale():void {
-			player.str -= 1;
+			player.strStat.core.value -= 1;
 			player.spe += 1;
 			
 			player.femininity = 66;
@@ -653,7 +653,7 @@
 
 		private function buildThickMale():void {
 			player.spe -= 4;
-			player.str += 2;
+			player.strStat.core.value += 2;
 			player.tou += 2;
 			
 			player.femininity = 29;
@@ -668,7 +668,7 @@
 
 		private function buildCurvyFemale():void {
 			player.spe -= 2;
-			player.str += 1;
+			player.strStat.core.value += 1;
 			player.tou += 1;
 			
 			player.femininity = 71;
@@ -681,7 +681,7 @@
 		}
 
 		private function buildGirlyMale():void {
-			player.str -= 2;
+			player.strStat.core.value -= 2;
 			player.spe += 2;
 			
 			player.femininity = 50;
@@ -695,7 +695,7 @@
 		}
 
 		private function buildTomboyishFemale():void {
-			player.str += 1;
+			player.strStat.core.value += 1;
 			player.spe -= 1;
 			
 			player.femininity = 56;
@@ -1172,7 +1172,7 @@
 		}
 
 		private function setEndowmentStrength():void {
-			player.str += 5;
+			player.strStat.core.value += 5;
 			player.tone += 7;
 			player.thickness += 3;
 			//Add bonus +25% strength gain

@@ -13,6 +13,10 @@ public class PrimaryStat implements IStat {
 		_mult.removeAllEffects();
 		_bonus.removeAllEffects();
 	}
+	public function removeAllEffects():void {
+		_mult.removeAllEffects();
+		_bonus.removeAllEffects();
+	}
 	
 	public function get core():RawStat {
 		return _core;

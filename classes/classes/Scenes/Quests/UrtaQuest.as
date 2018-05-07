@@ -251,7 +251,7 @@ public function startUrtaQuest():void {
 	player.vaginas[0].vaginalWetness = VaginaClass.WETNESS_DROOLING;
 	player.vaginas[0].vaginalLooseness = VaginaClass.LOOSENESS_NORMAL;
 	player.clitLength = 1;
-	player.str = 100;
+	player.strStat.reset(100);
 	player.tou = 110;
 	player.spe = 120;
 	player.inte = 60;
@@ -266,7 +266,7 @@ public function startUrtaQuest():void {
 	player.gems = 183;
 	player.level = 26;
 	player.teaseLevel = 5;
-	player.str += (player.newGamePlusMod() * 30);
+	player.strStat.core.value += (player.newGamePlusMod() * 30);
 	player.tou += (player.newGamePlusMod() * 33);
 	player.spe += (player.newGamePlusMod() * 36);
 	player.inte += (player.newGamePlusMod() * 18);
@@ -1599,7 +1599,7 @@ private function gnollAlphaBitchIntro():void {
 	outputText("\n\n<b>It's a fight!</b>");
     CoC.instance.player.clearStatuses(false);
     startCombat(new GnollSpearThrower());
-	monster.str += 20 + (4 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+	monster.strStat.core.value += 20 + (4 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.tou += 25 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.spe += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.inte += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);			

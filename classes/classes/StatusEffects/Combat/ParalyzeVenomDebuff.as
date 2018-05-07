@@ -17,7 +17,8 @@ public class ParalyzeVenomDebuff extends CombatBuff {
 	}
 
 	public function increase():void {
-		buffHost('str',-3,'spe',-3);
+		buffHost('str',-3);
+		buffHost('spe',-3);
 	}
 
 }

@@ -8,6 +8,7 @@ import classes.Items.ShieldLib;
 import classes.Items.WeaponLib;
 import classes.PerkLib;
 import classes.Scenes.API.FnHelpers;
+import classes.StatusEffectClass;
 import classes.StatusEffects;
 
 import coc.view.ButtonData;
@@ -663,22 +664,11 @@ public class CombatSoulskills extends BaseCombatContent {
 		//	TranceBoost *= spellModBlack();
 			TranceBoost = FnHelpers.FN.logScale(TranceBoost,TranceABC,10);
 			TranceBoost = Math.round(TranceBoost);
-			tempStrTou = TranceBoost;
-			player.createStatusEffect(StatusEffects.TranceTransformation, 0, 0, 0, 0);
-			player.changeStatusValue(StatusEffects.TranceTransformation, 1, tempStrTou);
-			mainView.statsView.showStatUp('str');
-			// strUp.visible = true;
-			// strDown.visible = false;
-			mainView.statsView.showStatUp('tou');
-			// touUp.visible = true;
-			// touDown.visible = false;
-			player.str += player.statusEffectv1(StatusEffects.TranceTransformation);
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.TranceTransformation, TranceBoost, 0, 0, 0);
+			sec.buffHost('str',TranceBoost);
 			player.tou += player.statusEffectv1(StatusEffects.TranceTransformation);
 			statScreenRefresh();
 		};
-		var tempStrTou:Number = 0;
-		var tempSpe:Number = 0;
-		var tempInt:Number = 0;
 		outputText("You focus the power of your mind and soul, letting the mystic energy fill you. Your [skin] begins to crystalize as the power within you takes form. The power whirls within you like a hurricane, the force of it lifting you off your feet. This power...  You will use it to reach victory!\n");
 		doEffect.call();
 		enemyAI();
@@ -686,7 +676,6 @@ public class CombatSoulskills extends BaseCombatContent {
 	public function DeactivateTranceTransformation():void {
 		clearOutput();
 		outputText("You disrupt the flow of power within you, softly falling to the ground as the crystal sheathing your [skin] dissipates into nothingness.");
-		player.dynStats("str", -player.statusEffectv1(StatusEffects.TranceTransformation));
 		player.dynStats("tou", -player.statusEffectv1(StatusEffects.TranceTransformation));
 		player.removeStatusEffect(StatusEffects.TranceTransformation);
 		enemyAI();
@@ -694,17 +683,14 @@ public class CombatSoulskills extends BaseCombatContent {
 
 	public function BeatOfWar():void {
 		clearOutput();
-		var tempStr:Number = 0;
 		var soulforcecost:int = 50 * soulskillCost() * soulskillcostmulti();
 		player.soulforce -= soulforcecost;
 		var BeatOfWarBoost:Number = (player.str - player.statusEffectv1(StatusEffects.BeatOfWar)) * 0.15;
 		if (BeatOfWarBoost < 1) BeatOfWarBoost = 1;
 		BeatOfWarBoost = Math.round(BeatOfWarBoost);
-		if (!player.hasStatusEffect(StatusEffects.BeatOfWar)) player.createStatusEffect(StatusEffects.BeatOfWar,0,0,0,0);//player.addStatusValue(StatusEffects.BeatOfWar, 1, BeatOfWarBoost);
-		tempStr = BeatOfWarBoost;
-		player.addStatusValue(StatusEffects.BeatOfWar,1,tempStr);
-		mainView.statsView.showStatUp('str');
-		player.str += BeatOfWarBoost;			//player.statusEffectv1(StatusEffects.BeatOfWar);
+		var sec:StatusEffectClass = player.createOrFindStatusEffect(StatusEffects.BeatOfWar);
+		sec.value1 += BeatOfWarBoost;
+		sec.buffHost('str',BeatOfWarBoost);
 		statScreenRefresh();
 		outputText("You momentarily attune yourself to the song of the mother tree, and prepare to add a note of your own to it’s rhythm. You feel the beat shift the song’s tempo slightly, taking a twist towards the ominous. This attunement augments your strength.\n\n");
 		combat.basemeleeattacks();

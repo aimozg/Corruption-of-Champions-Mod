@@ -17,11 +17,11 @@ public class LustyDemons extends Monster
 
 		override protected function performCombatAction():void
 		{
-			str = 70;
+			strStat.core.value = 70;
 			this.weaponAttack = 14 + (3 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 			createStatusEffect(StatusEffects.Attacks, 4, 0, 0, 0);
 			eAttack();
-			str = 140;
+			strStat.core.value = 140;
 			this.weaponAttack = 56 + (12 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 			eAttack();
 		}

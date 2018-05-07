@@ -17,6 +17,7 @@ import classes.Scenes.NPCs.Holli;
 import classes.Scenes.NPCs.JojoScene;
 import classes.Scenes.Places.TelAdre.UmasShop;
 import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
 import classes.StatusEffects;
 import classes.VaginaClass;
 
@@ -861,16 +862,16 @@ public class CombatMagic extends BaseCombatContent {
 				tempStr = MightBoost;
 			}
 			var oldHPratio:Number = player.hp100/100;
-			player.createStatusEffect(StatusEffects.Might,0,0,MightDuration,0);
-			if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) player.changeStatusValue(StatusEffects.Might,1,tempInt);
-			else player.changeStatusValue(StatusEffects.Might,1,tempStr);
-			player.changeStatusValue(StatusEffects.Might,2,tempTou);
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.Might,0,0,MightDuration,0);
 			if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) {
-				player.inte += player.statusEffectv1(StatusEffects.Might);
+				sec.value1 = tempInt;
+				player.inte += tempInt;
 			} else {
-				player.str += player.statusEffectv1(StatusEffects.Might);
+				sec.value1 = tempStr;
+				sec.buffHost('str',tempStr);
 			}
-			player.tou += player.statusEffectv2(StatusEffects.Might);
+			sec.value2 = tempTou;
+			player.tou += tempTou;
 			player.HP = oldHPratio*player.maxHP();
 			statScreenRefresh();
 		};

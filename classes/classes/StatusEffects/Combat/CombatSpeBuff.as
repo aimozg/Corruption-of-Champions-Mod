@@ -9,8 +9,8 @@ public class CombatSpeBuff extends CombatBuff {
 	public function CombatSpeBuff() {
 		super(TYPE, "spe");
 	}
-	public function applyEffect(speBuff:Number):Number {
-		return buffHost("spe", speBuff).spe;
+	public function applyEffect(speBuff:Number):void {
+		buffHost("spe", speBuff);
 	}
 }
 }

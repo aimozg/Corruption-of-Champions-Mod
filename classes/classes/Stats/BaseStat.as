@@ -69,6 +69,7 @@ public class BaseStat implements IStat {
 		this._base = options['base'];
 		this._min = options['min'];
 		this._max = options['max'];
+		this._value = this._base;
 		if (saveInto) saveInto[name] = this;
 
 		if (!(this._aggregate in AggregateTypes)) throw new Error("Invalid aggregate type");

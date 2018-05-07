@@ -45,7 +45,7 @@ public class TemporaryBuff extends StatusEffectClass{
 	/**
 	 * This function does a host.dynStats(...args) and stores the buff in status effect values
 	 */
-	protected function buffHost(...args):* {
+	protected function buffHost2(...args):* {
 		var buff:* = host.dynStats.apply(host,args);
 		if (_stat1) value1 += buff[_stat1];
 		if (_stat2) value2 += buff[_stat2];

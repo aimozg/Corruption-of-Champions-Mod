@@ -1511,11 +1511,11 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		player.nosePLong = saveFile.data.nosePLong;
 		
 		//MAIN STATS
-		// TODO @aimozg/@Oxdeception properly import stats... Suggestion:
+		// TODO @aimozg/stats & @Oxdeception properly import stats... Suggestion:
 		// 1) Check saved sum of all stats vs possible sum on current level
 		// 2) If saved < possible, add stat points
-		// 3) If saved
-		player.str = saveFile.data.str;
+		// 3) If saved > possible - ???
+		player.strStat.reset(15);
 		player.tou = saveFile.data.tou;
 		player.spe = saveFile.data.spe;
 		player.inte = saveFile.data.inte;

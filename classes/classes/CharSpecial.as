@@ -228,7 +228,7 @@ import classes.Items.*;
 			player.inte = 50;
 			player.tou = 50;
 			player.spe = 15;
-			player.str = 10;
+			player.strStat.core.value = 10;
 			player.cor = 30;
 			player.lib = 30;
 			player.sens = 10;
@@ -284,7 +284,7 @@ import classes.Items.*;
 		private function customCharlie():void {
 			outputText("You're strong, smart, fast, and tough.  It also helps that you've got four dongs well beyond what others have lurking in their trousers.  With your wings, bow, weapon, and tough armor, you're a natural for protecting the town.");
 			player.tou +=2;
-			player.str += 3;
+			player.strStat.core.value += 3;
 			player.fertility = 5;
 			player.hairLength= 26;
 			player.hairColor = "blond";
@@ -322,7 +322,7 @@ import classes.Items.*;
 			//Int 50 (if possible)
 			player.inte = 50;
 			//Str/Tou/Spd 25 (if possible)
-			player.str = 25;
+			player.strStat.core.value = 25;
 			player.tou = 25;
 			player.spe = 25;
 			//Bow
@@ -369,7 +369,7 @@ import classes.Items.*;
 			//-Chainmail armor
 			player.setArmor(armors.FULLCHN);
 			//-Large Claymore (i understand 40 Strength is need so if he could start with that would be great if not hit the gyms)"
-			player.str = 41;
+			player.strStat.core.value = 41;
 			player.setWeapon(weapons.CLAYMOR);
 		}
 		
@@ -404,7 +404,7 @@ import classes.Items.*;
 	
 			//Stats: (if possible)
 			//Strength: 90
-			player.str = 90;
+			player.strStat.core.value = 90;
 			//Fertility: 100
 			player.fertility = 100;
 			player.cor = 25;
@@ -538,7 +538,7 @@ import classes.Items.*;
 			player.fertility = 10;
 			player.hips.type = 8;
 			player.butt.type = 8;
-			player.str = 15;
+			player.strStat.core.value = 15;
 			player.tou = 15;
 			player.spe = 18;
 			player.inte = 17;
@@ -618,7 +618,7 @@ import classes.Items.*;
 			player.balls = 4;
 			player.cumMultiplier = 4;
 			player.ballSize = 2;
-			player.str = 18;
+			player.strStat.core.value = 18;
 			player.tou = 17;
 			player.spe = 15;
 			player.inte = 15;
@@ -698,7 +698,7 @@ import classes.Items.*;
 			//I'm kinda going under the assumption you are letting us go hog wild if not, take what's allowed and do what you wish out of what's below
 			outputText("The portal is not something you fear, not with your imposing armor and inscribed spellblade.  You're much faster and stronger than every champion that came before you, but will it be enough?");
 			//Core Stats:
-			player.str = 40;
+			player.strStat.core.value = 40;
 			player.tou = 20;
 			player.spe = 100;
 			player.inte = 80;
@@ -755,7 +755,7 @@ import classes.Items.*;
 			outputText("You're an equine dragon-herm with a rather well-proportioned body.  Ingnam is certainly going to miss having you whoring yourself out around town.  You don't think they'll miss cleaning up all the messy sex, though.");
 			player.spe+=3;
 			player.inte+=2;
-			player.str += 3;
+			player.strStat.core.value += 3;
 			player.clitLength = .5;
 			player.fertility = 20;
 			player.hairLength= 15;
@@ -862,7 +862,7 @@ import classes.Items.*;
 			player.butt.type = 7;
 			player.hips.type = 7;
 			player.inte = 40;
-			player.str = 20;
+			player.strStat.core.value = 20;
 			player.spe = 25;
 			player.tou = 15;
 			
@@ -882,7 +882,7 @@ import classes.Items.*;
 			//-Large Claymore (i understand 40 Strength is need so if he could start with that would be great if not hit the gyms)"
 			player.setWeapon(weapons.CLAYMOR);
 	
-			player.str = 41;
+			player.strStat.core.value = 41;
 			//femininity: 95
 			player.femininity = 95;
 			//(0 lust cum production: 10000)
@@ -1001,7 +1001,7 @@ import classes.Items.*;
 			player.fertility = 30;
 			player.hips.type = 6;
 			player.butt.type = 6;
-			player.str = 15;
+			player.strStat.core.value = 15;
 			player.tou = 15;
 			player.spe = 18;
 			player.inte = 17;
@@ -1050,7 +1050,7 @@ import classes.Items.*;
 			////"	"I'm picturing a tall, feminine German-Shepherd morph, solid white and gorgeous. She has both sets of genitals, with no balls, and a large set of breasts. She wields a large claymore and is dressed in a full chain vest and pants. 
 			//large claymore (and the strength to use it)
 			player.setWeapon(weapons.CLAYMOR);
-			player.str = 40;
+			player.strStat.core.value = 40;
 			//full chain
 			player.setArmor(armors.FULLCHN);
 			outputText("As a German-Shepherd morph, the rest of the village never really knew what to do with you... until they sent you through the portal to face whatever's on the other side...");
@@ -1116,7 +1116,7 @@ import classes.Items.*;
 		private function customSera():void {
 			outputText("You're something of a shemale - three rows of C-cup breasts matched with three, plump, juicy cocks.  Some decent sized balls, bat wings, and cat-like ears round out the package.");
 			player.tou +=2;
-			player.str += 3;
+			player.strStat.core.value += 3;
 			player.fertility = 5;
 			player.hairLength= 26;
 			player.hairColor = "white";
@@ -1203,7 +1203,7 @@ import classes.Items.*;
 			//human face
 			//no tail, fur, or scales"
 			flags[kFLAGS.HISTORY_PERK_SELECTED] = 0;
-			player.str = 25;
+			player.strStat.core.value = 25;
 			player.tou = 25;
 			player.inte = 25;
 			player.spe = 25;
@@ -1235,7 +1235,7 @@ import classes.Items.*;
 			player.fertility = 50;
 			player.hips.type = 6;
 			player.butt.type = 6;
-			player.str = 100;
+			player.strStat.core.value = 100;
 			player.tou = 100;
 			player.spe = 100;
 			player.inte = 100;
@@ -1443,7 +1443,7 @@ import classes.Items.*;
 			player.fertility = 10;
 			player.hips.type = 6;
 			player.butt.type = 6;
-			player.str = 15;
+			player.strStat.core.value = 15;
 			player.tou = 15;
 			player.spe = 18;
 			player.inte = 17;
@@ -1537,7 +1537,7 @@ import classes.Items.*;
 			player.itemSlot4.unlocked = true;
 			player.itemSlot5.unlocked = true;
 			player.createPerk(PerkLib.HistorySlacker,0,0,0,0);
-			player.str += 4;
+			player.strStat.core.value += 4;
 			player.tou += 4;
 			player.inte += 2;
 			player.spe += 2;
@@ -1583,7 +1583,7 @@ import classes.Items.*;
 			player.inte = 40;
 			player.tou = 25;
 			player.spe = 20;
-			player.str = 15;
+			player.strStat.core.value = 15;
 			player.cor = 30;
 			player.lib = 30;
 			player.sens = 10;
@@ -1652,7 +1652,7 @@ import classes.Items.*;
 			player.wings.type = Wings.DRACONIC_LARGE; // wings! to fly!
 			player.wings.desc = "large, draconic";
 			
-			player.str += -10; // strength? not a kitsune way, besides, you are small and really neglected physical training
+			player.strStat.core.value += -10; // strength? not a kitsune way, besides, you are small and really neglected physical training
 			player.tou += 0; // still, your dragon blood makes you surprisingly tough for your size and condition
 			player.spe += 5; // can take some advantage from small frame
 			player.inte += 55; // your mind is your power!
@@ -1831,7 +1831,7 @@ import classes.Items.*;
 			player.beardStyle = 0;
 			
 			// wrecked body and obsessed mind...
-			player.str -= 15;
+			player.strStat.core.value -= 15;
 			player.tou -= 15;
 			player.spe -= 15;
 			player.inte += 60;

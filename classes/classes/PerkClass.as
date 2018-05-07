@@ -1,6 +1,10 @@
 ﻿package classes
 {
-	public class PerkClass
+import classes.Stats.BaseStat;
+import classes.Stats.IStat;
+import classes.Stats.PrimaryStat;
+
+public class PerkClass
 	{
 		//constructor
 		public function PerkClass(perk:PerkType,value1:Number=0,value2:Number=0,value3:Number=0,value4:Number=0)
@@ -19,7 +23,21 @@
 		public var value4:Number;
 		//MEMBER FUNCTIONS
 
-
+		// TODO @aimozg how that will work with saving-loading-adding-removing? remake like with status effects, maybe even generalize
+		public function buffHost(host:Creature,stat:String,amount:Number):void {
+			/**
+			 * Attach a (de)buff to this status effect, will be removed with it
+			 */
+			var s:IStat = host.stats[stat];
+			if (s is PrimaryStat) {
+				(s as PrimaryStat).bonus.addOrIncreaseEffect(ptype.id,amount,this);
+			} else if (s is BaseStat) {
+				(s as BaseStat).addOrIncreaseEffect(ptype.id,amount,this);
+			} else {
+				trace("/!\\ buffHost("+stat+", "+amount+") in "+ptype.id);
+			}
+		}
+		
 		public function get ptype():PerkType
 		{
 			return _ptype;
