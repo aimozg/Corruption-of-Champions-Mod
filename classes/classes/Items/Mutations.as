@@ -7415,13 +7415,6 @@ public final class Mutations extends MutationsHelper
 					player.balls = 2;
 					player.ballSize = 3;
 				}
-				outputText("Finally, you feel the transformation skittering to a halt, leaving you to openly roam your new chiseled and sex-ready body.  So what if you can barely form coherent sentences anymore?  A body like this does all the talking you need, you figure!");
-				if (player.inte > 35) {
-					var boost:Number = (player.inte-35) / 5;
-					player.inte = 35 + boost;
-					dynStats("int", -0.1);
-
-				}
 				if (player.lib < 50) {
 					player.lib = 50;
 					dynStats("lib", .1);
@@ -7528,17 +7521,14 @@ public final class Mutations extends MutationsHelper
 			player.modTone(100, 100);
 			player.modThickness(100, 50);
 			//Bonus cum production!
-			player.createPerk(PerkLib.BroBrains, 0, 0, 0, 0);
+			var brains:PerkClass = player.createPerk(PerkLib.BroBrains, 0, 0, 0, 0);
+			player.intStat.mult.addOrReplaceEffect(brains.ptype.id,-0.60,brains); // TODO @aimozg/stats rebalance?
 			player.createPerk(PerkLib.BroBody, 0, 0, 0, 0);
 			outputText("<b>(Bro Body - Perk Gained!)\n");
 			outputText("(Bro Brains - Perk Gained!)</b>\n");//int to 20.  max int 50)
 			if (player.hasPerk(PerkLib.Feeder)) {
 				outputText("<b>(Perk Lost - Feeder!)</b>\n");
 				player.removePerk(PerkLib.Feeder);
-			}
-			if (player.inte > 21) {
-				boost = (player.inte-20) / 4;
-				player.inte = 21 + boost;
 			}
 			dynStats("str", 35, "tou", 35, "int", -1, "lib", 5, "lus", 40);
 			player.refillHunger(30);
@@ -9793,8 +9783,7 @@ public final class Mutations extends MutationsHelper
 				//Get warned!
 				if(flags[kFLAGS.FERRET_BAD_END_WARNING] == 0) {
 					outputText("\n\nYou find yourself staring off into the distance, dreaming idly of chasing rabbits through a warren.  You shake your head, returning to reality.  <b>Perhaps you should cut back on all the Ferret Fruit?</b>");
-					player.inte -= 5 + rand(3);
-					if(player.inte < 5) player.inte = 5;
+					player.drainStat('int',-(5 + rand(3)));
 					flags[kFLAGS.FERRET_BAD_END_WARNING] = 1;
 				}
 				//BEEN WARNED! BAD END! DUN DUN DUN

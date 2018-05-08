@@ -20,9 +20,8 @@ public class VampireThirstEffect extends StatusEffectClass {
         var change:Number = currentBoost - oldBoost;
         
         buffHost('str',change);
+        buffHost('int',change);
         host.dynStats(
-                "spe", change,
-                "int", change,
                 "lib", change,
                 "max", false,
                 "scale", false);
@@ -38,8 +37,6 @@ public class VampireThirstEffect extends StatusEffectClass {
     
     override public function onRemove():void {
         host.dynStats(
-                "spe", -currentBoost,
-                "int", -currentBoost,
                 "lib", -currentBoost,
                 "max", false,
                 "scale", false);

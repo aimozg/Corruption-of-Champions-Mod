@@ -37,7 +37,7 @@ import classes.lists.Gender;
  * II. Racial bonuses
  *
  * Racial bonuses are set of named values achievable on certain racial score thresholds.
- * Bonus values are not added on tiers within race (maxstr +15 at score 6 and +30 at 10 will give +30 at score 10),
+ * Bonus values are not added on tiers within race (str +15 at score 6 and +30 at 10 will give +30 at score 10),
  * but are added across different races.
  *
  * There is a AllBonusesFor function that iterates over all races and sums the bonuses.
@@ -163,12 +163,12 @@ public class Race {
 		}
 	}
 
-	public static const BonusName_maxstr:String       = 'maxstr';
-	public static const BonusName_maxtou:String       = 'maxtou';
-	public static const BonusName_maxspe:String       = 'maxspe';
-	public static const BonusName_maxint:String       = 'maxint';
-	public static const BonusName_maxwis:String       = 'maxwis';
-	public static const BonusName_maxlib:String       = 'maxlib';
+	public static const BonusName_str:String          = 'str'; // Str multiplier bonus x 100%
+	public static const BonusName_tou:String          = 'tou'; // Tou multiplier bonus x 100%
+	public static const BonusName_spe:String          = 'spe'; // Spe multiplier bonus x 100%
+	public static const BonusName_int:String          = 'int'; // Int multiplier bonus x 100%
+	public static const BonusName_wis:String          = 'wis'; // Wis multiplier bonus x 100%
+	public static const BonusName_lib:String          = 'lib'; // Lib multiplier bonus x 100%
 	public static const BonusName_minsen:String       = 'minsen';
 	public static const BonusName_maxsen:String       = 'maxsen';
 	public static const BonusName_maxlust:String      = 'maxlust';
@@ -177,12 +177,12 @@ public class Race {
 	public static const BonusName_maxsoulforce:String = 'maxsoulforce';
 	public static const BonusName_defense:String      = 'defense';
 	public static const BonusNames:/*String*/Array    = [
-		BonusName_maxstr,
-		BonusName_maxtou,
-		BonusName_maxspe,
-		BonusName_maxint,
-		BonusName_maxwis,
-		BonusName_maxlib,
+		BonusName_str,
+		BonusName_tou,
+		BonusName_spe,
+		BonusName_int,
+		BonusName_wis,
+		BonusName_lib,
 		BonusName_minsen,
 		BonusName_maxsen,
 		BonusName_maxlust,
@@ -336,36 +336,36 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(30,{
-				'maxstr': +40,
-				'maxtou': +40,
-				'maxspe': +40,
-				'maxint': +40,
-				'maxwis': +40,
-				'maxlib': +40,
+				'str': +40,
+				'tou': +40,
+				'spe': +40,
+				'int': +40,
+				'wis': +40,
+				'lib': +40,
 				'maxsen': +40
 			}).withBonusTier(29,{
-				'maxstr': +30,
-				'maxtou': +30,
-				'maxspe': +30,
-				'maxint': +30,
-				'maxwis': +30,
-				'maxlib': +30,
+				'str': +30,
+				'tou': +30,
+				'spe': +30,
+				'int': +30,
+				'wis': +30,
+				'lib': +30,
 				'maxsen': +30
 			}).withBonusTier(28,{
-				'maxstr': +20,
-				'maxtou': +20,
-				'maxspe': +20,
-				'maxint': +20,
-				'maxwis': +20,
-				'maxlib': +20,
+				'str': +20,
+				'tou': +20,
+				'spe': +20,
+				'int': +20,
+				'wis': +20,
+				'lib': +20,
 				'maxsen': +20
 			}).withBonusTier(27,{
-				'maxstr': +10,
-				'maxtou': +10,
-				'maxspe': +10,
-				'maxint': +10,
-				'maxwis': +10,
-				'maxlib': +10,
+				'str': +10,
+				'tou': +10,
+				'spe': +10,
+				'int': +10,
+				'wis': +10,
+				'lib': +10,
 				'maxsen': +10
 			});
 	public static var MUTANT:Race = new Race("mutant")
@@ -442,9 +442,9 @@ public class Race {
 				'maxfatigue'  : 50,
 				'maxsoulforce': +150,
 				'maxhp'       : +150,
-				'maxtou'      : +25,
-				'maxspe'      : +50,
-				'maxint'      : +90
+				'tou'      : +25,
+				'spe'      : +50,
+				'int'      : +90
 			});
 
 	public static var ALRAUNE:Race = new Race("alraune")
@@ -467,9 +467,9 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(10,{
-				'maxtou': +100,
-				'maxspe': -50,
-				'maxlib': +100
+				'tou': +100,
+				'spe': -50,
+				'lib': +100
 			});
 
 	public static var AVIAN:Race = new Race("avian")
@@ -493,13 +493,13 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr': +15,
-				'maxspe': +30,
-				'maxint': +15
+				'str': +15,
+				'spe': +30,
+				'int': +15
 			}).withBonusTier(9,{
-				'maxstr': +30,
-				'maxspe': +75,
-				'maxint': +30
+				'str': +30,
+				'spe': +75,
+				'int': +30
 			});
 
 	public static var BAT:Race = new Race("bat")
@@ -514,15 +514,15 @@ public class Race {
 				'eyes' : [Eyes.VAMPIRE, +1],
 				'rear' : [RearBody.BAT_COLLAR, +1]
 			}).withBonusTier(6,{
-				'maxstr': +20,
-				'maxspe': +20,
-				'maxint': +20,
-				'maxlib': +30
+				'str': +20,
+				'spe': +20,
+				'int': +20,
+				'lib': +30
 			}).withBonusTier(10,{
-				'maxstr': +35,
-				'maxspe': +35,
-				'maxint': +35,
-				'maxlib': +45
+				'str': +35,
+				'spe': +35,
+				'int': +35,
+				'lib': +45
 			});
 
 	public static var BEE:Race = new Race("bee")
@@ -560,13 +560,13 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(5,{
-				'maxtou': +30,
-				'maxspe': +30,
-				'maxint': +15
+				'tou': +30,
+				'spe': +30,
+				'int': +15
 			}).withBonusTier(9,{
-				'maxtou': +50,
-				'maxspe': +50,
-				'maxint': +35
+				'tou': +50,
+				'spe': +50,
+				'int': +35
 			});
 
 	public static var BUNNY:Race = new Race("bunny")
@@ -595,7 +595,7 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxspe': +10
+				'spe': +10
 			});
 
 	public static var CAT:Race = new Race("cat")
@@ -657,11 +657,11 @@ public class Race {
 						return catCounter;
 					}
 			).withBonusTier(4,{
-				'maxspe': +40,
-				'maxlib': +20
+				'spe': +40,
+				'lib': +20
 			}).withBonusTier(8,{
-				'maxspe': +60,
-				'maxlib': +60
+				'spe': +60,
+				'lib': +60
 			});
 
 	public static var CENTAUR:Race = new Race("centaur")
@@ -692,8 +692,8 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(8, {
-				'maxtou': +80,
-				'maxspe': +40,
+				'tou': +80,
+				'spe': +40,
 				'maxhp' : +100
 			});
 
@@ -723,8 +723,8 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(11,{
-				'maxspe': +60,
-				'maxint': +80,
+				'spe': +60,
+				'int': +80,
 				'maxsen': +25
 			});
 
@@ -746,9 +746,9 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(11,{
-				'maxstr': +40,
-				'maxtou': +25,
-				'maxspe': +100
+				'str': +40,
+				'tou': +25,
+				'spe': +100
 			});
 
 	public static var COW:Race = new Race("cow")
@@ -781,18 +781,18 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4, {
-				'maxstr' : +60,
-				'maxtou' : +10,
-				'maxspe' : -20,
-				'maxint' : -10,
-				'maxlib' : +20,
+				'str' : +60,
+				'tou' : +10,
+				'spe' : -20,
+				'int' : -10,
+				'lib' : +20,
 				'maxlust': +25
 			}).withBonusTier(10, {
-				'maxstr' : +120,
-				'maxtou' : +45,
-				'maxspe' : -40,
-				'maxint' : -20,
-				'maxlib' : +45,
+				'str' : +120,
+				'tou' : +45,
+				'spe' : -40,
+				'int' : -20,
+				'lib' : +45,
 				'maxlust': +50
 			});
 
@@ -838,14 +838,14 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(5, {
-				'maxspe' : +15,
-				'maxint' : +15,
-				'maxlib' : +45,
+				'spe' : +15,
+				'int' : +15,
+				'lib' : +45,
 				'maxlust': +50
 			}).withBonusTier(11, {
-				'maxspe' : +30,
-				'maxint' : +35,
-				'maxlib' : +100,
+				'spe' : +30,
+				'int' : +35,
+				'lib' : +100,
 				'maxlust': +50
 			});
 
@@ -873,8 +873,8 @@ public class Race {
 					score += 1;
 				return score;
 			}).withBonusTier(4,{
-				'maxspe': +15,
-				'maxint': -5
+				'spe': +15,
+				'int': -5
 			});
 
 	public static var DEER:Race = new Race("deer")
@@ -899,7 +899,7 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxspe': +20
+				'spe': +20
 			});
 
 	public static var DEVILKIN:Race = new Race("devilkin")
@@ -926,25 +926,25 @@ public class Race {
 					}
 			).withBonusTier(7, {
 				'minsen' : +10,
-				'maxstr' : +35,
-				'maxspe' : -10,
-				'maxint' : +40,
-				'maxlib' : +50,
+				'str' : +35,
+				'spe' : -10,
+				'int' : +40,
+				'lib' : +50,
 				'maxsen' : +10,
 				'maxlust': +75
 			}).withBonusTier(10, {
 				'minsen' : +25,
-				'maxstr' : +50,
-				'maxspe' : -20,
-				'maxint' : +60,
-				'maxlib' : +75,
+				'str' : +50,
+				'spe' : -20,
+				'int' : +60,
+				'lib' : +75,
 				'maxsen' : +15,
 				'maxlust': +150
 			}).withBonusTier(14, {
 				'minsen' : +55,
-				'maxspe' : +30,
-				'maxint' : +35,
-				'maxlib' : +100,
+				'spe' : +30,
+				'int' : +35,
+				'lib' : +100,
 				'maxlust': +150
 			});
 
@@ -1000,39 +1000,39 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4, {
-				'maxstr': +15,
-				'maxtou': +15,
-				'maxint': +15,
-				'maxwis': +15,
+				'str': +15,
+				'tou': +15,
+				'int': +15,
+				'wis': +15,
 				'maxhp' : +100
 			}).withBonusTier(10, {
 				'defense': 1,
-				'maxstr' : +50,
-				'maxtou' : +40,
-				'maxspe' : +10,
-				'maxint' : +20,
-				'maxwis' : +20,
-				'maxlib' : +10,
+				'str' : +50,
+				'tou' : +40,
+				'spe' : +10,
+				'int' : +20,
+				'wis' : +20,
+				'lib' : +10,
 				'maxhp'  : +200
 			}).withBonusTier(20, {
 				'defense'   : 4,
-				'maxstr'    : +95,
-				'maxtou'    : +95,
-				'maxspe'    : +20,
-				'maxint'    : +40,
-				'maxwis'    : +40,
-				'maxlib'    : +10,
+				'str'    : +95,
+				'tou'    : +95,
+				'spe'    : +20,
+				'int'    : +40,
+				'wis'    : +40,
+				'lib'    : +10,
 				'maxfatigue': +100,
 				'maxhp'     : +300,
 				'maxlust'   : +25
 			}).withBonusTier(28, {
 				'defense'   : 10,
-				'maxstr'    : +100,
-				'maxtou'    : +100,
-				'maxspe'    : +40,
-				'maxint'    : +50,
-				'maxwis'    : +50,
-				'maxlib'    : +20,
+				'str'    : +100,
+				'tou'    : +100,
+				'spe'    : +40,
+				'int'    : +50,
+				'wis'    : +50,
+				'lib'    : +20,
 				'maxfatigue': +200,
 				'maxhp'     : +400,
 				'maxlust'   : +50
@@ -1110,19 +1110,19 @@ public class Race {
 					}
 			).withBonusTier(5, {
 				'minsen': 15,
-				'maxstr': -10,
-				'maxtou': -10,
-				'maxspe': +40,
-				'maxint': +40,
-				'maxwis': +30,
+				'str': -10,
+				'tou': -10,
+				'spe': +40,
+				'int': +40,
+				'wis': +30,
 				'maxsen': +15
 			}).withBonusTier(11, {
 				'minsen': 30,
-				'maxstr': -10,
-				'maxtou': -15,
-				'maxspe': +80,
-				'maxint': +80,
-				'maxwis': +60,
+				'str': -10,
+				'tou': -15,
+				'spe': +80,
+				'int': +80,
+				'wis': +60,
 				'maxsen': +30
 			});
 
@@ -1164,13 +1164,13 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr': -5,
-				'maxspe': +40,
-				'maxint': +25
+				'str': -5,
+				'spe': +40,
+				'int': +25
 			}).withBonusTier(7,{
-				'maxstr': -30,
-				'maxspe': +80,
-				'maxint': +55,
+				'str': -30,
+				'spe': +80,
+				'int': +55,
 				'maxfatigue': +20
 			});
 
@@ -1213,9 +1213,9 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(21,{
-				'maxstr':+70,
-				'maxtou':+100,
-				'maxint':+70
+				'str':+70,
+				'tou':+100,
+				'int':+70
 			});
 
 	public static var GoblinSkinColors:/*String*/Array = ["pale yellow", "grayish-blue", "green", "dark green"];
@@ -1244,7 +1244,7 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxint': +20
+				'int': +20
 			});
 
 	public static var GOO:Race = new Race("goo")
@@ -1280,13 +1280,13 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxtou': +40,
-				'maxspe': -20,
-				'maxlib': +40
+				'tou': +40,
+				'spe': -20,
+				'lib': +40
 			}).withBonusTier(8,{
-				'maxtou': +80,
-				'maxspe': -40,
-				'maxlib': +80
+				'tou': +80,
+				'spe': -40,
+				'lib': +80
 			});
 
 	public static var GORGON:Race = new Race("gorgon")
@@ -1319,9 +1319,9 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(11,{
-				'maxstr': +50,
-				'maxtou': +45,
-				'maxspe': +70,
+				'str': +50,
+				'tou': +45,
+				'spe': +70,
 				'maxhp' : +50
 			});
 
@@ -1353,13 +1353,13 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxtou': -10,
-				'maxspe': +40,
-				'maxlib': +30
+				'tou': -10,
+				'spe': +40,
+				'lib': +30
 			}).withBonusTier(8,{
-				'maxtou': -20,
-				'maxspe': +80,
-				'maxlib': +60
+				'tou': -20,
+				'spe': +80,
+				'lib': +60
 			});
 
 	public static var HORSE:Race = new Race("horse")
@@ -1390,12 +1390,12 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxspe': +40,
-				'maxtou': +20,
+				'spe': +40,
+				'tou': +20,
 				'maxhp' : +35
 			}).withBonusTier(7,{
-				'maxspe': +70,
-				'maxtou': +35,
+				'spe': +70,
+				'tou': +35,
 				'maxhp' : +70
 			});
 
@@ -1451,25 +1451,25 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr': +15,
-				'maxtou': +15,
-				'maxspe': +30,
-				'maxint': +15,
-				'maxwis': -15
+				'str': +15,
+				'tou': +15,
+				'spe': +30,
+				'int': +15,
+				'wis': -15
 			}).withBonusTier(10,{
-				'maxstr': +50,
-				'maxtou': +40,
-				'maxspe': +50,
-				'maxint': +20,
-				'maxwis': -20,
-				'maxlib': +10
+				'str': +50,
+				'tou': +40,
+				'spe': +50,
+				'int': +20,
+				'wis': -20,
+				'lib': +10
 			}).withBonusTier(20,{
-				'maxstr': +95,
-				'maxtou': +95,
-				'maxspe': +100,
-				'maxint': +40,
-				'maxwis': -50,
-				'maxlib': +20
+				'str': +95,
+				'tou': +95,
+				'spe': +100,
+				'int': +40,
+				'wis': -50,
+				'lib': +20
 			});
 
 	public static var KANGA:Race = new Race("kangaroo")
@@ -1487,8 +1487,8 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxtou': +5,
-				'maxspe': +15
+				'tou': +5,
+				'spe': +15
 			});
 
 	public static var KITSHOO:Race = new Race("kitshoo")
@@ -1629,18 +1629,18 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(5, {
-				'maxstr'    : -35,
-				'maxspe'    : +20,
-				'maxint'    : +30,
-				'maxwis'    : +40,
-				'maxlib'    : +20,
+				'str'    : -35,
+				'spe'    : +20,
+				'int'    : +30,
+				'wis'    : +40,
+				'lib'    : +20,
 				'maxfatigue': +100
 			}).withBonusTier(12, {
-				'maxstr'    : -50,
-				'maxspe'    : +40,
-				'maxint'    : +70,
-				'maxwis'    : +100,
-				'maxlib'    : +20,
+				'str'    : -50,
+				'spe'    : +40,
+				'int'    : +70,
+				'wis'    : +100,
+				'lib'    : +20,
 				'maxfatigue': +300
 			});
 
@@ -1677,12 +1677,12 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4, {
-				'maxtou'    : +40,
-				'maxint'    : +20,
+				'tou'    : +40,
+				'int'    : +20,
 				'maxfatigue': +30
 			}).withBonusTier(8, {
-				'maxint'    : +70,
-				'maxlib'    : +50,
+				'tou'    : +70,
+				'int'    : +50,
 				'maxfatigue': +30
 			});
 
@@ -1718,15 +1718,15 @@ public class Race {
 					}
 			).withBonusTier(6, {
 				'minsen': 30,
-				'maxspe': +50,
-				'maxint': +25,
-				'maxlib': +30,
+				'spe': +50,
+				'int': +25,
+				'lib': +30,
 				'maxhp' : +50
 			}).withBonusTier(12, {
 				'minsen': 45,
-				'maxspe': +100,
-				'maxint': +50,
-				'maxlib': +60,
+				'spe': +100,
+				'int': +50,
+				'lib': +60,
 				'maxhp' : +50
 			});
 
@@ -1766,15 +1766,15 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(6,{
-				'maxstr': -20,
-				'maxtou': +30,
-				'maxspe': +70,
-				'maxint': +10
+				'str': -20,
+				'tou': +30,
+				'spe': +70,
+				'int': +10
 			}).withBonusTier(12,{
-				'maxstr': -40,
-				'maxtou': +60,
-				'maxspe': +140,
-				'maxint': +20
+				'str': -40,
+				'tou': +60,
+				'spe': +140,
+				'int': +20
 			});
 
 	public static var MINOTAUR:Race = new Race("minotaur")
@@ -1805,18 +1805,18 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4, {
-				'maxstr' : +60,
-				'maxtou' : +10,
-				'maxspe' : -10,
-				'maxint' : -20,
-				'maxlib' : +20,
+				'str' : +60,
+				'tou' : +10,
+				'spe' : -10,
+				'int' : -20,
+				'lib' : +20,
 				'maxlust': +25
 			}).withBonusTier(10, {
-				'maxstr' : +120,
-				'maxtou' : +45,
-				'maxspe' : -20,
-				'maxint' : -40,
-				'maxlib' : +45,
+				'str' : +120,
+				'tou' : +45,
+				'spe' : -20,
+				'int' : -40,
+				'lib' : +45,
 				'maxlust': +50
 			});
 
@@ -1855,12 +1855,12 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr': +20,
-				'maxspe': +40
+				'str': +20,
+				'spe': +40
 			}).withBonusTier(8,{
-				'maxstr': +40,
-				'maxtou': +20,
-				'maxspe': +60
+				'str': +40,
+				'tou': +20,
+				'spe': +60
 			});
 
 	public static var NEKOMATA:Race = new Race("nekomata")
@@ -1886,9 +1886,9 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(11,{
-				'maxspe': +40,
-				'maxint': +40,
-				'maxwis': +85
+				'spe': +40,
+				'int': +40,
+				'wis': +85
 			});
 
 	public static const OniEyeColors:/*String*/Array = ["red", "orange", "yellow"];
@@ -1925,15 +1925,15 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(6,{
-				'maxstr': +50,
-				'maxtou': +30,
-				'maxint': -10,
-				'maxwis': +20
+				'str': +50,
+				'tou': +30,
+				'int': -10,
+				'wis': +20
 			}).withBonusTier(12,{
-				'maxstr': +100,
-				'maxtou': +60,
-				'maxint': -20,
-				'maxwis': +40
+				'str': +100,
+				'tou': +60,
+				'int': -20,
+				'wis': +40
 			});
 
 	public static var ORCA:Race = new Race("orca")
@@ -1962,13 +1962,13 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(6,{
-				'maxstr': +35,
-				'maxtou': +20,
-				'maxspe': +35
+				'str': +35,
+				'tou': +20,
+				'spe': +35
 			}).withBonusTier(12,{
-				'maxstr': +70,
-				'maxtou': +40,
-				'maxspe': +70
+				'str': +70,
+				'tou': +40,
+				'spe': +70
 			});
 
 	public static var PHOENIX:Race = new Race("phoenix")
@@ -2003,10 +2003,10 @@ public class Race {
 			).withBonusTier(5, {
 				'maxlust': +25
 			}).withBonusTier(10, {
-				'maxstr' : +20,
-				'maxtou' : +20,
-				'maxspe' : +70,
-				'maxlib' : +40,
+				'str' : +20,
+				'tou' : +20,
+				'spe' : +70,
+				'lib' : +40,
 				'maxlust': +25
 			}).withRacialPerk(10,PerkLib.FireAffinity,
 					"You suddenly feels your body temperature rising to ridiculus level. You pant for several minutes until your finaly at ease with your bodily heat. You doubt any more heat is gunna make you more incomfortable then this as you quietly soak in the soothing warmth your body naturaly produce. Its like your body is made out of living fire.\n\n(<b>Gained Perk: Fire Affinity</b>)",
@@ -2071,23 +2071,23 @@ public class Race {
 					}
 			).withBonusTier(4, {
 				'defense': 2,
-				'maxtou': +30,
-				'maxspe': -10
+				'tou': +30,
+				'spe': -10
 			}).withBonusTier(5, {
 				'defense': 4,
-				'maxstr': +10,
-				'maxtou': +50,
-				'maxspe': -20
+				'str': +10,
+				'tou': +50,
+				'spe': -20
 			}).withBonusTier(6, {
 				'defense': 8,
-				'maxstr': +20,
-				'maxtou': +80,
-				'maxspe': -40
+				'str': +20,
+				'tou': +80,
+				'spe': -40
 			}).withBonusTier(7, {
 				'defense': 10,
-				'maxstr': +25,
-				'maxtou': +100,
-				'maxspe': -50
+				'str': +25,
+				'tou': +100,
+				'spe': -50
 			});
 
 	public static var RACCOON:Race = new Race("raccoon")
@@ -2111,7 +2111,7 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxspe': +15
+				'spe': +15
 			});
 
 	public static var RAIJU:Race = new Race("raiju")
@@ -2141,15 +2141,15 @@ public class Race {
 					}
 			).withBonusTier(5, {
 				'minsen': 25,
-				'maxspe': +35,
-				'maxint': +25,
-				'maxlib': +40,
+				'spe': +35,
+				'int': +25,
+				'lib': +40,
 				'maxsen': +25
 			}).withBonusTier(10, {
 				'minsen': 50,
-				'maxspe': +70,
-				'maxint': +50,
-				'maxlib': +80,
+				'spe': +70,
+				'int': +50,
+				'lib': +80,
 				'maxsen': +50
 			}).withRacialPerk(7,PerkLib.LightningAffinity,
 					"You suddenly feel a rush of electricity run across your skin as your arousal builds up and begin to masturbate in order to get rid of your creeping desire. However even after achieving orgasm not only are you still aroused but you are even hornier than before! You realise deep down that the only way for you to be freed from this jolting pleasure is to have sex with a partner!\n\n(<b>Gained the lightning affinity perk, electrified desire perk and Orgasmic lightning strike ability!</b>)",
@@ -2174,12 +2174,12 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxspe': +45,
-				'maxint': +15
+				'spe': +45,
+				'int': +15
 			}).withBonusTier(8,{
-				'maxstr': +15,
-				'maxspe': +75,
-				'maxint': +30
+				'str': +15,
+				'spe': +75,
+				'int': +30
 			}).withRacialPerk(6,PerkLib.JunglesWanderer,
 					"",
 					""
@@ -2204,10 +2204,10 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr': +15,
-				'maxtou': +15,
-				'maxspe': -10,
-				'maxint': -10,
+				'str': +15,
+				'tou': +15,
+				'spe': -10,
+				'int': -10,
 				'maxhp' : +100
 			});
 
@@ -2243,14 +2243,14 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4, {
-				'maxstr' : +15,
-				'maxtou' : +15,
-				'maxlib' : +30,
+				'str' : +15,
+				'tou' : +15,
+				'lib' : +30,
 				'maxlust': +25
 			}).withBonusTier(7, {
-				'maxstr' : +25,
-				'maxtou' : +25,
-				'maxlib' : +40,
+				'str' : +25,
+				'tou' : +25,
+				'lib' : +40,
 				'maxlust': +25
 			}).withRacialPerk(4,PerkLib.FireAffinity,
 				"You suddenly feels your body temperature rising to ridiculus level. You pant for several minutes until your finaly at ease with your bodily heat. You doubt any more heat is gunna make you more incomfortable then this as you quietly soak in the soothing warmth your body naturaly produce. Its like your body is made out of living fire.\n\n(<b>Gained Perk: Fire Affinity</b>)",
@@ -2302,8 +2302,8 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr': +5,
-				'maxspe': +5
+				'str': +5,
+				'spe': +5
 			});
 
 	public static var SCORPION:Race = new Race("scorpion")
@@ -2350,16 +2350,16 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr': +40,
-				'maxint': +20,
+				'str': +40,
+				'int': +20,
 				'maxhp' : +25
 			}).withBonusTier(7,{
-				'maxstr': +65,
-				'maxint': +40,
+				'str': +65,
+				'int': +40,
 				'maxhp' : +50
 			}).withBonusTier(12,{
-				'maxstr': +120,
-				'maxint': +60,
+				'str': +120,
+				'int': +60,
 				'maxhp' : +150
 			});
 
@@ -2390,16 +2390,16 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr': +20,
-				'maxspe': +40
+				'str': +20,
+				'spe': +40
 			}).withBonusTier(8,{
-				'maxstr': +40,
-				'maxspe': +70,
-				'maxlib': +10
+				'str': +40,
+				'spe': +70,
+				'lib': +10
 			}).withBonusTier(9, {
-				'maxstr' : +60,
-				'maxspe' : +70,
-				'maxlib' : +20,
+				'str' : +60,
+				'spe' : +70,
+				'lib' : +20,
 				'maxlust': +50
 			});
 
@@ -2426,9 +2426,9 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(10,{
-				'maxstr': +40,
-				'maxspe': +70,
-				'maxint': +40
+				'str': +40,
+				'spe': +70,
+				'int': +40
 			});
 
 	public static var SPHINX:Race = new Race("sphinx")
@@ -2480,11 +2480,11 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(14,{
-				'maxspe': +40,
-				'maxstr': +50,
-				'maxtou': -20,
-				'maxint': +100,
-				'maxwis': +40
+				'spe': +40,
+				'str': +50,
+				'tou': -20,
+				'int': +100,
+				'wis': +40
 			});
 
 	public static var SPIDER:Race = new Race("spider")
@@ -2515,13 +2515,13 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr': -10,
-				'maxtou': +30,
-				'maxint': +40
+				'str': -10,
+				'tou': +30,
+				'int': +40
 			}).withBonusTier(7,{
-				'maxstr': -20,
-				'maxtou': +50,
-				'maxint': +75
+				'str': -20,
+				'tou': +50,
+				'int': +75
 			});
 
 	public static var UNICORN:Race = new Race("unicorn")
@@ -2557,9 +2557,9 @@ public class Race {
 				'maxfatigue'  : +20,
 				'maxsoulforce': +50
 			}).withBonusTier(9, {
-				'maxtou'      : +20,
-				'maxspe'      : +40,
-				'maxint'      : +75,
+				'tou'      : +20,
+				'spe'      : +40,
+				'int'      : +75,
 				'maxfatigue'  : +20,
 				'maxsoulforce': +50,
 				'maxhp'       : +120
@@ -2577,15 +2577,15 @@ public class Race {
 				'eyes' : [Eyes.VAMPIRE, +1],
 				'arms' : [Arms.HUMAN, +1]
 			}).withBonusTier(6,{
-				'maxstr': +20,
-				'maxspe': +20,
-				'maxint': +20,
-				'maxlib': +30
+				'str': +20,
+				'spe': +20,
+				'int': +20,
+				'lib': +30
 			}).withBonusTier(10,{
-				'maxstr': +35,
-				'maxspe': +35,
-				'maxint': +35,
-				'maxlib': +45
+				'str': +35,
+				'spe': +35,
+				'int': +35,
+				'lib': +45
 			});
 
 	public static var VOUIVRE:Race = new Race("vouivre")
@@ -2625,11 +2625,11 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(11,{
-				'maxstr': +10,
-				'maxtou': -10,
-				'maxspe': +35,
-				'maxint': +10,
-				'maxwis': -20
+				'str': +10,
+				'tou': -10,
+				'spe': +35,
+				'int': +10,
+				'wis': -20
 			});
 
 	public static var WEREWOLF:Race = new Race("werewolf")
@@ -2666,15 +2666,15 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(6,{
-				'maxstr': +50,
-				'maxtou': +20,
-				'maxspe': +30,
-				'maxint': -10
+				'str': +50,
+				'tou': +20,
+				'spe': +30,
+				'int': -10
 			}).withBonusTier(12,{
-				'maxstr': +100,
-				'maxtou': +40,
-				'maxspe': +60,
-				'maxint': -20
+				'str': +100,
+				'tou': +40,
+				'spe': +60,
+				'int': -20
 			});
 
 	public static var WOLF:Race = new Race("wolf")
@@ -2703,24 +2703,24 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr': +15,
-				'maxspe': +10,
-				'maxint': -10
+				'str': +15,
+				'spe': +10,
+				'int': -10
 			}).withBonusTier(6,{
-				'maxstr': +30,
-				'maxtou': +10,
-				'maxspe': +30,
-				'maxint': -10
+				'str': +30,
+				'tou': +10,
+				'spe': +30,
+				'int': -10
 			}).withBonusTier(7,{
-				'maxstr': +30,
-				'maxtou': +20,
-				'maxspe': +30,
-				'maxint': -10
+				'str': +30,
+				'tou': +20,
+				'spe': +30,
+				'int': -10
 			}).withBonusTier(10,{
-				'maxstr': +60,
-				'maxtou': +30,
-				'maxspe': +60,
-				'maxint': -10
+				'str': +60,
+				'tou': +30,
+				'spe': +60,
+				'int': -10
 			});
 
 	public static var YETI:Race = new Race("yeti")
@@ -2748,17 +2748,17 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(6,{
-				'maxstr': +30,
-				'maxtou': +40,
-				'maxspe': +25,
-				'maxint': -30,
-				'maxlib': +25
+				'str': +30,
+				'tou': +40,
+				'spe': +25,
+				'int': -30,
+				'lib': +25
 			}).withBonusTier(12,{
-				'maxstr': +60,
-				'maxtou': +80,
-				'maxspe': +50,
-				'maxint': -60,
-				'maxlib': +50
+				'str': +60,
+				'tou': +80,
+				'spe': +50,
+				'int': -60,
+				'lib': +50
 			}).withRacialPerk(6, PerkLib.ColdAffinity,
 					"You suddenly no longer feel the cold so you guess you finally got acclimated to the icy winds of the glacial rift. You feel at one with the cold. So well that you actually developed icy power of your own.\n\n(<b>Gained Perks: Cold Affinity and Freezing Breath Yeti</b>)",
 					"You suddenly feel a chill in the air. You guess you somehow no longer resist the cold.\n\n<b>(Lost Perks: Cold Affinity and Freezing Breath Yeti)</b>"
@@ -2794,12 +2794,12 @@ public class Race {
 					}
 			).withBonusTier(10, {
 				'defense': 10,
-				'maxstr': +50,
-				'maxtou': +70,
-				'maxspe': -50,
-				'maxint': +50,
-				'maxwis': +80,
-				'maxlib': -50
+				'str': +50,
+				'tou': +70,
+				'spe': -50,
+				'int': +50,
+				'wis': +80,
+				'lib': -50
 			});
 
 	/*
@@ -2820,7 +2820,7 @@ public class Race {
 						return score;
 					}
 			).withBonusTier(4,{
-				'maxstr':10
+				'str':10
 			});
 	*/
 	

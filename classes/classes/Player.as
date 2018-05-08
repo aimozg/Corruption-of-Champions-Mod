@@ -2839,8 +2839,6 @@ use namespace CoC;
 		
 		public override function getAllMaxStats():Object {
 			Begin("Player","getAllMaxStats");
-			var maxSpe:int = 100;
-			var maxInt:int = 100;
 			var maxLib:int = 100;
 			var maxSen:int = 100;
 			var maxCor:int = 100;
@@ -2866,14 +2864,14 @@ use namespace CoC;
 				penaltyMultiplier -= (tallness - 72) / 168;
 				if (penaltyMultiplier < 0.4) penaltyMultiplier = 0.4;
 				tempSpeedPenalty *= penaltyMultiplier;
-				maxSpe -= tempSpeedPenalty;
-				if (maxSpe < 50) maxSpe = 50;
+				// TODO @aimozg/stats maxSpe -= tempSpeedPenalty;
+				// TODO @aimozg/stats if (maxSpe < 50) maxSpe = 50;
 			}
 			//Perks ahoy
 			Begin("Player","getAllMaxStats.perks");
 			if (hasPerk(PerkLib.BasiliskResistance) && hasPerk(PerkLib.GorgonsEyes))
 			{
-				// 'maxspe': -5, // TODO withBonusTier
+				// 'maxspe': -5, // TODO @aimozg/race convert to racial bonus? or perk?
 			}
 			//Uma's Needlework affects max stats. Takes effect BEFORE racial modifiers and AFTER modifiers from body size.
 			//Caps strength from Uma's needlework.
@@ -2888,6 +2886,8 @@ use namespace CoC;
 			}
 			*/
 			//Caps speed from Uma's needlework.
+			// TODO @aimozg/stats
+			/*
 			if (hasPerk(PerkLib.ChiReflowDefense))
 			{
 				if (maxSpe > UmasShop.NEEDLEWORK_DEFENSE_SPEED_CAP)
@@ -2895,25 +2895,24 @@ use namespace CoC;
 					maxSpe = UmasShop.NEEDLEWORK_DEFENSE_SPEED_CAP;
 				}
 			}
+			*/
 			End("Player","getAllMaxStats.perks");
 			Begin("Player","getAllMaxStats.racial");
 			//Alter max stats depending on race (+15 za pkt)
 			var racials:* = racialBonuses();
-			maxSpe += racials[Race.BonusName_maxspe] * newGamePlusMod;
-			maxInt += racials[Race.BonusName_maxint] * newGamePlusMod;
-			maxLib += racials[Race.BonusName_maxlib] * newGamePlusMod;
+			maxLib += racials[Race.BonusName_lib] * newGamePlusMod;
 			maxSen += racials[Race.BonusName_maxsen] * newGamePlusMod;
 
 			if (isNaga()) {
 				// TODO @aimozg/stats maxStr += (15 * newGamePlusMod);
-				maxSpe += (15 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (15 * newGamePlusMod);
 			}
 			if (isTaur()) {
-				maxSpe += (20 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (20 * newGamePlusMod);
 			}
 			if (isDrider()) {
 				// TODO @aimozg/stats maxTou += (15 * newGamePlusMod);
-				maxSpe += (15 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (15 * newGamePlusMod);
 			}
 			if (isScylla()) {
 				// TODO @aimozg/stats maxStr += (30 * newGamePlusMod);
@@ -2923,20 +2922,18 @@ use namespace CoC;
 					// TODO @aimozg/stats maxStr += (20 * newGamePlusMod);
 				}
 				if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 2) {
-					maxInt += (20 * newGamePlusMod);
+					// TODO @aimozg/stats maxInt += (20 * newGamePlusMod);
 				}
 			}
 			if (internalChimeraScore() >= 1) {
 				// TODO @aimozg/stats maxStr += (5 * internalChimeraScore() * newGamePlusMod);
 				// TODO @aimozg/stats maxTou += (5 * internalChimeraScore() * newGamePlusMod);
-				maxSpe += (5 * internalChimeraScore() * newGamePlusMod);
-				maxInt += (5 * internalChimeraScore() * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (5 * internalChimeraScore() * newGamePlusMod);
+				// TODO @aimozg/stats maxInt += (5 * internalChimeraScore() * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (5 * internalChimeraScore() * newGamePlusMod);
 				maxLib += (5 * internalChimeraScore() * newGamePlusMod);
 				maxSen += (5 * internalChimeraScore() * newGamePlusMod);
 			}
-			if (maxSpe < 25) maxSpe = 25;
-			if (maxInt < 25) maxInt = 25;
 			if (maxLib < 25) maxLib = 25;
 			if (maxSen < 25) maxSen = 25;
 			End("Player","getAllMaxStats.racial");
@@ -2947,25 +2944,25 @@ use namespace CoC;
 			}
 			if (hasPerk(PerkLib.ChimericalBodyBasicStage)) {
 				// TODO @aimozg/stats maxStr += (5 * newGamePlusMod);
-				maxSpe += (5 * newGamePlusMod);
-				maxInt += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxInt += (5 * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ChimericalBodyAdvancedStage)) {
 				// TODO @aimozg/stats maxStr += (10 * newGamePlusMod);
 				// TODO @aimozg/stats maxTou += (10 * newGamePlusMod);
-				maxSpe += (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ChimericalBodyPerfectStage)) {
-				maxInt += (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxInt += (10 * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (10 * newGamePlusMod);
 				maxLib += (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ChimericalBodyUltimateStage)) {
 				// TODO @aimozg/stats maxStr += (10 * newGamePlusMod);
 				// TODO @aimozg/stats maxTou += (10 * newGamePlusMod);
-				maxSpe += (10 * newGamePlusMod);
-				maxInt += (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxInt += (10 * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (10 * newGamePlusMod);
 				maxLib += (10 * newGamePlusMod);
 			}
@@ -2976,40 +2973,40 @@ use namespace CoC;
 			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved)) {
 				// TODO @aimozg/stats maxStr += (5 * newGamePlusMod);
 				// TODO @aimozg/stats maxTou += (5 * newGamePlusMod);
-				maxSpe += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (5 * newGamePlusMod);
 				maxLib += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ScyllaInkGlands)) {
 				// TODO @aimozg/stats maxStr += (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.MantislikeAgility)) {
-				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) maxSpe += (20 * newGamePlusMod);
-				if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) maxSpe += (15 * newGamePlusMod);
-				if (skinType == Skin.SCALES) maxSpe += (10 * newGamePlusMod);
-				if (hasPerk(PerkLib.ThickSkin)) maxSpe += (5 * newGamePlusMod);
+				// TODO @aimozg/stats if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) maxSpe += (20 * newGamePlusMod);
+				// TODO @aimozg/stats if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) maxSpe += (15 * newGamePlusMod);
+				// TODO @aimozg/stats if (skinType == Skin.SCALES) maxSpe += (10 * newGamePlusMod);
+				// TODO @aimozg/stats if (hasPerk(PerkLib.ThickSkin)) maxSpe += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.MantislikeAgilityEvolved)) {
-				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) maxSpe += (20 * newGamePlusMod);
-				if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) maxSpe += (15 * newGamePlusMod);
-				if (skinType == Skin.SCALES) maxSpe += (10 * newGamePlusMod);
-				if (hasPerk(PerkLib.ThickSkin)) maxSpe += (5 * newGamePlusMod);
+				// TODO @aimozg/stats if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) maxSpe += (20 * newGamePlusMod);
+				// TODO @aimozg/stats if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) maxSpe += (15 * newGamePlusMod);
+				// TODO @aimozg/stats if (skinType == Skin.SCALES) maxSpe += (10 * newGamePlusMod);
+				// TODO @aimozg/stats if (hasPerk(PerkLib.ThickSkin)) maxSpe += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.DraconicLungs)) {
-				maxSpe += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.DraconicLungsEvolved)) {
 				// TODO @aimozg/stats maxTou += (5 * newGamePlusMod);
-				maxSpe += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.KitsuneThyroidGland)) {
-				maxSpe += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved)) {
-				maxSpe += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (5 * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.CatlikeNimblenessEvolved)) {
-				maxSpe += (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.GargoylePure)) {
 				// TODO @aimozg/stats maxWis += (80 * newGamePlusMod);
@@ -3022,28 +3019,28 @@ use namespace CoC;
 			}
 			//Perks
 			if (hasPerk(PerkLib.JobCourtesan)) maxLib += (15 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobDervish)) maxSpe += (10 * newGamePlusMod);
+			// TODO @aimozg/stats if (hasPerk(PerkLib.JobDervish)) maxSpe += (10 * newGamePlusMod);
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobDefender)) maxTou += (15 * newGamePlusMod);
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobElementalConjurer)) maxWis += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobEnchanter)) maxInt += (15 * newGamePlusMod);
+			// TODO @aimozg/stats if (hasPerk(PerkLib.JobEnchanter)) maxInt += (15 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobEromancer)) {
-				maxInt += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxInt += (5 * newGamePlusMod);
 				maxLib += (5 * newGamePlusMod);
 			}
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobGuardian)) maxTou += (5 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobHunter)) {
-				maxSpe += (10 * newGamePlusMod);
-				maxInt += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxInt += (5 * newGamePlusMod);
 			}
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobKnight)) maxTou += (10 * newGamePlusMod);
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobMonk)) maxWis += (15 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobRanger)) maxSpe += (5 * newGamePlusMod);
+			// TODO @aimozg/stats if (hasPerk(PerkLib.JobRanger)) maxSpe += (5 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobSeducer)) maxLib += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobSorcerer)) maxInt += (5 * newGamePlusMod);
+			// TODO @aimozg/stats if (hasPerk(PerkLib.JobSorcerer)) maxInt += (5 * newGamePlusMod);
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobWarrior)) maxStr += (5 * newGamePlusMod);
 			if (hasPerk(PerkLib.PrestigeJobArcaneArcher)) {
-				maxSpe += (40 * newGamePlusMod);
-				maxInt += (40 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe += (40 * newGamePlusMod);
+				// TODO @aimozg/stats maxInt += (40 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.PrestigeJobBerserker)) {
 				// TODO @aimozg/stats maxStr += (60 * newGamePlusMod);
@@ -3061,109 +3058,42 @@ use namespace CoC;
 			if (hasPerk(PerkLib.ElementalConjurerResolve)) {
 				// TODO @aimozg/stats maxStr -= (15 * newGamePlusMod);
 				// TODO @aimozg/stats maxTou -= (15 * newGamePlusMod);
-				maxSpe -= (15 * newGamePlusMod);
-				maxInt += (20 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe -= (15 * newGamePlusMod);
+				// TODO @aimozg/stats maxInt += (20 * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (30 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ElementalConjurerDedication)) {
 				// TODO @aimozg/stats maxStr -= (30 * newGamePlusMod);
 				// TODO @aimozg/stats maxTou -= (30 * newGamePlusMod);
-				maxSpe -= (30 * newGamePlusMod);
-				maxInt += (40 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe -= (30 * newGamePlusMod);
+				// TODO @aimozg/stats maxInt += (40 * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (60 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ElementalConjurerSacrifice)) {
 				// TODO @aimozg/stats maxStr -= (45 * newGamePlusMod);
 				// TODO @aimozg/stats maxTou -= (45 * newGamePlusMod);
-				maxSpe -= (45 * newGamePlusMod);
-				maxInt += (60 * newGamePlusMod);
+				// TODO @aimozg/stats maxSpe -= (45 * newGamePlusMod);
+				// TODO @aimozg/stats maxInt += (60 * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (90 * newGamePlusMod);
 			}
-			if (hasPerk(PerkLib.Lycanthropy)) {
-				if (flags[kFLAGS.LUNA_MOON_CYCLE] == 3 || flags[kFLAGS.LUNA_MOON_CYCLE] == 5) {
-					// TODO @aimozg/stats maxStr += (10 * newGamePlusMod);
-					// TODO @aimozg/stats maxTou += (10 * newGamePlusMod);
-					maxSpe += (10 * newGamePlusMod);
-				}
-				if (flags[kFLAGS.LUNA_MOON_CYCLE] == 2 || flags[kFLAGS.LUNA_MOON_CYCLE] == 6) {
-					// TODO @aimozg/stats maxStr += (20 * newGamePlusMod);
-					// TODO @aimozg/stats maxTou += (20 * newGamePlusMod);
-					maxSpe += (20 * newGamePlusMod);
-				}
-				if (flags[kFLAGS.LUNA_MOON_CYCLE] == 1 || flags[kFLAGS.LUNA_MOON_CYCLE] == 7) {
-					// TODO @aimozg/stats maxStr += (30 * newGamePlusMod);
-					// TODO @aimozg/stats maxTou += (30 * newGamePlusMod);
-					maxSpe += (30 * newGamePlusMod);
-				}
-				if (flags[kFLAGS.LUNA_MOON_CYCLE] == 8) {
-					// TODO @aimozg/stats maxStr += (40 * newGamePlusMod);
-					// TODO @aimozg/stats maxTou += (40 * newGamePlusMod);
-					maxSpe += (40 * newGamePlusMod);
-				}
-			}
 			End("Player","getAllMaxStats.perks2");
-			Begin("Player","getAllMaxStats.effects");
 			//Apply New Game+
 			// TODO @aimozg/stats maxStr += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			// TODO @aimozg/stats maxTou += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			maxSpe += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			maxInt += 5 * perkv1(PerkLib.AscensionTranshumanism);
+			// TODO @aimozg/stats maxSpe += 5 * perkv1(PerkLib.AscensionTranshumanism);
+			// TODO @aimozg/stats maxInt += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			// TODO @aimozg/stats maxWis += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			maxLib += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			maxSen += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			//Might
-			if (hasStatusEffect(StatusEffects.Might)) {
-				if (hasStatusEffect(StatusEffects.FortressOfIntellect)) maxInt += statusEffectv1(StatusEffects.Might);
-			}
-			//Blink
-			if (hasStatusEffect(StatusEffects.Blink)) {
-				maxSpe += statusEffectv1(StatusEffects.Blink);
-			}
-			//Dwarf Rage
-			if (hasStatusEffect(StatusEffects.DwarfRage)) {
-				maxSpe += statusEffectv2(StatusEffects.DwarfRage);
-			}
-			//Crinos Shape
-			if (hasStatusEffect(StatusEffects.CrinosShape)) {
-				maxSpe += statusEffectv3(StatusEffects.CrinosShape);
-			}
-			//
-			if (hasStatusEffect(StatusEffects.ShiraOfTheEastFoodBuff2)) {
-				if (statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) maxSpe += statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2);
-				if (statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) maxInt += statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2);
-			}
-			//Beat of War
-			if (hasStatusEffect(StatusEffects.AndysSmoke)) {
-				maxSpe -= statusEffectv2(StatusEffects.AndysSmoke);
-				maxInt += statusEffectv3(StatusEffects.AndysSmoke);
-			}
-			if (hasStatusEffect(StatusEffects.FeedingEuphoria)) {
-				maxSpe += statusEffectv2(StatusEffects.FeedingEuphoria);
-			}
-			if (hasStatusEffect(StatusEffects.BlessingOfDivineTaoth)) {
-				maxSpe += statusEffectv2(StatusEffects.BlessingOfDivineTaoth);
-			}
-			var vthirst:VampireThirstEffect = statusEffectByType(StatusEffects.VampireThirst) as VampireThirstEffect;
-			if (vthirst != null) {
-				maxSpe += vthirst.currentBoost;
-				maxInt += vthirst.currentBoost;
-				maxLib += vthirst.currentBoost;
-			}
-			if (hasStatusEffect(StatusEffects.UnderwaterCombatBoost)) {
-				maxSpe += statusEffectv2(StatusEffects.UnderwaterCombatBoost);
-			}
-			End("Player","getAllMaxStats.effects");
 			End("Player","getAllMaxStats");
-			maxSpe = Math.max(maxSpe,1);
-			maxInt = Math.max(maxInt,1);
 			maxLib = Math.max(maxLib,1);
 			maxSen = Math.max(maxSen,1);
 			maxCor = Math.max(maxCor,1);
 			return {
 				str:strStat.max,
 				tou:touStat.max,
-				spe:maxSpe,
-				inte:maxInt,
+				spe:speStat.max,
+				inte:intStat.max,
 				wis:wisStat.max,
 				lib:maxLib,
 				sens:maxSen,
@@ -3757,8 +3687,8 @@ use namespace CoC;
 				game.oldStats.oldHunger = hunger;
 			}
 			var racials:* = racialBonuses();
-			strStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_maxstr]/100);
-			wisStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_maxwis]/100);
+			strStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_str]/100);
+			wisStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_wis]/100);
 			if (scale) {
 				//MOD CHANGES FOR PERKS
 				//Bimbos learn slower

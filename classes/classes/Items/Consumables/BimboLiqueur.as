@@ -4,6 +4,7 @@
 package classes.Items.Consumables
 {
 import classes.Items.Consumable;
+import classes.PerkClass;
 import classes.PerkLib;
 import classes.VaginaClass;
 import classes.internals.Utils;
@@ -55,11 +56,8 @@ public class BimboLiqueur extends Consumable {
 				game.player.removePerk(PerkLib.BroBody);
 				game.player.removePerk(PerkLib.BroBrains);
 				game.player.createPerk(PerkLib.FutaFaculties, 0, 0, 0, 0);
-				game.player.createPerk(PerkLib.FutaForm, 0, 0, 0, 0);
-				if (game.player.inte > 35) {
-					game.player.inte = 35;
-					game.player.dynStats("int", -0.1);
-				}
+				var brains:PerkClass = game.player.createPerk(PerkLib.FutaForm, 0, 0, 0, 0);
+				player.intStat.mult.addOrReplaceEffect(brains.ptype.id,-0.60,brains); // TODO @aimozg/stats rebalance?
 				if (game.player.lib < 50) {
 					game.player.lib = 50;
 					game.player.dynStats("lib", .1);
@@ -172,11 +170,8 @@ public class BimboLiqueur extends Consumable {
 				}
 				if (!game.player.hasPerk(PerkLib.BimboBrains)) {
 					outputText("<b>(Bimbo Brains - Perk Gained!)</b>\n");//int to 20.  max int 50)
-					game.player.createPerk(PerkLib.BimboBrains, 0, 0, 0, 0);
-					if (game.player.inte > 21) {
-						var boost:Number = game.player.inte / 5;
-						game.player.inte = 21 + boost;
-					}
+					brains = game.player.createPerk(PerkLib.BimboBrains, 0, 0, 0, 0);
+					player.intStat.mult.addOrReplaceEffect(brains.ptype.id,-0.60,brains); // TODO @aimozg/stats rebalance?
 				}
 				game.player.orgasm();
 				game.player.dynStats("int", -1, "lib", 5, "sen", 25);
