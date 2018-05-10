@@ -256,7 +256,7 @@ public function startUrtaQuest():void {
 	player.speStat.reset(120);
 	player.intStat.reset(60);
 	player.wisStat.reset(50);
-	player.lib = 90;
+	player.libStat.reset(90);
 	player.sens = 50;
 	player.cor = 30;
 	player.lust = 55;
@@ -270,7 +270,7 @@ public function startUrtaQuest():void {
 	player.touStat.core.value += (player.newGamePlusMod() * 33);
 	player.speStat.core.value += (player.newGamePlusMod() * 36);
 	player.intStat.core.value += (player.newGamePlusMod() * 18);
-	player.lib += (player.newGamePlusMod() * 27);
+	player.libStat.core.value += (player.newGamePlusMod() * 27);
 
 	//PERKS
 	player.createPerk(PerkLib.Agility,0,0,0,0);
@@ -1603,7 +1603,7 @@ private function gnollAlphaBitchIntro():void {
 	monster.touStat.core.value += 25 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.speStat.core.value += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.intStat.core.value += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.lib += 5 + (1 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+	monster.libStat.core.value += 5 + (1 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.bonusHP = 750;
 	monster.level += 11;
 	monster.short = "alpha gnoll";

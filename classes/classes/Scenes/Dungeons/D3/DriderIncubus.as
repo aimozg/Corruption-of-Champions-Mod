@@ -250,7 +250,7 @@ this.HP -= (this.maxHP() * 0.08);
 					}
 					
 					amount = VENOM_SPEED_DRAIN_FLAT + VENOM_SPEED_DRAIN_MULT*player.newGamePlusMod();
-					player.strStat.bonus.addOrIncreaseEffect(sec.stype.id,-amount,sec);
+					sec.buffHost('str',-amount);
 					player.addStatusValue(StatusEffects.DriderIncubusVenom, 2, amount);
 				}				
 			}

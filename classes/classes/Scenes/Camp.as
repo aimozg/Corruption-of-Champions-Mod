@@ -2974,6 +2974,7 @@ public function setLevelButton(allowAutoLevelTransition:Boolean):Boolean {
 			player.intStat.core.value >= player.intStat.core.max &&
 			player.speStat.core.value >= player.speStat.core.max &&
 			player.wisStat.core.value >= player.wisStat.core.max &&
+			player.libStat.core.value >= player.libStat.core.max &&
 			(player.perkPoints <= 0 || PerkTree.availablePerks(CoC.instance.player).length <= 0) && (player.XP < player.requiredXP() || player.level >= CoC.instance.levelCap)) {
 			mainView.statsView.hideLevelUp();
 		}

@@ -1003,7 +1003,7 @@ import flash.utils.getQualifiedClassName;
 		protected function initWisLibSensCor(wis:Number, lib:Number, sens:Number, cor:Number):void
 		{
 			this.wisStat.core.value = wis;
-			this.lib = lib;
+			this.libStat.core.value = lib;
 			this.sens = sens;
 			this.cor = cor;
 			initedWisLibSensCor = true;
@@ -2017,8 +2017,6 @@ import flash.utils.getQualifiedClassName;
 		}
 		public function prepareForCombat():void {
 			var bonusStatsAmp:Number = 0.2;
-			if (hasPerk(PerkLib.JobCourtesan)) lib += (15 * (1 + newGamePlusMod()));
-			if (hasPerk(PerkLib.JobSeducer)) lib += (5 * (1 + newGamePlusMod()));
 			if (level > 25) bonusStatsAmp += 0.1*((int)(level-1)/25);
 			bonusAscStr += bonusStatsAmp * str * newGamePlusMod();
 			bonusAscTou += bonusStatsAmp * tou * newGamePlusMod();
@@ -2039,7 +2037,7 @@ import flash.utils.getQualifiedClassName;
 			this.speStat.core.value += bonusAscSpe;
 			this.intStat.core.value += bonusAscInt;
 			this.wisStat.core.value += bonusAscWis;
-			this.lib += bonusAscLib;
+			this.libStat.core.value += bonusAscLib;
 			this.sens += bonusAscSen;
 			bonusAscMaxHP += bonusAscStr + bonusAscTou + bonusAscSpe + bonusAscInt + bonusAscWis + bonusAscLib + bonusAscSen;
 			if (level > 10) bonusAscMaxHP *= (int)(level / 10 + 1);

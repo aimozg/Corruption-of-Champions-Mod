@@ -4185,8 +4185,8 @@ public final class Mutations extends MutationsHelper
 			player.touStat.removeAllEffects();
 			player.intStat.removeAllEffects();
 			player.wisStat.removeAllEffects();
+			player.libStat.removeAllEffects();
 			player.sens = 20;
-			player.lib = 25;
 			player.cor = 5;
 			player.lust = 10;
 			player.hairType = Hair.NORMAL;
@@ -7415,16 +7415,14 @@ public final class Mutations extends MutationsHelper
 					player.balls = 2;
 					player.ballSize = 3;
 				}
-				if (player.lib < 50) {
-					player.lib = 50;
-					dynStats("lib", .1);
-				}
 				outputText("\n\n<b>(Lost Perk - ");
 				if (player.hasPerk(PerkLib.BimboBrains)) outputText("Bimbo Brains, ");
 				outputText("Bimbo Body)\n");
 				player.removePerk(PerkLib.BimboBrains);
 				player.removePerk(PerkLib.BimboBody);
-				player.createPerk(PerkLib.FutaForm, 0, 0, 0, 0);
+				brains = player.createPerk(PerkLib.FutaForm, 0, 0, 0, 0);
+				brains.buffHost(player,'intMult',-0.60); // TODO @aimozg/stats rebalance?
+				brains.buffHost(player,'libMult',+0.50); // TODO @aimozg/stats rebalance?
 				player.createPerk(PerkLib.FutaFaculties, 0, 0, 0, 0);
 				outputText("(Gained Perks - Futa Form, Futa Faculties)</b>");
 				return;
@@ -7522,7 +7520,7 @@ public final class Mutations extends MutationsHelper
 			player.modThickness(100, 50);
 			//Bonus cum production!
 			var brains:PerkClass = player.createPerk(PerkLib.BroBrains, 0, 0, 0, 0);
-			player.intStat.mult.addOrReplaceEffect(brains.ptype.id,-0.60,brains); // TODO @aimozg/stats rebalance?
+			brains.buffHost(player,'intMult',-0.60); // TODO @aimozg/stats rebalance?
 			player.createPerk(PerkLib.BroBody, 0, 0, 0, 0);
 			outputText("<b>(Bro Body - Perk Gained!)\n");
 			outputText("(Bro Brains - Perk Gained!)</b>\n");//int to 20.  max int 50)

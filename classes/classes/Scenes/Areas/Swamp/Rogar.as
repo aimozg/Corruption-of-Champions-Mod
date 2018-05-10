@@ -739,10 +739,6 @@ private function takeDatBroBrewFromDaBigMeanOlOrc():void {
 			player.ballSize = 3;
 		}
 		player.intStat.mult.addOrReplaceEffect(brains.ptype.id,-0.60,brains); // TODO @aimozg/stats rebalance?
-		if(player.lib < 50) {
-			player.lib = 50;
-			dynStats("lib", .1);
-		}
 		outputText("\n\n");
 		//(Tits b' gone) 
 		if(player.biggestTitSize() >= 1) {

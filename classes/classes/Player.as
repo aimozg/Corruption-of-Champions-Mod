@@ -2706,22 +2706,23 @@ use namespace CoC;
 		}
 
 		public override function getAllMinStats():Object {
-			var minSpe:int = 1;
-			var minInt:int = 1;
-			var minLib:int = 0;
 			var minSen:int = 10;
 			var minCor:int = 0;
 			var racialScores:* = this.racialScores();
 			var racial:* = this.racialBonuses();
 			//Minimum Libido
+			// TODO @aimozg/stats
+			/*
 			if (this.gender > 0) minLib = 15;
 			else minLib = 10;
+			*/
 	
 			if (this.armorName == "lusty maiden's armor") {
-				if (minLib < 50) minLib = 50;
+				// TODO @aimozg/stats if (minLib < 50) minLib = 50;
 			}
-			if (minLib < (minLust() * 2 / 3))
-			{
+			// TODO @aimozg/stats
+			/*
+			if (minLib < (minLust() * 2 / 3)) {
 				minLib = (minLust() * 2 / 3);
 			}
 			if (this.jewelryEffectId == JewelryLib.PURITY)
@@ -2734,15 +2735,19 @@ use namespace CoC;
 			if (this.hasPerk(PerkLib.HistoryReligious) || this.hasPerk(PerkLib.PastLifeReligious)) {
 				minLib -= 2;
 			}
+			*/
 			if (this.hasPerk(PerkLib.GargoylePure)) {
-				minLib = 5;
+				// TODO @aimozg/stats minLib = 5;
 				minSen = 5;
 			}
 			if (this.hasPerk(PerkLib.GargoyleCorrupted)) {
 				minSen += 15;
 			}
 			//Factory Perks
+			// TODO @aimozg/stats
+			/*
 			if(this.hasPerk(PerkLib.ProductivityDrugs)) {minLib+=this.perkv1(PerkLib.ProductivityDrugs);minCor+=this.perkv2(PerkLib.ProductivityDrugs);}
+			*/
 
 			//Minimum Sensitivity
 			minSen += racial[Race.BonusName_minsen];
@@ -2750,10 +2755,10 @@ use namespace CoC;
 			return {
 				str:strStat.min,
 				tou:touStat.min,
-				spe:minSpe,
-				inte:minInt,
+				spe:speStat.min,
+				inte:intStat.min,
 				wis:wisStat.min,
-				lib:minLib,
+				lib:libStat.min,
 				sens:minSen,
 				cor:minCor
 			};
@@ -2839,7 +2844,6 @@ use namespace CoC;
 		
 		public override function getAllMaxStats():Object {
 			Begin("Player","getAllMaxStats");
-			var maxLib:int = 100;
 			var maxSen:int = 100;
 			var maxCor:int = 100;
 			var newGamePlusMod:int = this.newGamePlusMod()+1;
@@ -2900,7 +2904,6 @@ use namespace CoC;
 			Begin("Player","getAllMaxStats.racial");
 			//Alter max stats depending on race (+15 za pkt)
 			var racials:* = racialBonuses();
-			maxLib += racials[Race.BonusName_lib] * newGamePlusMod;
 			maxSen += racials[Race.BonusName_maxsen] * newGamePlusMod;
 
 			if (isNaga()) {
@@ -2931,16 +2934,15 @@ use namespace CoC;
 				// TODO @aimozg/stats maxSpe += (5 * internalChimeraScore() * newGamePlusMod);
 				// TODO @aimozg/stats maxInt += (5 * internalChimeraScore() * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (5 * internalChimeraScore() * newGamePlusMod);
-				maxLib += (5 * internalChimeraScore() * newGamePlusMod);
+				// TODO @aimozg/stats maxLib += (5 * internalChimeraScore() * newGamePlusMod);
 				maxSen += (5 * internalChimeraScore() * newGamePlusMod);
 			}
-			if (maxLib < 25) maxLib = 25;
 			if (maxSen < 25) maxSen = 25;
 			End("Player","getAllMaxStats.racial");
 			Begin("Player","getAllMaxStats.perks2");
 			if (hasPerk(PerkLib.ChimericalBodyInitialStage)) {
 				// TODO @aimozg/stats maxTou += (5 * newGamePlusMod);
-				maxLib += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxLib += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ChimericalBodyBasicStage)) {
 				// TODO @aimozg/stats maxStr += (5 * newGamePlusMod);
@@ -2956,7 +2958,7 @@ use namespace CoC;
 			if (hasPerk(PerkLib.ChimericalBodyPerfectStage)) {
 				// TODO @aimozg/stats maxInt += (10 * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (10 * newGamePlusMod);
-				maxLib += (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxLib += (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ChimericalBodyUltimateStage)) {
 				// TODO @aimozg/stats maxStr += (10 * newGamePlusMod);
@@ -2964,17 +2966,17 @@ use namespace CoC;
 				// TODO @aimozg/stats maxSpe += (10 * newGamePlusMod);
 				// TODO @aimozg/stats maxInt += (10 * newGamePlusMod);
 				// TODO @aimozg/stats maxWis += (10 * newGamePlusMod);
-				maxLib += (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxLib += (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.SalamanderAdrenalGlands)) {
 				// TODO @aimozg/stats maxTou += (5 * newGamePlusMod);
-				maxLib += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxLib += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved)) {
 				// TODO @aimozg/stats maxStr += (5 * newGamePlusMod);
 				// TODO @aimozg/stats maxTou += (5 * newGamePlusMod);
 				// TODO @aimozg/stats maxSpe += (5 * newGamePlusMod);
-				maxLib += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxLib += (5 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.ScyllaInkGlands)) {
 				// TODO @aimozg/stats maxStr += (10 * newGamePlusMod);
@@ -3010,12 +3012,12 @@ use namespace CoC;
 			}
 			if (hasPerk(PerkLib.GargoylePure)) {
 				// TODO @aimozg/stats maxWis += (80 * newGamePlusMod);
-				maxLib -= (10 * newGamePlusMod);
+				// TODO @aimozg/stats maxLib -= (10 * newGamePlusMod);
 				maxSen -= (10 * newGamePlusMod);
 			}
 			if (hasPerk(PerkLib.GargoyleCorrupted)) {
 				// TODO @aimozg/stats maxWis -= (10 * newGamePlusMod);
-				maxLib += (80 * newGamePlusMod);
+				// TODO @aimozg/stats maxLib += (80 * newGamePlusMod);
 			}
 			//Perks
 			if (hasPerk(PerkLib.JobCourtesan)) maxLib += (15 * newGamePlusMod);
@@ -3025,7 +3027,7 @@ use namespace CoC;
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobEnchanter)) maxInt += (15 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobEromancer)) {
 				// TODO @aimozg/stats maxInt += (5 * newGamePlusMod);
-				maxLib += (5 * newGamePlusMod);
+				// TODO @aimozg/stats maxLib += (5 * newGamePlusMod);
 			}
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobGuardian)) maxTou += (5 * newGamePlusMod);
 			if (hasPerk(PerkLib.JobHunter)) {
@@ -3035,7 +3037,7 @@ use namespace CoC;
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobKnight)) maxTou += (10 * newGamePlusMod);
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobMonk)) maxWis += (15 * newGamePlusMod);
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobRanger)) maxSpe += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobSeducer)) maxLib += (5 * newGamePlusMod);
+			// TODO @aimozg/stats if (hasPerk(PerkLib.JobSeducer)) maxLib += (5 * newGamePlusMod);
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobSorcerer)) maxInt += (5 * newGamePlusMod);
 			// TODO @aimozg/stats if (hasPerk(PerkLib.JobWarrior)) maxStr += (5 * newGamePlusMod);
 			if (hasPerk(PerkLib.PrestigeJobArcaneArcher)) {
@@ -3083,10 +3085,9 @@ use namespace CoC;
 			// TODO @aimozg/stats maxSpe += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			// TODO @aimozg/stats maxInt += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			// TODO @aimozg/stats maxWis += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			maxLib += 5 * perkv1(PerkLib.AscensionTranshumanism);
+			// TODO @aimozg/stats maxLib += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			maxSen += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			End("Player","getAllMaxStats");
-			maxLib = Math.max(maxLib,1);
 			maxSen = Math.max(maxSen,1);
 			maxCor = Math.max(maxCor,1);
 			return {
@@ -3095,7 +3096,7 @@ use namespace CoC;
 				spe:speStat.max,
 				inte:intStat.max,
 				wis:wisStat.max,
-				lib:maxLib,
+				lib:libStat.max,
 				sens:maxSen,
 				cor:maxCor
 			};
@@ -3498,15 +3499,15 @@ use namespace CoC;
 				sac.value1 += 5 * intensity;
 				sac.value2 += 5 * intensity;
 				sac.value3 += 48 * intensity;
-				dynStats("lib", 5 * intensity, "scale", false);
+				sac.buffHost('lib',5*intensity);
 			}
 			//Go into heat.  Heats v1 is bonus fertility, v2 is bonus libido, v3 is hours till it's gone
 			else {
 				if(output) {
 					outputText("\n\nYour mind clouds as your " + vaginaDescript(0) + " moistens.  Your hands begin stroking your body from top to bottom, your sensitive skin burning with desire.  Fantasies about bending over and presenting your needy pussy to a male overwhelm you as <b>you realize you have gone into heat!</b>");
 				}
-				createStatusEffect(StatusEffects.Heat, 10 * intensity, 15 * intensity, 48 * intensity, 0);
-				dynStats("lib", 15 * intensity, "scale", false);
+				sac = createStatusEffect(StatusEffects.Heat, 10 * intensity, 15 * intensity, 48 * intensity, 0);
+				sac.buffHost("lib", 15 * intensity);
 			}
 			return true;
 		}
@@ -3525,15 +3526,16 @@ use namespace CoC;
 			}
 			
 			//Has rut, intensify it!
-			if (inRut) {
+			var sec:StatusEffectClass = statusEffectByType(StatusEffects.Rut);
+			if (sec) {
 				if(output) {
 					outputText("\n\nYour [cock] throbs and dribbles as your desire to mate intensifies.  You know that <b>you've sunken deeper into rut</b>, but all that really matters is unloading into a cum-hungry cunt.");
 				}
 				
-				addStatusValue(StatusEffects.Rut, 1, 100 * intensity);
-				addStatusValue(StatusEffects.Rut, 2, 5 * intensity);
-				addStatusValue(StatusEffects.Rut, 3, 48 * intensity);
-				dynStats("lib", 5 * intensity, "scale", false);
+				sec.value1 += 100 * intensity;
+				sec.value2 += 5 * intensity;
+				sec.value3 += 48 * intensity;
+				sec.buffHost("lib", 5 * intensity);
 			}
 			else {
 				if(output) {
@@ -3543,8 +3545,8 @@ use namespace CoC;
 				//v1 - bonus cum production
 				//v2 - bonus libido
 				//v3 - time remaining!
-				createStatusEffect(StatusEffects.Rut, 150 * intensity, 5 * intensity, 100 * intensity, 0);
-				dynStats("lib", 5 * intensity, "scale", false);
+				sec = createStatusEffect(StatusEffects.Rut, 150 * intensity, 5 * intensity, 100 * intensity, 0);
+				sec.buffHost("lib",5*intensity);
 			}
 			
 			return true;
@@ -3688,7 +3690,11 @@ use namespace CoC;
 			}
 			var racials:* = racialBonuses();
 			strStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_str]/100);
+			touStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_tou]/100);
+			speStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_spe]/100);
+			intStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_int]/100);
 			wisStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_wis]/100);
+			libStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_lib]/100);
 			if (scale) {
 				//MOD CHANGES FOR PERKS
 				//Bimbos learn slower

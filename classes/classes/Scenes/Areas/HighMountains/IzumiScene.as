@@ -331,14 +331,12 @@ import classes.GlobalFlags.kFLAGS;
 			
 			// Can't use dynStats for this, because stats() has a chained modifier to incoming sens changes that could turn this value into 8x what we expected it to be
 			sec.buffHost('spe',deltaSpd);
+			sec.buffHost('lib',deltaLib);
 			player.sens += deltaSns;
-			player.lib += deltaLib;
 			
 			if (player.sens >= 100) player.sens = 100;
-			if (player.lib >= 100) player.lib = 100;
 			
 			showStatUp('sens');
-			showStatUp('lib');
 			
 			dynStats("lus", lustMod);
 		}
@@ -367,10 +365,8 @@ import classes.GlobalFlags.kFLAGS;
 			if (sac)
 			{
 				player.sens -= sac.value3;
-				player.lib -= sac.value4;
 				
 				if (player.sens > 100) player.sens = 100;
-				if (player.lib <= 0) player.lib = 1;
 				
 				showStatDown('sens');
 				showStatDown('lib');

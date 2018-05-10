@@ -1544,7 +1544,8 @@ public function jojoFollowerMeditate(doClear:Boolean = true):void {
 			if (monk == 2 || monk == 3) {
 				outputText("Jojo glares down at you, and begins praying, slowly laying prayer papers all over your battered form.  You feel rage that quickly dissipates, replaced with a calm sense of peace.  You quickly lose consciousness, but are happy he defeated you.\n\nWhen you wake, you discover a note:\n\"<i>The fighting allowed me to exorcise most of your inner demons.  A part of me wanted to seek revenge for what you had done to me, but I know it was the taint on your soul that was responsible.  If we meet again I would be happy to meditate with you.\n\n          -Jojo.</i>\"");
 				player.orgasm();
-				dynStats("lib", -10., "cor", -15);
+				dynStats("sens", -10., "cor", -15);
+				/* TODO @aimozg/stats - ^ replaced with sens, what to do with these? >>
 				if (player.lib < 10) {
 					player.lib = 0;
 					dynStats("lib", 15);
@@ -1555,6 +1556,7 @@ public function jojoFollowerMeditate(doClear:Boolean = true):void {
 				if (player.horseCocks() > 0) player.lib += 3;
 				if (player.dogCocks() > 0) player.lib += 2;
 				if (player.biggestLactation() >= 1) player.lib += 2;
+				*/
 				monk = 0;
 			}
 			else {

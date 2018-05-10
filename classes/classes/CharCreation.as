@@ -154,11 +154,11 @@
 			model.player = player;
 			player.strStat.reset(15);
 			player.touStat.reset(15);
-			player.speStat.core.value = 15;
-			player.intStat.core.value = 15;
+			player.speStat.reset(15);
+			player.intStat.reset(15);
 			player.wisStat.reset(15);
+			player.libStat.reset(15);
 			player.sens = 15;
-			player.lib = 15;
 			player.cor = 15;
 			player.soulforce = 50;
 			player.wrath = 0;
@@ -1204,7 +1204,7 @@
 		}
 		
 		private function setEndowmentLibido():void {
-			player.lib += 5;
+			player.libStat.core.value += 5;
 			if (!player.hasPerk(PerkLib.Lusty)) player.createPerk(PerkLib.Lusty, 0.25, 0, 0, 0);
 			chooseHistory();
 		}

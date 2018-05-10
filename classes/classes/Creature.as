@@ -171,6 +171,7 @@ public class Creature extends Utils
 		public var speStat:PrimaryStat = new PrimaryStat("spe",stats);
 		public var intStat:PrimaryStat = new PrimaryStat("int",stats);
 		public var wisStat:PrimaryStat = new PrimaryStat("wis",stats);
+		public var libStat:PrimaryStat = new PrimaryStat("lib",stats);
 		public function get str():Number {
 			return strStat.value;
 		}
@@ -186,7 +187,9 @@ public class Creature extends Utils
 		public function get wis():Number {
 			return wisStat.value;
 		}
-		public var lib:Number = 0;
+		public function get lib():Number {
+			return libStat.value;
+		}
 		public var sens:Number = 0;
 		public var cor:Number = 0;
 		public var fatigue:Number = 0;
@@ -220,9 +223,6 @@ public class Creature extends Utils
 		
 		public function minLust():Number {
 			return 0;
-		}
-		public function minLib():Number {
-			return 1;
 		}
 		public function minSens():Number {
 			return 10;
@@ -339,10 +339,10 @@ public class Creature extends Utils
 			return {
 				str:strStat.max,
 				tou:touStat.max,
-				spe:100,
-				inte:100,
+				spe:speStat.max,
+				inte:intStat.max,
 				wis:wisStat.max,
-				lib:100,
+				lib:libStat.max,
 				sens:100,
 				cor:100
 			};
@@ -351,10 +351,10 @@ public class Creature extends Utils
 			return {
 				str:strStat.min,
 				tou:touStat.min,
-				spe:1,
-				inte:1,
+				spe:speStat.min,
+				inte:intStat.min,
 				wis:wisStat.min,
-				lib:10,
+				lib:libStat.min,
 				sens:10,
 				cor:0
 			};
@@ -441,7 +441,7 @@ public class Creature extends Utils
 			drainStat('spe', -dspe);
 			drainStat('int', -dinte);
 			drainStat('wis', -dwis);
-			lib  = Utils.boundFloat(mins.lib, lib + dlib, maxes.lib);
+			drainStat('lib', -dlib);
 			sens = Utils.boundFloat(mins.sens, sens + dsens, maxes.sens);
 			lust = Utils.boundFloat(mins.lust, lust + dlust, maxes.lust);
 			cor  = Utils.boundFloat(mins.cor, cor + dcor, maxes.cor);

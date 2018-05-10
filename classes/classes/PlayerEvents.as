@@ -1142,9 +1142,7 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 			}
 			if (player.inHeat) { //Heats v1 is bonus fertility, v2 is bonus libido, v3 is hours till it's gone
 				if (player.statusEffectv3(StatusEffects.Heat) <= 1 || player.vaginas.length == 0) { //Remove bonus libido from heat
-					player.dynStats("lib", -player.statusEffectv2(StatusEffects.Heat), "scale", false);
 					player.removeStatusEffect(StatusEffects.Heat); //remove heat
-					if (player.lib < 1) player.lib = 1;
 					EngineCore.statScreenRefresh();
 					outputText("\n<b>Your body calms down, at last getting over your heat.</b>\n");
 					needNext = true;
@@ -1155,9 +1153,7 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 			if (player.inRut) { //Rut v1 is bonus cum, v2 is bonus libido, v3 is hours till it's gone
 				trace("RUT:" + player.statusEffectv3(StatusEffects.Rut));
 				if (player.statusEffectv3(StatusEffects.Rut) <= 1 || player.cockTotal() == 0) { //Remove bonus libido from rut
-					player.dynStats("lib", -player.statusEffectv2(StatusEffects.Rut), "scale", false);
 					player.removeStatusEffect(StatusEffects.Rut); //remove heat
-					if (player.lib < 10) player.lib = 10;
                     EngineCore.statScreenRefresh();
 					outputText("\n<b>Your body calms down, at last getting over your rut.</b>\n");
 					needNext = true;

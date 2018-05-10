@@ -229,8 +229,8 @@ import classes.Items.*;
 			player.touStat.core.value = 50;
 			player.speStat.core.value = 15;
 			player.strStat.core.value = 10;
+			player.libStat.core.value = 30;
 			player.cor = 30;
-			player.lib = 30;
 			player.sens = 10;
 			outputText("As a wandering mage you had found your way into no small amount of trouble in the search for knowledge.  A strange tome here, a ritual there, most people found your pale form unsettling. They would be further troubled if they could see your feet!  Lets not even begin on the blood magic.  Yes, your interest in examining every aspect of magic has run you down a strange path, so when you wandered into Ingram and began to hear of the exile of the Champion, and the superstitions that surrounded it you were intrigued, as every little rumor and ritual often had a grain of truth.  You snuck into the cave prior to the ritual, where the old man supposedly led every Champion, and there you found a strange portal that emanated a certain degree of spacial transparency -  more than the portal's own.  Within it must have been a whole new world!  Throwing caution to the wind, your curiosities engulfing you, you dove in with nary a thought for the consequences.");
 		}
@@ -543,7 +543,7 @@ import classes.Items.*;
 			player.speStat.core.value = 18;
 			player.intStat.core.value = 17;
 			player.sens = 15;
-			player.lib = 15;
+			player.libStat.core.value = 15;
 			player.cor = 0;
 			player.HP = EngineCore.maxHP();
 			player.hairLength=13;
@@ -623,7 +623,7 @@ import classes.Items.*;
 			player.speStat.core.value = 15;
 			player.intStat.core.value = 15;
 			player.sens = 15;
-			player.lib = 15;
+			player.libStat.core.value = 15;
 			player.cor = 0;
 			player.HP = EngineCore.maxHP();
 			player.hairLength = 1;
@@ -702,7 +702,7 @@ import classes.Items.*;
 			player.touStat.core.value = 20;
 			player.speStat.core.value = 100;
 			player.intStat.core.value = 80;
-			player.lib = 25;
+			player.libStat.core.value = 25;
 			player.sens = 15;
 			
 			//Body Values:
@@ -1006,7 +1006,7 @@ import classes.Items.*;
 			player.speStat.core.value = 18;
 			player.intStat.core.value = 17;
 			player.sens = 15;
-			player.lib = 15;
+			player.libStat.core.value = 15;
 			player.cor = 0;
 			player.HP = EngineCore.maxHP();
 			player.skin.restore();
@@ -1240,7 +1240,7 @@ import classes.Items.*;
 			player.speStat.core.value = 100;
 			player.intStat.core.value = 100;
 			player.sens = 100;
-			player.lib = 30;
+			player.libStat.core.value = 30;
 			player.cor = 71;
 			player.HP = EngineCore.maxHP();
 			player.hairLength = 10;
@@ -1448,7 +1448,7 @@ import classes.Items.*;
 			player.speStat.core.value = 18;
 			player.intStat.core.value = 17;
 			player.sens = 15;
-			player.lib = 15;
+			player.libStat.core.value = 15;
 			player.cor = 0;
 			player.HP = EngineCore.maxHP();
 			player.hairLength = 10;
@@ -1585,7 +1585,7 @@ import classes.Items.*;
 			player.speStat.core.value = 20;
 			player.strStat.core.value = 15;
 			player.cor = 30;
-			player.lib = 30;
+			player.libStat.core.value = 30;
 			player.sens = 10;
 			outputText("You have been fascinated with magic as long as you can remember.  The villagers humored this at first, regaling you with stories about mages of old and providing “spellbooks” that were more superstition than fact.  When you learned to cast whitefire without any instruction, the villagers got worried. Your salvation came in the form of a traveling mage, a hero himself in his youth. He provided the apprenticeship you craved and focused your eccentricities into mastering the art of magical healing.  While you had earned yourself a respectable livelihood well before your coming of age, your fascination with the unnatural has always unnerved your friends and neighbors.  One year, an unknown disease passed through the town.  You saw this peculiar sickness as a challenge, and devised a spell to neutralize it.  ");
 			outputText("While you saved several lives, a handful of villagers died before you bested the plague. Rumors spread that you used their deaths to fuel unnatural rituals, bringing all the fear and suspicion focused on you over the years to a crux.  Your trial was swift, but you accepted the outcome without a second thought.  Whatever lay beyond that portal, you knew it would fall to your powers.");
@@ -1656,7 +1656,7 @@ import classes.Items.*;
 			player.touStat.core.value += 0; // still, your dragon blood makes you surprisingly tough for your size and condition
 			player.speStat.core.value += 5; // can take some advantage from small frame
 			player.intStat.core.value += 55; // your mind is your power!
-			player.lib += 85; // yes, you have problems
+			player.libStat.core.value += 85; // yes, you have problems
 			player.cor += 31; // have high initial corruption, but also have religious history to meditate
 			
 			// bow and concealing leather armor with robes, also can handle rapier well, but doesn't have one
@@ -1836,7 +1836,7 @@ import classes.Items.*;
 			player.speStat.core.value -= 15;
 			player.intStat.core.value += 60;
 			//player.sens = 15;
-			//player.lib = 15;
+			//player.libStat.core.value = 15;
 			player.cor += 2;
 
 			var skin:Number = rand(100);			

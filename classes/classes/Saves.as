@@ -1520,7 +1520,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		player.speStat.reset(15);
 		player.intStat.reset(15);
 		player.wisStat.reset(15);
-		player.lib = saveFile.data.lib;
+		player.libStat.reset(15);
 		player.sens = saveFile.data.sens;
 		player.cor = saveFile.data.cor;
 		player.fatigue = saveFile.data.fatigue;
