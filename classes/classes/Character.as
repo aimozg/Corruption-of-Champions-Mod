@@ -621,11 +621,11 @@ import classes.Items.JewelryLib;
 			return max;
 		}
 		
-		public override function maxSoulforce():Number
+		public override function maxKi():Number
 		{
 			var max:Number = 50;
 			var ngMult:int = 1 + game.player.newGamePlusMod();
-			max += racialBonuses()[Race.BonusName_maxsoulforce]*ngMult;
+			max += racialBonuses()[Race.BonusName_maxki]*ngMult;
 			if (flags[kFLAGS.SOUL_CULTIVATION] >= 2) max += 25;
 			if (flags[kFLAGS.SOUL_CULTIVATION] >= 3) max += 25;
 			if (flags[kFLAGS.SOUL_CULTIVATION] >= 4) max += 30;
@@ -676,7 +676,7 @@ import classes.Items.JewelryLib;
 		public override function maxWrath():Number
 		{
 			var max:Number = 250;
-			if (hasPerk(PerkLib.PrimalFuryI)) max += 10;
+			if (hasPerk(PerkLib.PrimalFury)) max += 10;
 			if (hasPerk(PerkLib.FeralArmor)) max += 20;
 			if (hasPerk(PerkLib.JobDervish)) max += 20;
 			if (hasPerk(PerkLib.JobWarrior)) max += 10;

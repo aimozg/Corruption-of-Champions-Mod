@@ -106,7 +106,7 @@ import flash.utils.getQualifiedClassName;
 		//For enemies
 		public var bonusHP:Number = 0;
 		public var bonusLust:Number = 0;
-		public var bonusSoulforce:Number = 0;
+		public var bonusKi:Number = 0;
 		public var bonusWrath:Number = 0;
 		public var bonusMana:Number = 0;
 		public var bonusStr:Number = 0;
@@ -216,7 +216,7 @@ import flash.utils.getQualifiedClassName;
 			//Apply NG+, NG++, NG+++, etc.
 			temp += this.bonusAscMaxHP * newGamePlusMod();
 			//Apply perks
-			if (hasPerk(PerkLib.TankI)) temp += ((this.tou*3) * (1 + newGamePlusMod()));
+			if (hasPerk(PerkLib.Tank)) temp += ((this.tou*3) * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.JobGuardian)) temp += 30;
 			return temp;
 		}
@@ -271,10 +271,10 @@ import flash.utils.getQualifiedClassName;
 			return temp;
 		}
 		
-		public override function maxSoulforce():Number
+		public override function maxKi():Number
 		{
-			//Base soulforce
-			var temp:Number = 50 + this.bonusSoulforce;
+			//Base ki
+			var temp:Number = 50 + this.bonusKi;
 			if (hasPerk(PerkLib.EnemyTrueDemon)) temp = 0;
 			return temp;
 		}
@@ -283,7 +283,7 @@ import flash.utils.getQualifiedClassName;
 		{
 			//Base wrath
 			var temp:Number = 250 + this.bonusWrath;
-			if (hasPerk(PerkLib.PrimalFuryI)) temp += (10 * (1 + newGamePlusMod()));
+			if (hasPerk(PerkLib.PrimalFury)) temp += (10 * (1 + newGamePlusMod()));
 			if (hasPerk(PerkLib.FeralArmor)) temp += 20;
 			if (hasPerk(PerkLib.JobDervish)) temp += 20;
 			if (hasPerk(PerkLib.JobWarrior)) temp += 10;
@@ -1427,6 +1427,9 @@ import flash.utils.getQualifiedClassName;
 		 */
 		public var onPcRunAttempt:Function = null;
 
+		public function genericPcRunDisabled():void {
+			SceneLib.combat.runFail("You can't escape from this fight!");
+		}
 		/**
 		 * Final method to handle hooks before calling overriden method
 		 */
@@ -1596,8 +1599,8 @@ import flash.utils.getQualifiedClassName;
 			result += Hehas + "str=" + str + ", tou=" + tou + ", spe=" + spe +", inte=" + inte +", wis=" + wis +", lib=" + lib + ", sens=" + sens + ", cor=" + cor + ".\n";
 			result += Pronoun1 + " can " + weaponVerb + " you with  " + weaponPerk + " " + weaponName+" (attack " + weaponAttack + ", value " + weaponValue+").\n";
 			result += Pronoun1 + " is guarded with " + armorPerk + " " + armorName+" (defense " + armorDef + ", value " + armorValue+").\n";
-			result += Hehas + HP + "/" + maxHP() + " HP, " + lust + "/" + maxLust() + " lust, " + fatigue + "/" + maxFatigue() + " fatigue, " + wrath + "/" + maxWrath() + " wrath, " + soulforce + "/" + maxSoulforce() + " soulforce, " + mana + "/" + maxMana() + " mana. ";
-			result += Pronoun3 + " bonus HP=" + bonusHP + ", bonus lust=" + bonusLust + ", bonus wrath=" + bonusWrath + ", bonus mana=" + bonusMana + ", bonus soulforce=" + bonusSoulforce + ", and lust vulnerability=" + lustVuln + ".\n"
+			result += Hehas + HP + "/" + maxHP() + " HP, " + lust + "/" + maxLust() + " lust, " + fatigue + "/" + maxFatigue() + " fatigue, " + wrath + "/" + maxWrath() + " wrath, " + ki + "/" + maxKi() + " ki, " + mana + "/" + maxMana() + " mana. ";
+			result += Pronoun3 + " bonus HP=" + bonusHP + ", bonus lust=" + bonusLust + ", bonus wrath=" + bonusWrath + ", bonus mana=" + bonusMana + ", bonus ki=" + bonusKi + ", and lust vulnerability=" + lustVuln + ".\n"
 			result += Heis + "level " + level + " and " + have+" " + gems + " gems. You will be awarded " + XP + " XP.\n";
 			
 			var numSpec:int = (special1 != null ? 1 : 0) + (special2 != null ? 1 : 0) + (special3 != null ? 1 : 0);
@@ -1932,7 +1935,7 @@ import flash.utils.getQualifiedClassName;
 				}
 				//Deal damage if still wounded.
 				else {
-					var store6:Number = (player.spe + player.inte) * SceneLib.combat.soulskillMod() * 0.5;
+					var store6:Number = (player.spe + player.inte) * SceneLib.combat.kiPowerMod() * 0.5;
 					store6 = SceneLib.combat.doDamage(store6);
 					if(plural) outputText(capitalA + short + " burn from lingering Fire Punch after-effect. <b>(<font color=\"#800000\">" + store6 + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " burns from lingering Fire Punch after-effect. <b>(<font color=\"#800000\">" + store6 + "</font>)</b>\n\n");

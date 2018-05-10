@@ -14,7 +14,6 @@ import classes.Items.JewelryLib;
 import classes.Items.ShieldLib;
 import classes.Items.WeaponLib;
 import classes.PerkLib;
-import classes.Scenes.Areas.Ocean.SeaAnemone;
 import classes.Scenes.Camp.CampMakeWinions;
 import classes.Scenes.Dungeons.D3.LivingStatue;
 import classes.Scenes.NPCs.Anemone;
@@ -1090,7 +1089,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 		damage += player.tou;
 		damage += scalingBonusToughness() * 0.5;
 		//addictive bonuses
-		if (player.hasPerk(PerkLib.IronFistsI)) damage += 10;
+		if (player.hasPerk(PerkLib.IronFists)) damage += 10;
 		if (player.hasPerk(PerkLib.JobMonk)) damage += (10 * (1 + player.newGamePlusMod()));
 		if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += (30 + (15 * player.newGamePlusMod()));
 		if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += (30 + (15 * player.newGamePlusMod()));
@@ -1145,7 +1144,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 		damage += player.tou;
 		damage += scalingBonusToughness() * 0.25;
 		//addictive bonuses
-		if (player.hasPerk(PerkLib.IronFistsI)) damage += 10;
+		if (player.hasPerk(PerkLib.IronFists)) damage += 10;
 		if (player.hasPerk(PerkLib.JobMonk)) damage += (10 * (1 + player.newGamePlusMod()));
 		if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += (30 + (15 * player.newGamePlusMod()));
 		if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += (30 + (15 * player.newGamePlusMod()));
@@ -1538,7 +1537,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 					damage += player.spe;
 					damage += scalingBonusSpeed() * 0.5;
 					//addictive bonuses
-					if (player.hasPerk(PerkLib.IronFistsI)) damage += 10;
+					if (player.hasPerk(PerkLib.IronFists)) damage += 10;
 					if (player.hasPerk(PerkLib.JobMonk)) damage += (10 * (1 + player.newGamePlusMod()));
 					if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += (30 + (15 * player.newGamePlusMod()));
 					if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += (30 + (15 * player.newGamePlusMod()));
@@ -2504,16 +2503,10 @@ public class PhysicalSpecials extends BaseCombatContent {
 		}
 		if(damage > 0) {
 			//Lust raised by anemone contact!
-			if(monster.short == "anemone") {
+			if(monster.short == "anemone" || monster.short == "sea anemone") {
 				outputText("\nThough you managed to hit the anemone, several of the tentacles surrounding her body sent home jolts of venom when your swing brushed past them.");
 				//(gain lust, temp lose str/spd)
 				(monster as Anemone).applyVenom((1+rand(2)));
-			}
-			//Lust raised by sea anemone contact!
-			if(monster.short == "sea anemone") {
-				outputText("\nThough you managed to hit the sea anemone, several of the tentacles surrounding her body sent home jolts of venom when your swing brushed past them.");
-				//(gain lust, temp lose str/spd)
-				(monster as SeaAnemone).applyVenom((1+rand(2)));
 			}
 		}
 		outputText("\n\n");

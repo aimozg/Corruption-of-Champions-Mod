@@ -1315,7 +1315,7 @@ public function campLoversMenu(descOnly:Boolean = false):void {
     for each(var npc:XXCNPC in _campFollowers){
 		npc.campDescription(buttons,XXCNPC.LOVER);
     }
-	if(!descOnly){submenu(buttons,playerMenu)}
+	if(!descOnly){buttons.submenu(playerMenu);}
 }
 
 public function campSlavesMenu(descOnly:Boolean = false):void {
@@ -1374,7 +1374,7 @@ public function campSlavesMenu(descOnly:Boolean = false):void {
     for each(var npc:XXCNPC in _campFollowers){
         npc.campDescription(buttons,XXCNPC.SLAVE);
     }
-    if(!descOnly){submenu(buttons,playerMenu);}
+    if(!descOnly){buttons.submenu(playerMenu);}
 }
 
 public function campFollowers(descOnly:Boolean = false):void {
@@ -1562,7 +1562,7 @@ public function campFollowers(descOnly:Boolean = false):void {
     for each(var npc:XXCNPC in _campFollowers){
         npc.campDescription(buttons,XXCNPC.FOLLOWER);
     }
-    if(!descOnly){submenu(buttons,playerMenu);}
+    if(!descOnly){buttons.submenu(playerMenu);}
 }
 
 //-----------------
@@ -2947,7 +2947,7 @@ public function setLevelButton(allowAutoLevelTransition:Boolean):Boolean {
 			var hp:int = 15;
 			var fatigue:int = 5;
 			var mana:int = 10;
-			var soulforce:int = 0;
+			var ki:int = 0;
 			var wrath:int = 0;
 			var lust:int = 0;
 			if (player.hasPerk(PerkLib.AscensionUnlockedPotential)) {
@@ -2958,9 +2958,9 @@ public function setLevelButton(allowAutoLevelTransition:Boolean):Boolean {
 			if (player.hasPerk(PerkLib.AscensionUnlockedPotential2ndStage)) {
 				lust += 2;
 				wrath += 2;
-				soulforce += 6;
+				ki += 6;
 			}
-			mainView.levelButton.toolTipText = "Level up to increase your maximum HP by " + hp + ", maximum Fatigue by " + fatigue + ", maximum Mana by " + mana + ", maximum Soulforce by " + soulforce + ", maximum Wrath by " + wrath + " and maximum Lust by " + lust + "; gain 5 attribute points and 1 perk points.";
+			mainView.levelButton.toolTipText = "Level up to increase your maximum HP by " + hp + ", maximum Fatigue by " + fatigue + ", maximum Mana by " + mana + ", maximum Ki by " + ki + ", maximum Wrath by " + wrath + " and maximum Lust by " + lust + "; gain 5 attribute points and 1 perk points.";
 			if (flags[kFLAGS.AUTO_LEVEL] > 0 && allowAutoLevelTransition) {
                 CoC.instance.playerInfo.levelUpGo();
                 return true; //True indicates that you should be routed to level-up.

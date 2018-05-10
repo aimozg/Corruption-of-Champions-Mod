@@ -1,43 +1,45 @@
 ﻿//CoC Creature.as
 package classes
 {
-import classes.BodyParts.Antennae;
-import classes.BodyParts.Arms;
-import classes.BodyParts.Beard;
-import classes.BodyParts.Butt;
-import classes.BodyParts.Claws;
-import classes.BodyParts.Ears;
-import classes.BodyParts.Eyes;
-import classes.BodyParts.Face;
-import classes.BodyParts.Gills;
-import classes.BodyParts.Hair;
-import classes.BodyParts.Hips;
-import classes.BodyParts.Horns;
-import classes.BodyParts.IOrifice;
-import classes.BodyParts.LowerBody;
-import classes.BodyParts.RearBody;
-import classes.BodyParts.Skin;
-import classes.BodyParts.Tail;
-import classes.BodyParts.Tongue;
-import classes.BodyParts.UnderBody;
-import classes.BodyParts.Wings;
-import classes.GlobalFlags.kFLAGS;
-import classes.Items.JewelryLib;
-import classes.Scenes.Places.TelAdre.UmasShop;
-import classes.Stats.BaseStat;
-import classes.Stats.PrimaryStat;
-import classes.StatusEffects.Combat.CombatInteBuff;
-import classes.StatusEffects.Combat.CombatSpeBuff;
-import classes.StatusEffects.Combat.CombatStrBuff;
-import classes.StatusEffects.Combat.CombatTouBuff;
-import classes.StatusEffects.Combat.CombatWisBuff;
-import classes.internals.Utils;
-import classes.lists.BreastCup;
-import classes.lists.Gender;
 
-import flash.errors.IllegalOperationError;
+	import classes.BodyParts.Antennae;
+	import classes.BodyParts.Arms;
+	import classes.BodyParts.Beard;
+	import classes.BodyParts.Butt;
+	import classes.BodyParts.Claws;
+	import classes.BodyParts.Ears;
+	import classes.BodyParts.Eyes;
+	import classes.BodyParts.Face;
+	import classes.BodyParts.Gills;
+	import classes.BodyParts.Hair;
+	import classes.BodyParts.Hips;
+	import classes.BodyParts.Horns;
+	import classes.BodyParts.IOrifice;
+	import classes.BodyParts.LowerBody;
+	import classes.BodyParts.RearBody;
+	import classes.BodyParts.Skin;
+	import classes.BodyParts.Tail;
+	import classes.BodyParts.Tongue;
+	import classes.BodyParts.UnderBody;
+	import classes.BodyParts.Wings;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.Items.JewelryLib;
+	import classes.Scenes.Camp.CampMakeWinions;
+	import classes.Scenes.Places.TelAdre.UmasShop;
+	import classes.Stats.BaseStat;
+	import classes.Stats.PrimaryStat;
+	import classes.StatusEffects.Combat.CombatInteBuff;
+	import classes.StatusEffects.Combat.CombatSpeBuff;
+	import classes.StatusEffects.Combat.CombatStrBuff;
+	import classes.StatusEffects.Combat.CombatTouBuff;
+	import classes.StatusEffects.Combat.CombatWisBuff;
+	import classes.internals.Utils;
+	import classes.lists.BreastCup;
+	import classes.lists.Gender;
 
-public class Creature extends Utils
+	import flash.errors.IllegalOperationError;
+
+	public class Creature extends Utils
 	{
 
 
@@ -194,7 +196,7 @@ public class Creature extends Utils
 		public var cor:Number = 0;
 		public var fatigue:Number = 0;
 		public var mana:Number = 0;
-		public var soulforce:Number = 0;
+		public var ki:Number = 0;
 		
 		//Combat Stats
 		public var HP:Number = 0;
@@ -218,7 +220,7 @@ public class Creature extends Utils
 		public function get hp100():Number { return 100*HP/maxHP(); }
 		public function get wrath100():Number { return 100*wrath/maxWrath(); }
 		public function get mana100():Number { return 100*mana/maxMana(); }
-		public function get soulforce100():Number { return 100*soulforce/maxSoulforce(); }
+		public function get ki100():Number { return 100*ki/maxKi(); }
 		public function get lust100():Number { return 100*lust/maxLust(); }
 		
 		public function minLust():Number {
@@ -227,43 +229,20 @@ public class Creature extends Utils
 		public function minSens():Number {
 			return 10;
 		}
+
 		protected function maxHP_base():Number {
 			var max:Number = 0;
 			max += int(tou * 2 + 50);
-			if (tou >= 21) max += Math.round(tou);
-			if (tou >= 41) max += Math.round(tou);
-			if (tou >= 61) max += Math.round(tou);
-			if (tou >= 81) max += Math.round(tou);
-			if (tou >= 101) max += Math.round(tou);
-			if (tou >= 151) max += Math.round(tou);
-			if (tou >= 201) max += Math.round(tou);
-			if (tou >= 251) max += Math.round(tou);
-			if (tou >= 301) max += Math.round(tou);
-			if (tou >= 351) max += Math.round(tou);
-			if (tou >= 401) max += Math.round(tou);
-			if (tou >= 451) max += Math.round(tou);
-			if (tou >= 501) max += Math.round(tou);
-			if (tou >= 551) max += Math.round(tou);
-			if (tou >= 601) max += Math.round(tou);
-			if (tou >= 651) max += Math.round(tou);
-			if (tou >= 701) max += Math.round(tou);
-			if (tou >= 751) max += Math.round(tou);
-			if (tou >= 801) max += Math.round(tou);
-			if (tou >= 851) max += Math.round(tou);
-			if (tou >= 901) max += Math.round(tou);
-			if (tou >= 951) max += Math.round(tou);
-			if (hasPerk(PerkLib.TankI)) max += Math.round(tou*3);
+			var under100: int = Math.floor(Math.min(tou, 100) / 20);
+			var over100: int = Math.floor(Math.max(tou - 100, 0) / 50);
+			max += tou * (over100 + under100);
+			if (hasPerk(PerkLib.Tank)) max += Math.round(tou*3);
 			if (hasPerk(PerkLib.ElementalBondFlesh)) {
-				if (hasStatusEffect(StatusEffects.SummonedElementalsAir)) max += 25 * statusEffectv2(StatusEffects.SummonedElementalsAir);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsEarth)) max += 25 * statusEffectv2(StatusEffects.SummonedElementalsEarth);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsFire)) max += 25 * statusEffectv2(StatusEffects.SummonedElementalsFire);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsWater)) max += 25 * statusEffectv2(StatusEffects.SummonedElementalsWater);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsEther)) max += 25 * statusEffectv2(StatusEffects.SummonedElementalsEther);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsWood)) max += 25 * statusEffectv2(StatusEffects.SummonedElementalsWood);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsMetal)) max += 25 * statusEffectv2(StatusEffects.SummonedElementalsMetal);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsIce)) max += 25 * statusEffectv2(StatusEffects.SummonedElementalsIce);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsLightning)) max += 25 * statusEffectv2(StatusEffects.SummonedElementalsLightning);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsDarkness)) max += 25 * statusEffectv2(StatusEffects.SummonedElementalsDarkness);
+				for each (var status:StatusEffectType in CampMakeWinions.summon_statuses){
+					if(hasStatusEffect(status)){
+						max += 25 * statusEffectv2(status);
+					}
+				}
 			}
 			if (hasPerk(PerkLib.JobGuardian)) max += 30;
 			if (hasPerk(PerkLib.AscensionHardiness)) max += perkv1(PerkLib.AscensionHardiness) * 100;
@@ -276,16 +255,11 @@ public class Creature extends Utils
 		protected function maxLust_base():Number {
 			var max:Number = 100;
 			if (hasPerk(PerkLib.ElementalBondUrges)) {
-				if (hasStatusEffect(StatusEffects.SummonedElementalsAir)) max += 5 * statusEffectv2(StatusEffects.SummonedElementalsAir);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsEarth)) max += 5 * statusEffectv2(StatusEffects.SummonedElementalsEarth);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsFire)) max += 5 * statusEffectv2(StatusEffects.SummonedElementalsFire);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsWater)) max += 5 * statusEffectv2(StatusEffects.SummonedElementalsWater);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsEther)) max += 5 * statusEffectv2(StatusEffects.SummonedElementalsEther);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsWood)) max += 5 * statusEffectv2(StatusEffects.SummonedElementalsWood);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsMetal)) max += 5 * statusEffectv2(StatusEffects.SummonedElementalsMetal);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsIce)) max += 5 * statusEffectv2(StatusEffects.SummonedElementalsIce);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsLightning)) max += 5 * statusEffectv2(StatusEffects.SummonedElementalsLightning);
-				if (hasStatusEffect(StatusEffects.SummonedElementalsDarkness)) max += 5 * statusEffectv2(StatusEffects.SummonedElementalsDarkness);
+				for each (var status:StatusEffectType in CampMakeWinions.summon_statuses){
+					if(hasStatusEffect(status)){
+						max += 5 * statusEffectv2(status);
+					}
+				}
 			}
 			if (hasPerk(PerkLib.BroBody) || hasPerk(PerkLib.BimboBody) || hasPerk(PerkLib.FutaForm)) max += 20;
 			if (hasPerk(PerkLib.OmnibusGift)) max += 15;
@@ -315,7 +289,7 @@ public class Creature extends Utils
 		public function maxWrath():Number {
 			return 250;
 		}
-		public function maxSoulforce():Number {
+		public function maxKi():Number {
 			return 0;
 		}
 		public function maxMana():Number {
@@ -452,7 +426,7 @@ public class Creature extends Utils
 			// Keep values in bounds (lust and HP handled above)
 			fatigue = Math.min(fatigue, maxFatigue());
 			mana = Math.min(mana, maxMana());
-			soulforce = Math.min(soulforce, maxSoulforce());
+			ki = Math.min(ki, maxKi());
 			wrath = Math.min(wrath,maxWrath());
 		}
 		// Lust gain, in % (100 = receive as is, 25 = receive one fourth, 0 = immune)
@@ -759,7 +733,7 @@ public class Creature extends Utils
 				// Allow weaponAttack to be negative as a penalty to strength-calculated damage
 				// Same with armorDef, bonusHP, additionalXP
 				"weaponValue", "armorValue",
-				"lust", "fatigue", "soulforce", "mana", "wrath",
+				"lust", "fatigue", "ki", "mana", "wrath",
 				"level", "gems",
 				"tailCount", "tailVenom", "tailRecharge", "horns.type",
 				"HP", "XP"

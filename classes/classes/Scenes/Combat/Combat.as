@@ -1,4 +1,4 @@
-﻿package classes.Scenes.Combat {
+package classes.Scenes.Combat {
 import classes.BaseContent;
 import classes.BodyParts.Ears;
 import classes.BodyParts.Face;
@@ -28,7 +28,6 @@ import classes.Scenes.Areas.GlacialRift.WinterWolf;
 import classes.Scenes.Areas.HighMountains.Basilisk;
 import classes.Scenes.Areas.HighMountains.Harpy;
 import classes.Scenes.Areas.Mountain.Minotaur;
-import classes.Scenes.Areas.Ocean.SeaAnemone;
 import classes.Scenes.Dungeons.D3.*;
 import classes.Scenes.Dungeons.HelDungeon.HarpyMob;
 import classes.Scenes.Dungeons.HelDungeon.HarpyQueen;
@@ -48,7 +47,7 @@ public class Combat extends BaseContent {
 	public var mspecials:MagicSpecials     = new MagicSpecials();
 	public var magic:CombatMagic           = new CombatMagic();
 	public var teases:CombatTeases         = new CombatTeases();
-	public var soulskills:CombatSoulskills = new CombatSoulskills();
+	public var kiPowers:CombatKiPowers = new CombatKiPowers();
 	public var ui:CombatUI                 = new CombatUI();
 	
 	public static const AIR:int       = 1;
@@ -667,13 +666,13 @@ public function basemeleeattacks():void {
 				if (player.fatigue + mutlimeleefistattacksCost <= player.maxFatigue()) {
 					if (flags[kFLAGS.FERAL_COMBAT_MODE] == 1 && (player.haveNaturalClaws() || player.haveNaturalClawsTypeWeapon())) fatigue(mutlimeleefistattacksCost);
 					else {
-						if (player.soulforce < mutlimeleefistattacksCost * 5) {
-							outputText("Your current soulforce is too low to attack more than once in this turn!\n\n");
+						if (player.ki < mutlimeleefistattacksCost * 5) {
+							outputText("Your current ki is too low to attack more than once in this turn!\n\n");
 							flags[kFLAGS.MULTIPLE_ATTACKS_STYLE] = 1;
 						}
 						else {
 							fatigue(mutlimeleefistattacksCost);
-							player.soulforce -= mutlimeleefistattacksCost * 5;
+							player.ki -= mutlimeleefistattacksCost * 5;
 						}
 					}
 				}
@@ -814,10 +813,10 @@ public function elementalattacks(elementType:int, summonedElementals:int):void {
 			addButton(0, "Next", combatMenu, false);
 		}
 		else {
-			wrathregeneration();
+			wrathRegeneration();
 			fatigueRecovery();
-			manaregeneration();
-			soulforceregeneration();
+			manaRegeneration();
+			kiRegeneration();
 			enemyAI();
 		}
 	}
@@ -894,9 +893,9 @@ internal function wait():void {
 	//Gain fatigue if not fighting sand tarps
 	if (!monster.hasStatusEffect(StatusEffects.Level)) {
 		fatigue( -5);
-		wrathregeneration();
-		manaregeneration();
-		soulforceregeneration();
+		wrathRegeneration();
+		manaRegeneration();
+		kiRegeneration();
 	}
 	if (monster.hasStatusEffect(StatusEffects.PCTailTangle)) {
 		(monster as Kitsune).kitsuneWait();
@@ -2072,10 +2071,10 @@ public function seconwindGo():void {
 	fatigue((player.maxFatigue() - player.fatigue) / 2);
 	player.createStatusEffect(StatusEffects.SecondWindRegen, 10, 0, 0, 0);
 	player.createStatusEffect(StatusEffects.CooldownSecondWind, 0, 0, 0, 0);
-	wrathregeneration();
+	wrathRegeneration();
 	fatigueRecovery();
-	manaregeneration();
-	soulforceregeneration();
+	manaRegeneration();
+	kiRegeneration();
 	enemyAI();
 }
 public function surrender():void {
@@ -2514,15 +2513,10 @@ public function meleeDamageAcc():void {
 	}
 	if(damage > 0) {
 		//Lust raised by anemone contact!
-		if(monster.short == "anemone" && !isWieldingRangedWeapon()) {
-			outputText("\nThough you managed to hit the anemone, several of the tentacles surrounding her body sent home jolts of venom when your swing brushed past them.");
+		if((monster.short == "sea anemone" || monster.short == "anemone") && !isWieldingRangedWeapon()) {
+			outputText("\nThough you managed to hit the "+monster.short+", several of the tentacles surrounding her body sent home jolts of venom when your swing brushed past them.");
 			//(gain lust, temp lose str/spd)
 			(monster as Anemone).applyVenom((1 + rand(2)));
-		}
-		if(monster.short == "sea anemone" && !isWieldingRangedWeapon()) {
-			outputText("\nThough you managed to hit the sea anemone, several of the tentacles surrounding her body sent home jolts of venom when your swing brushed past them.");
-			//(gain lust, temp lose str/spd)
-			(monster as SeaAnemone).applyVenom((1+rand(2)));
 		}
 		
 		//Lust raising weapon bonuses
@@ -2695,10 +2689,10 @@ public function meleeDamageAcc():void {
 		return;
 	}
 	outputText("\n");
-	wrathregeneration();
+	wrathRegeneration();
 	fatigueRecovery();
-	manaregeneration();
-	soulforceregeneration();
+	manaRegeneration();
+	kiRegeneration();
 	enemyAI();
 }
 
@@ -2970,7 +2964,7 @@ public function enemyAIImpl():void {
 		return;
 	}
 	monster.doAI();
-	if (player.hasStatusEffect(StatusEffects.TranceTransformation)) player.soulforce -= 50;
+	if (player.hasStatusEffect(StatusEffects.TranceTransformation)) player.ki -= 50;
 	if (player.hasStatusEffect(StatusEffects.CrinosShape)) player.wrath -= mspecials.crinosshapeCost();
 	combatRoundOver();
 }
@@ -3122,46 +3116,70 @@ private function combatStatusesUpdate():void {
 	{
 		dynStats("lus+", 3);
 	}
-	if(player.hasStatusEffect(StatusEffects.Sealed)) {
-		//Countdown and remove as necessary
-		if(player.statusEffectv1(StatusEffects.Sealed) > 0) {
-			player.addStatusValue(StatusEffects.Sealed,1,-1);
-			if(player.statusEffectv1(StatusEffects.Sealed) <= 0) player.removeStatusEffect(StatusEffects.Sealed);
-			else outputText("<b>One of your combat abilities is currently sealed by magic!</b>\n\n");
+	/**
+	 * [StatusEffectType effect, int statValue, int changeBy, String onRemove, String onUpdate]
+	 */
+	var statuses:Array = [
+		[StatusEffects.Sealed, 1, -1, "", "<b>One of your combat abilities is currently sealed by magic!</b>\n\n"],
+		[StatusEffects.Sealed2, 1, -1, "", "<b>One of your combat abilities is currently disabled as aftereffect of recent enemy attack!</b>\n\n"],
+		[StatusEffects.WhipSilence, 1, -1, "<b>The constricting cords encircling your neck fall away, their flames guttering into nothingness. It seems even a Demon Queen’s magic has an expiration date.</b>\n\n", ""],
+		[StatusEffects.TaintedMind, 1, 1, "Some of the drider’s magic fades, and you heft your [weapon] with a grin. No more of this ‘fight like a demon’ crap!\n\n","There is a thin film of filth layered upon your mind, latent and waiting. The drider said something about fighting like a demon. Is this supposed to interfere with your ability to fight?\n\n"],
+		[StatusEffects.ThroatPunch, 1, -1, "Your wind-pipe recovers from Isabella's brutal hit.  You'll be able to focus to cast spells again!\n\n", "Thanks to Isabella's wind-pipe crushing hit, you're having trouble breathing and are <b>unable to cast spells as a consequence.</b>\n\n"],
+		[StatusEffects.HeroBane, 1, -1, "<b>You feel your body lighten as the curse linking your vitality to that of the omnibus ends.</b>\n\n"],
+		[StatusEffects.Berzerking, 1, -1, "<b>Berserker effect wore off!</b>\n\n", ""],
+		[StatusEffects.Lustzerking, 1, -1, "<b>Lustzerker effect wore off!</b>\n\n", ""],
+		[StatusEffects.OniRampage, 1, -1, "<b>Your rage wear off.</b>\n\n", ""],
+		[StatusEffects.Maleficium, 1, -1, "<b>Maleficium effect wore off!</b>\n\n", ""],
+		[StatusEffects.ChargeWeapon, 2, -1, "<b>Charged Weapon effect wore off!</b>\n\n", ""],
+		[StatusEffects.ChargeArmor, 2, -1, "<b>Charged Armor effect wore off!</b>\n\n", ""],
+		[StatusEffects.EverywhereAndNowhere, 1, -1, "<b>Everywhere and nowhere effect ended!</b>\n\n", ""],
+		[StatusEffects.CooldownInkSpray, 1, -1, "", ""],
+		[StatusEffects.CooldownEveryAndNowhere, 1, -1, "", ""],
+		[StatusEffects.CooldownTailSmack, 1, -1, "", ""],
+		[StatusEffects.CooldownStoneClaw, 1, -1, "", ""],
+		[StatusEffects.CooldownTailSlam, 1, -1, "", ""],
+		[StatusEffects.CooldownWingBuffet, 1, -1, "", ""],
+		[StatusEffects.CooldownKick, 1, -1, "", ""],
+		[StatusEffects.CooldownFreezingBreath, 1, -1, "", ""],
+		[StatusEffects.CooldownFreezingBreathYeti, 1, -1, "", ""],
+		[StatusEffects.CooldownPhoenixFireBreath, 1, -1, "", ""],
+		[StatusEffects.CooldownIllusion, 1, -1, "", ""],
+		[StatusEffects.Illusion, 1, -1, "", ""],
+		[StatusEffects.CooldownTerror, 1, -1, "", ""],
+		[StatusEffects.CooldownFascinate, 1, -1, "", ""],
+		[StatusEffects.CooldownCompellingAria, 1, -1, "", ""],
+		[StatusEffects.CooldownOniRampage, 1, -1, "", ""],
+		[StatusEffects.WindWall, 2, -1, "<b>Wind Wall effect wore off!</b>\n\n", ""],
+		[StatusEffects.StoneSkin, 2, -1, "<b>Stone Skin effect wore off!</b>\n\n", ""],
+		[StatusEffects.BarkSkin, 2, -1, "<b>Bark Skin effect wore off!</b>\n\n", ""],
+		[StatusEffects.MetalSkin, 2, -1, "<b>Metal Skin effect wore off!</b>\n\n", ""],
+		[StatusEffects.CooldownHurricaneDance, 1, -1, "", ""],
+		[StatusEffects.HurricaneDance, 1, -1, "<b>Hurricane Dance effect wore off!</b>\n\n", ""],
+		[StatusEffects.CooldownEarthStance, 1, -1, "", ""],
+		[StatusEffects.CooldownEclipsingShadow, 1, -1, ""],
+		[StatusEffects.CooldownSonicScream, 1, -1, "", ""],
+		[StatusEffects.CooldownTornadoStrike, 1, -1, "", ""],
+		[StatusEffects.CooldownSoulBlast, 1, -1, "", ""],
+		[StatusEffects.SecondWindRegen, 2, -1, "", ""],
+		[StatusEffects.Flying, 1, -1, "<b>You land to tired to keep flying.</b>\n\n", "<b>You keep making circles in the air around your opponent.</b>\n\n"],
+		[StatusEffects.Blizzard, 1, -1, "<b>Blizzard spell exhausted all of it power and need to be casted again to provide protection from the fire attacks again!</b>\n\n", "<b>Surrounding your blizzard slowly loosing it protective power.</b>\n\n"],
+		[StatusEffects.EarthStance, 1, -1, "<b>Earth Stance effect wore off!</b>\n\n", ""]
+	];
+	for each(var st:Array in statuses){
+		if(player.hasStatusEffect(st[0])){
+			player.addStatusValue(st[0], st[1], st[2]);
+			var se:StatusEffectClass = player.statusEffectByType(st[0]);
+			if(se["value"+st[1]] <= 0){
+				player.removeStatusEffect(st[0]);
+				outputText(st[3]);
+			} else {
+				outputText(st[4]);
+			}
 		}
 	}
-	if(player.hasStatusEffect(StatusEffects.Sealed2)) {
-		//Countdown and remove as necessary
-		if(player.statusEffectv1(StatusEffects.Sealed2) > 0) {
-			player.addStatusValue(StatusEffects.Sealed2,1,-1);
-			if(player.statusEffectv1(StatusEffects.Sealed2) <= 0) player.removeStatusEffect(StatusEffects.Sealed2);
-			else outputText("<b>One of your combat abilities is currently disabled as aftereffect of recent enemy attack!</b>\n\n");
-		}
-	}
-	if (player.hasStatusEffect(StatusEffects.WhipSilence))
-	{
-		player.addStatusValue(StatusEffects.WhipSilence, 1, -1);
-		if (player.statusEffectv1(StatusEffects.WhipSilence) <= 0)
-		{
-			player.removeStatusEffect(StatusEffects.WhipSilence);
-			outputText("<b>The constricting cords encircling your neck fall away, their flames guttering into nothingness. It seems even a Demon Queen’s magic has an expiration date.</b>\n\n");
-		}
-	}	
 	if (player.hasStatusEffect(StatusEffects.PigbysHands))
 	{
 		dynStats("lus", 5);
-	}
-	if (player.hasStatusEffect(StatusEffects.TaintedMind)) {
-		player.addStatusValue(StatusEffects.TaintedMind, 1, 1);
-		if (player.statusEffectv1(StatusEffects.TaintedMind) <= 0)
-		{
-			player.removeStatusEffect(StatusEffects.TaintedMind);
-			outputText("Some of the drider’s magic fades, and you heft your [weapon] with a grin. No more of this ‘fight like a demon’ crap!\n\n");
-		}
-		else
-		{
-			outputText("There is a thin film of filth layered upon your mind, latent and waiting. The drider said something about fighting like a demon. Is this supposed to interfere with your ability to fight?\n\n");
-		}
 	}
 	if (player.hasStatusEffect(StatusEffects.PurpleHaze)) {
 		player.addStatusValue(StatusEffects.PurpleHaze, 1, -1);
@@ -3179,13 +3197,13 @@ private function combatStatusesUpdate():void {
 	if (player.hasStatusEffect(StatusEffects.LethicesRapeTentacles))
 	{
 		player.addStatusValue(StatusEffects.LethicesRapeTentacles, 1, -1);
-		
+
 		if (player.statusEffectv3(StatusEffects.LethicesRapeTentacles) != 0)
 		{
 			player.addStatusValue(StatusEffects.LethicesRapeTentacles, 2, 1);
-			
+
 			var tentaround:Number = player.statusEffectv2(StatusEffects.LethicesRapeTentacles);
-			
+
 			if (tentaround == 1)
 			{
 				outputText("Taking advantage of your helpless state, the tentacles wind deeper under your [armor], caressing your [nipples] and coating your [butt] in slippery goo. One even seeks out your crotch, none-too-gently prodding around for weak points.\n\n");
@@ -3229,7 +3247,7 @@ private function combatStatusesUpdate():void {
 			{
 				outputText("You’ve really fucked up now. An entire throne room full of demons is watching a bunch of summoned tentacles rape you in every hole, bouncing your body back and forth with the force of their thrusts, repeatedly spilling their corruptive payloads into your receptive holes. The worst part is");
 				if (player.cor >= 50) outputText(" how much of a bitch it makes you look like... and how good it feels to be Lethice’s bitch.");
-				else outputText(" how dirty it makes you feel... and how good it feels to be dirty.\n\n");				
+				else outputText(" how dirty it makes you feel... and how good it feels to be dirty.\n\n");
 				dynStats("lus", 10, "cor", 1);
 			}
 		}
@@ -3244,7 +3262,7 @@ private function combatStatusesUpdate():void {
 				player.changeStatusValue(StatusEffects.LethicesRapeTentacles, 3, 1);
 				dynStats("lus", 5);
 			}
-		}		
+		}
 		if (player.statusEffectv1(StatusEffects.LethicesRapeTentacles) <= 0)
 		{
 			if (player.statusEffectv3(StatusEffects.LethicesRapeTentacles) != 0)
@@ -3260,14 +3278,6 @@ private function combatStatusesUpdate():void {
 	}
 	monster.combatRoundUpdate();
 	//[Silence warning]
-	if(player.hasStatusEffect(StatusEffects.ThroatPunch)) {
-		player.addStatusValue(StatusEffects.ThroatPunch,1,-1);
-		if(player.statusEffectv1(StatusEffects.ThroatPunch) >= 0) outputText("Thanks to Isabella's wind-pipe crushing hit, you're having trouble breathing and are <b>unable to cast spells as a consequence.</b>\n\n");
-		else {
-			outputText("Your wind-pipe recovers from Isabella's brutal hit.  You'll be able to focus to cast spells again!\n\n");
-			player.removeStatusEffect(StatusEffects.ThroatPunch);
-		}
-	}
 	if(player.hasStatusEffect(StatusEffects.GooArmorSilence)) {
 		if(player.statusEffectv1(StatusEffects.GooArmorSilence) >= 2 || rand(20) + 1 + player.str / 10 >= 15) {
 			//if passing str check, output at beginning of turn
@@ -3299,7 +3309,7 @@ private function combatStatusesUpdate():void {
 			outputText("<b>Your mouth and nose are obstructed by sticky webbing, making it difficult to breathe and impossible to focus on casting spells.  You try to pull it off, but it just won't work!</b>\n\n");
 			player.addStatusValue(StatusEffects.WebSilence,1,1);
 		}
-	}		
+	}
 	if(player.hasStatusEffect(StatusEffects.HolliConstrict)) {
 		outputText("<b>You're tangled up in Holli's verdant limbs!  All you can do is try to struggle free...</b>\n\n");
 	}
@@ -3318,7 +3328,7 @@ private function combatStatusesUpdate():void {
 				player.addStatusValue(StatusEffects.Blind,1,-1);
 			}
 		}
-		else 
+		else
 		{
 			//Remove blind if countdown to 0
 			if (player.statusEffectv1(StatusEffects.Blind) == 0)
@@ -3338,7 +3348,7 @@ private function combatStatusesUpdate():void {
 				}
 				else outputText("<b>You are blind, and many physical attacks will miss much more often.</b>\n\n");
 			}
-			else 
+			else
 			{
 				player.addStatusValue(StatusEffects.Blind,1,-1);
 				outputText("<b>You are blind, and many physical attacks will miss much more often.</b>\n\n");
@@ -3348,7 +3358,7 @@ private function combatStatusesUpdate():void {
 	//Basilisk compulsion
 	if(player.hasStatusEffect(StatusEffects.BasiliskCompulsion)) {
 		player.addCombatBuff('spe', -15);
-		//Continuing effect text: 
+		//Continuing effect text:
 		outputText("<b>You still feel the spell of those grey eyes, making your movements slow and difficult, the remembered words tempting you to look into its eyes again. You need to finish this fight as fast as your heavy limbs will allow.</b>\n\n");
 		flags[kFLAGS.BASILISK_RESISTANCE_TRACKER]++;
 	}
@@ -3398,13 +3408,6 @@ private function combatStatusesUpdate():void {
 		deoxigen += (player.maxHP() * 0.05);
 		deoxigen = player.takePhysDamage(deoxigen);
 		outputText("<b>You are running out of oxygen you need to finish this fight and fast before you lose consciousness. <b>(<font color=\"#800000\">" + deoxigen + "</font>)</b></b>\n\n");
-	}
-	if(player.hasStatusEffect(StatusEffects.HeroBane)) {
-		player.addStatusValue(StatusEffects.HeroBane,1,-1);
-		if(player.statusEffectv1(StatusEffects.HeroBane) <= 0) {
-			player.removeStatusEffect(StatusEffects.HeroBane);
-			outputText("<b>You feel your body lighten as the curse linking your vitality to that of the omnibus ends.</b>\n\n");
-		}
 	}
 	if(player.hasStatusEffect(StatusEffects.AcidSlap)) {
 		var slap:Number = 3 + (player.maxHP() * 0.02);
@@ -3520,7 +3523,7 @@ private function combatStatusesUpdate():void {
 		dynStats("lus", 14 + int(player.sens)/8);
 	}
 	if(player.hasStatusEffect(StatusEffects.KissOfDeath)) {
-		//Effect 
+		//Effect
 		outputText("Your lips burn with an unexpected flash of heat.  They sting and burn with unholy energies as a puff of ectoplasmic gas escapes your lips.  That puff must be a part of your soul!  It darts through the air to the succubus, who slurps it down like a delicious snack.  You feel feverishly hot and exhausted...\n\n");
 		dynStats("lus", 5);
 		player.takePhysDamage(15);
@@ -3614,27 +3617,13 @@ private function combatStatusesUpdate():void {
 		else
 		{
 			outputText("\n\nFlames continue to lick at the horde of demons!");
-		}		
+		}
 	}
 	//Giant boulder
 	if (player.hasStatusEffect(StatusEffects.GiantBoulder)) {
 		outputText("<b>There is a large boulder coming your way. If you don't avoid it in time, you might take some serious damage.</b>\n\n");
 	}
 	//Berzerker/Lustzerker/Dwarf Rage/Oni Rampage/Maleficium
-	if (player.hasStatusEffect(StatusEffects.Berzerking)) {
-		if (player.statusEffectv1(StatusEffects.Berzerking) <= 0) {
-			player.removeStatusEffect(StatusEffects.Berzerking);
-			outputText("<b>Berserker effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.Berzerking,1,-1);
-	}
-	if (player.hasStatusEffect(StatusEffects.Lustzerking)) {
-		if (player.statusEffectv1(StatusEffects.Lustzerking) <= 0) {
-			player.removeStatusEffect(StatusEffects.Lustzerking);
-			outputText("<b>Lustzerker effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.Lustzerking,1,-1);
-	}
 	if (player.hasStatusEffect(StatusEffects.DwarfRage)) {
 		if (player.statusEffectv3(StatusEffects.DwarfRage) <= 0) {
 			player.removeStatusEffect(StatusEffects.DwarfRage);
@@ -3642,40 +3631,11 @@ private function combatStatusesUpdate():void {
 		}
 		else player.addStatusValue(StatusEffects.DwarfRage,3,-1);
 	}
-	if (player.hasStatusEffect(StatusEffects.OniRampage)) {
-		if (player.statusEffectv1(StatusEffects.OniRampage) <= 0) {
-			player.removeStatusEffect(StatusEffects.OniRampage);
-			outputText("<b>Your rage wear off.</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.OniRampage,1,-1);
-	}
-	if (player.hasStatusEffect(StatusEffects.Maleficium)) {
-		if (player.statusEffectv1(StatusEffects.Maleficium) <= 0) {
-			player.removeStatusEffect(StatusEffects.Maleficium);
-			outputText("<b>Maleficium effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.Maleficium,1,-1);
-	}
 	//Spell buffs
-	if (player.hasStatusEffect(StatusEffects.ChargeWeapon)) {
-		if (player.statusEffectv2(StatusEffects.ChargeWeapon) <= 0) {
-			player.removeStatusEffect(StatusEffects.ChargeWeapon);
-			outputText("<b>Charged Weapon effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.ChargeWeapon,2,-1);
-	}
-	if (player.hasStatusEffect(StatusEffects.ChargeArmor)) {
-		if (player.statusEffectv2(StatusEffects.ChargeArmor) <= 0) {
-			player.removeStatusEffect(StatusEffects.ChargeArmor);
-			outputText("<b>Charged Armor effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.ChargeArmor,2,-1);
-	}
 	if (player.hasStatusEffect(StatusEffects.Might)) {
 		if (player.statusEffectv3(StatusEffects.Might) <= 0) {
 			if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) player.dynStats("int", -player.statusEffectv1(StatusEffects.Might), "scale", false);
 			player.removeStatusEffect(StatusEffects.Might);
-		//	statScreenRefresh();
 			outputText("<b>Might effect wore off!</b>\n\n");
 		}
 		else player.addStatusValue(StatusEffects.Might,3,-1);
@@ -3687,31 +3647,19 @@ private function combatStatusesUpdate():void {
 		}
 		else player.addStatusValue(StatusEffects.Blink,3,-1);
 	}
-	//Blizzard
-	if (player.hasStatusEffect(StatusEffects.Blizzard)) {
-		//Remove blizzard if countdown to 0
-		if (player.statusEffectv1(StatusEffects.Blizzard) <= 0) {
-			player.removeStatusEffect(StatusEffects.Blizzard);
-			outputText("<b>Blizzard spell exhausted all of it power and need to be casted again to provide protection from the fire attacks again!</b>\n\n");
-		}
-		else {
-			player.addStatusValue(StatusEffects.Blizzard,1,-1);
-			outputText("<b>Surrounding your blizzard slowly loosing it protective power.</b>\n\n");
-		}
-	}
 	//Violet Pupil Transformation
 	if (player.hasStatusEffect(StatusEffects.VioletPupilTransformation)) {
-		if (player.soulforce < 100) {
+		if (player.ki < 100) {
 			player.removeStatusEffect(StatusEffects.VioletPupilTransformation);
-			outputText("<b>Your soulforce is too low to continue using Violet Pupil Transformation so soul skill deactivated itself!  As long you can recover some soulforce before end of the fight you could then reactivate this skill.</b>\n\n");
+			outputText("<b>Your ki is too low to continue using Violet Pupil Transformation so ki power deactivated itself!  As long you can recover some ki before end of the fight you could then reactivate this skill.</b>\n\n");
 		}
 		else {
-			var soulforcecost:int = 100;
-			player.soulforce -= soulforcecost;
+			var kicost:int = 100;
+			player.ki -= kicost;
 			var hpChange1:int = 200;
 			if (player.unicornScore() >= 5) hpChange1 += ((player.unicornScore() - 4) * 25);
 			if (player.alicornScore() >= 6) hpChange1 += ((player.alicornScore() - 5) * 25);
-			outputText("<b>As your soulforce is drained you can feel Violet Pupil Transformation regenerative power spreading in your body. (<font color=\"#008000\">+" + hpChange1 + "</font>)</b>\n\n");
+			outputText("<b>As your ki is drained you can feel Violet Pupil Transformation regenerative power spreading in your body. (<font color=\"#008000\">+" + hpChange1 + "</font>)</b>\n\n");
 			HPChange(hpChange1,false);
 		}
 	}
@@ -3735,12 +3683,14 @@ private function combatStatusesUpdate():void {
 	}
 	//Trance Transformation
 	if (player.hasStatusEffect(StatusEffects.TranceTransformation)) {
-		if (player.soulforce < 50) {
+		if (player.ki < 50) {
+			player.dynStats("str", -player.statusEffectv1(StatusEffects.TranceTransformation));
+			player.dynStats("tou", -player.statusEffectv1(StatusEffects.TranceTransformation));
 			player.removeStatusEffect(StatusEffects.TranceTransformation);
 			outputText("<b>The flow of power through you suddenly stops, as you no longer have the soul energy to sustain it.  You drop roughly to the floor, the crystal coating your [skin] cracking and fading to nothing.</b>\n\n");
 		}
 	//	else {
-	//		outputText("<b>As your soulforce is drained you can feel Violet Pupil Transformation regenerative power spreading in your body.</b>\n\n");
+	//		outputText("<b>As your ki is drained you can feel Violet Pupil Transformation regenerative power spreading in your body.</b>\n\n");
 	//	}
 	}
 	//Crinos Shape
@@ -3750,273 +3700,8 @@ private function combatStatusesUpdate():void {
 			outputText("<b>The flow of power through you suddenly stops, as you no longer have the wrath to sustain it.  You drop roughly to the floor, the bestial chanches slowly fading away leaving you in your normal form.</b>\n\n");
 		}
 	//	else {
-	//		outputText("<b>As your soulforce is drained you can feel Violet Pupil Transformation regenerative power spreading in your body.</b>\n\n");
+	//		outputText("<b>As your ki is drained you can feel Violet Pupil Transformation regenerative power spreading in your body.</b>\n\n");
 	//	}
-	}
-	//Everywhere and nowhere
-	if (player.hasStatusEffect(StatusEffects.EverywhereAndNowhere)) {
-		if (player.statusEffectv1(StatusEffects.EverywhereAndNowhere) <= 0) {
-			player.removeStatusEffect(StatusEffects.EverywhereAndNowhere);
-			outputText("<b>Everywhere and nowhere effect ended!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.EverywhereAndNowhere,1,-1);
-	}
-	//Flying
-	if(player.isFlying()) {
-		player.addStatusValue(StatusEffects.Flying,1,-1);
-		if(player.statusEffectv1(StatusEffects.Flying) >= 0) outputText("<b>You keep making circles in the air around your opponent.</b>\n\n");
-		else {
-			outputText("<b>You land to tired to keep flying.</b>\n\n");
-			player.removeStatusEffect(StatusEffects.Flying);
-		}
-	}
-	//Ink Spray
-	if (player.hasStatusEffect(StatusEffects.CooldownInkSpray)) {
-		if (player.statusEffectv1(StatusEffects.CooldownInkSpray) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownInkSpray);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownInkSpray,1,-1);
-		}
-	}
-	//Everywhere And Nowhere
-	if (player.hasStatusEffect(StatusEffects.CooldownEveryAndNowhere)) {
-		if (player.statusEffectv1(StatusEffects.CooldownEveryAndNowhere) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownEveryAndNowhere);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownEveryAndNowhere,1,-1);
-		}
-	}
-	//Tail Smack
-	if (player.hasStatusEffect(StatusEffects.CooldownTailSmack)) {
-		if (player.statusEffectv1(StatusEffects.CooldownTailSmack) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownTailSmack);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownTailSmack,1,-1);
-		}
-	}
-	//Stone Claw
-	if (player.hasStatusEffect(StatusEffects.CooldownStoneClaw)) {
-		if (player.statusEffectv1(StatusEffects.CooldownStoneClaw) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownStoneClaw);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownStoneClaw,1,-1);
-		}
-	}
-	//Tail Slam
-	if (player.hasStatusEffect(StatusEffects.CooldownTailSlam)) {
-		if (player.statusEffectv1(StatusEffects.CooldownTailSlam) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownTailSlam);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownTailSlam,1,-1);
-		}
-	}
-	//Wing Buffet
-	if (player.hasStatusEffect(StatusEffects.CooldownWingBuffet)) {
-		if (player.statusEffectv1(StatusEffects.CooldownWingBuffet) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownWingBuffet);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownWingBuffet,1,-1);
-		}
-	}
-	//Kick
-	if (player.hasStatusEffect(StatusEffects.CooldownKick)) {
-		if (player.statusEffectv1(StatusEffects.CooldownKick) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownKick);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownKick,1,-1);
-		}
-	}
-	//Freezing Breath Fenrir
-	if (player.hasStatusEffect(StatusEffects.CooldownFreezingBreath)) {
-		if (player.statusEffectv1(StatusEffects.CooldownFreezingBreath) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownFreezingBreath);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownFreezingBreath,1,-1);
-		}
-	}
-	//Freezing Breath Yeti
-	if (player.hasStatusEffect(StatusEffects.CooldownFreezingBreathYeti)) {
-		if (player.statusEffectv1(StatusEffects.CooldownFreezingBreathYeti) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownFreezingBreathYeti);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownFreezingBreathYeti,1,-1);
-		}
-	}
-	//Phoenix Fire Breath
-	if (player.hasStatusEffect(StatusEffects.CooldownPhoenixFireBreath)) {
-		if (player.statusEffectv1(StatusEffects.CooldownPhoenixFireBreath) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownPhoenixFireBreath);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownPhoenixFireBreath,1,-1);
-		}
-	}
-	//Illusion
-	if (player.hasStatusEffect(StatusEffects.CooldownIllusion)) {
-		if (player.statusEffectv1(StatusEffects.CooldownIllusion) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownIllusion);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownIllusion,1,-1);
-		}
-	}
-	if (player.hasStatusEffect(StatusEffects.Illusion)) {
-		if (player.statusEffectv1(StatusEffects.Illusion) <= 0) {
-			player.removeStatusEffect(StatusEffects.Illusion);
-		}
-		else {
-			player.addStatusValue(StatusEffects.Illusion,1,-1);
-		}
-	}
-	//Terror
-	if (player.hasStatusEffect(StatusEffects.CooldownTerror)) {
-		if (player.statusEffectv1(StatusEffects.CooldownTerror) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownTerror);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownTerror,1,-1);
-		}
-	}
-	//Fascinate
-	if (player.hasStatusEffect(StatusEffects.CooldownFascinate)) {
-		if (player.statusEffectv1(StatusEffects.CooldownFascinate) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownFascinate);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownFascinate,1,-1);
-		}
-	}
-	//Compelling Aria
-	if (player.hasStatusEffect(StatusEffects.CooldownCompellingAria)) {
-		if (player.statusEffectv1(StatusEffects.CooldownCompellingAria) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownCompellingAria);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownCompellingAria,1,-1);
-		}
-	}
-	//Oni Rampage
-	if (player.hasStatusEffect(StatusEffects.CooldownOniRampage)) {
-		if (player.statusEffectv1(StatusEffects.CooldownOniRampage) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownOniRampage);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownOniRampage,1,-1);
-		}
-	}
-	//Elemental Aspect status effects
-	if (player.hasStatusEffect(StatusEffects.WindWall)) {
-		if (player.statusEffectv2(StatusEffects.WindWall) <= 0) {
-			player.removeStatusEffect(StatusEffects.WindWall);
-			outputText("<b>Wind Wall effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.WindWall,2,-1);
-	}
-	if (player.hasStatusEffect(StatusEffects.StoneSkin)) {
-		if (player.statusEffectv2(StatusEffects.StoneSkin) <= 0) {
-			player.removeStatusEffect(StatusEffects.StoneSkin);
-			outputText("<b>Stone Skin effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.StoneSkin,2,-1);
-	}
-	if (player.hasStatusEffect(StatusEffects.BarkSkin)) {
-		if (player.statusEffectv2(StatusEffects.BarkSkin) <= 0) {
-			player.removeStatusEffect(StatusEffects.BarkSkin);
-			outputText("<b>Bark Skin effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.BarkSkin,2,-1);
-	}
-	if (player.hasStatusEffect(StatusEffects.MetalSkin)) {
-		if (player.statusEffectv2(StatusEffects.MetalSkin) <= 0) {
-			player.removeStatusEffect(StatusEffects.MetalSkin);
-			outputText("<b>Metal Skin effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.MetalSkin,2,-1);
-	}
-	//Hurricane Dance
-	if (player.hasStatusEffect(StatusEffects.CooldownHurricaneDance)) {
-		if (player.statusEffectv1(StatusEffects.CooldownHurricaneDance) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownHurricaneDance);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownHurricaneDance,1,-1);
-		}
-	}
-	if (player.hasStatusEffect(StatusEffects.HurricaneDance)) {
-		if (player.statusEffectv1(StatusEffects.HurricaneDance) <= 0) {
-			player.removeStatusEffect(StatusEffects.HurricaneDance);
-			outputText("<b>Hurricane Dance effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.HurricaneDance,1,-1);
-	}
-	//Earth Stance
-	if (player.hasStatusEffect(StatusEffects.CooldownEarthStance)) {
-		if (player.statusEffectv1(StatusEffects.CooldownEarthStance) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownEarthStance);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownEarthStance,1,-1);
-		}
-	}
-	if (player.hasStatusEffect(StatusEffects.EarthStance)) {
-		if (player.statusEffectv1(StatusEffects.EarthStance) <= 0) {
-			player.removeStatusEffect(StatusEffects.EarthStance);
-			outputText("<b>Earth Stance effect wore off!</b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.EarthStance,1,-1);
-	}
-	//Eclipsing shadow
-	if (player.hasStatusEffect(StatusEffects.CooldownEclipsingShadow)) {
-		if (player.statusEffectv1(StatusEffects.CooldownEclipsingShadow) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownEclipsingShadow);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownEclipsingShadow,1,-1);
-		}
-	}
-	//Sonic scream
-	if (player.hasStatusEffect(StatusEffects.CooldownSonicScream)) {
-		if (player.statusEffectv1(StatusEffects.CooldownSonicScream) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownSonicScream);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownSonicScream,1,-1);
-		}
-	}
-	//Tornado Strike
-	if (player.hasStatusEffect(StatusEffects.CooldownTornadoStrike)) {
-		if (player.statusEffectv1(StatusEffects.CooldownTornadoStrike) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownTornadoStrike);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownTornadoStrike,1,-1);
-		}
-	}
-	//Soul Blast
-	if (player.hasStatusEffect(StatusEffects.CooldownSoulBlast)) {
-		if (player.statusEffectv1(StatusEffects.CooldownSoulBlast) <= 0) {
-			player.removeStatusEffect(StatusEffects.CooldownSoulBlast);
-		}
-		else {
-			player.addStatusValue(StatusEffects.CooldownSoulBlast,1,-1);
-		}
-	}
-	//Second Wind Regen
-	if (player.hasStatusEffect(StatusEffects.SecondWindRegen)) {
-		if (player.statusEffectv2(StatusEffects.SecondWindRegen) <= 0) {
-			player.removeStatusEffect(StatusEffects.SecondWindRegen);
-			outputText("<b></b>\n\n");
-		}
-		else player.addStatusValue(StatusEffects.SecondWindRegen,2,-1);
 	}
 	if (player.hasStatusEffect(StatusEffects.BladeDance)) player.removeStatusEffect(StatusEffects.BladeDance);
 	if (player.hasStatusEffect(StatusEffects.ResonanceVolley)) player.removeStatusEffect(StatusEffects.ResonanceVolley);
@@ -4072,18 +3757,18 @@ public function regeneration(combat:Boolean = true):void {
 	}
 }
 
-public function soulforceregeneration(combat:Boolean = true):void {
-	var gainedsoulforce:Number = 0;
+public function kiRegeneration(combat:Boolean = true):void {
+	var gainedki:Number = 0;
 	if (combat) {
-		if (flags[kFLAGS.IN_COMBAT_USE_PLAYER_WAITED_FLAG] == 1) gainedsoulforce *= 2;
-		EngineCore.SoulforceChange(gainedsoulforce, false);
+		if (flags[kFLAGS.IN_COMBAT_USE_PLAYER_WAITED_FLAG] == 1) gainedki *= 2;
+		EngineCore.KiChange(gainedki, false);
 	}
 	else {
-		EngineCore.SoulforceChange(gainedsoulforce, false);
+		EngineCore.KiChange(gainedki, false);
 	}
 }
 
-public function manaregeneration(combat:Boolean = true):void {
+public function manaRegeneration(combat:Boolean = true):void {
 	var gainedmana:Number = 0;
 	if (combat) {
 		if (player.hasPerk(PerkLib.JobSorcerer)) gainedmana += 10;
@@ -4098,7 +3783,7 @@ public function manaregeneration(combat:Boolean = true):void {
 	}
 }
 
-public function wrathregeneration(combat:Boolean = true):void {
+public function wrathRegeneration(combat:Boolean = true):void {
 	var gainedwrath:Number = 0;
 	if (combat) {
 		if (player.hasPerk(PerkLib.Berzerker)) gainedwrath += 2;
@@ -4114,7 +3799,7 @@ public function wrathregeneration(combat:Boolean = true):void {
 		EngineCore.WrathChange(gainedwrath, false);
 	}
 	else {
-		if (player.hasPerk(PerkLib.PrimalFuryI)) gainedwrath += 1;
+		if (player.hasPerk(PerkLib.PrimalFury)) gainedwrath += 1;
 		if (player.hasPerk(PerkLib.Berzerker)) gainedwrath += 1;
 		if (player.hasPerk(PerkLib.Lustzerker)) gainedwrath += 1;
 		if (player.hasPerk(PerkLib.Rage)) gainedwrath += 1;
@@ -4182,7 +3867,7 @@ public function startCombatImpl(monster_:Monster, plotFight_:Boolean = false):vo
 	else if (player.newGamePlusMod() >= 4) monster.lustVuln *= 0.6;
 	monster.HP = monster.maxHP();
 	monster.mana = monster.maxMana();
-	monster.soulforce = monster.maxSoulforce();
+	monster.ki = monster.maxKi();
 	monster.XP = monster.totalXP();
 	if (player.weaponRangeName == "gnoll throwing spear") player.ammo = 20;
 	if (player.weaponRangeName == "gnoll throwing axes") player.ammo = 10;
@@ -4655,10 +4340,10 @@ public function ScyllaTease():void {
 	}
 	//(Otherwise)
 	else {
-		wrathregeneration();
+		wrathRegeneration();
 		fatigueRecovery();
-		manaregeneration();
-		soulforceregeneration();
+		manaRegeneration();
+		kiRegeneration();
 		var damage:Number = 0;
 		var chance:Number= 0;
 		var bimbo:Boolean = false;
@@ -4822,10 +4507,10 @@ public function GooTease():void {
 	}
 	//(Otherwise)
 	else {
-		wrathregeneration();
+		wrathRegeneration();
 		fatigueRecovery();
-		manaregeneration();
-		soulforceregeneration();
+		manaRegeneration();
+		kiRegeneration();
 		var damage:Number = 0;
 		var chance:Number= 0;
 		var bimbo:Boolean = false;
@@ -5040,329 +4725,202 @@ public function PussyLeggoMyEggo():void {
 	enemyAI();
 }
 
+	//Todo @Oxdeception move the run methods?
+	/**
+	 * Handles a successful run attempt: Shows text, and a next button that returns to camp
+	 * Also stops combat and clears combat statuses from the player
+	 * @param text The text to display
+	 */
+	public function runSucceed(text:String = ""):void {
+		outputText(text);
+		inCombat = false;
+		clearStatuses(false);
+		doNext(camp.returnToCampUseOneHour);
+	}
+
+	/**
+	 * Handles a failed run attempt: Shows text, and a next button that returns to combat
+	 * @param text The text to display
+	 * @param doAi True to have the monster take its turn, false to return to menu without finishing the round
+	 */
+	public function runFail(text:String = "", doAi:Boolean = false):void {
+		outputText(text);
+		if(doAi){
+			return enemyAI();
+		}
+		doNext(curry(combatMenu,false));
+	}
+
+	/**
+	 * Checks if a basic run attempt has been successful
+	 * Does NOT check the Runner perk
+	 * @return true if successful
+	 */
+	public function runCheckEscaped():Boolean{
+		//Calculations
+		var escapeMod:Number = 20 + monster.level * 3;
+		if(debug) escapeMod -= 300;
+		if(player.canFly()) escapeMod -= 20;
+		if(player.tailType == Tail.RACCOON && player.ears.type == Ears.RACCOON && player.hasPerk(PerkLib.Runner)) escapeMod -= 25;
+		if(monster.hasStatusEffect(StatusEffects.Stunned)) escapeMod -= 50;
+
+		//Big tits doesn't matter as much if ya can fly!
+		else {
+			if(player.biggestTitSize() >= 35) escapeMod += 5;
+			if(player.biggestTitSize() >= 66) escapeMod += 10;
+			if(player.hips.type >= 20) escapeMod += 5;
+			if(player.butt.type >= 20) escapeMod += 5;
+			if(player.balls > 0){
+				if(player.ballSize >= 24) escapeMod += 5;
+				if(player.ballSize >= 48) escapeMod += 10;
+				if(player.ballSize >= 120) escapeMod += 10;
+			}
+		}
+		return player.spe > rand(monster.spe + escapeMod);
+	}
+
+	/**
+	 * Checks if the player made a successful run attempt using the Runner Perk
+	 * @return true if successful
+	 */
+	public function runCheckRunner():Boolean {
+		return player.hasPerk(PerkLib.Runner) && rand(100) < 50;
+	}
+
+	/**
+	 *  The default run failure display.
+	 *  This function is for monsters overriding runAway that don't need to change failure texts
+	 */
+	public function runFailDefault():void {
+		var text:String = "";
+		//Flyers get special failure message.
+		if(player.canFly()) {
+			text = (monster.capitalA + monster.short + " manage"+(monster.plural? "s":"")+" to grab your [legs] and drag you back to the ground before you can fly away!");
+		} else if(player.tailType == Tail.RACCOON && player.ears.type == Ears.RACCOON && player.hasPerk(PerkLib.Runner)){
+			text = "Using your running skill, you build up a head of steam and jump, but before you can clear the ground more than a foot, your opponent latches onto you and drags you back down with a thud!";
+		} else {
+			//Huge balls messages
+			if(player.balls > 0 && player.ballSize >= 24) {
+				text += "With your [balls] " + (player.ballSize < 48 ? "swinging ponderously beneath you" : "dragging along the ground") + ", getting away is far harder than it should be.  ";
+			}
+			//FATASS BODY MESSAGES
+			var largeButt: Boolean = player.butt.type >= 20;
+			var largeHips: Boolean = player.hips.type >= 20;
+			var largeTits: Boolean = player.biggestTitSize() >= 35;
+			var hugeTits : Boolean = player.biggestTitSize() >= 66;
+
+			if (hugeTits) { //FOR PLAYERS WITH MASSIVE BREASTS
+				text += "Your [chest] nearly drag along the ground";
+				if (largeHips) {
+					text += " while your [hips] swing side to side";
+					if (largeButt) {
+						text += " causing the fat of your [skintone][butt] to wobble heavily,";
+					}
+				} else {
+					text += largeButt? " while the fat of your [skintone][butt] wobbles heavily from side to side," : ",";
+				}
+				text += " forcing your body off balance and preventing you from moving quick enough to escape."
+			}
+			else if (largeTits) { //FOR PLAYERS WITH GIANT BREASTS
+				if (largeHips) {
+					text += "Your [hips] forces your gait to lurch slightly side to side, which causes the fat of your [skintone] ";
+					if (largeButt) {
+						text += "[butt] and ";
+					}
+					text += "[chest] to wobble immensely, throwing you off balance and preventing you from moving quick enough to escape.";
+				} else if (largeButt) {
+					text += "Your [skintone][butt] and [chest] wobble and bounce heavily, throwing you off balance and preventing you from moving quick enough to escape.";
+				} else {
+					text += "Your [chest] jiggle and wobble side to side like the [skintone] sacks of milky fat they are, with such force as to constantly throw you off balance, preventing you from moving quick enough to escape.";
+				}
+			}
+			else if (largeHips) { //FOR PLAYERS WITH EITHER GIANT HIPS OR BUTT BUT NOT THE BREASTS
+				text += "Your [hips] swing heavily from side to side ";
+				if (largeButt) {
+					text += "causing your [skintone][butt] to wobble obscenely ";
+				}
+				text += "forcing your body into an awkward gait that slows you down, preventing you from escaping.";
+			}
+			else if (largeButt) { //JUST DA BOOTAH
+				text += ("Your [skintone][butt] wobbles so heavily that you're unable to move quick enough to escape.");
+			}
+			else { //NORMAL RUN FAIL MESSAGE
+				text += (monster.capitalA + monster.short + " stay"+(monster.plural? "s" : "")+" hot on your heels, denying you a chance at escape!");
+			}
+		}
+		runFail(text,true);
+	}
+
+	/**
+	 * The default run success display
+	 * This function for monsters overriding runAway that don't need to change success texts
+	 * @param runner if the runner perk caused the run success
+	 */
+	public function runSucceedDefault(runner:Boolean = false):void{
+		var text:String = "";
+		if(runner) {
+			if(player.tailType == Tail.RACCOON && player.ears.type == Ears.RACCOON) { //sekrit benefit: if you have coon ears, coon tail, and Runner perk, change normal Runner escape to flight-type escape
+				text += "Using your running skill, you build up a head of steam and jump, then spread your arms and flail your tail wildly; your opponent dogs you as best [monster he] can, but stops and stares dumbly as your spastic tail slowly propels you several meters into the air!  You leave [monster him] behind with your clumsy, jerky, short-range flight.";
+			} else {
+				text += "Thanks to your talent for running, you manage to escape.";
+			}
+		} else {
+			if(player.canFly()) {
+				text += monster.capitalA + monster.short + " can't catch you.";
+			}
+			else {
+				text += (monster.capitalA + monster.short + " rapidly disappears into the shifting landscape behind you.");
+			}
+		}
+		//fixme @Oxdeception Izma specific run text should be moved to Izma
+		if(monster.short == "Izma") {
+			text += "\n\nAs you leave the tigershark behind, her taunting voice rings out after you.  \"<i>Oooh, look at that fine backside!  Are you running or trying to entice me?  Haha, looks like we know who's the superior specimen now!  Remember: next time we meet, you owe me that ass!</i>\"  Your cheek tingles in shame at her catcalls.";
+		}
+		runSucceed(text);
+	}
+
+/**
+ * The player [run] option
+ * @param callHook set false to bypass monster overrides
+ */
 public function runAway(callHook:Boolean = true):void {
+	clearOutput();
 	if (callHook && monster.onPcRunAttempt != null){
 		monster.onPcRunAttempt();
 		return;
 	}
-	clearOutput();
 	if (inCombat && player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv2(StatusEffects.Sealed) == 4) {
-		clearOutput();
-		outputText("You try to run, but you just can't seem to escape.  <b>Your ability to run was sealed, and now you've wasted a chance to attack!</b>\n\n");
-		enemyAI();
-		return;
+		return runFail("You try to run, but you just can't seem to escape.  <b>Your ability to run was sealed, and now you've wasted a chance to attack!</b>\n\n",true);
 	}
 	//Rut doesnt let you run from dicks.
 	if(player.inRut && monster.cockTotal() > 0) {
-		clearOutput();
-		outputText("The thought of another male in your area competing for all the pussy infuriates you!  No way will you run!");
-//Pass false to combatMenu instead:		menuLoc = 3;
-//		doNext(combatMenu);
-		menu();
-		addButton(0, "Next", combatMenu, false);
-		return;
+		return runFail("The thought of another male in your area competing for all the pussy infuriates you!  No way will you run!");
 	}
-	if(monster.hasStatusEffect(StatusEffects.Level) && player.canFly() && monster is SandTrap) {
-		clearOutput();
-		outputText("You flex the muscles in your back and, shaking clear of the sand, burst into the air!  Wasting no time you fly free of the sandtrap and its treacherous pit.  \"One day your wings will fall off, little ant,\" the snarling voice of the thwarted androgyne carries up to you as you make your escape.  \"And I will be waiting for you when they do!\"");
-		inCombat = false;
-		clearStatuses(false);
-		doNext(camp.returnToCampUseOneHour);
-		return;
-	}
-	if(monster.hasStatusEffect(StatusEffects.GenericRunDisabled) || SceneLib.urtaQuest.isUrta()) {
-		outputText("You can't escape from this fight!");
-//Pass false to combatMenu instead:		menuLoc = 3;
-//		doNext(combatMenu);
-		menu();
-		addButton(0, "Next", combatMenu, false);
-		return;
-	}
-	if(monster.hasStatusEffect(StatusEffects.Level) && monster.statusEffectv1(StatusEffects.Level) < 4 && monster is SandTrap) {
-		outputText("You're too deeply mired to escape!  You'll have to <b>climb</b> some first!");
-//Pass false to combatMenu instead:		menuLoc = 3;
-//		doNext(combatMenu);
-		menu();
-		addButton(0, "Next", combatMenu, false);
-		return;
-	}
-	if(monster.hasStatusEffect(StatusEffects.RunDisabled)) {
-		outputText("You'd like to run, but you can't scale the walls of the pit with so many demonic hands pulling you down!");
-//Pass false to combatMenu instead:		menuLoc = 3;
-//		doNext(combatMenu);
-		menu();
-		addButton(0, "Next", combatMenu, false);
-		return;
-	}
-	if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00329] == 1 && (monster.short == "minotaur gang" || monster.short == "minotaur tribe")) {
-		flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00329] = 0;
-		//(Free run away) 
-		clearOutput();
-		outputText("You slink away while the pack of brutes is arguing.  Once they finish that argument, they'll be sorely disappointed!");
-		inCombat = false;
-		clearStatuses(false);
-		doNext(camp.returnToCampUseOneHour);
-		return;
-	}
-	else if(monster.short == "minotaur tribe" && monster.HPRatio() >= 0.75) {
-		clearOutput();
-		outputText("There's too many of them surrounding you to run!");
-//Pass false to combatMenu instead:		menuLoc = 3;
-//		doNext(combatMenu);
-		menu();
-		addButton(0, "Next", combatMenu, false);
-		return;
+	if(SceneLib.urtaQuest.isUrta()) {
+		return runFail("You can't escape from this fight!");
 	}
 	if(inDungeon || inRoomedDungeon) {
-		clearOutput();
-		outputText("You're trapped in your foe's home turf - there is nowhere to run!\n\n");
-		enemyAI();
-		return;
-	}
-	if (prison.inPrison && !prison.prisonCanEscapeRun()) {
-		addButton(0, "Next", combatMenu, false);
-		return;
+		return runFail("You're trapped in your foe's home turf - there is nowhere to run!\n\n",true);
 	}
 	//Attempt texts!
-	if(monster.short == "Marae") {
-		outputText("Your boat is blocked by tentacles! ");
-		if(!player.canFly()) outputText("You may not be able to swim fast enough. ");
-		else outputText("You grit your teeth with effort as you try to fly away but the tentacles suddenly grab your [legs] and pull you down. ");
-		outputText("It looks like you cannot escape. ");
-		enemyAI();
-		return;
-	}
-	if(monster.short == "Ember") {
-		outputText("You take off");
-		if(!player.canFly()) outputText(" running");
-		else outputText(", flapping as hard as you can");
-		outputText(", and Ember, caught up in the moment, gives chase.  ");
-	}
-	if (monster.short == "lizan rogue") {
-		outputText("As you retreat the lizan doesn't even attempt to stop you. When you look back to see if he's still there you find nothing but the empty bog around you.");
-		CoC.instance.inCombat = false;
-		clearStatuses(false);
-		doNext(camp.returnToCampUseOneHour);
-		return;
-	}
-	else if(player.canFly()) outputText("Gritting your teeth with effort, you beat your wings quickly and lift off!  ");
-	//Nonflying PCs
+	if(player.canFly()) outputText("Gritting your teeth with effort, you beat your wings quickly and lift off!  ");
 	else {
-		//In prison!
-		if (prison.inPrison) {
-			outputText("You make a quick dash for the door and attempt to escape! ");
-		}
 		//Stuck!
-		else if(player.hasStatusEffect(StatusEffects.NoFlee)) {
-			clearOutput();
+		if(player.hasStatusEffect(StatusEffects.NoFlee)) {
 			if(monster.short == "goblin") outputText("You try to flee but get stuck in the sticky white goop surrounding you.\n\n");
-			else outputText("You put all your skills at running to work and make a supreme effort to escape, but are unable to get away!\n\n");
-			enemyAI();
-			return;
+			return runFail("You put all your skills at running to work and make a supreme effort to escape, but are unable to get away!\n\n", true);
 		}
 		//Nonstuck!
-		else outputText("You turn tail and attempt to flee!  ");
+		outputText("You turn tail and attempt to flee!  ");
 	}
-		
-	//Calculations
-	var escapeMod:Number = 20 + monster.level * 3;
-	if(debug) escapeMod -= 300;
-	if(player.canFly()) escapeMod -= 20;
-	if(player.tailType == Tail.RACCOON && player.ears.type == Ears.RACCOON && player.hasPerk(PerkLib.Runner)) escapeMod -= 25;
-	if(monster.hasStatusEffect(StatusEffects.Stunned)) escapeMod -= 50;
-	
-	//Big tits doesn't matter as much if ya can fly!
-	else {
-		if(player.biggestTitSize() >= 35) escapeMod += 5;
-		if(player.biggestTitSize() >= 66) escapeMod += 10;
-		if(player.hips.type >= 20) escapeMod += 5;
-		if(player.butt.type >= 20) escapeMod += 5;
-		if(player.ballSize >= 24 && player.balls > 0) escapeMod += 5;
-		if(player.ballSize >= 48 && player.balls > 0) escapeMod += 10;
-		if(player.ballSize >= 120 && player.balls > 0) escapeMod += 10;
+
+	if (runCheckEscaped()) { //SUCCESSFUL FLEE
+		runSucceedDefault()
+	} else if(runCheckRunner()) { //Runner Perk Chance
+		runSucceedDefault(true)
+	} else {
+		runFailDefault();
 	}
-	//ANEMONE OVERRULES NORMAL RUN
-	if(monster.short == "anemone") {
-		//Autosuccess - less than 60 lust
-		if(player.lust < (player.maxLust() * 0.6)) {
-			clearOutput();
-			outputText("Marshalling your thoughts, you frown at the strange girl and turn to march up the beach.  After twenty paces inshore you turn back to look at her again.  The anemone is clearly crestfallen by your departure, pouting heavily as she sinks beneath the water's surface.");
-			inCombat = false;
-			clearStatuses(false);
-			doNext(camp.returnToCampUseOneHour);
-			return;
-		}
-		//Speed dependent
-		else {
-			//Success
-			if(player.spe > rand(monster.spe+escapeMod)) {
-				inCombat = false;
-				clearStatuses(false);
-				clearOutput();
-				outputText("Marshalling your thoughts, you frown at the strange girl and turn to march up the beach.  After twenty paces inshore you turn back to look at her again.  The anemone is clearly crestfallen by your departure, pouting heavily as she sinks beneath the water's surface.");
-				doNext(camp.returnToCampUseOneHour);
-				return;
-			}
-			//Run failed:
-			else {
-				outputText("You try to shake off the fog and run but the anemone slinks over to you and her tentacles wrap around your waist.  <i>\"Stay?\"</i> she asks, pressing her small breasts into you as a tentacle slides inside your [armor] and down to your nethers.  The combined stimulation of the rubbing and the tingling venom causes your knees to buckle, hampering your resolve and ending your escape attempt.");
-				//(gain lust, temp lose spd/str)
-				(monster as Anemone).applyVenom((4+player.sens/20));
-				combatRoundOver();
-				return;
-			}
-		}
-	}
-	//SEA ANEMONE OVERRULES NORMAL RUN
-	if(monster.short == "sea anemone") {
-		//Autosuccess - less than 60 lust
-		if(player.lust < (player.maxLust() * 0.6)) {
-			clearOutput();
-			outputText("Marshalling your thoughts, you frown at the strange girl and turn to march up the beach.  After twenty paces inshore you turn back to look at her again.  The anemone is clearly crestfallen by your departure, pouting heavily as she sinks beneath the water's surface.");
-			inCombat = false;
-			clearStatuses(false);
-			doNext(camp.returnToCampUseOneHour);
-			return;
-		}
-		//Speed dependent
-		else {
-			//Success
-			if(player.spe > rand(monster.spe+escapeMod)) {
-				inCombat = false;
-				clearStatuses(false);
-				clearOutput();
-				outputText("Marshalling your thoughts, you frown at the strange girl and turn to march up the beach.  After twenty paces inshore you turn back to look at her again.  The anemone is clearly crestfallen by your departure, pouting heavily as she sinks beneath the water's surface.");
-				doNext(camp.returnToCampUseOneHour);
-				return;
-			}
-			//Run failed:
-			else {
-				outputText("You try to shake off the fog and run but the anemone slinks over to you and her tentacles wrap around your waist.  <i>\"Stay?\"</i> she asks, pressing her small breasts into you as a tentacle slides inside your [armor] and down to your nethers.  The combined stimulation of the rubbing and the tingling venom causes your knees to buckle, hampering your resolve and ending your escape attempt.");
-				//(gain lust, temp lose spd/str)
-				(monster as SeaAnemone).applyVenom((4+player.sens/20));
-				combatRoundOver();
-				return;
-			}
-		}
-	}
-	//Ember is SPUCIAL
-	if(monster.short == "Ember") {
-		//GET AWAY
-		if(player.spe > rand(monster.spe + escapeMod) || (player.hasPerk(PerkLib.Runner) && rand(100) < 50)) {
-			if(player.hasPerk(PerkLib.Runner)) outputText("Using your skill at running, y");
-			else outputText("Y");
-			outputText("ou easily outpace the dragon, who begins hurling imprecations at you.  \"What the hell, [name], you weenie; are you so scared that you can't even stick out your punishment?\"");
-			outputText("\n\nNot to be outdone, you call back, \"Sucks to you!  If even the mighty Last Ember of Hope can't catch me, why do I need to train?  Later, little bird!\"");
-			inCombat = false;
-			clearStatuses(false);
-			doNext(camp.returnToCampUseOneHour);
-		}
-		//Fail: 
-		else {
-			outputText("Despite some impressive jinking, " + SceneLib.emberScene.emberMF("he","she") + " catches you, tackling you to the ground.\n\n");
-			enemyAI();
-		}
-		return;
-	}
-	//SUCCESSFUL FLEE
-	if (player.spe > rand(monster.spe + escapeMod)) {
-		//Escape prison
-		if (prison.inPrison) {
-			outputText("You quickly bolt out of the main entrance and after hiding for a good while, there's no sign of [monster a] [monster name]. You sneak back inside to retrieve whatever you had before you were captured. ");
-			inCombat = false;
-			clearStatuses(false);
-			prison.prisonEscapeSuccessText();
-			doNext(prison.prisonEscapeFinalePart1);
-			return;
-		}
-		//Fliers flee!
-		else if(player.canFly()) outputText(monster.capitalA + monster.short + " can't catch you.");
-		//sekrit benefit: if you have coon ears, coon tail, and Runner perk, change normal Runner escape to flight-type escape
-		else if(player.tailType == Tail.RACCOON && player.ears.type == Ears.RACCOON && player.hasPerk(PerkLib.Runner)) {
-			outputText("Using your running skill, you build up a head of steam and jump, then spread your arms and flail your tail wildly; your opponent dogs you as best [monster he] can, but stops and stares dumbly as your spastic tail slowly propels you several meters into the air!  You leave [monster him] behind with your clumsy, jerky, short-range flight.");
-		}
-		//Non-fliers flee
-		else outputText(monster.capitalA + monster.short + " rapidly disappears into the shifting landscape behind you.");
-		if(monster.short == "Izma") {
-			outputText("\n\nAs you leave the tigershark behind, her taunting voice rings out after you.  \"<i>Oooh, look at that fine backside!  Are you running or trying to entice me?  Haha, looks like we know who's the superior specimen now!  Remember: next time we meet, you owe me that ass!</i>\"  Your cheek tingles in shame at her catcalls.");
-		}
-		inCombat = false;
-		clearStatuses(false);
-		doNext(camp.returnToCampUseOneHour);
-		return;
-	}
-	//Runner perk chance
-	else if(player.hasPerk(PerkLib.Runner) && rand(100) < 50) {
-		inCombat = false;
-		outputText("Thanks to your talent for running, you manage to escape.");
-		if(monster.short == "Izma") {
-			outputText("\n\nAs you leave the tigershark behind, her taunting voice rings out after you.  \"<i>Oooh, look at that fine backside!  Are you running or trying to entice me?  Haha, looks like we know who's the superior specimen now!  Remember: next time we meet, you owe me that ass!</i>\"  Your cheek tingles in shame at her catcalls.");
-		}
-		clearStatuses(false);
-		doNext(camp.returnToCampUseOneHour);
-		return;
-	}
-	//FAIL FLEE
-	else {
-		if(monster.short == "Holli") {
-			(monster as Holli).escapeFailWithHolli();
-			return;
-		}
-		//Flyers get special failure message.
-		if(player.canFly()) {
-			if(monster.plural) outputText(monster.capitalA + monster.short + " manage to grab your [legs] and drag you back to the ground before you can fly away!");
-			else outputText(monster.capitalA + monster.short + " manages to grab your [legs] and drag you back to the ground before you can fly away!");
-		}
-		//fail
-		else if(player.tailType == Tail.RACCOON && player.ears.type == Ears.RACCOON && player.hasPerk(PerkLib.Runner)) outputText("Using your running skill, you build up a head of steam and jump, but before you can clear the ground more than a foot, your opponent latches onto you and drags you back down with a thud!");
-		//Nonflyer messages
-		else {
-			//Huge balls messages
-			if(player.balls > 0 && player.ballSize >= 24) {
-				if(player.ballSize < 48) outputText("With your [balls] swinging ponderously beneath you, getting away is far harder than it should be.  ");
-				else outputText("With your [balls] dragging along the ground, getting away is far harder than it should be.  ");
-			}
-			//FATASS BODY MESSAGES
-			if(player.biggestTitSize() >= 35 || player.butt.type >= 20 || player.hips.type >= 20)
-			{
-				//FOR PLAYERS WITH GIANT BREASTS
-				if(player.biggestTitSize() >= 35 && player.biggestTitSize() < 66)
-				{
-					if(player.hips.type >= 20)
-					{
-						outputText("Your " + hipDescript() + " forces your gait to lurch slightly side to side, which causes the fat of your " + player.skinTone + " ");
-						if(player.butt.type >= 20) outputText(buttDescript() + " and ");
-						outputText(chestDesc() + " to wobble immensely, throwing you off balance and preventing you from moving quick enough to escape.");
-					}
-					else if(player.butt.type >= 20) outputText("Your " + player.skinTone + buttDescript() + " and " + chestDesc() + " wobble and bounce heavily, throwing you off balance and preventing you from moving quick enough to escape.");
-					else outputText("Your " + chestDesc() + " jiggle and wobble side to side like the " + player.skinTone + " sacks of milky fat they are, with such force as to constantly throw you off balance, preventing you from moving quick enough to escape.");
-				}
-				//FOR PLAYERS WITH MASSIVE BREASTS
-				else if(player.biggestTitSize() >= 66) {
-					if(player.hips.type >= 20) {
-						outputText("Your " + chestDesc() + " nearly drag along the ground while your " + hipDescript() + " swing side to side ");
-						if(player.butt.type >= 20) outputText("causing the fat of your " + player.skinTone + buttDescript() + " to wobble heavily, ");
-						outputText("forcing your body off balance and preventing you from moving quick enough to get escape.");
-					}
-					else if(player.butt.type >= 20) outputText("Your " + chestDesc() + " nearly drag along the ground while the fat of your " + player.skinTone + buttDescript() + " wobbles heavily from side to side, forcing your body off balance and preventing you from moving quick enough to escape.");
-					else outputText("Your " + chestDesc() + " nearly drag along the ground, preventing you from moving quick enough to get escape.");
-				}
-				//FOR PLAYERS WITH EITHER GIANT HIPS OR BUTT BUT NOT THE BREASTS
-				else if(player.hips.type >= 20) {
-					outputText("Your " + hipDescript() + " swing heavily from side to side ");
-					if(player.butt.type >= 20) outputText("causing your " + player.skinTone + buttDescript() + " to wobble obscenely ");
-					outputText("and forcing your body into an awkward gait that slows you down, preventing you from escaping.");
-				}
-				//JUST DA BOOTAH
-				else if(player.butt.type >= 20) outputText("Your " + player.skinTone + buttDescript() + " wobbles so heavily that you're unable to move quick enough to escape.");
-			}
-			//NORMAL RUN FAIL MESSAGES
-			else if(monster.plural) outputText(monster.capitalA + monster.short + " stay hot on your heels, denying you a chance at escape!");
-			else outputText(monster.capitalA + monster.short + " stays hot on your heels, denying you a chance at escape!");
-		}
-	}
-	outputText("\n\n");
-	enemyAI();
 }
 
 public function takeFlight():void {
@@ -5413,7 +4971,7 @@ public function greatDive():void {
 	enemyAI();
 }
 
-public function soulskillMod():Number {
+public function kiPowerMod():Number {
 	var modss:Number = 1;
 	if (player.hasPerk(PerkLib.WizardsAndDaoistsFocus)) modss += player.perkv2(PerkLib.WizardsAndDaoistsFocus);
 	if (player.hasPerk(PerkLib.SeersInsight)) modss += player.perkv1(PerkLib.SeersInsight);
@@ -5421,13 +4979,13 @@ public function soulskillMod():Number {
 	if (player.shieldName == "spirit focus") modss += .2;
 	return modss;
 }
-public function soulskillPhysicalMod():Number {
+public function kiPowerPhysicalMod():Number {
 	var modssp:Number = 1;
 	if (player.hasPerk(PerkLib.BodyCultivatorsFocus)) modssp += player.perkv1(PerkLib.BodyCultivatorsFocus);
 	if (player.hasPerk(PerkLib.AscensionSpiritualEnlightenment)) modssp *= 1 + (player.perkv1(PerkLib.AscensionSpiritualEnlightenment) * 0.1);
 	return modssp;
 }
-public function soulskillMagicalMod():Number {
+public function kiPowerMagicalMod():Number {
 	var modssm:Number = 1;
 	if (player.hasPerk(PerkLib.WizardsAndDaoistsFocus)) modssm += player.perkv2(PerkLib.WizardsAndDaoistsFocus);
 	if (player.hasPerk(PerkLib.SeersInsight)) modssm += player.perkv1(PerkLib.SeersInsight);
@@ -5436,28 +4994,17 @@ public function soulskillMagicalMod():Number {
 	return modssm;
 }
 
-public function soulskillcostmulti():Number {
+public function kiPowerCostMulti():Number {
 	var multiss:Number = 1;
-	if (soulskillMod() > 1) multiss += (soulskillMod() - 1) * 0.1;/*
-	if (player.hasPerk(PerkLib.SoulPersonage)) multiss += 1;
-	if (player.hasPerk(PerkLib.SoulWarrior)) multiss += 1;
-	if (player.hasPerk(PerkLib.SoulSprite)) multiss += 1;
-	if (player.hasPerk(PerkLib.SoulScholar)) multiss += 1;
-	if (player.hasPerk(PerkLib.SoulElder)) multiss += 1;
-	if (player.hasPerk(PerkLib.SoulExalt)) multiss += 1;
-	if (player.hasPerk(PerkLib.SoulOverlord)) multiss += 1;
-	if (player.hasPerk(PerkLib.SoulTyrant)) multiss += 1;
-	if (player.hasPerk(PerkLib.SoulKing)) multiss += 1;
-	if (player.hasPerk(PerkLib.SoulEmperor)) multiss += 1;
-	if (player.hasPerk(PerkLib.SoulAncestor)) multiss += 1;*/
-	if (player.level >= 24 && player.wis >= 80) multiss += 1;//początek używania Dao of Elements
-	if (player.level >= 42 && player.wis >= 140) multiss += 1;//początek zdolności latania
-	if (player.level >= 60 && player.wis >= 200) multiss += 1;//początek czegoś tam 1
-	if (player.level >= 78 && player.wis >= 260) multiss += 1;//początek czegoś tam 2
+	if (kiPowerMod() > 1) multiss += (kiPowerMod() - 1) * 0.1;
+	if (player.level >= 24 && player.wis >= 80) multiss += 1;
+	if (player.level >= 42 && player.wis >= 140) multiss += 1;
+	if (player.level >= 60 && player.wis >= 200) multiss += 1;
+	if (player.level >= 78 && player.wis >= 260) multiss += 1;
 	return multiss;
 }
 
-public function soulskillCost():Number {
+public function kiPowerCost():Number {
 	var modssc:Number = 1;
 	if (player.hasPerk(PerkLib.WizardsAndDaoistsEndurance)) modssc -= (0.01 * player.perkv2(PerkLib.WizardsAndDaoistsEndurance));
 	if (player.hasPerk(PerkLib.SeersInsight)) modssc -= player.perkv1(PerkLib.SeersInsight);
