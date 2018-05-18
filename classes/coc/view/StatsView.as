@@ -5,6 +5,7 @@ import classes.CoC;
 import classes.Player;
 import classes.Scenes.SceneLib;
 import classes.Stats.BaseStat;
+import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
 import classes.internals.Utils;
 
@@ -135,7 +136,12 @@ public class StatsView extends Block {
 			onrollOver: hoverStat,
 			onrollOut: hoverStat
 		}));
-		addElement(libBar = new StatBar({statName: "Libido:"}));
+		addElement(libBar = new StatBar({
+			statName: "Libido:",
+			dataset: { statname: 'lib' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
 		addElement(senBar = new StatBar({statName: "Sensitivity:"}));
 		addElement(corBar = new StatBar({statName: "Corruption:"}));
 		combatStatsText = addTextField({
@@ -363,18 +369,19 @@ public class StatsView extends Block {
 		var player:Player            = game.player;
 		var maxes:Object      = player.getAllMaxStats();
 		nameText.htmlText     = "<b>Name: " + player.short + "</b>";
-		strBar.maxValue       = maxes.str;
-		strBar.value          = player.str;
-		touBar.maxValue       = maxes.tou;
-		touBar.value          = player.tou;
-		speBar.maxValue       = maxes.spe;
-		speBar.value          = player.spe;
-		intBar.maxValue       = maxes.inte;
-		intBar.value          = player.inte;
-		wisBar.maxValue       = maxes.wis;
-		wisBar.value          = player.wis;
-		libBar.maxValue       = maxes.lib;
-		libBar.value          = player.lib;
+		for each(var e:StatBar in allStats) {
+			var stat:PrimaryStat = player.stats[e.dataset.statname] as PrimaryStat;
+			if (!stat) continue;
+			e.maxValue = stat.max;
+			e.value = stat.value;
+			if (stat.bonus.value > 0) {
+				e.valueLabel.textColor = Color.fromRgb(0x00,0xff,0x00);
+			} else if (stat.bonus.value < 0) {
+				e.valueLabel.textColor = Color.fromRgb(0xff,0x00,0x00);
+			} else {
+				e.valueLabel.textColor = e.valueLabel.defaultTextFormat.color as uint;
+			}
+		}
 		senBar.maxValue       = maxes.sens;
 		senBar.value          = player.sens;
 		corBar.value          = player.cor;
@@ -393,11 +400,13 @@ public class StatsView extends Block {
 		kiBar.value           = player.ki;
 		hungerBar.maxValue    = player.maxHunger();
 		hungerBar.value       = player.hunger;
+		/* okay that needs to be done properly (blinking?)
 		if (player.hunger < 25) {
 			hungerBar.statName = '/!\\ Satiety:';
 		} else {
 			hungerBar.statName = 'Satiety:';
 		}
+		*/
 		var inPrison:Boolean          = SceneLib.prison.inPrison;
 		esteemBar.visible     		  = inPrison;
 		willBar.visible      		  = inPrison;

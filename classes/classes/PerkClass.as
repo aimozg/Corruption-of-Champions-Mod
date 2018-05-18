@@ -24,10 +24,10 @@ public class PerkClass
 		//MEMBER FUNCTIONS
 
 		// TODO @aimozg how that will work with saving-loading-adding-removing? remake like with status effects, maybe even generalize
+		/**
+		 * Attach a (de)buff to this status effect, will be removed with it
+		 */
 		public function buffHost(host:Creature,stat:String,amount:Number):void {
-			/**
-			 * Attach a (de)buff to this status effect, will be removed with it
-			 */
 			var s:IStat = host.stats[stat];
 			if (s is PrimaryStat) {
 				(s as PrimaryStat).bonus.addOrIncreaseEffect(ptype.id,amount,this);
@@ -35,6 +35,16 @@ public class PerkClass
 				(s as BaseStat).addOrIncreaseEffect(ptype.id,amount,this);
 			} else {
 				trace("/!\\ buffHost("+stat+", "+amount+") in "+ptype.id);
+			}
+		}
+		public function unbuffHost(host:Creature,stat:String):void {
+			var s:IStat = host.stats[stat];
+			if (s is PrimaryStat) {
+				(s as PrimaryStat).removeEffect(ptype.id);
+			} else if (s is BaseStat) {
+				(s as BaseStat).removeEffect(ptype.id);
+			} else {
+				trace("/!\\ unbuffHost("+stat+") in "+ptype.id);
 			}
 		}
 		

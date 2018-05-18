@@ -17,6 +17,10 @@ public class PrimaryStat implements IStat {
 		_mult.removeAllEffects();
 		_bonus.removeAllEffects();
 	}
+	public function removeEffect(tag:String):void {
+		_mult.removeEffect(tag);
+		_bonus.removeEffect(tag);
+	}
 	
 	public function get core():RawStat {
 		return _core;

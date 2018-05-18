@@ -98,35 +98,35 @@ public class BaseStat implements IStat {
 		}
 		return value;
 	}
-	private function indexOfEffect(tag:Object):int {
+	private function indexOfEffect(tag:String):int {
 		for (var i:int = 0; i< _effects.length; i++) {
 			if (_effects[i][1] == tag) return i;
 		}
 		return -1;
 	}
-	public function hasEffect(tag:Object):Boolean {
+	public function hasEffect(tag:String):Boolean {
 		return indexOfEffect(tag) != -1;
 	}
 	/**
 	 * @return tuple [value, tag, data] or null
 	 * This array is a copy; changing the value won't affect the stat
 	 */
-	public function findEffect(tag:Object):Array {
+	public function findEffect(tag:String):Array {
 		var i:int = indexOfEffect(tag);
 		if (i==-1) return null;
 		return _effects[i].slice();
 	}
-	public function valueOfEffect(tag:Object,defaultValue:Number=0.0):Number {
+	public function valueOfEffect(tag:String,defaultValue:Number=0.0):Number {
 		var i:int = indexOfEffect(tag);
 		if (i==-1) return defaultValue;
 		return _effects[i][0];
 	}
-	public function dataOfEffect(tag:Object,defaultData:Object=null):Object {
+	public function dataOfEffect(tag:String,defaultData:Object=null):Object {
 		var i:int = indexOfEffect(tag);
 		if (i==-1) return defaultData;
 		return _effects[i][2];
 	}
-	public function addOrIncreaseEffect(tag:Object, effectValue:Number, newData:Object=null):void {
+	public function addOrIncreaseEffect(tag:String, effectValue:Number, newData:Object=null):void {
 		var i:int = indexOfEffect(tag);
 		if (i == -1) {
 			_effects.push([effectValue,tag,newData]);
@@ -140,7 +140,7 @@ public class BaseStat implements IStat {
 			_value = calculate();
 		}
 	}
-	public function addOrReplaceEffect(tag:Object, effectValue:Number, newData:Object=null):void {
+	public function addOrReplaceEffect(tag:String, effectValue:Number, newData:Object=null):void {
 		var i:int = indexOfEffect(tag);
 		if (i == -1) {
 			_effects.push([effectValue,tag,newData]);
@@ -150,7 +150,7 @@ public class BaseStat implements IStat {
 		}
 		_value = calculate();
 	}
-	public function removeEffect(tag:Object):void {
+	public function removeEffect(tag:String):void {
 		var i:int = indexOfEffect(tag);
 		if (i == -1) return;
 		var effectValue:Number = _effects[i][0];
