@@ -376,6 +376,16 @@ package classes
 			setPerkStatEffect(PerkLib.ChiReflowSpeed,'strMult',UmasShop.NEEDLEWORK_SPEED_STRENGTH_MULT);
 			//Caps speed from Uma's needlework.
 			setPerkStatEffect(PerkLib.ChiReflowDefense,'speMult',UmasShop.NEEDLEWORK_DEFENSE_SPEED_MULT);
+			setPerkStatEffect(PerkLib.BimboBrains,'intMult',-0.60);
+			setPerkStatEffect(PerkLib.BroBrains,'intMult',-0.60);
+			setPerkStatEffect(PerkLib.FutaForm,'intMult',-0.60);
+			setPerkStatEffect(PerkLib.FutaForm,'libMult',+0.50);
+			perk = perkByType(PerkLib.ProductivityDrugs);
+			if (perk) {
+				perk.buffHost(this, 'lib', perk.value1);
+			} else {
+				libStat.removeEffect(PerkLib.ProductivityDrugs.id);
+			}
 			End("Creature","updateStats.perks");
 			
 			Begin("Creature","updateStats.racial");
@@ -572,7 +582,7 @@ package classes
 			var prevSens:Number  = sens;
 			var prevLust:Number  = lust;
 			var prevCor:Number  = cor;
-			modStats(argz.str, argz.tou, argz.spe, argz.inte, argz.wis, argz.lib, argz.sens, argz.lust, argz.cor, argz.scale, argz.max);
+			modStats(argz.str, argz.tou, argz.spe, argz.inte, argz.wis, argz.lib, argz.sens, argz.lust, argz.cor, argz.scale);
 			End("Creature","dynStats");
 			trace("dynStats("+args.join(", ")+") => ("+[str,tou,spe,inte,wis,lib,sens,lust,cor].join(", ")+")");
 			return {
@@ -619,24 +629,10 @@ package classes
 				stat.removeEffect(ptype.id);
 			}
 		}
-		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean, max:Boolean):void {
+		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {
 			var maxes:Object;
-			if (max) {
-				maxes = getAllMaxStats();
-				maxes.lust = maxLust();
-			} else {
-				maxes = {
-					str:Infinity,
-					tou:Infinity,
-					spe:Infinity,
-					inte:Infinity,
-					wis:Infinity,
-					lib:Infinity,
-					sens:Infinity,
-					cor:Infinity,
-					lust:Infinity
-				}
-			}
+			maxes = getAllMaxStats();
+			maxes.lust = maxLust();
 			var mins:Object = getAllMinStats();
 			mins.lust = minLust();
 			var oldHPratio:Number = hp100/100;
@@ -4269,7 +4265,7 @@ package classes
 		 * Generate increments for stats
 		 *
 		 * @return Object of (newStat-oldStat) with keys str, tou, spe, inte, wis, lib, sens, lust, cor
-		 * and flags scale, max
+		 * and flag 'scale'
 		 * */
 		public static function parseDynStatsArgs(c:Creature, args:Array):Object {
 			// Check num of args, we should have a multiple of 2
@@ -4288,8 +4284,7 @@ package classes
 				sen: [ 0, "+"],
 				lus: [ 0, "+"],
 				cor: [ 0, "+"],
-				scale: [ true, "="],
-				max: [ true, "="]
+				scale: [ true, "="]
 			};
 			var aliases:Object = {
 				"strength":"str",
@@ -4362,8 +4357,7 @@ package classes
 				sens    : newSens - c.sens,
 				lust    : newLust - c.lust,
 				cor     : newCor - c.cor,
-				scale   : argDefs.scale[0],
-				max     : argDefs.max[0]
+				scale   : argDefs.scale[0]
 			};
 		}
 	}

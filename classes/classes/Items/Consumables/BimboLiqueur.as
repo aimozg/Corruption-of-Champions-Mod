@@ -56,9 +56,7 @@ public class BimboLiqueur extends Consumable {
 				game.player.removePerk(PerkLib.BroBody);
 				game.player.removePerk(PerkLib.BroBrains);
 				game.player.createPerk(PerkLib.FutaFaculties, 0, 0, 0, 0);
-				var brains:PerkClass = game.player.createPerk(PerkLib.FutaForm, 0, 0, 0, 0);
-				brains.buffHost(game.player,'intMult',-0.60); // TODO @aimozg/stats rebalance?
-				brains.buffHost(game.player,'libMult',+0.50); // TODO @aimozg/stats rebalance?
+				game.player.createPerk(PerkLib.FutaForm, 0, 0, 0, 0);
 			}
 			else {
 				outputText("You pop the cork from the flask and are immediately assaulted by a cloying, spiced scent that paints visions of a slutty slave-girl's slightly-spread folds.  Wow, this is some potent stuff!  Well, you knew what you were getting into when you found this bottle!  You open wide and guzzle it down, feeling the fire of alcohol burning a path to your belly.  The burning quickly fades to a pleasant warmth that makes you light-headed and giggly.\n\n");
@@ -167,8 +165,7 @@ public class BimboLiqueur extends Consumable {
 				}
 				if (!game.player.hasPerk(PerkLib.BimboBrains)) {
 					outputText("<b>(Bimbo Brains - Perk Gained!)</b>\n");//int to 20.  max int 50)
-					brains = game.player.createPerk(PerkLib.BimboBrains, 0, 0, 0, 0);
-					brains.buffHost(game.player,'intMult',-0.60); // TODO @aimozg/stats rebalance?
+					game.player.createPerk(PerkLib.BimboBrains, 0, 0, 0, 0);
 				}
 				game.player.orgasm();
 				game.player.dynStats("int", -1, "lib", 5, "sen", 25);

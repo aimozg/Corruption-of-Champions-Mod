@@ -13,6 +13,7 @@ public class BaseStat implements IStat {
 	public static const AGGREGATE_SUM:int = EnumValue.add(AggregateTypes, 0, 'AGGREGATE_SUM', {short:'sum'});
 	public static const AGGREGATE_MAX:int = EnumValue.add(AggregateTypes, 1, 'AGGREGATE_MAX', {short:'max'});
 	public static const AGGREGATE_MIN:int = EnumValue.add(AggregateTypes, 2, 'AGGREGATE_MIN', {short:'min'});
+	public static const AGGREGATE_MULT:int = EnumValue.add(AggregateTypes, 3, 'AGGREGATE_MULT', {short:'mult'});
 	
 	private var _name:String;
 	private var _base:Number;
@@ -65,6 +66,7 @@ public class BaseStat implements IStat {
 		if (options.aggregate is String) {
 			options.aggregate = EnumValue.findByProperty(AggregateTypes,'short',options.aggregate).value;
 		}
+		if (options.aggregate == AGGREGATE_MULT && options.base == 0.0) options.base = 1.0;
 		this._aggregate = options.aggregate;
 		this._base = options['base'];
 		this._min = options['min'];
@@ -86,6 +88,9 @@ public class BaseStat implements IStat {
 				break;
 			case AGGREGATE_MIN:
 				accumulator = (accumulator < value) ? accumulator : value;
+				break;
+			case AGGREGATE_MULT:
+				accumulator *= value;
 				break;
 		}
 		return accumulator;
@@ -136,6 +141,8 @@ public class BaseStat implements IStat {
 		}
 		if (_aggregate == AGGREGATE_SUM) {
 			_value += effectValue;
+		} else if (_aggregate == AGGREGATE_MULT) {
+			_value *= effectValue;
 		} else {
 			_value = calculate();
 		}
@@ -157,6 +164,8 @@ public class BaseStat implements IStat {
 		_effects.splice(i,1);
 		if (_aggregate == AGGREGATE_SUM) {
 			_value -= effectValue;
+		} else if (_aggregate == AGGREGATE_MULT && effectValue != 0) {
+			_value /= effectValue;
 		} else {
 			_value = calculate();
 		}

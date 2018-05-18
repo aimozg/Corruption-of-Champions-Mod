@@ -7420,9 +7420,7 @@ public final class Mutations extends MutationsHelper
 				outputText("Bimbo Body)\n");
 				player.removePerk(PerkLib.BimboBrains);
 				player.removePerk(PerkLib.BimboBody);
-				brains = player.createPerk(PerkLib.FutaForm, 0, 0, 0, 0);
-				brains.buffHost(player,'intMult',-0.60); // TODO @aimozg/stats rebalance?
-				brains.buffHost(player,'libMult',+0.50); // TODO @aimozg/stats rebalance?
+				player.createPerk(PerkLib.FutaForm, 0, 0, 0, 0);
 				player.createPerk(PerkLib.FutaFaculties, 0, 0, 0, 0);
 				outputText("(Gained Perks - Futa Form, Futa Faculties)</b>");
 				return;
@@ -7519,8 +7517,7 @@ public final class Mutations extends MutationsHelper
 			player.modTone(100, 100);
 			player.modThickness(100, 50);
 			//Bonus cum production!
-			var brains:PerkClass = player.createPerk(PerkLib.BroBrains, 0, 0, 0, 0);
-			brains.buffHost(player,'intMult',-0.60); // TODO @aimozg/stats rebalance?
+			player.createPerk(PerkLib.BroBrains, 0, 0, 0, 0);
 			player.createPerk(PerkLib.BroBody, 0, 0, 0, 0);
 			outputText("<b>(Bro Body - Perk Gained!)\n");
 			outputText("(Bro Brains - Perk Gained!)</b>\n");//int to 20.  max int 50)

@@ -732,13 +732,12 @@ private function takeDatBroBrewFromDaBigMeanOlOrc():void {
 	
 	outputText("Leaving Ro'gar's apartment you wander out into the streets.");
 	if(!player.hasPerk(PerkLib.BroBody)) {
-		var brains:PerkClass = player.createPerk(PerkLib.BroBrains,0,0,0,0);
+		player.createPerk(PerkLib.BroBrains,0,0,0,0);
 		player.createPerk(PerkLib.BroBody,0,0,0,0);
 		if(player.balls == 0) {
 			player.balls = 2;
 			player.ballSize = 3;
 		}
-		player.intStat.mult.addOrReplaceEffect(brains.ptype.id,-0.60,brains); // TODO @aimozg/stats rebalance?
 		outputText("\n\n");
 		//(Tits b' gone) 
 		if(player.biggestTitSize() >= 1) {

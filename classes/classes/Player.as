@@ -2364,44 +2364,12 @@ use namespace CoC;
 			var minCor:int = 0;
 			var racialScores:* = this.racialScores();
 			var racial:* = this.racialBonuses();
-			//Minimum Libido
-			// TODO @aimozg/stats
-			/*
-			if (this.gender > 0) minLib = 15;
-			else minLib = 10;
-			*/
-	
-			if (this.armorName == "lusty maiden's armor") {
-				// TODO @aimozg/stats if (minLib < 50) minLib = 50;
-			}
-			// TODO @aimozg/stats
-			/*
-			if (minLib < (minLust() * 2 / 3)) {
-				minLib = (minLust() * 2 / 3);
-			}
-			if (this.jewelryEffectId == JewelryLib.PURITY)
-			{
-				minLib -= this.jewelryEffectMagnitude;
-			}
-			if (this.hasPerk(PerkLib.PurityBlessing)) {
-				minLib -= 2;
-			}
-			if (this.hasPerk(PerkLib.HistoryReligious) || this.hasPerk(PerkLib.PastLifeReligious)) {
-				minLib -= 2;
-			}
-			*/
 			if (this.hasPerk(PerkLib.GargoylePure)) {
-				// TODO @aimozg/stats minLib = 5;
 				minSen = 5;
 			}
 			if (this.hasPerk(PerkLib.GargoyleCorrupted)) {
 				minSen += 15;
 			}
-			//Factory Perks
-			// TODO @aimozg/stats
-			/*
-			if(this.hasPerk(PerkLib.ProductivityDrugs)) {minLib+=this.perkv1(PerkLib.ProductivityDrugs);minCor+=this.perkv2(PerkLib.ProductivityDrugs);}
-			*/
 
 			//Minimum Sensitivity
 			minSen += racial[Race.BonusName_minsen];
@@ -3093,7 +3061,7 @@ use namespace CoC;
 			return max;
 		}
 		
-		override public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number,dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean, max:Boolean):void {
+		override public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number,dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {
 			//Easy mode cuts lust gains!
 			if (flags[kFLAGS.EASY_MODE_ENABLE_FLAG] == 1 && dlust > 0 && scale) dlust /= 2;
 			
@@ -3163,24 +3131,9 @@ use namespace CoC;
 				if (hasPerk(PerkLib.Lusty)) dlib += dlib * perkv1(PerkLib.Lusty);
 				if (hasPerk(PerkLib.Sensitive)) dsens += dsens * perkv1(PerkLib.Sensitive);
 				
-				// Uma's Str Cap from Perks (Moved to max stats)
-				/*if (hasPerk(PerkLib.ChiReflowSpeed))
-				{
-					if (str > UmasShop.NEEDLEWORK_SPEED_STRENGTH_CAP)
-					{
-						str = UmasShop.NEEDLEWORK_SPEED_STRENGTH_CAP;
-					}
-				}
-				if (hasPerk(PerkLib.ChiReflowDefense))
-				{
-					if (spe > UmasShop.NEEDLEWORK_DEFENSE_SPEED_CAP)
-					{
-						spe = UmasShop.NEEDLEWORK_DEFENSE_SPEED_CAP;
-					}
-				}*/
 			}
 			//Change original stats
-			super.modStats(dstr,dtou,dspe,dinte,dwis,dlib,dsens,dlust,dcor,false,max);
+			super.modStats(dstr,dtou,dspe,dinte,dwis,dlib,dsens,dlust,dcor,false);
 			//Refresh the stat pane with updated values
 			//mainView.statsView.showUpDown();
 			EngineCore.showUpDown();

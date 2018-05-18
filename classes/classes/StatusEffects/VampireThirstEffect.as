@@ -21,10 +21,7 @@ public class VampireThirstEffect extends StatusEffectClass {
         
         buffHost('str',change);
         buffHost('int',change);
-        host.dynStats(
-                "lib", change,
-                "max", false,
-                "scale", false);
+        buffHost('lib',change);
     }
 	
 	public function get currentBoost():int {
@@ -33,13 +30,6 @@ public class VampireThirstEffect extends StatusEffectClass {
     }
     public function get singleStackBoost():Number {
         return 2 + game.player.newGamePlusMod();
-    }
-    
-    override public function onRemove():void {
-        host.dynStats(
-                "lib", -currentBoost,
-                "max", false,
-                "scale", false);
     }
 }
 }
