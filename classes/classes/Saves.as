@@ -833,6 +833,12 @@ public function saveGameObject(slot:String, isFile:Boolean):void
 		saveFile.data.nosePLong = player.nosePLong;
 		
 		//MAIN STATS
+		saveFile.data.strStat = player.strStat.saveToObject();
+		saveFile.data.touStat = player.touStat.saveToObject();
+		saveFile.data.speStat = player.speStat.saveToObject();
+		saveFile.data.intStat = player.intStat.saveToObject();
+		saveFile.data.wisStat = player.wisStat.saveToObject();
+		saveFile.data.libStat = player.libStat.saveToObject();
 		saveFile.data.str = player.str;
 		saveFile.data.tou = player.tou;
 		saveFile.data.spe = player.spe;
@@ -1511,16 +1517,27 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		player.nosePLong = saveFile.data.nosePLong;
 		
 		//MAIN STATS
-		// TODO @aimozg/stats & @Oxdeception properly import stats... Suggestion:
-		// 1) Check saved sum of all stats vs possible sum on current level
-		// 2) If saved < possible, add stat points
-		// 3) If saved > possible - ???
-		player.strStat.reset(15);
-		player.touStat.reset(15);
-		player.speStat.reset(15);
-		player.intStat.reset(15);
-		player.wisStat.reset(15);
-		player.libStat.reset(15);
+		
+		if (saveFile.data.strStat) {
+			player.strStat.loadFromObject(saveFile.data.strStat, false);
+			player.touStat.loadFromObject(saveFile.data.touStat, false);
+			player.speStat.loadFromObject(saveFile.data.speStat, false);
+			player.intStat.loadFromObject(saveFile.data.intStat, false);
+			player.wisStat.loadFromObject(saveFile.data.wisStat, false);
+			player.libStat.loadFromObject(saveFile.data.libStat, false);
+		} else {
+			// TODO @aimozg/stats & @Oxdeception properly import stats...
+			// Total possible stats (15 per stat + 5 points per level)
+			var sptot:int    = saveFile.data.level * 5 + 15 * 6;
+			var sstot:Number = saveFile.data.str + saveFile.data.tou + saveFile.data.spe + saveFile.data.inte + saveFile.data.wis + saveFile.data.lib;
+			var ratio:Number = sptot / sstot;
+			player.strStat.reset(int(saveFile.data.str * ratio));
+			player.touStat.reset(int(saveFile.data.tou * ratio));
+			player.speStat.reset(int(saveFile.data.spe * ratio));
+			player.intStat.reset(int(saveFile.data.inte * ratio));
+			player.wisStat.reset(int(saveFile.data.wis * ratio));
+			player.libStat.reset(int(saveFile.data.lib * ratio));
+		}
 		player.sens = saveFile.data.sens;
 		player.cor = saveFile.data.cor;
 		player.fatigue = saveFile.data.fatigue;

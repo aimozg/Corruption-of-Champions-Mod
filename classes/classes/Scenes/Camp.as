@@ -11,6 +11,9 @@ import classes.Scenes.Areas.HighMountains.TempleOfTheDivine;
 import classes.Scenes.Camp.*;
 import classes.Scenes.Dungeons.*;
 import classes.Scenes.NPCs.*;
+import classes.Stats.BaseStat;
+import classes.Stats.IStat;
+import classes.Stats.PrimaryStat;
 import classes.lists.Gender;
 
 import coc.view.ButtonDataList;
@@ -2322,6 +2325,16 @@ public function sleepRecovery(display:Boolean = false):void {
 	HPChange(timeQ * hpRecovery * multiplier, display);
 	//fatigue
 	fatigue(-(timeQ * fatRecovery * multiplier));
+	for each(var istat:IStat in player.stats) {
+		var stat:PrimaryStat = istat as PrimaryStat;
+		if (!stat) continue;
+		var drain:Number = stat.bonus.valueOfEffect('drain');
+		if (drain < 0) {
+			// Recover 10% of stat drained, at least 1
+			var delta:Number = Math.max(1, -drain/10);
+			player.drainStat(stat.name, -delta);
+		}
+	}
 }
 
 //Bad End if your balls are too big. Only happens in Realistic Mode.

@@ -2,7 +2,9 @@
  * Coded by aimozg on 06.05.2018.
  */
 package classes.Stats {
-public class PrimaryStat implements IStat {
+import classes.internals.Jsonable;
+
+public class PrimaryStat implements IStat,Jsonable {
 	private var _name:String;
 	private var _core:RawStat;
 	private var _mult:BaseStat;
@@ -31,9 +33,12 @@ public class PrimaryStat implements IStat {
 	public function get bonus():BaseStat {
 		return _bonus;
 	}
+	public function get mult100():int {
+		return Math.floor(_mult.value*100);
+	}
 	public function PrimaryStat(name:String,saveInto:*) {
 		this._name = name;
-		this._core = new RawStat(name+"Core",{value:1,min:1},saveInto);
+		this._core = new RawStat(name+"Core",{value:1,min:1,max:100},saveInto);
 		this._mult = new BaseStat(name+"Mult",{base:1.0,min:0},saveInto);
 		this._bonus = new BaseStat(name+"Bonus",{},saveInto);
 		if (saveInto) saveInto[name] = this;
@@ -49,7 +54,20 @@ public class PrimaryStat implements IStat {
 		return 1;
 	}
 	public function get max():Number {
-		return 100 * mult.value + Math.max(0, bonus.value);
+		return core.max * mult.value + Math.max(0, bonus.value);
+	}
+	
+	public function saveToObject():Object {
+		return {
+			core:core.value,
+			mult:mult.saveToObject(),
+			bonus:bonus.saveToObject()
+		};
+	}
+	public function loadFromObject(o:Object, ignoreErrors:Boolean):void {
+		core.value = o.core;
+		mult.loadFromObject(o.mult,ignoreErrors);
+		bonus.loadFromObject(o.bonus,ignoreErrors);
 	}
 }
 }

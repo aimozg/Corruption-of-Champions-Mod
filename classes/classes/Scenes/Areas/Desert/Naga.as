@@ -19,6 +19,7 @@ public class Naga extends Monster
 			var sec:StatusEffectClass = player.statusEffectByType(StatusEffects.NagaVenom);
 			if(!sec) {
 				outputText("The venom's effects are almost instantaneous; your vision begins to blur and it becomes increasingly harder to stand.");
+				sec = player.createStatusEffect(StatusEffects.NagaVenom,0,0,0,0);
 				if(player.spe > 4) {
 					sec.buffHost('spe',-3);
 				} else {

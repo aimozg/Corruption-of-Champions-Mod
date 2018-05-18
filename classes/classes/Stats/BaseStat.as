@@ -1,5 +1,6 @@
 package classes.Stats {
 import classes.internals.EnumValue;
+import classes.internals.Jsonable;
 import classes.internals.Utils;
 
 /**
@@ -8,7 +9,7 @@ import classes.internals.Utils;
  * Total value is maintained as a cache
  * TODO @aimozg/stats with introductioon of IStat, consider renaming (BuffableStat?)
  */
-public class BaseStat implements IStat {
+public class BaseStat implements IStat,Jsonable {
 	private static const AggregateTypes:/*EnumValue*/Array = [];
 	public static const AGGREGATE_SUM:int = EnumValue.add(AggregateTypes, 0, 'AGGREGATE_SUM', {short:'sum'});
 	public static const AGGREGATE_MAX:int = EnumValue.add(AggregateTypes, 1, 'AGGREGATE_MAX', {short:'max'});
@@ -171,7 +172,7 @@ public class BaseStat implements IStat {
 		}
 	}
 	/**
-	 * @return array of tuples [value, tag, data] or null
+	 * @return array of tuples [value, tag, data]
 	 * This array is a copy; changing it won't affect the stat
 	 */
 	public function listEffects():/*Array*/Array {
@@ -193,6 +194,18 @@ public class BaseStat implements IStat {
 	public function removeAllEffects():void {
 		this._effects = [];
 		this._value = _base;
+	}
+	
+	public function saveToObject():Object {
+		var jeffects:Array = [];
+		for each(var e:Array in _effects) {
+			jeffects.push(e.slice());
+		}
+		return {effects:jeffects};
+	}
+	public function loadFromObject(o:Object, ignoreErrors:Boolean):void {
+		removeAllEffects();
+		loadEffects(o.effects);
 	}
 }
 }
