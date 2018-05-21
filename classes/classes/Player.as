@@ -74,12 +74,7 @@
 		
 		//Prison stats
 		public var hunger:Number = 0; //Also used in survival and realistic mode
-		public var obey:Number = 0;
-		public var esteem:Number = 0;
-		public var will:Number = 0;
-		
-		public var obeySoftCap:Boolean = true;
-		
+
 		//Perks used to store 'queued' perk buys
 		public var perkPoints:Number = 0;
 		public var statPoints:Number = 0;
@@ -117,7 +112,6 @@
 		public var itemSlot10:ItemSlotClass;
 		public var itemSlots:Array;
 		
-		public var prisonItemSlots:Array = [];
 		public var previouslyWornClothes:Array = []; //For tracking achievement.
 		
 		private var _weapon:Weapon = WeaponLib.FISTS;
@@ -2136,7 +2130,7 @@
 		 * @param	nl
 		 */
 		public function refillHunger(amnt:Number = 0, nl:Boolean = true):void {
-			if ((flags[kFLAGS.HUNGER_ENABLED] > 0 || flags[kFLAGS.IN_PRISON] > 0) && !isGargoyle())
+			if (flags[kFLAGS.HUNGER_ENABLED] > 0 && !isGargoyle())
 			{
 				
 				var oldHunger:Number = hunger;
@@ -2145,7 +2139,7 @@
 				hunger += amnt;
 				if (hunger > maxHunger())
 				{
-					while (hunger > (maxHunger() + 10) && !SceneLib.prison.inPrison) {
+					while (hunger > (maxHunger() + 10)) {
 						weightChange++;
 						hunger -= 10;
 					}

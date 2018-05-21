@@ -326,17 +326,7 @@ package classes
 		public static const MaraesQuestStart:StatusEffectType        = mk("Marae's Quest Start");
 		public static const MetCorruptMarae:StatusEffectType         = mk("Met Corrupt Marae");
 		public static const MetMarae:StatusEffectType                = mk("Met Marae");
-		
-		//Prisoner status effects.
-		public static const PrisonCaptorEllyStatus:StatusEffectType  = mk("prisonCaptorEllyStatus");
-		public static const PrisonCaptorEllyQuest:StatusEffectType   = mk("prisonCaptorEllyQuest");
-		public static const PrisonCaptorEllyPet:StatusEffectType     = mk("prisonCaptorEllyPet");
-		public static const PrisonCaptorEllyBillie:StatusEffectType  = mk("prisonCaptorEllyBillie");
-		public static const PrisonCaptorEllyScruffy:StatusEffectType = mk("prisonCaptorEllyScruffy");
-		public static const PrisonRestraints:StatusEffectType        = mk("prisonRestraint");
-		public static const PrisonCaptorEllyScratch:StatusEffectType = mk("prisonCaptorEllyScatch");
-		
-		
+
 		public static const UmasMassage:StatusEffectType         = mk("Uma's Massage"); //v1 = bonus index; v2 = bonus value; v3 = remaining time
 		public static const Uniball:StatusEffectType             = mk("Uniball");
 		public static const UsedNaturalSelfStim:StatusEffectType = mk("used natural self-stim");

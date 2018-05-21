@@ -28,7 +28,7 @@ public class HelScene extends NPCAwareContent implements TimeAwareInterface {
 				if (flags[kFLAGS.HELSPAWN_GROWUP_COUNTER] > 0) flags[kFLAGS.HELSPAWN_GROWUP_COUNTER]++;
 				if (flags[kFLAGS.HEL_RAPED_TODAY] == 1) flags[kFLAGS.HEL_RAPED_TODAY] = 0;
 			}
-			if (model.time.hours == 3 && followerHel() && flags[kFLAGS.SLEEP_WITH] == "Helia" && rand(10) == 0 && (flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0)) {
+			if (model.time.hours == 3 && followerHel() && flags[kFLAGS.SLEEP_WITH] == "Helia" && rand(10) == 0 && flags[kFLAGS.IN_INGNAM] == 0) {
 				SceneLib.helFollower.sleepyNightMareHel();
 				return true;
 			}
@@ -41,16 +41,16 @@ public class HelScene extends NPCAwareContent implements TimeAwareInterface {
                 helSpawnScene.heliaBonusPointsAward();
 				return true;
 			}
-			if (model.time.hours == 8 && helFollower.followerHel() && flags[kFLAGS.HEL_NTR_TRACKER] == 1 && (flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0)) {
+			if (model.time.hours == 8 && helFollower.followerHel() && flags[kFLAGS.HEL_NTR_TRACKER] == 1 && flags[kFLAGS.IN_INGNAM] == 0) {
 				helSpawnScene.helGotKnockedUp();
 				return true;
 			}
 			if (flags[kFLAGS.HEL_FOLLOWER_LEVEL] == 1 && flags[kFLAGS.HEL_HARPY_QUEEN_DEFEATED] > 0 && helFollower.helAffection() >= 100 &&
-				flags[kFLAGS.HELIA_FOLLOWER_DISABLED] == 0 && model.time.hours == 2 && (flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0)) {
+				flags[kFLAGS.HELIA_FOLLOWER_DISABLED] == 0 && model.time.hours == 2 && flags[kFLAGS.IN_INGNAM] == 0) {
 				helFollower.heliaFollowerIntro();
 				return true;   
 			}
-			if (flags[kFLAGS.HEL_FOLLOWER_LEVEL] == -1 && model.time.hours == 6 && (flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0)) {
+			if (flags[kFLAGS.HEL_FOLLOWER_LEVEL] == -1 && model.time.hours == 6 && flags[kFLAGS.IN_INGNAM] == 0) {
 				SceneLib.dungeons.heltower.morningAfterHeliaDungeonAgreements();
 				return true;
 			}
@@ -60,7 +60,7 @@ public class HelScene extends NPCAwareContent implements TimeAwareInterface {
 				return true;
 			}
 			//Chance of threesomes!
-            if (checkedHeliaIsabellaThreesome++ == 0 && flags[kFLAGS.HEL_FUCKBUDDY] == 1 && SceneLib.isabellaFollowerScene.isabellaFollower() && model.time.hours == 2 && model.time.days % 11 == 0 && flags[kFLAGS.FOLLOWER_AT_FARM_ISABELLA] == 0 && (flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0)) {
+            if (checkedHeliaIsabellaThreesome++ == 0 && flags[kFLAGS.HEL_FUCKBUDDY] == 1 && SceneLib.isabellaFollowerScene.isabellaFollower() && model.time.hours == 2 && model.time.days % 11 == 0 && flags[kFLAGS.FOLLOWER_AT_FARM_ISABELLA] == 0 && flags[kFLAGS.IN_INGNAM] == 0) {
                 trace("ISABELLA/HELL TEST");
 				if (flags[kFLAGS.HEL_ISABELLA_THREESOME_ENABLED] == 0) { //Hell/Izzy threesome intro
 					spriteSelect(31);

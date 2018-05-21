@@ -76,10 +76,6 @@ public class GameSettings extends BaseContent {
 				["ON", curry(toggleSetting, kFLAGS.SFW_MODE, true), "SFW mode is enabled. You won't see sex scenes nor will you get raped.", flags[kFLAGS.SFW_MODE] == true],
 				["OFF", curry(toggleSetting, kFLAGS.SFW_MODE, false), "SFW mode is disabled. You'll see sex scenes.", flags[kFLAGS.SFW_MODE] == false]
 			]);
-//			pane.addOrUpdateToggleSettings("Prison", [
-//				["ON", curry(toggleSetting, kFLAGS.PRISON_ENABLED, true), "The prison can be accessed.\nWARNING: The prison is very buggy and may break your game. Enter it at your own risk!", flags[kFLAGS.PRISON_ENABLED] == true],
-//				["OFF", curry(toggleSetting, kFLAGS.PRISON_ENABLED, false), "The prison cannot be accessed.", flags[kFLAGS.PRISON_ENABLED] == false]
-//			]);
 			pane.addOrUpdateToggleSettings("Enable Survival", [
 				["Enable", enableSurvivalPrompt, "Survival mode is already enabled.", flags[kFLAGS.HUNGER_ENABLED] >= 0.5]
 			]);

@@ -28,7 +28,7 @@ import classes.Scenes.SceneLib;
 			return desc;
 		}
 		
-		public function canUse():Boolean { return SceneLib.prison.prisonCanUseItem(this); } //If an item cannot be used it should provide some description of why not
+		public function canUse():Boolean { return true; } //If an item cannot be used it should provide some description of why not
 		
 //		public function hasSubMenu():Boolean { return false; } //Only GroPlus and Reducto use this. //Replaced with a return
 		

@@ -1,9 +1,7 @@
 package coc.view {
-import classes.CoC;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
 import classes.Player;
-import classes.Scenes.SceneLib;
 import classes.internals.Utils;
 
 import flash.text.TextField;
@@ -59,9 +57,6 @@ public class StatsView extends Block {
 	private var manaBar:StatBar;
 	private var kiBar:StatBar;
 	private var hungerBar:StatBar;
-	private var esteemBar:StatBar;
-	private var willBar:StatBar;
-	private var obeyBar:StatBar;
 	private var levelBar:StatBar;
 	private var xpBar:StatBar;
 	private var gemsBar:StatBar;
@@ -145,18 +140,6 @@ public class StatsView extends Block {
 		}));
 		addElement(hungerBar = new StatBar({
 			statName: "Satiety:",
-			showMax : true
-		}));
-		addElement(esteemBar = new StatBar({
-			statName: "Self Esteem:",
-			showMax : true
-		}));
-		addElement(willBar = new StatBar({
-			statName: "Willpower:",
-			showMax : true
-		}));
-		addElement(obeyBar = new StatBar({
-			statName: "Obedience:",
 			showMax : true
 		}));
 		advancementText = addTextField({
@@ -253,12 +236,6 @@ public class StatsView extends Block {
 				return xpBar;
 			case 'gems':
 				return gemsBar;
-			case 'will':
-				return willBar;
-			case 'esteem':
-				return esteemBar;
-			case 'obey':
-				return obeyBar;
 		}
 		return null;
 	}
@@ -316,34 +293,17 @@ public class StatsView extends Block {
 		} else {
 			hungerBar.statName = 'Satiety:';
 		}
-		var inPrison:Boolean          = SceneLib.prison.inPrison;
-		esteemBar.visible     		  = inPrison;
-		willBar.visible      		  = inPrison;
-		obeyBar.visible       		  = inPrison;
-		levelBar.visible      		  = !inPrison;
-		xpBar.visible         		  = !inPrison;
-		gemsBar.visible       		  = !inPrison;
-		if (inPrison) {
-			advancementText.htmlText = "<b>Prison Stats</b>";
-			esteemBar.maxValue       = 100;
-			esteemBar.value          = player.esteem;
-			willBar.maxValue         = 100;
-			willBar.value            = player.will;
-			obeyBar.maxValue         = 100;
-			obeyBar.value            = player.obey;
+		advancementText.htmlText = "<b>Advancement</b>";
+		levelBar.value           = player.level;
+		if (player.level < CoC.instance.levelCap) {
+			xpBar.maxValue = player.requiredXP();
+			xpBar.value    = player.XP;
 		} else {
-			advancementText.htmlText = "<b>Advancement</b>";
-			levelBar.value           = player.level;
-			if (player.level < CoC.instance.levelCap) {
-				xpBar.maxValue = player.requiredXP();
-				xpBar.value    = player.XP;
-			} else {
-				xpBar.maxValue  = player.XP;
-				xpBar.value     = player.XP;
-				xpBar.valueText = 'MAX';
-			}
-			gemsBar.valueText = Utils.addComma(Math.floor(player.gems));
+			xpBar.maxValue  = player.XP;
+			xpBar.value     = player.XP;
+			xpBar.valueText = 'MAX';
 		}
+		gemsBar.valueText = Utils.addComma(Math.floor(player.gems));
 
 		var minutesDisplay:String = "" + game.model.time.minutes;
 		if (minutesDisplay.length == 1) minutesDisplay = "0" + minutesDisplay;

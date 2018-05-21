@@ -85,7 +85,6 @@ public final class ConsumableLib extends BaseContent
         public const BIMBOCH:SimpleConsumable = mk("BimboCh", "BimboCh", "a bottle of bimbo champagne", 20, "A bottle of bimbo champagne. Drinking this might incur temporary bimbofication.", curry(function (player:Player):void {
             SceneLib.telAdre.niamh.bimboChampagne(player, true, true)
         }));
-        public const C_BREAD:CumBread         = new CumBread();
 		public const CCUPCAK:SimpleConsumable = mk("CCupcak", "CCupcak", "a gigantic, chocolate cupcake", 250, "A gigantic, chocolate cupcake. You could easily get full from eating this!", m.giantChocolateCupcake);
 		public const FISHFIL:SimpleConsumable = mk("FishFil", "FishFil", "a fish fillet", 10, "A perfectly cooked piece of fish.  You're not sure what type of fish is, since you're fairly certain \"delicious\" is not a valid species.", m.fishFillet);
 		public const FREFISH:SimpleConsumable = mk("FreFish", "FreshFish", "a fresh fish", 6, "A fish freshly caugh from the waters of mareth.", m.freshFish);
@@ -95,7 +94,6 @@ public final class ConsumableLib extends BaseContent
 		public const IZYMILK:SimpleConsumable = mk("IzyMilk", "IzyMilk", "a bottle of Isabella's milk", 6, "This is a bottle of Isabella's milk.  Isabella seems fairly certain it will invigorate you.", m.isabellaMilk);
 		public const M__MILK:SimpleConsumable = mk("M. Milk", "M. Milk", "a clear bottle of milk from Marble", 6, "A clear bottle of milk from Marble's breasts. It smells delicious.", m.useMarbleMilk);
 		public const MINOCUM:SimpleConsumable = mk("MinoCum", "MinoCum", "a sealed bottle of minotaur cum", 60, "This bottle of minotaur cum looks thick and viscous.  You know it has narcotic properties, but aside from that its effects are relatively unknown.", curry(m.minotaurCum, false));
-		public const P_BREAD:SimpleConsumable = mk("P.Bread", "P.Bread", "a stale loaf of prison bread", 6, "An impossibly hard loaf of stale bread.  Despite its age, still quite nutritious.", m.prisonBread);
 		public const P_M_CUM:SimpleConsumable = mk("P.M.Cum", "P.MinoCum", "a sealed bottle of purified minotaur cum", 80, "This bottle of minotaur cum looks thick and viscous.  You know it has narcotic properties, but aside from that its effects are relatively unknown.  This bottle of cum has been purified to prevent corruption and addiction.", curry(m.minotaurCum, true));
 		public const P_WHSKY:PhoukaWhiskey    = new PhoukaWhiskey();
 		public const PROMEAD:SimpleConsumable = mk("ProMead", "ProMead", "a pint of premium god's mead", 6, null, m.proMead);

@@ -227,7 +227,6 @@ public function spellPerkUnlock():void {
 public function cleanupAfterCombatImpl(nextFunc:Function = null):void {
 	magic.cleanupAfterCombatImpl();
 	if (nextFunc == null) nextFunc = camp.returnToCampUseOneHour;
-	if (prison.inPrison && prison.prisonCombatWinEvent != null) nextFunc = prison.prisonCombatWinEvent;
 	if (inCombat) {
 		//clear status
 		clearStatuses(false);
@@ -278,11 +277,6 @@ public function cleanupAfterCombatImpl(nextFunc:Function = null):void {
 			var timePasses:int = monster.handleCombatLossText(inDungeon, gemsLost); //Allows monsters to customize the loss text and the amount of time lost
 			player.gems -= gemsLost;
 			inCombat = false;
-			if (prison.inPrison == false && flags[kFLAGS.PRISON_CAPTURE_CHANCE] > 0 && rand(100) < flags[kFLAGS.PRISON_CAPTURE_CHANCE] && (prison.trainingFeed.prisonCaptorFeedingQuestTrainingIsTimeUp() || !prison.trainingFeed.prisonCaptorFeedingQuestTrainingExists()) && (monster.short == "goblin" || monster.short == "goblin assassin" || monster.short == "imp" || monster.short == "imp lord" || monster.short == "imp warlord" || monster.short == "hellhound" || monster.short == "minotaur" || monster.short == "satyr" || monster.short == "gnoll" || monster.short == "gnoll spear-thrower" || monster.short == "basilisk")) {
-				outputText("  You feel yourself being dragged and carried just before you black out.");
-				doNext(prison.prisonIntro);
-				return;
-			}
 			//BUNUS XPZ
 			if(flags[kFLAGS.COMBAT_BONUS_XP_VALUE] > 0) {
 				player.XP += flags[kFLAGS.COMBAT_BONUS_XP_VALUE];
@@ -2410,13 +2404,10 @@ public function awardPlayer(nextFunc:Function = null):void
 		monster.gems = Math.round(monster.gems);
 	}
 	monster.handleAwardText(); //Each monster can now override the default award text
-	if (!inDungeon && !inRoomedDungeon && !prison.inPrison) { //Not in dungeons
-		if (nextFunc != null) doNext(nextFunc);
-		else doNext(playerMenu);
-	}
-	else {
-		if (nextFunc != null) doNext(nextFunc);
-		else doNext(playerMenu);
+	if (nextFunc != null) {
+		doNext(nextFunc);
+	} else {
+		doNext(playerMenu);
 	}
 	dropItem(monster, nextFunc);
 	inCombat = false;
@@ -3201,11 +3192,7 @@ public function startCombatImpl(monster_:Monster, plotFight_:Boolean = false, im
 	if (player.weaponRangeName == "blunderbuss") player.ammo = 9;
 	if (player.weaponRangeName == "flintlock pistol") player.ammo = 6;
 	if (player.weaponRange == weaponsrange.SHUNHAR || player.weaponRange == weaponsrange.KSLHARP || player.weaponRange == weaponsrange.LEVHARP) player.ammo = 1;
-	if (prison.inPrison && prison.prisonCombatAutoLose) {
-		dynStats("lus", player.maxLust(), "scale", false);
-		doNext(endLustLoss);
-		return;
-	}
+
 	if(immediate){
 		playerMenu();
 	} else {

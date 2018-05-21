@@ -1670,12 +1670,6 @@ if (CoC.instance.inCombat) cleanupAfterCombat();
 		
 		//BIRTHING SCENE! FINALLY!
 		public function minervaGivesBirth():void {
-			if (prison.inPrison) {
-				SceneLib.highMountains.minervaScene.pregnancy.knockUpForce();
-				flags[kFLAGS.MINERVA_CHILDREN] += 2;
-				prison.prisonLetter.letterFromMinerva();
-				return;
-			}
 			clearOutput();
 			SceneLib.highMountains.minervaScene.minervaSprite();
 			SceneLib.highMountains.minervaScene.pregnancy.knockUpForce(); //Clear pregnancy.
