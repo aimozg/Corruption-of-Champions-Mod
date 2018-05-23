@@ -7415,6 +7415,7 @@ public final class Mutations extends MutationsHelper
 					player.balls = 2;
 					player.ballSize = 3;
 				}
+				outputText("Finally, you feel the transformation skittering to a halt, leaving you to openly roam your new chiseled and sex-ready body.  So what if you can barely form coherent sentences anymore?  A body like this does all the talking you need, you figure!");
 				outputText("\n\n<b>(Lost Perk - ");
 				if (player.hasPerk(PerkLib.BimboBrains)) outputText("Bimbo Brains, ");
 				outputText("Bimbo Body)\n");
