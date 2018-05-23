@@ -12,17 +12,12 @@ package classes.Scenes.Combat {
 		private var _dtype:DamageType;
 
 		public function CombatDamage(damage:String, dtype:DamageType) {
-			var reg:RegExp = /(\d+)d?(\d*)\+?(\d*)/g;
-			if(!reg.test(damage)){throw "Incorrect damage format"}
-			var res:Array = damage.split("d");
-			_rolls = res[0];
-			if(res.length > 1){
-				res = res[1].split('+');
-				_die = res[0];
-				if(res.length > 1){
-					_min = res[1];
-				}
-			}
+			var reg:RegExp = /(\d+)d?(\d*)\+?(\d*)/;
+			var matches:Array = damage.match(reg);
+			if(!matches){throw "Incorrect damage format"}
+			_rolls = +matches[1];
+			_die = +matches[2];
+			if(matches[3]){_min = +matches[3]}
 			_max = (_rolls * _die) + _min;
 			_dtype = dtype;
 		}
@@ -33,7 +28,7 @@ package classes.Scenes.Combat {
 		}
 
 		public function roll():Number {
-			var damage:int = 0;
+			var damage:int = _rolls;
 			for (var i:int = 0; i < _rolls; i++) {
 				damage += Math.random() * _die;
 			}
