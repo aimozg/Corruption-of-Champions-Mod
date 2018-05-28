@@ -1,11 +1,12 @@
 package classes.Items.WeaponsRange 
 {
+	import classes.Items.WeaponRange;
 	import classes.PerkLib;
 	/**
 	 * ...
 	 * @author Oxdeception
 	 */
-	public class Artemis extends WeaponRangeWithPerk
+	public class Artemis extends WeaponRange
 	{
 		
 		public function Artemis() 

@@ -8,7 +8,7 @@ package classes.Items.Weapons
 	import classes.PerkLib;
 	import classes.Player;
 
-	public class Wardensgreatsword extends WeaponWithPerk
+	public class Wardensgreatsword extends Weapon
 	{
 		
 		public function Wardensgreatsword() 

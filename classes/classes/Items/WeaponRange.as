@@ -4,25 +4,15 @@
  */
 package classes.Items
 {
-	import classes.ItemType;
-	import classes.PerkLib;
-	import classes.Player;
+	import classes.PerkType;
 
-	public class WeaponRange extends Useable //Equipable
+	public class WeaponRange extends Weapon //Equipable
 	{
-		private var _verb:String;
-		private var _attack:Number;
-		private var _perk:String;
-		private var _name:String;
 		private var _ammoWord:String;
 		
-		public function WeaponRange(id:String, shortName:String, name:String,longName:String, verb:String, attack:Number, value:Number = 0, description:String = null, perk:String = "") {
-			super(id, shortName, longName, value, description);
-			this._name = name;
-			this._verb = verb;
-			this._attack = attack;
-			this._perk = perk;
-			switch(_perk){
+		public function WeaponRange(id:String, shortName:String, name:String, longName:String, verb:String, attack:Number, value:Number = 0, description:String = null, perk:String = "", ptype:PerkType = null, v1:Number = 0, v2:Number = 0, v3:Number = 0, v4:Number = 0) {
+			super(id, shortName, name, longName, verb, attack, value, description, perk, ptype, v1, v2, v3, v4);
+			switch(perk){
 				case "Bow": _ammoWord = "arrow"; break;
 				case "Crossbow": _ammoWord = "bolt"; break;
 				case "Throwing": _ammoWord = "projectile"; break;
@@ -31,15 +21,7 @@ package classes.Items
 					_ammoWord = "bullet"
 			}
 		}
-		
-		public function get verb():String { return _verb; }
-		
-		public function get attack():Number { return _attack; }
-		
-		public function get perk():String { return _perk; }
-		
-		public function get name():String { return _name; }
-		
+
 		override public function get description():String {
 			var desc:String = _description;
 			//Type
@@ -63,27 +45,6 @@ package classes.Items
 		override public function canUse():Boolean {
 			return true;
 		}
-
-		/**
-		 * This item is being equipped by the player. Add any perks, etc. - This function should only handle mechanics, not text output
-		 * @return
-		 */
-		public function playerEquip():WeaponRange {
-			return this;
-		}
-
-		/**
-		 * This item is being removed by the player. Remove any perks, etc. - This function should only handle mechanics, not text output
-		 * @return
-		 */
-		public function playerRemove():WeaponRange {
-			return this;
-		}
-
-		/**
-		 * Produces any text seen when removing the armor normally
-		 */
-		public function removeText():void {}
 
 		public function get ammoWord():String{
 			return _ammoWord;

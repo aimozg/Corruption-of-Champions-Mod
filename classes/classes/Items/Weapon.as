@@ -3,25 +3,34 @@
  */
 package classes.Items
 {
-import classes.PerkLib;
-import classes.Scenes.SceneLib;
+	import classes.PerkClass;
+	import classes.PerkLib;
+	import classes.PerkType;
+	import classes.Scenes.SceneLib;
 
-public class Weapon extends Useable //Equipable
+	public class Weapon extends Useable //Equipable
 	{
 		private var _verb:String;
 		private var _attack:Number;
 		private var _perk:String;
 		private var _name:String;
+		private var _weapPerk:PerkClass;
 		
-		public function Weapon(id:String, shortName:String, name:String,longName:String, verb:String, attack:Number, value:Number = 0, description:String = null, perk:String = "") {
+		public function Weapon(id:String, shortName:String, name:String, longName:String, verb:String, attack:Number, value:Number = 0, description:String = null, perk:String = "", ptype:PerkType = null, v1:Number = 0, v2:Number = 0, v3:Number = 0, v4:Number = 0) {
 			super(id, shortName, longName, value, description);
 			this._name = name;
 			this._verb = verb;
 			this._attack = attack;
 			this._perk = perk;
+			if(ptype){this._weapPerk = new PerkClass(ptype, v1, v2, v3, v4);}
 		}
 		
-		public function get verb():String { return _verb; }
+		public function get verb():String {
+			if(perk == "Staff" && game.player.hasPerk(PerkLib.StaffChanneling)){
+				return "shot";
+			}
+			return _verb;
+		}
 		
 		public function get attack():Number { return _attack; }
 		
@@ -46,6 +55,11 @@ public class Weapon extends Useable //Equipable
 			desc += "\nAttack: " + String(attack);
 			//Value
 			desc += "\nBase value: " + String(value);
+
+			if(_weapPerk){
+				desc += "\nSpecial: " + _weapPerk.perkName + " ";
+				desc += _weapPerk.perkDesc;
+			}
 			return desc;
 		}
 		
@@ -61,15 +75,24 @@ public class Weapon extends Useable //Equipable
 		}
 		
 		public function playerEquip():Weapon { //This item is being equipped by the player. Add any perks, etc. - This function should only handle mechanics, not text output
-			if ((perk == "Large" && game.player.shield != ShieldLib.NOTHING && !game.player.hasPerk(PerkLib.TitanGrip))
-			|| (perk == "Dual" && game.player.shield != ShieldLib.NOTHING)
-			|| (perk == "Dual Large" && game.player.shield != ShieldLib.NOTHING)) {
-				SceneLib.inventory.unequipShield();
+			if(perk == "Dual" || perk == "Dual Large" || (perk == "Large" && !game.player.hasPerk(PerkLib.TitanGrip))) {
+				if(game.player.shield != ShieldLib.NOTHING){
+					SceneLib.inventory.unequipShield();
+				}
+			}
+			if (_weapPerk) {
+				while (game.player.hasPerk(_weapPerk.ptype)) {
+					game.player.removePerk(_weapPerk.ptype);
+				}
+				game.player.createPerk(_weapPerk.ptype, _weapPerk.value1, _weapPerk.value2, _weapPerk.value3, _weapPerk.value4);
 			}
 			return this;
 		}
 		
 		public function playerRemove():Weapon { //This item is being removed by the player. Remove any perks, etc. - This function should only handle mechanics, not text output
+			while (game.player.hasPerk(_weapPerk.ptype)) {
+				game.player.removePerk(_weapPerk.ptype);
+			}
 			return this;
 		}
 		

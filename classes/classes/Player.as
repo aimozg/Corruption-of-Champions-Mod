@@ -1,4 +1,4 @@
-﻿package classes
+package classes
 {
 
 	import classes.BodyParts.Arms;
@@ -556,12 +556,12 @@
 		public function setWeaponRange(newWeaponRange:WeaponRange):WeaponRange {
 			//Returns the old shield, allowing the caller to discard it, store it or try to place it in the player's inventory
 			//Can return null, in which case caller should discard.
-			var oldWeaponRange:WeaponRange = _weaponRange.playerRemove();
+			var oldWeaponRange:WeaponRange = _weaponRange.playerRemove() as WeaponRange;
 			if (newWeaponRange == null) {
 				CoC_Settings.error(short + ".weapon (range) is set to null");
 				newWeaponRange = WeaponRangeLib.NOTHING;
 			}
-			_weaponRange = newWeaponRange.playerEquip();
+			_weaponRange = newWeaponRange.playerEquip() as WeaponRange;
 			return oldWeaponRange;
 		}
 		

@@ -1,11 +1,9 @@
 package classes.Items.Weapons 
 {
+	import classes.Items.Weapon;
 	import classes.PerkLib;
-	/**
-	 * ...
-	 * @author Oxdeception
-	 */
-	public class LifehuntScythe extends WeaponWithPerk
+
+	public class LifehuntScythe extends Weapon
 	{
 		
 		public function LifehuntScythe() 

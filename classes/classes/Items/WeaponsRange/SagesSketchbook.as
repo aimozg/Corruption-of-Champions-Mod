@@ -4,10 +4,10 @@
  */
 package classes.Items.WeaponsRange 
 {
+	import classes.Items.Weapon;
 	import classes.Items.WeaponRange;
 	import classes.PerkLib;
-	import classes.Player;
-	
+
 	public class SagesSketchbook extends WeaponRange
 	{
 		
@@ -29,13 +29,13 @@ package classes.Items.WeaponsRange
 			return desc;
 		}
 		
-		override public function playerEquip():WeaponRange {
+		override public function playerEquip():Weapon {
 			while (game.player.hasPerk(PerkLib.SagesKnowledge)) game.player.removePerk(PerkLib.SagesKnowledge);
 			game.player.createPerk(PerkLib.SagesKnowledge,0.6,0,0,0);
 			return super.playerEquip();
 		}
 		
-		override public function playerRemove():WeaponRange {
+		override public function playerRemove():Weapon {
 			while (game.player.hasPerk(PerkLib.SagesKnowledge)) game.player.removePerk(PerkLib.SagesKnowledge);
 			return super.playerRemove();
 		}

@@ -1,11 +1,12 @@
 package classes.Items.WeaponsRange 
 {
+	import classes.Items.WeaponRange;
 	import classes.PerkLib;
 	/**
 	 * ...
 	 * @author Oxdeception
 	 */
-	public class WildHunt extends WeaponRangeWithPerk
+	public class WildHunt extends WeaponRange
 	{
 		
 		public function WildHunt() 

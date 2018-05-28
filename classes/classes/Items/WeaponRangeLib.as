@@ -6,7 +6,6 @@ package classes.Items
 {
 	import classes.Items.WeaponsRange.*;
 	import classes.PerkLib;
-	import classes.PerkType;
 
 	public final class WeaponRangeLib
 	{
@@ -17,35 +16,35 @@ package classes.Items
 		public const ARTEMIS:Artemis = new Artemis();
 		public const BLUNDER:WeaponRange = new WeaponRange("Blunder", "Blunderbuss", "blunderbuss rifle", "a blunderbuss rifle", "shot", 16, 800, "This is a blunderbuss rifle. It's effective at short range but poor at long range.", "Rifle");
 		public const BOWGUID:WeaponRange = new WeaponRange("BowGuid", "BowGuided", "Guided bow", "a Guided bow", "shot", 1, 400, "A bow ornemented with a small carving representing a target. It seems to never miss no mather how poorly you aim.", "Bow");
-		public const BOWHODR:WeaponRangeWithPerk = new WeaponRangeWithPerk("BowHodr", "BowHodr", "Hodr's bow", "a Hodr's bow", "shot", 22, 2200, "Once was a frost giant wielding this bow and boasting to be the best hunter. To punish him Fera cursed him and his weapon rendering him permanently blind. Regardless, arrows drawn by this bow seems to seek out the eyes of its target.", "Bow",
+		public const BOWHODR:WeaponRange = new WeaponRange("BowHodr", "BowHodr", "Hodr's bow", "a Hodr's bow", "shot", 22, 2200, "Once was a frost giant wielding this bow and boasting to be the best hunter. To punish him Fera cursed him and his weapon rendering him permanently blind. Regardless, arrows drawn by this bow seems to seek out the eyes of its target.", "Bow",
 				PerkLib.Accuracy2,10,0,0,0);
 		public const BOWHUNT:WeaponRange = new WeaponRange("BowHunt", "BowHunt", "hunter bow", "a hunter bow", "shot", 10, 500, "This is a hunter bow. It allow to attain better accuracy of shooted arrows than long bow at the cost of slight lower damage.", "Bow");
-		public const BOWKELT:WeaponRangeWithPerk = new WeaponRangeWithPerk("BowTain", "BowTain", "tainted bow", "a tainted bow", "shot", 30, 1500, "This bow is tainted by corruption in the past. It's quite effective at both short and long range. It balance helps uset to increase shooting accuracy quite a bit compared to other bows.", "Bow",
+		public const BOWKELT:WeaponRange = new WeaponRange("BowTain", "BowTain", "tainted bow", "a tainted bow", "shot", 30, 1500, "This bow is tainted by corruption in the past. It's quite effective at both short and long range. It balance helps uset to increase shooting accuracy quite a bit compared to other bows.", "Bow",
 				PerkLib.Accuracy1,10,0,0,0);
-		public const BOWLIGH:WeaponRangeWithPerk = new WeaponRangeWithPerk("BowLigh", "BowLigh", "light bow", "a light bow", "shot", 5, 250, "This is a light bow. It's average in every way.", "Bow",
+		public const BOWLIGH:WeaponRange = new WeaponRange("BowLigh", "BowLigh", "light bow", "a light bow", "shot", 5, 250, "This is a light bow. It's average in every way.", "Bow",
 				PerkLib.Accuracy2,40,0,0,0);
-		public const BOWLONG:WeaponRangeWithPerk = new WeaponRangeWithPerk("BowLong", "BowLong", "longbow", "a longbow", "shot", 20, 1000, "This is a longbow. It allows to shoot arrows with greater speed dealing more damage at cost of slight lowered accuracy compared to hunter's bow.", "Bow",
+		public const BOWLONG:WeaponRange = new WeaponRange("BowLong", "BowLong", "longbow", "a longbow", "shot", 20, 1000, "This is a longbow. It allows to shoot arrows with greater speed dealing more damage at cost of slight lowered accuracy compared to hunter's bow.", "Bow",
 				PerkLib.Accuracy2,30,0,0,0);
-		public const BOWOLD_:WeaponRangeWithPerk = new WeaponRangeWithPerk("BowOld ", "BowOld ", "old bow", "an old bow", "shot", 1, 50, "This is an old bow. It's barely effective even at short range not to meantion it poor accuracy.", "Bow",
+		public const BOWOLD_:WeaponRange = new WeaponRange("BowOld ", "BowOld ", "old bow", "an old bow", "shot", 1, 50, "This is an old bow. It's barely effective even at short range not to meantion it poor accuracy.", "Bow",
 				PerkLib.Accuracy2,50,0,0,0);
-		public const EVELYN_:WeaponRangeWithPerk = new WeaponRangeWithPerk("Evelyn", "Evelyn", "Evelyn", "Evelyn", "shot", 40, 2000, "This is a blunderbuss rifle. It's effective at short range but poor at long range.", "Crossbow",
+		public const EVELYN_:WeaponRange = new WeaponRange("Evelyn", "Evelyn", "Evelyn", "Evelyn", "shot", 40, 2000, "This is a blunderbuss rifle. It's effective at short range but poor at long range.", "Crossbow",
 				PerkLib.Accuracy1,60,0,0,0);
 		public const FLINTLK:WeaponRange = new WeaponRange("Flintlk", "Flintlock", "flintlock pistol", "a flintlock pistol", "shot", 14, 700, "A flintlock pistol. Pew pew pew. Can fire six times before a reload is required.", "Pistol");
 		public const GTHRAXE:WeaponRange = new WeaponRange("GThrAxe", "GThrowAxes", "gnoll throwing axes", "a gnoll throwing axes", "shot", 25, 1250, "A set of throwing axes made and used by the gnoll barbarian, they are actually heavier than standard throwing weapon but all the more effective. You can carry up to 10 on you and need to retrieve them after battles.", "Throwing");
 		public const GTHRSPE:WeaponRange = new WeaponRange("GThrSpe", "GThrowSpear", "gnoll throwing spear", "a gnoll throwing spear", "shot", 18, 900, "A standard javelin for ranged combat made by the gnolls. You can carry up to 20 on you and need to retrieve them after battles.", "Throwing");
-		public const HEXBOW_:WeaponRangeWithPerk = new WeaponRangeWithPerk("HeXbow", "HeavyXbow", "heavy crossbow", "a heavy crossbow", "shot", 25, 1250, "This is a heavy crossbow. High penetrative power and good accuracy.", "Crossbow",
+		public const HEXBOW_:WeaponRange = new WeaponRange("HeXbow", "HeavyXbow", "heavy crossbow", "a heavy crossbow", "shot", 25, 1250, "This is a heavy crossbow. High penetrative power and good accuracy.", "Crossbow",
 				PerkLib.Accuracy1,40,0,0,0);
-		public const HUXBOW_:WeaponRangeWithPerk = new WeaponRangeWithPerk("HuXbow", "HuntXbow", "hunter crossbow", "a hunter crossbow", "shot", 15, 750, "This is a hunter crossbow. Slight better one with better accuracy and bolts penetrative power than light crossbow.", "Crossbow",
+		public const HUXBOW_:WeaponRange = new WeaponRange("HuXbow", "HuntXbow", "hunter crossbow", "a hunter crossbow", "shot", 15, 750, "This is a hunter crossbow. Slight better one with better accuracy and bolts penetrative power than light crossbow.", "Crossbow",
 				PerkLib.Accuracy1,20,0,0,0);
-		public const IVIARG_:WeaponRangeWithPerk = new WeaponRangeWithPerk("IvIArq", "Iv.I.Arq", "ivory inlaid arquebus", "an ivory inlaid arquebus", "shot", 28, 1400, "Gifted with a superb range and accuracy, this arquebus is truly a piece of art. Its stock has a gold trim and is inlaid with ivory in a pattern of wreath leaves. A layer of gold and ivory also runs through the barrel, giving the rifle a majestic look without compromising its functionality.", "Rifle",
+		public const IVIARG_:WeaponRange = new WeaponRange("IvIArq", "Iv.I.Arq", "ivory inlaid arquebus", "an ivory inlaid arquebus", "shot", 28, 1400, "Gifted with a superb range and accuracy, this arquebus is truly a piece of art. Its stock has a gold trim and is inlaid with ivory in a pattern of wreath leaves. A layer of gold and ivory also runs through the barrel, giving the rifle a majestic look without compromising its functionality.", "Rifle",
 				PerkLib.Accuracy1,40,0,0,0);
 		public const KSLHARP:KrakenSlayerHarpoons = new KrakenSlayerHarpoons();
-		public const LCROSBW:WeaponRangeWithPerk = new WeaponRangeWithPerk("LCrosbw", "LCrossbow", "light crossbow", "a light crossbow", "shot", 5, 250, "This is a light crossbow. A most basic one that fires bolts at your enemies.", "Crossbow",
+		public const LCROSBW:WeaponRange = new WeaponRange("LCrosbw", "LCrossbow", "light crossbow", "a light crossbow", "shot", 5, 250, "This is a light crossbow. A most basic one that fires bolts at your enemies.", "Crossbow",
 				PerkLib.Accuracy1,10,0,0,0);
 		public const LEVHARP:LeviathanHarpoons = new LeviathanHarpoons();
 		public const SHUNHAR:SeaHuntressHarpoons = new SeaHuntressHarpoons();
 		public const TRJAVEL:WeaponRange = new WeaponRange("TrJavel", "Tra.Javelins", "training javelins", "a training javelins", "shot", 5, 250, "A standard training javelin for ranged combat. You can carry up to 10 on you and need to retrieve them after battles.", "Throwing");
-		public const TRSXBOW:WeaponRangeWithPerk = new WeaponRangeWithPerk("TrSXBow", "Tra.S.Xbow", "training soul crossbow", "a training soul crossbow", "shot", 1, 50, "This crossbow was specialy forged and enhanted to help novice soul cultivatiors to train their ki.  Still if situation calls for it it could be used as a normal range weapon.", "Crossbow",
+		public const TRSXBOW:WeaponRange = new WeaponRange("TrSXBow", "Tra.S.Xbow", "training soul crossbow", "a training soul crossbow", "shot", 1, 50, "This crossbow was specialy forged and enhanted to help novice soul cultivatiors to train their ki.  Still if situation calls for it it could be used as a normal range weapon.", "Crossbow",
 				PerkLib.Accuracy1,5,0,0,0);
 		public const WARDBOW:Wardensbow = new Wardensbow();
 		public const WILDHUN:WildHunt = new WildHunt();

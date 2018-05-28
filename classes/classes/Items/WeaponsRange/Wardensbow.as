@@ -4,11 +4,12 @@
  */
 package classes.Items.WeaponsRange 
 {
+	import classes.Items.Weapon;
 	import classes.Items.WeaponRange;
 	import classes.PerkLib;
 	import classes.Player;
 	
-	public class Wardensbow extends WeaponRangeWithPerk
+	public class Wardensbow extends WeaponRange
 	{
 		
 		public function Wardensbow() 
@@ -32,7 +33,7 @@ package classes.Items.WeaponsRange
 			return desc;
 		}
 		
-		override public function playerEquip():WeaponRange {
+		override public function playerEquip():Weapon {
 			while (game.player.hasPerk(PerkLib.DaoistsFocus)) game.player.removePerk(PerkLib.DaoistsFocus);
 			game.player.createPerk(PerkLib.DaoistsFocus,0.4,0,0,0);
 			while (game.player.hasPerk(PerkLib.BodyCultivatorsFocus)) game.player.removePerk(PerkLib.BodyCultivatorsFocus);
@@ -42,7 +43,7 @@ package classes.Items.WeaponsRange
 			return super.playerEquip();
 		}
 		
-		override public function playerRemove():WeaponRange {
+		override public function playerRemove():Weapon {
 			while (game.player.hasPerk(PerkLib.DaoistsFocus)) game.player.removePerk(PerkLib.DaoistsFocus);
 			while (game.player.hasPerk(PerkLib.BodyCultivatorsFocus)) game.player.removePerk(PerkLib.BodyCultivatorsFocus);
 			while (game.player.hasPerk(PerkLib.WildWarden)) game.player.removePerk(PerkLib.WildWarden);

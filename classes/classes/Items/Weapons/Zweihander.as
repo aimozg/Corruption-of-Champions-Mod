@@ -13,10 +13,7 @@ package classes.Items.Weapons
 		
 		public function Zweihander() 
 		{
-			super("Zwnder ","Zwnder","zweihander","a zweihander","slash",31,2480,
-					"The zweihander is a longsword recognizable by its six foot monster of a blade and its wavy edges. On this one, the pommel and handle are decorated with a fierce-looking wolf and made of silver with other lupine motifs as ornaments.",
-					"Large"
-			);
+			super("Zwnder ", "Zwnder", "zweihander", "a zweihander", "slash", 31, 2480, "The zweihander is a longsword recognizable by its six foot monster of a blade and its wavy edges. On this one, the pommel and handle are decorated with a fierce-looking wolf and made of silver with other lupine motifs as ornaments.", "Large");
 		}
 		
 		override public function get attack():Number {

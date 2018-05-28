@@ -4,10 +4,9 @@
  */
 package classes.Items.WeaponsRange  
 {
-	import classes.ItemType;
+	import classes.Items.Weapon;
 	import classes.Items.WeaponRange;
-	import classes.Player;
-	
+
 	public class Nothing extends WeaponRange
 	{
 		public function Nothing()
@@ -15,7 +14,7 @@ package classes.Items.WeaponsRange
 			super("norange", "norange", "nothing", "no range weapon \nAttack: 0", "nothing", 0);
 		}
 		
-		override public function playerRemove():WeaponRange {
+		override public function playerRemove():Weapon {
 			return null; //There is nothing!
 		}
 	}
