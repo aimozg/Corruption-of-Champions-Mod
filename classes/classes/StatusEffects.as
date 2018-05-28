@@ -392,7 +392,6 @@ package classes
 		public static const NoLoot:StatusEffectType             = mk("No Loot");
 		public static const PCTailTangle:StatusEffectType       = mk("PCTailTangle");
 		public static const PeachLootLoss:StatusEffectType      = mk("Peach Loot Loss");
-		// @aimozg i don't know and do not fucking care if these two should be merged
 		public static const PhyllaFight:StatusEffectType        = mk("PhyllaFight");
 		public static const phyllafight:StatusEffectType        = mk("phyllafight");
 		public static const Platoon:StatusEffectType            = mk("platoon");

@@ -1054,7 +1054,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 		var EntangleSpeNerf:Number = 0;
 		EntangleStrNerf = Math.round(monster.str * .5);
 		EntangleSpeNerf = Math.round(monster.spe * .5);
-		// TODO @aimozg/stats replace with a proper 50% debuff
+		// TODO @aimozg/stats replace with a proper 50% debuff. Stat must be applied to monster though
 		monster.drainStat('str',EntangleStrNerf);
 		monster.drainStat('spe',EntangleSpeNerf);
 		player.createStatusEffect(StatusEffects.AlrauneEntangle,EntangleStrNerf,EntangleSpeNerf,0,0);

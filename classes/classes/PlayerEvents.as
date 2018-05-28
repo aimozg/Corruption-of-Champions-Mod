@@ -585,7 +585,7 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 				if (flags[kFLAGS.LUNA_FOLLOWER] >= 4) {
 					flags[kFLAGS.LUNA_MOON_CYCLE]++;
 					if (flags[kFLAGS.LUNA_MOON_CYCLE] > 8) flags[kFLAGS.LUNA_MOON_CYCLE] = 1;
-					var lycan:PerkClass = player.perkByType(PerkLib.Lycanthropy);
+					var lycan:PerkClass = player.getPerk(PerkLib.Lycanthropy);
 					if (lycan) {
 						var changeV:Number = 10 * player.newGamePlusMod();
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 5) {

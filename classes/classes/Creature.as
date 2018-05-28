@@ -326,7 +326,7 @@ package classes
 				speStat.bonus.removeEffect('oversized');
 			}
 			//Perks ahoy
-			var perk:PerkClass = perkByType(PerkLib.GorgonsEyes);
+			var perk:PerkClass = getPerk(PerkLib.GorgonsEyes);
 			if (hasPerk(PerkLib.BasiliskResistance) && perk) {
 				perk.buffHost(this,'spe',-5);
 			} else {
@@ -340,7 +340,7 @@ package classes
 			setPerkStatEffect(PerkLib.BroBrains,'intMult',-0.60);
 			setPerkStatEffect(PerkLib.FutaForm,'intMult',-0.60);
 			setPerkStatEffect(PerkLib.FutaForm,'libMult',+0.50);
-			perk = perkByType(PerkLib.ProductivityDrugs);
+			perk = getPerk(PerkLib.ProductivityDrugs);
 			if (perk) {
 				perk.buffHost(this, 'lib', perk.value1);
 			} else {
@@ -433,9 +433,9 @@ package classes
 			setPerkStatEffect(PerkLib.SalamanderAdrenalGlandsEvolved, 'speMult', +0.05);
 			setPerkStatEffect(PerkLib.SalamanderAdrenalGlandsEvolved, 'libMult', +0.05);
 			setPerkStatEffect(PerkLib.ScyllaInkGlands, 'strMult', +0.10);
-			perk = perkByType(PerkLib.MantislikeAgility);
+			perk = getPerk(PerkLib.MantislikeAgility);
 			if (perk) {
-				var perk2:PerkClass = perkByType(PerkLib.MantislikeAgilityEvolved);
+				var perk2:PerkClass = getPerk(PerkLib.MantislikeAgilityEvolved);
 				var mult:Number = 1.0;
 				if (perk2) {
 					mult = 2.0;
@@ -475,7 +475,7 @@ package classes
 			setPerkStatEffect(PerkLib.JobHunter, 'speMult', +0.10);
 			setPerkStatEffect(PerkLib.JobHunter, 'intMult', +0.05);
 			setPerkStatEffect(PerkLib.JobKnight, 'touMult', +0.10);
-			setPerkStatEffect(PerkLib.JobMonk, 'wisMult', +0.15);
+			setPerkStatEffect(PerkLib.AdvancedJobMonk, 'wisMult', +0.15);
 			setPerkStatEffect(PerkLib.JobRanger, 'speMult', +0.05);
 			setPerkStatEffect(PerkLib.JobSeducer, 'libMult', +0.05);
 			setPerkStatEffect(PerkLib.JobSorcerer, 'intMult', +0.05);
@@ -504,7 +504,7 @@ package classes
 			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'speMult', -0.45);
 			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'intMult', +0.60);
 			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'wisMult', +0.90);
-			perk = perkByType(PerkLib.AscensionTranshumanism);
+			perk = getPerk(PerkLib.AscensionTranshumanism);
 			if (perk) {
 				perk.buffHost(this, 'strMult', +0.05 * perk.value1);
 				perk.buffHost(this, 'touMult', +0.05 * perk.value1);
@@ -582,7 +582,7 @@ package classes
  		 */
 		public function setPerkStatEffect(ptype:PerkType,statname:String,value:Number):void {
 			var stat:BaseStat = (stats[statname] as BaseStat) || (stats[statname] as PrimaryStat).bonus;
-			var perk:PerkClass = perkByType(ptype);
+			var perk:PerkClass = getPerk(ptype);
 			if (perk) {
 				stat.addOrReplaceEffect(ptype.id,value,{save:false,text:ptype.name});
 			} else {
@@ -1358,6 +1358,7 @@ package classes
 			var newPerk:PerkClass = new PerkClass(ptype, value1, value2, value3, value4);
 			perks.push(newPerk);
 			perks.sortOn("perkName");
+			return newPerk;
 		}
 
 		/**
