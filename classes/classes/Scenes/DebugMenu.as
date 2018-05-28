@@ -1,63 +1,52 @@
 package classes.Scenes 
 {
-import classes.*;
-import classes.BodyParts.Antennae;
-import classes.BodyParts.Arms;
-import classes.BodyParts.Beard;
-import classes.BodyParts.Claws;
-import classes.BodyParts.Ears;
-import classes.BodyParts.Eyes;
-import classes.BodyParts.Face;
-import classes.BodyParts.Gills;
-import classes.BodyParts.Hair;
-import classes.BodyParts.Horns;
-import classes.BodyParts.LowerBody;
-import classes.BodyParts.RearBody;
-import classes.BodyParts.Skin;
-import classes.BodyParts.SkinLayer;
-import classes.BodyParts.Tail;
-import classes.BodyParts.Tongue;
-import classes.BodyParts.Wings;
-import classes.GlobalFlags.kFLAGS;
-import classes.Items.Consumable;
-import classes.Items.ConsumableLib;
-import classes.Parser.Parser;
-import classes.Scenes.NPCs.JojoScene;
-import classes.internals.EnumValue;
+	import avmplus.getQualifiedClassName;
 
-import coc.view.Color;
+	import classes.*;
+	import classes.BodyParts.Antennae;
+	import classes.BodyParts.Arms;
+	import classes.BodyParts.Beard;
+	import classes.BodyParts.Claws;
+	import classes.BodyParts.Ears;
+	import classes.BodyParts.Eyes;
+	import classes.BodyParts.Face;
+	import classes.BodyParts.Gills;
+	import classes.BodyParts.Hair;
+	import classes.BodyParts.Horns;
+	import classes.BodyParts.LowerBody;
+	import classes.BodyParts.RearBody;
+	import classes.BodyParts.Skin;
+	import classes.BodyParts.SkinLayer;
+	import classes.BodyParts.Tail;
+	import classes.BodyParts.Tongue;
+	import classes.BodyParts.Wings;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.Parser.Parser;
+	import classes.Scenes.NPCs.JojoScene;
+
+	import coc.view.ButtonDataList;
+	import coc.view.Color;
 
 	import flash.events.Event;
-
 	import flash.events.KeyboardEvent;
-
 	import flash.events.TextEvent;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
 	import flash.utils.describeType;
+	import flash.utils.getDefinitionByName;
 
-public class DebugMenu extends BaseContent
+	public class DebugMenu extends BaseContent
 	{
-		public var flagNames:XML = describeType(kFLAGS);
-		private var lastMenu:Function = null;
-		
-		public var setArrays:Boolean = false;
+		private var _setLists:Boolean = false;
 
-		//Set up equipment arrays
-		public var weaponArray:Array = [];
-		public var shieldArray:Array = [];
-		public var armourArray:Array = [];
-		public var undergarmentArray:Array = [];
-		public var accessoryArray:Array = [];
-		
-		//Set up item arrays
-		public var transformativeArray:Array = [];
-		public var consumableArray:Array = [];
-		public var dyeArray:Array = [];
-		public var materialArray:Array = [];
-		public var rareArray:Array = [];
-		public var testArray:Array = [];
-		
+		private var _armourButtons:ButtonDataList = new ButtonDataList();
+		private var _shieldButtons:ButtonDataList = new ButtonDataList();
+		private var _weaponButtons:ButtonDataList = new ButtonDataList();
+		private var _jewelryButtons:ButtonDataList = new ButtonDataList();
+		private var _useableButtons:ButtonDataList = new ButtonDataList();
+		private var _consumableButtons:ButtonDataList = new ButtonDataList();
+		private var _undergarmentButtons:ButtonDataList = new ButtonDataList();
+
 		
 		public function DebugMenu() 
 		{	
@@ -217,393 +206,55 @@ public class DebugMenu extends BaseContent
 				
 			}
 		}
-		//Spawn items menu
+
 		private function itemSpawnMenu():void {
 			setItemArrays();
 			clearOutput();
 			outputText("Select a category.");
 			menu();
-			addButton(0, "Transformatives", displayItemPage, transformativeArray, 1);
-			addButton(1, "Consumables", displayItemPage, consumableArray, 1);
-			addButton(2, "Dyes", displayItemPage, dyeArray, 1);
-			addButton(3, "Materials", displayItemPage, materialArray, 1);
-			addButton(4, "Rare Items", displayItemPage, rareArray, 1);
-			addButton(5, "Weapons", displayItemPage, weaponArray, 1);
-			addButton(6, "Shields", displayItemPage, shieldArray, 1);
-			addButton(7, "Armours", displayItemPage, armourArray, 1);
-			addButton(8, "Undergarments", displayItemPage, undergarmentArray, 1);
-			addButton(9, "Accessories", displayItemPage, accessoryArray, 1);
-			addButton(10,"ConsumableLib",displayItemPage,testArray,1);
+			addButton(0, "Consumables", displayItems, _consumableButtons, 0);
+			addButton(1, "Useables", displayItems, _useableButtons, 0);
+			addButton(2, "Weapons", displayItems, _weaponButtons, 0);
+			addButton(3, "Shields", displayItems, _shieldButtons, 0);
+			addButton(4, "Armours", displayItems, _armourButtons, 0);
+			addButton(5, "Jewelry", displayItems, _jewelryButtons, 0);
+			addButton(6, "Undergarments", displayItems, _undergarmentButtons, 0);
 			addButton(14, "Back", accessDebugMenu);
 		}
-		
-		private function displayItemPage(array:Array, page:int):void {
+
+		private function displayItems(buttons:ButtonDataList, page:int = -1):void{
 			clearOutput();
-			outputText("What item would you like to spawn? ");
-			menu();
-			var buttonPos:int = 0; //Button positions 4 and 9 are reserved for next and previous.
-			for (var i:int = 0; i < 12; i++) {
-				if (array[((page-1) * 12) + i] != undefined) {
-					if (array[((page-1) * 12) + i] != null) addButton(buttonPos, array[((page-1) * 12) + i].shortName, inventory.takeItem, array[((page-1) * 12) + i], curry(displayItemPage, array, page));
-				}
-				buttonPos++;
-				if (buttonPos == 4 || buttonPos == 9) buttonPos++;
-			}
-			if (!isNextPageEmpty(array, page)) addButton(4, "Next", displayItemPage, array, page+1);
-			if (!isPreviousPageEmpty(array, page)) addButton(9, "Previous", displayItemPage, array, page-1);
-			addButton(14, "Back", itemSpawnMenu);
+			outputText("What item would you like to spawn?\n\n");
+			if(page == -1){page = buttons.page;}
+			buttons.submenu(itemSpawnMenu, page);
 		}
-		
-		private function isPreviousPageEmpty(array:Array, page:int):Boolean {
-			var isEmpty:Boolean = true;
-			for (var i:int = 0; i < 12; i++) {
-				if (array[((page-2) * 12) + i] != undefined) {
-					isEmpty = false;
-				}
-			}
-			return isEmpty;
-		}
-		
-		private function isNextPageEmpty(array:Array, page:int):Boolean {
-			var isEmpty:Boolean = true;
-			for (var i:int = 0; i < 12; i++) {
-				if (array[((page) * 12) + i] != undefined) {
-					isEmpty = false;
-				}
-			}
-			return isEmpty;
-		}
-		
-		private function setItemArrays():void {
-            if (setArrays) return; //Already set, cancel.
-            var xmlList:XMLList = describeType(ConsumableLib).factory.constant;
-            for each (var item:XML in xmlList){
-                if(consumables[item.@name] is Consumable){
-					testArray.push(consumables[item.@name]);
-                    trace(String(consumables[item.@name]));
+
+		private function setList(buttons:ButtonDataList, lib:Object):void {
+			var libClass:Class = Class(getDefinitionByName(getQualifiedClassName(lib)));
+			var xmlList:XMLList = describeType(libClass).factory.constant;
+			for each (var item:XML in xmlList){
+				var itype:* = lib[item.@name];
+				if(itype is ItemType){
+					buttons.add(itype.shortName, curry(inventory.takeItem, itype, curry(displayItems, buttons)))
+							.hint(itype.description, itype.longName);
+					trace(itype.shortName);
 				} else {
 					trace("Not Added: "+String(consumables[item.@name]));
 				}
-            }
-			//Build arrays here
-			//------------
-			// Transformatives
-			//------------
-			//Page 1
-			transformativeArray.push(consumables.B_GOSSR);
-			transformativeArray.push(consumables.BEEHONY);
-			transformativeArray.push(consumables.BLACKPP);
-			transformativeArray.push(consumables.BOARTRU);
-			transformativeArray.push(consumables.BULBYPP);
-			transformativeArray.push(consumables.CANINEP);
-			transformativeArray.push(consumables.CENTARI);
-			transformativeArray.push(consumables.DBLPEPP);
-			transformativeArray.push(consumables.DRAKHRT);
-			transformativeArray.push(consumables.DRYTENT);
-			transformativeArray.push(consumables.ECTOPLS);
-			transformativeArray.push(consumables.EQUINUM);
-			//Page 2
-			transformativeArray.push(consumables.FOXBERY);
-			transformativeArray.push(consumables.FOXJEWL);
-			transformativeArray.push(consumables.FRRTFRT);
-			transformativeArray.push(consumables.GLDRIND);
-			transformativeArray.push(consumables.GLDSEED);
-			transformativeArray.push(consumables.GOB_ALE);
-			transformativeArray.push(consumables.HUMMUS_);
-			transformativeArray.push(consumables.IMPFOOD);
-			transformativeArray.push(consumables.INCUBID);
-			transformativeArray.push(consumables.KANGAFT);
-			transformativeArray.push(consumables.KNOTTYP);
-			transformativeArray.push(consumables.LABOVA_);
-			//Page 3
-			transformativeArray.push(consumables.LARGEPP);
-			transformativeArray.push(consumables.MAGSEED);
-			transformativeArray.push(consumables.MGHTYVG);
-			transformativeArray.push(consumables.MOUSECO);
-			transformativeArray.push(consumables.MINOBLO);
-			transformativeArray.push(consumables.MYSTJWL);
-			transformativeArray.push(consumables.P_LBOVA);
-			transformativeArray.push(consumables.PIGTRUF);
-			transformativeArray.push(consumables.PRFRUIT);
-			transformativeArray.push(consumables.PROBOVA);
-			transformativeArray.push(consumables.P_DRAFT);
-			transformativeArray.push(consumables.P_S_MLK);
-			//Page 4
-			transformativeArray.push(consumables.PSDELIT);
-			transformativeArray.push(consumables.PURHONY);
-			transformativeArray.push(consumables.SATYR_W);
-			transformativeArray.push(consumables.SDELITE);
-			transformativeArray.push(consumables.S_DREAM);
-			transformativeArray.push(consumables.SUCMILK);
-			transformativeArray.push(consumables.REPTLUM);
-			transformativeArray.push(consumables.RINGFIG);
-			transformativeArray.push(consumables.RIZZART);
-			transformativeArray.push(consumables.S_GOSSR);
-			transformativeArray.push(consumables.SALAMFW);
-			transformativeArray.push(consumables.SHARK_T);
-			//Page 5
-			transformativeArray.push(consumables.SNAKOIL);
-			transformativeArray.push(consumables.SPHONEY);
-			transformativeArray.push(consumables.TRAPOIL);
-			transformativeArray.push(consumables.TSCROLL);
-			transformativeArray.push(consumables.TSTOOTH);
-			transformativeArray.push(consumables.VIXVIGR);
-			transformativeArray.push(consumables.W_FRUIT);
-			transformativeArray.push(consumables.WETCLTH);
-			
-			//------------
-			// Consumables
-			//------------
-			//Page 1
-			consumableArray.push(consumables.AKBALSL);
-			consumableArray.push(consumables.C__MINT);
-			consumableArray.push(consumables.CERUL_P);
-			consumableArray.push(consumables.COAL___);
-			consumableArray.push(consumables.DEBIMBO);
-			consumableArray.push(consumables.EXTSERM);
-			consumableArray.push(consumables.F_DRAFT);
-			consumableArray.push(consumables.GROPLUS);
-			consumableArray.push(consumables.H_PILL);
-			consumableArray.push(consumables.HRBCNT);
-			consumableArray.push(consumables.ICICLE_);
-			consumableArray.push(consumables.KITGIFT);
-			//Page 2
-			consumableArray.push(consumables.L_DRAFT);
-			consumableArray.push(consumables.LACTAID);
-			consumableArray.push(consumables.LUSTSTK);
-			consumableArray.push(consumables.MILKPTN);
-			consumableArray.push(consumables.NUMBOIL);
-			consumableArray.push(consumables.NUMBROX);
-			consumableArray.push(consumables.OVIELIX);
-			consumableArray.push(consumables.PEPPWHT);
-			consumableArray.push(consumables.PPHILTR);
-			consumableArray.push(consumables.PRNPKR);
-			consumableArray.push(consumables.REDUCTO);
-			consumableArray.push(consumables.SENSDRF);
-			//Page 3
-			consumableArray.push(consumables.SMART_T);
-			consumableArray.push(consumables.VITAL_T);
-			consumableArray.push(consumables.B__BOOK);
-			consumableArray.push(consumables.W__BOOK);
-			consumableArray.push(consumables.G__BOOK);
-			consumableArray.push(consumables.BC_BEER);
-			consumableArray.push(consumables.BHMTCUM);
-			consumableArray.push(consumables.BIMBOCH);
-			consumableArray.push(consumables.CCUPCAK);
-			consumableArray.push(consumables.FISHFIL);
-			consumableArray.push(consumables.FR_BEER);
-			//Page 4
-			consumableArray.push(consumables.GODMEAD);
-			consumableArray.push(consumables.H_BISCU);
-			consumableArray.push(consumables.IZYMILK);
-			consumableArray.push(consumables.M__MILK);
-			consumableArray.push(consumables.MINOCUM);
-			consumableArray.push(consumables.P_WHSKY);
-			consumableArray.push(consumables.PURPEAC);
-			consumableArray.push(consumables.SHEEPMK);
-			consumableArray.push(consumables.S_WATER);
-			consumableArray.push(consumables.NPNKEGG);
-			consumableArray.push(consumables.DRGNEGG);
-			//Page 5
-			consumableArray.push(consumables.W_PDDNG);
-			consumableArray.push(consumables.TRAILMX);
-			consumableArray.push(consumables.URTACUM);
-			consumableArray.push(consumables.BLACKEG);
-			consumableArray.push(consumables.L_BLKEG);
-			consumableArray.push(consumables.BLUEEGG);
-			consumableArray.push(consumables.L_BLUEG);
-			consumableArray.push(consumables.BROWNEG);
-			consumableArray.push(consumables.L_BRNEG);
-			consumableArray.push(consumables.PINKEGG);
-			consumableArray.push(consumables.L_PNKEG);
-			consumableArray.push(consumables.PURPLEG);
-			//Page 6
-			consumableArray.push(consumables.L_PRPEG);
-			consumableArray.push(consumables.WHITEEG);
-			consumableArray.push(consumables.L_WHTEG);
-			
-			//------------
-			// Dyes
-			//------------
-			//Page 1
-			dyeArray.push(consumables.AUBURND);
-			dyeArray.push(consumables.BLACK_D);
-			dyeArray.push(consumables.BLOND_D);
-			dyeArray.push(consumables.BLUEDYE);
-			dyeArray.push(consumables.BROWN_D);
-			dyeArray.push(consumables.GRAYDYE);
-			dyeArray.push(consumables.GREEN_D);
-			dyeArray.push(consumables.ORANGDY);
-			dyeArray.push(consumables.PINKDYE);
-			dyeArray.push(consumables.PURPDYE);
-			dyeArray.push(consumables.RAINDYE);
-			dyeArray.push(consumables.RED_DYE);
-			//Page 2
-			dyeArray.push(consumables.WHITEDY);
-			
-			//------------
-			// Materials
-			//------------
-			//Page 1, which is the only page for material so far. :(
-			materialArray.push(useables.GREENGL);
-			materialArray.push(useables.B_CHITN);
-			materialArray.push(useables.T_SSILK);
-			materialArray.push(useables.D_SCALE);
-			materialArray.push(useables.IMPSKLL);
-			materialArray.push(useables.LETHITE);
-			materialArray.push(null);
-			materialArray.push(null);
-			materialArray.push(null);
-			materialArray.push(null);
-			materialArray.push(null);
-			materialArray.push(useables.CONDOM);
-			//------------
-			// Rare Items
-			//------------
-			//Page 1, again the only page available.
-			rareArray.push(consumables.BIMBOLQ);
-			rareArray.push(consumables.BROBREW);
-			rareArray.push(consumables.HUMMUS2);
-			rareArray.push(consumables.P_PEARL);
-			
-			rareArray.push(useables.DBGWAND);
-			rareArray.push(useables.GLDSTAT);
-			
-			//------------
-			// Weapons
-			//------------
-			//Page 1
-			weaponArray.push(weapons.B_SCARB);
-			weaponArray.push(weapons.B_SWORD);
-			weaponArray.push(weapons.BFSWORD);
-			weaponArray.push(weapons.CLAYMOR);
-			weaponArray.push(weapons.E_STAFF);
-			weaponArray.push(weapons.FLAIL);
-			weaponArray.push(weapons.URTAHLB);
-			weaponArray.push(weapons.H_GAUNT);
-			weaponArray.push(weapons.JRAPIER);
-			weaponArray.push(weapons.KATANA);
-			weaponArray.push(weapons.L__AXE);
-			weaponArray.push(weapons.L_DAGGR);
-			//Page 2
-			weaponArray.push(weapons.L_HAMMR);
-			weaponArray.push(weapons.L_STAFF);
-			weaponArray.push(weapons.MACE);
-			weaponArray.push(weapons.PIPE);
-			weaponArray.push(weapons.PTCHFRK);			
-			weaponArray.push(weapons.RIDINGC);
-			weaponArray.push(weapons.RRAPIER);
-			weaponArray.push(weapons.S_BLADE);
-			weaponArray.push(weapons.S_GAUNT);			
-			weaponArray.push(weapons.SCARBLD);
-			weaponArray.push(weapons.SCIMITR);
-			weaponArray.push(weapons.SPEAR);
-			//Page 3
-			weaponArray.push(weapons.SUCWHIP);
-			weaponArray.push(weapons.W_STAFF);
-			weaponArray.push(weapons.WARHAMR);
-			weaponArray.push(weapons.WHIP);
-			weaponArray.push(weaponsrange.BLUNDER);
-			weaponArray.push(weaponsrange.BOWKELT);
-			weaponArray.push(weaponsrange.BOWOLD_);
-			weaponArray.push(weaponsrange.LCROSBW);
-			weaponArray.push(weaponsrange.FLINTLK);
-			
-			//------------
-			// Shields
-			//------------
-			//Page 1, poor shield category is so lonely. :(
-			shieldArray.push(shields.BUCKLER);
-			shieldArray.push(shields.DRGNSHL);
-			shieldArray.push(shields.GREATSH);
-			shieldArray.push(shields.KITE_SH);
-			shieldArray.push(shields.TOWERSH);
-			
-			//------------
-			// Armours
-			//------------
-			//Page 1
-			armourArray.push(armors.ADVCLTH);
-			armourArray.push(armors.B_DRESS);
-			armourArray.push(armors.BEEARMR);
-			armourArray.push(armors.BIMBOSK);
-			armourArray.push(armors.BONSTRP);
-			armourArray.push(armors.C_CLOTH);
-			armourArray.push(armors.CHBIKNI);
-			armourArray.push(armors.CLSSYCL);
-			armourArray.push(armors.DBARMOR);
-			armourArray.push(armors.FULLCHN);
-			armourArray.push(armors.FULLPLT);
-			armourArray.push(armors.GELARMR);
-			//Page 2
-			armourArray.push(armors.GOOARMR);
-			armourArray.push(armors.I_CORST);
-			armourArray.push(armors.I_ROBES);
-			armourArray.push(armors.INDECST);
-			armourArray.push(armors.LEATHRA);
-			armourArray.push(armors.URTALTA);
-			armourArray.push(armors.LMARMOR);
-			armourArray.push(armors.LTHCARM);
-			armourArray.push(armors.LTHRPNT);
-			armourArray.push(armors.LTHRROB);
-			armourArray.push(armors.M_ROBES);
-			armourArray.push(armors.TBARMOR);
-			//Page 3
-			armourArray.push(armors.NURSECL);
-			armourArray.push(armors.OVERALL);
-			armourArray.push(armors.R_BDYST);
-			armourArray.push(armors.RBBRCLT);
-			armourArray.push(armors.S_SWMWR);
-			armourArray.push(armors.SAMUARM);
-			armourArray.push(armors.SCALEML);
-			armourArray.push(armors.SEDUCTA);
-			armourArray.push(armors.SEDUCTU);
-			armourArray.push(armors.SS_ROBE);
-			armourArray.push(armors.SSARMOR);
-			armourArray.push(armors.T_BSUIT);
-			armourArray.push(armors.TUBETOP);
-			//Page 4
-			armourArray.push(armors.W_ROBES);
-			armourArray.push(armors.NAGASLK);
-			armourArray.push(armors.FRSGOWN);
-			
-			//------------
-			// Undergarments
-			//------------
-			//Page 1
-			undergarmentArray.push(undergarments.C_BRA);
-			undergarmentArray.push(undergarments.C_LOIN);
-			undergarmentArray.push(undergarments.C_PANTY);
-			undergarmentArray.push(undergarments.DS_BRA);
-			undergarmentArray.push(undergarments.DS_LOIN);
-			undergarmentArray.push(undergarments.DSTHONG);
-			undergarmentArray.push(undergarments.FURLOIN);
-			undergarmentArray.push(undergarments.GARTERS);
-			undergarmentArray.push(undergarments.LTX_BRA);
-			undergarmentArray.push(undergarments.LTXSHRT);
-			undergarmentArray.push(undergarments.LTXTHNG);
-			undergarmentArray.push(undergarments.SS_BRA);
-			//Page 2
-			undergarmentArray.push(undergarments.SS_LOIN);
-			undergarmentArray.push(undergarments.SSPANTY);
-			
-			//------------
-			// Accessories
-			//------------
-			//Page 1
-			accessoryArray.push(jewelries.CRIMRNG);
-			accessoryArray.push(jewelries.FERTRNG);
-			accessoryArray.push(jewelries.ICE_RNG);
-			accessoryArray.push(jewelries.LIFERNG);
-			accessoryArray.push(jewelries.MYSTRNG);
-			accessoryArray.push(jewelries.POWRRNG);
-			accessoryArray.push(jewelries.PURERNG);
-			accessoryArray.push(jewelries.DIAMRNG);
-			accessoryArray.push(jewelries.GOLDRNG);
-			accessoryArray.push(jewelries.LTHCRNG);
-			accessoryArray.push(jewelries.PLATRNG);
-			accessoryArray.push(jewelries.SILVRNG);
-			setArrays = true;
+			}
+		}
+		
+		private function setItemArrays():void {
+            if (_setLists) return; //Already set, cancel.
+            setList(_consumableButtons, consumables);
+			setList(_weaponButtons, weapons);
+			setList(_weaponButtons, weaponsrange);
+			setList(_armourButtons, armors);
+			setList(_undergarmentButtons, undergarments);
+			setList(_jewelryButtons, jewelries);
+			setList(_shieldButtons, shields);
+			setList(_useableButtons, useables);
+			_setLists = true;
 		}
 		
 
