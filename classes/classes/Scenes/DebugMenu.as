@@ -389,7 +389,6 @@ public class DebugMenu extends BaseContent
 			consumableArray.push(consumables.BC_BEER);
 			consumableArray.push(consumables.BHMTCUM);
 			consumableArray.push(consumables.BIMBOCH);
-			consumableArray.push(consumables.C_BREAD);
 			consumableArray.push(consumables.CCUPCAK);
 			consumableArray.push(consumables.FISHFIL);
 			consumableArray.push(consumables.FR_BEER);
@@ -399,7 +398,6 @@ public class DebugMenu extends BaseContent
 			consumableArray.push(consumables.IZYMILK);
 			consumableArray.push(consumables.M__MILK);
 			consumableArray.push(consumables.MINOCUM);
-			consumableArray.push(consumables.P_BREAD);
 			consumableArray.push(consumables.P_WHSKY);
 			consumableArray.push(consumables.PURPEAC);
 			consumableArray.push(consumables.SHEEPMK);
@@ -655,7 +653,6 @@ public class DebugMenu extends BaseContent
 			addButton(1, "Scorpion Tail", changeScorpionTail);
 			addButton(2, "Be Manticore", getManticoreKit).hint("Gain everything needed to become a Manticore-morph.");
 			addButton(3, "Be Dragonne", getDragonneKit).hint("Gain everything needed to become a Dragonne-morph.");
-			addButton(4, "Debug Prison", debugPrison);
 			addButton(5, "Tooltips Ahoy", EngineCore.doNothing).hint("Ahoy! I'm a tooltip! I will show up a lot in future updates!", "Tooltip 2.0");
 			addButton(6, "Lights Out", startLightsOut, testVictoryFunc, testFailureFunc, null, "Test the lights out puzzle, fresh off TiTS!");
 			addButton(7, "Isabella Birth", SceneLib.isabellaFollowerScene.isabellaGivesBirth).hint("Test Isabella giving birth for debugging purposes.", "Trigger Isabella Giving Birth");
@@ -1274,38 +1271,7 @@ public class DebugMenu extends BaseContent
 			player.wings.type = Wings.DRACONIC_LARGE;
 			doNext(styleHackMenu);
 		}
-		
-		private function debugPrison():void {
-			clearOutput();
-			doNext(styleHackMenu);
-			//Stored equipment
-			outputText("<b><u>Stored equipment:</u></b>");
-			outputText("\n<b>Stored armour:</b> ");
-			if (flags[kFLAGS.PRISON_STORAGE_ARMOR] != 0) {
-				outputText("" + ItemType.lookupItem(flags[kFLAGS.PRISON_STORAGE_ARMOR]));
-			}
-			else outputText("None");
-			outputText("\n<b>Stored weapon:</b> ");
-			if (flags[kFLAGS.PRISON_STORAGE_WEAPON] != 0) {
-				outputText("" + ItemType.lookupItem(flags[kFLAGS.PRISON_STORAGE_WEAPON]));
-			}
-			else outputText("None");
-			outputText("\n<b>Stored shield:</b> ");
-			if (flags[kFLAGS.PRISON_STORAGE_SHIELD] != 0) {
-				outputText("" + ItemType.lookupItem(flags[kFLAGS.PRISON_STORAGE_SHIELD]));
-			}
-			else outputText("None");
-			//Stored items
-			outputText("\n\n<b><u>Stored items:</u></b>");
-			for (var i:int = 0; i < 10; i++) {
-				if (player.prisonItemSlots[i*2] != null && player.prisonItemSlots[i*2] != undefined) {
-					outputText("\n" + player.prisonItemSlots[i*2]);
-					outputText(" x" + player.prisonItemSlots[(i*2)+1]);
-				}
-			}
-			flushOutputTextToGUI();
-		}
-		
+
 		private function eventTriggerMenu():void {
 			menu();
 			addButton(0, "Anemone", SceneLib.anemoneScene.anemoneKidBirthPtII);

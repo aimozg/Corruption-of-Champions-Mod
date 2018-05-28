@@ -325,10 +325,6 @@ public class EventParser {
             }
 
         }
-        if (SceneLib.prison.trainingFeed.prisonCaptorFeedingQuestTrainingExists() && SceneLib.prison.trainingFeed.prisonCaptorFeedingQuestTrainingIsTimeUp() && Utils.rand(100) < (CoC.instance.flags[kFLAGS.PRISON_CAPTURE_CHANCE] + player.obey / 4) && !DungeonAbstractContent.inDungeon && !DungeonAbstractContent.inRoomedDungeon && !SceneLib.prison.inPrison && !SceneLib.ingnam.inIngnam) {
-            SceneLib.prison.goBackToPrisonBecauseQuestTimeIsUp();
-            return true;
-        }
         EngineCore.statScreenRefresh();
         if (needNext) {
             EngineCore.doNext(playerMenu);
@@ -521,7 +517,7 @@ public class EventParser {
                 return 1;
             } else if (chance > Utils.rand(100) && !player.hasStatusEffect(StatusEffects.DefenseCanopy)) {
                 if (player.gender > 0 && (!player.hasStatusEffect(StatusEffects.JojoNightWatch) || !player.hasStatusEffect(StatusEffects.PureCampJojo)) && (flags[kFLAGS.HEL_GUARDING] == 0 || !SceneLib.helFollower.followerHel()) && flags[kFLAGS.ANEMONE_WATCH] == 0 && (flags[kFLAGS.HOLLI_DEFENSE_ON] == 0 || flags[kFLAGS.FUCK_FLOWER_KILLED] > 0) && (flags[kFLAGS.KIHA_CAMP_WATCH] == 0 || !SceneLib.kihaFollower.followerKiha()) && !(flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && (flags[kFLAGS.SLEEP_WITH] == "Marble" || flags[kFLAGS.SLEEP_WITH] == "")) &&
-                        (flags[kFLAGS.IN_INGNAM] == 0 && flags[kFLAGS.IN_PRISON] == 0) || flags[kFLAGS.CAMP_UPGRADES_MAGIC_WARD] == 2) {
+                        flags[kFLAGS.IN_INGNAM] == 0 || flags[kFLAGS.CAMP_UPGRADES_MAGIC_WARD] == 2) {
                     SceneLib.impScene.impGangabangaEXPLOSIONS();
                     EngineCore.doNext(playerMenu);
                     return 2;

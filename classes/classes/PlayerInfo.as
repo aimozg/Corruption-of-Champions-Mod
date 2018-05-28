@@ -58,10 +58,10 @@ public class PlayerInfo extends BaseContent {
 		combatStats += "<b>Accuracy (1st range attack):</b> " + (combat.arrowsAccuracy() / 2) + "%\n";
 		if (player.hasPerk(PerkLib.Manyshot)) combatStats += "<b>Accuracy (4th range attack):</b> " + ((combat.arrowsAccuracy() / 2) - 45) + "%\n";
 
-		combatStats += "<b>Ki Power Effect Multiplier:</b> " + Math.round(100 * combat.kiPowerMod()) + "%\n";
-		combatStats += "<b>Physical Ki Power Effect Multiplier:</b> " + Math.round(100 * combat.kiPowerPhysicalMod()) + "%\n";
-		combatStats += "<b>Magical Ki Power Effect Multiplier:</b> " + Math.round(100 * combat.kiPowerMagicalMod()) + "%\n";
-		combatStats += "<b>Ki Power Cost:</b> " + Math.round(100 * combat.kiPowerCost()) + "%\n";
+		combatStats += "<b>Ki Power Effect Multiplier:</b> " + Math.round(100 * player.kiPowerMod()) + "%\n";
+		combatStats += "<b>Physical Ki Power Effect Multiplier:</b> " + Math.round(100 * player.kiPowerMod(true)) + "%\n";
+		combatStats += "<b>Magical Ki Power Effect Multiplier:</b> " + Math.round(100 * player.kiPowerMod()) + "%\n";
+		combatStats += "<b>Ki Power Cost:</b> " + Math.round(100 * player.kiPowerCostMod()) + "%\n";
 
 		combatStats += "<b>Unarmed:</b> +" + combat.unarmedAttack() + "\n";
 
@@ -90,8 +90,6 @@ public class PlayerInfo extends BaseContent {
 		if (combatStats != "")
 			outputText("<b><u>Combat Stats</u></b>\n" + combatStats);
 		// End Combat Stats
-
-		if (prison.inPrison || flags[kFLAGS.PRISON_CAPTURE_COUNTER] > 0) prison.displayPrisonStats();
 
 		// Begin Children Stats
 		var childStats:String = "";
@@ -221,7 +219,7 @@ public class PlayerInfo extends BaseContent {
 		// Begin Body Stats
 		var bodyStats:String = "";
 
-		if (flags[kFLAGS.HUNGER_ENABLED] > 0 || flags[kFLAGS.IN_PRISON] > 0) {
+		if (flags[kFLAGS.HUNGER_ENABLED] > 0) {
 			bodyStats += "<b>Satiety:</b> " + Math.floor(player.hunger) + " / " + player.maxHunger() + " (";
 			if (player.hunger <= 0) bodyStats += "<font color=\"#ff0000\">Dying</font>";
 			if (player.hunger > 0 && player.hunger < 10) bodyStats += "<font color=\"#C00000\">Starving</font>";

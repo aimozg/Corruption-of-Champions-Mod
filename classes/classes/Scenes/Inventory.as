@@ -30,7 +30,6 @@ package classes.Scenes
 		private var itemStorage:Array;
 		private var pearlStorage:Array;
 		private var gearStorage:Array;
-		private var prisonStorage:Array;
 		private var callNext:Function;		//These are used so that we know what has to happen once the player finishes with an item
 		private var callOnAbandon:Function;	//They simplify dealing with items that have a sub menu. Set in inventoryMenu and in takeItem
 		private var currentItemSlot:ItemSlotClass;	//The slot previously occupied by the current item - only needed for stashes and items with a sub menu.
@@ -41,7 +40,6 @@ package classes.Scenes
 			itemStorage = [];
 			pearlStorage = [];
 			gearStorage = [];
-			prisonStorage = [];
 			saveSystem.linkToInventory(itemStorageDirectGet, pearlStorageDirectGet, gearStorageDirectGet);
 		}
 		
@@ -54,9 +52,7 @@ package classes.Scenes
 		public function pearlStorageDirectGet():Array { return pearlStorage; }
 		
 		public function gearStorageDirectGet():Array { return gearStorage; }
-		
-		public function prisonStorageDirectGet():Array { return prisonStorage; }
-		
+
 //		public function currentCallNext():Function { return callNext; }
 		
 		public function itemGoNext():void { if (callNext != null) doNext(callNext); }
@@ -95,7 +91,7 @@ package classes.Scenes
 				}
 			}
 
-if (!CoC.instance.inCombat && inDungeon == false && inRoomedDungeon == false && flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0) {
+			if (!CoC.instance.inCombat && inDungeon == false && inRoomedDungeon == false && flags[kFLAGS.IN_INGNAM] == 0) {
                 var miscNieve:Boolean = Holidays.nieveHoliday() && flags[kFLAGS.NIEVE_STAGE] > 0 && flags[kFLAGS.NIEVE_STAGE] < 5;
                 var miscHolli:Boolean         = flags[kFLAGS.FUCK_FLOWER_KILLED] == 0 && (flags[kFLAGS.FUCK_FLOWER_LEVEL] >= 1 && flags[kFLAGS.FUCK_FLOWER_LEVEL] < 4 || flags[kFLAGS.FLOWER_LEVEL] >= 1 && flags[kFLAGS.FLOWER_LEVEL] < 4);
 				if (miscNieve

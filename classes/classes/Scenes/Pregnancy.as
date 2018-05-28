@@ -1755,7 +1755,6 @@ public class Pregnancy extends NPCAwareContent {
         }
         //Give birth if it's time (to a cowgirl!)
         if (player.pregnancyIncubation == 1 && player.pregnancyType == PregnancyStore.PREGNANCY_MARBLE) {
-            if (prison.prisonLetter.deliverChildWhileInPrison()) return displayedUpdate;
             player.knockUpForce(); //Clear Pregnancy
             player.boostLactation(.01);
             if(player.vaginas.length == 0) {
@@ -1874,11 +1873,6 @@ public class Pregnancy extends NPCAwareContent {
         {
             if(flags[kFLAGS.AMILY_VISITING_URTA] == 1 || flags[kFLAGS.AMILY_VISITING_URTA] == 2) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
         }
-        //Amily failsafe - converts PC with pure babies to mouse babies if PC is in prison.
-        if (player.pregnancyIncubation == 1 && player.pregnancyType == PregnancyStore.PREGNANCY_AMILY)
-        {
-            if(prison.inPrison) player.knockUpForce(PregnancyStore.PREGNANCY_MOUSE, player.pregnancyIncubation);
-        }
         //Give birth if it's time (to an AMILY BITCH mouse!)
         if (player.pregnancyIncubation == 1 && player.pregnancyType == PregnancyStore.PREGNANCY_AMILY) {
             player.boostLactation(.01);
@@ -1907,7 +1901,7 @@ public class Pregnancy extends NPCAwareContent {
             }
 
             //Main Text here
-            if (player.pregnancyType == PregnancyStore.PREGNANCY_JOJO && (monk < 0 || flags[kFLAGS.JOJO_BIMBO_STATE] >= 3) && !prison.inPrison) {
+            if (player.pregnancyType == PregnancyStore.PREGNANCY_JOJO && (monk < 0 || flags[kFLAGS.JOJO_BIMBO_STATE] >= 3)) {
                 if (flags[kFLAGS.JOJO_BIMBO_STATE] >= 3) {
                     SceneLib.joyScene.playerGivesBirthToJoyBabies();
                     return true;
@@ -2020,7 +2014,6 @@ public class Pregnancy extends NPCAwareContent {
         }
         //Give birth to sirens.
         if (player.pregnancyType == PregnancyStore.PREGNANCY_MINERVA && player.pregnancyIncubation == 1) {
-            if (prison.prisonLetter.deliverChildWhileInPrison()) return displayedUpdate;
             if(player.vaginas.length == 0) {
                 EngineCore.outputText("\nYou feel a terrible pressure in your groin... then an incredible pain accompanied by the rending of flesh.  <b>You look down and behold a new vagina</b>.\n");
                 player.createVagina();
@@ -2035,7 +2028,6 @@ public class Pregnancy extends NPCAwareContent {
         }
         //Give birth to alraune seeds.
         if (player.pregnancyType == PregnancyStore.PREGNANCY_ALRAUNE && player.pregnancyIncubation == 1) {
-            //	if (prison.prisonLetter.deliverChildWhileInPrison()) return displayedUpdate;
             if(player.vaginas.length == 0) {
                 EngineCore.outputText("\nYou feel a terrible pressure in your groin... then an incredible pain accompanied by the rending of flesh.  <b>You look down and behold a new vagina</b>.\n");
                 player.createVagina();
@@ -2056,7 +2048,6 @@ public class Pregnancy extends NPCAwareContent {
         }
         //Give birth to behemoth.
         if (player.pregnancyType == PregnancyStore.PREGNANCY_BEHEMOTH && player.pregnancyIncubation == 1) {
-            if (prison.prisonLetter.deliverChildWhileInPrison()) return displayedUpdate;
             if(player.vaginas.length == 0) {
                 EngineCore.outputText("\nYou feel a terrible pressure in your groin... then an incredible pain accompanied by the rending of flesh.  <b>You look down and behold a new vagina</b>.\n");
                 player.createVagina();

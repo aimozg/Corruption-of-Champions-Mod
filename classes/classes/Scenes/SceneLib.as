@@ -186,8 +186,6 @@ public class SceneLib {
 
     public static var ingnam:Ingnam = new Ingnam();
 
-    public static var prison:Prison = new Prison();
-
     public static var kitsuneScene:KitsuneScene = new KitsuneScene();
 	
 	public static var anzu:AnzuScene = new AnzuScene();

@@ -164,9 +164,6 @@
 			player.wrath = 0;
 			player.mana = 100;
 			player.hunger = 80;
-			player.obey = 10;
-			player.esteem = 50;
-			player.will = 80;
 			player.lust = 15;
 			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) {
 				player.XP = flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP];

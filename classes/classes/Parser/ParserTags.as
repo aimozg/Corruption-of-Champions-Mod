@@ -118,15 +118,7 @@ public class ParserTags {
         "guy"                   : function ():* { return CoC.instance.player.mf("guy", "girl"); },
         "wings"                 : function ():* { return CoC.instance.player.wingsDescript(); },
         "tail"                  : function ():* { return CoC.instance.player.tailDescript(); },
-        "onetail"               : function ():* { return CoC.instance.player.oneTailDescript(); },
-
-        //Prisoner
-        "captortitle": function ():* { return SceneLib.prison.prisonCaptor.captorTitle; },
-        "captorname" : function ():* { return SceneLib.prison.prisonCaptor.captorName; },
-        "captorhe"   : function ():* { return SceneLib.prison.prisonCaptor.captorPronoun1; },
-        "captorhim"  : function ():* { return SceneLib.prison.prisonCaptor.captorPronoun2; },
-        "captorhis"  : function ():* { return SceneLib.prison.prisonCaptor.captorPronoun3;}
-
+        "onetail"               : function ():* { return CoC.instance.player.oneTailDescript(); }
     };
     /**
      * provides lookups for subject: "arian"
@@ -238,6 +230,7 @@ public class ParserTags {
         "his"                   : function ():* { return CoC.instance.monster.pronoun3; },
         "hisher"                : function ():* { return CoC.instance.monster.pronoun3; },
         "horns"                 : function ():* { return CoC.instance.monster.hornDescript(); },
+        "is"                    : function ():* { return CoC.instance.monster.isare(); },
         "leg"                   : function ():* { return CoC.instance.monster.leg(); },
         "legs"                  : function ():* { return CoC.instance.monster.legs(); },
         "lowergarment"          : function ():* { return CoC.instance.monster.lowerGarmentName; },
@@ -489,12 +482,7 @@ public class ParserTags {
         "islactating"   : function ():* { return (CoC.instance.player.lactationQ() > 0); },
         "true"          : function ():* { return true; },
         "false"         : function ():* { return false; },
-	    "silly"         : function ():* { return EngineCore.silly();},
-
-        //Prison
-        "esteem": function ():* { return CoC.instance.player.esteem; },
-        "obey"  : function ():* { return CoC.instance.player.obey; },
-        "will"  : function ():* { return CoC.instance.player.will;}
+	    "silly"         : function ():* { return EngineCore.silly();}
     };
 
     internal static function skinDescriptionFn(layer:String, noAdj:Boolean, noTone:Boolean):Function {

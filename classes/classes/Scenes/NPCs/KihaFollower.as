@@ -31,20 +31,20 @@ public class KihaFollower extends NPCAwareContent implements TimeAwareInterface
 			}
 			if (flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] > 1) {
 				if (flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] != 144) flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER]--;
-				if (flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] == 240 && (flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0)) {
+				if (flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] == 240 && flags[kFLAGS.IN_INGNAM] == 0) {
 					kihaBreastfeedingTime();
 					needNext = true;
 				}
-				else if (flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] == 144 && prison.inPrison) {
+				else if (flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] == 144) {
 					kihaTellsChildrenStory();
 					needNext = true;
 				}
-				else if (flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] == 72 && (flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0)) {
+				else if (flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] == 72 && flags[kFLAGS.IN_INGNAM] == 0) {
 					kihaTrainsHerKids();
 					needNext = true;
 				}
 			}
-			else if (flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] == 1 && (flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0)) {
+			else if (flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] == 1 && flags[kFLAGS.IN_INGNAM] == 0) {
 				kihaChildGraduationTime();
 				needNext = true;
 			}
@@ -2172,10 +2172,6 @@ private function lvlUpCheckup():void {
 			eggCounter += (player.virilityQ() / 10);
 			if (eggCounter > 10) eggCounter = 10;
 			//In prison? Letter for you!
-			if (prison.inPrison) {
-				prison.prisonLetter.letterFromKiha1(eggCounter);
-				return;
-			}
 			//Scene time!
 			outputText("\nA fierce howling scream splits the night air, jostling you from your rest. As you wonder just what the bloody hell that was, it echoes out again, coming unquestionably from Kiha's part of the camp. Looks like she's gone into labor...");
 			outputText("\n\n\"<i>Do something, Doofus!</i>\" Kiha yells. You grab Kiha by her clawed hand and assure her that you're here to assist her. ");
@@ -2223,10 +2219,6 @@ private function lvlUpCheckup():void {
 		
 		public function kihaTellsChildrenStory():void {
 			flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER]--;
-			if (prison.inPrison) {
-				prison.prisonLetter.letterFromKiha3();
-				return;
-			}
 			clearOutput();
 			outputText("Kiha walks over to you and says, \"<i>Could you sit with me please, [name]? I want to tell our " + (totalKihaChildren() == 1 ? "kid" : "kids") + " a story,</i>\" she says. You tell her that it would be a wonderful idea! Kiha escorts you to her nest.");
 			outputText("\n\nYou sit on the crudely made seat while Kiha sits on the other seat. ");
@@ -2258,10 +2250,6 @@ private function lvlUpCheckup():void {
 		
 		private function kihaChildGraduationTime():void {
 			flags[kFLAGS.KIHA_CHILD_MATURITY_COUNTER] = 0;
-			if (prison.inPrison) {
-				prison.prisonLetter.letterFromKiha4();
-				return;
-			}
 			var availableGenders:Array = [];
 			var selectedGender:int = 0;
 			if (flags[kFLAGS.KIHA_CHILDREN_BOYS] > 0) availableGenders.push("male");

@@ -18,14 +18,6 @@ public class Masturbation extends BaseContent {
 				meditate();
 				return;
 			}
-			if (prison.inPrison && !prison.prisonCanMasturbate()) {
-				doNext(playerMenu);
-				return;
-			}
-			if (prison.inPrison && flags[kFLAGS.PRISON_PUNISHMENT] == 2) {
-				prison.punishments.prisonCaptorPunishmentConfinementMasturbate();
-				return;
-			}
 			if (player.hasCock() && (player.cocks[0].cockType == CockTypesEnum.BEE) && !fappingItems(false)) {
 				clearOutput();
 				outputText("Although your bee cock aches you know that there's no way for you to get relief on your own.  When you touch your shaft or think about cumming images of the bee girl and the sound of her hypnotic buzzing fill your mind.");
@@ -206,9 +198,6 @@ public class Masturbation extends BaseContent {
 					if (player.hasCock() || player.hasVagina()) outputText("fondling your naughty bits as you do so and ");
 					outputText("casting seductive looks around, hoping someone or something is nearby to fuck you.\n\n");
 				}
-			}
-			else if (prison.inPrison) {
-				outputText("You walk to a secluded corner" + player.clothedOrNakedLower(", remove your [lowergarment]") + " and sit down. ");
 			}
 			//In cabin
 			else {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="Flex" version="4">
-  <component name="FlexBuildConfigurationManager" active="CoC-Mobile">
+  <component name="FlexBuildConfigurationManager" active="CoC-debug">
     <configurations>
       <configuration name="CoC-debug" main-class="classes.CoC" output-file="CoC-debug.swf" output-folder="$MODULE_DIR$">
         <dependencies target-player="11.1" framework-linkage="Merged">

@@ -121,10 +121,6 @@ CoC.instance.saves.saveGame(player.slotName);
 		SceneLib.ingnam.menuIngnam();
 		return;
 	}
-	if (prison.inPrison) { //Prison
-		SceneLib.prison.prisonRoom(true);
-		return;
-	}
 	//trace("Current fertility: " + player.totalFertility());
 	mainView.showMenuButton( MainView.MENU_NEW_MAIN );
 	if(player.hasStatusEffect(StatusEffects.PostAkbalSubmission)) {
@@ -362,7 +358,7 @@ CoC.instance.saves.saveGame(player.slotName);
 			return;
 		}
 	}
-	if(flags[kFLAGS.FUCK_FLOWER_KILLED] == 0 && flags[kFLAGS.CORRUPT_MARAE_FOLLOWUP_ENCOUNTER_STATE] > 0 && (flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0)) {
+	if(flags[kFLAGS.FUCK_FLOWER_KILLED] == 0 && flags[kFLAGS.CORRUPT_MARAE_FOLLOWUP_ENCOUNTER_STATE] > 0 && flags[kFLAGS.IN_INGNAM] == 0) {
 		if(flags[kFLAGS.FUCK_FLOWER_LEVEL] == 0 && flags[kFLAGS.FUCK_FLOWER_GROWTH_COUNTER] >= 8) {
 			holliScene.getASprout();
 			hideMenus();
@@ -385,7 +381,7 @@ CoC.instance.saves.saveGame(player.slotName);
 			return;
 		}
 	}
-	if(flags[kFLAGS.FUCK_FLOWER_KILLED] == 0 && flags[kFLAGS.MARAE_QUEST_COMPLETE] == 1 && (flags[kFLAGS.IN_PRISON] == 0 && flags[kFLAGS.IN_INGNAM] == 0)) {
+	if(flags[kFLAGS.FUCK_FLOWER_KILLED] == 0 && flags[kFLAGS.MARAE_QUEST_COMPLETE] == 1 && flags[kFLAGS.IN_INGNAM] == 0) {
 		if (flags[kFLAGS.FLOWER_LEVEL] == 0 && flags[kFLAGS.FUCK_FLOWER_GROWTH_COUNTER] >= 8) {
 			HolliPure.getASprout();
 			hideMenus();
@@ -1953,7 +1949,7 @@ public function rest():void {
 	if (player.hasPerk(PerkLib.ControlledBreath)) fatRecovery *= 1.1;
 	if (player.hasStatusEffect(StatusEffects.BathedInHotSpring)) fatRecovery *= 1.2;
 	if (flags[kFLAGS.AYANE_FOLLOWER] >= 2) fatRecovery *= 3;
-	if (flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && !prison.inPrison && !ingnam.inIngnam)
+	if (flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && !ingnam.inIngnam)
 		multiplier += 0.5;
 	//Marble withdrawal
 	if(player.hasStatusEffect(StatusEffects.MarbleWithdrawl))
@@ -1979,7 +1975,7 @@ public function rest():void {
 			fatigue(timeQ * -fatRecovery * multiplier);
 		}
 		
-		if (flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && !prison.inPrison && !ingnam.inIngnam)
+		if (flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED] > 0 && !ingnam.inIngnam)
 		{
 			if (timeQ != 1) outputText("You head into your cabin to rest. You lie down on your bed to rest for " + num2Text(timeQ) + " hours.\n");
 			else outputText("You head into your cabin to rest. You lie down on your bed to rest for an hour.\n");
@@ -2098,7 +2094,7 @@ public function doSleep(clrScreen:Boolean = true):void {
 		if(model.time.hours == 3) timeQ = 3;
 		if(model.time.hours == 4) timeQ = 2;
 		if(model.time.hours == 5) timeQ = 1;
-		if (flags[kFLAGS.BENOIT_CLOCK_ALARM] > 0 && flags[kFLAGS.IN_PRISON] == 0) {
+		if (flags[kFLAGS.BENOIT_CLOCK_ALARM] > 0) {
 			timeQ += (flags[kFLAGS.BENOIT_CLOCK_ALARM] - 6);
 		}
 		//Autosave stuff		
@@ -2110,14 +2106,6 @@ CoC.instance.saves.saveGame(player.slotName);
         }
 		//Clear screen
 		if (clrScreen) clearOutput();
-		if (prison.inPrison) {
-			outputText("You curl up on a slab, planning to sleep for " + num2Text(timeQ) + " hour");
-			if (timeQ > 1) outputText("s");
-			outputText(". ");
-			sleepRecovery(true);
-			goNext(timeQ, true);
-			return;
-		}
 		/******************************************************************/
 		/*       ONE TIME SPECIAL EVENTS                                  */
 		/******************************************************************/
@@ -2487,7 +2475,6 @@ public function placesCount():int {
 	if (flags[kFLAGS.MET_MINERVA] >= 4) places++;
 	if (flags[kFLAGS.KITSUNE_SHRINE_UNLOCKED] > 0) places++;
 	if (flags[kFLAGS.FOUND_TEMPLE_OF_THE_DIVINE] > 0) places++;
-	if (flags[kFLAGS.PRISON_CAPTURE_COUNTER] > 0) places++;
 	return places;
 }
 
@@ -2529,7 +2516,6 @@ private function placesPage2():void {
 	if (flags[kFLAGS.MET_MINERVA] >= 4) addButton(6, "Oasis Tower", SceneLib.highMountains.minervaScene.encounterMinerva).hint("Visit the ruined tower in the high mountains where Minerva resides.");
 	if (flags[kFLAGS.FOUND_TEMPLE_OF_THE_DIVINE] > 0) addButton(7, "Temple", templeofdivine.repeatvisitintro).hint("Visit the temple in the high mountains where Sapphire resides.");
 	
-//	if (flags[kFLAGS.PRISON_CAPTURE_COUNTER] > 0) addButton(12, "Prison", CoC.instance.prison.prisonIntro, false, null, null, "Return to the prison and continue your life as Elly's slave.");
 	if (debug) addButton(13, "Ingnam", SceneLib.ingnam.returnToIngnam).hint("Return to Ingnam for debugging purposes. Night-time event weirdness might occur. You have been warned!");
 	addButton(4, "Previous", placesToPage1);
 	addButton(14, "Back", playerMenu);
