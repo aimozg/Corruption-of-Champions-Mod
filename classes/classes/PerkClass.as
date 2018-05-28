@@ -30,9 +30,9 @@ public class PerkClass
 		public function buffHost(host:Creature,stat:String,amount:Number):void {
 			var s:IStat = host.stats[stat];
 			if (s is PrimaryStat) {
-				(s as PrimaryStat).bonus.addOrIncreaseEffect(ptype.id,amount,this);
+				(s as PrimaryStat).bonus.addOrIncreaseEffect(ptype.id,amount,{save:false,text:ptype.name});
 			} else if (s is BaseStat) {
-				(s as BaseStat).addOrIncreaseEffect(ptype.id,amount,this);
+				(s as BaseStat).addOrIncreaseEffect(ptype.id,amount,{save:false,text:ptype.name});
 			} else {
 				trace("/!\\ buffHost("+stat+", "+amount+") in "+ptype.id);
 			}

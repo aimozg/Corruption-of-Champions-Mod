@@ -234,16 +234,16 @@ public class StatsView extends Block {
 				var text:String            = '';
 				text += '<b>Base value:</b> ' + Utils.floor(stat.core.value, 1) + '\n';
 				var effects:/*Array*/Array = stat.mult.listEffects();
+				var hasHidden:Boolean = false;
 				for each(var effect:Array in effects) {
 					var value:Number = effect[0];
 					if (value >= 0.0 && value < 0.01) continue;
-					var s:String;
-					if (effect[1] == 'race') {
-						s = 'Racial bonus'
-					} else {
-						// cause unknown, reply with tag
-						s = effect[1];
+					if (!effect[2].show) {
+						hasHidden = true;
+						continue;
 					}
+					var s:String;
+					s = effect[2].text || Utils.capitalizeFirstLetter(effect[1]);
 					text += '<b>' + s + ':</b> ';
 					text += (value >= 0 ? '+' : '') + Utils.floor(value * 100) + '%';
 					text += '\n';
@@ -252,14 +252,14 @@ public class StatsView extends Block {
 				for each(effect in effects) {
 					value = effect[0];
 					if (value >= 0.0 && value < 0.1) continue;
-					if (effect[1] == 'drain') {
-						s = 'Drain'
-					} else {
-						// cause unknown, reply with tag
-						s = Utils.capitalizeFirstLetter(effect[1]);
+					if (!effect[2].show) {
+						hasHidden = true;
+						continue;
 					}
+					s = effect[2].text || Utils.capitalizeFirstLetter(effect[1]);
 					text += '<b>' + s + ':</b> ' + (value >= 0 ? '+' : '') + Utils.floor(value, 1) + '\n';
 				}
+				if (hasHidden) text += '<b>Unknown Sources:</b> ±??\n';
 				text += '\n';
 				text += '<b>Total:</b> ' + Utils.floor(stat.value, 1);
 				mainView.toolTipView.header = bar.nameLabel.text.replace(':', '') + ' ' +
@@ -375,9 +375,9 @@ public class StatsView extends Block {
 			e.maxValue = stat.max;
 			e.value = stat.value;
 			if (stat.bonus.value > 0) {
-				e.valueLabel.textColor = Color.fromRgb(0x00,0xff,0x00);
+				e.valueLabel.textColor = Color.fromRgb(0x10,0x8f,0x10);
 			} else if (stat.bonus.value < 0) {
-				e.valueLabel.textColor = Color.fromRgb(0xff,0x00,0x00);
+				e.valueLabel.textColor = Color.fromRgb(0xaf,0x10,0x10);
 			} else {
 				e.valueLabel.textColor = e.valueLabel.defaultTextFormat.color as uint;
 			}

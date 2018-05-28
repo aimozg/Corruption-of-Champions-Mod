@@ -76,12 +76,12 @@ public class StatusEffectClass extends Utils
 	/**
 	 * Attach a (de)buff to this status effect, will be removed with it
 	 */
-	public function buffHost(stat:String,amount:Number):void {
+	public function buffHost(stat:String,amount:Number,text:String=null,show:Boolean=true):void {
 		var s:IStat = host.stats[stat];
 		if (s is PrimaryStat) {
-			(s as PrimaryStat).bonus.addOrIncreaseEffect(stype.id,amount,this);
+			(s as PrimaryStat).bonus.addOrIncreaseEffect(stype.id,amount,{save:true,text:text||stype.id,show:show});
 		} else if (s is BaseStat) {
-			(s as BaseStat).addOrIncreaseEffect(stype.id,amount,this);
+			(s as BaseStat).addOrIncreaseEffect(stype.id,amount,{save:true,text:text||stype.id,show:show});
 		} else {
 			trace("/!\\ buffHost("+stat+", "+amount+") in "+stype.id);
 		}
