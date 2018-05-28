@@ -98,9 +98,10 @@ public class GoblinShaman extends Goblin
 			else if (spellChooser == 5 && fatigue <= (100 - spellCostMight)) {
 				outputText("She flushes, drawing on her body's desires to empower her muscles and toughen her up.");
 				outputText("The rush of success and power flows through her body.  She feels like she can do anything!");
-				createStatusEffect(StatusEffects.Might, 20 * spellMultiplier(), 20 * spellMultiplier(), 0, 0);
-				str += 20 * spellMultiplier();
-				tou += 20 * spellMultiplier();
+				var mightPower:Number = 20 * spellMultiplier();
+				var sec:StatusEffectClass = createStatusEffect(StatusEffects.Might, mightPower, mightPower, 0, 0);
+				sec.buffHost('str', mightPower);
+				sec.buffHost('tou', mightPower);
 				fatigue += spellCostMight;
 			}
 		}

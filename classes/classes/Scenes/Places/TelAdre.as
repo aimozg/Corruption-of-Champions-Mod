@@ -1398,20 +1398,6 @@ private function goJogging():void {
 		addButton(2, "Inferno", restaurantSpicing,"inferno");
 	}
 	private function ResetFoodBuffStats():void {
-		if (player.statusEffectv1(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) {
-			var tempStrength:int = player.statusEffectv1(StatusEffects.ShiraOfTheEastFoodBuff2);
-			dynStats("str", -tempStrength);
-		}
-		if (player.statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) {
-			var tempSpeed:int = player.statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2);
-			dynStats("spe", -tempSpeed);
-		}
-		if (player.statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) {
-			var tempIntelligence:int = player.statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2);
-			dynStats("inte", -tempIntelligence);
-		}
-		var tempToughness:int = player.statusEffectv4(StatusEffects.ShiraOfTheEastFoodBuff2);
-		dynStats("tou", -tempToughness);
 		player.removeStatusEffect(StatusEffects.ShiraOfTheEastFoodBuff2);
 	}
 	private function restaurantSpicing(level:String):void{
@@ -1425,20 +1411,17 @@ private function goJogging():void {
 			case "inferno":outputText("\n\nWow, the meal is so spicy you almost breathe smoke and fire. You gulp down several glasses of water but still start to sweat as your inner temperature rises. It’s likely you won’t have much to fear of the cold today.");break;
 		}
 		outputText("\n\nRegardless the food is excellent and you leave in high spirits for the rest of the day.");
-		if (player.statusEffectv1(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) {
-			var tempStrength:int = player.statusEffectv1(StatusEffects.ShiraOfTheEastFoodBuff2);
-			dynStats("str", tempStrength);
+		var sec:StatusEffectClass = player.statusEffectByType(StatusEffects.ShiraOfTheEastFoodBuff2);
+		if (sec.value1 >= 1) {
+			sec.buffHost("str", sec.value1);
 		}
-		if (player.statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) {
-			var tempSpeed:int = player.statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2);
-			dynStats("spe", tempSpeed);
+		if (sec.value2 >= 1) {
+			sec.buffHost("spe", sec.value2);
 		}
-		if (player.statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) {
-			var tempIntelligence:int = player.statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2);
-			dynStats("inte", tempIntelligence);
+		if (sec.value3 >= 1) {
+			sec.buffHost("int", sec.value3);
 		}
-		var tempToughness:int = player.statusEffectv4(StatusEffects.ShiraOfTheEastFoodBuff2);
-		dynStats("tou", tempToughness);
+		sec.buffHost("tou", sec.value4);
 		player.gems -= 5;
 		statScreenRefresh();
 		doNext(camp.returnToCampUseOneHour);

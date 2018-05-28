@@ -157,8 +157,8 @@ package classes.Scenes.Places.Boat
 				this.bonusHP += 5000;
 				if (game.flags[kFLAGS.MINERVA_TOWER_TREE] > 0) {
 					this.armorDef = 2000;
-					this.str += 120;
-					this.tou += 120;
+					this.strStat.core.value += 120;
+					this.touStat.core.value += 120;
 					this.bonusHP += 4000;
 					this.additionalXP = 6000;
 					this.createPerk(PerkLib.MonsterRegeneration, 5, 0, 0, 0);

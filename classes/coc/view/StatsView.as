@@ -2,7 +2,13 @@ package coc.view {
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
 import classes.Player;
+import classes.Scenes.SceneLib;
+import classes.Stats.BaseStat;
+import classes.Stats.IStat;
+import classes.Stats.PrimaryStat;
 import classes.internals.Utils;
+
+import flash.events.MouseEvent;
 
 import flash.text.TextField;
 import flash.text.TextFormat;
@@ -61,11 +67,11 @@ public class StatsView extends Block {
 	private var xpBar:StatBar;
 	private var gemsBar:StatBar;
 
-	private var allStats:Array;
+	private var allStats:/*StatBar*/Array;
 
+	private var mainView:MainView;
 
-
-	public function StatsView(mainView:MainView/*, model:GameModel*/) {
+	public function StatsView(mainView:MainView) {
 		super({
 			x    : MainView.STATBAR_X,
 			y    : MainView.STATBAR_Y,
@@ -79,6 +85,7 @@ public class StatsView extends Block {
 				gap: 1
 			}
 		});
+		this.mainView = mainView;
 		StatBar.setDefaultOptions({
 			barColor: '#600000',
 			width: innerWidth
@@ -95,12 +102,42 @@ public class StatsView extends Block {
 			text: 'Core stats:',
 			defaultTextFormat: LABEL_FORMAT
 		},{before:1});
-		addElement(strBar = new StatBar({statName: "Strength:"}));
-		addElement(touBar = new StatBar({statName: "Toughness:"}));
-		addElement(speBar = new StatBar({statName: "Speed:"}));
-		addElement(intBar = new StatBar({statName: "Intelligence:"}));
-		addElement(wisBar = new StatBar({statName: "Wisdom:"}));
-		addElement(libBar = new StatBar({statName: "Libido:"}));
+		addElement(strBar = new StatBar({
+			statName: "Strength:",
+			dataset: { statname: 'str' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
+		addElement(touBar = new StatBar({
+			statName: "Toughness:",
+			dataset: { statname: 'tou' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
+		addElement(speBar = new StatBar({
+			statName: "Speed:",
+			dataset: { statname: 'spe' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
+		addElement(intBar = new StatBar({
+			statName: "Intelligence:",
+			dataset: { statname: 'int' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
+		addElement(wisBar = new StatBar({
+			statName: "Wisdom:",
+			dataset: { statname: 'wis' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
+		addElement(libBar = new StatBar({
+			statName: "Libido:",
+			dataset: { statname: 'lib' },
+			onrollOver: hoverStat,
+			onrollOut: hoverStat
+		}));
 		addElement(senBar = new StatBar({statName: "Sensitivity:"}));
 		addElement(corBar = new StatBar({statName: "Corruption:"}));
 		combatStatsText = addTextField({
@@ -168,7 +205,59 @@ public class StatsView extends Block {
 			if (e) allStats.push(e);
 		}
 	}
-
+	
+	private function hoverStat(event:MouseEvent):void {
+		var player:Player = CoC.instance.player;
+		switch (event.type) {
+			case MouseEvent.ROLL_OVER:
+				var bar:StatBar = event.target as StatBar;
+				if (!bar) return;
+				var statname:String  = bar.dataset.statname;
+				var stat:PrimaryStat = player.stats[statname];
+				if (!stat) return;
+				var text:String            = '';
+				text += '<b>Base value:</b> ' + Utils.floor(stat.core.value, 1) + '\n';
+				var effects:/*Array*/Array = stat.mult.listEffects();
+				var hasHidden:Boolean = false;
+				for each(var effect:Array in effects) {
+					var value:Number = effect[0];
+					if (value >= 0.0 && value < 0.01) continue;
+					if (!effect[2].show) {
+						hasHidden = true;
+						continue;
+					}
+					var s:String;
+					s = effect[2].text || Utils.capitalizeFirstLetter(effect[1]);
+					text += '<b>' + s + ':</b> ';
+					text += (value >= 0 ? '+' : '') + Utils.floor(value * 100) + '%';
+					text += '\n';
+				}
+				effects = stat.bonus.listEffects();
+				for each(effect in effects) {
+					value = effect[0];
+					if (value >= 0.0 && value < 0.1) continue;
+					if (!effect[2].show) {
+						hasHidden = true;
+						continue;
+					}
+					s = effect[2].text || Utils.capitalizeFirstLetter(effect[1]);
+					text += '<b>' + s + ':</b> ' + (value >= 0 ? '+' : '') + Utils.floor(value, 1) + '\n';
+				}
+				if (hasHidden) text += '<b>Unknown Sources:</b> ±??\n';
+				text += '\n';
+				text += '<b>Total:</b> ' + Utils.floor(stat.value, 1);
+				mainView.toolTipView.header = bar.nameLabel.text.replace(':', '') + ' ' +
+											  Utils.floor(stat.value) + ' / ' +
+											  Utils.floor(stat.max);
+				mainView.toolTipView.text   = text;
+				
+				mainView.toolTipView.showForElement(bar);
+				break;
+			case MouseEvent.ROLL_OUT:
+				mainView.toolTipView.hide();
+				break;
+		}
+	}
 
 	public function show():void {
 		this.visible = true;
@@ -258,18 +347,19 @@ public class StatsView extends Block {
 		var player:Player            = game.player;
 		var maxes:Object      = player.getAllMaxStats();
 		nameText.htmlText     = "<b>Name: " + player.short + "</b>";
-		strBar.maxValue       = maxes.str;
-		strBar.value          = player.str;
-		touBar.maxValue       = maxes.tou;
-		touBar.value          = player.tou;
-		speBar.maxValue       = maxes.spe;
-		speBar.value          = player.spe;
-		intBar.maxValue       = maxes.inte;
-		intBar.value          = player.inte;
-		wisBar.maxValue       = maxes.wis;
-		wisBar.value          = player.wis;
-		libBar.maxValue       = maxes.lib;
-		libBar.value          = player.lib;
+		for each(var e:StatBar in allStats) {
+			var stat:PrimaryStat = player.stats[e.dataset.statname] as PrimaryStat;
+			if (!stat) continue;
+			e.maxValue = stat.max;
+			e.value = stat.value;
+			if (stat.bonus.value > 0) {
+				e.valueLabel.textColor = Color.fromRgb(0x10,0x8f,0x10);
+			} else if (stat.bonus.value < 0) {
+				e.valueLabel.textColor = Color.fromRgb(0xaf,0x10,0x10);
+			} else {
+				e.valueLabel.textColor = e.valueLabel.defaultTextFormat.color as uint;
+			}
+		}
 		senBar.maxValue       = maxes.sens;
 		senBar.value          = player.sens;
 		corBar.value          = player.cor;
@@ -288,11 +378,13 @@ public class StatsView extends Block {
 		kiBar.value           = player.ki;
 		hungerBar.maxValue    = player.maxHunger();
 		hungerBar.value       = player.hunger;
+		/* okay that needs to be done properly (blinking?)
 		if (player.hunger < 25) {
 			hungerBar.statName = '/!\\ Satiety:';
 		} else {
 			hungerBar.statName = 'Satiety:';
 		}
+		*/
 		advancementText.htmlText = "<b>Advancement</b>";
 		levelBar.value           = player.level;
 		if (player.level < CoC.instance.levelCap) {

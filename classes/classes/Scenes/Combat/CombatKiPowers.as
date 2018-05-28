@@ -11,7 +11,8 @@ package classes.Scenes.Combat {
 	import classes.Scenes.API.FnHelpers;
 	import classes.Scenes.SceneLib;
 	import classes.StatusEffectClass;
-	import classes.StatusEffects;
+	import classes.StatusEffectClass;
+import classes.StatusEffects;
 
 	import coc.view.ButtonDataList;
 
@@ -187,11 +188,9 @@ package classes.Scenes.Combat {
 		TranceBoost = Math.max(10, TranceBoost);
 		TranceBoost = FnHelpers.FN.logScale(TranceBoost,TranceABC,10);
 		TranceBoost = Math.round(TranceBoost);
-		player.createStatusEffect(StatusEffects.TranceTransformation, TranceBoost, 0, 0, 0);
-		mainView.statsView.showStatUp('str');
-		mainView.statsView.showStatUp('tou');
-		player.str += TranceBoost;
-		player.tou += TranceBoost;
+		var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.TranceTransformation, TranceBoost, 0, 0, 0);
+		sec.buffHost('str',TranceBoost);
+		sec.buffHost('tou',TranceBoost);
 		statScreenRefresh();
 		enemyAI();
 	}
@@ -199,8 +198,6 @@ package classes.Scenes.Combat {
 	public function DeactivateTranceTransformation():void {
 		clearOutput();
 		outputText("You disrupt the flow of power within you, softly falling to the ground as the crystal sheathing your [skin] dissipates into nothingness.");
-		player.dynStats("str", -player.statusEffectv1(StatusEffects.TranceTransformation));
-		player.dynStats("tou", -player.statusEffectv1(StatusEffects.TranceTransformation));
 		player.removeStatusEffect(StatusEffects.TranceTransformation);
 		enemyAI();
 	}
@@ -213,8 +210,7 @@ package classes.Scenes.Combat {
 		var status:StatusEffectClass = player.createOrFindStatusEffect(StatusEffects.BeatOfWar);
 		var BeatOfWarBoost:int = Math.max(1, (player.str - status.value1) * 0.15);
 		status.value1 += BeatOfWarBoost;
-		mainView.statsView.showStatUp('str');
-		player.str += BeatOfWarBoost;
+		status.buffHost('str',BeatOfWarBoost);
 		statScreenRefresh();
 		outputText("You momentarily attune yourself to the song of the mother tree, and prepare to add a note of your own to it’s rhythm. You feel the beat shift the song’s tempo slightly, taking a twist towards the ominous. This attunement augments your strength.\n\n");
 		combat.attack();

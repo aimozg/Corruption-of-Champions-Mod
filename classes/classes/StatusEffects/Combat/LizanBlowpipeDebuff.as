@@ -15,14 +15,16 @@ public class LizanBlowpipeDebuff extends CombatBuff {
 		if (host.cor > 50 + (playerHost ? playerHost.corruptionTolerance() : 0)) {
 			power = 10;
 		}
-		buffHost('str', -power, 'spe', -power);
+		buffHost('str', -power);
+		buffHost('spe', -power);
 	}
 	public function debuffTouSens():void {
 		var power:Number = 5;
 		if (host.cor > 50 + (playerHost ? playerHost.corruptionTolerance() : 0)) {
 			power = 10;
 		}
-		buffHost('tou', -power, 'sens', power);
+		buffHost('tou', -power);
+		buffHost('sens', power);
 	}
 }
 

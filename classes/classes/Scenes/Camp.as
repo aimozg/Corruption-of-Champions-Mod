@@ -11,6 +11,9 @@ import classes.Scenes.Areas.HighMountains.TempleOfTheDivine;
 import classes.Scenes.Camp.*;
 import classes.Scenes.Dungeons.*;
 import classes.Scenes.NPCs.*;
+import classes.Stats.BaseStat;
+import classes.Stats.IStat;
+import classes.Stats.PrimaryStat;
 import classes.lists.Gender;
 
 import coc.view.ButtonDataList;
@@ -148,22 +151,6 @@ CoC.instance.saves.saveGame(player.slotName);
 		return;
 	}
 	fixFlags();
-	if(player.hasStatusEffect(StatusEffects.Might)) {
-		if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) player.dynStats("int", -player.statusEffectv1(StatusEffects.Might));
-		else player.dynStats("str", -player.statusEffectv1(StatusEffects.Might));
-		player.dynStats("tou", -player.statusEffectv2(StatusEffects.Might));
-		player.removeStatusEffect(StatusEffects.Might);
-	}
-	if(player.hasStatusEffect(StatusEffects.Blink)) {
-		player.dynStats("spe", -player.statusEffectv1(StatusEffects.Blink));
-		player.removeStatusEffect(StatusEffects.Blink);
-	}
-	if(player.hasStatusEffect(StatusEffects.ChargeWeapon)) {
-		player.removeStatusEffect(StatusEffects.ChargeWeapon);
-	}
-	if(player.hasStatusEffect(StatusEffects.ChargeArmor)) {
-		player.removeStatusEffect(StatusEffects.ChargeArmor);
-	}
 	if(player.hasItem(useables.SOULGEM, 1) && player.hasStatusEffect(StatusEffects.CampRathazul) && flags[kFLAGS.DEN_OF_DESIRE_QUEST] < 1) {
 		campUniqueScenes.playsRathazulAndSoulgemScene();
 		return;
@@ -2326,6 +2313,16 @@ public function sleepRecovery(display:Boolean = false):void {
 	HPChange(timeQ * hpRecovery * multiplier, display);
 	//fatigue
 	fatigue(-(timeQ * fatRecovery * multiplier));
+	for each(var istat:IStat in player.stats) {
+		var stat:PrimaryStat = istat as PrimaryStat;
+		if (!stat) continue;
+		var drain:Number = stat.bonus.valueOfEffect('drain');
+		if (drain < 0) {
+			// Recover 10% of stat drained, at least 1
+			var delta:Number = Math.max(1, -drain/10);
+			player.drainStat(stat.name, -delta);
+		}
+	}
 }
 
 //Bad End if your balls are too big. Only happens in Realistic Mode.
@@ -2971,7 +2968,13 @@ public function setLevelButton(allowAutoLevelTransition:Boolean):Boolean {
 		}
 		mainView.showMenuButton( MainView.MENU_LEVEL );
 		mainView.statsView.showLevelUp();
-		if (player.str >= player.getMaxStats("str") && player.tou >= player.getMaxStats("tou") && player.inte >= player.getMaxStats("int") && player.spe >= player.getMaxStats("spe") && (player.perkPoints <= 0 || PerkTree.availablePerks(CoC.instance.player).length <= 0) && (player.XP < player.requiredXP() || player.level >= CoC.instance.levelCap)) {
+		if (player.strStat.core.value >= player.strStat.core.max &&
+			player.touStat.core.value >= player.touStat.core.max &&
+			player.intStat.core.value >= player.intStat.core.max &&
+			player.speStat.core.value >= player.speStat.core.max &&
+			player.wisStat.core.value >= player.wisStat.core.max &&
+			player.libStat.core.value >= player.libStat.core.max &&
+			(player.perkPoints <= 0 || PerkTree.availablePerks(CoC.instance.player).length <= 0) && (player.XP < player.requiredXP() || player.level >= CoC.instance.levelCap)) {
 			mainView.statsView.hideLevelUp();
 		}
 	}

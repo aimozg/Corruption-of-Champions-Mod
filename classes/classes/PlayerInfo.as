@@ -5,6 +5,7 @@ import classes.BodyParts.Tail;
 import classes.GlobalFlags.*;
 import classes.Scenes.NPCs.IsabellaScene;
 import classes.Scenes.SceneLib;
+import classes.Stats.PrimaryStat;
 import classes.StatusEffects.VampireThirstEffect;
 
 import coc.view.MainView;
@@ -715,43 +716,41 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 
 //Attribute menu
 	private function attributeMenu():void {
-		var maxes:Object = player.getAllMaxStats();
 		clearOutput();
 		outputText("You have <b>" + (player.statPoints) + "</b> left to spend.\n\n");
+		
+		function statLine(stat:PrimaryStat,temp:int):String {
+			var s:String     = "";
+			var core:Number = stat.core.value;
+			var mult100:Number = stat.mult100;
+			if (core >= stat.core.max) {
+				s += floor(core)+" (Maximum)";
+				return s;
+			}
+			if (mult100 != 100) s += "(";
+			s += floor(core)+" + <b>"+temp+"</b>";
+			if (mult100 != 100) s += ") × "+mult100+"%";
+			s += " → ";
+			s += floor((core+temp)*stat.mult.value);
+			return s;
+		}
 
-		outputText("Strength: ");
-		if (player.str < maxes.str) outputText("" + Math.floor(player.str) + " + <b>" + player.tempStr + "</b> → " + Math.floor(player.str + player.tempStr) + "\n");
-		else outputText("" + Math.floor(player.str) + " (Maximum)\n");
-
-		outputText("Toughness: ");
-		if (player.tou < maxes.tou) outputText("" + Math.floor(player.tou) + " + <b>" + player.tempTou + "</b> → " + Math.floor(player.tou + player.tempTou) + "\n");
-		else outputText("" + Math.floor(player.tou) + " (Maximum)\n");
-
-		outputText("Speed: ");
-		if (player.spe < maxes.spe) outputText("" + Math.floor(player.spe) + " + <b>" + player.tempSpe + "</b> → " + Math.floor(player.spe + player.tempSpe) + "\n");
-		else outputText("" + Math.floor(player.spe) + " (Maximum)\n");
-
-		outputText("Intelligence: ");
-		if (player.inte < maxes.inte) outputText("" + Math.floor(player.inte) + " + <b>" + player.tempInt + "</b> → " + Math.floor(player.inte + player.tempInt) + "\n");
-		else outputText("" + Math.floor(player.inte) + " (Maximum)\n");
-
-		outputText("Wisdom: ");
-		if (player.wis < maxes.wis) outputText("" + Math.floor(player.wis) + " + <b>" + player.tempWis + "</b> → " + Math.floor(player.wis + player.tempWis) + "\n");
-		else outputText("" + Math.floor(player.wis) + " (Maximum)\n");
-
-		outputText("Libido: ");
-		if (player.lib < maxes.lib) outputText("" + Math.floor(player.lib) + " + <b>" + player.tempLib + "</b> → " + Math.floor(player.lib + player.tempLib) + "\n");
-		else outputText("" + Math.floor(player.lib) + " (Maximum)\n");
+		outputText("Strength: "+statLine(player.strStat,player.tempStr)+"\n");
+		outputText("Toughness: "+statLine(player.touStat,player.tempTou)+"\n");
+		outputText("Speed: "+statLine(player.speStat,player.tempSpe)+"\n");
+		outputText("Intelligence: "+statLine(player.intStat,player.tempInt)+"\n");
+		outputText("Wisdom: "+statLine(player.wisStat,player.tempWis)+"\n");
+		outputText("Libido: "+statLine(player.libStat,player.tempLib)+"\n");
 
 		menu();
 		//Add
 		if (player.statPoints > 0) {
-			if ((player.str + player.tempStr) < maxes.str) addButton(0, "Add STR", addAttribute, "str", null, null, "Add 1 point (5 points with Shift) to Strength.", "Add Strength");
-			if ((player.tou + player.tempTou) < maxes.tou) addButton(1, "Add TOU", addAttribute, "tou", null, null, "Add 1 point (5 points with Shift) to Toughness.", "Add Toughness");
-			if ((player.spe + player.tempSpe) < maxes.spe) addButton(2, "Add SPE", addAttribute, "spe", null, null, "Add 1 point (5 points with Shift) to Speed.", "Add Speed");
-			if ((player.inte + player.tempInt) < maxes.inte) addButton(3, "Add INT", addAttribute, "int", null, null, "Add 1 point (5 points with Shift) to Intelligence.", "Add Intelligence");
-			if ((player.wis + player.tempWis) < maxes.wis) addButton(4, "Add WIS", addAttribute, "wis", null, null, "Add 1 point (5 points with Shift) to Wisdom.", "Add Wisdom");
-			if ((player.lib + player.tempLib) < maxes.lib) addButton(10, "Add LIB", addAttribute, "lib", null, null, "Add 1 point (5 points with Shift) to Libido.", "Add Libido");
+			if ((player.strStat.core.value + player.tempStr) < player.strStat.core.max) addButton(0, "Add STR", addAttribute, "str", null, null, "Add 1 point (5 points with Shift) to Strength.", "Add Strength");
+			if ((player.touStat.core.value + player.tempTou) < player.touStat.core.max) addButton(1, "Add TOU", addAttribute, "tou", null, null, "Add 1 point (5 points with Shift) to Toughness.", "Add Toughness");
+			if ((player.speStat.core.value + player.tempSpe) < player.speStat.core.max) addButton(2, "Add SPE", addAttribute, "spe", null, null, "Add 1 point (5 points with Shift) to Speed.", "Add Speed");
+			if ((player.intStat.core.value + player.tempInt) < player.intStat.core.max) addButton(3, "Add INT", addAttribute, "int", null, null, "Add 1 point (5 points with Shift) to Intelligence.", "Add Intelligence");
+			if ((player.wisStat.core.value + player.tempWis) < player.wisStat.core.max) addButton(4, "Add WIS", addAttribute, "wis", null, null, "Add 1 point (5 points with Shift) to Wisdom.", "Add Wisdom");
+			if ((player.libStat.core.value + player.tempLib) < player.libStat.core.max) addButton(10, "Add LIB", addAttribute, "lib", null, null, "Add 1 point (5 points with Shift) to Libido.", "Add Libido");
 		}
 		//Subtract
 		if (player.tempStr > 0) addButton(5, "Sub STR", subtractAttribute, "str", null, null, "Subtract 1 point (5 points with Shift) from Strength.", "Subtract Strength");
@@ -766,47 +765,41 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 	}
 
 	private function addAttribute(attribute:String):void {
-		var maxes:Object = player.getAllMaxStats();
 		var n:int=1;
 		var m:int;
 		if (flags[kFLAGS.SHIFT_KEY_DOWN]) n = 5;
 		if (n > player.statPoints) n = player.statPoints;
 		switch (attribute) {
 			case "str":
-				m = maxes.str - int(player.str + player.tempStr);
+				m = player.strStat.core.max - int(player.strStat.core.value + player.tempStr);
 				if (m < n) n = m;
 				player.tempStr+=n;
 				break;
 			case "tou":
-				m = maxes.tou - int(player.tou + player.tempTou);
+				m = player.touStat.core.max - int(player.touStat.core.value + player.tempTou);
 				if (m < n) n = m;
 				player.tempTou+=n;
 				break;
 			case "spe":
-				m = maxes.spe - int(player.spe + player.tempSpe);
+				m = player.speStat.core.max - int(player.speStat.core.value + player.tempSpe);
 				if (m < n) n = m;
 				player.tempSpe+=n;
 				break;
 			case "int":
-				m = maxes.inte - int(player.inte + player.tempInt);
+				m = player.intStat.core.max - int(player.intStat.core.value + player.tempInt);
 				if (m < n) n = m;
 				player.tempInt+=n;
 				break;
 			case "wis":
-				m = maxes.wis - int(player.wis + player.tempWis);
+				m = player.wisStat.core.max - int(player.wisStat.core.value + player.tempWis);
 				if (m < n) n = m;
 				player.tempWis+=n;
 				break;
 			case "lib":
-				m = maxes.lib - int(player.lib + player.tempLib);
+				m = player.libStat.core.max - int(player.libStat.core.value + player.tempLib);
 				if (m < n) n = m;
 				player.tempLib+=n;
 				break;
-		//	case "sen":
-		//		m = maxes.sens - int(player.sens + player.tempSens);
-		//		if (m < n) n = m;
-		//		player.tempSens+=n;
-		//		break;
 			default:
 				n=0; //Failsafe
 		}
@@ -894,12 +887,12 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 		if (player.tempStr + player.tempTou + player.tempSpe + player.tempInt + player.tempWis + player.tempLib <= 0 || player.statPoints > 0) {
 			outputText("\nYou may allocate your remaining stat points later.");
 		}
-		player.str += player.tempStr;
-		player.tou += player.tempTou;
-		player.spe += player.tempSpe;
-		player.inte += player.tempInt;
-		player.wis += player.tempWis;
-		player.lib += player.tempLib;
+		player.strStat.core.value += player.tempStr;
+		player.touStat.core.value += player.tempTou;
+		player.speStat.core.value += player.tempSpe;
+		player.intStat.core.value += player.tempInt;
+		player.wisStat.core.value += player.tempWis;
+		player.libStat.core.value += player.tempLib;
 		player.tempStr = 0;
 		player.tempTou = 0;
 		player.tempSpe = 0;

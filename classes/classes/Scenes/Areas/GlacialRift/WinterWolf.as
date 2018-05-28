@@ -69,8 +69,7 @@ public class WinterWolf extends Monster
 			if(!player.hasStatusEffect(StatusEffects.Frostbite)) {
 				outputText(" You feel the cold enter your body and shake you to the very core weakening your resolve just as much as slowing down your movement.");
 				if(player.str > 7) {
-					player.str -= 6;
-					showStatDown( 'str' );
+					player.drainStat('str',6);
 					player.createStatusEffect(StatusEffects.Frostbite,6,0,0,0);
 				}
 				else {
@@ -87,8 +86,7 @@ public class WinterWolf extends Monster
 			else {
 				outputText(" The coldness effects intensify as your movement slowing down even more.");
 				if(player.str > 6) {
-					player.str -= 5;
-					showStatDown( 'str' );
+					player.drainStat('str',5);
 					player.addStatusValue(StatusEffects.Frostbite,1,5);
 				}
 				else {

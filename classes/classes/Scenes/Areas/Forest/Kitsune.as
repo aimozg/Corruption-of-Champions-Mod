@@ -7,6 +7,7 @@ import classes.BodyParts.Skin;
 import classes.BodyParts.Tail;
 import classes.GlobalFlags.kFLAGS;
 import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
 import classes.internals.*;
 
 public class Kitsune extends Monster
@@ -101,8 +102,8 @@ public class Kitsune extends Monster
 				outputText("\n\nThe kitsune seems to melt away before your eyes for a moment, as though the edges of reality are blurring around her.  You tighten your focus, keeping your eyes trained on her, and she suddenly reels in pain, clutching her forehead as she is thrust back into view.  She lets out a frustrated huff of disappointment, realizing that you have resisted her illusions.");
 			}
 			else {
-				createStatusEffect(StatusEffects.Illusion, 0, 0, 0, 0);
-				spe += 20;
+				var sec:StatusEffectClass = createStatusEffect(StatusEffects.Illusion, 0, 0, 0, 0);
+				sec.buffHost('spe',20);
 			}
 		}
 

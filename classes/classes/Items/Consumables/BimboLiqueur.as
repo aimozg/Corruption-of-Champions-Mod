@@ -4,6 +4,7 @@
 package classes.Items.Consumables
 {
 import classes.Items.Consumable;
+import classes.PerkClass;
 import classes.PerkLib;
 import classes.VaginaClass;
 import classes.internals.Utils;
@@ -56,14 +57,6 @@ public class BimboLiqueur extends Consumable {
 				game.player.removePerk(PerkLib.BroBrains);
 				game.player.createPerk(PerkLib.FutaFaculties, 0, 0, 0, 0);
 				game.player.createPerk(PerkLib.FutaForm, 0, 0, 0, 0);
-				if (game.player.inte > 35) {
-					game.player.inte = 35;
-					game.player.dynStats("int", -0.1);
-				}
-				if (game.player.lib < 50) {
-					game.player.lib = 50;
-					game.player.dynStats("lib", .1);
-				}
 			}
 			else {
 				outputText("You pop the cork from the flask and are immediately assaulted by a cloying, spiced scent that paints visions of a slutty slave-girl's slightly-spread folds.  Wow, this is some potent stuff!  Well, you knew what you were getting into when you found this bottle!  You open wide and guzzle it down, feeling the fire of alcohol burning a path to your belly.  The burning quickly fades to a pleasant warmth that makes you light-headed and giggly.\n\n");
@@ -173,10 +166,6 @@ public class BimboLiqueur extends Consumable {
 				if (!game.player.hasPerk(PerkLib.BimboBrains)) {
 					outputText("<b>(Bimbo Brains - Perk Gained!)</b>\n");//int to 20.  max int 50)
 					game.player.createPerk(PerkLib.BimboBrains, 0, 0, 0, 0);
-					if (game.player.inte > 21) {
-						var boost:Number = game.player.inte / 5;
-						game.player.inte = 21 + boost;
-					}
 				}
 				game.player.orgasm();
 				game.player.dynStats("int", -1, "lib", 5, "sen", 25);

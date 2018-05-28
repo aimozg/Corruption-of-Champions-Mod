@@ -92,17 +92,13 @@ public class Gorgon extends Monster
 			//(Deals damage over 4-5 turns, invariably reducing 
 			//your speed. It wears off once combat is over.)
 			outputText("The " + this.short + " strikes with the speed of a cobra, sinking her fangs into your flesh!  ");
-			if(!player.hasStatusEffect(StatusEffects.NagaVenom)) {
+			var sec:StatusEffectClass = player.statusEffectByType(StatusEffects.NagaVenom);
+			if(!sec) {
 				outputText("The venom's effects are almost instantaneous; your vision begins to blur and it becomes increasingly harder to stand.");
+				sec = player.createStatusEffect(StatusEffects.NagaVenom,0,0,0,0);
 				if(player.spe > 6) {
-					player.spe -= 5;
-					showStatDown( 'spe' );
-					// speUp.visible = false;
-					// speDown.visible = true;
-					player.createStatusEffect(StatusEffects.NagaVenom,5,0,0,0);
-				}
-				else {
-					player.createStatusEffect(StatusEffects.NagaVenom,0,0,0,0);
+					sec.buffHost('spe',-5);
+				} else {
 					player.takePhysDamage(15+rand(15));
 				}
 				player.takePhysDamage(15+rand(15));
@@ -110,12 +106,7 @@ public class Gorgon extends Monster
 			else {
 				outputText("The venom's effects intensify as your vision begins to blur and it becomes increasingly harder to stand.");
 				if(player.spe > 5) {
-					//stats(0,0,-2,0,0,0,0,0);
-					player.spe -= 4;
-					showStatDown( 'spe' );
-					// speUp.visible = false;
-					// speDown.visible = true;
-					player.addStatusValue(StatusEffects.NagaVenom,1,4);
+					sec.buffHost('spe',-4);
 				}
 				else player.takePhysDamage(15+rand(15));
 				player.takePhysDamage(15+rand(15));

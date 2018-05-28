@@ -9,8 +9,8 @@ public class CombatInteBuff extends CombatBuff {
 	public function CombatInteBuff() {
 		super(TYPE, "inte");
 	}
-	public function applyEffect(inteBuff:Number):Number {
-		return buffHost("inte", inteBuff).inte;
+	public function applyEffect(inteBuff:Number):void {
+		buffHost("inte", inteBuff);
 	}
 }
 }

@@ -29,6 +29,8 @@ package classes
 	import classes.Perks.AscensionSpiritualEnlightenmentPerk;
 	import classes.Scenes.Camp.CampMakeWinions;
 	import classes.Scenes.Places.TelAdre.UmasShop;
+	import classes.Stats.BaseStat;
+	import classes.Stats.PrimaryStat;
 	import classes.StatusEffects.Combat.CombatInteBuff;
 	import classes.StatusEffects.Combat.CombatSpeBuff;
 	import classes.StatusEffects.Combat.CombatStrBuff;
@@ -120,14 +122,33 @@ package classes
 		   [   S T A T S   ]
 		
 		 */
+		public var stats:Object = {};// [index:string]:BaseStat
 		
 		//Primary stats
-		public var str:Number = 0;
-		public var tou:Number = 0;
-		public var spe:Number = 0;
-		public var inte:Number = 0;
-		public var wis:Number = 0;
-		public var lib:Number = 0;
+		public var strStat:PrimaryStat = new PrimaryStat("str",stats);
+		public var touStat:PrimaryStat = new PrimaryStat("tou",stats);
+		public var speStat:PrimaryStat = new PrimaryStat("spe",stats);
+		public var intStat:PrimaryStat = new PrimaryStat("int",stats);
+		public var wisStat:PrimaryStat = new PrimaryStat("wis",stats);
+		public var libStat:PrimaryStat = new PrimaryStat("lib",stats);
+		public function get str():Number {
+			return strStat.value;
+		}
+		public function get tou():Number {
+			return touStat.value;
+		}
+		public function get spe():Number {
+			return speStat.value;
+		}
+		public function get inte():Number {
+			return intStat.value;
+		}
+		public function get wis():Number {
+			return wisStat.value;
+		}
+		public function get lib():Number {
+			return libStat.value;
+		}
 		public var sens:Number = 0;
 		public var cor:Number = 0;
 		public var fatigue:Number = 0;
@@ -161,9 +182,6 @@ package classes
 		
 		public function minLust():Number {
 			return 0;
-		}
-		public function minLib():Number {
-			return 1;
 		}
 		public function minSens():Number {
 			return 10;
@@ -250,27 +268,256 @@ package classes
 		 */
 		public function getAllMaxStats():Object {
 			return {
-				str:100,
-				tou:100,
-				spe:100,
-				inte:100,
-				wis:100,
-				lib:100,
+				str:strStat.max,
+				tou:touStat.max,
+				spe:speStat.max,
+				inte:intStat.max,
+				wis:wisStat.max,
+				lib:libStat.max,
 				sens:100,
 				cor:100
 			};
 		}
 		public function getAllMinStats():Object {
 			return {
-				str:1,
-				tou:1,
-				spe:1,
-				inte:1,
-				wis:1,
-				lib:10,
+				str:strStat.min,
+				tou:touStat.min,
+				spe:speStat.min,
+				inte:intStat.min,
+				wis:wisStat.min,
+				lib:libStat.min,
 				sens:10,
 				cor:0
 			};
+		}
+		/**
+		 * Called regularly to [re]apply all effects and statuses lacking proper hook
+		 */
+		public function updateStats():void {
+			Begin("Creature","updateStats");
+			var racialScores:* = this.racialScores();
+			var racials:* = racialBonuses();
+			
+			Begin("Creature","updateStats.perks");
+			//Alter max speed if you have oversized parts. (Realistic mode)
+			if (flags[kFLAGS.HUNGER_ENABLED] >= 1) {
+				//Balls
+				var tempSpeedPenalty:Number = 0;
+				var lim:int = isTaur() ? 9 : 4;
+				if (ballSize > lim && balls > 0) tempSpeedPenalty += Math.round((ballSize - lim) / 2);
+				//Breasts
+				lim = isTaur() ? BreastCup.I : BreastCup.G;
+				if (hasBreasts() && biggestTitSize() > lim) tempSpeedPenalty += ((biggestTitSize() - lim) / 2);
+				//Cocks
+				lim = isTaur() ? 72 : 24;
+				if (biggestCockArea() > lim) tempSpeedPenalty += ((biggestCockArea() - lim) / 6);
+				//Min-cap
+				var penaltyMultiplier:Number = 1;
+				penaltyMultiplier -= str * 0.1;
+				penaltyMultiplier -= (tallness - 72) / 168;
+				if (penaltyMultiplier < 0.4) penaltyMultiplier = 0.4;
+				tempSpeedPenalty *= penaltyMultiplier;
+				if (tempSpeedPenalty > 50) tempSpeedPenalty = 50;
+				speStat.bonus.addOrReplaceEffect('oversized',-tempSpeedPenalty,{
+					save:false,
+					text:'Oversized!'
+				});
+			} else {
+				speStat.bonus.removeEffect('oversized');
+			}
+			//Perks ahoy
+			var perk:PerkClass = getPerk(PerkLib.GorgonsEyes);
+			if (hasPerk(PerkLib.BasiliskResistance) && perk) {
+				perk.buffHost(this,'spe',-5);
+			} else {
+				speStat.bonus.removeEffect(PerkLib.BasiliskResistance.id);
+			}
+			//Caps strength from Uma's needlework.
+			setPerkStatEffect(PerkLib.ChiReflowSpeed,'strMult',UmasShop.NEEDLEWORK_SPEED_STRENGTH_MULT);
+			//Caps speed from Uma's needlework.
+			setPerkStatEffect(PerkLib.ChiReflowDefense,'speMult',UmasShop.NEEDLEWORK_DEFENSE_SPEED_MULT);
+			setPerkStatEffect(PerkLib.BimboBrains,'intMult',-0.60);
+			setPerkStatEffect(PerkLib.BroBrains,'intMult',-0.60);
+			setPerkStatEffect(PerkLib.FutaForm,'intMult',-0.60);
+			setPerkStatEffect(PerkLib.FutaForm,'libMult',+0.50);
+			perk = getPerk(PerkLib.ProductivityDrugs);
+			if (perk) {
+				perk.buffHost(this, 'lib', perk.value1);
+			} else {
+				libStat.removeEffect(PerkLib.ProductivityDrugs.id);
+			}
+			End("Creature","updateStats.perks");
+			
+			Begin("Creature","updateStats.racial");
+			strStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_str]/100, {save:false,text:'Racial'});
+			touStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_tou]/100, {save:false,text:'Racial'});
+			speStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_spe]/100, {save:false,text:'Racial'});
+			intStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_int]/100, {save:false,text:'Racial'});
+			wisStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_wis]/100, {save:false,text:'Racial'});
+			libStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_lib]/100, {save:false,text:'Racial'});
+			if (isNaga()) {
+				strStat.mult.addOrReplaceEffect('naga',0.15,{save:false, text:'Naga'});
+				speStat.mult.addOrReplaceEffect('naga',0.15,{save:false, text:'Naga'});
+			} else {
+				strStat.mult.removeEffect('naga');
+				speStat.mult.removeEffect('naga');
+			}
+			if (isTaur()) {
+				speStat.mult.addOrReplaceEffect('taur',0.20,{save:false, text:'Taur'});
+			} else {
+				speStat.mult.removeEffect('taur');
+			}
+			if (isDrider()) {
+				touStat.mult.addOrReplaceEffect('drider',0.15,{save:false, text:'Drider'});
+				speStat.mult.addOrReplaceEffect('drider',0.15,{save:false, text:'Drider'});
+			} else {
+				touStat.mult.removeEffect('drider');
+				speStat.mult.removeEffect('drider');
+			}
+			if (isScylla()) {
+				strStat.mult.addOrReplaceEffect('scylla',0.30,{save:false, text:'Scylla'});
+			} else {
+				strStat.mult.removeEffect('scylla');
+			}
+			if (racialScores[Race.GARGOYLE.name] >= 21) {
+				if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 1) {
+					strStat.mult.addOrReplaceEffect('gargoyle',0.20,{save:false, text:'Gargoyle'});
+					intStat.mult.removeEffect('gargoyle');
+				} else if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 2) {
+					strStat.mult.removeEffect('gargoyle');
+					intStat.mult.addOrReplaceEffect('gargoyle',0.20,{save:false, text:'Gargoyle'});
+				} else {
+					strStat.mult.removeEffect('gargoyle');
+					intStat.mult.removeEffect('gargoyle');
+				}
+			} else {
+				strStat.mult.removeEffect('gargoyle');
+				intStat.mult.removeEffect('gargoyle');
+			}
+			var ics:Number = internalChimeraScore();
+			if (ics >= 1) {
+				strStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				touStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				speStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				intStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				wisStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				libStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+			} else {
+				removeStatEffects('chimera');
+			}
+			End("Creature","updateStats.racial");
+			
+			Begin("Creature","updateStats.perks2");
+			setPerkStatEffect(PerkLib.ChimericalBodyInitialStage, 'touMult', 0.05);
+			setPerkStatEffect(PerkLib.ChimericalBodyInitialStage, 'libMult', 0.05);
+			setPerkStatEffect(PerkLib.ChimericalBodyBasicStage, 'strMult', +0.05);
+			setPerkStatEffect(PerkLib.ChimericalBodyBasicStage, 'speMult', +0.05);
+			setPerkStatEffect(PerkLib.ChimericalBodyBasicStage, 'intMult', +0.05);
+			setPerkStatEffect(PerkLib.ChimericalBodyBasicStage, 'wisMult', +0.05);
+			setPerkStatEffect(PerkLib.ChimericalBodyAdvancedStage, 'strMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyAdvancedStage, 'touMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyAdvancedStage, 'speMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyPerfectStage, 'intMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyPerfectStage, 'wisMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyPerfectStage, 'libMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'strMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'touMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'speMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'intMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'wisMult', +0.10);
+			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'libMult', +0.10);
+			setPerkStatEffect(PerkLib.SalamanderAdrenalGlands, 'touMult', +0.05);
+			setPerkStatEffect(PerkLib.SalamanderAdrenalGlands, 'libMult', +0.05);
+			setPerkStatEffect(PerkLib.SalamanderAdrenalGlandsEvolved, 'strMult', +0.05);
+			setPerkStatEffect(PerkLib.SalamanderAdrenalGlandsEvolved, 'touMult', +0.05);
+			setPerkStatEffect(PerkLib.SalamanderAdrenalGlandsEvolved, 'speMult', +0.05);
+			setPerkStatEffect(PerkLib.SalamanderAdrenalGlandsEvolved, 'libMult', +0.05);
+			setPerkStatEffect(PerkLib.ScyllaInkGlands, 'strMult', +0.10);
+			perk = getPerk(PerkLib.MantislikeAgility);
+			if (perk) {
+				var perk2:PerkClass = getPerk(PerkLib.MantislikeAgilityEvolved);
+				var mult:Number = 1.0;
+				if (perk2) {
+					mult = 2.0;
+					perk = perk2;
+					speStat.mult.removeEffect(PerkLib.MantislikeAgility.id);
+				} else {
+					speStat.mult.removeEffect(PerkLib.MantislikeAgilityEvolved.id);
+				}
+				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) perk.buffHost(this,'speMult', +0.20*mult);
+				else if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) perk.buffHost(this,'speMult', +0.15*mult);
+				else if (skinType == Skin.SCALES) perk.buffHost(this, 'speMult', +0.10*mult);
+				else if (hasPerk(PerkLib.ThickSkin)) perk.buffHost(this, 'speMult', +0.05*mult);
+			} else {
+				speStat.mult.removeEffect(PerkLib.MantislikeAgility.id);
+				speStat.mult.removeEffect(PerkLib.MantislikeAgilityEvolved.id);
+			}
+			setPerkStatEffect(PerkLib.DraconicLungs, 'speMult', +0.05);
+			setPerkStatEffect(PerkLib.DraconicLungsEvolved, 'touMult', +0.05);
+			setPerkStatEffect(PerkLib.DraconicLungsEvolved, 'speMult', +0.05);
+			setPerkStatEffect(PerkLib.KitsuneThyroidGland, 'speMult', +0.05);
+			setPerkStatEffect(PerkLib.KitsuneThyroidGlandEvolved, 'speMult', +0.05);
+			setPerkStatEffect(PerkLib.KitsuneThyroidGlandEvolved, 'wisMult', +0.05);
+			setPerkStatEffect(PerkLib.CatlikeNimblenessEvolved, 'speMult', +0.10);
+			setPerkStatEffect(PerkLib.GargoylePure, 'wisMult', +0.80);
+			setPerkStatEffect(PerkLib.GargoylePure, 'libMult', -0.10);
+			setPerkStatEffect(PerkLib.GargoyleCorrupted, 'wisMult', -0.10);
+			setPerkStatEffect(PerkLib.GargoyleCorrupted, 'libMult', +0.80);
+
+			setPerkStatEffect(PerkLib.JobCourtesan, 'libMult', +0.15);
+			setPerkStatEffect(PerkLib.JobDervish, 'speMult', +0.10);
+			setPerkStatEffect(PerkLib.JobDefender, 'touMult', +0.15);
+			setPerkStatEffect(PerkLib.JobElementalConjurer, 'wisMult', +0.05);
+			setPerkStatEffect(PerkLib.JobEnchanter, 'intMult', +0.15);
+			setPerkStatEffect(PerkLib.JobEromancer, 'intMult', +0.05);
+			setPerkStatEffect(PerkLib.JobEromancer, 'libMult', +0.05);
+			setPerkStatEffect(PerkLib.JobGuardian, 'touMult', +0.05);
+			setPerkStatEffect(PerkLib.JobHunter, 'speMult', +0.10);
+			setPerkStatEffect(PerkLib.JobHunter, 'intMult', +0.05);
+			setPerkStatEffect(PerkLib.JobKnight, 'touMult', +0.10);
+			setPerkStatEffect(PerkLib.AdvancedJobMonk, 'wisMult', +0.15);
+			setPerkStatEffect(PerkLib.JobRanger, 'speMult', +0.05);
+			setPerkStatEffect(PerkLib.JobSeducer, 'libMult', +0.05);
+			setPerkStatEffect(PerkLib.JobSorcerer, 'intMult', +0.05);
+			setPerkStatEffect(PerkLib.JobWarrior, 'strMult', +0.05);
+			setPerkStatEffect(PerkLib.PrestigeJobArcaneArcher, 'speMult', +0.40);
+			setPerkStatEffect(PerkLib.PrestigeJobArcaneArcher, 'intMult', +0.40);
+			setPerkStatEffect(PerkLib.PrestigeJobBerserker, 'strMult', +0.60);
+			setPerkStatEffect(PerkLib.PrestigeJobBerserker, 'touMult', +0.20);
+			setPerkStatEffect(PerkLib.PrestigeJobSentinel, 'strMult', +0.20);
+			setPerkStatEffect(PerkLib.PrestigeJobSentinel, 'touMult', +0.60);
+			setPerkStatEffect(PerkLib.PrestigeJobKiArtMaster, 'strMult', +0.40);
+			setPerkStatEffect(PerkLib.PrestigeJobKiArtMaster, 'wisMult', +0.40);
+			setPerkStatEffect(PerkLib.WeaponMastery, 'strMult', +0.05);
+			setPerkStatEffect(PerkLib.ElementalConjurerResolve, 'strMult', -0.15);
+			setPerkStatEffect(PerkLib.ElementalConjurerResolve, 'touMult', -0.15);
+			setPerkStatEffect(PerkLib.ElementalConjurerResolve, 'speMult', -0.15);
+			setPerkStatEffect(PerkLib.ElementalConjurerResolve, 'intMult', +0.20);
+			setPerkStatEffect(PerkLib.ElementalConjurerResolve, 'wisMult', +0.30);
+			setPerkStatEffect(PerkLib.ElementalConjurerDedication, 'strMult', -0.30);
+			setPerkStatEffect(PerkLib.ElementalConjurerDedication, 'touMult', -0.30);
+			setPerkStatEffect(PerkLib.ElementalConjurerDedication, 'speMult', -0.30);
+			setPerkStatEffect(PerkLib.ElementalConjurerDedication, 'intMult', +0.40);
+			setPerkStatEffect(PerkLib.ElementalConjurerDedication, 'wisMult', +0.60);
+			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'strMult', -0.45);
+			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'touMult', -0.45);
+			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'speMult', -0.45);
+			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'intMult', +0.60);
+			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'wisMult', +0.90);
+			perk = getPerk(PerkLib.AscensionTranshumanism);
+			if (perk) {
+				perk.buffHost(this, 'strMult', +0.05 * perk.value1);
+				perk.buffHost(this, 'touMult', +0.05 * perk.value1);
+				perk.buffHost(this, 'speMult', +0.05 * perk.value1);
+				perk.buffHost(this, 'intMult', +0.05 * perk.value1);
+				perk.buffHost(this, 'wisMult', +0.05 * perk.value1);
+				perk.buffHost(this, 'libMult', +0.05 * perk.value1);
+			} else {
+				removeStatEffects(PerkLib.AscensionTranshumanism.id);
+			}
+			End("Creature","updateStats.perks2");
+			
+			End("Creature","updateStats");
 		}
 		/**
 		 * Modify stats.
@@ -295,9 +542,9 @@ package classes
 			var prevSens:Number  = sens;
 			var prevLust:Number  = lust;
 			var prevCor:Number  = cor;
-			modStats(argz.str, argz.tou, argz.spe, argz.inte, argz.wis, argz.lib, argz.sens, argz.lust, argz.cor, argz.scale, argz.max);
+			modStats(argz.str, argz.tou, argz.spe, argz.inte, argz.wis, argz.lib, argz.sens, argz.lust, argz.cor, argz.scale);
 			End("Creature","dynStats");
-			//trace("dynStats("+args.join(", ")+") => ("+[str,tou,spe,inte,wis,lib,sens,lust,cor].join(", ")+")");
+			trace("dynStats("+args.join(", ")+") => ("+[str,tou,spe,inte,wis,lib,sens,lust,cor].join(", ")+")");
 			return {
 				str:str-prevStr,
 				tou:tou-prevTou,
@@ -310,33 +557,52 @@ package classes
 				cor:cor-prevCor
 			};
 		}
-		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean, max:Boolean):void {
-			var maxes:Object;
-			if (max) {
-				maxes = getAllMaxStats();
-				maxes.lust = maxLust();
-			} else {
-				maxes = {
-					str:Infinity,
-					tou:Infinity,
-					spe:Infinity,
-					inte:Infinity,
-					wis:Infinity,
-					lib:Infinity,
-					sens:Infinity,
-					cor:Infinity,
-					lust:Infinity
-				}
+		public function drainStat(statname:String, damage:Number):Number {
+			var stat:BaseStat = stats[statname+'Bonus'];
+			if (!stat) {
+				// TODO report error
+				return NaN;
 			}
+			if (damage == 0) return 0;
+			var delta:Number = -damage;
+			var current:Number = stat.valueOfEffect('drain');
+			if (delta > 0 && delta+current > 0) delta = -current;
+			stat.addOrIncreaseEffect('drain', delta,{text:'Drain'});
+			return damage;
+		}
+		public function removeStatEffects(tag:String):void {
+			for (var statname:String in stats) {
+				var stat:BaseStat = stats[statname] as BaseStat;
+				if (!stat) continue;
+				stat.removeEffect(tag);
+			}
+		}
+		/**
+		 * If perk is present, add/replace stat buff. If not, remove stat buff
+ 		 */
+		public function setPerkStatEffect(ptype:PerkType,statname:String,value:Number):void {
+			var stat:BaseStat = (stats[statname] as BaseStat) || (stats[statname] as PrimaryStat).bonus;
+			var perk:PerkClass = getPerk(ptype);
+			if (perk) {
+				stat.addOrReplaceEffect(ptype.id,value,{save:false,text:ptype.name});
+			} else {
+				stat.removeEffect(ptype.id);
+			}
+		}
+		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {
+			var maxes:Object;
+			maxes = getAllMaxStats();
+			maxes.lust = maxLust();
 			var mins:Object = getAllMinStats();
 			mins.lust = minLust();
 			var oldHPratio:Number = hp100/100;
-			str  = Utils.boundFloat(mins.str, str + dstr, maxes.str);
-			tou  = Utils.boundFloat(mins.tou, tou + dtou, maxes.tou);
-			spe  = Utils.boundFloat(mins.spe, spe + dspe, maxes.spe);
-			inte = Utils.boundFloat(mins.inte, inte + dinte, maxes.inte);
-			wis  = Utils.boundFloat(mins.wis, wis + dwis, maxes.wis);
-			lib  = Utils.boundFloat(mins.lib, lib + dlib, maxes.lib);
+			drainStat('str', -dstr);
+			drainStat('tou', -dtou);
+			drainStat('spe', -dspe);
+			drainStat('int', -dinte);
+			drainStat('wis', -dwis);
+			drainStat('lib', -dlib);
+			updateStats();
 			sens = Utils.boundFloat(mins.sens, sens + dsens, maxes.sens);
 			lust = Utils.boundFloat(mins.lust, lust + dlust, maxes.lust);
 			cor  = Utils.boundFloat(mins.cor, cor + dcor, maxes.cor);
@@ -714,6 +980,353 @@ package classes
 			return Race.AllBonusesFor(this);
 		}
 		
+		
+		
+		//Determine Chimera Race Rating
+		public function chimeraScore():Number {
+			Begin("Player","racialScore","chimera");
+			var chimeraCounter:Number = 0;
+			var racialScores:* = this.racialScores();
+			if (racialScores[Race.CAT.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.LIZARD.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.DRAGON.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.RACCOON.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.DOG.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.WOLF.name] >= 6)
+				chimeraCounter++;
+			if (racialScores[Race.WEREWOLF.name] >= 6)
+				chimeraCounter++;
+			if (racialScores[Race.FOX.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.FERRET.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.KITSUNE.name] >= 5)
+				chimeraCounter++;
+			if (racialScores[Race.HORSE.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.MINOTAUR.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.COW.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.BEE.name] >= 5)
+				chimeraCounter++;
+			if (racialScores[Race.GOBLIN.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.DEMON.name] >= 5)
+				chimeraCounter++;
+			if (racialScores[Race.DEVILKIN.name] >= 7)
+				chimeraCounter++;
+			if (racialScores[Race.SHARK.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.ORCA.name] >= 6)
+				chimeraCounter++;
+			if (racialScores[Race.ONI.name] >= 6)
+				chimeraCounter++;
+			if (racialScores[Race.ELF.name] >= 5)
+				chimeraCounter++;
+			if (racialScores[Race.RAIJU.name] >= 5)
+				chimeraCounter++;
+			if (racialScores[Race.BUNNY.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.HARPY.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.SPIDER.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.KANGA.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.MOUSE.name] >= 3)
+				chimeraCounter++;
+			if (racialScores[Race.SCORPION.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.MANTIS.name] >= 6)
+				chimeraCounter++;
+			if (racialScores[Race.SALAMANDER.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.NAGA.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.PHOENIX.name] >= 10)
+				chimeraCounter++;
+			if (racialScores[Race.SCYLLA.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.PLANT.name] >= 6)
+				chimeraCounter++;
+			if (racialScores[Race.PIG.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.SATYR.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.RHINO.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.ECHIDNA.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.DEER.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.MANTICORE.name] >= 6)
+				chimeraCounter++;
+			if (racialScores[Race.REDPANDA.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.SIREN.name] >= 10)
+				chimeraCounter++;
+			if (racialScores[Race.YETI.name] >= 6)
+				chimeraCounter++;
+			if (racialScores[Race.BAT.name] >= 6)
+				chimeraCounter++;
+			if (racialScores[Race.VAMPIRE.name] >= 6)
+				chimeraCounter++;
+			if (racialScores[Race.JABBERWOCKY.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.AVIAN.name] >= 4)
+				chimeraCounter++;
+			if (racialScores[Race.GARGOYLE.name] >= 21)
+				chimeraCounter++;
+			if (racialScores[Race.GOO.name] >= 4)
+				chimeraCounter++;
+			
+			End("Player","racialScore");
+			return chimeraCounter;
+		}
+		
+		//Determine Grand Chimera Race Rating
+		public function grandchimeraScore():Number {
+			Begin("Player","racialScore","grandchimera");
+			var grandchimeraCounter:Number = 0;
+			var racialScores:* = this.racialScores();
+			if (racialScores[Race.CAT.name] >= 8)
+				grandchimeraCounter++;
+			if (racialScores[Race.NEKOMATA.name] >= 11)
+				grandchimeraCounter++;
+			if (racialScores[Race.CHESHIRE.name] >= 11)
+				grandchimeraCounter++;
+			if (racialScores[Race.LIZARD.name] >= 8)
+				grandchimeraCounter++;
+			if (racialScores[Race.DRAGON.name] >= 10)
+				grandchimeraCounter++;
+			/*			if (racialScores[Race.RACCOON.name] >= 4)
+							grandchimeraCounter++;
+						if (racialScores[Race.DOG.name] >= 4)
+							grandchimeraCounter++;
+						if (racialScores[Race.WOLF.name] >= 6)
+							grandchimeraCounter++;
+			*/			if (racialScores[Race.WEREWOLF.name] >= 12)
+				grandchimeraCounter++;
+			if (racialScores[Race.FOX.name] >= 7)
+				grandchimeraCounter++;
+//			if (racialScores[Race.FERRET.name] >= 4)
+//				grandchimeraCounter++;
+			if (racialScores[Race.KITSUNE.name] >= 6 && tailType == 13 && tailCount >= 2)
+				grandchimeraCounter++;
+			if (racialScores[Race.HORSE.name] >= 7)
+				grandchimeraCounter++;
+			if (racialScores[Race.UNICORN.name] >= 9)
+				grandchimeraCounter++;
+			if (racialScores[Race.ALICORN.name] >= 11)
+				grandchimeraCounter++;
+			if (racialScores[Race.CENTAUR.name] >= 8)
+				grandchimeraCounter++;
+			if (racialScores[Race.MINOTAUR.name] >= 9)
+				grandchimeraCounter++;
+			if (racialScores[Race.COW.name] >= 9)
+				grandchimeraCounter++;
+			if (racialScores[Race.BEE.name] >= 9)
+				grandchimeraCounter++;
+//			if (racialScores[Race.GOBLIN.name] >= 4)
+//				grandchimeraCounter++;
+			if (racialScores[Race.DEMON.name] >= 11)
+				grandchimeraCounter++;
+			if (racialScores[Race.DEVILKIN.name] >= 10)
+				grandchimeraCounter++;
+			if (racialScores[Race.SHARK.name] >= 8)
+				grandchimeraCounter++;
+			if (racialScores[Race.ORCA.name] >= 12)
+				grandchimeraCounter++;
+			if (racialScores[Race.ONI.name] >= 12)
+				grandchimeraCounter++;
+			if (racialScores[Race.ELF.name] >= 11)
+				grandchimeraCounter++;
+			if (racialScores[Race.RAIJU.name] >= 10)
+				grandchimeraCounter++;
+//			if (racialScores[Race.BUNNY.name] >= 4)
+//				grandchimeraCounter++;
+			if (racialScores[Race.HARPY.name] >= 8)
+				grandchimeraCounter++;
+			if (racialScores[Race.SPIDER.name] >= 7)
+				grandchimeraCounter++;
+			/*			if (racialScores[Race.KANGA.name] >= 4)
+							grandchimeraCounter++;
+						if (racialScores[Race.MOUSE.name] >= 3)
+							grandchimeraCounter++;
+						if (racialScores[Race.SCORPION.name] >= 4)
+							grandchimeraCounter++;
+			*/			if (racialScores[Race.MANTIS.name] >= 12)
+				grandchimeraCounter++;
+			if (racialScores[Race.SALAMANDER.name] >= 7)
+				grandchimeraCounter++;
+			if (racialScores[Race.NAGA.name] >= 8)
+				grandchimeraCounter++;
+			if (racialScores[Race.GORGON.name] >= 11)
+				grandchimeraCounter++;
+			if (racialScores[Race.VOUIVRE.name] >= 11)
+				grandchimeraCounter++;
+			if (racialScores[Race.COUATL.name] >= 11)
+				grandchimeraCounter++;
+			if (racialScores[Race.PHOENIX.name] >= 10)
+				grandchimeraCounter++;
+			if (racialScores[Race.SCYLLA.name] >= 7)
+				grandchimeraCounter++;
+//			if (racialScores[Race.PLANT.name] >= 6)
+//				grandchimeraCounter++;
+			if (racialScores[Race.ALRAUNE.name] >= 10)
+				grandchimeraCounter++;
+			if (racialScores[Race.YGGDRASIL.name] >= 10)
+				grandchimeraCounter++;
+			/*			if (racialScores[Race.PIG.name] >= 4)
+							grandchimeraCounter++;
+						if (racialScores[Race.SATYR.name] >= 4)
+							grandchimeraCounter++;
+						if (racialScores[Race.RHINO.name] >= 4)
+							grandchimeraCounter++;
+						if (racialScores[Race.ECHIDNA.name] >= 4)
+							grandchimeraCounter++;
+						if (racialScores[Race.DEER.name] >= 4)
+							grandchimeraCounter++;
+			*/			if (racialScores[Race.MANTICORE.name] >= 12)
+				grandchimeraCounter += 2;
+			if (racialScores[Race.REDPANDA.name] >= 8)
+				grandchimeraCounter++;
+			if (racialScores[Race.SIREN.name] >= 10)
+				grandchimeraCounter++;
+			if (racialScores[Race.YETI.name] >= 12)
+				grandchimeraCounter++;
+			if (racialScores[Race.BAT.name] >= 10)
+				grandchimeraCounter++;
+			if (racialScores[Race.VAMPIRE.name] >= 10)
+				grandchimeraCounter++;
+			if (racialScores[Race.JABBERWOCKY.name] >= 10)
+				grandchimeraCounter++;
+			if (racialScores[Race.AVIAN.name] >= 9)
+				grandchimeraCounter++;
+			if (racialScores[Race.GARGOYLE.name] >= 21)
+				grandchimeraCounter++;
+			if (racialScores[Race.GOO.name] >= 8)
+				grandchimeraCounter++;
+			
+			End("Player","racialScore");
+			return grandchimeraCounter;
+		}
+		
+		//Determine Inner Chimera Score
+		public function internalChimeraScore():Number {
+			Begin("Player","racialScore","internalChimeraScore");
+			var internalChimeraCounter:Number = 0;
+			if (hasPerk(PerkLib.BlackHeart))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.CatlikeNimbleness))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.CatlikeNimblenessEvolved))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.DraconicLungs))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.DraconicLungsEvolved))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.GorgonsEyes))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.KitsuneThyroidGland))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.LizanMarrow))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.LizanMarrowEvolved))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.ManticoreMetabolism))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.MantislikeAgility))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.MantislikeAgilityEvolved))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.SalamanderAdrenalGlands))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.ScyllaInkGlands))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.TrachealSystem))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.TrachealSystemEvolved))
+				internalChimeraCounter++;
+			if (hasPerk(PerkLib.TrachealSystemFinalForm))
+				internalChimeraCounter++;
+			//	if (hasPerk(PerkLib.TrachealSystemEvolved))
+			//		internalChimeraCounter++;
+			
+			End("Player","racialScore");
+			return internalChimeraCounter;
+		}
+		
+		//Determine Inner Chimera Rating
+		public function internalChimeraRating():Number {
+			Begin("Player","racialScore","internalChimeraRating");
+			var internalChimeraRatingCounter:Number = 0;
+			if (hasPerk(PerkLib.BlackHeart))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.CatlikeNimbleness))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.CatlikeNimblenessEvolved))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.DraconicLungs))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.DraconicLungsEvolved))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.GorgonsEyes))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.KitsuneThyroidGland))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.LizanMarrow))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.LizanMarrowEvolved))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.ManticoreMetabolism))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.MantislikeAgility))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.MantislikeAgilityEvolved))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.SalamanderAdrenalGlands))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.ScyllaInkGlands))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.TrachealSystem))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.TrachealSystemEvolved))
+				internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.TrachealSystemFinalForm))
+				internalChimeraRatingCounter++;
+			//	if (hasPerk(PerkLib.TrachealSystemEvolved))
+			//		internalChimeraRatingCounter++;
+			if (hasPerk(PerkLib.ChimericalBodyInitialStage))
+				internalChimeraRatingCounter -= 2;
+			if (hasPerk(PerkLib.ChimericalBodyBasicStage))
+				internalChimeraRatingCounter -= 3;
+			if (hasPerk(PerkLib.ChimericalBodyAdvancedStage))
+				internalChimeraRatingCounter -= 4;
+			if (hasPerk(PerkLib.ChimericalBodySemiPerfectStage))
+				internalChimeraRatingCounter -= 5;
+			if (hasPerk(PerkLib.ChimericalBodyPerfectStage))
+				internalChimeraRatingCounter -= 6;
+			if (hasPerk(PerkLib.ChimericalBodyUltimateStage))
+				internalChimeraRatingCounter -= 7;
+			End("Player","racialScore");
+			return internalChimeraRatingCounter;
+		}
+		
 		/*
 		
 		[        P E R K S          ]
@@ -740,11 +1353,12 @@ package classes
 		//Functions
 
 		//Create a perk
-		public function createPerk(ptype:PerkType, value1:Number, value2:Number, value3:Number, value4:Number):void
+		public function createPerk(ptype:PerkType, value1:Number, value2:Number, value3:Number, value4:Number):PerkClass
 		{
 			var newPerk:PerkClass = new PerkClass(ptype, value1, value2, value3, value4);
 			perks.push(newPerk);
 			perks.sortOn("perkName");
+			return newPerk;
 		}
 
 		/**
@@ -1024,29 +1638,32 @@ package classes
 		 * to check for _specific_ debuff source (poison etc) mid-battle
 		 * @param stat 'str','spe','tou','inte','wis'
 		 * @param buff Creature stat is decremented by this value.
-		 * @return (oldStat-newStat)
 		 */
-		public function addCombatBuff(stat:String, buff:Number):Number {
+		public function addCombatBuff(stat:String, buff:Number):void {
 			switch(stat) {
 				case 'str':
-					return (createOrFindStatusEffect(StatusEffects.GenericCombatStrBuff)
+					(createOrFindStatusEffect(StatusEffects.GenericCombatStrBuff)
 							as CombatStrBuff).applyEffect(buff);
+					break;
 				case 'spe':
-					return (createOrFindStatusEffect(StatusEffects.GenericCombatSpeBuff)
+					(createOrFindStatusEffect(StatusEffects.GenericCombatSpeBuff)
 							as CombatSpeBuff).applyEffect(buff);
+					break;
 				case 'tou':
-					return (createOrFindStatusEffect(StatusEffects.GenericCombatTouBuff)
+					(createOrFindStatusEffect(StatusEffects.GenericCombatTouBuff)
 							as CombatTouBuff).applyEffect(buff);
+					break;
 				case 'int':
 				case 'inte':
-					return (createOrFindStatusEffect(StatusEffects.GenericCombatInteBuff)
+					(createOrFindStatusEffect(StatusEffects.GenericCombatInteBuff)
 							as CombatInteBuff).applyEffect(buff);
+					break;
 				case 'wis':
-					return (createOrFindStatusEffect(StatusEffects.GenericCombatWisBuff)
+					(createOrFindStatusEffect(StatusEffects.GenericCombatWisBuff)
 							as CombatWisBuff).applyEffect(buff);
+					break;
 			}
 			trace("/!\\ ERROR: addCombatBuff('"+stat+"', "+buff+")");
-			return 0;
 		}
 
 		public var availableActions:Array = [];
@@ -3628,7 +4245,7 @@ package classes
 		 * Generate increments for stats
 		 *
 		 * @return Object of (newStat-oldStat) with keys str, tou, spe, inte, wis, lib, sens, lust, cor
-		 * and flags scale, max
+		 * and flag 'scale'
 		 * */
 		public static function parseDynStatsArgs(c:Creature, args:Array):Object {
 			// Check num of args, we should have a multiple of 2
@@ -3647,8 +4264,7 @@ package classes
 				sen: [ 0, "+"],
 				lus: [ 0, "+"],
 				cor: [ 0, "+"],
-				scale: [ true, "="],
-				max: [ true, "="]
+				scale: [ true, "="]
 			};
 			var aliases:Object = {
 				"strength":"str",
@@ -3721,8 +4337,7 @@ package classes
 				sens    : newSens - c.sens,
 				lust    : newLust - c.lust,
 				cor     : newCor - c.cor,
-				scale   : argDefs.scale[0],
-				max     : argDefs.max[0]
+				scale   : argDefs.scale[0]
 			};
 		}
 

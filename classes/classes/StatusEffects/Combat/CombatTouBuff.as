@@ -9,8 +9,8 @@ public class CombatTouBuff extends CombatBuff {
 	public function CombatTouBuff() {
 		super(TYPE, "tou");
 	}
-	public function applyEffect(touBuff:Number):Number {
-		return buffHost("tou", touBuff).tou;
+	public function applyEffect(touBuff:Number):void {
+		buffHost("tou", touBuff);
 	}
 }
 }

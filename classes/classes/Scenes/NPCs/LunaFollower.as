@@ -18,7 +18,8 @@ package classes.Scenes.NPCs
 	import classes.BodyParts.Tongue;
 	import classes.BodyParts.Wings;
 	import classes.GlobalFlags.kFLAGS;
-	import classes.Scenes.SceneLib;
+import classes.PerkClass;
+import classes.Scenes.SceneLib;
 	import classes.Items.MutationsHelper;
 	
 	public class LunaFollower extends NPCAwareContent
@@ -271,8 +272,10 @@ package classes.Scenes.NPCs
 			if (flags[kFLAGS.LUNA_MOON_CYCLE] == 2 || flags[kFLAGS.LUNA_MOON_CYCLE] == 6) bonusStats += 20;
 			if (flags[kFLAGS.LUNA_MOON_CYCLE] == 1 || flags[kFLAGS.LUNA_MOON_CYCLE] == 7) bonusStats += 30;
 			if (flags[kFLAGS.LUNA_MOON_CYCLE] == 8) bonusStats += 40;
-			player.createPerk(PerkLib.Lycanthropy,bonusStats,0,0,0);
-			player.dynStats("str", (bonusStats * player.newGamePlusMod()), "tou", (bonusStats * player.newGamePlusMod()), "spe", (bonusStats * player.newGamePlusMod()), "cor", 20);
+			var perk:PerkClass = player.createPerk(PerkLib.Lycanthropy,bonusStats,0,0,0);
+			perk.buffHost(player,'str', bonusStats * player.newGamePlusMod());
+			perk.buffHost(player,'tou', bonusStats * player.newGamePlusMod());
+			player.dynStats("spe", (bonusStats * player.newGamePlusMod()), "cor", 20);
 			statScreenRefresh();
 			outputText("Barely satiated your eyes now focus back on Luna, lust overwhelming your cursed body. You must have her... NOW!\n\n");
 			doNext(sexMenuDominateHer);
@@ -549,8 +552,10 @@ package classes.Scenes.NPCs
 					player.cocks[selectedCockValue].thickenCock(2);
 				}
 			}
-			player.createPerk(PerkLib.Lycanthropy,40,0,0,0);
-			player.dynStats("str", (40 * player.newGamePlusMod()), "tou", (40 * player.newGamePlusMod()), "spe", (40 * player.newGamePlusMod()), "cor", 20);
+			var perk:PerkClass = player.createPerk(PerkLib.Lycanthropy,40,0,0,0);
+			perk.buffHost(player,'str', 40 * player.newGamePlusMod());
+			perk.buffHost(player,'tou', 40 * player.newGamePlusMod());
+			player.dynStats("spe", (40 * player.newGamePlusMod()), "cor", 20);
 			statScreenRefresh();
 			outputText("Barely satiated your eyes now focus back on Luna, lust overwhelming your cursed body. You must have her... NOW!\n\n");
 			monster.createPerk(PerkLib.NoGemsLost, 0, 0, 0, 0);

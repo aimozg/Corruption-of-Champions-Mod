@@ -1620,352 +1620,6 @@
 			return race;
 		}
 
-		
-		//Determine Chimera Race Rating
-		public function chimeraScore():Number {
-			Begin("Player","racialScore","chimera");
-			var chimeraCounter:Number = 0;
-			var racialScores:* = this.racialScores();
-			if (racialScores[Race.CAT.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.LIZARD.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DRAGON.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.RACCOON.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DOG.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.WOLF.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.WEREWOLF.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.FOX.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.FERRET.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.KITSUNE.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.HORSE.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MINOTAUR.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.COW.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.BEE.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.GOBLIN.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DEMON.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.DEVILKIN.name] >= 7)
-				chimeraCounter++;
-			if (racialScores[Race.SHARK.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.ORCA.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.ONI.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.ELF.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.RAIJU.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.BUNNY.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.HARPY.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.SPIDER.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.KANGA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MOUSE.name] >= 3)
-				chimeraCounter++;
-			if (racialScores[Race.SCORPION.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MANTIS.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.SALAMANDER.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.NAGA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.PHOENIX.name] >= 10)
-				chimeraCounter++;
-			if (racialScores[Race.SCYLLA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.PLANT.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.PIG.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.SATYR.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.RHINO.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.ECHIDNA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DEER.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MANTICORE.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.REDPANDA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.SIREN.name] >= 10)
-				chimeraCounter++;
-			if (racialScores[Race.YETI.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.BAT.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.VAMPIRE.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.JABBERWOCKY.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.AVIAN.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.GARGOYLE.name] >= 21)
-				chimeraCounter++;
-			if (racialScores[Race.GOO.name] >= 4)
-				chimeraCounter++;
-			
-			End("Player","racialScore");
-			return chimeraCounter;
-		}
-		
-		//Determine Grand Chimera Race Rating
-		public function grandchimeraScore():Number {
-			Begin("Player","racialScore","grandchimera");
-			var grandchimeraCounter:Number = 0;
-			var racialScores:* = this.racialScores();
-			if (racialScores[Race.CAT.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.NEKOMATA.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.CHESHIRE.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.LIZARD.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.DRAGON.name] >= 10)
-				grandchimeraCounter++;
-/*			if (racialScores[Race.RACCOON.name] >= 4)
-				grandchimeraCounter++;
-			if (racialScores[Race.DOG.name] >= 4)
-				grandchimeraCounter++;
-			if (racialScores[Race.WOLF.name] >= 6)
-				grandchimeraCounter++;
-*/			if (racialScores[Race.WEREWOLF.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.FOX.name] >= 7)
-				grandchimeraCounter++;
-//			if (racialScores[Race.FERRET.name] >= 4)
-//				grandchimeraCounter++;
-			if (racialScores[Race.KITSUNE.name] >= 6 && tailType == 13 && tailCount >= 2)
-				grandchimeraCounter++;	
-			if (racialScores[Race.HORSE.name] >= 7)
-				grandchimeraCounter++;
-			if (racialScores[Race.UNICORN.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.ALICORN.name] >= 11)
-				grandchimeraCounter++;	
-			if (racialScores[Race.CENTAUR.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.MINOTAUR.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.COW.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.BEE.name] >= 9)
-				grandchimeraCounter++;
-//			if (racialScores[Race.GOBLIN.name] >= 4)
-//				grandchimeraCounter++;
-			if (racialScores[Race.DEMON.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.DEVILKIN.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.SHARK.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.ORCA.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.ONI.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.ELF.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.RAIJU.name] >= 10)
-				grandchimeraCounter++;
-//			if (racialScores[Race.BUNNY.name] >= 4)
-//				grandchimeraCounter++;
-			if (racialScores[Race.HARPY.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.SPIDER.name] >= 7)
-				grandchimeraCounter++;
-/*			if (racialScores[Race.KANGA.name] >= 4)
-				grandchimeraCounter++;
-			if (racialScores[Race.MOUSE.name] >= 3)
-				grandchimeraCounter++;
-			if (racialScores[Race.SCORPION.name] >= 4)
-				grandchimeraCounter++;
-*/			if (racialScores[Race.MANTIS.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.SALAMANDER.name] >= 7)
-				grandchimeraCounter++;
-			if (racialScores[Race.NAGA.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.GORGON.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.VOUIVRE.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.COUATL.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.PHOENIX.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.SCYLLA.name] >= 7)
-				grandchimeraCounter++;
-//			if (racialScores[Race.PLANT.name] >= 6)
-//				grandchimeraCounter++;
-			if (racialScores[Race.ALRAUNE.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.YGGDRASIL.name] >= 10)
-				grandchimeraCounter++;
-/*			if (racialScores[Race.PIG.name] >= 4)
-				grandchimeraCounter++;
-			if (racialScores[Race.SATYR.name] >= 4)
-				grandchimeraCounter++;
-			if (racialScores[Race.RHINO.name] >= 4)
-				grandchimeraCounter++;
-			if (racialScores[Race.ECHIDNA.name] >= 4)
-				grandchimeraCounter++;
-			if (racialScores[Race.DEER.name] >= 4)
-				grandchimeraCounter++;
-*/			if (racialScores[Race.MANTICORE.name] >= 12)
-				grandchimeraCounter += 2;
-			if (racialScores[Race.REDPANDA.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.SIREN.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.YETI.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.BAT.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.VAMPIRE.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.JABBERWOCKY.name] >= 10)
-				grandchimeraCounter++;	
-			if (racialScores[Race.AVIAN.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.GARGOYLE.name] >= 21)
-				grandchimeraCounter++;
-			if (racialScores[Race.GOO.name] >= 8)
-				grandchimeraCounter++;
-			
-			End("Player","racialScore");
-			return grandchimeraCounter;
-		}
-		
-		//Determine Inner Chimera Score
-		public function internalChimeraScore():Number {
-			Begin("Player","racialScore","internalChimeraScore");
-			var internalChimeraCounter:Number = 0;
-			if (hasPerk(PerkLib.BlackHeart))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.CatlikeNimbleness))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.CatlikeNimblenessEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.DraconicLungs))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.DraconicLungsEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.GorgonsEyes))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGland))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.LizanMarrow))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.LizanMarrowEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.ManticoreMetabolism))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.MantislikeAgility))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.MantislikeAgilityEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlands))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.ScyllaInkGlands))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.TrachealSystem))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.TrachealSystemEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.TrachealSystemFinalForm))
-				internalChimeraCounter++;
-		//	if (hasPerk(PerkLib.TrachealSystemEvolved))
-		//		internalChimeraCounter++;
-			
-			End("Player","racialScore");
-			return internalChimeraCounter;
-		}
-		
-		//Determine Inner Chimera Rating
-		public function internalChimeraRating():Number {
-			Begin("Player","racialScore","internalChimeraRating");
-			var internalChimeraRatingCounter:Number = 0;
-			if (hasPerk(PerkLib.BlackHeart))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.CatlikeNimbleness))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.CatlikeNimblenessEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.DraconicLungs))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.DraconicLungsEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.GorgonsEyes))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGland))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.LizanMarrow))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.LizanMarrowEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.ManticoreMetabolism))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.MantislikeAgility))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.MantislikeAgilityEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlands))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.ScyllaInkGlands))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.TrachealSystem))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.TrachealSystemEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.TrachealSystemFinalForm))
-				internalChimeraRatingCounter++;
-		//	if (hasPerk(PerkLib.TrachealSystemEvolved))
-		//		internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.ChimericalBodyInitialStage))
-				internalChimeraRatingCounter -= 2;
-			if (hasPerk(PerkLib.ChimericalBodyBasicStage))
-				internalChimeraRatingCounter -= 3;
-			if (hasPerk(PerkLib.ChimericalBodyAdvancedStage))
-				internalChimeraRatingCounter -= 4;
-			if (hasPerk(PerkLib.ChimericalBodySemiPerfectStage))
-				internalChimeraRatingCounter -= 5;
-			if (hasPerk(PerkLib.ChimericalBodyPerfectStage))
-				internalChimeraRatingCounter -= 6;
-			if (hasPerk(PerkLib.ChimericalBodyUltimateStage))
-				internalChimeraRatingCounter -= 7;
-			End("Player","racialScore");
-			return internalChimeraRatingCounter;
-		}
-
 		public function alicornScore():int{ return racialScore(Race.ALICORN); }
 		public function alrauneScore():int{ return racialScore(Race.ALRAUNE); }
 		public function avianScore():int{ return racialScore(Race.AVIAN); }
@@ -2540,57 +2194,27 @@
 		}
 
 		public override function getAllMinStats():Object {
-			var minStr:int = 1;
-			var minTou:int = 1;
-			var minSpe:int = 1;
-			var minInt:int = 1;
-			var minWis:int = 1;
-			var minLib:int = 0;
 			var minSen:int = 10;
 			var minCor:int = 0;
 			var racialScores:* = this.racialScores();
 			var racial:* = this.racialBonuses();
-			//Minimum Libido
-			if (this.gender > 0) minLib = 15;
-			else minLib = 10;
-	
-			if (this.armorName == "lusty maiden's armor") {
-				if (minLib < 50) minLib = 50;
-			}
-			if (minLib < (minLust() * 2 / 3))
-			{
-				minLib = (minLust() * 2 / 3);
-			}
-			if (this.jewelryEffectId == JewelryLib.PURITY)
-			{
-				minLib -= this.jewelryEffectMagnitude;
-			}
-			if (this.hasPerk(PerkLib.PurityBlessing)) {
-				minLib -= 2;
-			}
-			if (this.hasPerk(PerkLib.HistoryReligious) || this.hasPerk(PerkLib.PastLifeReligious)) {
-				minLib -= 2;
-			}
 			if (this.hasPerk(PerkLib.GargoylePure)) {
-				minLib = 5;
 				minSen = 5;
 			}
 			if (this.hasPerk(PerkLib.GargoyleCorrupted)) {
 				minSen += 15;
 			}
-			//Factory Perks
-			if(this.hasPerk(PerkLib.ProductivityDrugs)) {minLib+=this.perkv1(PerkLib.ProductivityDrugs);minCor+=this.perkv2(PerkLib.ProductivityDrugs);}
 
 			//Minimum Sensitivity
 			minSen += racial[Race.BonusName_minsen];
 
 			return {
-				str:minStr,
-				tou:minTou,
-				spe:minSpe,
-				inte:minInt,
-				wis:minWis,
-				lib:minLib,
+				str:strStat.min,
+				tou:touStat.min,
+				spe:speStat.min,
+				inte:intStat.min,
+				wis:wisStat.min,
+				lib:libStat.min,
 				sens:minSen,
 				cor:minCor
 			};
@@ -2676,366 +2300,38 @@
 		
 		public override function getAllMaxStats():Object {
 			Begin("Player","getAllMaxStats");
-			var maxStr:int = 100;
-			var maxTou:int = 100;
-			var maxSpe:int = 100;
-			var maxInt:int = 100;
-			var maxWis:int = 100;
-			var maxLib:int = 100;
 			var maxSen:int = 100;
-			var maxCor:int = 100;
 			var newGamePlusMod:int = this.newGamePlusMod()+1;
-			var racialScores:* = Race.AllScoresFor(this);
 			
-			//Alter max speed if you have oversized parts. (Realistic mode)
-			if (flags[kFLAGS.HUNGER_ENABLED] >= 1)
-			{
-				//Balls
-				var tempSpeedPenalty:Number = 0;
-				var lim:int = isTaur() ? 9 : 4;
-				if (ballSize > lim && balls > 0) tempSpeedPenalty += Math.round((ballSize - lim) / 2);
-				//Breasts
-				lim = isTaur() ? BreastCup.I : BreastCup.G;
-				if (hasBreasts() && biggestTitSize() > lim) tempSpeedPenalty += ((biggestTitSize() - lim) / 2);
-				//Cocks
-				lim = isTaur() ? 72 : 24;
-				if (biggestCockArea() > lim) tempSpeedPenalty += ((biggestCockArea() - lim) / 6);
-				//Min-cap
-				var penaltyMultiplier:Number = 1;
-				penaltyMultiplier -= str * 0.1;
-				penaltyMultiplier -= (tallness - 72) / 168;
-				if (penaltyMultiplier < 0.4) penaltyMultiplier = 0.4;
-				tempSpeedPenalty *= penaltyMultiplier;
-				maxSpe -= tempSpeedPenalty;
-				if (maxSpe < 50) maxSpe = 50;
-			}
-			//Perks ahoy
-			Begin("Player","getAllMaxStats.perks");
-			if (hasPerk(PerkLib.BasiliskResistance) && hasPerk(PerkLib.GorgonsEyes))
-			{
-				// 'maxspe': -5, // TODO withBonusTier
-			}
-			//Uma's Needlework affects max stats. Takes effect BEFORE racial modifiers and AFTER modifiers from body size.
-			//Caps strength from Uma's needlework. 
-			if (hasPerk(PerkLib.ChiReflowSpeed))
-			{
-				if (maxStr > UmasShop.NEEDLEWORK_SPEED_STRENGTH_CAP)
-				{
-					maxStr = UmasShop.NEEDLEWORK_SPEED_STRENGTH_CAP;
-				}
-			}
-			//Caps speed from Uma's needlework.
-			if (hasPerk(PerkLib.ChiReflowDefense))
-			{
-				if (maxSpe > UmasShop.NEEDLEWORK_DEFENSE_SPEED_CAP)
-				{
-					maxSpe = UmasShop.NEEDLEWORK_DEFENSE_SPEED_CAP;
-				}
-			}
-			End("Player","getAllMaxStats.perks");
 			Begin("Player","getAllMaxStats.racial");
 			//Alter max stats depending on race (+15 za pkt)
 			var racials:* = racialBonuses();
-			maxStr += racials[Race.BonusName_maxstr] * newGamePlusMod;
-			maxTou += racials[Race.BonusName_maxtou] * newGamePlusMod;
-			maxSpe += racials[Race.BonusName_maxspe] * newGamePlusMod;
-			maxInt += racials[Race.BonusName_maxint] * newGamePlusMod;
-			maxWis += racials[Race.BonusName_maxwis] * newGamePlusMod;
-			maxLib += racials[Race.BonusName_maxlib] * newGamePlusMod;
 			maxSen += racials[Race.BonusName_maxsen] * newGamePlusMod;
-
-			if (isNaga()) {
-				maxStr += (15 * newGamePlusMod);
-				maxSpe += (15 * newGamePlusMod);
-			}
-			if (isTaur()) {
-				maxSpe += (20 * newGamePlusMod);
-			}
-			if (isDrider()) {
-				maxTou += (15 * newGamePlusMod);
-				maxSpe += (15 * newGamePlusMod);
-			}
-			if (isScylla()) {
-				maxStr += (30 * newGamePlusMod);
-			}
-			if (racialScores[Race.GARGOYLE.name] >= 21) {
-				if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 1) {
-					maxStr += (20 * newGamePlusMod);
-				}
-				if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 2) {
-					maxInt += (20 * newGamePlusMod);
-				}
-			}
 			if (internalChimeraScore() >= 1) {
-				maxStr += (5 * internalChimeraScore() * newGamePlusMod);
-				maxTou += (5 * internalChimeraScore() * newGamePlusMod);
-				maxSpe += (5 * internalChimeraScore() * newGamePlusMod);
-				maxInt += (5 * internalChimeraScore() * newGamePlusMod);
-				maxWis += (5 * internalChimeraScore() * newGamePlusMod);
-				maxLib += (5 * internalChimeraScore() * newGamePlusMod);
 				maxSen += (5 * internalChimeraScore() * newGamePlusMod);
 			}
-			if (maxStr < 25) maxStr = 25;
-			if (maxTou < 25) maxTou = 25;
-			if (maxSpe < 25) maxSpe = 25;
-			if (maxInt < 25) maxInt = 25;
-			if (maxWis < 25) maxWis = 25;
-			if (maxLib < 25) maxLib = 25;
 			if (maxSen < 25) maxSen = 25;
 			End("Player","getAllMaxStats.racial");
 			Begin("Player","getAllMaxStats.perks2");
-			if (hasPerk(PerkLib.ChimericalBodyInitialStage)) {
-				maxTou += (5 * newGamePlusMod);
-				maxLib += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.ChimericalBodyBasicStage)) {
-				maxStr += (5 * newGamePlusMod);
-				maxSpe += (5 * newGamePlusMod);
-				maxInt += (5 * newGamePlusMod);
-				maxWis += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.ChimericalBodyAdvancedStage)) {
-				maxStr += (10 * newGamePlusMod);
-				maxTou += (10 * newGamePlusMod);
-				maxSpe += (10 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.ChimericalBodyPerfectStage)) {
-				maxInt += (10 * newGamePlusMod);
-				maxWis += (10 * newGamePlusMod);
-				maxLib += (10 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.ChimericalBodyUltimateStage)) {
-				maxStr += (10 * newGamePlusMod);
-				maxTou += (10 * newGamePlusMod);
-				maxSpe += (10 * newGamePlusMod);
-				maxInt += (10 * newGamePlusMod);
-				maxWis += (10 * newGamePlusMod);
-				maxLib += (10 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.SalamanderAdrenalGlands)) {
-				maxTou += (5 * newGamePlusMod);
-				maxLib += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved)) {
-				maxStr += (5 * newGamePlusMod);
-				maxTou += (5 * newGamePlusMod);
-				maxSpe += (5 * newGamePlusMod);
-				maxLib += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.ScyllaInkGlands)) {
-				maxStr += (10 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.MantislikeAgility)) {
-				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) maxSpe += (20 * newGamePlusMod);
-				if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) maxSpe += (15 * newGamePlusMod);
-				if (skinType == Skin.SCALES) maxSpe += (10 * newGamePlusMod);
-				if (hasPerk(PerkLib.ThickSkin)) maxSpe += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.MantislikeAgilityEvolved)) {
-				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) maxSpe += (20 * newGamePlusMod);
-				if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) maxSpe += (15 * newGamePlusMod);
-				if (skinType == Skin.SCALES) maxSpe += (10 * newGamePlusMod);
-				if (hasPerk(PerkLib.ThickSkin)) maxSpe += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.DraconicLungs)) {
-				maxSpe += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.DraconicLungsEvolved)) {
-				maxTou += (5 * newGamePlusMod);
-				maxSpe += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.KitsuneThyroidGland)) {
-				maxSpe += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved)) {
-				maxSpe += (5 * newGamePlusMod);
-				maxWis += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.CatlikeNimblenessEvolved)) {
-				maxSpe += (10 * newGamePlusMod);
-			}
 			if (hasPerk(PerkLib.GargoylePure)) {
-				maxWis += (80 * newGamePlusMod);
-				maxLib -= (10 * newGamePlusMod);
 				maxSen -= (10 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.GargoyleCorrupted)) {
-				maxWis -= (10 * newGamePlusMod);
-				maxLib += (80 * newGamePlusMod);
-			}
-			//Perks
-			if (hasPerk(PerkLib.JobCourtesan)) maxLib += (15 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobDervish)) maxSpe += (10 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobDefender)) maxTou += (15 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobElementalConjurer)) maxWis += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobEnchanter)) maxInt += (15 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobEromancer)) {
-				maxInt += (5 * newGamePlusMod);
-				maxLib += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.JobGuardian)) maxTou += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobHunter)) {
-				maxSpe += (10 * newGamePlusMod);
-				maxInt += (5 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.JobKnight)) maxTou += (10 * newGamePlusMod);
-			if (hasPerk(PerkLib.AdvancedJobMonk)) maxWis += (15 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobRanger)) maxSpe += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobSeducer)) maxLib += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobSorcerer)) maxInt += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.JobWarrior)) maxStr += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.PrestigeJobArcaneArcher)) {
-				maxSpe += (40 * newGamePlusMod);
-				maxInt += (40 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.PrestigeJobBerserker)) {
-				maxStr += (60 * newGamePlusMod);
-				maxTou += (20 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.PrestigeJobSentinel)) {
-				maxStr += (20 * newGamePlusMod);
-				maxTou += (60 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.PrestigeJobKiArtMaster)) {
-				maxStr += (40 * newGamePlusMod);
-				maxWis += (40 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.WeaponMastery)) maxStr += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.ElementalConjurerResolve)) {
-				maxStr -= (15 * newGamePlusMod);
-				maxTou -= (15 * newGamePlusMod);
-				maxSpe -= (15 * newGamePlusMod);
-				maxInt += (20 * newGamePlusMod);
-				maxWis += (30 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.ElementalConjurerDedication)) {
-				maxStr -= (30 * newGamePlusMod);
-				maxTou -= (30 * newGamePlusMod);
-				maxSpe -= (30 * newGamePlusMod);
-				maxInt += (40 * newGamePlusMod);
-				maxWis += (60 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.ElementalConjurerSacrifice)) {
-				maxStr -= (45 * newGamePlusMod);
-				maxTou -= (45 * newGamePlusMod);
-				maxSpe -= (45 * newGamePlusMod);
-				maxInt += (60 * newGamePlusMod);
-				maxWis += (90 * newGamePlusMod);
-			}
-			if (hasPerk(PerkLib.Lycanthropy)) {
-				if (flags[kFLAGS.LUNA_MOON_CYCLE] == 3 || flags[kFLAGS.LUNA_MOON_CYCLE] == 5) {
-					maxStr += (10 * newGamePlusMod);
-					maxTou += (10 * newGamePlusMod);
-					maxSpe += (10 * newGamePlusMod);
-				}
-				if (flags[kFLAGS.LUNA_MOON_CYCLE] == 2 || flags[kFLAGS.LUNA_MOON_CYCLE] == 6) {
-					maxStr += (20 * newGamePlusMod);
-					maxTou += (20 * newGamePlusMod);
-					maxSpe += (20 * newGamePlusMod);
-				}
-				if (flags[kFLAGS.LUNA_MOON_CYCLE] == 1 || flags[kFLAGS.LUNA_MOON_CYCLE] == 7) {
-					maxStr += (30 * newGamePlusMod);
-					maxTou += (30 * newGamePlusMod);
-					maxSpe += (30 * newGamePlusMod);
-				}
-				if (flags[kFLAGS.LUNA_MOON_CYCLE] == 8) {
-					maxStr += (40 * newGamePlusMod);
-					maxTou += (40 * newGamePlusMod);
-					maxSpe += (40 * newGamePlusMod);
-				}
 			}
 			End("Player","getAllMaxStats.perks2");
 			Begin("Player","getAllMaxStats.effects");
 			//Apply New Game+
-			maxStr += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			maxTou += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			maxSpe += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			maxInt += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			maxWis += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			maxLib += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			maxSen += 5 * perkv1(PerkLib.AscensionTranshumanism);
-			//Might
-			if (hasStatusEffect(StatusEffects.Might)) {
-				if (hasStatusEffect(StatusEffects.FortressOfIntellect)) maxInt += statusEffectv1(StatusEffects.Might);
-				else maxStr += statusEffectv1(StatusEffects.Might);
-				maxTou += statusEffectv2(StatusEffects.Might);
-			}
-			//Blink
-			if (hasStatusEffect(StatusEffects.Blink)) {
-				maxSpe += statusEffectv1(StatusEffects.Blink);
-			}
-			//Dwarf Rage
-			if (hasStatusEffect(StatusEffects.DwarfRage)) {
-				maxStr += statusEffectv1(StatusEffects.DwarfRage);
-				maxTou += statusEffectv2(StatusEffects.DwarfRage);
-				maxSpe += statusEffectv2(StatusEffects.DwarfRage);
-			}
-			//Trance Transformation
-			if (hasStatusEffect(StatusEffects.TranceTransformation)) {
-				maxStr += statusEffectv1(StatusEffects.TranceTransformation);
-				maxTou += statusEffectv1(StatusEffects.TranceTransformation);
-			}
-			//Crinos Shape
-			if (hasStatusEffect(StatusEffects.CrinosShape)) {
-				maxStr += statusEffectv1(StatusEffects.CrinosShape);
-				maxTou += statusEffectv2(StatusEffects.CrinosShape);
-				maxSpe += statusEffectv3(StatusEffects.CrinosShape);
-			}
-			//
-			if (hasStatusEffect(StatusEffects.ShiraOfTheEastFoodBuff2)) {
-				if (statusEffectv1(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) maxStr += statusEffectv1(StatusEffects.ShiraOfTheEastFoodBuff2);
-				maxTou += statusEffectv4(StatusEffects.ShiraOfTheEastFoodBuff2);
-				if (statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) maxSpe += statusEffectv2(StatusEffects.ShiraOfTheEastFoodBuff2);
-				if (statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2) >= 1) maxInt += statusEffectv3(StatusEffects.ShiraOfTheEastFoodBuff2);
-			}
-			//Beat of War
-			if (hasStatusEffect(StatusEffects.BeatOfWar)) {
-				maxStr += statusEffectv1(StatusEffects.BeatOfWar);
-			}
-			if (hasStatusEffect(StatusEffects.AndysSmoke)) {
-				maxSpe -= statusEffectv2(StatusEffects.AndysSmoke);
-				maxInt += statusEffectv3(StatusEffects.AndysSmoke);
-			}
-			if (hasStatusEffect(StatusEffects.FeedingEuphoria)) {
-				maxSpe += statusEffectv2(StatusEffects.FeedingEuphoria);
-			}
-			if (hasStatusEffect(StatusEffects.BlessingOfDivineFenrir)) {
-				maxStr += statusEffectv2(StatusEffects.BlessingOfDivineFenrir);
-				maxTou += statusEffectv3(StatusEffects.BlessingOfDivineFenrir);
-			}
-			if (hasStatusEffect(StatusEffects.BlessingOfDivineTaoth)) {
-				maxSpe += statusEffectv2(StatusEffects.BlessingOfDivineTaoth);
-			}
-			var vthirst:VampireThirstEffect = statusEffectByType(StatusEffects.VampireThirst) as VampireThirstEffect;
-			if (vthirst != null) {
-				maxStr += vthirst.currentBoost;
-				maxSpe += vthirst.currentBoost;
-				maxInt += vthirst.currentBoost;
-				maxLib += vthirst.currentBoost;
-			}
-			if (hasStatusEffect(StatusEffects.UnderwaterCombatBoost)) {
-				maxStr += statusEffectv1(StatusEffects.UnderwaterCombatBoost);
-				maxSpe += statusEffectv2(StatusEffects.UnderwaterCombatBoost);
-			}
-			End("Player","getAllMaxStats.effects");
+			End("Player","getAllMaxStats.perks2");
 			End("Player","getAllMaxStats");
-			maxStr = Math.max(maxStr,1);
-			maxTou = Math.max(maxTou,1);
-			maxSpe = Math.max(maxSpe,1);
-			maxInt = Math.max(maxInt,1);
-			maxWis = Math.max(maxWis,1);
-			maxLib = Math.max(maxLib,1);
 			maxSen = Math.max(maxSen,1);
-			maxCor = Math.max(maxCor,1);
 			return {
-				str:maxStr,
-				tou:maxTou,
-				spe:maxSpe,
-				inte:maxInt,
-				wis:maxWis,
-				lib:maxLib,
+				str:strStat.max,
+				tou:touStat.max,
+				spe:speStat.max,
+				inte:intStat.max,
+				wis:wisStat.max,
+				lib:libStat.max,
 				sens:maxSen,
-				cor:maxCor
+				cor:100
 			};
 		}
 		
@@ -3054,93 +2350,13 @@
 
 		public function clearStatuses(visibility:Boolean):void
 		{
-			if (hasStatusEffect(StatusEffects.DriderIncubusVenom))
-			{
-				str += statusEffectv2(StatusEffects.DriderIncubusVenom);
-				removeStatusEffect(StatusEffects.DriderIncubusVenom);
-				CoC.instance.mainView.statsView.showStatUp('str');
-			}
 			if(CoC.instance.monster.hasStatusEffect(StatusEffects.Sandstorm)) CoC.instance.monster.removeStatusEffect(StatusEffects.Sandstorm);
-			if(hasStatusEffect(StatusEffects.DwarfRage)) {
-				dynStats("str", -statusEffectv1(StatusEffects.DwarfRage),"tou", -statusEffectv2(StatusEffects.DwarfRage),"spe", -statusEffectv2(StatusEffects.DwarfRage), "scale", false);
-				removeStatusEffect(StatusEffects.DwarfRage);
-			}
-			if(hasStatusEffect(StatusEffects.Berzerking)) {
-				removeStatusEffect(StatusEffects.Berzerking);
-			}
-			if(hasStatusEffect(StatusEffects.Lustzerking)) {
-				removeStatusEffect(StatusEffects.Lustzerking);
-			}
-			if(hasStatusEffect(StatusEffects.EverywhereAndNowhere)) {
-				removeStatusEffect(StatusEffects.EverywhereAndNowhere);
-			}
-			if(CoC.instance.monster.hasStatusEffect(StatusEffects.TailWhip)) {
-				CoC.instance.monster.removeStatusEffect(StatusEffects.TailWhip);
-			}
-			if(CoC.instance.monster.hasStatusEffect(StatusEffects.TwuWuv)) {
-				inte += CoC.instance.monster.statusEffectv1(StatusEffects.TwuWuv);
-				EngineCore.statScreenRefresh();
-				CoC.instance.mainView.statsView.showStatUp( 'inte' );
-			}
-			if(hasStatusEffect(StatusEffects.NagaVenom)) {
-				spe += statusEffectv1(StatusEffects.NagaVenom);
-				CoC.instance.mainView.statsView.showStatUp( 'spe' );
-				removeStatusEffect(StatusEffects.NagaVenom);
-			}
-			if(hasStatusEffect(StatusEffects.MedusaVenom)) {
-				str += statusEffectv1(StatusEffects.MedusaVenom);
-				tou += statusEffectv2(StatusEffects.MedusaVenom);
-				spe += statusEffectv3(StatusEffects.MedusaVenom);
-				inte += statusEffectv4(StatusEffects.MedusaVenom);
-				CoC.instance.mainView.statsView.showStatUp( 'str' );
-				CoC.instance.mainView.statsView.showStatUp( 'tou' );
-				CoC.instance.mainView.statsView.showStatUp( 'spe' );
-				CoC.instance.mainView.statsView.showStatUp( 'inte' );
-				removeStatusEffect(StatusEffects.MedusaVenom);
-			}
-			if(hasStatusEffect(StatusEffects.Frostbite)) {
-				str += statusEffectv1(StatusEffects.Frostbite);
-				CoC.instance.mainView.statsView.showStatUp( 'str' );
-				removeStatusEffect(StatusEffects.Frostbite);
-			}
 			if(hasStatusEffect(StatusEffects.Flying)) {
 				removeStatusEffect(StatusEffects.Flying);
 				if(hasStatusEffect(StatusEffects.FlyingNoStun)) {
 					removeStatusEffect(StatusEffects.FlyingNoStun);
 					removePerk(PerkLib.Resolute);
 				}
-			}
-			if(hasStatusEffect(StatusEffects.Might)) {
-				if (hasStatusEffect(StatusEffects.FortressOfIntellect)) dynStats("int", -statusEffectv1(StatusEffects.Might), "scale", false);
-				else dynStats("str", -statusEffectv1(StatusEffects.Might), "scale", false);
-				dynStats("tou", -statusEffectv2(StatusEffects.Might), "scale", false);
-				removeStatusEffect(StatusEffects.Might);
-			}
-			if(hasStatusEffect(StatusEffects.Blink)) {
-				dynStats("spe", -statusEffectv1(StatusEffects.Blink), "scale", false);
-				removeStatusEffect(StatusEffects.Blink);
-			}
-			if(hasStatusEffect(StatusEffects.BeatOfWar)) {
-				dynStats("str", -statusEffectv1(StatusEffects.BeatOfWar), "scale", false);
-				removeStatusEffect(StatusEffects.BeatOfWar);
-			}
-			if(hasStatusEffect(StatusEffects.UnderwaterCombatBoost)) {
-				dynStats("str", -statusEffectv1(StatusEffects.UnderwaterCombatBoost),"spe", -statusEffectv2(StatusEffects.UnderwaterCombatBoost), "scale", false);
-				removeStatusEffect(StatusEffects.UnderwaterCombatBoost);
-			}
-			if(hasStatusEffect(StatusEffects.TranceTransformation)) {
-				dynStats("str", -statusEffectv1(StatusEffects.TranceTransformation), "scale", false);
-				dynStats("tou", -statusEffectv1(StatusEffects.TranceTransformation), "scale", false);
-				removeStatusEffect(StatusEffects.TranceTransformation);
-			}
-			if(hasStatusEffect(StatusEffects.CrinosShape)) {
-				dynStats("str", -statusEffectv1(StatusEffects.CrinosShape), "scale", false);
-				dynStats("tou", -statusEffectv2(StatusEffects.CrinosShape), "scale", false);
-				dynStats("spe", -statusEffectv3(StatusEffects.CrinosShape), "scale", false);
-				removeStatusEffect(StatusEffects.CrinosShape);
-			}
-			if(hasStatusEffect(StatusEffects.EzekielCurse)) {
-				removeStatusEffect(StatusEffects.EzekielCurse);
 			}
 			if(hasStatusEffect(StatusEffects.DragonBreathCooldown) && hasPerk(PerkLib.DraconicLungsEvolved)) {
 				removeStatusEffect(StatusEffects.DragonBreathCooldown);
@@ -3157,12 +2373,6 @@
 			if(hasStatusEffect(StatusEffects.DragonLightningBreathCooldown) && hasPerk(PerkLib.DraconicLungs)) {
 				removeStatusEffect(StatusEffects.DragonLightningBreathCooldown);
 			}
-			if(hasStatusEffect(StatusEffects.HeroBane)) {
-				removeStatusEffect(StatusEffects.HeroBane);
-			}
-			if(hasStatusEffect(StatusEffects.PlayerRegenerate)) {
-				removeStatusEffect(StatusEffects.PlayerRegenerate);
-			}
 			if(hasStatusEffect(StatusEffects.Disarmed)) {
 				removeStatusEffect(StatusEffects.Disarmed);
 				if (weapon == WeaponLib.FISTS) {
@@ -3173,11 +2383,6 @@
 				else {
 					flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] = flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID];
 				}
-			}
-			if (hasStatusEffect(StatusEffects.DriderIncubusVenom))
-			{
-				str += statusEffectv2(StatusEffects.DriderIncubusVenom);
-				removeStatusEffect(StatusEffects.DriderIncubusVenom);
 			}
 			
 			// All CombatStatusEffects are removed here
@@ -3527,15 +2732,15 @@
 				sac.value1 += 5 * intensity;
 				sac.value2 += 5 * intensity;
 				sac.value3 += 48 * intensity;
-				dynStats("lib", 5 * intensity, "scale", false);
+				sac.buffHost('lib',5*intensity);
 			}
 			//Go into heat.  Heats v1 is bonus fertility, v2 is bonus libido, v3 is hours till it's gone
 			else {
 				if(output) {
 					outputText("\n\nYour mind clouds as your " + vaginaDescript(0) + " moistens.  Your hands begin stroking your body from top to bottom, your sensitive skin burning with desire.  Fantasies about bending over and presenting your needy pussy to a male overwhelm you as <b>you realize you have gone into heat!</b>");
 				}
-				createStatusEffect(StatusEffects.Heat, 10 * intensity, 15 * intensity, 48 * intensity, 0);
-				dynStats("lib", 15 * intensity, "scale", false);
+				sac = createStatusEffect(StatusEffects.Heat, 10 * intensity, 15 * intensity, 48 * intensity, 0);
+				sac.buffHost("lib", 15 * intensity);
 			}
 			return true;
 		}
@@ -3554,15 +2759,16 @@
 			}
 			
 			//Has rut, intensify it!
-			if (inRut) {
+			var sec:StatusEffectClass = statusEffectByType(StatusEffects.Rut);
+			if (sec) {
 				if(output) {
 					outputText("\n\nYour [cock] throbs and dribbles as your desire to mate intensifies.  You know that <b>you've sunken deeper into rut</b>, but all that really matters is unloading into a cum-hungry cunt.");
 				}
 				
-				addStatusValue(StatusEffects.Rut, 1, 100 * intensity);
-				addStatusValue(StatusEffects.Rut, 2, 5 * intensity);
-				addStatusValue(StatusEffects.Rut, 3, 48 * intensity);
-				dynStats("lib", 5 * intensity, "scale", false);
+				sec.value1 += 100 * intensity;
+				sec.value2 += 5 * intensity;
+				sec.value3 += 48 * intensity;
+				sec.buffHost("lib", 5 * intensity);
 			}
 			else {
 				if(output) {
@@ -3572,8 +2778,8 @@
 				//v1 - bonus cum production
 				//v2 - bonus libido
 				//v3 - time remaining!
-				createStatusEffect(StatusEffects.Rut, 150 * intensity, 5 * intensity, 100 * intensity, 0);
-				dynStats("lib", 5 * intensity, "scale", false);
+				sec = createStatusEffect(StatusEffects.Rut, 150 * intensity, 5 * intensity, 100 * intensity, 0);
+				sec.buffHost("lib",5*intensity);
 			}
 			
 			return true;
@@ -3691,7 +2897,7 @@
 			return max;
 		}
 		
-		override public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number,dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean, max:Boolean):void {
+		override public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number,dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {
 			//Easy mode cuts lust gains!
 			if (flags[kFLAGS.EASY_MODE_ENABLE_FLAG] == 1 && dlust > 0 && scale) dlust /= 2;
 			
@@ -3761,24 +2967,9 @@
 				if (hasPerk(PerkLib.Lusty)) dlib += dlib * perkv1(PerkLib.Lusty);
 				if (hasPerk(PerkLib.Sensitive)) dsens += dsens * perkv1(PerkLib.Sensitive);
 				
-				// Uma's Str Cap from Perks (Moved to max stats)
-				/*if (hasPerk(PerkLib.ChiReflowSpeed))
-				{
-					if (str > UmasShop.NEEDLEWORK_SPEED_STRENGTH_CAP)
-					{
-						str = UmasShop.NEEDLEWORK_SPEED_STRENGTH_CAP;
-					}
-				}
-				if (hasPerk(PerkLib.ChiReflowDefense))
-				{
-					if (spe > UmasShop.NEEDLEWORK_DEFENSE_SPEED_CAP)
-					{
-						spe = UmasShop.NEEDLEWORK_DEFENSE_SPEED_CAP;
-					}
-				}*/
 			}
 			//Change original stats
-			super.modStats(dstr,dtou,dspe,dinte,dwis,dlib,dsens,dlust,dcor,false,max);
+			super.modStats(dstr,dtou,dspe,dinte,dwis,dlib,dsens,dlust,dcor,false);
 			//Refresh the stat pane with updated values
 			//mainView.statsView.showUpDown();
 			EngineCore.showUpDown();

@@ -9,8 +9,8 @@ public class CombatWisBuff extends CombatBuff {
 	public function CombatWisBuff() {
 		super(TYPE, "wis");
 	}
-	public function applyEffect(wisBuff:Number):Number {
-		return buffHost("wis", wisBuff).wis;
+	public function applyEffect(wisBuff:Number):void {
+		buffHost("wis", wisBuff);
 	}
 }
 }

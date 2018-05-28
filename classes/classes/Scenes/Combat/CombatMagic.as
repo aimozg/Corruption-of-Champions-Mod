@@ -17,6 +17,8 @@ import classes.Scenes.NPCs.Holli;
 import classes.Scenes.NPCs.JojoScene;
 import classes.Scenes.Places.TelAdre.UmasShop;
 import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
+import classes.StatusEffectClass;
 import classes.StatusEffects;
 import classes.VaginaClass;
 
@@ -861,16 +863,16 @@ public class CombatMagic extends BaseCombatContent {
 				tempStr = MightBoost;
 			}
 			var oldHPratio:Number = player.hp100/100;
-			player.createStatusEffect(StatusEffects.Might,0,0,MightDuration,0);
-			if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) player.changeStatusValue(StatusEffects.Might,1,tempInt);
-			else player.changeStatusValue(StatusEffects.Might,1,tempStr);
-			player.changeStatusValue(StatusEffects.Might,2,tempTou);
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.Might,0,0,MightDuration,0);
 			if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) {
-				player.inte += player.statusEffectv1(StatusEffects.Might);
+				sec.value1 = tempInt;
+				sec.buffHost('int',tempInt);
 			} else {
-				player.str += player.statusEffectv1(StatusEffects.Might);
+				sec.value1 = tempStr;
+				sec.buffHost('str',tempStr);
 			}
-			player.tou += player.statusEffectv2(StatusEffects.Might);
+			sec.value2 = tempTou;
+			sec.buffHost('tou',tempTou);
 			player.HP = oldHPratio*player.maxHP();
 			statScreenRefresh();
 		};
@@ -955,14 +957,9 @@ public class CombatMagic extends BaseCombatContent {
 			BlinkBoost = FnHelpers.FN.logScale(BlinkBoost,BlinkABC,10);
 			BlinkBoost = Math.round(BlinkBoost);
 			var BlinkDuration:Number = 5;
-			player.createStatusEffect(StatusEffects.Blink,0,0,BlinkDuration,0);
-			tempSpe = BlinkBoost;
-			//if(player.spe + temp > 100) tempSpe = 100 - player.spe;
-			player.changeStatusValue(StatusEffects.Blink,1,tempSpe);
-			mainView.statsView.showStatUp('spe');
-			// strUp.visible = true;
-			// strDown.visible = false;
-			player.spe += player.statusEffectv1(StatusEffects.Blink);
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.Blink,0,0,BlinkDuration,0);
+			sec.value1 = BlinkBoost;
+			sec.buffHost('spe',BlinkBoost);
 			statScreenRefresh();
 		};
 

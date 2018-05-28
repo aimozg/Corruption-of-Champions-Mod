@@ -63,16 +63,13 @@ public final class Mutations extends MutationsHelper
 			outputText("You use the incense and sit to meditate as the perfume of flowers and fruits fill the area. You see visions of things you could do and things you could’ve done good and bad, and when you open your eyes you realise you found new insight on your goals.");
 			if (rand(3) == 0) outputText(player.modTone(15, 1));
 			if (player.wis < 50) {
-				player.wis += 1 + rand(4);
-				dynStats();
+				dynStats('wis',1+rand(4));
 			}
 			else if (player.wis < 100) {
-				player.wis += 1 + rand(3);
-				dynStats();
+				dynStats('wis',1+rand(3));
 			}
 			else {
-				player.wis += 1 + rand(2);
-				dynStats();
+				dynStats('wis',1+rand(2));
 			}
 		}
 /*
@@ -4183,12 +4180,13 @@ public final class Mutations extends MutationsHelper
 			}
 			outputText("You shovel the stuff into your face, not sure WHY you're eating it, but once you start, you just can't stop.  It tastes incredibly bland, and with a slight hint of cheese.");
 			player.refillHunger(100);
-			player.str = 30;
-			player.spe = 30;
-			player.tou = 30;
-			player.inte = 30;
+			player.strStat.removeAllEffects();
+			player.speStat.removeAllEffects();
+			player.touStat.removeAllEffects();
+			player.intStat.removeAllEffects();
+			player.wisStat.removeAllEffects();
+			player.libStat.removeAllEffects();
 			player.sens = 20;
-			player.lib = 25;
 			player.cor = 5;
 			player.lust = 10;
 			player.hairType = Hair.NORMAL;
@@ -7418,16 +7416,6 @@ public final class Mutations extends MutationsHelper
 					player.ballSize = 3;
 				}
 				outputText("Finally, you feel the transformation skittering to a halt, leaving you to openly roam your new chiseled and sex-ready body.  So what if you can barely form coherent sentences anymore?  A body like this does all the talking you need, you figure!");
-				if (player.inte > 35) {
-					var boost:Number = (player.inte-35) / 5;
-					player.inte = 35 + boost;
-					dynStats("int", -0.1);
-
-				}
-				if (player.lib < 50) {
-					player.lib = 50;
-					dynStats("lib", .1);
-				}
 				outputText("\n\n<b>(Lost Perk - ");
 				if (player.hasPerk(PerkLib.BimboBrains)) outputText("Bimbo Brains, ");
 				outputText("Bimbo Body)\n");
@@ -7537,10 +7525,6 @@ public final class Mutations extends MutationsHelper
 			if (player.hasPerk(PerkLib.Feeder)) {
 				outputText("<b>(Perk Lost - Feeder!)</b>\n");
 				player.removePerk(PerkLib.Feeder);
-			}
-			if (player.inte > 21) {
-				boost = (player.inte-20) / 4;
-				player.inte = 21 + boost;
 			}
 			dynStats("str", 35, "tou", 35, "int", -1, "lib", 5, "lus", 40);
 			player.refillHunger(30);
@@ -9795,8 +9779,7 @@ public final class Mutations extends MutationsHelper
 				//Get warned!
 				if(flags[kFLAGS.FERRET_BAD_END_WARNING] == 0) {
 					outputText("\n\nYou find yourself staring off into the distance, dreaming idly of chasing rabbits through a warren.  You shake your head, returning to reality.  <b>Perhaps you should cut back on all the Ferret Fruit?</b>");
-					player.inte -= 5 + rand(3);
-					if(player.inte < 5) player.inte = 5;
+					player.drainStat('int',-(5 + rand(3)));
 					flags[kFLAGS.FERRET_BAD_END_WARNING] = 1;
 				}
 				//BEEN WARNED! BAD END! DUN DUN DUN

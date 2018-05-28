@@ -125,6 +125,9 @@ public class Block extends Sprite {
 		addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		invalidateLayout();
 	}
+	
+	// User-defined properties can be stored here
+	public var dataset:Object = {};
 
 	private function get xmin():Number {
 		var xmin:Number = 0;

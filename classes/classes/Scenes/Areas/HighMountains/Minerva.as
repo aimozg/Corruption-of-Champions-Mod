@@ -38,7 +38,7 @@ public class Minerva extends Monster
 			outputText("The blue beauty flaps her wings and launches herself into the air.  Once she's gained as much altitude as she can, she dive-bombs you, her demon-clawed feet leading the attack.");
 
 			var damage:int = int((str + weaponAttack + 100) - rand(player.tou) - player.armorDef);
-			spe -= 70;
+			speStat.core.value -= 70;
 			if (player.getEvasionRoll()) {
 				outputText("  You jump out of the landing zone just in time, piles of dirt exploding in all directions as Minerva slams into the ground.");
 			}
@@ -49,7 +49,7 @@ public class Minerva extends Monster
 				outputText("  She hits you square in the chest, knocking you to the ground as her entire weight lands on you.  The bombshell of a woman jumps off your chest, ready to keep fighting. ");
 				damage = player.takePhysDamage(damage, true);
 			}
-			spe += 70;
+			speStat.core.value += 70;
 		}
 
 //Tail-whip

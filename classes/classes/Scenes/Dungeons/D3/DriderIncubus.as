@@ -6,6 +6,7 @@ import classes.CockTypesEnum;
 import classes.PerkLib;
 import classes.Scenes.Areas.Swamp.AbstractSpiderMorph;
 import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
 import classes.StatusEffects;
 
 public class DriderIncubus extends AbstractSpiderMorph
@@ -207,24 +208,10 @@ this.HP -= (this.maxHP() * 0.08);
 			//Inflicts venom that reduces strength.
 			if (player.hasStatusEffect(StatusEffects.Stunned) || (player.spe <= 1 && player.statusEffectv1(StatusEffects.Web) >= 2))
 			{
-				if (player.hasStatusEffect(StatusEffects.DriderIncubusVenom))
-				{
-					player.changeStatusValue(StatusEffects.DriderIncubusVenom, 1, 5);
-				}
-				else
-				{
-					player.createStatusEffect(StatusEffects.DriderIncubusVenom, 5, 0, 0, 0);
-				}					
-				
+				var sec:StatusEffectClass = player.createOrFindStatusEffect(StatusEffects.DriderIncubusVenom);
+				sec.value1 += 5;
 				amount = VENOM_SPEED_DRAIN_FLAT + VENOM_SPEED_DRAIN_MULT*player.newGamePlusMod();
-				
-				if (player.str - amount < 1)
-				{
-					amount = player.str - 1;
-				}
-				
-				player.str -= amount;
-				showStatDown('str');
+				sec.buffHost('str',-amount);
 				player.addStatusValue(StatusEffects.DriderIncubusVenom, 2, amount);
 					
 				//Alternate if PC cannot move
@@ -252,24 +239,18 @@ this.HP -= (this.maxHP() * 0.08);
 					
 					outputText("<i>“I do love watching you struggle.”</i> He flashes a crooked smile.");
 					
-					if (player.hasStatusEffect(StatusEffects.DriderIncubusVenom))
+					sec = player.statusEffectByType(StatusEffects.DriderIncubusVenom);
+					if (sec)
 					{
-						player.changeStatusValue(StatusEffects.DriderIncubusVenom, 1, 5);
+						sec.value1 += 5;
 					}
 					else
 					{
-						player.createStatusEffect(StatusEffects.DriderIncubusVenom, 5, 0, 0, 0);
-					}					
-					
-					amount = VENOM_SPEED_DRAIN_FLAT + VENOM_SPEED_DRAIN_MULT*player.newGamePlusMod();
-					
-					if (player.str - amount < 1)
-					{
-						amount = player.str - 1;
+						sec = player.createStatusEffect(StatusEffects.DriderIncubusVenom, 5, 0, 0, 0);
 					}
 					
-					player.str -= amount;
-					showStatDown('str');
+					amount = VENOM_SPEED_DRAIN_FLAT + VENOM_SPEED_DRAIN_MULT*player.newGamePlusMod();
+					sec.buffHost('str',-amount);
 					player.addStatusValue(StatusEffects.DriderIncubusVenom, 2, amount);
 				}				
 			}

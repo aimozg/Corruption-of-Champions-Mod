@@ -251,12 +251,12 @@ public function startUrtaQuest():void {
 	player.vaginas[0].vaginalWetness = VaginaClass.WETNESS_DROOLING;
 	player.vaginas[0].vaginalLooseness = VaginaClass.LOOSENESS_NORMAL;
 	player.clitLength = 1;
-	player.str = 100;
-	player.tou = 110;
-	player.spe = 120;
-	player.inte = 60;
-	player.wis = 50;
-	player.lib = 90;
+	player.strStat.reset(100);
+	player.touStat.reset(110);
+	player.speStat.reset(120);
+	player.intStat.reset(60);
+	player.wisStat.reset(50);
+	player.libStat.reset(90);
 	player.sens = 50;
 	player.cor = 30;
 	player.lust = 55;
@@ -266,12 +266,11 @@ public function startUrtaQuest():void {
 	player.gems = 183;
 	player.level = 26;
 	player.teaseLevel = 5;
-	player.str += (player.newGamePlusMod() * 30);
-	player.tou += (player.newGamePlusMod() * 33);
-	player.spe += (player.newGamePlusMod() * 36);
-	player.inte += (player.newGamePlusMod() * 18);
-	player.wis += (player.newGamePlusMod() * 15);
-	player.lib += (player.newGamePlusMod() * 27);
+	player.strStat.core.value += (player.newGamePlusMod() * 30);
+	player.touStat.core.value += (player.newGamePlusMod() * 33);
+	player.speStat.core.value += (player.newGamePlusMod() * 36);
+	player.intStat.core.value += (player.newGamePlusMod() * 18);
+	player.libStat.core.value += (player.newGamePlusMod() * 27);
 
 	//PERKS
 	player.createPerk(PerkLib.Agility,0,0,0,0);
@@ -1600,11 +1599,11 @@ private function gnollAlphaBitchIntro():void {
 	outputText("\n\n<b>It's a fight!</b>");
     CoC.instance.player.clearStatuses(false);
     startCombat(new GnollSpearThrower());
-	monster.str += 20 + (4 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.tou += 25 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.spe += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.inte += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);			
-	monster.lib += 5 + (1 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+	monster.strStat.core.value += 20 + (4 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+	monster.touStat.core.value += 25 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+	monster.speStat.core.value += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+	monster.intStat.core.value += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+	monster.libStat.core.value += 5 + (1 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 	monster.bonusHP = 750;
 	monster.level += 11;
 	monster.short = "alpha gnoll";

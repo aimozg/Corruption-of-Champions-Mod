@@ -5,6 +5,7 @@ import classes.BodyParts.Butt;
 import classes.BodyParts.Hips;
 import classes.GlobalFlags.*;
 import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
 import classes.internals.*;
 
 public class GoblinElder extends Goblin
@@ -99,9 +100,10 @@ public class GoblinElder extends Goblin
 			else if (spellChooser == 5 && fatigue <= (100 - spellCostMight)) {
 				outputText("She flushes, drawing on her body's desires to empower her muscles and toughen her up.");
 				outputText("The rush of success and power flows through her body.  She feels like she can do anything!");
-				createStatusEffect(StatusEffects.Might, 15 * spellMultiplier(), 15 * spellMultiplier(), 0, 0);
-				str += 15 * spellMultiplier();
-				tou += 15 * spellMultiplier();
+				var mightPower:Number = 15 * spellMultiplier();
+				var sec:StatusEffectClass = createStatusEffect(StatusEffects.Might, mightPower, mightPower, 0, 0);
+				sec.buffHost('str',mightPower);
+				sec.buffHost('tou',mightPower);
 				fatigue += spellCostMight;
 			}
 		}

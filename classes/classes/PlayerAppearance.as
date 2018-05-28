@@ -2024,6 +2024,7 @@ public function RacialScores():void {
 		outputText("\n<font color=\"#0000a0\">INTERNAL CHIMERICAL DISPOSITION: " + player.internalChimeraScore() + " (+" + (5 * player.internalChimeraScore() * (1 + player.newGamePlusMod())) + " max Str / Tou / Spe / Int / Wis / Lib)</font>");
 	}
 	else if (player.internalChimeraScore() < 1) outputText("\nINTERNAL CHIMERICAL DISPOSITION: 0</font>");
+	outputText("\n\n");
 		var metrics:* = Race.MetricsFor(player);
 		for each (var race:Race in Race.RegisteredRaces) {
 			outputText("<b>" +race.name+"</b>:\n<ul>");

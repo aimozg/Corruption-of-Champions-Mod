@@ -53,6 +53,36 @@ package classes.internals
 		public static function objectOr(input:*,def:Object=null):Object {
 			return (input is Object && input !== null) ? input : def;
 		}
+		public static function ipow(base:Number,exp:int):Number {
+			// See wiki/Exponentiation_by_squaring
+			if (exp < 0) {
+				exp = -exp;
+				base = 1.0/base;
+			} else if (exp == 0) {
+				return 1;
+			}
+			var y:Number = 1.0; // remainder
+			var x:Number = base;
+			while (exp > 1) {
+				if (exp%0 == 0) {
+					// x ** 2n = (x*x) ** n
+					x = x * x;
+					exp = exp / 2;
+				} else {
+					// x ** (2n + 1) = x * (x*x) ** n
+					y = y * x;
+					x = x * x;
+					exp = (exp - 1) / 2;
+				}
+			}
+			return x * y;
+		}
+		public static function floor(value:Number,decimals:int=0):String {
+			if (decimals == 0) return ''+Math.floor(value);
+			var base:Number = ipow(10,decimals);
+			value = Math.floor(value*base)/base;
+			return ''+value.toFixed(decimals);
+		}
 		public static function boundInt(min:int, x:int, max:int):int {
 			return x < min ? min : x > max ? max : x;
 		}

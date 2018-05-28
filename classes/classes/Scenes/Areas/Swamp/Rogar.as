@@ -732,17 +732,11 @@ private function takeDatBroBrewFromDaBigMeanOlOrc():void {
 	
 	outputText("Leaving Ro'gar's apartment you wander out into the streets.");
 	if(!player.hasPerk(PerkLib.BroBody)) {
+		player.createPerk(PerkLib.BroBrains,0,0,0,0);
+		player.createPerk(PerkLib.BroBody,0,0,0,0);
 		if(player.balls == 0) {
 			player.balls = 2;
 			player.ballSize = 3;
-		}
-		if(player.inte > 35) {
-			player.inte = 35;
-			dynStats("int", -0.1);
-		}
-		if(player.lib < 50) {
-			player.lib = 50;
-			dynStats("lib", .1);
 		}
 		outputText("\n\n");
 		//(Tits b' gone) 
@@ -786,20 +780,13 @@ private function takeDatBroBrewFromDaBigMeanOlOrc():void {
 		if(player.thickness < 100) {
 			player.modThickness(100,50);
 		}
-		if(player.inte > 21) player.inte = 21;
 		dynStats("str", 33,"tou", 33, "int", -1, "lib", 4, "lus", 40);
-		changed = true;
-		player.removePerk(PerkLib.Feeder);
-	}
-	//[(if player received a change from brew)
-	if(changed) {
+		//[(if player received a change from brew)
 		outputText("  You realize you look much stronger, bigger, and sexier");
 		//(if dick grew)
 		if(cocked) outputText(", and you smile to yourself as your now-larger endowment" + (player.armorDescript() != "gear" ? " rubs against garments not suited to it" : " flops freely in the air") + "");
 		outputText(".  Who needs book smarts anyway?  Nerds.");
 		//lose lust, gain bro traits, slimefeed
-		player.createPerk(PerkLib.BroBrains,0,0,0,0);
-		player.createPerk(PerkLib.BroBody,0,0,0,0);
 		outputText("<b>(Bro Body - Perk Gained!)\n");
 		outputText("(Bro Brains - Perk Gained!)</b>\n");//int to 20.  max int 50)
 		if(player.hasPerk(PerkLib.Feeder)) {

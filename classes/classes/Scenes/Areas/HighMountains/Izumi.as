@@ -321,17 +321,7 @@ public class Izumi extends Monster
 		// Remove the effect post-combat, fixup stats
 		public function cleanupGroundpound():void
 		{
-			if (player.hasStatusEffect(StatusEffects.Groundpound))
-			{
-				// Can't use dynStats to achieve this, as it can give back more speed than we originally took away due to perks
-				player.spe += player.statusEffectv2(StatusEffects.Groundpound);
-				var max:int = player.getMaxStats("spe");
-				if (player.spe > max) player.spe = max;
-				
-				player.removeStatusEffect(StatusEffects.Groundpound);
-				
-				trace("Removing Groundpound slow effect");
-			}
+			player.removeStatusEffect(StatusEffects.Groundpound);
 		}
 		
 		// Binding attack, mild lust increase per turn until the player breaks out. Not TOO hard to break out, though.

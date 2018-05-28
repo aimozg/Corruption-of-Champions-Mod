@@ -22,10 +22,10 @@ public class SandWitchMob extends Monster
 		public function gangrush():void {
 			outputText("The witches close ranks and advance with raised fists, intent on beating you into submission!\n");
 			//3-5 attacks.at half strength
-			str -= 10;
+			strStat.bonus.addOrReplaceEffect('rush',-10);
 			createStatusEffect(StatusEffects.Attacks, 2 + rand(3),0,0,0);
 			eAttack();
-			str += 10;
+			strStat.bonus.removeEffect('rush');
 			
 		}
 

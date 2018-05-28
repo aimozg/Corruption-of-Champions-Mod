@@ -149,6 +149,8 @@ public class CoC extends MovieClip
     public var kFLAGS_REF:*;
     public var kACHIEVEMENTS_REF:*;
 
+    public var inGame:Boolean = false;
+    
     public function get inCombat():Boolean { return _gameState == 1; }
 
     public function set inCombat(value:Boolean):void { _gameState = (value ? 1 : 0); }

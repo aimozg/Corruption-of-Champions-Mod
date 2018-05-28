@@ -13,6 +13,8 @@ import classes.Scenes.Dungeons.D3.LivingStatue;
 import classes.Scenes.NPCs.Holli;
 import classes.Scenes.Places.TelAdre.UmasShop;
 import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
+import classes.StatusEffectClass;
 import classes.StatusEffects.VampireThirstEffect;
 
 import coc.view.ButtonData;
@@ -1643,27 +1645,22 @@ public class MagicSpecials extends BaseCombatContent {
 	public function dwarfrage():void {
 		clearOutput();
 		player.wrath -= 50;
-		var temp:Number = 0;
-		var tempStr:Number = 0;
-		var tempTouSpe:Number = 0;
+		var tempStr:Number;
+		var tempTouSpe:Number;
 		var dwarfrageDuration:Number = 10;
 		var DwarfRageBoost:Number = 10;
 		if (player.hasPerk(PerkLib.Berzerker)) DwarfRageBoost += 5;
 		if (player.hasPerk(PerkLib.Lustzerker)) DwarfRageBoost += 5;
 	//	DwarfRageBoost += player.tou / 10;player.tou * 0.1 - im wytrzymalesze ciało tym wiekszy bonus może udźwignąć
 		outputText("You roar and unleash your dwarf rage in order to destroy your foe!\n\n");
-		player.createStatusEffect(StatusEffects.DwarfRage, 0, 0, dwarfrageDuration, 0);
-		temp = DwarfRageBoost;
-		tempStr = temp * 2;
-		tempTouSpe = temp;
-		player.changeStatusValue(StatusEffects.DwarfRage,1,tempStr);
-		player.changeStatusValue(StatusEffects.DwarfRage,2,tempTouSpe);
-		mainView.statsView.showStatUp('str');
-		mainView.statsView.showStatUp('tou');
-		mainView.statsView.showStatUp('spe');
-		player.str += player.statusEffectv1(StatusEffects.DwarfRage);
-		player.tou += player.statusEffectv2(StatusEffects.DwarfRage);
-		player.spe += player.statusEffectv2(StatusEffects.DwarfRage);
+		var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.DwarfRage, 0, 0, dwarfrageDuration, 0);
+		tempStr = DwarfRageBoost * 2;
+		tempTouSpe = DwarfRageBoost;
+		sec.value1 = tempStr;
+		sec.value2 = tempTouSpe;
+		sec.buffHost('str',tempStr);
+		sec.buffHost('tou',tempTouSpe);
+		sec.buffHost('spe',tempTouSpe);
 		statScreenRefresh();
 		enemyAI();
 	}
@@ -1705,25 +1702,16 @@ public class MagicSpecials extends BaseCombatContent {
 		var tempTou:Number = Math.round(player.tou * 0.2);
 		var tempSpe:Number = Math.round(player.spe * 0.2);
 		outputText("You roar and unleash your inner beast assuming Crinos Shape in order to destroy your foe!\n\n");
-		player.createStatusEffect(StatusEffects.CrinosShape, 0, 0, 0, 0);
-		player.changeStatusValue(StatusEffects.CrinosShape,1,tempStr);
-		player.changeStatusValue(StatusEffects.CrinosShape,2,tempTou);
-		player.changeStatusValue(StatusEffects.CrinosShape,3,tempSpe);
-		mainView.statsView.showStatUp('str');
-		mainView.statsView.showStatUp('tou');
-		mainView.statsView.showStatUp('spe');
-		player.str += player.statusEffectv1(StatusEffects.CrinosShape);
-		player.tou += player.statusEffectv2(StatusEffects.CrinosShape);
-		player.spe += player.statusEffectv3(StatusEffects.CrinosShape);
+		var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.CrinosShape, tempStr,tempTou,tempSpe,0);
+		sec.buffHost('str',tempStr);
+		sec.buffHost('tou',tempTou);
+		sec.buffHost('spe',tempSpe);
 		statScreenRefresh();
 		enemyAI();
 	}
 	public function returnToNormalShape():void {
 		clearOutput();
 		outputText("Gathering all you willpower you forcefully subduing your inner beast and returning to your normal shape.");
-		player.dynStats("str", -player.statusEffectv1(StatusEffects.CrinosShape));
-		player.dynStats("tou", -player.statusEffectv2(StatusEffects.CrinosShape));
-		player.dynStats("spe", -player.statusEffectv3(StatusEffects.CrinosShape));
 		player.removeStatusEffect(StatusEffects.CrinosShape);
 		enemyAI();
 	}

@@ -22,6 +22,8 @@ import classes.BodyParts.Wings;
 import classes.GlobalFlags.kFLAGS;
 import classes.Items.WeaponLib;
 import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
+import classes.StatusEffectClass;
 
 use namespace CoC;
 	
@@ -131,20 +133,14 @@ use namespace CoC;
 			if (player.hasStatusEffect(StatusEffects.BlessingOfDivineTaoth)) {
 				outputText("You chose to pray a different Deity losing the favor of the first to gain the bonus of the other.\n");
 				outputText("<b>You lost the Blessing of Divine Agency - Taoth</b>\n");
-				var tempSpe:int = player.statusEffectv2(StatusEffects.BlessingOfDivineTaoth);
 				player.removeStatusEffect(StatusEffects.BlessingOfDivineTaoth);
-				dynStats("spe", -tempSpe);
 			}
 		}
 		public function loosingFenrirBlessing():void {
 			if (player.hasStatusEffect(StatusEffects.BlessingOfDivineFenrir)) {
 				outputText("You chose to pray a different Deity losing the favor of the first to gain the bonus of the other.\n");
 				outputText("<b>You lost the Blessing of Divine Agency - Fenrir</b>\n");
-				var tempStr:int = player.statusEffectv2(StatusEffects.BlessingOfDivineFenrir);
-				var tempTou:int = player.statusEffectv3(StatusEffects.BlessingOfDivineFenrir);
 				player.removeStatusEffect(StatusEffects.BlessingOfDivineFenrir);
-				dynStats("str", -tempStr);
-				dynStats("tou", -tempTou);
 			}
 		}
 		public function loosingFeraBlessing():void {
@@ -190,11 +186,10 @@ use namespace CoC;
 			var tempSpe:Number = 0;
 			temp1 += player.spe * 0.1;
 			temp1 = Math.round(temp1);
-			player.createStatusEffect(StatusEffects.BlessingOfDivineTaoth, 169, 0, 0, 0);
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.BlessingOfDivineTaoth, 169, 0, 0, 0);
 			tempSpe = temp1;
-			player.changeStatusValue(StatusEffects.BlessingOfDivineTaoth,2,tempSpe);
-			mainView.statsView.showStatUp('spe');
-			player.spe += player.statusEffectv2(StatusEffects.BlessingOfDivineTaoth);
+			sec.value2 = tempSpe;
+			sec.buffHost('spe',tempSpe);
 			if (player.HP < player.maxHP()) player.HP = player.maxHP();
 			dynStats("cor", -10);
 			statScreenRefresh();
@@ -215,15 +210,13 @@ use namespace CoC;
 			temp2 += player.tou * 0.1;
 			temp1 = Math.round(temp1);
 			temp2 = Math.round(temp2);
-			player.createStatusEffect(StatusEffects.BlessingOfDivineFenrir, 169, 0, 0, 0);
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.BlessingOfDivineFenrir, 169, 0, 0, 0);
 			tempStr = temp1;
 			tempTou = temp2;
-			player.changeStatusValue(StatusEffects.BlessingOfDivineFenrir,2,tempStr);
-			player.changeStatusValue(StatusEffects.BlessingOfDivineFenrir,3,tempTou);
-			mainView.statsView.showStatUp('str');
-			mainView.statsView.showStatUp('tou');
-			player.str += player.statusEffectv2(StatusEffects.BlessingOfDivineFenrir);
-			player.tou += player.statusEffectv3(StatusEffects.BlessingOfDivineFenrir);
+			sec.value2 = tempStr;
+			sec.value3 = tempTou;
+			sec.buffHost('str',tempStr);
+			sec.buffHost('tou',tempTou);
 			if (player.HP < player.maxHP()) player.HP = player.maxHP();
 			dynStats("cor", -10);
 			statScreenRefresh();

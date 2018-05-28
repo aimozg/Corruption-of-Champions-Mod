@@ -872,17 +872,17 @@ import flash.utils.getQualifiedClassName;
 
 		protected function initStrTouSpeInte(str:Number, tou:Number, spe:Number, inte:Number):void
 		{
-			this.str = str;
-			this.tou = tou;
-			this.spe = spe;
-			this.inte = inte;
+			this.strStat.core.value = str;
+			this.touStat.core.value = tou;
+			this.speStat.core.value = spe;
+			this.intStat.core.value = inte;
 			initedStrTouSpeInte = true;
 		}
 
 		protected function initWisLibSensCor(wis:Number, lib:Number, sens:Number, cor:Number):void
 		{
-			this.wis = wis;
-			this.lib = lib;
+			this.wisStat.core.value = wis;
+			this.libStat.core.value = lib;
 			this.sens = sens;
 			this.cor = cor;
 			initedWisLibSensCor = true;
@@ -1871,18 +1871,17 @@ import flash.utils.getQualifiedClassName;
 				outputText("[monster A][monster name] is currently wrapped up in your tail-coils!  ");
 			}
 			//Venom stuff!
-			if(hasStatusEffect(StatusEffects.NagaVenom)) {
-				if(statusEffectv1(StatusEffects.NagaVenom) <= 1) {
+			var nagaVenom:StatusEffectClass = statusEffectByType(StatusEffects.NagaVenom);
+			if(nagaVenom) {
+				if(nagaVenom.value1 <= 1) {
 					outputText("You notice [monster he] [monster is] beginning to show signs of weakening, but there still appears to be plenty of fight left in [monster him].  ");
 				}
 				else {
 					outputText("You notice [monster he] [monster is] obviously affected by your venom, [monster his] movements become unsure, and [monster his] balance begins to fade. Sweat begins to roll on [monster his] skin. You wager [monster he] [monster is] probably beginning to regret provoking you.  ");
 				}
-				spe -= statusEffectv1(StatusEffects.NagaVenom);
-				str -= statusEffectv1(StatusEffects.NagaVenom);
-				if (spe < 1) spe = 1;
-				if (str < 1) str = 1;
-				if (statusEffectv3(StatusEffects.NagaVenom) >= 1) lust += statusEffectv3(StatusEffects.NagaVenom);
+				nagaVenom.buffHost('str',-nagaVenom.value1);
+				nagaVenom.buffHost('spe',-nagaVenom.value1);
+				if (nagaVenom.value3 >= 1) lust += nagaVenom.value3;
 				if (SceneLib.combat.combatIsOver()) {
 					return;
 				}
@@ -1996,38 +1995,6 @@ import flash.utils.getQualifiedClassName;
 		}
 		public function prepareForCombat():void {
 			var mod:int = newGamePlusMod();
-			var mMod:int = (1 + mod);
-			if (hasPerk(PerkLib.JobCourtesan)) lib += (15 * mMod);
-			if (hasPerk(PerkLib.JobDefender)) tou += (15 * mMod);
-			if (hasPerk(PerkLib.JobElementalConjurer)) wis += (5 * mMod);
-			if (hasPerk(PerkLib.JobEnchanter)) inte += (15 * mMod);
-			if (hasPerk(PerkLib.JobEromancer)) {
-				inte += (5 * mMod);
-				lib += (5 * mMod);
-			}
-			if (hasPerk(PerkLib.JobGuardian)) tou += (5 * mMod);
-			if (hasPerk(PerkLib.JobHunter)) {
-				spe += (10 * mMod);
-				inte += (5 * mMod);
-			}
-			if (hasPerk(PerkLib.JobKnight)) tou += (10 * mMod);
-			if (hasPerk(PerkLib.AdvancedJobMonk)) wis += (15 * mMod);
-			if (hasPerk(PerkLib.JobRanger)) spe += (5 * mMod);
-			if (hasPerk(PerkLib.JobSeducer)) lib += (5 * mMod);
-			if (hasPerk(PerkLib.JobSorcerer)) inte += (5 * mMod);
-			if (hasPerk(PerkLib.JobWarrior)) str += (5 * mMod);
-			if (hasPerk(PerkLib.PrestigeJobArcaneArcher)) {
-				spe += (40 * mMod);
-				inte += (40 * mMod);
-			}
-			if (hasPerk(PerkLib.PrestigeJobBerserker)) {
-				str += (60 * mMod);
-				tou += (20 * mMod);
-			}
-			if (hasPerk(PerkLib.PrestigeJobKiArtMaster)) {
-				str += (40 * mMod);
-				wis += (40 * mMod);
-			}
 			var bonusStatsAmp:Number = 0.2;
 			if (level > 25) bonusStatsAmp += 0.1*((int)(level-1)/25);
 			bonusStatsAmp *= mod;
@@ -2038,12 +2005,12 @@ import flash.utils.getQualifiedClassName;
 			var bonusAscWis:int = Math.round(bonusStatsAmp * wis);
 			var bonusAscLib:int = Math.round(bonusStatsAmp * lib);
 			var bonusAscSen:int = Math.round(bonusStatsAmp * sens);
-			this.str += bonusAscStr;
-			this.tou += bonusAscTou;
-			this.spe += bonusAscSpe;
-			this.inte += bonusAscInt;
-			this.wis += bonusAscWis;
-			this.lib += bonusAscLib;
+			this.strStat.core.value += bonusAscStr;
+			this.touStat.core.value += bonusAscTou;
+			this.speStat.core.value += bonusAscSpe;
+			this.intStat.core.value += bonusAscInt;
+			this.wisStat.core.value += bonusAscWis;
+			this.libStat.core.value += bonusAscLib;
 			this.sens += bonusAscSen;
 			bonusAscMaxHP += bonusAscStr + bonusAscTou + bonusAscSpe + bonusAscInt + bonusAscWis + bonusAscLib + bonusAscSen;
 			if (level > 10) {

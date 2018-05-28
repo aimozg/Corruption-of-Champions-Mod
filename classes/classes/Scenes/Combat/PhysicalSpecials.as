@@ -18,6 +18,7 @@ import classes.Scenes.Camp.CampMakeWinions;
 import classes.Scenes.Dungeons.D3.LivingStatue;
 import classes.Scenes.NPCs.Anemone;
 import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
 import classes.StatusEffects;
 
 import coc.view.ButtonData;
@@ -849,7 +850,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 				damage += 5 + rand(6);
 			}
 			damage += player.level * 1.5;
-			monster.spe -= damage/2;
+			monster.drainStat('spe',damage/2);
 			damage = monster.lustVuln * damage;
 			//Clean up down to 1 decimal point
 			damage = Math.round(damage*10)/10;
@@ -1053,10 +1054,9 @@ public class PhysicalSpecials extends BaseCombatContent {
 		var EntangleSpeNerf:Number = 0;
 		EntangleStrNerf = Math.round(monster.str * .5);
 		EntangleSpeNerf = Math.round(monster.spe * .5);
-		monster.str -= EntangleStrNerf;
-		monster.spe -= EntangleSpeNerf;
-		if(monster.str < 1) monster.str = 1;
-		if(monster.spe < 1) monster.spe = 1;
+		// TODO @aimozg/stats replace with a proper 50% debuff. Stat must be applied to monster though
+		monster.drainStat('str',EntangleStrNerf);
+		monster.drainStat('spe',EntangleSpeNerf);
 		player.createStatusEffect(StatusEffects.AlrauneEntangle,EntangleStrNerf,EntangleSpeNerf,0,0);
 		enemyAI();
 	}
@@ -1316,8 +1316,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 		else {
 			if(!monster.plural) outputText("The adhesive strands cover " + monster.a + monster.short + " with restrictive webbing, greatly slowing " + monster.mf("him","her") + ". ");
 			else outputText("The adhesive strands cover " + monster.a + monster.short + " with restrictive webbing, greatly slowing " + monster.mf("him","her") + ". ");
-			monster.spe -= 45;
-			if(monster.spe < 0) monster.spe = 0;
+			monster.drainStat('spe',45);
 		}
 		awardAchievement("How Do I Shot Web?", kACHIEVEMENTS.COMBAT_SHOT_WEB);
 		outputText("\n\n");
@@ -1620,16 +1619,11 @@ public class PhysicalSpecials extends BaseCombatContent {
 			//(Otherwise)
 			else outputText("You lunge at the foe headfirst, fangs bared. You manage to catch " + monster.a + monster.short + " off guard, your needle-like fangs penetrating deep into " + monster.pronoun3 + " body. You quickly release your venom, and retreat before " + monster.pronoun1 + " manages to react.");
 			//The following is how the enemy reacts over time to poison. It is displayed after the description paragraph,instead of lust
-			monster.str -= 2;
-			monster.spe -= 2;
-			if(monster.str < 1) monster.str = 1;
-			if(monster.spe < 1) monster.spe = 1;
-			if(monster.hasStatusEffect(StatusEffects.NagaVenom))
-			{
-				monster.addStatusValue(StatusEffects.NagaVenom,2,2);
-				monster.addStatusValue(StatusEffects.NagaVenom,1,2);
-			}
-			else monster.createStatusEffect(StatusEffects.NagaVenom,2,2,0,0);
+			var nagaVenom:StatusEffectClass = monster.createOrFindStatusEffect(StatusEffects.NagaVenom);
+			nagaVenom.buffHost('str',-2);
+			nagaVenom.buffHost('spe',-2);
+			nagaVenom.value1 += 2;
+			nagaVenom.value2 += 2;
 		}
 		else {
 			outputText("You lunge headfirst, fangs bared. Your attempt fails horrendously, as " + monster.a + monster.short + " manages to counter your lunge, knocking your head away with enough force to make your ears ring.");
@@ -1719,15 +1713,9 @@ public class PhysicalSpecials extends BaseCombatContent {
 			//(Otherwise)
 			else outputText("You lunge at the foe headfirst, maw open for a bite. You manage to catch the " + monster.a + monster.short + " off guard, biting it viciously. The merciless cold of your bite transfer to your foe weakening it as you retreat before " + monster.pronoun1 + " manages to react.");
 			//The following is how the enemy reacts over time to poison. It is displayed after the description paragraph,instead of lust
-			monster.str -= 5 + rand(5);
-			monster.spe -= 5 + rand(5);
-			if(monster.str < 1) monster.str = 1;
-			if(monster.spe < 1) monster.spe = 1;
-			if(monster.hasStatusEffect(StatusEffects.Frostbite))
-			{
-				monster.addStatusValue(StatusEffects.Frostbite,1,1);
-			}
-			else monster.createStatusEffect(StatusEffects.Frostbite,1,0,0,0);
+			var frostbite:StatusEffectClass = monster.createOrFindStatusEffect(StatusEffects.Frostbite);
+			frostbite.buffHost('str',-(5 + rand(5)));
+			frostbite.buffHost('spe',-(5 + rand(5)));
 		}
 		else {
 			outputText("You lunge headfirst, maw open for a bite. Your attempt fails horrendously, as " + monster.a + monster.short + " manages to counter your lunge, knocking your head away with enough force to make your ears ring.");
@@ -2103,8 +2091,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 			monster.teased(monster.lustVuln * damage);
 		}
 		if (player.tailType == 20) {
-			monster.spe -= 10;
-			if(monster.spe < 1) monster.spe = 1;
+			monster.drainStat('spe',10);
 		}
 		if(monster.hasStatusEffect(StatusEffects.NagaVenom))
 		{
@@ -2185,18 +2172,12 @@ public class PhysicalSpecials extends BaseCombatContent {
 		else damage += 80;
 		lustdamage *= 0.7;
 		monster.teased(monster.lustVuln * lustdamage);
-		monster.spe -= 10;
-		if(monster.spe < 1) monster.spe = 1;
-		if(monster.hasStatusEffect(StatusEffects.NagaVenom))
-		{
-			monster.addStatusValue(StatusEffects.NagaVenom,3,5);
-		}
-		else monster.createStatusEffect(StatusEffects.NagaVenom, 0, 0, 5, 0);
-		//if (!monster.hasStatusEffect(StatusEffects.lustvenom)) monster.createStatusEffect(StatusEffects.lustvenom, 0, 0, 0, 0);
+		var sec:StatusEffectClass = monster.createOrFindStatusEffect(StatusEffects.NagaVenom);
+		monster.drainStat('spe',-5);
+		sec.buffHost('spe',-5);
 		//New line before monster attack
 		outputText("\n\n");
-		monster.spe -= (2+rand(3));
-		if(monster.spe < 1) monster.spe = 1;
+		sec.buffHost('spe',-(2+rand(3)));
 		//Use tail mp
 		player.tailVenom -= 25;
 		flags[kFLAGS.VENOM_TIMES_USED] += 1;
