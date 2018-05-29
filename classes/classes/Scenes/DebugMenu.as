@@ -23,6 +23,7 @@ import classes.Items.Consumable;
 import classes.Items.ConsumableLib;
 import classes.Parser.Parser;
 import classes.Scenes.NPCs.JojoScene;
+import classes.Stats.PrimaryStat;
 import classes.internals.EnumValue;
 
 import coc.view.Color;
@@ -612,17 +613,17 @@ public class DebugMenu extends BaseContent
 			clearOutput();
 			outputText("Which attribute would you like to alter?");
 			menu();
-			addButton(0, "Strength", statChangeAttributeMenu, "str");
-			addButton(1, "Toughness", statChangeAttributeMenu, "tou");
-			addButton(2, "Speed", statChangeAttributeMenu, "spe");
-			addButton(3, "Intelligence", statChangeAttributeMenu, "int");
-			addButton(5, "Libido", statChangeAttributeMenu, "lib");
+			addButton(0, "Strength", statChangeAttributeMenu, player.strStat);
+			addButton(1, "Toughness", statChangeAttributeMenu, player.touStat);
+			addButton(2, "Speed", statChangeAttributeMenu, player.speStat);
+			addButton(3, "Intelligence", statChangeAttributeMenu, player.intStat);
+			addButton(5, "Libido", statChangeAttributeMenu, player.libStat);
 			addButton(6, "Sensitivity", statChangeAttributeMenu, "sen");
 			addButton(7, "Corruption", statChangeAttributeMenu, "cor");
 			addButton(14, "Back", accessDebugMenu);
 		}
 		
-		private function statChangeAttributeMenu(stats:String = ""):void {
+		private function statChangeAttributeMenu(stats:* = null):void {
 			var attribute:* = stats;
 			clearOutput();
 			outputText("Increment or decrement by how much?");
@@ -639,8 +640,12 @@ public class DebugMenu extends BaseContent
 			addButton(14, "Back", statChangeMenu);
 		}
 		
-		private function statChangeApply(stats:String = "", increment:Number = 0):void {
-			dynStats(stats, increment);
+		private function statChangeApply(stats:* = null, increment:Number = 0):void {
+			if (stats is String) {
+				dynStats(stats, increment);
+			} else if (stats is PrimaryStat) {
+				(stats as PrimaryStat).core.value += increment
+			}
 			statScreenRefresh();
 			statChangeAttributeMenu(stats);
 		}
