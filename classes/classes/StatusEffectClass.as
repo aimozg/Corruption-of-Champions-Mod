@@ -79,9 +79,9 @@ public class StatusEffectClass extends Utils
 	public function buffHost(stat:String,amount:Number,text:String=null,show:Boolean=true):void {
 		var s:IStat = host.stats[stat];
 		if (s is PrimaryStat) {
-			(s as PrimaryStat).bonus.addOrIncreaseEffect(stype.id,amount,{save:true,text:text||stype.id,show:show});
+			(s as PrimaryStat).bonus.addOrIncreaseBuff(stype.id,amount,{save:true,text: text || stype.id,show:show});
 		} else if (s is BuffableStat) {
-			(s as BuffableStat).addOrIncreaseEffect(stype.id,amount,{save:true,text: text || stype.id,show:show});
+			(s as BuffableStat).addOrIncreaseBuff(stype.id,amount,{save:true,text: text || stype.id,show:show});
 		} else {
 			trace("/!\\ buffHost("+stat+", "+amount+") in "+stype.id);
 		}

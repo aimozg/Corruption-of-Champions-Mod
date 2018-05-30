@@ -318,19 +318,19 @@ package classes
 				if (penaltyMultiplier < 0.4) penaltyMultiplier = 0.4;
 				tempSpeedPenalty *= penaltyMultiplier;
 				if (tempSpeedPenalty > 50) tempSpeedPenalty = 50;
-				speStat.bonus.addOrReplaceEffect('oversized',-tempSpeedPenalty,{
+				speStat.bonus.addOrReplaceBuff('oversized',-tempSpeedPenalty,{
 					save:false,
 					text:'Oversized!'
 				});
 			} else {
-				speStat.bonus.removeEffect('oversized');
+				speStat.bonus.removeBuff('oversized');
 			}
 			//Perks ahoy
 			var perk:PerkClass = getPerk(PerkLib.GorgonsEyes);
 			if (hasPerk(PerkLib.BasiliskResistance) && perk) {
 				perk.buffHost(this,'spe',-5);
 			} else {
-				speStat.bonus.removeEffect(PerkLib.BasiliskResistance.id);
+				speStat.bonus.removeBuff(PerkLib.BasiliskResistance.id);
 			}
 			//Caps strength from Uma's needlework.
 			setPerkStatEffect(PerkLib.ChiReflowSpeed,'strMult',UmasShop.NEEDLEWORK_SPEED_STRENGTH_MULT);
@@ -349,59 +349,59 @@ package classes
 			End("Creature","updateStats.perks");
 			
 			Begin("Creature","updateStats.racial");
-			strStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_str]/100, {save:false,text:'Racial'});
-			touStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_tou]/100, {save:false,text:'Racial'});
-			speStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_spe]/100, {save:false,text:'Racial'});
-			intStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_int]/100, {save:false,text:'Racial'});
-			wisStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_wis]/100, {save:false,text:'Racial'});
-			libStat.mult.addOrReplaceEffect('race', racials[Race.BonusName_lib]/100, {save:false,text:'Racial'});
+			strStat.mult.addOrReplaceBuff('race', racials[Race.BonusName_str] / 100, {save:false,text:'Racial'});
+			touStat.mult.addOrReplaceBuff('race', racials[Race.BonusName_tou] / 100, {save:false,text:'Racial'});
+			speStat.mult.addOrReplaceBuff('race', racials[Race.BonusName_spe] / 100, {save:false,text:'Racial'});
+			intStat.mult.addOrReplaceBuff('race', racials[Race.BonusName_int] / 100, {save:false,text:'Racial'});
+			wisStat.mult.addOrReplaceBuff('race', racials[Race.BonusName_wis] / 100, {save:false,text:'Racial'});
+			libStat.mult.addOrReplaceBuff('race', racials[Race.BonusName_lib] / 100, {save:false,text:'Racial'});
 			if (isNaga()) {
-				strStat.mult.addOrReplaceEffect('naga',0.15,{save:false, text:'Naga'});
-				speStat.mult.addOrReplaceEffect('naga',0.15,{save:false, text:'Naga'});
+				strStat.mult.addOrReplaceBuff('naga',0.15,{save:false, text:'Naga'});
+				speStat.mult.addOrReplaceBuff('naga',0.15,{save:false, text:'Naga'});
 			} else {
-				strStat.mult.removeEffect('naga');
-				speStat.mult.removeEffect('naga');
+				strStat.mult.removeBuff('naga');
+				speStat.mult.removeBuff('naga');
 			}
 			if (isTaur()) {
-				speStat.mult.addOrReplaceEffect('taur',0.20,{save:false, text:'Taur'});
+				speStat.mult.addOrReplaceBuff('taur',0.20,{save:false, text:'Taur'});
 			} else {
-				speStat.mult.removeEffect('taur');
+				speStat.mult.removeBuff('taur');
 			}
 			if (isDrider()) {
-				touStat.mult.addOrReplaceEffect('drider',0.15,{save:false, text:'Drider'});
-				speStat.mult.addOrReplaceEffect('drider',0.15,{save:false, text:'Drider'});
+				touStat.mult.addOrReplaceBuff('drider',0.15,{save:false, text:'Drider'});
+				speStat.mult.addOrReplaceBuff('drider',0.15,{save:false, text:'Drider'});
 			} else {
-				touStat.mult.removeEffect('drider');
-				speStat.mult.removeEffect('drider');
+				touStat.mult.removeBuff('drider');
+				speStat.mult.removeBuff('drider');
 			}
 			if (isScylla()) {
-				strStat.mult.addOrReplaceEffect('scylla',0.30,{save:false, text:'Scylla'});
+				strStat.mult.addOrReplaceBuff('scylla',0.30,{save:false, text:'Scylla'});
 			} else {
-				strStat.mult.removeEffect('scylla');
+				strStat.mult.removeBuff('scylla');
 			}
 			if (racialScores[Race.GARGOYLE.name] >= 21) {
 				if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 1) {
-					strStat.mult.addOrReplaceEffect('gargoyle',0.20,{save:false, text:'Gargoyle'});
-					intStat.mult.removeEffect('gargoyle');
+					strStat.mult.addOrReplaceBuff('gargoyle',0.20,{save:false, text:'Gargoyle'});
+					intStat.mult.removeBuff('gargoyle');
 				} else if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 2) {
-					strStat.mult.removeEffect('gargoyle');
-					intStat.mult.addOrReplaceEffect('gargoyle',0.20,{save:false, text:'Gargoyle'});
+					strStat.mult.removeBuff('gargoyle');
+					intStat.mult.addOrReplaceBuff('gargoyle',0.20,{save:false, text:'Gargoyle'});
 				} else {
-					strStat.mult.removeEffect('gargoyle');
-					intStat.mult.removeEffect('gargoyle');
+					strStat.mult.removeBuff('gargoyle');
+					intStat.mult.removeBuff('gargoyle');
 				}
 			} else {
-				strStat.mult.removeEffect('gargoyle');
-				intStat.mult.removeEffect('gargoyle');
+				strStat.mult.removeBuff('gargoyle');
+				intStat.mult.removeBuff('gargoyle');
 			}
 			var ics:Number = internalChimeraScore();
 			if (ics >= 1) {
-				strStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
-				touStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
-				speStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
-				intStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
-				wisStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
-				libStat.mult.addOrReplaceEffect('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				strStat.mult.addOrReplaceBuff('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				touStat.mult.addOrReplaceBuff('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				speStat.mult.addOrReplaceBuff('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				intStat.mult.addOrReplaceBuff('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				wisStat.mult.addOrReplaceBuff('chimera', 0.05 * ics,{save:false, text:'Chimera'});
+				libStat.mult.addOrReplaceBuff('chimera', 0.05 * ics,{save:false, text:'Chimera'});
 			} else {
 				removeStatEffects('chimera');
 			}
@@ -440,17 +440,17 @@ package classes
 				if (perk2) {
 					mult = 2.0;
 					perk = perk2;
-					speStat.mult.removeEffect(PerkLib.MantislikeAgility.id);
+					speStat.mult.removeBuff(PerkLib.MantislikeAgility.id);
 				} else {
-					speStat.mult.removeEffect(PerkLib.MantislikeAgilityEvolved.id);
+					speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.id);
 				}
 				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) perk.buffHost(this,'speMult', +0.20*mult);
 				else if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) perk.buffHost(this,'speMult', +0.15*mult);
 				else if (skinType == Skin.SCALES) perk.buffHost(this, 'speMult', +0.10*mult);
 				else if (hasPerk(PerkLib.ThickSkin)) perk.buffHost(this, 'speMult', +0.05*mult);
 			} else {
-				speStat.mult.removeEffect(PerkLib.MantislikeAgility.id);
-				speStat.mult.removeEffect(PerkLib.MantislikeAgilityEvolved.id);
+				speStat.mult.removeBuff(PerkLib.MantislikeAgility.id);
+				speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.id);
 			}
 			setPerkStatEffect(PerkLib.DraconicLungs, 'speMult', +0.05);
 			setPerkStatEffect(PerkLib.DraconicLungsEvolved, 'touMult', +0.05);
@@ -565,16 +565,16 @@ package classes
 			}
 			if (damage == 0) return 0;
 			var delta:Number = -damage;
-			var current:Number = stat.valueOfEffect('drain');
+			var current:Number = stat.valueOfBuff('drain');
 			if (delta > 0 && delta+current > 0) delta = -current;
-			stat.addOrIncreaseEffect('drain', delta,{text:'Drain'});
+			stat.addOrIncreaseBuff('drain', delta,{text:'Drain'});
 			return damage;
 		}
 		public function removeStatEffects(tag:String):void {
 			for (var statname:String in stats) {
 				var stat:BuffableStat = stats[statname] as BuffableStat;
 				if (!stat) continue;
-				stat.removeEffect(tag);
+				stat.removeBuff(tag);
 			}
 		}
 		/**
@@ -584,9 +584,9 @@ package classes
 			var stat:BuffableStat = (stats[statname] as BuffableStat) || (stats[statname] as PrimaryStat).bonus;
 			var perk:PerkClass    = getPerk(ptype);
 			if (perk) {
-				stat.addOrReplaceEffect(ptype.id,value,{save:false,text:ptype.name});
+				stat.addOrReplaceBuff(ptype.id,value,{save:false,text:ptype.name});
 			} else {
-				stat.removeEffect(ptype.id);
+				stat.removeBuff(ptype.id);
 			}
 		}
 		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {

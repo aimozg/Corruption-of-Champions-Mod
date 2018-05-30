@@ -3,6 +3,7 @@ import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
 import classes.Player;
 import classes.Scenes.SceneLib;
+import classes.Stats.Buff;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
@@ -217,31 +218,28 @@ public class StatsView extends Block {
 				if (!stat) return;
 				var text:String            = '';
 				text += '<b>Base value:</b> ' + Utils.floor(stat.core.value, 1) + '\n';
-				var effects:/*Array*/Array = stat.mult.listEffects();
+				var buffs:/*Buff*/Array = stat.mult.listBuffs();
 				var hasHidden:Boolean = false;
-				for each(var effect:Array in effects) {
-					var value:Number = effect[0];
+				for each(var buff:Buff in buffs) {
+					var value:Number = buff.value;
 					if (value >= 0.0 && value < 0.01) continue;
-					if (!effect[2].show) {
+					if (!buff.show) {
 						hasHidden = true;
 						continue;
 					}
-					var s:String;
-					s = effect[2].text || Utils.capitalizeFirstLetter(effect[1]);
-					text += '<b>' + s + ':</b> ';
+					text += '<b>' + buff.text + ':</b> ';
 					text += (value >= 0 ? '+' : '') + Utils.floor(value * 100) + '%';
 					text += '\n';
 				}
-				effects = stat.bonus.listEffects();
-				for each(effect in effects) {
-					value = effect[0];
+				buffs = stat.bonus.listBuffs();
+				for each(buff in buffs) {
+					value = buff.value;
 					if (value >= 0.0 && value < 0.1) continue;
-					if (!effect[2].show) {
+					if (!buff.show) {
 						hasHidden = true;
 						continue;
 					}
-					s = effect[2].text || Utils.capitalizeFirstLetter(effect[1]);
-					text += '<b>' + s + ':</b> ' + (value >= 0 ? '+' : '') + Utils.floor(value, 1) + '\n';
+					text += '<b>' + buff.text + ':</b> ' + (value >= 0 ? '+' : '') + Utils.floor(value, 1) + '\n';
 				}
 				if (hasHidden) text += '<b>Unknown Sources:</b> ±??\n';
 				text += '\n';

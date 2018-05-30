@@ -12,16 +12,16 @@ public class PrimaryStat implements IStat,Jsonable {
 	
 	public function reset(core:Number):void {
 		_core.value = core;
-		_mult.removeAllEffects();
-		_bonus.removeAllEffects();
+		_mult.removeAllBuffs();
+		_bonus.removeAllBuffs();
 	}
 	public function removeAllEffects():void {
-		_mult.removeAllEffects();
-		_bonus.removeAllEffects();
+		_mult.removeAllBuffs();
+		_bonus.removeAllBuffs();
 	}
 	public function removeEffect(tag:String):void {
-		_mult.removeEffect(tag);
-		_bonus.removeEffect(tag);
+		_mult.removeBuff(tag);
+		_bonus.removeBuff(tag);
 	}
 	
 	public function get core():RawStat {

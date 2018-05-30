@@ -4,8 +4,8 @@ import classes.internals.Jsonable;
 import classes.internals.Utils;
 
 /**
- * BuffableStat is aggregation (sum/min/max/product) of effects.
- * Effect is tuple `[value:Number, tag:String, options:{...}]` where tag is used as a unique key
+ * BuffableStat is aggregation (sum/min/max/product) of buffs.
+ * Buff contains (see Buff.as for details) unique tag:String, value:Number, and other options
  * Total value is maintained as a cache
  *
  * Options object structure:
@@ -13,11 +13,11 @@ import classes.internals.Utils;
  * show: boolean = true, <-- can be viewed by player. Note that player might figure that there is a hidden effect
  * text: String = null, (default is same as tag) <-- displayable name in the list of effects
  */
-public class BuffableStat implements IStat,Jsonable {
+public class BuffableStat implements IStat, Jsonable {
 	private static const AggregateTypes:/*EnumValue*/Array = [];
 	
 	public static const AGGREGATE_SUM:int  = EnumValue.add(AggregateTypes, 0, 'AGGREGATE_SUM', {short: 'sum'});
-	public static const AGGREGATE_MAX:int = EnumValue.add(AggregateTypes, 1, 'AGGREGATE_MAX', {short: 'max'});
+	public static const AGGREGATE_MAX:int  = EnumValue.add(AggregateTypes, 1, 'AGGREGATE_MAX', {short: 'max'});
 	public static const AGGREGATE_MIN:int  = EnumValue.add(AggregateTypes, 2, 'AGGREGATE_MIN', {short: 'min'});
 	public static const AGGREGATE_PROD:int = EnumValue.add(AggregateTypes, 3, 'AGGREGATE_PROD', {short: 'prod'});
 	
@@ -27,7 +27,7 @@ public class BuffableStat implements IStat,Jsonable {
 	private var _min:Number;
 	private var _max:Number;
 	private var _value:Number;
-	private var _effects:/*Array*/Array = []; // Array of tuples [value, tag, descriptor]
+	private var _buffs:/*Buff*/Array = [];
 	
 	public function get name():String {
 		return _name;
@@ -60,31 +60,31 @@ public class BuffableStat implements IStat,Jsonable {
 	 * @param saveInto If present, saveInto[this.name] = this
 	 */
 	public function BuffableStat(name:String,
-								 options:*=null,
-								 saveInto:*=null) {
+								 options:*  = null,
+								 saveInto:* = null) {
 		this._name = name;
-		options = Utils.extend({
-			aggregate:AGGREGATE_SUM,
-			base:0.0,
-			min:-Infinity,
-			max:+Infinity
-		},options);
+		options    = Utils.extend({
+			aggregate: AGGREGATE_SUM,
+			base     : 0.0,
+			min      : -Infinity,
+			max      : +Infinity
+		}, options);
 		if (options.aggregate is String) {
-			options.aggregate = EnumValue.findByProperty(AggregateTypes,'short',options.aggregate).value;
+			options.aggregate = EnumValue.findByProperty(AggregateTypes, 'short', options.aggregate).value;
 		}
 		if (options.aggregate == AGGREGATE_PROD && options.base == 0.0) options.base = 1.0;
 		this._aggregate = options.aggregate;
-		this._base = options['base'];
-		this._min = options['min'];
-		this._max = options['max'];
-		this._value = this._base;
+		this._base      = options['base'];
+		this._min       = options['min'];
+		this._max       = options['max'];
+		this._value     = this._base;
 		if (saveInto) saveInto[name] = this;
-
+		
 		if (!(this._aggregate in AggregateTypes)) throw new Error("Invalid aggregate type");
 		// TODO validate other arguments
 	}
 	
-	private function aggregateStep(accumulator:Number,value:Number):Number {
+	private function aggregateStep(accumulator:Number, value:Number):Number {
 		switch (_aggregate) {
 			case AGGREGATE_SUM:
 				accumulator += value;
@@ -103,119 +103,99 @@ public class BuffableStat implements IStat,Jsonable {
 	}
 	private function calculate():Number {
 		var value:Number = _base;
-		for each(var effect:Array in _effects) {
-			var effectValue:Number = effect[0];
-			value = aggregateStep(value, effectValue);
+		for each(var buff:Buff in _buffs) {
+			value = aggregateStep(value, buff.value);
 		}
 		return value;
 	}
-	private function indexOfEffect(tag:String):int {
-		for (var i:int = 0; i< _effects.length; i++) {
-			if (_effects[i][1] == tag) return i;
+	private function indexOfBuff(tag:String):int {
+		for (var i:int = 0; i < _buffs.length; i++) {
+			if (_buffs[i].tag == tag) return i;
 		}
 		return -1;
 	}
-	public function hasEffect(tag:String):Boolean {
-		return indexOfEffect(tag) != -1;
+	public function hasBuff(tag:String):Boolean {
+		return indexOfBuff(tag) != -1;
 	}
 	/**
-	 * @return tuple [value, tag, data] or null
-	 * This array is a copy; changing the value won't affect the stat
+	 * @return Buff null
 	 */
-	public function findEffect(tag:String):Array {
-		var i:int = indexOfEffect(tag);
-		if (i==-1) return null;
-		return _effects[i].slice();
+	public function findBuff(tag:String):Buff {
+		var i:int = indexOfBuff(tag);
+		if (i == -1) return null;
+		return _buffs[i];
 	}
-	public function valueOfEffect(tag:String,defaultValue:Number=0.0):Number {
-		var i:int = indexOfEffect(tag);
-		if (i==-1) return defaultValue;
-		return _effects[i][0];
+	public function valueOfBuff(tag:String, defaultValue:Number = 0.0):Number {
+		var i:int = indexOfBuff(tag);
+		if (i == -1) return defaultValue;
+		return _buffs[i].value;
 	}
-	private static function mkOptions(tag:String,newOptions:Object=null):Object {
-		return Utils.extend({
-			save:true,
-			show:true,
-			text:tag
-		},newOptions);
-	}
-	public function addOrIncreaseEffect(tag:String, effectValue:Number, newOptions:Object=null):void {
-		var i:int = indexOfEffect(tag);
+	public function addOrIncreaseBuff(tag:String, buffValue:Number, newOptions:Object = null):void {
+		var i:int = indexOfBuff(tag);
 		if (i == -1) {
-			_effects.push([effectValue,tag,mkOptions(tag,newOptions)]);
+			_buffs.push(new Buff(buffValue, tag).withOptions(newOptions));
 		} else {
-			_effects[i][0] += effectValue;
-			if (newOptions!==null) _effects[i][2] = mkOptions(tag,newOptions);
+			_buffs[i].value += buffValue;
+			if (newOptions !== null) _buffs[i].options = newOptions;
 		}
 		if (_aggregate == AGGREGATE_SUM) {
-			_value += effectValue;
+			_value += buffValue;
 		} else if (_aggregate == AGGREGATE_PROD) {
-			_value *= effectValue;
+			_value *= buffValue;
 		} else {
 			_value = calculate();
 		}
 	}
-	public function addOrReplaceEffect(tag:String, effectValue:Number, newOptions:Object=null):void {
-		var i:int = indexOfEffect(tag);
+	public function addOrReplaceBuff(tag:String, buffValue:Number, newOptions:Object = null):void {
+		var i:int = indexOfBuff(tag);
 		if (i == -1) {
-			_effects.push([effectValue,tag,mkOptions(tag,newOptions)]);
+			_buffs.push(new Buff(buffValue, tag).withOptions(newOptions));
 		} else {
-			_effects[i][0] = effectValue;
-			if (newOptions!==null) _effects[i][2] = mkOptions(tag,newOptions);
+			_buffs[i].value = buffValue;
+			if (newOptions !== null) _buffs[i].options = newOptions;
 		}
 		_value = calculate();
 	}
-	public function removeEffect(tag:String):void {
-		var i:int = indexOfEffect(tag);
+	public function removeBuff(tag:String):void {
+		var i:int = indexOfBuff(tag);
 		if (i == -1) return;
-		var effectValue:Number = _effects[i][0];
-		_effects.splice(i,1);
+		var buffValue:Number = _buffs[i].value;
+		_buffs.splice(i, 1);
 		if (_aggregate == AGGREGATE_SUM) {
-			_value -= effectValue;
-		} else if (_aggregate == AGGREGATE_PROD && effectValue != 0) {
-			_value /= effectValue;
+			_value -= buffValue;
+		} else if (_aggregate == AGGREGATE_PROD && buffValue != 0) {
+			_value /= buffValue;
 		} else {
 			_value = calculate();
 		}
 	}
-	/**
-	 * @return array of tuples [value, tag, data]
-	 * This array is a copy; changing it won't affect the stat EXCEPT the options element
-	 */
-	public function listEffects():/*Array*/Array {
-		var result:Array = [];
-		// copy of depth=1
-		for (var i:int=0; i<_effects.length; i++) result[i] = _effects[i].slice();
-		return result;
+	public function listBuffs():/*Buff*/Array {
+		return _buffs.slice();
 	}
-	public function loadEffects(effects:Array):void {
-		var value:Number = _base;
-		for each(var effect:Array in effects) {
-			var effectValue:Number = effect[0];
-			value = aggregateStep(value, effectValue);
-			// copy of depth=1
-			effect = effect.slice();
-			effect[2] = mkOptions(effect[1],effect[2]);
-			_effects.push(effect);
-		}
-		this._value = value;
-	}
-	public function removeAllEffects():void {
-		this._effects = [];
+	public function removeAllBuffs():void {
+		this._buffs = [];
 		this._value = _base;
 	}
 	
 	public function saveToObject():Object {
-		var jeffects:Array = [];
-		for each(var e:Array in _effects) {
-			if (e[2].save===false) continue;
-			jeffects.push(e.slice());
+		var jbuffs:Array = [];
+		for each(var b:Buff in _buffs) {
+			if (!b.save) continue;
+			jbuffs.push(b.saveToObject());
 		}
-		return {effects:jeffects};
+		return {effects: jbuffs};
 	}
 	public function loadFromObject(o:Object, ignoreErrors:Boolean):void {
-		removeAllEffects();
-		loadEffects(o.effects);
+		removeAllBuffs();
+		var value:Number = _base;
+		for each(var savedBuff:Object in o.effects) {
+			var buff:Buff = new Buff(0, '', false);
+			buff.loadFromObject(savedBuff, ignoreErrors);
+			var buffValue:Number = buff.value;
+			value                = aggregateStep(value, buffValue);
+			_buffs.push(buff);
+		}
+		this._value = value;
 	}
 }
 }

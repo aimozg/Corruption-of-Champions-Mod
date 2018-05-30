@@ -2316,7 +2316,7 @@ public function sleepRecovery(display:Boolean = false):void {
 	for each(var istat:IStat in player.stats) {
 		var stat:PrimaryStat = istat as PrimaryStat;
 		if (!stat) continue;
-		var drain:Number = stat.bonus.valueOfEffect('drain');
+		var drain:Number = stat.bonus.valueOfBuff('drain');
 		if (drain < 0) {
 			// Recover 10% of stat drained, at least 1
 			var delta:Number = Math.max(1, -drain/10);

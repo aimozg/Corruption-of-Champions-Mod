@@ -30,9 +30,9 @@ public class PerkClass
 		public function buffHost(host:Creature,stat:String,amount:Number):void {
 			var s:IStat = host.stats[stat];
 			if (s is PrimaryStat) {
-				(s as PrimaryStat).bonus.addOrIncreaseEffect(ptype.id,amount,{save:false,text:ptype.name});
+				(s as PrimaryStat).bonus.addOrIncreaseBuff(ptype.id,amount,{save:false,text:ptype.name});
 			} else if (s is BuffableStat) {
-				(s as BuffableStat).addOrIncreaseEffect(ptype.id,amount,{save:false,text:ptype.name});
+				(s as BuffableStat).addOrIncreaseBuff(ptype.id,amount,{save:false,text:ptype.name});
 			} else {
 				trace("/!\\ buffHost("+stat+", "+amount+") in "+ptype.id);
 			}
@@ -42,7 +42,7 @@ public class PerkClass
 			if (s is PrimaryStat) {
 				(s as PrimaryStat).removeEffect(ptype.id);
 			} else if (s is BuffableStat) {
-				(s as BuffableStat).removeEffect(ptype.id);
+				(s as BuffableStat).removeBuff(ptype.id);
 			} else {
 				trace("/!\\ unbuffHost("+stat+") in "+ptype.id);
 			}
