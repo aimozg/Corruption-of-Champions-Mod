@@ -21,11 +21,6 @@ package classes.Perks
 					"Your equipment boost your spells power and argument your white magic at the same time lowering it costs!");
 		}
 		
-		override public function keepOnAscension(respec:Boolean = false):Boolean 
-		{
-			return true;
-		}
-		
 	}
 
 }

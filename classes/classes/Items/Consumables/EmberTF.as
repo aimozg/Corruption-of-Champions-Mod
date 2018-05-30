@@ -31,7 +31,7 @@ public class EmberTF extends BaseContent
 public function dragonTFeffects(drakesHeart:Boolean = false):void {
 	var changes:int = 0;
 	var changeLimit:int = 2;
-	if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+	if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 	if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 	//Temporary storage
 	var temp:Number = 0;

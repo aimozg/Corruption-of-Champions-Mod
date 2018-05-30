@@ -517,21 +517,14 @@ import flash.utils.getQualifiedClassName;
 		public function totalXP(playerLevel:Number=-1):Number
 		{
 			var multiplier:Number = 1;
-			multiplier += game.player.perkv1(PerkLib.AscensionWisdom) * 0.1;
 			if (playerLevel == -1) playerLevel = game.player.level;
 			// 1) Nerf xp gains by 10% per level after first one level difference up to 90% at 10 lvl diff!
 			// 2) Bonuses for underlevel all the way to 20 lvl's below enemy! Above 20 lvl diff bonus is fixed at 300%! With underdog it increase to 40 lvl diff and caps at 900%!
 			// 3) Super high level folks (over 10 levels) only get 1 xp!
 			var difference:Number = 1;
 			var diff2:Number = this.level - playerLevel;
-			if (game.player.hasPerk(PerkLib.AscensionUnderdog)) {
-				if (diff2 >= 40) difference += 8;
-				if (diff2 >= 1 && diff2 < 40) difference += diff2 * 0.2;
-			}
-			else {
-				if (diff2 >= 20) difference += 2;
-				if (diff2 >= 1 && diff2 < 20) difference += diff2 * 0.1;
-			}
+			if (diff2 >= 40) difference += 8;
+			if (diff2 >= 1 && diff2 < 40) difference += diff2 * 0.2;
 			if (diff2 == -2) difference -= 0.1;
 			if (diff2 == -3) difference -= 0.2;
 			if (diff2 == -4) difference -= 0.3;

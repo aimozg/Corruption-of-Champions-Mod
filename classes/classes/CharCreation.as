@@ -341,16 +341,7 @@
 				}
 			}
 			//Clear perks
-			var ascendPerkTemp:Array = [];
-			for (i = 0; i < player.perks.length; i++) {
-				if (isAscensionPerk(player.perks[i])) ascendPerkTemp.push(player.perks[i]);
-			}
 			player.removePerks();
-			if (ascendPerkTemp.length > 0) {
-				for (i = 0; i < ascendPerkTemp.length; i++) {
-					player.createPerk(ascendPerkTemp[i].ptype, ascendPerkTemp[i].value1, ascendPerkTemp[i].value2, ascendPerkTemp[i].value3, ascendPerkTemp[i].value4);
-				}
-			}
 			//Clear key items
 			var keyItemTemp:Array = [];
 			for (i = 0; i < player.keyItems.length; i++) {
@@ -1274,23 +1265,22 @@
 			outputText("Before you became a champion, you had other plans for your life.  What were you doing before?");
 			menu();
 			var historyPerks:Array = [
-				["Alchemy", PerkLib.HistoryAlchemist, PerkLib.PastLifeAlchemist, "You spent some time as an alchemist's assistant, and alchemical items always seem to be more reactive in your hands."],
-				["Fighting", PerkLib.HistoryFighter, PerkLib.PastLifeFighter, "You spent much of your time fighting other children, and you had plans to find work as a guard when you grew up.  You do 10% more damage with physical melee attacks.  You will also start out with 50 gems."],
-				["Fortune", PerkLib.HistoryFortune, PerkLib.PastLifeFortune, "You always feel lucky when it comes to fortune.  Because of that, you have always managed to save up gems until whatever's needed and how to make the most out it (+15% gems on victory).  You will also start out with 250 gems."],
-				["Healing", PerkLib.HistoryHealer, PerkLib.PastLifeHealer, "You often spent your free time with the village healer, learning how to tend to wounds.  Healing items and effects are 20% more effective."],
-				["Religion", PerkLib.HistoryReligious, PerkLib.PastLifeReligious, "You spent a lot of time at the village temple, and learned how to meditate.  The 'masturbation' option is replaced with 'meditate' when corruption is at or below 66."],
-				["Schooling", PerkLib.HistoryScholar, PerkLib.PastLifeScholar, "You spent much of your time in school, and even begged the richest man in town, Mr. " + (silly() ? "Savin" : "Sellet") + ", to let you read some of his books.  You are much better at focusing, and spellcasting uses 20% less fatigue."],
-				["Scout", PerkLib.HistoryScout, PerkLib.PastLifeScout, "You spent much of your time learning use range weapons, and you had plans to find work as a hunter when you grew up.  You do 10% more damage with physical range attacks and +20% accuracy.  You will also start out with 50 gems."],
-				["Slacking", PerkLib.HistorySlacker, PerkLib.PastLifeSlacker, "You spent a lot of time slacking, avoiding work, and otherwise making a nuisance of yourself.  Your efforts at slacking have made you quite adept at resting, and your fatigue comes back 20% faster."],
-				["Slutting", PerkLib.HistorySlut, PerkLib.PastLifeSlut, "You managed to spend most of your time having sex.  Quite simply, when it came to sex, you were the village bicycle - everyone got a ride.  Because of this, your body is a bit more resistant to penetrative stretching, and has a higher upper limit on what exactly can be inserted."],
-				["Smithing", PerkLib.HistorySmith, PerkLib.PastLifeSmith, "You managed to get an apprenticeship with the local blacksmith.  Because of your time spent at the blacksmith's side, you've learned how to fit armor for maximum protection."],
-				["Whoring", PerkLib.HistoryWhore, PerkLib.PastLifeWhore, "You managed to find work as a whore.  Because of your time spent trading seduction for profit, you're more effective at teasing (+15% tease damage)."]
+				["Alchemy", PerkLib.HistoryAlchemist, "You spent some time as an alchemist's assistant, and alchemical items always seem to be more reactive in your hands."],
+				["Fighting", PerkLib.HistoryFighter, "You spent much of your time fighting other children, and you had plans to find work as a guard when you grew up.  You do 10% more damage with physical melee attacks.  You will also start out with 50 gems."],
+				["Fortune", PerkLib.HistoryFortune, "You always feel lucky when it comes to fortune.  Because of that, you have always managed to save up gems until whatever's needed and how to make the most out it (+15% gems on victory).  You will also start out with 250 gems."],
+				["Healing", PerkLib.HistoryHealer, "You often spent your free time with the village healer, learning how to tend to wounds.  Healing items and effects are 20% more effective."],
+				["Religion", PerkLib.HistoryReligious, "You spent a lot of time at the village temple, and learned how to meditate.  The 'masturbation' option is replaced with 'meditate' when corruption is at or below 66."],
+				["Schooling", PerkLib.HistoryScholar, "You spent much of your time in school, and even begged the richest man in town, Mr. " + (silly() ? "Savin" : "Sellet") + ", to let you read some of his books.  You are much better at focusing, and spellcasting uses 20% less fatigue."],
+				["Scout", PerkLib.HistoryScout, "You spent much of your time learning use range weapons, and you had plans to find work as a hunter when you grew up.  You do 10% more damage with physical range attacks and +20% accuracy.  You will also start out with 50 gems."],
+				["Slacking", PerkLib.HistorySlacker, "You spent a lot of time slacking, avoiding work, and otherwise making a nuisance of yourself.  Your efforts at slacking have made you quite adept at resting, and your fatigue comes back 20% faster."],
+				["Slutting", PerkLib.HistorySlut, "You managed to spend most of your time having sex.  Quite simply, when it came to sex, you were the village bicycle - everyone got a ride.  Because of this, your body is a bit more resistant to penetrative stretching, and has a higher upper limit on what exactly can be inserted."],
+				["Smithing", PerkLib.HistorySmith, "You managed to get an apprenticeship with the local blacksmith.  Because of your time spent at the blacksmith's side, you've learned how to fit armor for maximum protection."],
+				["Whoring", PerkLib.HistoryWhore, "You managed to find work as a whore.  Because of your time spent trading seduction for profit, you're more effective at teasing (+15% tease damage)."]
 			];
 			var buttons:ButtonDataList = new ButtonDataList();
 
 			for each (var hist:Array in historyPerks) {
-				buttons.add(hist[0], curry(confirmHistory, hist[1], hist[3]))
-						.disableIf(player.hasPerk(hist[2]), "You already have this History as one of Past Lives!");
+				buttons.add(hist[0], curry(confirmHistory, hist[1], hist[2]));
 			}
 			buttons.submenu();
 
@@ -1305,7 +1295,7 @@
 
 		private function setHistory(choice:PerkType):void {
 			player.createPerk(choice, 0, 0, 0, 0);
-			if (choice == PerkLib.HistorySlut || choice == PerkLib.HistoryWhore || player.hasPerk(PerkLib.PastLifeSlut) || player.hasPerk(PerkLib.PastLifeWhore)) {
+			if (choice == PerkLib.HistorySlut || choice == PerkLib.HistoryWhore) {
 				if (player.hasVagina()) {
 					player.vaginas[0].virgin = false;
 					player.vaginas[0].vaginalLooseness = VaginaClass.LOOSENESS_LOOSE;
@@ -1501,23 +1491,6 @@
 			if (player.biggestTitSize() >= 2) player.setUndergarment(undergarments.C_BRA);
 			else player.setUndergarment(undergarments.C_SHIRT);
 			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.HistoryFortune) || player.hasPerk(PerkLib.HistoryHealer) || player.hasPerk(PerkLib.HistoryReligious) || player.hasPerk(PerkLib.HistorySlacker) || player.hasPerk(PerkLib.HistorySlut)) player.perkPoints += 1;
-			if (player.hasPerk(PerkLib.PastLifeAlchemist)) player.perkPoints += 1;
-			if (player.hasPerk(PerkLib.PastLifeFortune)) player.perkPoints += 1;
-			if (player.hasPerk(PerkLib.PastLifeHealer)) player.perkPoints += 1;
-			if (player.hasPerk(PerkLib.PastLifeReligious)) player.perkPoints += 1;
-			if (player.hasPerk(PerkLib.PastLifeSlacker)) player.perkPoints += 1;
-			if (player.hasPerk(PerkLib.PastLifeSlut)) player.perkPoints += 1;
-			if (player.hasPerk(PerkLib.AscensionHerosHeritage)) {
-				player.perkPoints += 3 * player.newGamePlusMod();
-				player.statPoints += 15 * player.newGamePlusMod();
-			}
-			if (player.hasPerk(PerkLib.AscensionHerosLineage)) {
-				player.perkPoints += 2 * player.newGamePlusMod();
-				player.statPoints += 10 * player.newGamePlusMod();
-			}
-			if (player.hasPerk(PerkLib.AscensionNaturalMetamorph)) {
-				player.createPerk(PerkLib.GeneticMemory, 0, 0, 0, 0);
-			}
 			clearOutput();
 			statScreenRefresh();
 			outputText("Would you like to play through the " + (1 * (1 + player.newGamePlusMod())) + "-day");
@@ -1547,269 +1520,8 @@
 			outputText("\n\nAscension Perk Points: " + player.ascensionPerkPoints);
 			outputText("\n\n(When you're done, select Reincarnate.)");
 			menu();
-			addButton(0, "Perk Select(1)", ascensionPerkMenu).hint("Spend Ascension Perk Points on special perks!", "Perk Selection");
-			addButton(1, "Perk Select(2)", ascensionPerkMenu2).hint("Spend Ascension Perk Points on special perks!", "Perk Selection");
-			addButton(2, "Rare Perks(1)", rarePerks).hint("Spend Ascension Points on rare special perks!", "Perk Selection");
-			addButton(5, "Perm Perks", ascensionPermeryMenu).hint("Spend Ascension Perk Points to make certain perks permanent (5 per perk).", "Perk Selection");
-			if (player.ascensionPerkPoints >= 5) addButton(6, "Past Life", historyTopastlife).hint("Spend Ascension Points to change current possesed History perk into Past Life perk (5 per perk).", "Perk Selection");
 			addButton(10, "Rename", renamePrompt).hint("Change your name at no charge?");
 			addButton(11, "Reincarnate", reincarnatePrompt).hint("Reincarnate and start an entirely new adventure?");
-		}
-		private function ascensionPerkMenu():void {
-			clearOutput();
-			outputText("You can spend your Ascension Perk Points on special perks not available at level-up!");
-			outputText("\n\nAscension Perk Points: " + player.ascensionPerkPoints);
-			menu();
-			addButton(0, "Mysticality", ascensionPerkSelection, PerkLib.AscensionMysticality, MAX_MYSTICALITY_LEVEL, null, PerkLib.AscensionMysticality.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionMysticality) + " / " + MAX_MYSTICALITY_LEVEL);
-			addButton(1, "S.Enlight.", ascensionPerkSelection, PerkLib.AscensionSpiritualEnlightenment, MAX_SPIRITUALENLIGHTENMENT_LEVEL, null, PerkLib.AscensionSpiritualEnlightenment.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionSpiritualEnlightenment) + " / " + MAX_SPIRITUALENLIGHTENMENT_LEVEL);
-			addButton(2, "Fortune", ascensionPerkSelection, PerkLib.AscensionFortune, MAX_FORTUNE_LEVEL, null, PerkLib.AscensionFortune.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionFortune) + " (No maximum level)");
-			addButton(3, "Moral Shifter", ascensionPerkSelection, PerkLib.AscensionMoralShifter, MAX_MORALSHIFTER_LEVEL, null, PerkLib.AscensionMoralShifter.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionMoralShifter) + " / " + MAX_MORALSHIFTER_LEVEL);
-			addButton(4, "Tolerance", ascensionPerkSelection, PerkLib.AscensionTolerance, MAX_TOLERANCE_LEVEL, null, PerkLib.AscensionTolerance.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionTolerance) + " / " + MAX_TOLERANCE_LEVEL);
-			addButton(5, "Fertility", ascensionPerkSelection, PerkLib.AscensionFertility, MAX_FERTILITY_LEVEL, null, PerkLib.AscensionFertility.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionFertility) + " / " + MAX_FERTILITY_LEVEL);
-			addButton(6, "Virility", ascensionPerkSelection, PerkLib.AscensionVirility, MAX_VIRILITY_LEVEL, null, PerkLib.AscensionVirility.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionVirility) + " / " + MAX_VIRILITY_LEVEL);
-			addButton(7, "Wisdom", ascensionPerkSelection, PerkLib.AscensionWisdom, MAX_WISDOM_LEVEL, null, PerkLib.AscensionWisdom.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionWisdom) + " / " + MAX_WISDOM_LEVEL);
-			addButton(14, "Back", ascensionMenu);
-		}
-		private function ascensionPerkMenu2():void {
-			clearOutput();
-			outputText("You can spend your Ascension Perk Points on special perks not available at level-up!");
-			outputText("\n\nAscension Perk Points: " + player.ascensionPerkPoints);
-			menu();
-			addButton(0, "Desires", ascensionPerkSelection2, PerkLib.AscensionDesires, MAX_DESIRES_LEVEL, null, PerkLib.AscensionDesires.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionDesires) + " / " + MAX_DESIRES_LEVEL);
-			addButton(1, "Endurance", ascensionPerkSelection2, PerkLib.AscensionEndurance, MAX_ENDURANCE_LEVEL, null, PerkLib.AscensionEndurance.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionEndurance) + " / " + MAX_ENDURANCE_LEVEL);
-			addButton(2, "Hardiness", ascensionPerkSelection2, PerkLib.AscensionHardiness, MAX_HARDINESS_LEVEL, null, PerkLib.AscensionHardiness.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionHardiness) + " / " + MAX_HARDINESS_LEVEL);
-			addButton(3, "Soul Purity", ascensionPerkSelection2, PerkLib.AscensionSoulPurity, MAX_SOULPURITY_LEVEL, null, PerkLib.AscensionSoulPurity.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionSoulPurity) + " / " + MAX_SOULPURITY_LEVEL);
-			addButton(4, "Inner Power", ascensionPerkSelection2, PerkLib.AscensionInnerPower, MAX_INNERPOWER_LEVEL, null, PerkLib.AscensionInnerPower.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionInnerPower) + " / " + MAX_INNERPOWER_LEVEL);
-			addButton(5, "Fury", ascensionPerkSelection2, PerkLib.AscensionFury, MAX_FURY_LEVEL, null, PerkLib.AscensionFury.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionFury) + " / " + MAX_FURY_LEVEL);
-			addButton(6, "Transhuman.", ascensionPerkSelection2, PerkLib.AscensionTranshumanism, MAX_TRANSHUMANISM_LEVEL, null, PerkLib.AscensionTranshumanism.longDesc + "\n\nCurrent level: " + player.perkv1(PerkLib.AscensionTranshumanism) + " / " + MAX_TRANSHUMANISM_LEVEL);
-			addButton(14, "Back", ascensionMenu);
-		}
-		
-		private function ascensionPerkSelection(perk:* = null, maxLevel:int = 10):void {
-			clearOutput();
-			outputText("Perk Effect: " + perk.longDesc);
-			outputText("\nCurrent level: " + player.perkv1(perk) + (maxLevel > 0 ? " / " + maxLevel : " (No maximum level)") + "");
-			if (player.perkv1(perk) >= maxLevel && maxLevel > 0) outputText(" <b>(Maximum)</b>");
-			var cost:int = player.perkv1(perk) + 1;
-			if (cost > 5) cost = 5;
-			if (player.perkv1(perk) < maxLevel || maxLevel < 0) outputText("\nCost for next level: " + cost);
-			else outputText("\nCost for next level: <b>N/A</b>");
-			outputText("\n\nAscension Perk Points: " + player.ascensionPerkPoints);
-			menu();
-			if (player.ascensionPerkPoints >= cost && (player.perkv1(perk) < maxLevel || maxLevel < 0)) addButton(0, "Add 1 level", addAscensionPerk, perk, maxLevel);
-			addButton(4, "Back", ascensionPerkMenu);
-		}
-		private function addAscensionPerk(perk:* = null, maxLevel:int = 10):void {
-			var cost:int = player.perkv1(perk) + 1;
-			if (cost > 5) cost = 5;
-			player.ascensionPerkPoints -= cost;
-			if (player.hasPerk(perk)) player.addPerkValue(perk, 1, 1);
-			else player.createPerk(perk, 1, 0, 0, 0);
-			ascensionPerkSelection(perk, maxLevel);
-		}
-		private function ascensionPerkSelection2(perk:* = null, maxRank:int = 10):void {
-			clearOutput();
-			var maxRank:int = 5;
-			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 1) maxRank += 5;
-			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 2) maxRank += 5;
-			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 3) maxRank += 5;
-			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 4) maxRank += 5;
-			//if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 5) maxRank += 5;
-			//if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 6) maxRank += 5;
-			//if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 7) maxRank += 5;
-			//if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 8) maxRank += 5;
-			outputText("Perk Effect: " + perk.longDesc);
-			outputText("\nCurrent level: " + player.perkv1(perk) + " / " + maxRank + "");
-			if (player.perkv1(perk) >= 25) outputText(" <b>(Maximum)</b>");
-			var cost:int = player.perkv1(perk) + 1;
-			if (cost > 5) cost = 5;
-			if (player.perkv1(perk) < 25) outputText("\nCost for next level: " + cost);
-			else outputText("\nCost for next level: <b>N/A</b>");
-			outputText("\n\nAscension Perk Points: " + player.ascensionPerkPoints);
-			menu();
-			if (player.ascensionPerkPoints >= cost && player.perkv1(perk) < maxRank) addButton(0, "Add 1 level", addAscensionPerk2, perk, maxRank);
-			if (player.ascensionPerkPoints >= cost && player.perkv1(perk) == maxRank && player.perkv1(perk) < 20) addButtonDisabled(0, "Add 1 level", "You've reached max rank for this perk at current tier of ascension. To unlock higher ranks you need to ascend again.");
-			addButton(4, "Back", ascensionPerkMenu2);
-		}
-		private function addAscensionPerk2(perk:* = null, maxRank:int = 10):void {
-			var cost:int = player.perkv1(perk) + 1;
-			if (cost > 5) cost = 5;
-			player.ascensionPerkPoints -= cost;
-			if (player.hasPerk(perk)) player.addPerkValue(perk, 1, 1);
-			else player.createPerk(perk, 1, 0, 0, 0);
-			ascensionPerkSelection2(perk, maxRank);
-		}
-		
-		private function rarePerks():void {
-			clearOutput();
-			outputText("You can spend your Ascension Perk Points on rare special perks not available at level-up!");
-			outputText("\n\nAscension Perk Points: " + player.ascensionPerkPoints);
-			menu();
-			var btn:int = 0;
-			if (player.ascensionPerkPoints >= 5 && !player.hasPerk(PerkLib.AscensionHerosHeritage)) addButton(btn, "HeroHeritage", perkHerosHeritage).hint("Perk giving additional 3 perk points and 15 stat points at the start of the game (scalling with current NG tier).\n\nCost: 5 points");
-			else if (player.ascensionPerkPoints < 5 && !player.hasPerk(PerkLib.AscensionHerosHeritage)) addButtonDisabled(btn, "HeroHeritage", "You not have enough ascension perk points!");
-			else addButtonDisabled(btn, "HeroHeritage", "You already bought this perk.");
-			btn++;
-			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 1 && player.hasPerk(PerkLib.AscensionHerosHeritage)) {
-				if (player.ascensionPerkPoints >= 5 && !player.hasPerk(PerkLib.AscensionHerosLineage)) addButton(btn, "HeroLineage", perkHerosLineage).hint("Perk giving additional 2 perk points and 10 stat points at the start of the game (scalling with current NG tier).\n\nCost: 5 points");
-				else if (player.ascensionPerkPoints < 5) button(btn).disable("You not have enough ascension perk points!");
-				else addButtonDisabled(btn, "HeroLineage", "You already bought this perk.");
-			}
-			else addButtonDisabled(btn, "HeroLineage", "You need ascend more times to buy this perk.");
-			btn++;
-			if (player.ascensionPerkPoints >= 10 && !player.hasPerk(PerkLib.AscensionHybridTheory)) addButton(btn, "HybridTheory", perkHybridTheory).hint("Perk allowing reduce by one req. race points to recive race bonuses (still req. min 3 race points to work and/or other things like specific body part/perk).\n\nCost: 10 points");
-			else if (player.ascensionPerkPoints < 10 && !player.hasPerk(PerkLib.AscensionHybridTheory)) addButtonDisabled(btn, "HybridTheory", "You not have enough ascension perk points!");
-			else addButtonDisabled(btn, "HybridTheory", "You already bought this perk.");
-			btn++;
-			if (player.ascensionPerkPoints >= 30 && !player.hasPerk(PerkLib.AscensionNaturalMetamorph)) addButton(btn, "N.Metamorph", perkNaturalMetamorph).hint("Perk allowing to start with Genetic Memory and Metamorph perks.\n\nCost: 30 points");
-			else if (player.ascensionPerkPoints < 30 && !player.hasPerk(PerkLib.AscensionNaturalMetamorph)) addButtonDisabled(btn, "N.Metamorph", "You not have enough ascension perk points!");
-			else addButtonDisabled(btn, "N.Metamorph", "You already bought this perk.");
-			btn++;
-			if (player.ascensionPerkPoints >= 5 && !player.hasPerk(PerkLib.AscensionUnderdog)) addButton(btn, "Underdog", perkUnderdog).hint("Perk allowing to double increase to base exp gains for fighting enemies above PC level, increasing max lvl diff when bonus still increase from 20 to 40 above current PC lvl.\n\nCost: 5 points");// And... to live up to underdog role PC will 'accidentally' find few places to further power-up.
-			else if (player.ascensionPerkPoints < 5 && !player.hasPerk(PerkLib.AscensionUnderdog)) addButtonDisabled(btn, "Underdog", "You not have enough ascension perk points!");
-			else addButtonDisabled(btn, "Underdog", "You already bought this perk.");
-			btn++;
-			if (player.ascensionPerkPoints >= 5 && !player.hasPerk(PerkLib.AscensionUnlockedPotential)) addButton(btn, "UnlockPotent", perkUnlockedPotential).hint("Perk allowing to have increase passive gains of max hp, fatigue and mana at each lvl-up.\n\nCost: 5 point");
-			else if (player.ascensionPerkPoints < 5 && !player.hasPerk(PerkLib.AscensionUnlockedPotential)) addButtonDisabled(btn, "UnlockPotent", "You not have enough ascension perk points!");
-			else addButtonDisabled(btn, "UnlockPotent", "You already bought this perk.");
-			btn++;
-			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 1 && player.hasPerk(PerkLib.AscensionUnlockedPotential)) {
-				if (player.ascensionPerkPoints >= 5 && !player.hasPerk(PerkLib.AscensionUnlockedPotential2ndStage)) addButton(btn, "U.Potent2nd", perkUnlockedPotential2ndStage).hint("Perk allowing to have increase passive gains of max wrath, lust and ki at each lvl-up.\n\nCost: 5 point");
-				else if (player.ascensionPerkPoints < 5) addButtonDisabled(btn, "U.Potent2nd", "You not have enough ascension perk points!");
-				else addButtonDisabled(btn, "U.Potent2nd", "You already bought this perk.");
-			}
-			else addButtonDisabled(btn, "HeroLineage", "You need ascend more times to buy this perk.");
-			btn++;
-		//	if (player.ascensionPerkPoints >= 10 && !player.hasPerk(PerkLib.AscensionHybridTheory)) addButton(btn, "HybridTheory", perkHybridTheory).hint("Perk allowing reduce by one req. race points to recive race bonuses (still req. min 3 race points to work).\n\nCost: 10 points");
-		//	else if (player.ascensionPerkPoints < 10) addButtonDisabled(btn, "HybridTheory", "You not have enough ascension perk points!");
-		//	else addButtonDisabled(btn, "HybridTheory", "You already bought this perk.");
-		//	btn++;
-		//	if (player.ascensionPerkPoints >= 10 && !player.hasPerk(PerkLib.AscensionHybridTheory)) addButton(btn, "HybridTheory", perkHybridTheory).hint("Perk allowing reduce by one req. race points to recive race bonuses (still req. min 3 race points to work).\n\nCost: 10 points");
-		//	else if (player.ascensionPerkPoints < 10) addButtonDisabled(btn, "HybridTheory", "You not have enough ascension perk points!");
-		//	else addButtonDisabled(btn, "HybridTheory", "You already bought this perk.");
-		//	btn++;
-		//	if (player.ascensionPerkPoints >= 10 && !player.hasPerk(PerkLib.AscensionHybridTheory)) addButton(btn, "HybridTheory", perkHybridTheory).hint("Perk allowing reduce by one req. race points to recive race bonuses (still req. min 3 race points to work).\n\nCost: 10 points");
-		//	else if (player.ascensionPerkPoints < 10) addButtonDisabled(btn, "HybridTheory", "You not have enough ascension perk points!");
-		//	else addButtonDisabled(btn, "HybridTheory", "You already bought this perk.");
-		//	btn++;
-		//	if (player.ascensionPerkPoints >= 10 && !player.hasPerk(PerkLib.AscensionHybridTheory)) addButton(btn, "HybridTheory", perkHybridTheory).hint("Perk allowing reduce by one req. race points to recive race bonuses (still req. min 3 race points to work).\n\nCost: 10 points");
-		//	else if (player.ascensionPerkPoints < 10) addButtonDisabled(btn, "HybridTheory", "You not have enough ascension perk points!");
-		//	else addButtonDisabled(btn, "HybridTheory", "You already bought this perk.");
-		//	btn++;
-			addButton(14, "Back", ascensionMenu);
-		}
-		private function perkHerosHeritage():void {
-			player.ascensionPerkPoints -= 5;
-			player.createPerk(PerkLib.AscensionHerosHeritage,0,0,0,1);
-			clearOutput();
-			outputText("Your gained Hero's Heritage perk.");
-			doNext(rarePerks);
-		}
-		private function perkHerosLineage():void {
-			player.ascensionPerkPoints -= 5;
-			player.createPerk(PerkLib.AscensionHerosLineage,0,0,0,1);
-			clearOutput();
-			outputText("Your gained Hero's Lineage perk.");
-			doNext(rarePerks);
-		}
-		private function perkHybridTheory():void {
-			player.ascensionPerkPoints -= 10;
-			player.createPerk(PerkLib.AscensionHybridTheory,0,0,0,1);
-			clearOutput();
-			outputText("Your gained Hybrid Theory perk.");
-			doNext(rarePerks);
-		}
-		private function perkNaturalMetamorph():void {
-			player.ascensionPerkPoints -= 30;
-			player.createPerk(PerkLib.AscensionNaturalMetamorph,0,0,0,1);
-			clearOutput();
-			outputText("Your gained Natural Metamorph perk.");
-			doNext(rarePerks);
-		}
-		private function perkUnderdog():void {
-			player.ascensionPerkPoints -= 5;
-			player.createPerk(PerkLib.AscensionUnderdog,0,0,0,1);
-			clearOutput();
-			outputText("Your gained Underdog perk.");
-			doNext(rarePerks);
-		}
-		private function perkUnlockedPotential():void {
-			player.ascensionPerkPoints -= 5;
-			player.createPerk(PerkLib.AscensionUnlockedPotential,0,0,0,1);
-			clearOutput();
-			outputText("Your gained Unlocked Potential perk.");
-			doNext(rarePerks);
-		}
-		private function perkUnlockedPotential2ndStage():void {
-			player.ascensionPerkPoints -= 5;
-			player.createPerk(PerkLib.AscensionUnlockedPotential2ndStage,0,0,0,1);
-			clearOutput();
-			outputText("Your gained Unlocked Potential (2nd Stage) perk.");
-			doNext(rarePerks);
-		}
-
-		private function historyTopastlife():void {
-			var historyPerks:Array = [
-				[PerkLib.HistoryAlchemist, PerkLib.PastLifeAlchemist],
-				[PerkLib.HistoryFighter, PerkLib.PastLifeFighter],
-				[PerkLib.HistoryFortune, PerkLib.PastLifeFortune],
-				[PerkLib.HistoryHealer, PerkLib.PastLifeHealer],
-				[PerkLib.HistoryReligious, PerkLib.PastLifeReligious],
-				[PerkLib.HistoryScholar, PerkLib.PastLifeScholar],
-				[PerkLib.HistoryScout, PerkLib.PastLifeScout],
-				[PerkLib.HistorySlacker, PerkLib.PastLifeSlacker],
-				[PerkLib.HistorySlut, PerkLib.PastLifeSlut],
-//				[PerkLib.HistorySmith, PerkLib.PastLifeSmith],
-				[PerkLib.HistoryWhore, PerkLib.PastLifeWhore]
-			];
-			clearOutput();
-			for each(var pk:Array in historyPerks) {
-				if (player.hasPerk(pk[0])) {
-					player.removePerk(pk[0]);
-					player.createPerk(pk[1], 0, 0, 0, 1);
-					player.ascensionPerkPoints -= 5;
-					outputText("Your History perk became your Past Life perk.");
-					doNext(ascensionMenu);
-					return;
-				}
-			}
-			outputText("You not have any History perk to change into Past Life perk.");
-			doNext(ascensionMenu);
-		}
-
-		private function ascensionPermeryMenu(page:int = 0):void {
-			clearOutput();
-			outputText("For the price of five points, you can make certain perks permanent and they will carry over in future ascensions. In addition, if the perks come from transformations, they will stay even if you no longer meet the requirements.");
-			outputText("\n\nAscension Perk Points: " + player.ascensionPerkPoints);
-
-			var buttons:ButtonDataList = new ButtonDataList();
-			var permablePerks:Array = [
-				PerkLib.CorruptedKitsune, PerkLib.CorruptedNinetails, PerkLib.DarkCharm, PerkLib.DragonFireBreath,
-				PerkLib.DragonIceBreath, PerkLib.EnlightenedKitsune, PerkLib.EnlightenedNinetails,
-				PerkLib.FerasBoonAlpha, PerkLib.FerasBoonBreedingBitch, PerkLib.FerasBoonMilkingTwat,
-				PerkLib.FerasBoonSeeder, PerkLib.FireLord, PerkLib.Flexibility, PerkLib.Hellfire, PerkLib.InkSpray,
-				PerkLib.LizanRegeneration, PerkLib.Lustzerker, PerkLib.MagicalFertility, PerkLib.MagicalVirility,
-				PerkLib.MaraesGiftButtslut, PerkLib.MaraesGiftFertility, PerkLib.MaraesGiftProfractory, PerkLib.MaraesGiftStud,
-				PerkLib.MilkMaid, PerkLib.NinetailsKitsuneOfBalance, PerkLib.OneTrackMind, PerkLib.PureAndLoving,
-				PerkLib.PurityBlessing, PerkLib.SensualLover
-			];
-			for each(var pk:PerkType in permablePerks) {
-				buttons.add(pk.name, curry(permanentizePerk, pk))
-						.disableIf(!player.hasPerk(pk))
-						.disableIf(player.perkv4(pk) > 0, "This perk is already made permanent and will carry over in all subsequent ascensions.");
-			}
-			buttons.submenu(ascensionMenu,page);
-
-			function permanentizePerk(perk:PerkType):void {
-				//Not enough points or perk already permed? Cancel.
-				if (player.ascensionPerkPoints < 5) return;
-				if (player.perkv4(perk) > 0) return;
-				//Deduct points
-				player.ascensionPerkPoints -= 5;
-				//Permanentize a perk
-				player.addPerkValue(perk, 4, 1);
-				ascensionPermeryMenu(buttons.page);
-			}
 		}
 		
 		private function renamePrompt():void {
@@ -1892,16 +1604,7 @@
 		private function removeLevelPerks():void {
 			clearOutput();
 			player.perkPoints = player.level - 1;
-			var ascendPerkTemp:Array = [];
-			for (var i:int = 0; i < player.perks.length; i++) {
-				if (isAscensionPerk(player.perks[i], true)) ascendPerkTemp.push(player.perks[i]);
-			}
 			player.removePerks();
-			if (ascendPerkTemp.length > 0) {
-				for (i = 0; i < ascendPerkTemp.length; i++) {
-					player.createPerk(ascendPerkTemp[i].ptype, ascendPerkTemp[i].value1, ascendPerkTemp[i].value2, ascendPerkTemp[i].value3, ascendPerkTemp[i].value4);
-				}
-			}
 			outputText("After looking around the room for a while, you look into the mirror and begin to recollect who you are...");
 			doNext(routeToGenderChoiceReincarnation);
 		}
@@ -1911,10 +1614,6 @@
 			genericGenderChoice();
 		}
 		
-		private function isAscensionPerk(perk:PerkClass, respec:Boolean = false):Boolean {
-			return perk.ptype.keepOnAscension(respec) || perk.value4 > 0;
-		}
-
 		private function isSpecialKeyItem(keyName:* = null):Boolean {//tylko sky poinson pearl zostawić tutaj
 			return (keyName == "Sky Poison Pearl" || keyName == "Nieve's Tear"); 
 		}

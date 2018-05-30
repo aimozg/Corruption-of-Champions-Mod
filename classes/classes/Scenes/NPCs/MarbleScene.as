@@ -1553,7 +1553,7 @@ private function extendedMurbelFarmTalkz():void {
 		case 5:
 			//Next love, Marble's problem
 			outputText("This time it's you who spends a fair bit talking about your own love life back home - or lack thereof, as it seemed to you sometimes.  After you finish, you notice that Marble is looking off to the side.  She turns back to you and thanks you for sharing.  You ask her if she doesn't mind continuing where you left off last time.  \"<i>");
-			if(player.hasPerk(PerkLib.HistorySlut) || player.hasPerk(PerkLib.HistoryWhore) || player.hasPerk(PerkLib.PastLifeSlut) || player.hasPerk(PerkLib.PastLifeWhore)) outputText("Well, you certainly gave an arousing description.  I think I can share something in return.");
+			if(player.hasPerk(PerkLib.HistorySlut) || player.hasPerk(PerkLib.HistoryWhore)) outputText("Well, you certainly gave an arousing description.  I think I can share something in return.");
 			else if(player.cor < 33) outputText("Sweetie, after you told me such a nice story, of course I will.");
 			else if(player.cor < 66) outputText("Sweetie, I can tell that you care a great deal about what happened, even if you try to hide it. Of course I'll share.");
 			else outputText("Well, you certainly gave an arousing description.  I think I can share something in return.");

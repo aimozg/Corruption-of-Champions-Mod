@@ -698,7 +698,7 @@ public class MagicSpecials extends BaseCombatContent {
 			if (player.hasPerk(PerkLib.ElectrifiedDesire)) {
 				lustDmgF *= (1 + (player.lust100 * 0.01));
 			}
-			if (player.hasPerk(PerkLib.HistoryWhore) || player.hasPerk(PerkLib.PastLifeWhore)) {
+			if (player.hasPerk(PerkLib.HistoryWhore)) {
 				lustDmgF *= 1.15;
 			}
 			//Determine if critical tease!

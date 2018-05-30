@@ -21,11 +21,6 @@ package classes.Perks
 					"Your equipment makes it harder for spell-casting to drain your mana or souskills to drain your ki!");
 		}
 		
-		override public function keepOnAscension(respec:Boolean = false):Boolean 
-		{
-			return true;
-		}
-		
 	}
 
 }

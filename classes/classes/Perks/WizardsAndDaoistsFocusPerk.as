@@ -20,11 +20,6 @@ package classes.Perks
 					"Your equipment grants you additional focus, increasing your spells and magical soulskills power.");
 		}
 		
-		override public function keepOnAscension(respec:Boolean = false):Boolean 
-		{
-			return true;
-		}
-		
 	}
 
 }

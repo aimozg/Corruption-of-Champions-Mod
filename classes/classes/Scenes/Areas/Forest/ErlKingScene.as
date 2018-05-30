@@ -977,7 +977,7 @@ public class ErlKingScene extends BaseContent
 			var x:int = 0;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			if (player.hasPerk(PerkLib.TransformationImmunity)) changeLimit = 0;
 			// Main TFs

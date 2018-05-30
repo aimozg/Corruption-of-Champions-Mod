@@ -1078,7 +1078,7 @@ public function naggaTease():void {
     if (rand(100) <= chance) {
         //NERF TEASE DAMAGE
         damage *= .9;
-        if (player.hasPerk(PerkLib.HistoryWhore) || player.hasPerk(PerkLib.PastLifeWhore)) {
+        if (player.hasPerk(PerkLib.HistoryWhore)) {
             damage *= 1.15;
         }
         if (player.hasPerk(PerkLib.DazzlingDisplay) && rand(100) < 10) damage *= 1.2;

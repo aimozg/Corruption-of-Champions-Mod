@@ -53,7 +53,7 @@ public class EngineCore {
         if (changeNum == 0) return 0;
         if (changeNum > 0) {
             //Increase by 20%!
-            if (CoC.instance.player.hasPerk(PerkLib.HistoryHealer) || CoC.instance.player.hasPerk(PerkLib.PastLifeHealer)) changeNum *= 1.2;
+            if (CoC.instance.player.hasPerk(PerkLib.HistoryHealer)) changeNum *= 1.2;
             if (CoC.instance.player.HP + int(changeNum) > maxHP()) {
                 if (CoC.instance.player.HP >= maxHP()) {
                     if (display) HPChangeNotify(changeNum);

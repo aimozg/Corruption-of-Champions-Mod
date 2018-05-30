@@ -17,117 +17,59 @@ public class PerkLib
 				"");
 		// Player creation perks
 		public static const Fast:PerkType = mk("Fast", "Fast",
-				"Gains speed 25% faster.", null, true);
+				"Gains speed 25% faster.", null);
 		public static const Lusty:PerkType = mk("Lusty", "Lusty",
-				"Gains lust 25% faster.", null, true);
+				"Gains lust 25% faster.", null);
 		public static const Pervert:PerkType = mk("Pervert", "Pervert",
-				"Gains corruption 25% faster. Reduces corruption requirement for high-corruption variant of scenes.", null, true);
+				"Gains corruption 25% faster. Reduces corruption requirement for high-corruption variant of scenes.", null);
 		public static const Sensitive:PerkType = mk("Sensitive", "Sensitive",
-				"Gains sensitivity 25% faster.", null, true);
+				"Gains sensitivity 25% faster.", null);
 		public static const Smart:PerkType = mk("Smart", "Smart",
-				"Gains intelligence 25% faster.", null, true);
+				"Gains intelligence 25% faster.", null);
 		public static const Strong:PerkType = mk("Strong", "Strong",
-				"Gains strength 25% faster.", null, true);
+				"Gains strength 25% faster.", null);
 		public static const Tough:PerkType = mk("Tough", "Tough",
-				"Gains toughness 25% faster.", null, true);
+				"Gains toughness 25% faster.", null);
 		// Female creation perks
 		public static const BigClit:PerkType = mk("Big Clit", "Big Clit",
-				"Allows your clit to grow larger more easily and faster.", null, true);
+				"Allows your clit to grow larger more easily and faster.", null);
 		public static const BigTits:PerkType = mk("Big Tits", "Big Tits",
-				"Makes your tits grow larger more easily.", null, true);
+				"Makes your tits grow larger more easily.", null);
 		public static const Fertile:PerkType = mk("Fertile", "Fertile",
-				"Makes you 15% more likely to become pregnant.", null, true);
+				"Makes you 15% more likely to become pregnant.", null);
 		public static const WetPussy:PerkType = mk("Wet Pussy", "Wet Pussy",
-				"Keeps your pussy wet and provides a bonus to capacity.", null, true);
+				"Keeps your pussy wet and provides a bonus to capacity.", null);
 		// Male creation perks
 		public static const BigCock:PerkType = mk("Big Cock", "Big Cock",
-				"Gains cock size 25% faster and with less limitations.", null, true);
+				"Gains cock size 25% faster and with less limitations.", null);
 		public static const MessyOrgasms:PerkType = mk("Messy Orgasms", "Messy Orgasms",
-				"Produces 50% more cum volume.", null, true);
+				"Produces 50% more cum volume.", null);
 				
-		// Ascension perks
-		public static const AscensionDesires:AscensionDesiresPerk = new AscensionDesiresPerk();
-		public static const AscensionEndurance:AscensionEndurancePerk = new AscensionEndurancePerk();
-		public static const AscensionHardiness:AscensionHardinessPerk = new AscensionHardinessPerk();
-		public static const AscensionFertility:AscensionFertilityPerk = new AscensionFertilityPerk();
-		public static const AscensionFortune:AscensionFortunePerk = new AscensionFortunePerk();
-		public static const AscensionFury:AscensionFuryPerk = new AscensionFuryPerk();
-		public static const AscensionInnerPower:AscensionInnerPowerPerk = new AscensionInnerPowerPerk();
-		public static const AscensionMoralShifter:AscensionMoralShifterPerk = new AscensionMoralShifterPerk();
-		public static const AscensionMysticality:AscensionMysticalityPerk = new AscensionMysticalityPerk();
-		public static const AscensionSoulPurity:AscensionSoulPurityPerk = new AscensionSoulPurityPerk();
-		public static const AscensionSpiritualEnlightenment:AscensionSpiritualEnlightenmentPerk = new AscensionSpiritualEnlightenmentPerk();
-		public static const AscensionTolerance:AscensionTolerancePerk = new AscensionTolerancePerk();
-		public static const AscensionTranshumanism:AscensionTranshumanismPerk = new AscensionTranshumanismPerk();
-		public static const AscensionVirility:AscensionVirilityPerk = new AscensionVirilityPerk();
-		public static const AscensionWisdom:AscensionWisdomPerk = new AscensionWisdomPerk();
-		
-		// Ascension Rare perks
-		public static const AscensionHerosHeritage:PerkType = mk("Ascension: Hero's Heritage", "Ascension: Hero's Heritage",
-				"After reincarnation you ended in body of local hero descendant possesing much more firm body and resolve giving you a slight easier start of your quest in Mareth.");
-		public static const AscensionHerosLineage:PerkType = mk("Ascension: Hero's Lineage", "Ascension: Hero's Lineage",
-				"Body in which you ends up after next incarnation have much more thicker hero linage than before giving you even better start before venturing into Mareth. You would probably need it.");
-		public static const AscensionHybridTheory:PerkType = mk("Ascension: Hybrid Theory", "Ascension: Hybrid Theory",
-				"Allows you to reduce by one needed to accumulate mutations into non-human species to attain race specific enhancing effects.");
-		public static const AscensionNaturalMetamorph:PerkType = mk("Ascension: Natural Metamorph", "Ascension: Natural Metamorph",
-				"When others needs to work hard on unlocking their metamorph potential you never had to do it. Whatever the reason for that is... truth be told you try not to think about it, affraid of what it might mean for you. You do not want to care about it as long as it's nothing harmfull for you in the long run.");
-		public static const AscensionUnderdog:PerkType = mk("Ascension: Underdog", "Ascension: Underdog",
-				"You're underdog. Gains twice more exp for beating up enemies above your current level with doubled limit after which increase to gained exp stops.");
-				// Also allow to use 'accidentally' finding all forgotten or hidden legacies from times before the demon invasion.");
-		public static const AscensionUnlockedPotential:PerkType = mk("Ascension: Unlocked Potential", "Ascension: Unlocked Potential",
-				"Due to reincarnation experience your body becoming strong faster than in previous life (increased passive hp, fatigue, mana gains at lvl-up).");
-		public static const AscensionUnlockedPotential2ndStage:PerkType = mk("Ascension: Unlocked Potential (2nd Stage)", "Ascension: Unlocked Potential (2nd Stage)",
-				"Due to reincarnation experience your body becoming strong faster than in previous life (increased passive lust, wrath, Ki gains at lvl-up).");
-		
 		// History perks
 		public static const HistoryAlchemist:PerkType = mk("History: Alchemist", "History: Alchemist",
 				"Alchemical experience makes items more reactive to your body.");
-		public static const PastLifeAlchemist:PerkType = mk("Past Life: Alchemist", "Past Life: Alchemist",
-				"Alchemical experience makes items more reactive to your body.", null, true);
 		public static const HistoryCultivator:PerkType = mk("History: Cultivator", "History: Cultivator",
 				"Ki is easier to kept giving you 10% increase to it maximum amount.");
-		public static const PastLifeCultivator:PerkType = mk("Past Life: Cultivator", "Past Life: Cultivator",
-				"Ki is easier to kept giving you 10% increase to it maximum amount.", null, true);
 		public static const HistoryFighter:PerkType = mk("History: Fighter", "History: Fighter",
 				"A Past full of conflict increases physical melee damage dealt by 10%.");
-		public static const PastLifeFighter:PerkType = mk("Past Life: Fighter", "Past Life: Fighter",
-				"A Past full of conflict increases physical melee damage dealt by 10%.", null, true);
 		public static const HistoryFortune:PerkType = mk("History: Fortune", "History: Fortune",
 				"Your luck and skills at gathering currency allows you to get 15% more gems from victories.");
-		public static const PastLifeFortune:PerkType = mk("Past Life: Fortune", "Past Life: Fortune",
-				"Your luck and skills at gathering currency allows you to get 15% more gems from victories.", null, true);
 		public static const HistoryHealer:PerkType = mk("History: Healer", "History: Healer",
 				"Healing experience increases HP gains by 20%.");
-		public static const PastLifeHealer:PerkType = mk("Past Life: Healer", "Past Life: Healer",
-				"Healing experience increases HP gains by 20%.", null, true);
 		public static const HistoryReligious:PerkType = mk("History: Religious", "History: Religious",
 				"Replaces masturbate with meditate when corruption less than or equal to 66. Reduces minimum libido slightly.");
-		public static const PastLifeReligious:PerkType = mk("Past Life: Religious", "Past Life: Religious",
-				"Replaces masturbate with meditate when corruption less than or equal to 66. Reduces minimum libido slightly.", null, true);
 		public static const HistoryScholar:PerkType = mk("History: Scholar", "History: Scholar",
 				"Time spent focusing your mind makes spellcasting use 20% less mana.");
-		public static const PastLifeScholar:PerkType = mk("Past Life: Scholar", "Past Life: Scholar",
-				"Time spent focusing your mind makes spellcasting use 20% less mana.", null, true);
 		public static const HistoryScout:PerkType = mk("History: Scout", "History: Scout",
 				"A Past full of archery training increases physical range damage dealt by 10% and acc by 20%.");
-		public static const PastLifeScout:PerkType = mk("Past Life: Scout", "Past Life: Scout",
-				"A Past full of archery training increases physical range damage dealt by 10% and acc by 20%.", null, true);
 		public static const HistorySlacker:PerkType = mk("History: Slacker", "History: Slacker",
 				"Regenerate fatigue 20% faster.");
-		public static const PastLifeSlacker:PerkType = mk("Past Life: Slacker", "Past Life: Slacker",
-				"Regenerate fatigue 20% faster.", null, true);
 		public static const HistorySlut:PerkType = mk("History: Slut", "History: Slut",
 				"Sexual experience has made you more able to handle large insertions and more resistant to stretching.");
-		public static const PastLifeSlut:PerkType = mk("Past Life: Slut", "Past Life: Slut",
-				"Sexual experience has made you more able to handle large insertions and more resistant to stretching.", null, true);
 		public static const HistorySmith:PerkType = mk("History: Smith", "History: Smith",
 				"Knowledge of armor and fitting increases armor effectiveness by roughly 10%.");
-		public static const PastLifeSmith:PerkType = mk("Past Life: Smith", "Past Life: Smith",
-				"Knowledge of armor and fitting increases armor effectiveness by roughly 10%.", null, true);
 		public static const HistoryWhore:PerkType = mk("History: Whore", "History: Whore",
 				"Seductive experience causes your tease attacks to be 15% more effective.");
-		public static const PastLifeWhore:PerkType = mk("Past Life: Whore", "Past Life: Whore",
-				"Seductive experience causes your tease attacks to be 15% more effective.", null, true);
 		
 		// Ordinary (levelup) perks
 		public static const Acclimation:PerkType = mk("Acclimation", "Acclimation",
@@ -713,17 +655,17 @@ public class PerkLib
 		// Non-weapon equipment perks
 		public static const Ambition:AmbitionPerk = new AmbitionPerk();
 		public static const DexterousSwordsmanship:PerkType = mk("Dexterous swordsmanship", "Dexterous swordsmanship",
-				"Increases parry chance by 10% while wielding a weapon.",null,true);
+				"Increases parry chance by 10% while wielding a weapon.",null);
 		public static const BloodMage:PerkType = mk("Blood Mage", "Blood Mage",
-				"Spellcasting now consumes health instead of mana!",null,true);
+				"Spellcasting now consumes health instead of mana!",null);
 		public static const LastResort:PerkType = mk("Last Resort", "Last Resort",
-				"When mana is too low to cast a spell, automatically cast from hp instead.",null,true);
+				"When mana is too low to cast a spell, automatically cast from hp instead.",null);
 		public static const Obsession:ObsessionPerk = new ObsessionPerk();
 		public static const Sanctuary:PerkType = mk("Sanctuary", "Sanctuary", "Regenerates up to 1% of HP scaling on purity");
 		public static const SeersInsight:SeersInsightPerk = new SeersInsightPerk();
 		public static const SluttySeduction:SluttySeductionPerk = new SluttySeductionPerk();
 		public static const WellspringOfLust:PerkType = mk("Wellspring of Lust", "Wellspring of Lust",
-				"At the beginning of combat, gain lust up to black magic threshold if lust is bellow black magic threshold.",null,true);
+				"At the beginning of combat, gain lust up to black magic threshold if lust is bellow black magic threshold.",null);
 		public static const WizardsEnduranceAndSluttySeduction:WizardsEnduranceAndSluttySeductionPerk = new WizardsEnduranceAndSluttySeductionPerk();
 		public static const WizardsAndDaoistsEndurance:WizardsAndDaoistsEndurancePerk = new WizardsAndDaoistsEndurancePerk();
 		public static const WizardsEndurance:WizardsEndurancePerk = new WizardsEndurancePerk();
@@ -732,16 +674,16 @@ public class PerkLib
 		public static const Accuracy1:Accuracy1Perk = new Accuracy1Perk();
 		public static const Accuracy2:Accuracy2Perk = new Accuracy2Perk();
 		public static const BladeWarden:PerkType = mk("Blade-Warden", "Blade-Warden",
-				"Enables Resonance Volley ki power while equipped: Perform a ranged attack where each arrow after the first gets an additional 10% accuracy for every arrow before it.",null,true);
+				"Enables Resonance Volley ki power while equipped: Perform a ranged attack where each arrow after the first gets an additional 10% accuracy for every arrow before it.",null);
 		public static const BodyCultivatorsFocus:BodyCultivatorsFocusPerk = new BodyCultivatorsFocusPerk();
 		public static const DaoistsFocus:DaoistsFocusPerk = new DaoistsFocusPerk();
 		public static const MageWarden:PerkType = mk("Mage-Warden", "Mage-Warden",
-				"Enables Resonance Volley ki power while equipped: Perform a ranged attack where each arrow after the first gets an additional 10% accuracy for every arrow before it.",null,true);
+				"Enables Resonance Volley ki power while equipped: Perform a ranged attack where each arrow after the first gets an additional 10% accuracy for every arrow before it.",null);
 		public static const SagesKnowledge:SagesKnowledgePerk = new SagesKnowledgePerk();
 		public static const StrifeWarden:PerkType = mk("Strife-Warden", "Strife-Warden",
-				"Enables Beat of War ki power while equipped: Attack with low-moderate additional soul damage, gain strength equal to 15% your base strength until end of battle. This effect stacks.",null,true);
+				"Enables Beat of War ki power while equipped: Attack with low-moderate additional soul damage, gain strength equal to 15% your base strength until end of battle. This effect stacks.",null);
 		public static const WildWarden:PerkType = mk("Wild-Warden", "Wild-Warden",
-				"Enables Resonance Volley ki power while equipped: Perform a ranged attack where each arrow after the first gets an additional 10% accuracy for every arrow before it.",null,true);
+				"Enables Resonance Volley ki power while equipped: Perform a ranged attack where each arrow after the first gets an additional 10% accuracy for every arrow before it.",null);
 		public static const WizardsAndDaoistsFocus:WizardsAndDaoistsFocusPerk = new WizardsAndDaoistsFocusPerk();
 		public static const WizardsFocus:WizardsFocusPerk = new WizardsFocusPerk();
 
@@ -777,9 +719,9 @@ public class PerkLib
 		public static const ColdMastery:PerkType = mk("Cold Mastery", "Cold Mastery",
 				"You now have complete control over the ice element adding your own inner power to all cold based attack.");
 		public static const CorruptedKitsune:PerkType = mk("Corrupted Kitsune", "Corrupted Kitsune",
-				"The mystical energy of the kitsunes surges through you, filling you with phenomenal cosmic power!  Your boundless magic allows you to recover quickly after casting spells, but your method of attaining it has corrupted the transformation, preventing you from achieving true enlightenment.",null,true);
+				"The mystical energy of the kitsunes surges through you, filling you with phenomenal cosmic power!  Your boundless magic allows you to recover quickly after casting spells, but your method of attaining it has corrupted the transformation, preventing you from achieving true enlightenment.",null);
 		public static const CorruptedNinetails:PerkType = mk("Corrupted Nine-tails", "Corrupted Nine-tails",
-				"The mystical energy of the nine-tails surges through you, filling you with phenomenal cosmic power!  Your boundless magic allows you to recover quickly after casting spells, but your method of attaining it has corrupted the transformation, preventing you from achieving true enlightenment.",null,true);
+				"The mystical energy of the nine-tails surges through you, filling you with phenomenal cosmic power!  Your boundless magic allows you to recover quickly after casting spells, but your method of attaining it has corrupted the transformation, preventing you from achieving true enlightenment.",null);
 		public static const DarkCharm:PerkType = mk("Dark Charm", "Dark Charm",
 				"Allows access to demons charm attacks.");
 		public static const Diapause:PerkType = mk("Diapause", "Diapause",
@@ -795,9 +737,9 @@ public class PerkLib
 		public static const ElectrifiedDesire:PerkType = mk("Electrified Desire", "Electrified Desire",
 				"Masturbating only makes you hornier. Furthermore, your ability to entice, tease and zap thing is enhanced the more horny you are.");
 		public static const EnlightenedKitsune:PerkType = mk("Enlightened Kitsune", "Enlightened Kitsune",
-				"The mystical energy of the kitsunes surges through you, filling you with phenomenal cosmic power!  Your boundless magic allows you to recover quickly after casting spells.",null,true);
+				"The mystical energy of the kitsunes surges through you, filling you with phenomenal cosmic power!  Your boundless magic allows you to recover quickly after casting spells.",null);
 		public static const EnlightenedNinetails:PerkType = mk("Enlightened Nine-tails", "Enlightened Nine-tails",
-				"The mystical energy of the nine-tails surges through you, filling you with phenomenal cosmic power!  Your boundless magic allows you to recover quickly after casting spells.",null,true);
+				"The mystical energy of the nine-tails surges through you, filling you with phenomenal cosmic power!  Your boundless magic allows you to recover quickly after casting spells.",null);
 		public static const Feeder:PerkType = mk("Feeder", "Feeder",
 				"Lactation does not decrease and gives a compulsion to breastfeed others.");
 		public static const FenrirSpikedCollar:PerkType = mk("Fenrir spiked collar", "Fenrir spiked collar",
@@ -848,7 +790,7 @@ public class PerkLib
 		public static const MinotaurCumResistance:PerkType = mk("Minotaur Cum Resistance", "Minotaur Cum Resistance",
 				"You can never become a Minotaur Cum Addict. Grants immunity to Minotaur Cum addiction.");
 		public static const NinetailsKitsuneOfBalance:PerkType = mk("Nine-tails Kitsune of Balance", "Nine-tails Kitsune of Balance",
-				"The mystical energy of the nine-tails surges through you, filling you with phenomenal cosmic power!  You tread narrow path between corruption and true enlightment maintaining balance that allow to fuse both sides powers.",null,true);
+				"The mystical energy of the nine-tails surges through you, filling you with phenomenal cosmic power!  You tread narrow path between corruption and true enlightment maintaining balance that allow to fuse both sides powers.",null);
 		public static const Oviposition:PerkType = mk("Oviposition", "Oviposition",
 				"Causes you to regularly lay eggs when not otherwise pregnant.");
 		public static const PhoenixFireBreath:PerkType = mk("Phoenix fire breath", "Phoenix fire breath",
@@ -960,9 +902,9 @@ public class PerkLib
 		public static const ShieldWielder:PerkType = mk("Shield wielder", "Shield wielder", "");
 		public static const TeaseResistance:PerkType = mk("Tease Resistance", "Tease Resistance", "");
 
-		private static function mk(id:String, name:String, desc:String, longDesc:String = null, keepOnAscension:Boolean = false):PerkType
+		private static function mk(id:String, name:String, desc:String, longDesc:String = null):PerkType
 		{
-			return new PerkType(id, name, desc, longDesc, keepOnAscension);
+			return new PerkType(id, name, desc, longDesc);
 		}
 
 	// Perk requirements

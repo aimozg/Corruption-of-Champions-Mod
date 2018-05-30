@@ -21,10 +21,6 @@ package classes.Perks
 					"Your spellcasting equipment makes your spell-casting cost less mana you and allows access to 'Seduce', an improved form of 'Tease'.!");
 		}
 		
-		override public function keepOnAscension(respec:Boolean = false):Boolean 
-		{
-			return true;
-		}		
 	}
 
 }

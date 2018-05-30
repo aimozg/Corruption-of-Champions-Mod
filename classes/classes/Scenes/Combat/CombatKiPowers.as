@@ -111,7 +111,7 @@ import classes.StatusEffects;
 				damage *= host.kiPowerMod(true);
 				if (host.hasPerk(PerkLib.HoldWithBothHands) && host.weaponName != WeaponLib.FISTS.name && host.shieldName == ShieldLib.NOTHING.name && !SceneLib.combat.isWieldingRangedWeapon()) damage *= 1.2;
 				if (host.hasPerk(PerkLib.ThunderousStrikes) && host.str >= 80) damage *= 1.2;
-				if (host.hasPerk(PerkLib.HistoryFighter) || host.hasPerk(PerkLib.PastLifeFighter)) damage *= 1.1;
+				if (host.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
 				if (host.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
 				if (host.hasStatusEffect(StatusEffects.OniRampage)) damage *= 3;
 				if (host.hasStatusEffect(StatusEffects.Overlimit)) damage *= 2;

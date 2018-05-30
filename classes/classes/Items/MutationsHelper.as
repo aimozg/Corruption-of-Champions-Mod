@@ -243,7 +243,7 @@ import classes.BodyParts.Wings;
 		for (var i:int = 2; i <= maxChanges; i++) {
 			if (rand(i) == 0) changeLimit++;
 		}
-		if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+		if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 		if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 		return changes;
 	}

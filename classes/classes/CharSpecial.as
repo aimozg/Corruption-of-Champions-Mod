@@ -1684,8 +1684,6 @@ import classes.Items.*;
 			if (!player.hasPerk(PerkLib.HistoryAlchemist)) player.createPerk(PerkLib.HistoryAlchemist, 0, 0, 0, 0); // and resorted to your hobby - alchemy
 			if (!player.hasPerk(PerkLib.TransformationResistance)) player.createPerk(PerkLib.TransformationResistance, 0, 0, 0, 0);  // tf resistance and alchemist are actually mutually nullifying each other - this is flavor mostly
 			if (!player.hasPerk(PerkLib.HistoryHealer)) player.createPerk(PerkLib.HistoryHealer, 0, 0, 0, 0);  // with religious and alchemical knowlege you are skilled healer
-			if (!player.hasPerk(PerkLib.AscensionMoralShifter)) player.createPerk(PerkLib.AscensionMoralShifter, 5, 0, 0, 0); // your kitsune's trickster nature makes you susceptable to corruption
-			if (!player.hasPerk(PerkLib.AscensionTolerance)) player.createPerk(PerkLib.AscensionTolerance, 10, 0, 0, 0); // but in the same time your enlightment keeps you from really turning to demon, so corruption level does not really affect you much
 			if (!player.hasPerk(PerkLib.Fast)) player.createPerk(PerkLib.Fast, 0.25, 0, 0, 0); // gaining speed is pain in ass... this one is not for history flavor
 			if (!player.hasPerk(PerkLib.Smart)) player.createPerk(PerkLib.Smart, 0.25, 0, 0, 0); // int is easy to get, just for history flavor
 			if (!player.hasPerk(PerkLib.Lusty)) player.createPerk(PerkLib.Lusty, 0.25, 0, 0, 0); // have a lust problem

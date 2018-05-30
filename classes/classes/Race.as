@@ -431,8 +431,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(6, {
@@ -488,8 +486,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -555,8 +551,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(5,{
@@ -590,8 +584,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -648,8 +640,6 @@ public class Race {
 							catCounter++;
 						if (ch.hasPerk(PerkLib.CatlikeNimblenessEvolved))
 							catCounter++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && catCounter >= 3)
-							catCounter += 1;
 						if (ch.hasPerk(PerkLib.CatlikeNimbleness) && ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage))
 							catCounter++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
@@ -685,8 +675,6 @@ public class Race {
 							score -= 3;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						if (ch.horns.type == Horns.UNICORN)
 							return 0;
 						return score;
@@ -718,8 +706,6 @@ public class Race {
 						if (ch.hasPerk(PerkLib.Flexibility)) score++;
 						if (ch.hasPerk(PerkLib.CatlikeNimbleness)) score++;
 						if (ch.hasPerk(PerkLib.CatlikeNimblenessEvolved)) score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 7)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(11,{
@@ -739,13 +725,7 @@ public class Race {
 				'wings'    : [Wings.FEATHERED_LARGE, +2],
 				'legs'     : [LowerBody.NAGA, +2],
 				'skin.coat': [Skin.SCALES, +1]
-			}).withFinalizerScript(
-					function (ch:Creature, metrics:*, score:int):int {
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 7)
-							score += 1;
-						return score;
-					}
-			).withBonusTier(11,{
+			}).withBonusTier(11,{
 				'str': +40,
 				'tou': +25,
 				'spe': +100
@@ -776,8 +756,6 @@ public class Race {
 						}
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 4)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4, {
@@ -829,8 +807,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.BlackHeart))
 							score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 5)
-							score += 1;
 						if (ch.hasPerk(PerkLib.BlackHeart) && ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage))
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
@@ -869,8 +845,6 @@ public class Race {
 					score++;
 				if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 					score += 10;
-				if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-					score += 1;
 				return score;
 			}).withBonusTier(4,{
 				'spe': +15,
@@ -894,8 +868,6 @@ public class Race {
 							score++;
 						if (score >= 3 && ch.countCocksOfType(CockTypesEnum.HORSE) > 0)
 							score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -993,8 +965,6 @@ public class Race {
 							score++;
 						//	if (hasPerk(PerkLib.ChimericalBodyPerfectStage))
 						//		dragonCounter += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 4)
-							score += 1;
 						if (ch.hasPerk(PerkLib.DraconicLungs) && ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage))
 							score++;
 						return score;
@@ -1104,8 +1074,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(5, {
@@ -1159,8 +1127,6 @@ public class Race {
 						if (ch.hasFur() && score > 0) score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -1239,8 +1205,6 @@ public class Race {
 							if (ch.hasVagina())
 								score++;
 						}
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -1275,8 +1239,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 4)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -1312,8 +1274,6 @@ public class Race {
 							score -= 3;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 7)
-							score += 1;
 						if (ch.hasPerk(PerkLib.GorgonsEyes) && ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage))
 							score++;
 						return score;
@@ -1348,8 +1308,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -1385,8 +1343,6 @@ public class Race {
 //							score -= 5;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -1444,8 +1400,6 @@ public class Race {
 							score++;
 						//	if (hasPerk(PerkLib.ChimericalBodyPerfectStage))
 						//		dragonCounter += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 4)
-							score += 1;
 						if (ch.hasPerk(PerkLib.DraconicLungs) && ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage))
 							score++;
 						return score;
@@ -1620,8 +1574,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.KitsuneThyroidGlandEvolved))
 							score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 5)
-							score += 1;
 						if (ch.hasPerk(PerkLib.KitsuneThyroidGland) && ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage))
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
@@ -1672,8 +1624,6 @@ public class Race {
 							score += 10;
 						if (ch.hasPerk(PerkLib.LizanMarrow) && ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage))
 							score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 4)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4, {
@@ -1706,8 +1656,6 @@ public class Race {
 						else score -= 3;
 						if (ch.hasPerk(PerkLib.ManticoreMetabolism))
 							score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						if (ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage) && ch.hasPerk(PerkLib.ManticoreMetabolism))
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage) && ch.hasPerk(PerkLib.ManticoreMetabolism) && score >= 6)
@@ -1759,8 +1707,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						if (ch.hasPerk(PerkLib.MantislikeAgility) && ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage))
 							score++;
 						return score;
@@ -1801,7 +1747,6 @@ public class Race {
 							if (ch.horseCocks() > 0) score++;
 						}
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage)) score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 4) score += 1;
 						return score;
 					}
 			).withBonusTier(4, {
@@ -1881,8 +1826,6 @@ public class Race {
 						if (ch.hasPerk(PerkLib.Flexibility)) score++;
 						if (ch.hasPerk(PerkLib.CatlikeNimbleness)) score++;
 						if (ch.hasPerk(PerkLib.CatlikeNimblenessEvolved)) score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 7)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(11,{
@@ -1920,8 +1863,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(6,{
@@ -1957,8 +1898,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(6,{
@@ -1996,8 +1935,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(5, {
@@ -2060,8 +1997,6 @@ public class Race {
 					function (ch:Creature, metrics:*, score:int):int {
 						if ((ch.lowerBody == LowerBody.PLANT_HIGH_HEELS || ch.lowerBody == LowerBody.PLANT_ROOT_CLAWS) && ch.tentacleCocks() > 0)
 							score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						// TODO conflicting races
 //						if (racialScores[Race.ALRAUNE.name] >= 10)
 //							score -= 7;
@@ -2106,8 +2041,6 @@ public class Race {
 						if (ch.hasFur() && score > 0) score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -2135,8 +2068,6 @@ public class Race {
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(5, {
@@ -2165,8 +2096,6 @@ public class Race {
 				'legs': [LowerBody.RED_PANDA, +1]
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						if (score >= 2 && ch.skin.base.pattern == Skin.PATTERN_RED_PANDA_UNDERBODY)
 							score++;
 						if (score >= 2 && ch.skinType == Skin.FUR)
@@ -2199,8 +2128,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -2236,8 +2163,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 4)
-							score += 1;
 						if (ch.hasPerk(PerkLib.SalamanderAdrenalGlands) && ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage))
 							score++;
 						return score;
@@ -2297,8 +2222,6 @@ public class Race {
 						}
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -2343,8 +2266,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 4)
-							score += 1;
 						if (ch.hasPerk(PerkLib.ScyllaInkGlands) && ch.hasPerk(PerkLib.ChimericalBodyAdvancedStage))
 							score++;
 						return score;
@@ -2385,8 +2306,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -2421,8 +2340,6 @@ public class Race {
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(10,{
@@ -2471,8 +2388,6 @@ public class Race {
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						if (ch.hasPerk(PerkLib.Flexibility))
 							score++;
 						if (ch.hasPerk(PerkLib.CatlikeNimbleness))
@@ -2510,8 +2425,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{
@@ -2549,8 +2462,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
 							score += 10;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(5, {
@@ -2620,8 +2531,6 @@ public class Race {
 							score++;
 						if (ch.hasPerk(PerkLib.DraconicLungsEvolved))
 							score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 7)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(11,{
@@ -2654,8 +2563,6 @@ public class Race {
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.wolfCocks() > 0 && score > 0)
-							score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && score >= 3)
 							score++;
 						if (ch.cor >= 20)
 							score += 2;
@@ -2698,8 +2605,6 @@ public class Race {
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.wolfCocks() > 0 && score > 0) score++;
 						if (ch.hasPerk(PerkLib.FreezingBreath)) score++;
-						if (ch.hasPerk(PerkLib.AscensionHybridTheory) && ch.eyes.type == Eyes.FENRIR)
-							score += 1;
 						return score;
 					}
 			).withBonusTier(4,{

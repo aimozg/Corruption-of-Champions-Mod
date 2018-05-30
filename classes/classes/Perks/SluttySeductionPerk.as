@@ -20,9 +20,5 @@ package classes.Perks
 					"Your armor allows you access to 'Seduce', an improved form of 'Tease'.");
 		}
 		
-		override public function keepOnAscension(respec:Boolean = false):Boolean 
-		{
-			return true;
-		}		
 	}
 }

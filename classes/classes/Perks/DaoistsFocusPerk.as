@@ -20,9 +20,5 @@ package classes.Perks
 					"Your daoist's weapon grants you additional focus, increasing your soulskills power.");
 		}
 		
-		override public function keepOnAscension(respec:Boolean = false):Boolean 
-		{
-			return true;
-		}	
 	}
 }

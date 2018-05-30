@@ -26,7 +26,6 @@ package classes
 	import classes.Items.Jewelry;
 	import classes.Items.JewelryLib;
 	import classes.Items.WeaponLib;
-	import classes.Perks.AscensionSpiritualEnlightenmentPerk;
 	import classes.Scenes.Camp.CampMakeWinions;
 	import classes.Scenes.Places.TelAdre.UmasShop;
 	import classes.Stats.BuffableStat;
@@ -202,10 +201,8 @@ package classes
 				}
 			}
 			if (hasPerk(PerkLib.JobGuardian)) max += 30;
-			if (hasPerk(PerkLib.AscensionHardiness)) max += perkv1(PerkLib.AscensionHardiness) * 100;
 			if (hasPerk(PerkLib.ChiReflowDefense)) max += UmasShop.NEEDLEWORK_DEFENSE_EXTRA_HP;
 			max += level * 15;
-			if (hasPerk(PerkLib.AscensionUnlockedPotential)) max += level * 20;
 			if (jewelryEffectId == JewelryLib.MODIFIER_HP) max += jewelryEffectMagnitude;
 			return max;
 		}
@@ -222,8 +219,6 @@ package classes
 			if (hasPerk(PerkLib.OmnibusGift)) max += 15;
 			if (hasPerk(PerkLib.JobCourtesan)) max += 20;
 			if (hasPerk(PerkLib.JobSeducer)) max += 10;
-			if (hasPerk(PerkLib.AscensionDesires)) max += perkv1(PerkLib.AscensionDesires) * 10;
-			if (hasPerk(PerkLib.AscensionUnlockedPotential2ndStage)) max += level * 2;
 			return max;
 		}
 		protected function maxHP_mult():Number {
@@ -504,17 +499,6 @@ package classes
 			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'speMult', -0.45);
 			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'intMult', +0.60);
 			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'wisMult', +0.90);
-			perk = getPerk(PerkLib.AscensionTranshumanism);
-			if (perk) {
-				perk.buffHost(this, 'strMult', +0.05 * perk.value1);
-				perk.buffHost(this, 'touMult', +0.05 * perk.value1);
-				perk.buffHost(this, 'speMult', +0.05 * perk.value1);
-				perk.buffHost(this, 'intMult', +0.05 * perk.value1);
-				perk.buffHost(this, 'wisMult', +0.05 * perk.value1);
-				perk.buffHost(this, 'libMult', +0.05 * perk.value1);
-			} else {
-				removeStatEffects(PerkLib.AscensionTranshumanism.id);
-			}
 			End("Creature","updateStats.perks2");
 			
 			End("Creature","updateStats");
@@ -2288,7 +2272,7 @@ package classes
 			//Wet pussy provides 20 point boost
 			if (hasPerk(PerkLib.WetPussy))
 				bonus += 20;
-			if (hasPerk(PerkLib.HistorySlut) || hasPerk(PerkLib.PastLifeSlut))
+			if (hasPerk(PerkLib.HistorySlut))
 				bonus += 20;
 			if (hasPerk(PerkLib.OneTrackMind))
 				bonus += 10;
@@ -2308,7 +2292,7 @@ package classes
 			//Centaurs = +30 capacity
 			if (isTaur())
 				bonus = 30;
-			if (hasPerk(PerkLib.HistorySlut) || hasPerk(PerkLib.PastLifeSlut))
+			if (hasPerk(PerkLib.HistorySlut))
 				bonus += 20;
 			if (hasPerk(PerkLib.Cornucopia))
 				bonus += 30;
@@ -2531,8 +2515,6 @@ package classes
 			//Fertite ring bonus!
 			if (jewelryEffectId == JewelryLib.MODIFIER_FERTILITY)
 				percent += (jewelryEffectMagnitude / 100);
-			if (hasPerk(PerkLib.AscensionVirility))
-				percent += perkv1(PerkLib.AscensionVirility) * 0.05;
 			if (percent > 1)
 				percent = 1;
 			if (percent < 0)
@@ -3357,7 +3339,6 @@ package classes
 			counter += perkv1(PerkLib.PiercedFertite);
 			if (jewelryEffectId == JewelryLib.MODIFIER_FERTILITY)
 				counter += jewelryEffectMagnitude;
-			counter += perkv1(PerkLib.AscensionFertility) * 5;
 			return counter;
 		}
 
@@ -4375,9 +4356,6 @@ package classes
 				if(shieldName == CoC.instance.shields.SPI_FOC.name){
 					mod += 0.2;
 				}
-			}
-			if(hasPerk(PerkLib.AscensionSpiritualEnlightenment)){
-				mod *= 1 + perkv1(PerkLib.AscensionSpiritualEnlightenment);
 			}
 			return mod;
 		}

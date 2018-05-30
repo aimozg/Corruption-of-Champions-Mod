@@ -1465,7 +1465,7 @@ public class CombatTeases extends BaseCombatContent {
 				damage *= (1 + (player.lust100 * 0.01));
 				bonusDamage *= (1 + (player.lust100 * 0.01));
 			}
-			if (player.hasPerk(PerkLib.HistoryWhore) || player.hasPerk(PerkLib.PastLifeWhore)) {
+			if (player.hasPerk(PerkLib.HistoryWhore)) {
 				damage *= 1.15;
 				bonusDamage *= 1.15;
 			}

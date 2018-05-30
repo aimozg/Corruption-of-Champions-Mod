@@ -62,7 +62,7 @@ public class BeeHoney extends Consumable
 			if (Utils.rand(2) == 0) changeLimit++;
 			if (Utils.rand(2) == 0) changeLimit++;
 			if (Utils.rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Drink text
 			if (special) {

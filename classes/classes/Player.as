@@ -161,7 +161,7 @@ package classes
 			armorDef += upperGarment.armorDef;
 			armorDef += lowerGarment.armorDef;
 			//Blacksmith history!
-			if (armorDef > 0 && (hasPerk(PerkLib.HistorySmith) || hasPerk(PerkLib.PastLifeSmith))) {
+			if (armorDef > 0 && hasPerk(PerkLib.HistorySmith)) {
 				armorDef = Math.round(armorDef * 1.1);
 				armorDef += 1;
 			}
@@ -1843,10 +1843,10 @@ package classes
 			dynStats("lus", 0, "scale", false);
 		}
 		
+		// TODO @aimozg replace with isCorruptEnough/isPureEnough
 		public function corruptionTolerance():int {
-			var temp:int = perkv1(PerkLib.AscensionTolerance) * 5;
-			if (flags[kFLAGS.MEANINGLESS_CORRUPTION] > 0) temp += 100;
-			return temp;
+			if (flags[kFLAGS.MEANINGLESS_CORRUPTION] > 0) return 100;
+			return 0;
 		}
 		
 		public function newGamePlusMod():int {
@@ -2316,10 +2316,6 @@ package classes
 			if (hasPerk(PerkLib.GargoylePure)) {
 				maxSen -= (10 * newGamePlusMod);
 			}
-			End("Player","getAllMaxStats.perks2");
-			Begin("Player","getAllMaxStats.effects");
-			//Apply New Game+
-			maxSen += 5 * perkv1(PerkLib.AscensionTranshumanism);
 			End("Player","getAllMaxStats.perks2");
 			End("Player","getAllMaxStats");
 			maxSen = Math.max(maxSen,1);
@@ -2947,7 +2943,6 @@ package classes
 				if (dcor > 0 && hasPerk(PerkLib.PurityBlessing)) dcor *= 0.5;
 				if (dcor > 0 && hasPerk(PerkLib.PureAndLoving)) dcor *= 0.75;
 				if (dcor > 0 && weapon == game.weapons.HNTCANE) dcor *= 0.5;
-				if (hasPerk(PerkLib.AscensionMoralShifter)) dcor *= 1 + (perkv1(PerkLib.AscensionMoralShifter) * 0.2);
 				if (hasPerk(PerkLib.Lycanthropy)) dcor *= 1.2;
 				if (hasStatusEffect(StatusEffects.BlessingOfDivineFera)) dcor *= 2;
 				
@@ -2984,10 +2979,8 @@ package classes
 			if (hasPerk(PerkLib.JobHunter)) max += 50;
 			if (hasPerk(PerkLib.JobRanger)) max += 5;
 			if (hasPerk(PerkLib.PrestigeJobArcaneArcher)) max += 600;
-			if (hasPerk(PerkLib.AscensionEndurance)) max += perkv1(PerkLib.AscensionEndurance) * 30;
 			if (jewelryEffectId == JewelryLib.MODIFIER_MP) max += jewelryEffectMagnitude;
 			max += level * 5;
-			if (hasPerk(PerkLib.AscensionUnlockedPotential)) max += level * 6;
 			if (max > 74999) max = 74999;
 			return max;
 		}
@@ -3071,12 +3064,6 @@ package classes
 			if (hasPerk(PerkLib.Rage)) {
 				max += 300;
 			}
-			if (hasPerk(PerkLib.AscensionFury)) {
-				max += perkv1(PerkLib.AscensionFury) * 20;
-			}
-			if (hasPerk(PerkLib.AscensionUnlockedPotential2ndStage)) {
-				max += level * 2;
-			}
 			if (max > 20899) {
 				max = 20899;
 			}//obecnie max to 20890
@@ -3087,18 +3074,12 @@ package classes
 			var max: Number = 50;
 			var ngMult: int = 1 + game.player.newGamePlusMod();
 			max += racialBonuses()[Race.BonusName_maxki] * ngMult;
-			if (hasPerk(PerkLib.AscensionSoulPurity)) {
-				max += perkv1(PerkLib.AscensionSoulPurity) * 50;
-			}
 			if (flags[kFLAGS.SOULFORCE_GAINED_FROM_CULTIVATING] > 0) {
 				max += flags[kFLAGS.SOULFORCE_GAINED_FROM_CULTIVATING];
 			}//+310
 			if (jewelryEffectId == JewelryLib.MODIFIER_SF) {
 				max += jewelryEffectMagnitude;
 			}//+20
-			if (hasPerk(PerkLib.AscensionUnlockedPotential2ndStage)) {
-				max += level * 6;
-			}
 			max = Math.round(max);
 			if (max > 139999) {
 				max = 139999;

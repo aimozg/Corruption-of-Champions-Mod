@@ -84,7 +84,7 @@ public class CombatMagic extends BaseCombatContent {
 		//Limiting it and multiplicative mods
 		if(player.hasPerk(PerkLib.BloodMage) && costPercent < 50) costPercent = 50;
 		mod *= costPercent/100;
-		if (player.hasPerk(PerkLib.HistoryScholar) || player.hasPerk(PerkLib.PastLifeScholar)) {
+		if (player.hasPerk(PerkLib.HistoryScholar)) {
 			if(mod > 2) mod *= .8;
 		}
 		if (player.hasPerk(PerkLib.BloodMage) && mod < 5) mod = 5;
@@ -132,7 +132,7 @@ public class CombatMagic extends BaseCombatContent {
 		//Limiting it and multiplicative mods
 		if(player.hasPerk(PerkLib.BloodMage) && costPercent < 50) costPercent = 50;
 		mod *= costPercent/100;
-		if (player.hasPerk(PerkLib.HistoryScholar) || player.hasPerk(PerkLib.PastLifeScholar)) {
+		if (player.hasPerk(PerkLib.HistoryScholar)) {
 			if(mod > 2) mod *= .8;
 		}
 		if (player.hasPerk(PerkLib.BloodMage) && mod < 5) mod = 5;
@@ -182,7 +182,7 @@ public class CombatMagic extends BaseCombatContent {
 		//Limiting it and multiplicative mods
 		if(player.hasPerk(PerkLib.BloodMage) && costPercent < 50) costPercent = 50;
 		mod *= costPercent/100;
-		if (player.hasPerk(PerkLib.HistoryScholar) || player.hasPerk(PerkLib.PastLifeScholar)) {
+		if (player.hasPerk(PerkLib.HistoryScholar)) {
 			if(mod > 2) mod *= .8;
 		}
 		if (player.hasPerk(PerkLib.BloodMage) && mod < 5) mod = 5;
@@ -236,7 +236,6 @@ public class CombatMagic extends BaseCombatContent {
 		if (player.hasPerk(PerkLib.ChiReflowMagic)) mod += UmasShop.NEEDLEWORK_MAGIC_SPELL_MULTI;
 		if (player.jewelryEffectId == JewelryLib.MODIFIER_SPELL_POWER) mod += (player.jewelryEffectMagnitude / 100);
 		if (player.countCockSocks("blue") > 0) mod += (player.countCockSocks("blue") * .05);
-		if (player.hasPerk(PerkLib.AscensionMysticality)) mod *= 1 + (player.perkv1(PerkLib.AscensionMysticality) * 0.1);
 		if (player.hasPerk(PerkLib.SeersInsight)) mod += player.perkv1(PerkLib.SeersInsight);
 		if (player.shield == shields.SPI_FOC) mod += .2;
 		if (player.shield == shields.MABRACE) mod += .5;
@@ -269,7 +268,6 @@ public class CombatMagic extends BaseCombatContent {
 		if (player.hasPerk(PerkLib.ChiReflowMagic)) mod += UmasShop.NEEDLEWORK_MAGIC_SPELL_MULTI;
 		if (player.jewelryEffectId == JewelryLib.MODIFIER_SPELL_POWER) mod += (player.jewelryEffectMagnitude / 100);
 		if (player.countCockSocks("blue") > 0) mod += (player.countCockSocks("blue") * .05);
-		if (player.hasPerk(PerkLib.AscensionMysticality)) mod *= 1 + (player.perkv1(PerkLib.AscensionMysticality) * 0.1);
 		if (player.hasPerk(PerkLib.SeersInsight)) mod += player.perkv1(PerkLib.SeersInsight);
 		if (player.shield == shields.MABRACE) mod += .5;
 		if (player.weapon == weapons.N_STAFF) mod += player.cor * .01;
@@ -304,7 +302,6 @@ public class CombatMagic extends BaseCombatContent {
 		if (player.hasPerk(PerkLib.UnicornBlessing) && player.cor <= 20) mod += 20;
 		if (player.jewelryEffectId == JewelryLib.MODIFIER_SPELL_POWER) mod += (player.jewelryEffectMagnitude / 100);
 		if (player.countCockSocks("blue") > 0) mod += (player.countCockSocks("blue") * .05);
-		if (player.hasPerk(PerkLib.AscensionMysticality)) mod *= 1 + (player.perkv1(PerkLib.AscensionMysticality) * 0.1);
 		if (player.hasPerk(PerkLib.SeersInsight)) mod += player.perkv1(PerkLib.SeersInsight);
 		if (player.shield == shields.SPI_FOC) mod += .2;
 		if (player.shield == shields.MABRACE) mod += .5;
@@ -337,7 +334,6 @@ public class CombatMagic extends BaseCombatContent {
 		if (player.hasPerk(PerkLib.UnicornBlessing) && player.cor <= 20) mod += 20;
 		if (player.jewelryEffectId == JewelryLib.MODIFIER_SPELL_POWER) mod += (player.jewelryEffectMagnitude / 100);
 		if (player.countCockSocks("blue") > 0) mod += (player.countCockSocks("blue") * .05);
-		if (player.hasPerk(PerkLib.AscensionMysticality)) mod *= 1 + (player.perkv1(PerkLib.AscensionMysticality) * 0.1);
 		if (player.hasPerk(PerkLib.SeersInsight)) mod += player.perkv1(PerkLib.SeersInsight);
 		if (player.shield == shields.MABRACE) mod += .5;
 		if (player.weapon == weapons.N_STAFF) mod += player.cor * .01;
@@ -368,7 +364,6 @@ public class CombatMagic extends BaseCombatContent {
 		if (player.hasPerk(PerkLib.BicornBlessing) && player.cor >= 80) mod += 20;
 		if (player.jewelryEffectId == JewelryLib.MODIFIER_SPELL_POWER) mod += (player.jewelryEffectMagnitude / 100);
 		if (player.countCockSocks("blue") > 0) mod += (player.countCockSocks("blue") * .05);
-		if (player.hasPerk(PerkLib.AscensionMysticality)) mod *= 1 + (player.perkv1(PerkLib.AscensionMysticality) * 0.1);
 		if (player.hasPerk(PerkLib.SeersInsight)) mod += player.perkv1(PerkLib.SeersInsight);
 		if (player.shield == shields.SPI_FOC) mod += .2;
 		if (player.shield == shields.MABRACE) mod += .5;
@@ -398,7 +393,6 @@ public class CombatMagic extends BaseCombatContent {
 		if (player.hasPerk(PerkLib.BicornBlessing) && player.cor >= 80) mod += 20;
 		if (player.jewelryEffectId == JewelryLib.MODIFIER_SPELL_POWER) mod += (player.jewelryEffectMagnitude / 100);
 		if (player.countCockSocks("blue") > 0) mod += (player.countCockSocks("blue") * .05);
-		if (player.hasPerk(PerkLib.AscensionMysticality)) mod *= 1 + (player.perkv1(PerkLib.AscensionMysticality) * 0.1);
 		if (player.hasPerk(PerkLib.SeersInsight)) mod += player.perkv1(PerkLib.SeersInsight);
 		if (player.shield == shields.MABRACE) mod += .5;
 		if (player.weapon == weapons.N_STAFF) mod += player.cor * .01;

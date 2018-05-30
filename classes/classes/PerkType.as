@@ -26,7 +26,6 @@ public class PerkType
 		private var _name:String;
 		private var _desc:String;
 		private var _longDesc:String;
-		private var _keepOnAscension:Boolean;
 		public var defaultValue1:Number = 0;
 		public var defaultValue2:Number = 0;
 		public var defaultValue3:Number = 0;
@@ -64,21 +63,12 @@ public class PerkType
 			return _longDesc;
 		}
 		
-		public function keepOnAscension(respec:Boolean = false):Boolean
-		{
-			if (_keepOnAscension)
-				return true;						
-			
-			return _longDesc != _desc && !respec; // dirty condition
-		}
-
-		public function PerkType(id:String,name:String,desc:String,longDesc:String = null,keepOnAscension:Boolean = false)
+		public function PerkType(id:String,name:String,desc:String,longDesc:String = null)
 		{
 			this._id = id;
 			this._name = name;
 			this._desc = desc;
 			this._longDesc = longDesc || _desc;
-			this._keepOnAscension = keepOnAscension;
 			if (PERK_LIBRARY[id] != null) {
 				CoC_Settings.error("Duplicate perk id "+id+", old perk is "+(PERK_LIBRARY[id] as PerkType)._name);
 			}

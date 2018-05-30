@@ -21,11 +21,6 @@ package classes.Perks
 					"Your equipment boost your spells/magical soulskills power and lowering costs of specials/soulskills!");
 		}
 		
-		override public function keepOnAscension(respec:Boolean = false):Boolean 
-		{
-			return true;
-		}
-		
 	}
 
 }

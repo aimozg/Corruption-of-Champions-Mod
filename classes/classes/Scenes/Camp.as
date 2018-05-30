@@ -833,7 +833,7 @@ CoC.instance.saves.saveGame(player.slotName);
 	var canFap:Boolean = !player.hasStatusEffect(StatusEffects.Dysfunction) && (flags[kFLAGS.UNABLE_TO_MASTURBATE_BECAUSE_CENTAUR] == 0 && !player.isTaur());
 	if (player.lust >= 30) {
 		addButton(11, "Masturbate", SceneLib.masturbation.masturbateMenu);
-		if ((((player.hasPerk(PerkLib.HistoryReligious) || player.hasPerk(PerkLib.PastLifeReligious)) && player.cor <= 66) || (player.hasPerk(PerkLib.Enlightened) && player.cor < 10)) && !(player.hasStatusEffect(StatusEffects.Exgartuan) && player.statusEffectv2(StatusEffects.Exgartuan) == 0) || flags[kFLAGS.SFW_MODE] >= 1) addButton(11, "Meditate", SceneLib.masturbation.masturbateMenu);
+		if ((((player.hasPerk(PerkLib.HistoryReligious)) && player.cor <= 66) || (player.hasPerk(PerkLib.Enlightened) && player.cor < 10)) && !(player.hasStatusEffect(StatusEffects.Exgartuan) && player.statusEffectv2(StatusEffects.Exgartuan) == 0) || flags[kFLAGS.SFW_MODE] >= 1) addButton(11, "Meditate", SceneLib.masturbation.masturbateMenu);
 	}
 	addButton(12, "Wait", doWait).hint("Wait for four hours.\n\nShift-click to wait until the night comes.");
 	if (player.fatigue > 40 || player.HP / player.maxHP() <= .9) addButton(12, "Rest", rest).hint("Rest for four hours.\n\nShift-click to rest until fully healed or night comes.");
@@ -2949,16 +2949,6 @@ public function setLevelButton(allowAutoLevelTransition:Boolean):Boolean {
 			var ki:int = 0;
 			var wrath:int = 0;
 			var lust:int = 0;
-			if (player.hasPerk(PerkLib.AscensionUnlockedPotential)) {
-				hp += 20;
-				fatigue += 6;
-				mana += 12;
-			}
-			if (player.hasPerk(PerkLib.AscensionUnlockedPotential2ndStage)) {
-				lust += 2;
-				wrath += 2;
-				ki += 6;
-			}
 			mainView.levelButton.toolTipText = "Level up to increase your maximum HP by " + hp + ", maximum Fatigue by " + fatigue + ", maximum Mana by " + mana + ", maximum Ki by " + ki + ", maximum Wrath by " + wrath + " and maximum Lust by " + lust + "; gain 5 attribute points and 1 perk points.";
 			if (flags[kFLAGS.AUTO_LEVEL] > 0 && allowAutoLevelTransition) {
                 CoC.instance.playerInfo.levelUpGo();
@@ -3195,11 +3185,6 @@ private function promptSaveUpdate():void {
 		saveVersion(13);
 		outputText("And we do it again since game got more shiny then before so we would fast give additional polishing to your save. No worry it will be now +20% more shiny ;)");
 		var refund:int = 0;
-		if (player.perkv1(PerkLib.AscensionTolerance) > 10) {
-			refund += player.perkv1(PerkLib.AscensionTolerance) - 10;
-			player.setPerkValue(PerkLib.AscensionTolerance,1,10);
-			player.ascensionPerkPoints += refund;
-		}
 		if (player.hasPerk(PerkLib.JobArcher)) {
 			player.removePerk(PerkLib.JobArcher);
 			player.createPerk(PerkLib.JobRanger, 0, 0, 0, 0);

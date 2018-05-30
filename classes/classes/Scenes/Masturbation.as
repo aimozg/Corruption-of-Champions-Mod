@@ -26,7 +26,7 @@ public class Masturbation extends BaseContent {
 					outputText("\n\nFortunately, you could smear honey all over your [cock] and relieve yourself if you want to.");
 					addButton(1, "Use Honey", masturbateGo);
 				}
-				if (((player.hasPerk(PerkLib.HistoryReligious) || player.hasPerk(PerkLib.PastLifeReligious)) && player.cor <= 66) || (player.hasPerk(PerkLib.Enlightened) && player.cor < 10)) {
+				if (((player.hasPerk(PerkLib.HistoryReligious)) && player.cor <= 66) || (player.hasPerk(PerkLib.Enlightened) && player.cor < 10)) {
 					outputText("\n\nYou could meditate to cleanse your urges.");
 					addButton(2, "Meditate", meditate);
 				}
@@ -35,10 +35,10 @@ public class Masturbation extends BaseContent {
 			var button:int = 0;
 			
 			//FAP BUTTON GOAADFADHAKDADK
-			if (((player.hasPerk(PerkLib.HistoryReligious) || player.hasPerk(PerkLib.PastLifeReligious)) && player.cor <= 66) || (player.hasPerk(PerkLib.Enlightened) && player.cor < 10)) {
+			if (((player.hasPerk(PerkLib.HistoryReligious)) && player.cor <= 66) || (player.hasPerk(PerkLib.Enlightened) && player.cor < 10)) {
 				if (player.hasStatusEffect(StatusEffects.Exgartuan) && player.statusEffectv2(StatusEffects.Exgartuan) == 0)
 					addButton(button++, "Masturbate", masturbateGo);
-				else if (player.hasPerk(PerkLib.Enlightened) && (!player.hasPerk(PerkLib.HistoryReligious) || !player.hasPerk(PerkLib.PastLifeReligious))) {
+				else if (player.hasPerk(PerkLib.Enlightened) && !player.hasPerk(PerkLib.HistoryReligious)) {
 					addButton(button++, "Masturbate", masturbateGo);
 					addButton(button++, "Meditate", meditate);
 				}
@@ -75,7 +75,7 @@ public class Masturbation extends BaseContent {
 			if (fappingItems(false))
 				addButton(13 ,"Items", fappingItems);
 			else if (button == 1) { //If you can only masturbate or meditate the normal way then do that automatically
-				if (((player.hasPerk(PerkLib.HistoryReligious) || player.hasPerk(PerkLib.PastLifeReligious)) && player.cor <= 66) || (player.hasPerk(PerkLib.Enlightened) && player.cor < 10)) {
+				if (((player.hasPerk(PerkLib.HistoryReligious)) && player.cor <= 66) || (player.hasPerk(PerkLib.Enlightened) && player.cor < 10)) {
 					if (player.hasStatusEffect(StatusEffects.Exgartuan) && player.statusEffectv2(StatusEffects.Exgartuan) == 0)
 						masturbateGo();
 					else meditate();

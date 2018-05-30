@@ -1401,7 +1401,7 @@ import classes.lists.Gender;
 		public function satyrTFs():void {
 			var changes:int = 0;
 			var changeLimit:int = 3;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Stats and genital changes
 			if (rand(2) == 0) {
@@ -1533,7 +1533,7 @@ import classes.lists.Gender;
 		public function rhinoTFs():void {
 			var changes:int = 0;
 			var changeLimit:int = 3;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			// Stats Changes
 			//------------
@@ -1830,7 +1830,7 @@ import classes.lists.Gender;
 		public function echidnaTFs():void {
 			var changes:int = 0;
 			var changeLimit:int = 3;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			var i:int = 0;
 			// Stats Changes

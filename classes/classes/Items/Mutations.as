@@ -107,7 +107,7 @@ public final class Mutations extends MutationsHelper
 			var temp2:Number = 0;
 			var temp3:Number = 0;
 			var rando:Number = rand(100);
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) rando += 10;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) rando += 10;
 			clearOutput();
 			outputText("The draft is slick and sticky, ");
 			if (player.cor <= 33) outputText("just swallowing it makes you feel unclean.");
@@ -371,7 +371,7 @@ public final class Mutations extends MutationsHelper
 			var temp2:Number = 0;
 			var temp3:Number = 0;
 			var rando:Number = Math.random() * 100;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) rando += 10;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) rando += 10;
 			if (rando >= 90 && !tainted) rando -= 10;
 			if (player.cor < 35) {
 				clearOutput();
@@ -597,7 +597,7 @@ public final class Mutations extends MutationsHelper
 			var changes:Number = 0;
 			var changeLimit:Number = 1;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			player.slimeFeed();
@@ -981,7 +981,7 @@ public final class Mutations extends MutationsHelper
 			var changeLimit:Number = 1;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Initial outputs & crit level
@@ -1714,7 +1714,7 @@ public final class Mutations extends MutationsHelper
 			//Chances to up the max number of changes
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Generic drinking text
@@ -1802,7 +1802,7 @@ public final class Mutations extends MutationsHelper
 			//Chances to up the max number of changes
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Generic drinking text
@@ -2562,7 +2562,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			if (enhanced) changeLimit += 2;
@@ -3197,7 +3197,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(3) == 0) changeLimit++;
 			if (rand(4) == 0) changeLimit++;
 			if (rand(5) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			clearOutput();
@@ -3510,7 +3510,7 @@ public final class Mutations extends MutationsHelper
 			var changeLimit:Number = 2;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			if (type == 0) {
@@ -3709,7 +3709,7 @@ public final class Mutations extends MutationsHelper
 			var changeLimit:Number = 1;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//b) Description while used
@@ -3838,7 +3838,7 @@ public final class Mutations extends MutationsHelper
 			var changeLimit:Number = 1;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(4) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			outputText("Pinching your nose, you quickly uncork the vial and bring it to your mouth, determined to see what effects it might have on your body. Pouring in as much as you can take, you painfully swallow before going for another shot, emptying the bottle.  Minutes pass as you start wishing you had water with you, to get rid of the ");
@@ -4276,7 +4276,7 @@ public final class Mutations extends MutationsHelper
 			var changeLimit:Number = 1;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			clearOutput();
@@ -4583,7 +4583,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Text go!
@@ -4942,7 +4942,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(4) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//clear screen
@@ -5308,7 +5308,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(4) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//clear screen
@@ -5554,7 +5554,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(4) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//clear screen
@@ -5880,7 +5880,7 @@ public final class Mutations extends MutationsHelper
 			var changeLimit:Number = 1;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//If this is a pregnancy change, only 1 change per proc.
@@ -6222,7 +6222,7 @@ public final class Mutations extends MutationsHelper
 			if (type == 1) changeLimit += 2;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Generic eating text:
@@ -6554,7 +6554,7 @@ public final class Mutations extends MutationsHelper
 			var temp2:Number = 0;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Generic eating text:
@@ -6875,7 +6875,7 @@ public final class Mutations extends MutationsHelper
 			if (type == 1) changeLimit += 2;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Used as a holding variable for biggest dicks and the like
@@ -7101,7 +7101,7 @@ public final class Mutations extends MutationsHelper
 			var changeLimit:Number = 1;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Consuming Text
@@ -7546,7 +7546,7 @@ public final class Mutations extends MutationsHelper
 			var changeLimit:Number = 1;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Effect script 1:  (higher intelligence)
@@ -7635,7 +7635,7 @@ public final class Mutations extends MutationsHelper
 			var changeLimit:Number = 1;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			outputText("You really should’ve brought this to someone who knew about it first!  Your stomach grumbles, and you feel a short momentaneous pain in your head.  As you swallow you feel your body start to change into something else.");
@@ -7753,7 +7753,7 @@ public final class Mutations extends MutationsHelper
 			if (itemused == true) {
 				if (rand(2) == 0) changeLimit++;
 				if (rand(3) == 0) changeLimit++;
-				if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+				if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 				
 				if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 				outputText("As you admire the shiny jewel, you notice a flicker of energy flash across it, before a sudden jolt runs through your body! Letting out a howling moan, the jewel crumbles to dust as your body spasms in pleasure before the feeling subsides into dull ecstasy. You twitch and drool as something seems to be happening to your body...");
@@ -7899,7 +7899,7 @@ public final class Mutations extends MutationsHelper
 			var changeLimit:Number = 1;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 
@@ -7988,7 +7988,7 @@ public final class Mutations extends MutationsHelper
 			if (enhanced) changeLimit += 2;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Used for dick and boob TFs
@@ -8982,7 +8982,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			outputText("You pour some of the oil onto your hands and ");
@@ -9297,7 +9297,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//stat gains:
@@ -9470,7 +9470,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//use:
@@ -9804,7 +9804,7 @@ public final class Mutations extends MutationsHelper
 			if(rand(2) == 0) changeLimit++;
 			if(rand(2) == 0) changeLimit++;
 			if(rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//Ferret Fruit Effects
@@ -10054,7 +10054,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (boar) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			outputText("You take a bite into the pigtail truffle. It oddly tastes like bacon. You eventually finish eating. ");
@@ -10244,7 +10244,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(4) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//clear screen
@@ -10654,7 +10654,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(4) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//clear screen
@@ -10677,7 +10677,7 @@ public final class Mutations extends MutationsHelper
 			//Randomly choose affects limit
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//clear screen
@@ -10855,7 +10855,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//clear screen
@@ -10880,7 +10880,7 @@ public final class Mutations extends MutationsHelper
 			//Randomly choose affects limit
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//clear screen
@@ -10985,7 +10985,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(4) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//clear screen
@@ -11216,7 +11216,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(3) == 0) changeLimit++;
 			if (rand(4) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			//clear screen
@@ -11518,7 +11518,7 @@ public final class Mutations extends MutationsHelper
 			if (rand(2) == 0) changeLimit++;
 			if (rand(2) == 0) changeLimit++;
 			if (rand(4) == 0) changeLimit++;
-			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.PastLifeAlchemist)) changeLimit++;
+			if (player.hasPerk(PerkLib.HistoryAlchemist)) changeLimit++;
 			
 			if (player.hasPerk(PerkLib.TransformationResistance)) changeLimit--;
 			clearOutput();

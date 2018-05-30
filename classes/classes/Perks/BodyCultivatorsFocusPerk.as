@@ -21,9 +21,5 @@ package classes.Perks
 					"Your body cultivator's weapon grants you additional focus, increasing your physical soulskills power.");
 		}
 		
-		override public function keepOnAscension(respec:Boolean = false):Boolean 
-		{
-			return true;
-		}
 	}
 }

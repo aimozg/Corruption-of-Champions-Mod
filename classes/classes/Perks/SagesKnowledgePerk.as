@@ -21,9 +21,5 @@ package classes.Perks
 					"Your tome grants you additional focus, increasing your spells power.");
 		}
 		
-		override public function keepOnAscension(respec:Boolean = false):Boolean 
-		{
-			return true;
-		}
 	}
 }

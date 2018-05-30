@@ -20,9 +20,5 @@ package classes.Perks
 					"Your spellcasting equipment makes you use less mana for spell-casting!");
 		}
 		
-		override public function keepOnAscension(respec:Boolean = false):Boolean 
-		{
-			return true;
-		}		
 	}
 }

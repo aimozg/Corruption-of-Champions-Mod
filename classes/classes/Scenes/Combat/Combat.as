@@ -683,7 +683,7 @@ public function meleeAccuracy():Number {
 
 public function arrowsAccuracy():Number {
 	var accmod:Number = 80;
-	if (player.hasPerk(PerkLib.HistoryScout) || player.hasPerk(PerkLib.PastLifeScout)) accmod += 40;
+	if (player.hasPerk(PerkLib.HistoryScout)) accmod += 40;
 	if (player.hasPerk(PerkLib.Accuracy1)) {
 		accmod += player.perkv1(PerkLib.Accuracy1);
 	}
@@ -893,7 +893,7 @@ public function multiArrowsStrike():void {
 			crit = true;
 			damage *= 1.75;
 		}
-		if (player.hasPerk(PerkLib.HistoryScout) || player.hasPerk(PerkLib.PastLifeScout)) damage *= 1.1;
+		if (player.hasPerk(PerkLib.HistoryScout)) damage *= 1.1;
 		if (player.hasPerk(PerkLib.JobRanger)) damage *= 1.05;
 		if (player.statusEffectv1(StatusEffects.Kelt) > 0) {
 			if (player.statusEffectv1(StatusEffects.Kelt) < 100) damage *= 1 + (0.01 * player.statusEffectv1(StatusEffects.Kelt));
@@ -1177,7 +1177,7 @@ public function throwWeapon():void {
 			crit = true;
 			damage *= 1.75;
 		}
-		if (player.hasPerk(PerkLib.HistoryScout) || player.hasPerk(PerkLib.PastLifeScout)) damage *= 1.1;
+		if (player.hasPerk(PerkLib.HistoryScout)) damage *= 1.1;
 		if (player.hasPerk(PerkLib.JobRanger)) damage *= 1.05;
 		if (player.hasStatusEffect(StatusEffects.OniRampage)) damage *= 3;
 		if (player.hasStatusEffect(StatusEffects.Overlimit)) damage *= 2;
@@ -1303,7 +1303,7 @@ public function shootWeapon():void {
 			crit = true;
 			damage *= 1.75;
 		}
-		if (player.hasPerk(PerkLib.HistoryScout) || player.hasPerk(PerkLib.PastLifeScout)) {
+		if (player.hasPerk(PerkLib.HistoryScout)) {
 			damage *= 1.1;
 		}
 		if (player.hasPerk(PerkLib.JobRanger)) {
@@ -1785,7 +1785,7 @@ public function meleeDamageAcc():void {
 	{
 		if (!monster.hasStatusEffect(StatusEffects.Stunned))
 		{
-			if (damage > 0 && player.hasPerk(PerkLib.HistoryFighter) || player.hasPerk(PerkLib.PastLifeFighter)) damage *= 1.1;
+			if (damage > 0 && player.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
 			if (damage > 0 && player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
 			if (damage > 0 && player.hasPerk(PerkLib.Heroism) && (monster.hasPerk(PerkLib.EnemyBossType) || monster.hasPerk(PerkLib.EnemyGigantType))) damage *= 2;
 			if (player.countCockSocks("red") > 0) damage *= (1 + player.countCockSocks("red") * 0.02);
@@ -1814,7 +1814,7 @@ public function meleeDamageAcc():void {
 	if(damage > 0) {
 		var vbladeeffect:Boolean = false;
 		var vbladeeffectChance:int = 1;
-		if (player.hasPerk(PerkLib.HistoryFighter) || player.hasPerk(PerkLib.PastLifeFighter)) damage *= 1.1;
+		if (player.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
 		if (player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
 		if (player.hasPerk(PerkLib.Heroism) && (monster.hasPerk(PerkLib.EnemyBossType) || monster.hasPerk(PerkLib.EnemyGigantType))) damage *= 2;
 		if (player.weapon == weapons.VBLADE && (rand(100) < vbladeeffectChance)) {
@@ -2290,7 +2290,7 @@ public function fatigueImpl(mod:Number,type:Number  = USEFATG_NORMAL):void {
 }
 	public function fatigueRecoveryMultiplier():Number {
 		var multi:Number = 1;
-		if (player.hasPerk(PerkLib.HistorySlacker) || player.hasPerk(PerkLib.PastLifeSlacker)) multi += 0.2;
+		if (player.hasPerk(PerkLib.HistorySlacker)) multi += 0.2;
 		if (player.hasPerk(PerkLib.ControlledBreath) && player.cor < (30 + player.corruptionTolerance())) multi += 0.2;
 		if (player.hasPerk(PerkLib.SpeedyRecovery)) multi += 1;
 		return multi;
@@ -2375,17 +2375,13 @@ public function awardPlayer(nextFunc:Function = null):void
 		monster.gems += bonusGems;
 		//trace( "to: " + monster.gems )
 	}
-	if (player.hasPerk(PerkLib.HistoryFortune) || player.hasPerk(PerkLib.PastLifeFortune)) {
+	if (player.hasPerk(PerkLib.HistoryFortune)) {
 		var bonusGems2:int = monster.gems * 0.15;
 		monster.gems += bonusGems2;
 	}
-	if (player.hasPerk(PerkLib.HistoryWhore) || player.hasPerk(PerkLib.PastLifeWhore)) {
+	if (player.hasPerk(PerkLib.HistoryWhore)) {
 		var bonusGems3:int = (monster.gems * 0.04) * (player.teaseLevel * 0.2);
 		if (monster.lust >= monster.maxLust()) monster.gems += bonusGems3;
-	}
-	if (player.hasPerk(PerkLib.AscensionFortune)) {
-		monster.gems *= 1 + (player.perkv1(PerkLib.AscensionFortune) * 0.1);
-		monster.gems = Math.round(monster.gems);
 	}
 	monster.handleAwardText(); //Each monster can now override the default award text
 	if (nextFunc != null) {
@@ -3424,7 +3420,7 @@ public function ScyllaTease():void {
 		if(rand(100) <= chance) {
 			//NERF TEASE DAMAGE
 			damage *= .9;
-			if(player.hasPerk(PerkLib.HistoryWhore) || player.hasPerk(PerkLib.PastLifeWhore)) {
+			if(player.hasPerk(PerkLib.HistoryWhore)) {
 				damage *= 1.15;
 			}
 			if (player.hasPerk(PerkLib.DazzlingDisplay) && rand(100) < 10) damage *= 1.2;
@@ -3585,7 +3581,7 @@ public function GooTease():void {
 			damage += player.scalingBonusLibido();
 			damage *= 0.25;
 			damage = Math.round(damage);
-			if(player.hasPerk(PerkLib.HistoryWhore) || player.hasPerk(PerkLib.PastLifeWhore)) {
+			if(player.hasPerk(PerkLib.HistoryWhore)) {
 				damage *= 1.15;
 			}
 			if (player.hasPerk(PerkLib.DazzlingDisplay) && rand(100) < 10) damage *= 1.2;
