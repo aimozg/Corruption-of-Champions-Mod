@@ -11,7 +11,7 @@ import classes.Scenes.Areas.HighMountains.TempleOfTheDivine;
 import classes.Scenes.Camp.*;
 import classes.Scenes.Dungeons.*;
 import classes.Scenes.NPCs.*;
-import classes.Stats.BaseStat;
+import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
 import classes.lists.Gender;

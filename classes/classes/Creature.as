@@ -29,7 +29,7 @@ package classes
 	import classes.Perks.AscensionSpiritualEnlightenmentPerk;
 	import classes.Scenes.Camp.CampMakeWinions;
 	import classes.Scenes.Places.TelAdre.UmasShop;
-	import classes.Stats.BaseStat;
+	import classes.Stats.BuffableStat;
 	import classes.Stats.PrimaryStat;
 	import classes.StatusEffects.Combat.CombatInteBuff;
 	import classes.StatusEffects.Combat.CombatSpeBuff;
@@ -122,7 +122,7 @@ package classes
 		   [   S T A T S   ]
 		
 		 */
-		public var stats:Object = {};// [index:string]:BaseStat
+		public var stats:Object = {};// [index:string]:IStat
 		
 		//Primary stats
 		public var strStat:PrimaryStat = new PrimaryStat("str",stats);
@@ -558,7 +558,7 @@ package classes
 			};
 		}
 		public function drainStat(statname:String, damage:Number):Number {
-			var stat:BaseStat = stats[statname+'Bonus'];
+			var stat:BuffableStat = stats[statname + 'Bonus'];
 			if (!stat) {
 				// TODO report error
 				return NaN;
@@ -572,7 +572,7 @@ package classes
 		}
 		public function removeStatEffects(tag:String):void {
 			for (var statname:String in stats) {
-				var stat:BaseStat = stats[statname] as BaseStat;
+				var stat:BuffableStat = stats[statname] as BuffableStat;
 				if (!stat) continue;
 				stat.removeEffect(tag);
 			}
@@ -581,8 +581,8 @@ package classes
 		 * If perk is present, add/replace stat buff. If not, remove stat buff
  		 */
 		public function setPerkStatEffect(ptype:PerkType,statname:String,value:Number):void {
-			var stat:BaseStat = (stats[statname] as BaseStat) || (stats[statname] as PrimaryStat).bonus;
-			var perk:PerkClass = getPerk(ptype);
+			var stat:BuffableStat = (stats[statname] as BuffableStat) || (stats[statname] as PrimaryStat).bonus;
+			var perk:PerkClass    = getPerk(ptype);
 			if (perk) {
 				stat.addOrReplaceEffect(ptype.id,value,{save:false,text:ptype.name});
 			} else {

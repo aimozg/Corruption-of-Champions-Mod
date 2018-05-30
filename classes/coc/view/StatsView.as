@@ -3,7 +3,7 @@ import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
 import classes.Player;
 import classes.Scenes.SceneLib;
-import classes.Stats.BaseStat;
+import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
 import classes.internals.Utils;

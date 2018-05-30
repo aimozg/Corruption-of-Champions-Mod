@@ -4,7 +4,7 @@ import classes.internals.Jsonable;
 import classes.internals.Utils;
 
 /**
- * BaseStat is aggregation (sum/min/max/product) of effects.
+ * BuffableStat is aggregation (sum/min/max/product) of effects.
  * Effect is tuple `[value:Number, tag:String, options:{...}]` where tag is used as a unique key
  * Total value is maintained as a cache
  *
@@ -12,10 +12,8 @@ import classes.internals.Utils;
  * save: boolean = true, <-- save and load the effect. False for effects created by other creature properties (race, perks)
  * show: boolean = true, <-- can be viewed by player. Note that player might figure that there is a hidden effect
  * text: String = null, (default is same as tag) <-- displayable name in the list of effects
- *
- * TODO @aimozg/stats with introductioon of IStat, consider renaming (BuffableStat?)
  */
-public class BaseStat implements IStat,Jsonable {
+public class BuffableStat implements IStat,Jsonable {
 	private static const AggregateTypes:/*EnumValue*/Array = [];
 	
 	public static const AGGREGATE_SUM:int  = EnumValue.add(AggregateTypes, 0, 'AGGREGATE_SUM', {short: 'sum'});
@@ -61,9 +59,9 @@ public class BaseStat implements IStat,Jsonable {
 	 * }
 	 * @param saveInto If present, saveInto[this.name] = this
 	 */
-	public function BaseStat(name:String,
-							 options:*=null,
-							 saveInto:*=null) {
+	public function BuffableStat(name:String,
+								 options:*=null,
+								 saveInto:*=null) {
 		this._name = name;
 		options = Utils.extend({
 			aggregate:AGGREGATE_SUM,

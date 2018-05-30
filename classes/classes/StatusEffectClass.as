@@ -1,7 +1,7 @@
 ﻿package classes
 {
 import classes.CoC;
-import classes.Stats.BaseStat;
+import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
 import classes.Stats.PrimaryStat;
@@ -80,8 +80,8 @@ public class StatusEffectClass extends Utils
 		var s:IStat = host.stats[stat];
 		if (s is PrimaryStat) {
 			(s as PrimaryStat).bonus.addOrIncreaseEffect(stype.id,amount,{save:true,text:text||stype.id,show:show});
-		} else if (s is BaseStat) {
-			(s as BaseStat).addOrIncreaseEffect(stype.id,amount,{save:true,text:text||stype.id,show:show});
+		} else if (s is BuffableStat) {
+			(s as BuffableStat).addOrIncreaseEffect(stype.id,amount,{save:true,text: text || stype.id,show:show});
 		} else {
 			trace("/!\\ buffHost("+stat+", "+amount+") in "+stype.id);
 		}
