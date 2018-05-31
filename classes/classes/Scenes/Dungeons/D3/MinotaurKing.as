@@ -315,7 +315,7 @@ public class MinotaurKing extends Monster
 			super.showLust();
 			if (player.hasStatusEffect(StatusEffects.MinotaurKingMusk))
 			{
-				var percent:int = player.lib100;
+				var percent:int = player.lust100;
 				if (percent <= 10) outputText("\nYou catch yourself looking at the King’s crotch instead of his weapon. Ugh, it’s this scent. It’s so... so powerful, worming its way into you with every breath and reminding you that sex could be a single step away.\n");
 				else if (percent <= 20) outputText("\nWhy does he have to smell so good? A big guy like that, covered in sweat - he should smell bad, if anything. But he doesn’t. He’s like sea salt and fresh-chopped wood after a quick soak between a slut’s legs. You shiver in what you hope is repulsion.\n");
 				else if (percent <= 30) outputText("\nYou try to breathe through your mouth to minimize the effect of his alluring musk, but then your mouth starts watering... and your lips feel dry. You lick them a few times, just to keep them nice and moist. Only after a moment do you realize you were staring at his dripping-wet cock and polishing your lips like a wanton whore. You may need to change tactics.\n");

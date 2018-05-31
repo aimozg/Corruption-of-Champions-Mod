@@ -169,14 +169,6 @@ package classes
 		public var spellDmgMultStat:BuffableStat = new BuffableStat("spellDmgMult",{base:1.0,min:0.0},stats);
 		public function get spellDmgMult():Number { return spellDmgMultStat.value }
 		
-		public function get str100():Number { return 100*str/getMaxStats('str'); }
-		public function get tou100():Number { return 100*tou/getMaxStats('tou'); }
-		public function get spe100():Number { return 100*spe/getMaxStats('spe'); }
-		public function get inte100():Number { return 100*inte/getMaxStats('inte'); }
-		public function get wis100():Number { return 100*wis/getMaxStats('wis'); }
-		public function get lib100():Number { return 100*lib/getMaxStats('lib'); }
-		public function get sens100():Number { return 100*sens/getMaxStats('sens'); }
-		public function get fatigue100():Number { return 100*fatigue/maxFatigue(); }
 		public function get hp100():Number { return 100*HP/maxHP(); }
 		public function get wrath100():Number { return 100*wrath/maxWrath(); }
 		public function get mana100():Number { return 100*mana/maxMana(); }
