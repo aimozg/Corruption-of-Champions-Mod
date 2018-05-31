@@ -6,18 +6,20 @@ import classes.internals.Jsonable;
 import classes.internals.Utils;
 
 public class Buff implements Jsonable {
-	public var tag:String;
-	public var value:Number;
+	private var _tag:String;
+	public var rawValue:Number;
 	public var save:Boolean;
 	public var text:String;
 	public var show:Boolean;
+	private var stat:BuffableStat;
 	
-	public function Buff(value:Number,tag:String,save:Boolean=true,show:Boolean=true,text:String=null) {
-		this.value = value;
-		this.tag = tag;
-		this.save = save;
-		this.show = show;
-		this.text = (text === null) ? Utils.capitalizeFirstLetter(tag) : text;
+	public function Buff(stat:BuffableStat, value:Number,tag:String,save:Boolean=true,show:Boolean=true,text:String=null) {
+		this.stat     = stat;
+		this.rawValue = value;
+		this._tag     = tag;
+		this.save     = save;
+		this.show     = show;
+		this.text     = (text === null) ? Utils.capitalizeFirstLetter(tag) : text;
 	}
 	public function withOptions(options:Object):Buff {
 		this.options = options;
@@ -33,13 +35,13 @@ public class Buff implements Jsonable {
 		if ('show' in value) this.show = value.show;
 	}
 	public function saveToObject():Object {
-		return [value,tag,options];
+		return [rawValue,_tag,options];
 	}
 	public function loadFromObject(o:Object, ignoreErrors:Boolean):void {
 		if (o is Array) {
-			value = +o[0];
-			tag = o[1];
-			options = o[2];
+			rawValue = +o[0];
+			_tag     = o[1];
+			options  = o[2];
 			return;
 		}
 		if (ignoreErrors) {
@@ -48,5 +50,15 @@ public class Buff implements Jsonable {
 		throw "Not a valid Buff: "+o;
 	}
 	
+	public function get tag():String {
+		return _tag;
+	}
+	public function get value():Number {
+		return rawValue;
+	}
+	public function set value(value:Number):void {
+		rawValue = value;
+		stat.recalculate();
+	}
 }
 }

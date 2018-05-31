@@ -101,12 +101,15 @@ public class BuffableStat implements IStat, Jsonable {
 		}
 		return accumulator;
 	}
-	private function calculate():Number {
+	public function calculate():Number {
 		var value:Number = _base;
 		for each(var buff:Buff in _buffs) {
 			value = aggregateStep(value, buff.value);
 		}
 		return value;
+	}
+	public function recalculate():void {
+		_value = calculate();
 	}
 	private function indexOfBuff(tag:String):int {
 		for (var i:int = 0; i < _buffs.length; i++) {
@@ -133,9 +136,9 @@ public class BuffableStat implements IStat, Jsonable {
 	public function addOrIncreaseBuff(tag:String, buffValue:Number, newOptions:Object = null):void {
 		var i:int = indexOfBuff(tag);
 		if (i == -1) {
-			_buffs.push(new Buff(buffValue, tag).withOptions(newOptions));
+			_buffs.push(new Buff(this, buffValue, tag).withOptions(newOptions));
 		} else {
-			_buffs[i].value += buffValue;
+			_buffs[i].rawValue += buffValue;
 			if (newOptions !== null) _buffs[i].options = newOptions;
 		}
 		if (_aggregate == AGGREGATE_SUM) {
@@ -149,9 +152,9 @@ public class BuffableStat implements IStat, Jsonable {
 	public function addOrReplaceBuff(tag:String, buffValue:Number, newOptions:Object = null):void {
 		var i:int = indexOfBuff(tag);
 		if (i == -1) {
-			_buffs.push(new Buff(buffValue, tag).withOptions(newOptions));
+			_buffs.push(new Buff(this, buffValue, tag).withOptions(newOptions));
 		} else {
-			_buffs[i].value = buffValue;
+			_buffs[i].rawValue = buffValue;
 			if (newOptions !== null) _buffs[i].options = newOptions;
 		}
 		_value = calculate();
@@ -189,7 +192,7 @@ public class BuffableStat implements IStat, Jsonable {
 		removeAllBuffs();
 		var value:Number = _base;
 		for each(var savedBuff:Object in o.effects) {
-			var buff:Buff = new Buff(0, '', false);
+			var buff:Buff = new Buff(this, 0, '', false);
 			buff.loadFromObject(savedBuff, ignoreErrors);
 			var buffValue:Number = buff.value;
 			value                = aggregateStep(value, buffValue);
