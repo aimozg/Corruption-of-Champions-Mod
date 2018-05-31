@@ -171,10 +171,9 @@ package classes
 					.customDamage(Utils.curry(CombatKiPowers.kiDamage,CombatKiPowers.UNARMED))
 					.hitText("Air seems to lose all temperature around your fist as you dash at [monster a][monster name] and shove your palm on [monster him], [monster his] body suddenly is frozen solid, encased in a thick block of ice!")
 					.addCustomAction(function(host:Creature, target:Creature, damage:Number, crit:Boolean):Number{
-						target.createOrFindStatusEffect(StatusEffects.Frozen);
+						var eff:StatusEffectClass = target.createOrFindStatusEffect(StatusEffects.Frozen);
 						var spdmod:int = Utils.boundInt(0, target.spe, 20);
-						target.addStatusValue(StatusEffects.Frozen, 1, spdmod);
-						target.spe -= spdmod;
+						eff.buffHost('spe',-spdmod);
 						return damage;
 					})
 					.stunAttempt(2)
@@ -221,10 +220,10 @@ package classes
 					.enableDodge("your attack")
 					.rageEnabled()
 					.addCustomAction(function(host:Creature, target:Creature, damage:Number, crit:Boolean):Number{
-						if (target.hasStatusEffect(Frozen)) {
+						var eff:StatusEffectClass = target.statusEffectByType(Frozen);
+						if (eff) {
 							damage *= 2;
-							target.spe += target.statusEffectv1(Frozen);
-							target.removeStatusEffect(Frozen);
+							eff.remove();
 							EngineCore.outputText("Your [weapon] hits the ice in three specific points, making it explode along with your frozen adversary!");
 						} else {
 							EngineCore.outputText("Your [weapon] hits thrice against [monster a][monster name]!");
