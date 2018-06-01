@@ -23,6 +23,7 @@ package classes.Scenes
 	import classes.GlobalFlags.kFLAGS;
 	import classes.Parser.Parser;
 	import classes.Scenes.NPCs.JojoScene;
+	import classes.Stats.PrimaryStat;
 
 	import coc.view.ButtonDataList;
 	import coc.view.Color;
@@ -47,7 +48,7 @@ package classes.Scenes
 		private var _consumableButtons:ButtonDataList = new ButtonDataList();
 		private var _undergarmentButtons:ButtonDataList = new ButtonDataList();
 
-		
+
 		public function DebugMenu() 
 		{	
 		}
@@ -243,7 +244,7 @@ package classes.Scenes
 				}
 			}
 		}
-		
+
 		private function setItemArrays():void {
             if (_setLists) return; //Already set, cancel.
             setList(_consumableButtons, consumables);
@@ -263,17 +264,17 @@ package classes.Scenes
 			clearOutput();
 			outputText("Which attribute would you like to alter?");
 			menu();
-			addButton(0, "Strength", statChangeAttributeMenu, "str");
-			addButton(1, "Toughness", statChangeAttributeMenu, "tou");
-			addButton(2, "Speed", statChangeAttributeMenu, "spe");
-			addButton(3, "Intelligence", statChangeAttributeMenu, "int");
-			addButton(5, "Libido", statChangeAttributeMenu, "lib");
+			addButton(0, "Strength", statChangeAttributeMenu, player.strStat);
+			addButton(1, "Toughness", statChangeAttributeMenu, player.touStat);
+			addButton(2, "Speed", statChangeAttributeMenu, player.speStat);
+			addButton(3, "Intelligence", statChangeAttributeMenu, player.intStat);
+			addButton(5, "Libido", statChangeAttributeMenu, player.libStat);
 			addButton(6, "Sensitivity", statChangeAttributeMenu, "sen");
 			addButton(7, "Corruption", statChangeAttributeMenu, "cor");
 			addButton(14, "Back", accessDebugMenu);
 		}
 		
-		private function statChangeAttributeMenu(stats:String = ""):void {
+		private function statChangeAttributeMenu(stats:* = null):void {
 			var attribute:* = stats;
 			clearOutput();
 			outputText("Increment or decrement by how much?");
@@ -290,8 +291,12 @@ package classes.Scenes
 			addButton(14, "Back", statChangeMenu);
 		}
 		
-		private function statChangeApply(stats:String = "", increment:Number = 0):void {
-			dynStats(stats, increment);
+		private function statChangeApply(stats:* = null, increment:Number = 0):void {
+			if (stats is String) {
+				dynStats(stats, increment);
+			} else if (stats is PrimaryStat) {
+				(stats as PrimaryStat).core.value += increment
+			}
 			statScreenRefresh();
 			statChangeAttributeMenu(stats);
 		}
@@ -300,13 +305,14 @@ package classes.Scenes
 			menu();
 			clearOutput();
 			outputText("TEST STUFFZ");
-			addButton(0, "ASPLODE", styleHackMenu);
+			// addButton(0, "", );
 			addButton(1, "Scorpion Tail", changeScorpionTail);
 			addButton(2, "Be Manticore", getManticoreKit).hint("Gain everything needed to become a Manticore-morph.");
 			addButton(3, "Be Dragonne", getDragonneKit).hint("Gain everything needed to become a Dragonne-morph.");
-			addButton(5, "Tooltips Ahoy", EngineCore.doNothing).hint("Ahoy! I'm a tooltip! I will show up a lot in future updates!", "Tooltip 2.0");
-			addButton(6, "Lights Out", startLightsOut, testVictoryFunc, testFailureFunc, null, "Test the lights out puzzle, fresh off TiTS!");
-			addButton(7, "Isabella Birth", SceneLib.isabellaFollowerScene.isabellaGivesBirth).hint("Test Isabella giving birth for debugging purposes.", "Trigger Isabella Giving Birth");
+			// addButton(4, "", );
+			// addButton(5, "", );
+			// addButton(6, "", );
+			// addButton(7, "", );
 			addButton(8, "BodyPartEditor", bodyPartEditorRoot).hint("Inspect and fine-tune the player body parts");
 			addButton(9, "Color Picker", colorPickerRoot).hint("HSL picker for skin/hair color");
 			addButton(14, "Back", accessDebugMenu);
@@ -1080,113 +1086,7 @@ package classes.Scenes
 			else flags[flagId] = mainView.nameBox.text;
 			flagEditor();
 		}
-		
-		//------------
-		// LIGHTS OUT
-		//------------
-		public var lightsOutVictoryFunction:Function;
-		public var lightsOutFailureFunction:Function;
 
-		public var lightsArray:Array;
-
-		public function startLightsOut(victoryFunction:Function = null, failureFunction:Function = null):void
-		{
-			clearOutput();
-			outputText("Test puzzle!");
-			outputText("\n\nThis is the same type used in Stellar Tether bomb puzzle in TiTS.");
-			
-			if (victoryFunction == null) victoryFunction = accessDebugMenu;
-			lightsOutVictoryFunction = victoryFunction;
-			if (failureFunction == null) failureFunction = accessDebugMenu;
-			lightsOutFailureFunction = failureFunction;
-			
-			menu();
-			lightsArray = new Array();
-			
-			for (var i:int = 0; i < 15; i++)
-			{
-				lightsArray[i] = false;
-				
-				addButton(i, " ", toggleLight, i);
-			}
-			
-			var onBts:Array = [1, 5, 6, 9, 10, 11, 12, 13];
-			
-			for (i = 0; i < onBts.length; i++)
-			{
-				lightsArray[onBts[i]] = true;
-				
-				addButton(onBts[i], "XXXXXXXX", toggleLight, onBts[i]);
-			}
-		}
-
-		public function testVictoryFunc():void
-		{
-			clearOutput();
-			outputText("A winner is you! A horsecock for your butt as tribute!");
-			menu();
-			addButton(0, "Next", accessDebugMenu);
-		}
-
-		public function testFailureFunc():void
-		{
-			clearOutput();
-			outputText("You failed. Try again?");
-			menu();
-			addButton(0, "Yes", startLightsOut, testVictoryFunc, testFailureFunc);
-			addButton(1, "No", accessDebugMenu);
-		}
-		
-		public function toggleSlot(slot:int):void
-		{
-			lightsArray[slot] = !lightsArray[slot];
-			
-			if (lightsArray[slot]) 
-			{
-				//userInterface.setButtonPurple(slot);
-				mainView.setButtonText(slot, "XXXXXXXX");
-			}
-			else
-			{
-				//userInterface.setButtonBlue(slot);
-				mainView.setButtonText(slot, "");
-			}
-		}
-
-		public function toggleLight(slot:int):void
-		{
-			toggleSlot(slot);
-			toggleNearby(slot);
-			
-			var allOff:Boolean = true;
-			var allOn:Boolean = true;
-			
-			for (var i:int = 0; i < 15; i++)
-			{
-				if (lightsArray[i] == 1) allOff = false;
-				if (lightsArray[i] == 0) allOn = false;
-
-			}
-			if (allOn)
-			{
-				lightsOutFailureFunction();
-			}
-			if (allOff)
-			{
-				lightsOutVictoryFunction();
-			}
-		}
-
-		public function toggleNearby(slot:int):void
-		{
-			var pX:int = slot % 5;
-			var pY:int = slot / 5;
-			
-			if (pX > 0) toggleSlot(slot - 1);
-			if (pX < 4) toggleSlot(slot + 1);
-			if (pY > 0) toggleSlot(slot - 5);
-			if (pY < 2) toggleSlot(slot + 5);
-		}
 	}
 
 }
