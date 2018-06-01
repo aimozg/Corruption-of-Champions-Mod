@@ -238,9 +238,9 @@ package classes.Scenes
 				if(itype is ItemType){
 					buttons.add(itype.shortName, curry(inventory.takeItem, itype, curry(displayItems, buttons)))
 							.hint(itype.description, itype.longName);
-					trace(itype.shortName);
+					trace("Set List "+libClass+" added: " +itype.shortName);
 				} else {
-					trace("Not Added: "+String(consumables[item.@name]));
+					trace("Set List "+libClass+" not added: "+String(itype));
 				}
 			}
 		}
