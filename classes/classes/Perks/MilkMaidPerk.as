@@ -14,7 +14,7 @@ package classes.Perks
 		
 		public function MilkMaidPerk() 
 		{
-			super("Milk Maid", "Milk Maid", "Increases milk production by ---mL. Allows you to lactate perpetually.");
+			super("Milk Maid", "Milk Maid", "Increases milk production by 200+mL. Allows you to lactate perpetually.");
 		}
 	}
 }

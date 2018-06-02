@@ -78,6 +78,13 @@ public class Eval {
 		if (expr.match(RX_INT)) return int(expr);
 		return new Eval(thiz, expr).evalUntil("")();
 	}
+	public static function evalScoped(expr:String,...scopes:/*Object*/Array):* {
+		return evalVScoped(expr,scopes);
+	}
+	public static function evalVScoped(expr:String,scopes:/*Object*/Array):* {
+		if (expr.match(RX_INT)) return int(expr);
+		return compile(expr).vcall(scopes);
+	}
 	public static function compile(expr:String):Eval {
 		var e:Eval = new Eval({}, expr);
 		if (expr.match(RX_INT)) {

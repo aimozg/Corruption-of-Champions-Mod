@@ -405,7 +405,7 @@ public class PerkLib
 		public static const Rage:PerkType = mk("Rage", "Rage",
 				"Increasing crit chance by up to 50% in berserk state that would reset after succesful crit attack.",
 				"You choose the 'Rage' perk, increasing crit chance by up to 50% in berserk state until next crit attack.");
-		public static const Regeneration :RegenerationPerk = new RegenerationPerk();
+		public static const Regeneration:PerkType = RegenerationPerk.TYPE;
 		public static const Resistance:PerkType = mk("Resistance", "Resistance",
 				"Reduces lust gain by 5%.",
 				"You choose the 'Resistance I' perk, reducing the rate at which your lust increases by 5%.");
@@ -633,8 +633,12 @@ public class PerkLib
 				"Speed reductions are halved but caps strength");
 
 		// Piercing perks
-		public static const PiercedCrimstone:PiercedCrimstonePerk = new PiercedCrimstonePerk();
-		public static const PiercedIcestone:PiercedIcestonePerk = new PiercedIcestonePerk();
+		public static const PiercedCrimstone:PerkType = mk("Pierced: Crimstone", "Pierced: Crimstone",
+				"Increases minimum lust by [value1].",
+				"You've been pierced with Crimstone and your lust seems to stay a bit higher than before.");
+		public static const PiercedIcestone:PerkType = mk("Pierced: Icestone", "Pierced: Icestone",
+				"Reduces minimum lust by [value1].",
+				"You've been pierced with Icestone and your lust seems to stay a bit lower than before.");
 		public static const PiercedFertite:PiercedFertitePerk = new PiercedFertitePerk();
 		public static const PiercedFurrite:PerkType = mk("Pierced: Furrite", "Pierced: Furrite",
 				"Increases chances of encountering 'furry' foes.");
@@ -646,52 +650,88 @@ public class PerkLib
 				"Regenerates 0,5% of HP per round in combat and 1% of HP per hour.");
 		public static const MidasCock:PerkType = mk("Midas Cock", "Midas Cock",
 				"Increases the gems awarded from victory in battle.");
-		public static const PentUp:PentUpPerk = new PentUpPerk();
+		public static const PentUp:PerkType = mk("Pent Up","Pent Up",
+				"Increases minimum lust by [value1] and makes you more vulnerable to seduction.",
+				"Increases minimum lust and makes you more vulnerable to seduction");
 		public static const PhallicPotential:PerkType = mk("Phallic Potential", "Phallic Potential",
 				"Increases the effects of penis-enlarging transformations.");
 		public static const PhallicRestraint:PerkType = mk("Phallic Restraint", "Phallic Restraint",
 				"Reduces the effects of penis-enlarging transformations.");
 
 		// Non-weapon equipment perks
-		public static const Ambition:AmbitionPerk = new AmbitionPerk();
+		public static const Ambition:PerkType = mk("Ambition", "Ambition",
+				"Increase spell power by [value1x100]% and increase power/lower cost of white magic by [value2x100]%.",
+				"Your equipment boost your spells power and argument your white magic at the same time lowering it costs!");
 		public static const DexterousSwordsmanship:PerkType = mk("Dexterous swordsmanship", "Dexterous swordsmanship",
 				"Increases parry chance by 10% while wielding a weapon.",null);
 		public static const BloodMage:PerkType = mk("Blood Mage", "Blood Mage",
 				"Spellcasting now consumes health instead of mana!",null);
 		public static const LastResort:PerkType = mk("Last Resort", "Last Resort",
 				"When mana is too low to cast a spell, automatically cast from hp instead.",null);
-		public static const Obsession:ObsessionPerk = new ObsessionPerk();
+		public static const Obsession:PerkType = mk("Obsession", "Obsession",
+				"Increase spell power by [value1x100]% and increase power/lower cost of black magic by [value2x100]%.",
+				"Your equipment boost your spells power and argument your black magic at the same time lowering it costs!");
 		public static const Sanctuary:PerkType = mk("Sanctuary", "Sanctuary", "Regenerates up to 1% of HP scaling on purity");
-		public static const SeersInsight:SeersInsightPerk = new SeersInsightPerk();
-		public static const SluttySeduction:SluttySeductionPerk = new SluttySeductionPerk();
+		public static const SeersInsight:PerkType = mk("Seer’s Insight", "Seer’s Insight",
+				"Increase spell/magical soulskills power and lower specials fatigue/ki cost by [value1x100]%.",
+				"Your equipment boost your spells/magical soulskills power and lowering costs of specials/soulskills!");
+		public static const SluttySeduction:PerkType = mk("Slutty Seduction", "Slutty Seduction",
+				"Increases odds of successfully teasing and lust damage of successful teases by [value1] points.",
+				"Your armor allows you access to 'Seduce', an improved form of 'Tease'.");
 		public static const WellspringOfLust:PerkType = mk("Wellspring of Lust", "Wellspring of Lust",
 				"At the beginning of combat, gain lust up to black magic threshold if lust is bellow black magic threshold.",null);
-		public static const WizardsEnduranceAndSluttySeduction:WizardsEnduranceAndSluttySeductionPerk = new WizardsEnduranceAndSluttySeductionPerk();
-		public static const WizardsAndDaoistsEndurance:WizardsAndDaoistsEndurancePerk = new WizardsAndDaoistsEndurancePerk();
-		public static const WizardsEndurance:WizardsEndurancePerk = new WizardsEndurancePerk();
+		public static const WizardsEnduranceAndSluttySeduction:PerkType = mk("Wizard's Endurance/Slutty Seduction", "Wizard's Endurance/Slutty Seduction",
+				"Reduces mana cost of spells by [value1]% and increases odds of successfully teasing and lust damage of successful teases by [value2] points.",
+				"Your spellcasting equipment makes your spell-casting cost less mana you and allows access to 'Seduce', an improved form of 'Tease'.!");
+		public static const WizardsAndDaoistsEndurance:PerkType = mk("Wizard's and Daoists's Endurance", "Wizard's and Daoists's Endurance",
+				"Reduces mana cost of spells by [value1]% and ki cost of soulskills by [value2]%.",
+				"Your equipment makes it harder for spell-casting to drain your mana or souskills to drain your ki!");
+		public static const WizardsEndurance:PerkType = mk("Wizard's Endurance", "Wizard's Endurance",
+				"Reduces mana cost of spells by [value1]%.",
+				"Your spellcasting equipment makes you use less mana for spell-casting!");
 
 		// Melee & Range weapon perks
-		public static const Accuracy1:Accuracy1Perk = new Accuracy1Perk();
-		public static const Accuracy2:Accuracy2Perk = new Accuracy2Perk();
+		public static const Accuracy1:PerkType = mk("Accuracy+", "Accuracy+",
+				"Rise your accuracy by [value1]%.",
+				"You have mastered your control over the flow of energy in your star sphere. You are now able to recover fatigue and ki over time.");
+		public static const Accuracy2:PerkType = mk("Accuracy-", "Accuracy-",
+				"Lower your accuracy by [value1]%.",
+				"Your range weapon lowering your accuracy when shooting.");
 		public static const BladeWarden:PerkType = mk("Blade-Warden", "Blade-Warden",
 				"Enables Resonance Volley ki power while equipped: Perform a ranged attack where each arrow after the first gets an additional 10% accuracy for every arrow before it.",null);
-		public static const BodyCultivatorsFocus:BodyCultivatorsFocusPerk = new BodyCultivatorsFocusPerk();
-		public static const DaoistsFocus:DaoistsFocusPerk = new DaoistsFocusPerk();
+		public static const BodyCultivatorsFocus:PerkType = mk("Body Cultivator's Focus", 		"Body Cultivator's Focus",
+				"(+[value1x100]% Physical Ki Powers Power)",
+				"Your body cultivator's weapon grants you additional focus, increasing your physical soulskills power.");
+		public static const DaoistsFocus:PerkType = mk("Daoist's Focus", "Daoist's Focus",
+				"Increases your magical soulskill effect modifier by [value1x100]%.",
+				"Your daoist's weapon grants you additional focus, increasing your soulskills power.");
 		public static const MageWarden:PerkType = mk("Mage-Warden", "Mage-Warden",
 				"Enables Resonance Volley ki power while equipped: Perform a ranged attack where each arrow after the first gets an additional 10% accuracy for every arrow before it.",null);
-		public static const SagesKnowledge:SagesKnowledgePerk = new SagesKnowledgePerk();
+		public static const SagesKnowledge:PerkType = mk("Sage's Knowledge", "Sage's Knowledge",
+				"Increases your spell effect modifier by [value1x100]%.",
+				"Your tome grants you additional focus, increasing your spells power.");
 		public static const StrifeWarden:PerkType = mk("Strife-Warden", "Strife-Warden",
 				"Enables Beat of War ki power while equipped: Attack with low-moderate additional soul damage, gain strength equal to 15% your base strength until end of battle. This effect stacks.",null);
 		public static const WildWarden:PerkType = mk("Wild-Warden", "Wild-Warden",
 				"Enables Resonance Volley ki power while equipped: Perform a ranged attack where each arrow after the first gets an additional 10% accuracy for every arrow before it.",null);
-		public static const WizardsAndDaoistsFocus:WizardsAndDaoistsFocusPerk = new WizardsAndDaoistsFocusPerk();
-		public static const WizardsFocus:WizardsFocusPerk = new WizardsFocusPerk();
+		public static const WizardsAndDaoistsFocus:PerkType = mk("Wizard's and Daoists's Focus", "Wizard's and Daoists's Focus",
+				"Increases your spell effect modifier by [value1x100]% and your magical soulskill effect modifier by [value2x100]%.",
+				"Your equipment grants you additional focus, increasing your spells and magical soulskills power.");
+		public static const WizardsFocus:PerkType = jmk({
+			id:"Wizard's Focus",
+			name:"Wizard's Focus",
+			short:"+<eval>value1*100</eval> % Spell Power",
+			long:"Your wizard's weapon grants you additional focus, increasing your spells power.",
+			buffs:{
+				spellDmgMult:'value1'
+			}
+		});
 
 		// Achievement perks
-		public static const BowShooting:BowShootingPerk = new BowShootingPerk();
+		public static const BowShooting:PerkType = mk("Bow Shooting","Bow Shooting", "Reduces arrow shooting costs by [value1]%.","Reduces cost of shotting arrows.");
 		public static const BroodMother:PerkType = mk("Brood Mother", "Brood Mother",
 				"Pregnancy moves twice as fast as a normal woman's.");
-		public static const SpellcastingAffinity:SpellcastingAffinityPerk = new SpellcastingAffinityPerk();
+		public static const SpellcastingAffinity:PerkType = mk("Spellcasting Affinity","Spellcasting Affinity", "Reduces spell costs by [value1]%.","Reduces spell costs.");
 
 		// Mutation perks
 		public static const Androgyny:PerkType = mk("Androgyny", "Androgyny",
@@ -817,7 +857,9 @@ public class PerkLib
 				"Grants a 5 point damage bonus to dick-based tease attacks.");
 		public static const Cornucopia:PerkType = mk("Cornucopia", "Cornucopia",
 				"Vaginal and Anal capacities increased by 30.");
-		public static const ElvenBounty:ElvenBountyPerk = new ElvenBountyPerk();
+		public static const ElvenBounty:PerkType = mk("Elven Bounty", "Elven Bounty",
+				"Increases fertility by [value2]% and cum production by [value1]mLs.",
+				"After your encounter with an elf, her magic has left you with increased fertility and virility.");
 		public static const FerasBoonAlpha:PerkType = mk("Fera's Boon - Alpha", "Fera's Boon - Alpha",
 				"Increases the rate your cum builds up and cum production in general.");
 		public static const FerasBoonBreedingBitch:PerkType = mk("Fera's Boon - Breeding Bitch", "Fera's Boon - Breeding Bitch",
@@ -862,7 +904,9 @@ public class PerkLib
 				"Your constant desire for sex causes your sexual organs to be able to take larger insertions and disgorge greater amounts of fluid.");
 		public static const PilgrimsBounty:PerkType = mk("Pilgrim's Bounty", "Pilgrim's Bounty",
 				"Causes you to always cum as hard as if you had max lust.");
-		public static const ProductivityDrugs:PerkType = new ProductivityDrugsPerk();
+		public static const ProductivityDrugs:PerkType = mk("Productivity Drugs","Productivity Drugs",
+				"Minimum libido increased by [value1], minimum corruption increased by [value2], cum production (if applicable) increased by [value3]mL, and milk production (if applicable) increased by [value4]mL.",
+				"The drugs from the factory significantly increase your minimum libido, minimum corruption, and fluid production.");
 		public static const PureAndLoving:PerkType = mk("Pure and Loving", "Pure and Loving",
 				"Your caring attitude towards love and romance makes you slightly more resistant to lust and corruption.");
 		public static const SensualLover:PerkType = mk("Sensual Lover", "Sensual Lover",
@@ -877,7 +921,12 @@ public class PerkLib
 		public static const ControlledBreath:ControlledBreathPerk = new ControlledBreathPerk();
 		public static const CleansingPalm:CleansingPalmPerk = new CleansingPalmPerk();
 		public static const Enlightened:EnlightenedPerk = new EnlightenedPerk();
-		public static const StarSphereMastery:StarSphereMasteryPerk = new StarSphereMasteryPerk();
+		public static const StarSphereMastery:PerkType = jmk({
+					id:"Star Sphere Mastery",
+					name:"Star Sphere Mastery",
+					short:"Regenerate <eval>value1*2</eval> fatigue every round and increase Fox Fire damage by <eval>value1*5</eval>%.",
+					long:"You have mastered your control over the flow of energy in your star sphere. You are now able to recover fatigue and ki over time."
+				});
 
 		// Monster perks
 		public static const Acid:PerkType = mk("Acid", "Acid", "");
@@ -904,7 +953,10 @@ public class PerkLib
 
 		private static function mk(id:String, name:String, desc:String, longDesc:String = null):PerkType
 		{
-			return new PerkType(id, name, desc, longDesc);
+			return new PerkType(id, name, desc,PerkClass,1, longDesc);
+		}
+		private static function jmk(json:Object):PerkType {
+			return new BuffingPerkType(json['id'], json['name'], json['short'], json['long'],json['buffs']);
 		}
 
 	// Perk requirements

@@ -508,7 +508,7 @@ import flash.text.TextField;
 		if (button && button.visible && button.toolTipText) {
 			this.toolTipView.header = button.toolTipHeader;
 			this.toolTipView.text   = button.toolTipText;
-			this.toolTipView.showForButton(button);
+			this.toolTipView.showForElement(button);
 		}
 		else {
 			this.toolTipView.hide();

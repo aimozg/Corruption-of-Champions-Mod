@@ -926,11 +926,9 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 	        mainView.mainText.addEventListener(TextEvent.LINK, linkhandler);
 	        perkList = [];
 	        for each(var perk:PerkType in perks) {
-		        var p:PerkClass = new PerkClass(perk,
-				        perk.defaultValue1, perk.defaultValue2, perk.defaultValue3, perk.defaultValue4);
-		        var lab:* = {label: p.perkName, perk: p};
+		        var lab:* = {label: perk.name, perk: perk};
 		        perkList.push(lab);
-		        outputText("<u><a href=\"event:"+perkList.indexOf(lab)+"\">"+p.perkName+"</a></u>\n");
+		        outputText("<u><a href=\"event:"+perkList.indexOf(lab)+"\">"+perk.name+"</a></u>\n");
 	        }
 			mainView.hideMenuButton(MainView.MENU_NEW_MAIN);
 			menu();
@@ -942,7 +940,7 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 		trace(e.text);
 		perkCbChangeHandler(perkList[e.text]);
 	}
-	private function perkSelect(selected:PerkClass):void {
+	private function perkSelect(selected:PerkType):void {
 		mainView.mainText.removeEventListener(TextEvent.LINK, linkhandler);
 		mainView.hideComboBox();
 		applyPerk(selected);
@@ -957,11 +955,11 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 	public function perkCbChangeHandler(selectedItem:*):void {
 		//Store perk name for later addition
 		clearOutput();
-		var selected:PerkClass = selectedItem.perk;
+		var selected:PerkType = selectedItem.perk;
 		outputText("You have selected the following perk:\n");
-		outputText("<b>" + selected.perkName + ":</b> " + selected.perkLongDesc);
+		outputText("<b>" + selected.name + ":</b> " + selected.longDesc);
         CoC.instance.placeComboBoxAfterText();
-        var unlocks:Array = CoC.instance.perkTree.listUnlocks(selected.ptype);
+        var unlocks:Array = CoC.instance.perkTree.listUnlocks(selected);
         if (unlocks.length > 0) {
 			outputText("<b>Unlocks:</b> <ul>");
 			for each (var pt:PerkType in unlocks) outputText("<li>" + pt.name + " (" + pt.longDesc + ")</li>");
@@ -970,24 +968,24 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 		outputText("If you would like to select this perk, click <b>Okay</b>.  Otherwise, select a new perk, or press <b>Skip</b> to make a decision later.");
 		if (player.perkPoints>1) outputText("\n\nYou have "+numberOfThings(player.perkPoints,"perk point","perk points")+".\n\n");
 		for each(var p:* in perkList){
-			outputText("<u><a href=\"event:"+perkList.indexOf(p)+"\">"+p.perk.perkName+"</a></u>\n");
+			outputText("<u><a href=\"event:"+perkList.indexOf(p)+"\">"+p.perk.name+"</a></u>\n");
 		}
 		menu();
 		addButton(0, "Okay", perkSelect, selected);
 		addButton(1, "Skip", perkSkip);
 	}
 
-	public function applyPerk(perk:PerkClass):void {
+	public function applyPerk(perk:PerkType):void {
 		clearOutput();
 		player.perkPoints--;
 		//Apply perk here.
-		outputText("<b>" + perk.perkName + "</b> gained!");
-		player.createPerk(perk.ptype, perk.value1, perk.value2, perk.value3, perk.value4);
-		if (perk.ptype == PerkLib.StrongBack){
+		outputText("<b>" + perk.name + "</b> gained!");
+		player.createPerk(perk, perk.defaultValue1, perk.defaultValue2, perk.defaultValue3, perk.defaultValue4);
+		if (perk == PerkLib.StrongBack){
 			player.itemSlot4.unlocked = true;
 			player.itemSlot5.unlocked = true;
 		}
-		if (perk.ptype == PerkLib.Tank) {
+		if (perk == PerkLib.Tank) {
 			HPChange(player.tou, false);
 			statScreenRefresh();
 		}

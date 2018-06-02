@@ -165,6 +165,10 @@ package classes
 		public var gems:Number = 0;
 		public var additionalXP:Number = 0;
 		
+		// Other buffable stats
+		public var spellDmgMultStat:BuffableStat = new BuffableStat("spellDmgMult",{base:1.0,min:0.0},stats);
+		public function get spellDmgMult():Number { return spellDmgMultStat.value }
+		
 		public function get str100():Number { return 100*str/getMaxStats('str'); }
 		public function get tou100():Number { return 100*tou/getMaxStats('tou'); }
 		public function get spe100():Number { return 100*spe/getMaxStats('spe'); }
@@ -323,7 +327,7 @@ package classes
 			//Perks ahoy
 			var perk:PerkClass = getPerk(PerkLib.GorgonsEyes);
 			if (hasPerk(PerkLib.BasiliskResistance) && perk) {
-				perk.buffHost(this,'spe',-5);
+				perk.buffHost('spe',-5);
 			} else {
 				speStat.bonus.removeBuff(PerkLib.BasiliskResistance.id);
 			}
@@ -337,7 +341,7 @@ package classes
 			setPerkStatEffect(PerkLib.FutaForm,'libMult',+0.50);
 			perk = getPerk(PerkLib.ProductivityDrugs);
 			if (perk) {
-				perk.buffHost(this, 'lib', perk.value1);
+				perk.buffHost('lib', perk.value1);
 			} else {
 				libStat.removeEffect(PerkLib.ProductivityDrugs.id);
 			}
@@ -439,10 +443,10 @@ package classes
 				} else {
 					speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.id);
 				}
-				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) perk.buffHost(this,'speMult', +0.20*mult);
-				else if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) perk.buffHost(this,'speMult', +0.15*mult);
-				else if (skinType == Skin.SCALES) perk.buffHost(this, 'speMult', +0.10*mult);
-				else if (hasPerk(PerkLib.ThickSkin)) perk.buffHost(this, 'speMult', +0.05*mult);
+				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) perk.buffHost('speMult', +0.20*mult);
+				else if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) perk.buffHost('speMult', +0.15*mult);
+				else if (skinType == Skin.SCALES) perk.buffHost('speMult', +0.10*mult);
+				else if (hasPerk(PerkLib.ThickSkin)) perk.buffHost('speMult', +0.05*mult);
 			} else {
 				speStat.mult.removeBuff(PerkLib.MantislikeAgility.id);
 				speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.id);
@@ -1318,7 +1322,7 @@ package classes
 		*/
 		//Monsters have few perks, which I think should be a status effect for clarity's sake.
 		//TODO: Move perks into monster status effects.
-		private var _perks:Array;
+		private var _perks:/*PerkClass*/Array;
 		public function perk(i:int):PerkClass{
 			return _perks[i];
 		}
@@ -1339,39 +1343,45 @@ package classes
 		//Create a perk
 		public function createPerk(ptype:PerkType, value1:Number, value2:Number, value3:Number, value4:Number):PerkClass
 		{
-			var newPerk:PerkClass = new PerkClass(ptype, value1, value2, value3, value4);
+			var newPerk:PerkClass = ptype.create(value1,value2,value3,value4);
 			perks.push(newPerk);
 			perks.sortOn("perkName");
+			newPerk.addedToHostList(this,true);
 			return newPerk;
+		}
+		public function addPerk(perk:PerkClass):void {
+			if (perk.host != this) {
+				perk.remove();
+				perk.attach(this);
+			} else {
+				_perks.push(perk);
+				perk.addedToHostList(this,true);
+			}
 		}
 
 		/**
 		 * Remove perk. Return true if there was such perk
 		 */
-		public function removePerk(ptype:PerkType):Boolean
+		public function removePerk(ptype:PerkType):PerkClass
 		{
-			var counter:Number = perks.length;
-			//Various Errors preventing action
-			if (perks.length <= 0)
-			{
-				return false;
+			var counter:int = indexOfPerk(ptype);
+			if (counter < 0) return null;
+			var perk:PerkClass = _perks[counter];
+			_perks.splice(counter, 1);
+			perk.removedFromHostList(true);
+			return perk;
+		}
+		public function removePerkInstance(perk:PerkClass):void {
+			var i:int = _perks.indexOf(perk);
+			if (i < 0) return;
+			_perks.splice(i, 1);
+			perk.removedFromHostList(true);
+		}
+		public function indexOfPerk(ptype:PerkType):int {
+			for (var i:int = 0,n:int=_perks.length; i<n; i++) {
+				if (_perks[i].ptype == ptype) return i;
 			}
-			if (perkv4(ptype) > 0)
-			{
-				// trace('ERROR! Attempted to remove permanent "' + ptype.name + '" perk.');
-				return false;
-			}
-			while (counter > 0)
-			{
-				counter--;
-				if (perk(counter).ptype == ptype)
-				{
-					perks.splice(counter, 1);
-					//trace("Attempted to remove \"" + perkName + "\" perk.");
-					return true;
-				}
-			}
-			return false;
+			return -1;
 		}
 
 		//has perk?

@@ -34,7 +34,7 @@ public class StatusEffectType
 	/**
 	 * @param id Unique status effect id; should persist between game version
 	 * @param clazz Class to create instances of
-	 * @param arity Class constructor arity: 0: new clazz(), 1: new clazz(thiz:StatusEffectType)
+	 * @param arity Class constructor arity: 0: new clazz(), 1: new clazz(stype:StatusEffectType)
 	 */
 	public function StatusEffectType(id:String,clazz:Class,arity:int)
 	{

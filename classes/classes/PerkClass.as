@@ -17,18 +17,59 @@ public class PerkClass
 		}
 		//data
 		private var _ptype:PerkType;
+		private var _host:Creature;
 		public var value1:Number;
 		public var value2:Number;
 		public var value3:Number;
 		public var value4:Number;
-		//MEMBER FUNCTIONS
-
-		// TODO @aimozg how that will work with saving-loading-adding-removing? remake like with status effects, maybe even generalize
+		
+		public function get host():Creature {
+			return _host;
+		}
+		/**
+		 * Returns null if host is not a Player
+		 */
+		public function get playerHost():Player {
+			return _host as Player;
+		}
+		
+		// ==============================
+		// EVENTS - to be overridden in subclasses
+		// ===============================
+		
+		/**
+		 * Called when the effect is applied to the creature, after adding to its list of effects.
+		 */
+		public function onAttach():void {
+			// do nothing
+		}
+		/**
+		 * Called when the effect is removed from the creature, after removing from its list of effects.
+		 */
+		public function onRemove():void {
+			// do nothing
+		}
+		/**
+		 * Called after combat in player.clearStatuses()
+		 */
+		public function onCombatEnd():void {
+			// do nothing
+		}
+		/**
+		 * Called during combat in combatStatusesUpdate() for player, then for monster
+		 */
+		public function onCombatRound():void {
+			// do nothing
+		}
+		// ==============================
+		// Utilities
+		// ===============================
+		
 		/**
 		 * Attach a (de)buff to this status effect, will be removed with it
 		 */
-		public function buffHost(host:Creature,stat:String,amount:Number):void {
-			var s:IStat = host.stats[stat];
+		public function buffHost(stat:String,amount:Number):void {
+			var s:IStat = _host.stats[stat];
 			if (s is PrimaryStat) {
 				(s as PrimaryStat).bonus.addOrIncreaseBuff(ptype.id,amount,{save:false,text:ptype.name});
 			} else if (s is BuffableStat) {
@@ -37,15 +78,31 @@ public class PerkClass
 				trace("/!\\ buffHost("+stat+", "+amount+") in "+ptype.id);
 			}
 		}
-		public function unbuffHost(host:Creature,stat:String):void {
-			var s:IStat = host.stats[stat];
-			if (s is PrimaryStat) {
-				(s as PrimaryStat).removeEffect(ptype.id);
-			} else if (s is BuffableStat) {
-				(s as BuffableStat).removeBuff(ptype.id);
-			} else {
-				trace("/!\\ unbuffHost("+stat+") in "+ptype.id);
+		public function remove(/*fireEvent:Boolean = true*/):void {
+			if (_host == null) return;
+			_host.removePerkInstance(this/*,fireEvent*/);
+			_host = null;
+		}
+		public function removedFromHostList(fireEvent:Boolean):void {
+			if (fireEvent) {
+				onRemove();
+				_host.removeStatEffects(ptype.id);
 			}
+			_host = null;
+		}
+		public function addedToHostList(host:Creature,fireEvent:Boolean):void {
+			_host = host;
+			if (fireEvent) onAttach();
+		}
+		public function attach(host:Creature/*,fireEvent:Boolean = true*/):void {
+			if (_host == host) return;
+			if (_host != null) remove();
+			_host = host;
+			host.addPerk(this/*,fireEvent*/);
+		}
+		
+		protected static function register(id:String,name:String,desc:String,perkClass:Class,arity:int=0,longDesc:String=null):PerkType {
+			return new PerkType(id,name,desc,perkClass,arity,longDesc);
 		}
 		
 		public function get ptype():PerkType

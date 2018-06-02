@@ -273,8 +273,8 @@ import classes.Scenes.SceneLib;
 			if (flags[kFLAGS.LUNA_MOON_CYCLE] == 1 || flags[kFLAGS.LUNA_MOON_CYCLE] == 7) bonusStats += 30;
 			if (flags[kFLAGS.LUNA_MOON_CYCLE] == 8) bonusStats += 40;
 			var perk:PerkClass = player.createPerk(PerkLib.Lycanthropy,bonusStats,0,0,0);
-			perk.buffHost(player,'str', bonusStats * player.newGamePlusMod());
-			perk.buffHost(player,'tou', bonusStats * player.newGamePlusMod());
+			perk.buffHost('str', bonusStats * player.newGamePlusMod());
+			perk.buffHost('tou', bonusStats * player.newGamePlusMod());
 			player.dynStats("spe", (bonusStats * player.newGamePlusMod()), "cor", 20);
 			statScreenRefresh();
 			outputText("Barely satiated your eyes now focus back on Luna, lust overwhelming your cursed body. You must have her... NOW!\n\n");
@@ -553,8 +553,8 @@ import classes.Scenes.SceneLib;
 				}
 			}
 			var perk:PerkClass = player.createPerk(PerkLib.Lycanthropy,40,0,0,0);
-			perk.buffHost(player,'str', 40 * player.newGamePlusMod());
-			perk.buffHost(player,'tou', 40 * player.newGamePlusMod());
+			perk.buffHost('str', 40 * player.newGamePlusMod());
+			perk.buffHost('tou', 40 * player.newGamePlusMod());
 			player.dynStats("spe", (40 * player.newGamePlusMod()), "cor", 20);
 			statScreenRefresh();
 			outputText("Barely satiated your eyes now focus back on Luna, lust overwhelming your cursed body. You must have her... NOW!\n\n");

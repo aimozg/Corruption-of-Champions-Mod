@@ -84,28 +84,6 @@ import flash.text.TextFieldAutoSize;
 			show(e.x, e.y, e.width, e.height);
 		}
 
-		public function showForButton(button:DisplayObject):void {
-			//showForBox(button.x, button.y, button.width, button.height);
-			var bx:Number = button.x,
-				by:Number = button.y;
-
-			// TODO: Should we try to remove some of these numbers?
-			/*if (this.model.mobile) {
-				bx = (bx >= 410 ? 405: bx);
-				this.x = bx + 98;
-				this.y = by - 347;
-			}*/
-			//else {
-			bg.height = Math.max(tf.height + 63, MIN_HEIGHT);
-			bx = (bx >= 688 ? 680: bx);
-			this.x = bx - 13;
-			var y:Number = by - this.height - 2;
-			if (y < 0) y = by + button.height + 6;
-			this.y = y;
-			//}
-
-		}
-
 		public function hide():void {
 			this.visible = false;
 		}

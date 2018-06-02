@@ -5,22 +5,21 @@ import classes.PerkClass;
 	import classes.PerkType;
 	import classes.GlobalFlags.*;
 
-	public class RegenerationPerk extends PerkType
+	public class RegenerationPerk extends PerkClass
 	{
+		public static const TYPE:PerkType = register(
+				"Regeneration I", "Regeneration I", "Regenerates 1% of max HP/hour and 0,5% of max HP/round.",
+				RegenerationPerk,0,
+				"You choose the '"+"Regeneration I"+"' perk, allowing you to heal 0,5% of max HP every round of combat and 1% of max HP every hour!"
+		);
 		
-		override public function desc(params:PerkClass = null):String
-		{
+		override public function get perkDesc():String {
 			if (CoC.instance.flags[kFLAGS.HUNGER_ENABLED] > 0 && CoC.instance.player.hunger < 25) return "<b>DISABLED</b> - You are too hungry!";
-			else return super.desc(params);
+			else return super.perkDesc;
 		}
 		
-		public function RegenerationPerk()
-		{
-			var num:String = "Regeneration I";
-			super(
-					num, num, "Regenerates 1% of max HP/hour and 0,5% of max HP/round.",
-					"You choose the '"+num+"' perk, allowing you to heal 0,5% of max HP every round of combat and 1% of max HP every hour!"
-			);
+		public function RegenerationPerk() {
+			super(TYPE);
 
 		}
 		

@@ -22,7 +22,7 @@ package classes.Items
 			this._verb = verb;
 			this._attack = attack;
 			this._perk = perk;
-			if(ptype){this._weapPerk = new PerkClass(ptype, v1, v2, v3, v4);}
+			if(ptype){this._weapPerk = ptype.create(v1, v2, v3, v4);}
 		}
 		
 		public function get verb():String {
@@ -90,8 +90,10 @@ package classes.Items
 		}
 		
 		public function playerRemove():Weapon { //This item is being removed by the player. Remove any perks, etc. - This function should only handle mechanics, not text output
-			while (game.player.hasPerk(_weapPerk.ptype)) {
-				game.player.removePerk(_weapPerk.ptype);
+			if (_weapPerk) {
+				while (game.player.hasPerk(_weapPerk.ptype)) {
+					game.player.removePerk(_weapPerk.ptype);
+				}
 			}
 			return this;
 		}

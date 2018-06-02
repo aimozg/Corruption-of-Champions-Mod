@@ -218,7 +218,7 @@ public class Skin extends SaveableBodyPart {
 		return coverage > COVERAGE_NONE && coverage < COVERAGE_HIGH;
 	}
 	public function coatType():int {
-		return hasCoat() ? coat.type : -1;
+		return hasCoat() ? coat.type : 0;
 	}
 	public function baseType():int {
 		return base.type;
