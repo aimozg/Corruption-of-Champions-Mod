@@ -698,10 +698,9 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 				var buffs:/*Buff*/Array = bstat.listBuffs();
 				for each(var buff:Buff in buffs) {
 					var value:Number = buff.value;
-					outputText('\t'+buff.tag + ': ' + (value >= 0 ? '+' : '') + value);
+					outputText('\n\t'+buff.tag + ': ' + (value >= 0 ? '+' : '') + value);
 					if (buff.save) outputText(', save+');
 					if (!buff.show) outputText(', show-');
-					outputText('\n');
 				}
 			} else if (rstat) {
 				outputText('(raw)');
