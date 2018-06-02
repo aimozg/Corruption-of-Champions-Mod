@@ -8,10 +8,9 @@ public class XMLEval {
 	public function XMLEval() {
 	}
 	
-	public static function process(source:XML, ...scopes:/*Object*/Array):String {
-		if (source.nodeKind() == "text") return source.text();
+	public static function processList(source:XMLList, ...scopes:/*Object*/Array):String {
 		var s:String = "";
-		for each(var e:XML in source.children()) {
+		for each(var e:XML in source) {
 			switch (e.nodeKind()) {
 				case "text":
 					s += e.toString();
@@ -39,6 +38,10 @@ public class XMLEval {
 			}
 		}
 		return s;
+	}
+	public static function process(source:XML, ...scopes:/*Object*/Array):String {
+		if (source.nodeKind() == "text") return source.text();
+		return processList.apply(null, [source.children()].concat(scopes));
 	}
 }
 }

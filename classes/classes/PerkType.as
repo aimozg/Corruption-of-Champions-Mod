@@ -6,6 +6,9 @@ package classes
 import classes.EngineCore;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
+import classes.internals.Utils;
+
+import coc.script.XMLEval;
 
 import flash.utils.Dictionary;
 
@@ -24,14 +27,15 @@ public class PerkType
 
 		private var _id:String;
 		private var _name:String;
-		private var _desc:String;
-		private var _longDesc:String;
+		private var _desc:XMLList;
+		private var _longDesc:XMLList;
 		public var defaultValue1:Number = 0;
 		public var defaultValue2:Number = 0;
 		public var defaultValue3:Number = 0;
 		public var defaultValue4:Number = 0;
 		private var _secClazz:Class;
 		private var arity:int;
+		private var _buffs:Object;
 
 		/**
 		 * Unique perk id, should be kept in future game versions
@@ -53,20 +57,7 @@ public class PerkType
 		 * Short description used in perk listing
 		 */
 		public function desc(params:PerkClass=null):String {
-			return evaluate(_desc,params);
-		}
-		private function evaluate(pattern:String,pc:PerkClass=null):String {
-			var params:* = pc || {
-				value1:defaultValue1,
-				value2:defaultValue2,
-				value3:defaultValue3,
-				value4:defaultValue4
-			};
-			return pattern.replace(/\[(value[1-4])(x100)?]/g,function():String {
-				var v:* = params[arguments[1]];
-				if (arguments[2] == 'x100') v *= 100;
-				return ""+Math.round(v);
-			});
+			return XMLEval.processList(_desc, params||{value1:defaultValue1,value2:defaultValue2,value3:defaultValue3,value4:defaultValue4});
 		}
 
 		/**
@@ -74,7 +65,11 @@ public class PerkType
 		 */
 		public function get longDesc():String
 		{
-			return evaluate(_longDesc,null);
+			return XMLEval.processList(_longDesc, {value1:defaultValue1,value2:defaultValue2,value3:defaultValue3,value4:defaultValue4});
+		}
+		
+		public function get buffs():Object {
+			return _buffs;
 		}
 		
 		/**
@@ -82,18 +77,25 @@ public class PerkType
 		 * @param clazz Class to create instances of
 		 * @param arity Class constructor arity: 0: new clazz(), 1: new clazz(ptype:PerkType)
 		 */
-		public function PerkType(id:String,name:String,desc:String,clazz:Class=null,arity:int=1,longDesc:String = null)
+		public function PerkType(id:String,name:String,desc:String,clazz:Class=null,arity:int=1,longDesc:String = null, buffs:Object = null)
 		{
+			var _prev:Boolean = XML.ignoreWhitespace;
+			XML.ignoreWhitespace = false;
+			
 			this._id = id;
 			this._name = name;
-			this._desc = desc;
-			this._longDesc = longDesc || _desc;
+			this._desc = new XMLList(desc);
+			this._longDesc = new XMLList(longDesc || desc);
 			this.arity = arity;
 			this._secClazz = clazz || PerkClass;
+			this._buffs = Utils.shallowCopy(buffs||{});
+			
 			if (PERK_LIBRARY[id] != null) {
 				CoC_Settings.error("Duplicate perk id "+id+", old perk is "+(PERK_LIBRARY[id] as PerkType)._name);
 			}
 			PERK_LIBRARY[id] = this;
+			
+			XML.ignoreWhitespace = _prev;
 		}
 		
 		public function create(value1:Number, value2:Number, value3:Number, value4:Number):PerkClass {

@@ -1987,7 +1987,7 @@ public class PerkLib
 			return new PerkType(id, name, desc,PerkClass,1, longDesc);
 		}
 		private static function jmk(json:Object):PerkType {
-			return new BuffingPerkType(json['id'], json['name'], json['short'], json['long'],json['buffs']);
+			return new PerkType(json['id'], json['name'], json['short'], PerkClass,1,json['long'],json['buffs']);
 		}
 
 	// Perk requirements

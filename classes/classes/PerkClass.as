@@ -86,6 +86,13 @@ public class PerkClass
 		}
 		public function addedToHostList(host:Creature,fireEvent:Boolean):void {
 			_host = host;
+			StatUtils.applyBuffObject(
+					host,
+					ptype.buffs,
+					ptype.id,
+					{save:false,text:ptype.name},
+					this
+			);
 			if (fireEvent) onAttach();
 		}
 		public function attach(host:Creature/*,fireEvent:Boolean = true*/):void {
