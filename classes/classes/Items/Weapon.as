@@ -162,8 +162,11 @@ import classes.Scenes.SceneLib;
 			return this;
 		}
 		
+		public function get tagForBuffs():String {
+			return 'item/'+id;
+		}
 		private function applyBuffs():void {
-			StatUtils.applyBuffObject(host, _buffs, id, {save:false,text:name}, this);
+			StatUtils.applyBuffObject(host, _buffs, tagForBuffs, {save:false,text:name}, this);
 		}
 		
 		public function saveLoaded():void {
@@ -176,6 +179,7 @@ import classes.Scenes.SceneLib;
 					host.removePerk(perk.ptype);
 				}
 			}
+			host.removeStatEffects(tagForBuffs);
 			return this;
 		}
 		

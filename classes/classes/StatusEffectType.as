@@ -31,6 +31,10 @@ public class StatusEffectType
 	
 	private var _secClazz:Class;
 	
+	public function get tagForBuffs():String {
+		return 'status/'+id;
+	}
+	
 	/**
 	 * @param id Unique status effect id; should persist between game version
 	 * @param clazz Class to create instances of

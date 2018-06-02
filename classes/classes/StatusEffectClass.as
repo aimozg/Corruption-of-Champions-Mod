@@ -78,7 +78,7 @@ public class StatusEffectClass extends Utils
 	 * Attach a (de)buff to this status effect, will be removed with it
 	 */
 	public function buffHost(stat:String,amount:Number,text:String=null,show:Boolean=true):void {
-		StatUtils.buffByName(host,stat,amount,stype.id,{save:true,text: text || stype.id,show:show});
+		StatUtils.buffByName(host,stat,amount,stype.tagForBuffs,{save:true,text: text || stype.id,show:show});
 	}
 	
 	public function remove(/*fireEvent:Boolean = true*/):void {
@@ -89,7 +89,7 @@ public class StatusEffectClass extends Utils
 	public function removedFromHostList(fireEvent:Boolean):void {
 		if (fireEvent) {
 			onRemove();
-			_host.removeStatEffects(stype.id);
+			_host.removeStatEffects(stype.tagForBuffs);
 		}
 		_host = null;
 	}

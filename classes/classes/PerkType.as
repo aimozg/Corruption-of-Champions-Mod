@@ -72,6 +72,11 @@ public class PerkType
 			return _buffs;
 		}
 		
+		
+		public function get tagForBuffs():String {
+			return 'perk/'+id;
+		}
+		
 		/**
 		 * @param id Unique perk id; should persist between game version
 		 * @param clazz Class to create instances of
