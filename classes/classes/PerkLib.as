@@ -543,11 +543,11 @@ public class PerkLib
 		});
 		public static const ImmovableObject:PerkType                = mk("Immovable Object", "Immovable Object",
 				"[if(player.tou>=75)" +
-				"Grants 10% physical damage reduction.</b>" +
+				"Grants 10% physical damage reduction." +
 				"|" +
 				"<b>You aren't tough enough to benefit from this anymore.</b>" +
 				"]",
-				"You choose the 'Immovable Object' perk, granting 10% physical damage reduction.</b>");
+				"You choose the 'Immovable Object' perk, granting 10% physical damage reduction.");
 		public static const Impale:PerkType                         = jmk({
 			id   : "Impale",
 			name : "Impale",
@@ -712,11 +712,11 @@ public class PerkLib
 		});
 		public static const LightningStrikes:PerkType               = mk("Lightning Strikes", "Lightning Strikes",
 				"[if(player.spe>=60)" +
-				"Increases the attack damage for non-heavy weapons.</b>" +
+				"Increases the attack damage for non-heavy weapons." +
 				"|" +
 				"<b>You are too slow to benefit from this perk.</b>" +
 				"]",
-				"You choose the 'Lightning Strikes' perk, increasing the attack damage for non-heavy weapons.</b>");
+				"You choose the 'Lightning Strikes' perk, increasing the attack damage for non-heavy weapons.");
 		public static const LizanMarrow:PerkType                    = jmk({
 			id   : "Lizan Marrow",
 			name : "Lizan Marrow",
@@ -864,11 +864,11 @@ public class PerkLib
 		});
 		public static const Resolute:PerkType                       = mk("Resolute", "Resolute",
 				"[if(player.tou>=75)" +
-				"Grants immunity to stuns and some statuses.</b>" +
+				"Grants immunity to stuns and some statuses." +
 				"|" +
 				"<b>You aren't tough enough to benefit from this anymore.</b>" +
 				"]",
-				"You choose the 'Resolute' perk, granting immunity to stuns and some statuses.</b>");
+				"You choose the 'Resolute' perk, granting immunity to stuns and some statuses.");
 		public static const Runner:PerkType                         = jmk({
 			id   : "Runner",
 			name : "Runner",

@@ -84,23 +84,28 @@ public class PerkType
 		 */
 		public function PerkType(id:String,name:String,desc:String,clazz:Class=null,arity:int=1,longDesc:String = null, buffs:Object = null)
 		{
-			var _prev:Boolean = XML.ignoreWhitespace;
-			XML.ignoreWhitespace = false;
-			
-			this._id = id;
-			this._name = name;
-			this._desc = new XMLList(desc);
-			this._longDesc = new XMLList(longDesc || desc);
-			this.arity = arity;
-			this._secClazz = clazz || PerkClass;
-			this._buffs = Utils.shallowCopy(buffs||{});
-			
-			if (PERK_LIBRARY[id] != null) {
-				CoC_Settings.error("Duplicate perk id "+id+", old perk is "+(PERK_LIBRARY[id] as PerkType)._name);
+			try {
+				var _prev:Boolean    = XML.ignoreWhitespace;
+				XML.ignoreWhitespace = false;
+				
+				this._id       = id;
+				this._name     = name;
+				this._desc     = new XMLList(desc);
+				this._longDesc = new XMLList(longDesc || desc);
+				this.arity     = arity;
+				this._secClazz = clazz || PerkClass;
+				this._buffs    = Utils.shallowCopy(buffs || {});
+				
+				if (PERK_LIBRARY[id] != null) {
+					CoC_Settings.error("Duplicate perk id " + id + ", old perk is " + (PERK_LIBRARY[id] as PerkType)._name);
+				}
+				PERK_LIBRARY[id] = this;
+				
+				XML.ignoreWhitespace = _prev;
+			} catch(e:*) {
+				trace("Exception in initializer of PerkType "+id);
+				throw e;
 			}
-			PERK_LIBRARY[id] = this;
-			
-			XML.ignoreWhitespace = _prev;
 		}
 		
 		public function create(value1:Number, value2:Number, value3:Number, value4:Number):PerkClass {

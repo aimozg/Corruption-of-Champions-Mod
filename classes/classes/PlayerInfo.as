@@ -5,8 +5,14 @@ import classes.BodyParts.Tail;
 import classes.GlobalFlags.*;
 import classes.Scenes.NPCs.IsabellaScene;
 import classes.Scenes.SceneLib;
+import classes.Stats.Buff;
+import classes.Stats.BuffableStat;
+import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
+import classes.Stats.RawStat;
+import classes.Stats.StatUtils;
 import classes.StatusEffects.VampireThirstEffect;
+import classes.internals.Utils;
 
 import coc.view.MainView;
 
@@ -670,7 +676,42 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 			outputText("\n\n<b>You have " + num2Text(player.statPoints) + " attribute point" + (player.statPoints == 1 ? "" : "s") + " to distribute.</b>");
 			addButton(1, "Stat Up", attributeMenu);
 		}
-		doNext(playerMenu);
+		if (debug) {
+			addButton(2, "DebugStats", debugStats).hint('Show list of stats, their values and buffs');
+		}
+		addButton(0,"Back",playerMenu);
+	}
+	
+	public function debugStats():void {
+		clearOutput();
+		var statnames:/*String*/Array = Utils.keys(player.stats).sort();
+		for each(var statname:String in statnames) {
+			var stat:IStat = player.stats[statname];
+			outputText('<b>'+statname+' = '+stat.value+'</b> ');
+			var pstat:PrimaryStat = stat as PrimaryStat;
+			var bstat:BuffableStat = stat as BuffableStat;
+			var rstat:RawStat = stat as RawStat;
+			if (pstat) {
+				outputText(' = '+pstat.core.name+'×'+pstat.mult.name+' + '+pstat.bonus.name);
+			} else if (bstat) {
+				outputText('(base '+bstat.base+')');
+				var buffs:/*Buff*/Array = bstat.listBuffs();
+				for each(var buff:Buff in buffs) {
+					var value:Number = buff.value;
+					outputText('\t'+buff.tag + ': ' + (value >= 0 ? '+' : '') + value);
+					if (buff.save) outputText(', save+');
+					if (!buff.show) outputText(', show-');
+					outputText('\n');
+				}
+			} else if (rstat) {
+				outputText('(raw)');
+			} else {
+				outputText('/!\\ Unknown stat class '+stat['prototype']['constructor']);
+			}
+			outputText('\n');
+		}
+		menu();
+		addButton(0,"Back",displayStats);
 	}
 
 	//------------

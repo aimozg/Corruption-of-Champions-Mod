@@ -53,6 +53,16 @@ public class StatUtils {
 		trace('[WARN] Unexplainable stat '+stat);
 		return stat+' '+x;
 	}
+	public static function nameOfStat(stat:String):String {
+		if (stat in PlainNumberStats) {
+			return PlainNumberStats[stat];
+		} else if (stat in PercentageStats) {
+			return PercentageStats[stat];
+		} else {
+			trace('[WARN] Unknown stat '+stat);
+			return stat;
+		}
+	}
 	public static const PlainNumberStats:Object = Utils.createMapFromPairs([
 		['str','Strength'],
 		['tou','Toughness'],
