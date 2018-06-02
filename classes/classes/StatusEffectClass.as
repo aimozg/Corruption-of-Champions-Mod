@@ -5,6 +5,7 @@ import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
 import classes.Stats.PrimaryStat;
+import classes.Stats.StatUtils;
 import classes.internals.Utils;
 
 public class StatusEffectClass extends Utils
@@ -77,14 +78,7 @@ public class StatusEffectClass extends Utils
 	 * Attach a (de)buff to this status effect, will be removed with it
 	 */
 	public function buffHost(stat:String,amount:Number,text:String=null,show:Boolean=true):void {
-		var s:IStat = host.stats[stat];
-		if (s is PrimaryStat) {
-			(s as PrimaryStat).bonus.addOrIncreaseBuff(stype.id,amount,{save:true,text: text || stype.id,show:show});
-		} else if (s is BuffableStat) {
-			(s as BuffableStat).addOrIncreaseBuff(stype.id,amount,{save:true,text: text || stype.id,show:show});
-		} else {
-			trace("/!\\ buffHost("+stat+", "+amount+") in "+stype.id);
-		}
+		StatUtils.buffByName(host,stat,amount,stype.id,{save:true,text: text || stype.id,show:show});
 	}
 	
 	public function remove(/*fireEvent:Boolean = true*/):void {

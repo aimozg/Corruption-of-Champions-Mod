@@ -2,7 +2,8 @@ package classes.Items {
 	import classes.PerkClass;
 	import classes.PerkType;
 	import classes.Scenes.Combat.CombatDamage;
-	import classes.lists.DamageType;
+import classes.internals.Utils;
+import classes.lists.DamageType;
 
 	public class WeaponBuilder {
 		//itemType
@@ -24,6 +25,7 @@ package classes.Items {
 		internal var weaponPerks:Vector.<PerkClass> = new Vector.<PerkClass>();
 		internal var weaponType:String;
 		internal var damage:Array = [];
+		internal var buffs:Object = {};
 
 		public function WeaponBuilder(id:String, type:String, name:String = null, perk:String = null) {
 			this.id = id;
@@ -73,6 +75,22 @@ package classes.Items {
 
 		public function withVerb(value:String):WeaponBuilder {
 			this.verb = value;
+			return this;
+		}
+		
+		/**
+		 * @param buffs object{ [statname:string] => number or eval string }
+		 */
+		public function withBuffs(buffs:Object):WeaponBuilder {
+			this.buffs = Utils.extend(this.buffs,buffs);
+			return this;
+		}
+		
+		/**
+		 * @param amount number or eval string
+		 */
+		public function withBuff(statname:String, amount:*):WeaponBuilder {
+			this.buffs[statname] = amount;
 			return this;
 		}
 

@@ -92,7 +92,9 @@ package classes.Items
 		public const U_STAFF:Weapon = new Weapon("U.Staff", "U. Staff", "unicorn staff", "a unicorn staff", "smack", 6, 960, "This blessed staff is made in pearl-white sandalwood and decorated with a golden spiral pattern, reminiscent of a unicorn’s horn. The magic within seems to greatly enhance the user’s healing spells, not unlike those of the fabled creature that it emulates.", "Staff", PerkLib.WizardsFocus, 0.9, 0, 0, 0);
 		public const URTAHLB:Weapon = new Weapon("UrtaHlb", "UrtaHlb", "halberd", "a halberd", "slash", 30, 1200, "Urta's halberd. How did you manage to get this?", "Large");
 		public const VBLADE :Weapon = new Weapon("V.Blade", "V.Blade", "V.Blade", "a V.Blade", "slash", 28, 2240, "A peculiar sword. The letter V is engraved into the blade perhaps its former owner name.");
-		public const W_STAFF:Weapon = new Weapon("W.Staff", "W. Staff", "wizard's staff", "a wizard's staff", "smack", 3, 240, "This staff is made of very old wood and seems to tingle to the touch.  The top has an odd zig-zag shape to it, and the wood is worn smooth from lots of use.  It probably belonged to a wizard at some point and would aid magic use.", "Staff", PerkLib.WizardsFocus, 0.4, 0, 0, 0);
+		public const W_STAFF:Weapon = new Weapon("W.Staff", "W. Staff", "wizard's staff", "a wizard's staff", "smack", 3, 240, "This staff is made of very old wood and seems to tingle to the touch.  The top has an odd zig-zag shape to it, and the wood is worn smooth from lots of use.  It probably belonged to a wizard at some point and would aid magic use.", "Staff", null, 0, 0, 0, 0, {
+			spellDmgMult: +0.4
+		});
 		public const WARHAMR:HugeWarhammer = new HugeWarhammer();
 		public const WHIP   :Whip = new Whip();
 		public const WG_GAXE:WingedGreataxe = new WingedGreataxe();

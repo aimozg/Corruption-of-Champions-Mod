@@ -2279,6 +2279,8 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 				saveFile.data.itemSlot10.quantity);
 		}
 
+		player.weapon.saveLoaded();
+		player.weaponRange.saveLoaded();
 		loadAllAwareClasses(CoC.instance); //Informs each saveAwareClass that it must load its values from the flags array
         unFuckSave();
 		

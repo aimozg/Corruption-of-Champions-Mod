@@ -11,10 +11,13 @@ public class Buff implements Jsonable {
 	public var save:Boolean;
 	public var text:String;
 	public var show:Boolean;
-	private var stat:BuffableStat;
+	private var _stat:BuffableStat;
 	
+	public function get stat():BuffableStat {
+		return _stat;
+	}
 	public function Buff(stat:BuffableStat, value:Number,tag:String,save:Boolean=true,show:Boolean=true,text:String=null) {
-		this.stat     = stat;
+		this._stat    = stat;
 		this.rawValue = value;
 		this._tag     = tag;
 		this.save     = save;
@@ -58,7 +61,7 @@ public class Buff implements Jsonable {
 	}
 	public function set value(value:Number):void {
 		rawValue = value;
-		stat.recalculate();
+		_stat.recalculate();
 	}
 }
 }
