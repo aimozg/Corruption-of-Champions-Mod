@@ -1,6 +1,7 @@
 package coc.view {
 import flash.display.DisplayObject;
 import flash.display.Sprite;
+import flash.geom.Point;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 
@@ -63,12 +64,11 @@ import flash.text.TextFieldAutoSize;
 		 * Display tooltip near rectangle with specified coordinates
 		 */
 		public function show(bx:Number, by:Number, bw:Number, bh:Number):void {
-			if (bx+bw < mainView.width/2) {
-				// put to the right
-				this.x = bx + bw;
-			} else {
-				// put to the left
-				this.x = bx - this.width;
+			this.x = bx;
+			if (this.x < 0) {
+				this.x = 0; // left border
+			} else if (this.x + this.width > mainView.width) {
+				this.x = mainView.width - this.width; // right border
 			}
 			bg.height = Math.max(tf.height + 63, MIN_HEIGHT);
 			if (by+bh < mainView.height/2) {
@@ -81,7 +81,8 @@ import flash.text.TextFieldAutoSize;
 			this.visible = true;
 		}
 		public function showForElement(e:DisplayObject):void {
-			show(e.x, e.y, e.width, e.height);
+			var lpt:Point = e.getRect(this.parent).topLeft;
+			show(lpt.x, lpt.y, e.width, e.height);
 		}
 
 		public function hide():void {
