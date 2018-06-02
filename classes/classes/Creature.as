@@ -166,8 +166,8 @@ package classes
 		public var additionalXP:Number = 0;
 		
 		// Other buffable stats
-		public var spellDmgMultStat:BuffableStat = new BuffableStat("spellDmgMult",{base:1.0,min:0.0},stats);
-		public function get spellDmgMult():Number { return spellDmgMultStat.value }
+		public var spellPowerStat:BuffableStat = new BuffableStat("spellPower",{base:1.0,min:0.0},stats);
+		public function get spellPower():Number { return spellPowerStat.value }
 		
 		public function get hp100():Number { return 100*HP/maxHP(); }
 		public function get wrath100():Number { return 100*wrath/maxWrath(); }

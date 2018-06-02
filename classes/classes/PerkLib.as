@@ -723,7 +723,7 @@ public class PerkLib
 			short:"+<eval>value1*100</eval> % Spell Power",
 			long:"Your wizard's weapon grants you additional focus, increasing your spells power.",
 			buffs:{
-				spellDmgMult:'value1'
+				spellPower:'value1'
 			}
 		});
 

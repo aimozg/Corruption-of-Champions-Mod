@@ -74,7 +74,7 @@ public class StatUtils {
 			['intMult','Intellect'],
 			['wisMult','Wisdom'],
 			['libMult','Libido'],
-			['spellDmgMult','Spellpower']
+			['spellPower','Spellpower']
 	]);
 }
 }

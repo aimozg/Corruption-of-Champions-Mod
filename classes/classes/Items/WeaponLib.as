@@ -93,7 +93,7 @@ package classes.Items
 		public const URTAHLB:Weapon = new Weapon("UrtaHlb", "UrtaHlb", "halberd", "a halberd", "slash", 30, 1200, "Urta's halberd. How did you manage to get this?", "Large");
 		public const VBLADE :Weapon = new Weapon("V.Blade", "V.Blade", "V.Blade", "a V.Blade", "slash", 28, 2240, "A peculiar sword. The letter V is engraved into the blade perhaps its former owner name.");
 		public const W_STAFF:Weapon = new Weapon("W.Staff", "W. Staff", "wizard's staff", "a wizard's staff", "smack", 3, 240, "This staff is made of very old wood and seems to tingle to the touch.  The top has an odd zig-zag shape to it, and the wood is worn smooth from lots of use.  It probably belonged to a wizard at some point and would aid magic use.", "Staff", null, 0, 0, 0, 0, {
-			spellDmgMult: +0.4
+			spellPower: +0.4
 		});
 		public const WARHAMR:HugeWarhammer = new HugeWarhammer();
 		public const WHIP   :Whip = new Whip();

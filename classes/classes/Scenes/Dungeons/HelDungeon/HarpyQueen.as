@@ -99,7 +99,7 @@ public class HarpyQueen extends Monster
 			var mod:Number = 1;
 			if (hasPerk(PerkLib.JobSorcerer)) mod += .1;
 			if (hasPerk(PerkLib.Spellpower)) mod += .2;
-			mod += spellDmgMult;
+			mod += spellPower;
 			return mod;
 		}
 		

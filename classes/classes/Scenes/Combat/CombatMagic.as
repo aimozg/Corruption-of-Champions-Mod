@@ -214,7 +214,7 @@ public class CombatMagic extends BaseCombatContent {
 	}
 
 	internal function spellModImpl():Number {
-		var mod:Number = player.spellDmgMult;
+		var mod:Number = player.spellPower;
 		if(player.hasPerk(PerkLib.JobSorcerer) && player.inte >= 25) mod += .1;
 		if(player.hasPerk(PerkLib.Spellpower) && player.inte >= 50) mod += .1;
 		if(player.hasPerk(PerkLib.TraditionalMage) && player.weaponPerk == "Staff" && player.isUsingTome()) mod += 1;
@@ -253,7 +253,7 @@ public class CombatMagic extends BaseCombatContent {
 		if(player.hasPerk(PerkLib.Ambition)) {
 			mod += player.perkv1(PerkLib.Ambition);
 		}
-		mod += player.spellDmgMult;
+		mod += player.spellPower;
 		if(player.hasPerk(PerkLib.WizardsAndDaoistsFocus)) {
 			mod += player.perkv1(PerkLib.WizardsAndDaoistsFocus);
 		}
@@ -284,7 +284,7 @@ public class CombatMagic extends BaseCombatContent {
 		if(player.hasStatusEffect(StatusEffects.BlessingOfDivineMarae)) {
 			mod += player.statusEffectv2(StatusEffects.BlessingOfDivineMarae);
 		}
-		mod += player.spellDmgMult;
+		mod += player.spellPower;
 		if(player.hasPerk(PerkLib.WizardsAndDaoistsFocus)) {
 			mod += player.perkv1(PerkLib.WizardsAndDaoistsFocus);
 		}
@@ -314,7 +314,7 @@ public class CombatMagic extends BaseCombatContent {
 		if(player.hasStatusEffect(StatusEffects.BlessingOfDivineMarae)) {
 			mod += player.statusEffectv2(StatusEffects.BlessingOfDivineMarae);
 		}
-		mod += player.spellDmgMult;
+		mod += player.spellPower;
 		if(player.hasPerk(PerkLib.WizardsAndDaoistsFocus)) {
 			mod += player.perkv1(PerkLib.WizardsAndDaoistsFocus);
 		}
@@ -342,7 +342,7 @@ public class CombatMagic extends BaseCombatContent {
 		if(player.hasPerk(PerkLib.Obsession)) {
 			mod += player.perkv2(PerkLib.Obsession);
 		}
-		mod += player.spellDmgMult;
+		mod += player.spellPower;
 		if(player.hasPerk(PerkLib.WizardsAndDaoistsFocus)) {
 			mod += player.perkv1(PerkLib.WizardsAndDaoistsFocus);
 		}
@@ -369,7 +369,7 @@ public class CombatMagic extends BaseCombatContent {
 		if(player.hasPerk(PerkLib.Obsession)) {
 			mod += player.perkv2(PerkLib.Obsession);
 		}
-		mod += player.spellDmgMult;
+		mod += player.spellPower;
 		if(player.hasPerk(PerkLib.WizardsAndDaoistsFocus)) {
 			mod += player.perkv1(PerkLib.WizardsAndDaoistsFocus);
 		}
