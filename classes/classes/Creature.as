@@ -323,20 +323,6 @@ package classes
 			} else {
 				speStat.bonus.removeBuff(PerkLib.BasiliskResistance.id);
 			}
-			//Caps strength from Uma's needlework.
-			setPerkStatEffect(PerkLib.ChiReflowSpeed,'strMult',UmasShop.NEEDLEWORK_SPEED_STRENGTH_MULT);
-			//Caps speed from Uma's needlework.
-			setPerkStatEffect(PerkLib.ChiReflowDefense,'speMult',UmasShop.NEEDLEWORK_DEFENSE_SPEED_MULT);
-			setPerkStatEffect(PerkLib.BimboBrains,'intMult',-0.60);
-			setPerkStatEffect(PerkLib.BroBrains,'intMult',-0.60);
-			setPerkStatEffect(PerkLib.FutaForm,'intMult',-0.60);
-			setPerkStatEffect(PerkLib.FutaForm,'libMult',+0.50);
-			perk = getPerk(PerkLib.ProductivityDrugs);
-			if (perk) {
-				perk.buffHost('lib', perk.value1);
-			} else {
-				libStat.removeEffect(PerkLib.ProductivityDrugs.id);
-			}
 			End("Creature","updateStats.perks");
 			
 			Begin("Creature","updateStats.racial");
@@ -399,31 +385,6 @@ package classes
 			End("Creature","updateStats.racial");
 			
 			Begin("Creature","updateStats.perks2");
-			setPerkStatEffect(PerkLib.ChimericalBodyInitialStage, 'touMult', 0.05);
-			setPerkStatEffect(PerkLib.ChimericalBodyInitialStage, 'libMult', 0.05);
-			setPerkStatEffect(PerkLib.ChimericalBodyBasicStage, 'strMult', +0.05);
-			setPerkStatEffect(PerkLib.ChimericalBodyBasicStage, 'speMult', +0.05);
-			setPerkStatEffect(PerkLib.ChimericalBodyBasicStage, 'intMult', +0.05);
-			setPerkStatEffect(PerkLib.ChimericalBodyBasicStage, 'wisMult', +0.05);
-			setPerkStatEffect(PerkLib.ChimericalBodyAdvancedStage, 'strMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyAdvancedStage, 'touMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyAdvancedStage, 'speMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyPerfectStage, 'intMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyPerfectStage, 'wisMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyPerfectStage, 'libMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'strMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'touMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'speMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'intMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'wisMult', +0.10);
-			setPerkStatEffect(PerkLib.ChimericalBodyUltimateStage, 'libMult', +0.10);
-			setPerkStatEffect(PerkLib.SalamanderAdrenalGlands, 'touMult', +0.05);
-			setPerkStatEffect(PerkLib.SalamanderAdrenalGlands, 'libMult', +0.05);
-			setPerkStatEffect(PerkLib.SalamanderAdrenalGlandsEvolved, 'strMult', +0.05);
-			setPerkStatEffect(PerkLib.SalamanderAdrenalGlandsEvolved, 'touMult', +0.05);
-			setPerkStatEffect(PerkLib.SalamanderAdrenalGlandsEvolved, 'speMult', +0.05);
-			setPerkStatEffect(PerkLib.SalamanderAdrenalGlandsEvolved, 'libMult', +0.05);
-			setPerkStatEffect(PerkLib.ScyllaInkGlands, 'strMult', +0.10);
 			perk = getPerk(PerkLib.MantislikeAgility);
 			if (perk) {
 				var perk2:PerkClass = getPerk(PerkLib.MantislikeAgilityEvolved);
@@ -443,58 +404,6 @@ package classes
 				speStat.mult.removeBuff(PerkLib.MantislikeAgility.id);
 				speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.id);
 			}
-			setPerkStatEffect(PerkLib.DraconicLungs, 'speMult', +0.05);
-			setPerkStatEffect(PerkLib.DraconicLungsEvolved, 'touMult', +0.05);
-			setPerkStatEffect(PerkLib.DraconicLungsEvolved, 'speMult', +0.05);
-			setPerkStatEffect(PerkLib.KitsuneThyroidGland, 'speMult', +0.05);
-			setPerkStatEffect(PerkLib.KitsuneThyroidGlandEvolved, 'speMult', +0.05);
-			setPerkStatEffect(PerkLib.KitsuneThyroidGlandEvolved, 'wisMult', +0.05);
-			setPerkStatEffect(PerkLib.CatlikeNimblenessEvolved, 'speMult', +0.10);
-			setPerkStatEffect(PerkLib.GargoylePure, 'wisMult', +0.80);
-			setPerkStatEffect(PerkLib.GargoylePure, 'libMult', -0.10);
-			setPerkStatEffect(PerkLib.GargoyleCorrupted, 'wisMult', -0.10);
-			setPerkStatEffect(PerkLib.GargoyleCorrupted, 'libMult', +0.80);
-
-			setPerkStatEffect(PerkLib.JobCourtesan, 'libMult', +0.15);
-			setPerkStatEffect(PerkLib.JobDervish, 'speMult', +0.10);
-			setPerkStatEffect(PerkLib.JobDefender, 'touMult', +0.15);
-			setPerkStatEffect(PerkLib.JobElementalConjurer, 'wisMult', +0.05);
-			setPerkStatEffect(PerkLib.JobEnchanter, 'intMult', +0.15);
-			setPerkStatEffect(PerkLib.JobEromancer, 'intMult', +0.05);
-			setPerkStatEffect(PerkLib.JobEromancer, 'libMult', +0.05);
-			setPerkStatEffect(PerkLib.JobGuardian, 'touMult', +0.05);
-			setPerkStatEffect(PerkLib.JobHunter, 'speMult', +0.10);
-			setPerkStatEffect(PerkLib.JobHunter, 'intMult', +0.05);
-			setPerkStatEffect(PerkLib.JobKnight, 'touMult', +0.10);
-			setPerkStatEffect(PerkLib.AdvancedJobMonk, 'wisMult', +0.15);
-			setPerkStatEffect(PerkLib.JobRanger, 'speMult', +0.05);
-			setPerkStatEffect(PerkLib.JobSeducer, 'libMult', +0.05);
-			setPerkStatEffect(PerkLib.JobSorcerer, 'intMult', +0.05);
-			setPerkStatEffect(PerkLib.JobWarrior, 'strMult', +0.05);
-			setPerkStatEffect(PerkLib.PrestigeJobArcaneArcher, 'speMult', +0.40);
-			setPerkStatEffect(PerkLib.PrestigeJobArcaneArcher, 'intMult', +0.40);
-			setPerkStatEffect(PerkLib.PrestigeJobBerserker, 'strMult', +0.60);
-			setPerkStatEffect(PerkLib.PrestigeJobBerserker, 'touMult', +0.20);
-			setPerkStatEffect(PerkLib.PrestigeJobSentinel, 'strMult', +0.20);
-			setPerkStatEffect(PerkLib.PrestigeJobSentinel, 'touMult', +0.60);
-			setPerkStatEffect(PerkLib.PrestigeJobKiArtMaster, 'strMult', +0.40);
-			setPerkStatEffect(PerkLib.PrestigeJobKiArtMaster, 'wisMult', +0.40);
-			setPerkStatEffect(PerkLib.WeaponMastery, 'strMult', +0.05);
-			setPerkStatEffect(PerkLib.ElementalConjurerResolve, 'strMult', -0.15);
-			setPerkStatEffect(PerkLib.ElementalConjurerResolve, 'touMult', -0.15);
-			setPerkStatEffect(PerkLib.ElementalConjurerResolve, 'speMult', -0.15);
-			setPerkStatEffect(PerkLib.ElementalConjurerResolve, 'intMult', +0.20);
-			setPerkStatEffect(PerkLib.ElementalConjurerResolve, 'wisMult', +0.30);
-			setPerkStatEffect(PerkLib.ElementalConjurerDedication, 'strMult', -0.30);
-			setPerkStatEffect(PerkLib.ElementalConjurerDedication, 'touMult', -0.30);
-			setPerkStatEffect(PerkLib.ElementalConjurerDedication, 'speMult', -0.30);
-			setPerkStatEffect(PerkLib.ElementalConjurerDedication, 'intMult', +0.40);
-			setPerkStatEffect(PerkLib.ElementalConjurerDedication, 'wisMult', +0.60);
-			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'strMult', -0.45);
-			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'touMult', -0.45);
-			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'speMult', -0.45);
-			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'intMult', +0.60);
-			setPerkStatEffect(PerkLib.ElementalConjurerSacrifice, 'wisMult', +0.90);
 			End("Creature","updateStats.perks2");
 			
 			End("Creature","updateStats");

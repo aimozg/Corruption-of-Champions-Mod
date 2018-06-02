@@ -569,8 +569,6 @@ import classes.Scenes.SceneLib;
 
 		public const NEEDLEWORK_SPEED_PERK:PerkType = PerkLib.ChiReflowSpeed;
 		public static const NEEDLEWORK_SPEED_PERK_DESC:String = "Uma's Acupuncture Needlework has gifted you with the 'Chi Reflow - Speed' perk. As a result your strength is capped but speed reductions are halved.";
-		public static const NEEDLEWORK_SPEED_STRENGTH_CAP:int = 60;
-		public static const NEEDLEWORK_SPEED_STRENGTH_MULT:int = (NEEDLEWORK_SPEED_STRENGTH_CAP-100)/100; // max 60 => multiplier -= 0.4
 		public static const NEEDLEWORK_SPEED_SPEED_MULTI:Number = 0.5;
 		
 		public const NEEDLEWORK_LUST_PERK:PerkType = PerkLib.ChiReflowLust;
@@ -584,8 +582,6 @@ import classes.Scenes.SceneLib;
 		public static const NEEDLEWORK_DEFENSE_PERK_DESC:String = "Uma's Acupuncture Needlework has gifted you with the 'Chi Reflow - Defense' perk. As a result your body has gained passive damage resistance and extra health, but speed is capped.";
 		public static const NEEDLEWORK_DEFENSE_DEFENSE_MULTI:Number = 1.1;
 		public static const NEEDLEWORK_DEFENSE_EXTRA_HP:int = 50;
-		public static const NEEDLEWORK_DEFENSE_SPEED_CAP:int = 60;
-		public static const NEEDLEWORK_DEFENSE_SPEED_MULT:int = (NEEDLEWORK_DEFENSE_SPEED_CAP-100)/100; // max 60 => multiplier -= 0.4
 		
 		public const NEEDLEWORK_MAGIC_PERK:PerkType = PerkLib.ChiReflowMagic;
 		public static const NEEDLEWORK_MAGIC_PERK_DESC:String = "Uma's Acupuncture Needlework has gifted you with the 'Chi Reflow - Magic' perk. As a result your spells are now more powerful, but regular attacks are weaker.";

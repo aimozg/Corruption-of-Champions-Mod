@@ -18,9 +18,15 @@ public class BuffingPerkType extends PerkType {
 	}
 	public function BuffingPerkType(id:String, name:String, shortDesc:*, longDesc:*, buffs:*) {
 		super(id,name,"",BuffingPerk);
+		
+		var _prev:Boolean = XML.ignoreWhitespace;
+		XML.ignoreWhitespace = false;
+
 		this.shortDescX = shortDesc as XML || new XML("<p>"+shortDesc+"</p>");
 		this.longDescX = longDesc as XML || new XML("<p>"+longDesc+"</p>");
 		this._buffs = Utils.shallowCopy(buffs||{});
+
+		XML.ignoreWhitespace = _prev;
 	}
 	
 	override public function desc(params:PerkClass = null):String {

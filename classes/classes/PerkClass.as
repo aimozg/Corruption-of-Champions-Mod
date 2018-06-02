@@ -3,6 +3,7 @@
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
+import classes.Stats.StatUtils;
 
 public class PerkClass
 	{
@@ -69,14 +70,7 @@ public class PerkClass
 		 * Attach a (de)buff to this status effect, will be removed with it
 		 */
 		public function buffHost(stat:String,amount:Number):void {
-			var s:IStat = _host.stats[stat];
-			if (s is PrimaryStat) {
-				(s as PrimaryStat).bonus.addOrIncreaseBuff(ptype.id,amount,{save:false,text:ptype.name});
-			} else if (s is BuffableStat) {
-				(s as BuffableStat).addOrIncreaseBuff(ptype.id,amount,{save:false,text:ptype.name});
-			} else {
-				trace("/!\\ buffHost("+stat+", "+amount+") in "+ptype.id);
-			}
+			StatUtils.buffByName(host,stat,amount,ptype.id,{save:false,text:ptype.name});
 		}
 		public function remove(/*fireEvent:Boolean = true*/):void {
 			if (_host == null) return;
