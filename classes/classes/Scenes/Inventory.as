@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Created by aimozg on 12.01.14.
  */
 package classes.Scenes
@@ -601,16 +601,16 @@ package classes.Scenes
 					itemGoNext();
 				else takeItem(item, callNext);
 			}
-			else if (item is Weapon) {
-				player.weapon.removeText();
-				item = player.setWeapon(item as Weapon); //Item is now the player's old weapon
+			else if (item is WeaponRange) {
+				player.weaponRange.removeText();
+				item = player.setWeaponRange(item as WeaponRange); //Item is now the player's old weapon range
 				if (item == null)
 					itemGoNext();
 				else takeItem(item, callNext);
 			}
-			else if (item is WeaponRange) {
-				player.weaponRange.removeText();
-				item = player.setWeaponRange(item as WeaponRange); //Item is now the player's old weapon range
+			else if (item is Weapon) {
+				player.weapon.removeText();
+				item = player.setWeapon(item as Weapon); //Item is now the player's old weapon
 				if (item == null)
 					itemGoNext();
 				else takeItem(item, callNext);
