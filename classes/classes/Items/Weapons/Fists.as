@@ -3,9 +3,9 @@
  */
 package classes.Items.Weapons
 {
-	import classes.ItemType;
+	import classes.Creature;
+	import classes.Items.Equipable;
 	import classes.Items.Weapon;
-	import classes.Player;
 
 	public class Fists extends Weapon {
 		
@@ -13,9 +13,9 @@ package classes.Items.Weapons
 			super("Fists  ", "Fists", "fists", "fists \n\nType: Weapon (Unarmed) \nAttack: 0 \nBase value: N/A", "punch", 0);
 		}
 		
-		override public function useText():void {} //No text for equipping fists
+		override public function useText(host:Creature):String {return ""} //No text for equipping fists
 
-		override public function playerRemove():Weapon {
+		override public function unequip(host:Creature):Equipable {
 			return null;
 		}
 	}

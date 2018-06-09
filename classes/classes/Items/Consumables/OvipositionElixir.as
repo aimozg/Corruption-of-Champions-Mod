@@ -4,8 +4,8 @@
 package classes.Items.Consumables
 {
 	import classes.*;
-	import classes.internals.Utils;
 	import classes.Items.Consumable;
+	import classes.internals.Utils;
 
 	public class OvipositionElixir extends Consumable {
 		
@@ -13,7 +13,7 @@ package classes.Items.Consumables
 			super("OviElix", "Ovi Elixir", "a hexagonal crystal bottle tagged with an image of an egg", 30, "This hexagonal crystal bottle is filled with a strange green fluid.  A tag with a picture of an egg is tied to the neck of the bottle, indicating it is somehow connected to egg-laying.");
 		}
 		
-		override public function canUse():Boolean {
+		override public function canUse(host:Creature):Boolean {
 			if (game.player.hasVagina()) return true;
 			outputText("You pop the cork and prepare to drink the stuff, but the smell nearly makes you gag.  You cork it hastily.\n\n");
 			return false;
@@ -31,7 +31,7 @@ package classes.Items.Consumables
 		 4 - white - breast growth.  If lactating increases lactation.
 		 5 - rubbery black
 		 */
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			game.player.slimeFeed();
 			outputText("You pop the cork and gulp down the thick greenish fluid.  The taste is unusual and unlike anything you've tasted before.");
 			if (game.player.pregnancyType == PregnancyStore.PREGNANCY_GOO_STUFFED) {

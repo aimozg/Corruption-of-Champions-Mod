@@ -1,17 +1,18 @@
 package classes.Items.Consumables 
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
 	import classes.Items.ConsumableLib;
 	import classes.StatusEffects;
-	
-	public class HerbalContraceptive extends Consumable 
+
+	public class HerbalContraceptive extends Consumable
 	{
 		public function HerbalContraceptive() 
 		{
 			super("HrblCnt", "HrblCnt", "a bundle of verdant green leaves", ConsumableLib.DEFAULT_VALUE, "A small bundle of verdant green leaves.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			clearOutput();
 

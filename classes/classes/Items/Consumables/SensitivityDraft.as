@@ -1,10 +1,10 @@
 package classes.Items.Consumables 
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
 	import classes.StatusEffects;
-import classes.internals.Utils;
 
-/**
+	/**
 	 * Increases sensitivity.
 	 */
 	public class SensitivityDraft extends Consumable 
@@ -16,7 +16,7 @@ import classes.internals.Utils;
 			super("SensDrf","SensDraft", "a bottle of sensitivity draft", ITEM_VALUE, "This carefully labelled potion is a 'Sensitivity Draft', and if the diagrams are any indication, it will make your body more sensitive.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			player.slimeFeed();
 			clearOutput();

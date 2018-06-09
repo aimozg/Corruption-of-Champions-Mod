@@ -1,16 +1,15 @@
 //Quest Dungeon: Tower of the Phoenix (Helia's quest, one-time dungeon)
 package classes.Scenes.Dungeons 
 {
-import classes.*;
-import classes.GlobalFlags.kACHIEVEMENTS;
-import classes.GlobalFlags.kFLAGS;
-import classes.CoC;
-import classes.Items.Armor;
-import classes.Scenes.Dungeons.HelDungeon.*;
-import classes.Scenes.NPCs.*;
-import classes.Scenes.SceneLib;
+	import classes.*;
+	import classes.GlobalFlags.kACHIEVEMENTS;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.Items.Armor;
+	import classes.Scenes.Dungeons.HelDungeon.*;
+	import classes.Scenes.NPCs.*;
+	import classes.Scenes.SceneLib;
 
-use namespace CoC;
+	use namespace CoC;
 	
 	public class HelDungeon extends DungeonAbstractContent
 	{
@@ -401,8 +400,8 @@ use namespace CoC;
 		public function takeGooArmorAndWearIt():void {
 			spriteSelect(79);
 			clearOutput();
-			armors.GOOARMR.useText();
-			player.armor.removeText();
+			outputText(armors.GOOARMR.useText(CoC.instance.player));
+			outputText(player.armor.removeText(player));
 			//(\"<i>You gained ValeriaArmor!</i>\")
 			cleanupAfterCombat();
 			//(\"<i>You put a (previous armorName) in your X pouch)

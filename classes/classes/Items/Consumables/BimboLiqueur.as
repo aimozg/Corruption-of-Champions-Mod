@@ -3,25 +3,25 @@
  */
 package classes.Items.Consumables
 {
-import classes.Items.Consumable;
-import classes.PerkClass;
-import classes.PerkLib;
-import classes.VaginaClass;
-import classes.internals.Utils;
+	import classes.Creature;
+	import classes.Items.Consumable;
+	import classes.PerkLib;
+	import classes.VaginaClass;
+	import classes.internals.Utils;
 
-public class BimboLiqueur extends Consumable {
+	public class BimboLiqueur extends Consumable {
 		
 		public function BimboLiqueur() {
 			super("BimboLq", "BimboLq", "a potent bottle of 'Bimbo Liqueur'", 1000, "This small bottle of liqueur is labelled 'Bimbo Liqueur'.  There's a HUGE warning label about the effects being strong and usually permanent, so you should handle this with care.");
 		}
 		
-		override public function canUse():Boolean {
+		override public function canUse(host:Creature):Boolean {
 			if (!game.player.hasPerk(PerkLib.FutaForm)) return true;
 			outputText("Ugh.  This stuff is so, like... last year.  Maybe you can find someone else to feed it to?\n\n");
 			return false;
 		}
 
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			if (game.player.hasPerk(PerkLib.BroBody)) {
 				outputText("You wince as the stuff hits your stomach, already feeling the insidious effects beginning to take hold.  A lengthy belch escapes your lips as your stomach gurgles, and you giggle abashedly to yourself.");
 				if (game.player.tallness < 77) {

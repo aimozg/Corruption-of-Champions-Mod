@@ -1162,7 +1162,6 @@ public function saveGameObject(slot:String, isFile:Boolean):void
         saveFile.data.controls = CoC.instance.inputManager.SaveBindsToObj();
 		saveFile.data.settings = [];
 		saveFile.data.settings.showHotkeys = CoC.instance.inputManager.showHotkeys;
-        // TODO @Oxdeception recheck
 		saveFile.data.world = [];
 		saveFile.data.world.x = [];
 		for each(var npc:XXCNPC in XXCNPC.SavedNPCs){
@@ -1540,80 +1539,80 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		//CLOTHING/ARMOR
 		var found:Boolean = false;
 		if (saveFile.data.weaponId){
-			player.setWeaponHiddenField((ItemType.lookupItem(saveFile.data.weaponId) as Weapon) || WeaponLib.FISTS);
+			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.weaponId) as Weapon) || WeaponLib.FISTS);
 		} else {
 			player.setWeapon(WeaponLib.FISTS);
 			//player.weapon = WeaponLib.FISTS;
 			for each (var itype:ItemType in ItemType.getItemLibrary()) {
 				if (itype is Weapon && (itype as Weapon).name == saveFile.data.weaponName){
-					player.setWeaponHiddenField(itype as Weapon || WeaponLib.FISTS);
+					player.dierctSetEquipment(itype as Weapon || WeaponLib.FISTS);
 					found = true;
 					break;
 				}
 			}
 		}
 		if (saveFile.data.weaponRangeId){
-			player.setWeaponRangeHiddenField((ItemType.lookupItem(saveFile.data.weaponRangeId) as WeaponRange) || WeaponRangeLib.NOTHING);
+			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.weaponRangeId) as WeaponRange) || WeaponRangeLib.NOTHING);
 		} else {
 			player.setWeaponRange(WeaponRangeLib.NOTHING);
 			for each (itype in ItemType.getItemLibrary()) {
 				if (itype is WeaponRange && (itype as WeaponRange).name == saveFile.data.weaponRangeName){
-					player.setWeaponRangeHiddenField(itype as WeaponRange || WeaponRangeLib.NOTHING);
+					player.dierctSetEquipment(itype as WeaponRange || WeaponRangeLib.NOTHING);
 					found = true;
 					break;
 				}
 			}
 		}
 		if (saveFile.data.shieldId){
-			player.setShieldHiddenField((ItemType.lookupItem(saveFile.data.shieldId) as Shield) || ShieldLib.NOTHING);
+			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.shieldId) as Shield) || ShieldLib.NOTHING);
 		} else {
 			player.setShield(ShieldLib.NOTHING);
 			for each (itype in ItemType.getItemLibrary()) {
 				if (itype is Shield && (itype as Shield).name == saveFile.data.shieldName){
-					player.setShieldHiddenField(itype as Shield || ShieldLib.NOTHING);
+					player.dierctSetEquipment(itype as Shield || ShieldLib.NOTHING);
 					found = true;
 					break;
 				}
 			}
 		}
 		if (saveFile.data.jewelryId){
-			player.setJewelryHiddenField((ItemType.lookupItem(saveFile.data.jewelryId) as Jewelry) || JewelryLib.NOTHING);
+			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.jewelryId) as Jewelry) || JewelryLib.NOTHING);
 		} else {
 			player.setJewelry(JewelryLib.NOTHING);
 			for each (itype in ItemType.getItemLibrary()) {
 				if (itype is Jewelry && (itype as Jewelry).name == saveFile.data.jewelryName){
-					player.setJewelryHiddenField(itype as Jewelry || JewelryLib.NOTHING);
+					player.dierctSetEquipment(itype as Jewelry || JewelryLib.NOTHING);
 					found = true;
 					break;
 				}
 			}
 		}
 		if (saveFile.data.upperGarmentId){
-			player.setUndergarmentHiddenField((ItemType.lookupItem(saveFile.data.upperGarmentId) as Undergarment) || UndergarmentLib.NOTHING, UndergarmentLib.TYPE_UPPERWEAR);
+			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.upperGarmentId) as Undergarment) || UndergarmentLib.NOTHING);
 		} else {
 			player.setUndergarment(UndergarmentLib.NOTHING);
 			for each (itype in ItemType.getItemLibrary()) {
 				if (itype is Undergarment && (itype as Undergarment).name == saveFile.data.upperGarmentName){
-					player.setUndergarmentHiddenField(itype as Undergarment || UndergarmentLib.NOTHING, UndergarmentLib.TYPE_UPPERWEAR);
+					player.dierctSetEquipment(itype as Undergarment || UndergarmentLib.NOTHING);
 					found = true;
 					break;
 				}
 			}
 		}
 		if (saveFile.data.lowerGarmentId){
-			player.setUndergarmentHiddenField((ItemType.lookupItem(saveFile.data.lowerGarmentId) as Undergarment) || UndergarmentLib.NOTHING, UndergarmentLib.TYPE_LOWERWEAR);
+			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.lowerGarmentId) as Undergarment) || UndergarmentLib.NOTHING);
 		} else {
 			player.setUndergarment(UndergarmentLib.NOTHING);
 			for each (itype in ItemType.getItemLibrary()) {
 				if (itype is Undergarment && (itype as Undergarment).name == saveFile.data.lowerGarmentName){
-					player.setUndergarmentHiddenField(itype as Undergarment || UndergarmentLib.NOTHING, UndergarmentLib.TYPE_LOWERWEAR);
+					player.dierctSetEquipment(itype as Undergarment || UndergarmentLib.NOTHING);
 					found = true;
 					break;
 				}
 			}
 		}
 		if (saveFile.data.armorId){
-			player.setArmorHiddenField((ItemType.lookupItem(saveFile.data.armorId) as Armor) || ArmorLib.COMFORTABLE_UNDERCLOTHES);
+			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.armorId) as Armor) || ArmorLib.COMFORTABLE_UNDERCLOTHES);
 			if (player.armor.name != saveFile.data.armorName) player.modArmorName = saveFile.data.armorName;
 		} else {
 			found = false;
@@ -1621,7 +1620,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 			//player.armor = ArmorLib.COMFORTABLE_UNDERCLOTHES;
 			for each (itype in ItemType.getItemLibrary()) {
 				if (itype is Armor && (itype as Armor).name == saveFile.data.armorName){
-					player.setArmorHiddenField(itype as Armor || ArmorLib.COMFORTABLE_UNDERCLOTHES);
+					player.dierctSetEquipment(itype as Armor || ArmorLib.COMFORTABLE_UNDERCLOTHES);
 					found = true;
 					break;
 				}
@@ -1631,7 +1630,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 					if (itype is Armor){
 						var a:Armor = itype as Armor;
 						if (a.value == saveFile.data.armorValue &&
-								a.def == saveFile.data.armorDef &&
+								a.defense == saveFile.data.armorDef &&
 								a.perk == saveFile.data.armorPerk){
 							player.setArmor(a);
 							//player.armor = a;
@@ -2279,8 +2278,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 				saveFile.data.itemSlot10.quantity);
 		}
 
-		player.weapon.saveLoaded();
-		player.weaponRange.saveLoaded();
+		player.saveLoaded();
 		loadAllAwareClasses(CoC.instance); //Informs each saveAwareClass that it must load its values from the flags array
         unFuckSave();
 		
@@ -2290,7 +2288,6 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 			game.inputManager.LoadBindsFromObj(saveFile.data.controls);
 		}
 		
-		// TODO @Oxdeception recheck
 		XXCNPC.unloadSavedNPCs();
 		if(saveFile.data.settings == undefined){saveFile.data.settings = [];}
 		if ('showHotkeys' in saveFile.data.settings) game.inputManager.showHotkeys = saveFile.data.settings.showHotkeys;

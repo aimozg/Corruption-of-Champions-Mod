@@ -1,8 +1,9 @@
 package classes.Items.Consumables 
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
 	import classes.Items.ConsumableLib;
-	
+
 	/**
 	 * Item that boosts lactation.
 	 */
@@ -13,7 +14,7 @@ package classes.Items.Consumables
 			super("Lactaid","Lactaid", "a pink bottle labelled \"Lactaid\"", ConsumableLib.DEFAULT_VALUE, "Judging by the name printed on this bottle, 'Lactaid' probably has an effect on the ability to lactate, and you doubt that effect is a reduction.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			clearOutput();
 			player.slimeFeed();

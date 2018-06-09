@@ -1,9 +1,10 @@
 package classes.Items.Consumables 
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
 	import classes.Items.ConsumableLib;
 	import classes.StatusEffects;
-	
+
 	/**
 	 * Triggers heat or rut and increases anal capacity.
 	 */
@@ -14,7 +15,7 @@ package classes.Items.Consumables
 			super("Coal   ","Coal", "two pieces of coal", ConsumableLib.DEFAULT_VALUE, "These two pieces of coal may look ordinary but it makes you wonder what happens when you rub them.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			var changes:Number = 0;
 			clearOutput();

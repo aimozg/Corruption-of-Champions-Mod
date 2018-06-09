@@ -1,17 +1,18 @@
 package classes.Items.Consumables
 {
-import classes.EngineCore;
-import classes.Items.Consumable;
-import classes.Scenes.SceneLib;
-import classes.internals.Utils;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.Items.Consumable;
+	import classes.Scenes.SceneLib;
+	import classes.internals.Utils;
 
-public final class KitsuneGift extends Consumable {
+	public final class KitsuneGift extends Consumable {
 		
 		public function KitsuneGift() {
 			super("KitGift", "KitGift", "a kitsune's gift", 0, "A small square package given to you by a forest kitsune.  It is wrapped up in plain white paper and tied with a string.  Who knows what's inside?");
 		}
 		
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			clearOutput();
 			outputText("Curiosity gets the best of you, and you decide to open the package.  After all, what's the worst that could happen?\n\n");
 			//Opening the gift randomly results in one of the following:

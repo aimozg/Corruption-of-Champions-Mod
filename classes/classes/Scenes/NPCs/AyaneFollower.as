@@ -6,7 +6,7 @@ package classes.Scenes.NPCs
 {
 	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	import classes.Items.Useable;
+	import classes.Items.BaseUseable;
 import classes.display.SpriteDb;
 
 public class AyaneFollower extends NPCAwareContent
@@ -118,7 +118,7 @@ public function ayaneShop():void {
 			addButton(14, "Leave", camp.returnToCampUseOneHour);
 		}
 	}
-	private function sellItem(item:Useable,cost:int = -1,buy:Boolean=false):void{
+	private function sellItem(item:BaseUseable, cost:int = -1, buy:Boolean=false):void{
 		cost = (cost > 0)? cost:item.value;
 		if (buy){
 			if (player.gems < cost){

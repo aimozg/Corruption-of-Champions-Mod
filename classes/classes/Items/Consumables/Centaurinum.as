@@ -2,25 +2,27 @@
  * Coded by aimozg on 01.06.2017.
  */
 package classes.Items.Consumables {
-import classes.Appearance;
-import classes.BodyParts.Arms;
-import classes.BodyParts.Ears;
-import classes.BodyParts.Face;
-import classes.BodyParts.LowerBody;
-import classes.BodyParts.Tail;
-import classes.CoC_Settings;
-import classes.CockTypesEnum;
-import classes.EngineCore;
-import classes.Items.Consumable;
-import classes.PerkLib;
-import classes.StatusEffects;
-import classes.VaginaClass;
+	import classes.Appearance;
+	import classes.BodyParts.Arms;
+	import classes.BodyParts.Ears;
+	import classes.BodyParts.Face;
+	import classes.BodyParts.LowerBody;
+	import classes.BodyParts.Tail;
+	import classes.CoC_Settings;
+	import classes.CockTypesEnum;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.Items.Consumable;
+	import classes.PerkLib;
+	import classes.StatusEffects;
+	import classes.VaginaClass;
+	import classes.internals.Utils;
 
-public class Centaurinum extends Consumable{
+	public class Centaurinum extends Consumable{
 	public function Centaurinum() {
 		super("Centari", "Centari", "a vial of Centaurinum", 20, "This is a long flared vial with a small label that reads, \"<i>Centaurinum</i>\".  It is likely this potion is tied to centaurs in some way.");
 	}
-	public override function useItem():Boolean {
+	public override function useItem(host:Creature):Boolean {
 		var changes:Number = 0;
 		var changeLimit:Number = 1;
 		if (rand(2) == 0) changeLimit++;
@@ -320,7 +322,7 @@ public class Centaurinum extends Consumable{
 			changes++;
 		}
 		//-Remove feather-arms (copy this for goblin ale, mino blood, equinum, centaurinum, canine pepps, demon items)
-		if (changes < changeLimit && !InCollection(player.arms.type, Arms.HUMAN, Arms.GARGOYLE) && rand(4) == 0) {
+		if (changes < changeLimit && !Utils.InCollection(player.arms.type, Arms.HUMAN, Arms.GARGOYLE) && rand(4) == 0) {
 			mutations.humanizeArms();
 			changes++;
 		}

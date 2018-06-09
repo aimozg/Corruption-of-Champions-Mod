@@ -1,16 +1,18 @@
 package classes.Items.Consumables {
-import classes.BodyParts.Ears;
-import classes.BodyParts.Eyes;
-import classes.BodyParts.Face;
-import classes.BodyParts.RearBody;
-import classes.BodyParts.Wings;
-import classes.CoC;
-import classes.Items.Consumable;
-import classes.PerkLib;
+	import classes.BodyParts.Ears;
+	import classes.BodyParts.Eyes;
+	import classes.BodyParts.Face;
+	import classes.BodyParts.RearBody;
+	import classes.BodyParts.Wings;
+	import classes.CoC;
+	import classes.Creature;
+	import classes.Items.Consumable;
+	import classes.PerkLib;
+	import classes.internals.Utils;
 
-import coc.xxc.BoundStory;
+	import coc.xxc.BoundStory;
 
-public class VampireBlood extends Consumable {
+	public class VampireBlood extends Consumable {
     private var pure:Boolean;
     public static var first:Boolean = true;
     public function VampireBlood(purified:Boolean=false) {
@@ -34,7 +36,7 @@ public class VampireBlood extends Consumable {
         }
         return super.description;
     }
-    override public function useItem():Boolean{
+    override public function useItem(host:Creature):Boolean{
         clearOutput();
         var story:BoundStory = CoC.instance.rootStory.locate("diva/item").bind(CoC.instance.context);
         if(first){
@@ -89,7 +91,7 @@ public class VampireBlood extends Consumable {
         if (player.hasPerk(PerkLib.TransformationImmunity)) changeLimit = 0;
 		for each (var tf:Object in tfArr) {
             if (changes >= changeLimit) break;
-            if (trueOnceInN(tf.Chance? tf.Chance : 3)) {
+            if (Utils.trueOnceInN(tf.Chance? tf.Chance : 3)) {
 	            doChange(tf);
             }
 		}

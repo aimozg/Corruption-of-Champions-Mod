@@ -1,12 +1,13 @@
 package classes.Items.Consumables 
 {
-import classes.Appearance;
-import classes.BodyParts.Skin;
-import classes.EngineCore;
-import classes.Items.Consumable;
-import classes.Scenes.SceneLib;
+	import classes.Appearance;
+	import classes.BodyParts.Skin;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.Items.Consumable;
+	import classes.Scenes.SceneLib;
 
-public class HairDye extends Consumable
+	public class HairDye extends Consumable
 	{
 		private var _color:String;
 
@@ -19,11 +20,11 @@ public class HairDye extends Consumable
 			super(id, shortName, longName, value, description);
 		}
 		
-		override public function canUse():Boolean {
+		override public function canUse(host:Creature):Boolean {
 			return true;
 		}
 		
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			clearOutput();
 			EngineCore.menu();
 			 

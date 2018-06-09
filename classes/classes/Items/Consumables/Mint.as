@@ -1,8 +1,9 @@
 package classes.Items.Consumables 
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
 	import classes.Items.ConsumableLib;
-	
+
 	/**
 	 * Raw mint.
 	 */
@@ -13,7 +14,7 @@ package classes.Items.Consumables
 			super("C. Mint","C. Mint", "a calm mint", ConsumableLib.DEFAULT_VALUE,"This is a sprig of silver-colored mint.  Its strong scent makes you feel calmer and less lustful.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			clearOutput();
 			outputText("Eating the sprig of raw mint is a bit of a stretch, but you manage to gulp it down.  As the strong minty flavor overwhelms your taste buds, your mind feels calmer, and a relaxed sensation spreads through your body.");

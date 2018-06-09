@@ -2,20 +2,21 @@
  * @author Liadri
  */
 package classes.Items.Consumables {
-import classes.BodyParts.Arms;
-import classes.BodyParts.Ears;
-import classes.BodyParts.Eyes;
-import classes.BodyParts.Face;
-import classes.BodyParts.Horns;
-import classes.BodyParts.LowerBody;
-import classes.BodyParts.Skin;
-import classes.GlobalFlags.kFLAGS;
-import classes.Items.Consumable;
-import classes.Items.Mutations;
-import classes.PerkLib;
-import classes.Race;
+	import classes.BodyParts.Arms;
+	import classes.BodyParts.Ears;
+	import classes.BodyParts.Eyes;
+	import classes.BodyParts.Face;
+	import classes.BodyParts.Horns;
+	import classes.BodyParts.LowerBody;
+	import classes.BodyParts.Skin;
+	import classes.Creature;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.Items.Consumable;
+	import classes.PerkLib;
+	import classes.Race;
+	import classes.internals.Utils;
 
-public class OnikiriSake extends Consumable {
+	public class OnikiriSake extends Consumable {
 	public function OnikiriSake() 
 	{
 		super("OniSake", "Onikiri Sake", "a bottle of Onikiri Sake", 6, "A drink favored by oni.");
@@ -29,7 +30,7 @@ public class OnikiriSake extends Consumable {
 		return desc;
 	}
 	
-	override public function useItem():Boolean {
+	override public function useItem(host:Creature):Boolean {
 		var changes:Number = 0;
 		var changeLimit:Number = 1;
 		if (rand(3) == 0) changeLimit++;
@@ -147,9 +148,9 @@ public class OnikiriSake extends Consumable {
 		}
 		//Eyes
 		if ((player.horns.type == Horns.ONI_X2 || player.horns.type == Horns.ONI)
-		    && (player.eyes.type != Eyes.ONI || !InCollection(player.eyes.colour, Race.OniEyeColors)) && changes < changeLimit && rand(3) == 0) {
+		    && (player.eyes.type != Eyes.ONI || !Utils.InCollection(player.eyes.colour, Race.OniEyeColors)) && changes < changeLimit && rand(3) == 0) {
 			var colorEyes:String;
-			colorEyes = randomChoice(Race.OniEyeColors);
+			colorEyes = Utils.randomChoice(Race.OniEyeColors);
 			mutations.setEyeTypeAndColor(Eyes.ONI,colorEyes);
 			outputText("\n\nYou feel something fundamental change in your sight when you go check yourself in a puddle you notice your iris now are <b>[eyecolor] just like that of an Oni with a slit at the center giving them a fiendish outlook.</b>");
 			changes++;
@@ -175,7 +176,7 @@ public class OnikiriSake extends Consumable {
 		//Skin
 		if (player.skinTone != "red" && player.skinTone != "reddish orange" && player.skinTone != "purple" && player.skinTone != "blue" && !player.isGargoyle() && changes < changeLimit && rand(4) == 0) {
 			var colorSkin:String;
-			colorSkin = randomChoice("purple","reddish orange","red","blue");
+			colorSkin = Utils.randomChoice("purple","reddish orange","red","blue");
 			player.skinTone = colorSkin;
 			changes++;
 			outputText("\n\nThe heat of the alcohol is getting to you; it's like if your ");

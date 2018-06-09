@@ -12,20 +12,19 @@ package classes
 	import classes.GlobalFlags.kFLAGS;
 	import classes.Items.Armor;
 	import classes.Items.ArmorLib;
+	import classes.Items.Equipable;
+	import classes.Items.Equipment;
 	import classes.Items.Jewelry;
 	import classes.Items.JewelryLib;
 	import classes.Items.Shield;
-	import classes.Items.ShieldLib;
 	import classes.Items.Undergarment;
 	import classes.Items.UndergarmentLib;
 	import classes.Items.Weapon;
 	import classes.Items.WeaponLib;
 	import classes.Items.WeaponRange;
-	import classes.Items.WeaponRangeLib;
 	import classes.Scenes.Places.TelAdre.UmasShop;
 	import classes.Scenes.Pregnancy;
 	import classes.Scenes.SceneLib;
-	import classes.StatusEffects.VampireThirstEffect;
 	import classes.internals.Utils;
 	import classes.lists.BreastCup;
 
@@ -37,20 +36,7 @@ package classes
 	 */
 	public class Player extends Character {
 		
-		public function Player() {
-			//Item things
-			itemSlot1 = new ItemSlotClass();
-			itemSlot2 = new ItemSlotClass();
-			itemSlot3 = new ItemSlotClass();
-			itemSlot4 = new ItemSlotClass();
-			itemSlot5 = new ItemSlotClass();
-			itemSlot6 = new ItemSlotClass();
-			itemSlot7 = new ItemSlotClass();
-			itemSlot8 = new ItemSlotClass();
-			itemSlot9 = new ItemSlotClass();
-			itemSlot10 = new ItemSlotClass();
-			itemSlots = [itemSlot1, itemSlot2, itemSlot3, itemSlot4, itemSlot5, itemSlot6, itemSlot7, itemSlot8, itemSlot9, itemSlot10];
-		}
+		public function Player() {}
 		
 		protected final function outputText(text:String, clear:Boolean = false):void
 		{
@@ -100,28 +86,39 @@ package classes
 		}
 
 		// Inventory
-		public var itemSlot1:ItemSlotClass;
-		public var itemSlot2:ItemSlotClass;
-		public var itemSlot3:ItemSlotClass;
-		public var itemSlot4:ItemSlotClass;
-		public var itemSlot5:ItemSlotClass;
-		public var itemSlot6:ItemSlotClass;
-		public var itemSlot7:ItemSlotClass;
-		public var itemSlot8:ItemSlotClass;
-		public var itemSlot9:ItemSlotClass;
-		public var itemSlot10:ItemSlotClass;
-		public var itemSlots:Array;
+		public var itemSlot1:ItemSlotClass = new ItemSlotClass();
+		public var itemSlot2:ItemSlotClass = new ItemSlotClass();
+		public var itemSlot3:ItemSlotClass = new ItemSlotClass();
+		public var itemSlot4:ItemSlotClass = new ItemSlotClass();
+		public var itemSlot5:ItemSlotClass = new ItemSlotClass();
+		public var itemSlot6:ItemSlotClass = new ItemSlotClass();
+		public var itemSlot7:ItemSlotClass = new ItemSlotClass();
+		public var itemSlot8:ItemSlotClass = new ItemSlotClass();
+		public var itemSlot9:ItemSlotClass = new ItemSlotClass();
+		public var itemSlot10:ItemSlotClass = new ItemSlotClass();
+		public var itemSlots:Array = [itemSlot1, itemSlot2, itemSlot3, itemSlot4, itemSlot5, itemSlot6, itemSlot7, itemSlot8, itemSlot9, itemSlot10];
 		
 		public var previouslyWornClothes:Array = []; //For tracking achievement.
-		
-		private var _weapon:Weapon = WeaponLib.FISTS;
-		private var _weaponRange:WeaponRange = WeaponRangeLib.NOTHING;
-		private var _armor:Armor = ArmorLib.COMFORTABLE_UNDERCLOTHES;
-		private var _jewelry:Jewelry = JewelryLib.NOTHING;
-		private var _shield:Shield = ShieldLib.NOTHING;
-		private var _upperGarment:Undergarment = UndergarmentLib.NOTHING;
-		private var _lowerGarment:Undergarment = UndergarmentLib.NOTHING;
+
 		private var _modArmorName:String = "";
+		private var _equipment:Equipment = new Equipment();
+
+		public function get equipment():Equipment {
+			return _equipment;
+		}
+
+		public function equip(value:Equipable):Equipable {
+			return equipment.equip(this, value);
+		}
+
+		public function dierctSetEquipment(value:Equipable):void {
+			equipment.setItem(this, value);
+		}
+
+		public function saveLoaded():void {
+			weapon.saveLoaded(this);
+			weaponRange.saveLoaded(this);
+		}
 
 		public function get modArmorName():String
 		{
@@ -150,16 +147,16 @@ package classes
 		//override public function get armors
 		override public function get armorName():String {
 			if (_modArmorName.length > 0) return modArmorName;
-			else if (_armor.name == "nothing" && lowerGarmentName != "nothing") return lowerGarmentName;
-			else if (_armor.name == "nothing" && lowerGarmentName == "nothing") return "gear";
-			return _armor.name;
+			else if(armor.name != "nothing") return armor.name;
+			else if (lowerGarmentName != "nothing") return lowerGarmentName;
+			return "gear";
 		}
 		override public function get armorDef():Number {
 			var racialBonus:int = this.racialBonuses()[Race.BonusName_defense];
 			var newGamePlusMod:int = this.newGamePlusMod()+1;
-			var armorDef:Number = _armor.def;
-			armorDef += upperGarment.armorDef;
-			armorDef += lowerGarment.armorDef;
+			var armorDef:Number = armor.defense;
+			armorDef += upperGarment.defense;
+			armorDef += lowerGarment.defense;
 			//Blacksmith history!
 			if (armorDef > 0 && hasPerk(PerkLib.HistorySmith)) {
 				armorDef = Math.round(armorDef * 1.1);
@@ -204,7 +201,7 @@ package classes
 			//Agility boosts armor ratings!
 			var speedBonus:int = 0;
 			if (hasPerk(PerkLib.Agility)) {
-				if (armorPerk == "Light" || _armor.name == "nothing") {
+				if (armorPerk == "Light" || armor.name == "nothing") {
 					speedBonus += Math.round(spe / 10);
 				}
 				else if (armorPerk == "Medium") {
@@ -218,7 +215,7 @@ package classes
 				toughnessBonus += Math.round(tou / 20);
 			}
 			armorDef += toughnessBonus;
-			if (hasPerk(PerkLib.PrestigeJobSentinel) && armorPerk == "Heavy") armorDef += _armor.def;
+			if (hasPerk(PerkLib.PrestigeJobSentinel) && armorPerk == "Heavy") armorDef += armor.defense;
 			//Acupuncture effect
 			if (hasPerk(PerkLib.ChiReflowDefense)) armorDef *= UmasShop.NEEDLEWORK_DEFENSE_DEFENSE_MULTI;
 			if (hasPerk(PerkLib.ChiReflowAttack)) armorDef *= UmasShop.NEEDLEWORK_ATTACK_DEFENSE_MULTI;
@@ -249,13 +246,13 @@ package classes
 			return armorDef;
 		}
 		public function get armorBaseDef():Number {
-			return _armor.def;
+			return armor.defense;
 		}
 		override public function get armorPerk():String {
-			return _armor.perk;
+			return armor.perk;
 		}
 		override public function get armorValue():Number {
-			return _armor.value;
+			return armor.value;
 		}
 		//Natural Claws (arm types and weapons that can substitude them)
 		public function haveNaturalClaws():Boolean
@@ -313,14 +310,14 @@ package classes
 		}
 		//override public function get weapons
 		override public function get weaponName():String {
-			return _weapon.name;
+			return weapon.name;
 		}
 		override public function get weaponVerb():String {
-			return _weapon.verb;
+			return weapon.verb;
 		}
 		override public function get weaponAttack():Number {
 			var newGamePlusMod:int = this.newGamePlusMod()+1;
-			var attack:Number = _weapon.attack;
+			var attack:Number = weapon.attack;
 			if (hasPerk(PerkLib.HiddenMomentum) && weaponPerk == "Large" && str >= 75 && spe >= 50) {
 				attack += (((str + spe) - 100) * 0.1);
 			}//30-70-110
@@ -361,13 +358,13 @@ package classes
 			return attack;
 		}
 		public function get weaponBaseAttack():Number {
-			return _weapon.attack;
+			return weapon.attack;
 		}
 		override public function get weaponPerk():String {
-			return _weapon.perk || "";
+			return weapon.perk || "";
 		}
 		override public function get weaponValue():Number {
-			return _weapon.value;
+			return weapon.value;
 		}
 		//Artifacts Bows
 		public function isArtifactBow():Boolean
@@ -381,24 +378,24 @@ package classes
 		}
 		//override public function get weapons
 		override public function get weaponRangeName():String {
-			return _weaponRange.name;
+			return weaponRange.name;
 		}
 		override public function get weaponRangeVerb():String {
-			return _weaponRange.verb;
+			return weaponRange.verb;
 		}
 		override public function get weaponRangeAttack():Number {
-			var rangeattack:Number = _weaponRange.attack;
+			var rangeattack:Number = weaponRange.attack;
 			rangeattack = Math.round(rangeattack);
 			return rangeattack;
 		}
 		public function get weaponRangeBaseAttack():Number {
-			return _weaponRange.attack;
+			return weaponRange.attack;
 		}
 		override public function get weaponRangePerk():String {
-			return _weaponRange.perk || "";
+			return weaponRange.perk || "";
 		}
 		override public function get weaponRangeValue():Number {
-			return _weaponRange.value;
+			return weaponRange.value;
 		}
 		public function get ammo():int {
 			return flags[kFLAGS.FLINTLOCK_PISTOL_AMMO];
@@ -409,237 +406,109 @@ package classes
 		
 		//override public function get jewelries.
 		override public function get jewelryName():String {
-			return _jewelry.name;
+			return jewelry.name;
 		}
 		override public function get jewelryEffectId():Number {
-			return _jewelry.effectId;
+			return jewelry.effectId;
 		}
 		override public function get jewelryEffectMagnitude():Number {
-			return _jewelry.effectMagnitude;
+			return jewelry.effectMagnitude;
 		}
 		override public function get jewelryPerk():String {
-			return _jewelry.perk;
+			return jewelry.perk;
 		}
 		override public function get jewelryValue():Number {
-			return _jewelry.value;
+			return jewelry.value;
 		}
 		
-		//Shields for Bash
-		public function isShieldsForShieldBash():Boolean
-		{
+		public function isShieldsForShieldBash():Boolean {
 			return shield == game.shields.BUCKLER || shield == game.shields.GREATSH || shield == game.shields.KITE_SH || shield == game.shields.TRASBUC || shield == game.shields.TOWERSH || shield == game.shields.DRGNSHL || shield == game.shields.SANCTYN || shield == game.shields.SANCTYL || shield == game.shields.SANCTYD;
 		}
-		//override public function get shields
+
 		override public function get shieldName():String {
-			return _shield.name;
+			return shield.name;
 		}
 		override public function get shieldBlock():Number {
-			var block:Number = _shield.block;
+			var block:Number = shield.defense;
 			if (hasPerk(PerkLib.JobKnight)) block += 3;
-			//miejce na sposoby boostowania block value like perks or status effects
 			block = Math.round(block);
 			return block;
 		}
 		override public function get shieldPerk():String {
-			return _shield.perk;
+			return shield.perk;
 		}
 		override public function get shieldValue():Number {
-			return _shield.value;
+			return shield.value;
 		}
-		public function get shield():Shield
-		{
-			return _shield;
+		public function get shield():Shield {
+			return _equipment.getItem(Equipment.SHIELD) as Shield;
 		}
 
-		//override public function get undergarment
 		override public function get upperGarmentName():String {
-			return _upperGarment.name;
+			return upperGarment.name;
 		}
 		override public function get upperGarmentPerk():String {
-			return _upperGarment.perk;
+			return upperGarment.perk;
 		}
 		override public function get upperGarmentValue():Number {
-			return _upperGarment.value;
+			return upperGarment.value;
 		}
-		public function get upperGarment():Undergarment
-		{
-			return _upperGarment;
+		public function get upperGarment():Undergarment {
+			return _equipment.getItem(Equipment.UPPER_GARMENT) as Undergarment;
 		}
 		
 		override public function get lowerGarmentName():String {
-			return _lowerGarment.name;
+			return lowerGarment.name;
 		}
 		override public function get lowerGarmentPerk():String {
-			return _lowerGarment.perk;
+			return lowerGarment.perk;
 		}
 		override public function get lowerGarmentValue():Number {
-			return _lowerGarment.value;
+			return lowerGarment.value;
 		}
-		public function get lowerGarment():Undergarment
-		{
-			return _lowerGarment;
+		public function get lowerGarment():Undergarment {
+			return _equipment.getItem(Equipment.LOWER_GARMENT) as Undergarment;
 		}
 		
-		public function get armor():Armor
-		{
-			return _armor;
+		public function get armor():Armor {
+			return _equipment.getItem(Equipment.ARMOUR) as Armor;
 		}
 		
 		public function setArmor(newArmor:Armor):Armor {
-			//Returns the old armor, allowing the caller to discard it, store it or try to place it in the player's inventory
-			//Can return null, in which case caller should discard.
-			var oldArmor:Armor = _armor.playerRemove(); //The armor is responsible for removing any bonuses, perks, etc.
-			if (newArmor == null) {
-				CoC_Settings.error(short + ".armor is set to null");
-				newArmor = ArmorLib.COMFORTABLE_UNDERCLOTHES;
-			}
-			_armor = newArmor.playerEquip(); //The armor can also choose to equip something else - useful for Ceraph's trap armor
-			return oldArmor;
-		}
-		
-		/*
-		public function set armor(value:Armor):void
-		{
-			if (value == null){
-				CoC_Settings.error(short+".armor is set to null");
-				value = ArmorLib.COMFORTABLE_UNDERCLOTHES;
-			}
-			value.equip(this, false, false);
-		}
-		*/
-
-		// in case you don't want to call the value.equip
-		public function setArmorHiddenField(value:Armor):void
-		{
-			this._armor = value;
+			return _equipment.equip(this, newArmor) as Armor;
 		}
 
-		public function get weapon():Weapon
-		{
-			return _weapon;
+		public function get weapon():Weapon {
+			return _equipment.getItem(Equipment.WEAPON) as Weapon;
 		}
 		
-		public function get weaponRange():WeaponRange
-		{
-			return _weaponRange;
+		public function get weaponRange():WeaponRange {
+			return _equipment.getItem(Equipment.RANGED) as WeaponRange;
 		}
 
 		public function setWeapon(newWeapon:Weapon):Weapon {
-			//Returns the old weapon, allowing the caller to discard it, store it or try to place it in the player's inventory
-			//Can return null, in which case caller should discard.
-			var oldWeapon:Weapon = _weapon.playerRemove(); //The weapon is responsible for removing any bonuses, perks, etc.
-			if (newWeapon == null) {
-				CoC_Settings.error(short + ".weapon (melee) is set to null");
-				newWeapon = WeaponLib.FISTS;
-			}
-			_weapon = newWeapon.playerEquip(); //The weapon can also choose to equip something else
-			return oldWeapon;
-		}
-		
-		/*
-		public function set weapon(value:Weapon):void
-		{
-			if (value == null){
-				CoC_Settings.error(short+".weapon is set to null");
-				value = WeaponLib.FISTS;
-			}
-			value.equip(this, false, false);
-		}
-		*/
-
-		// in case you don't want to call the value.equip
-		public function setWeaponHiddenField(value:Weapon):void
-		{
-			this._weapon = value;
+			return _equipment.equip(this, newWeapon) as Weapon;
 		}
 		
 		public function setWeaponRange(newWeaponRange:WeaponRange):WeaponRange {
-			//Returns the old shield, allowing the caller to discard it, store it or try to place it in the player's inventory
-			//Can return null, in which case caller should discard.
-			var oldWeaponRange:WeaponRange = _weaponRange.playerRemove() as WeaponRange;
-			if (newWeaponRange == null) {
-				CoC_Settings.error(short + ".weapon (range) is set to null");
-				newWeaponRange = WeaponRangeLib.NOTHING;
-			}
-			_weaponRange = newWeaponRange.playerEquip() as WeaponRange;
-			return oldWeaponRange;
-		}
-		
-		// in case you don't want to call the value.equip
-		public function setWeaponRangeHiddenField(value:WeaponRange):void
-		{
-			this._weaponRange = value;
+			return equipment.equip(this, newWeaponRange) as WeaponRange;
 		}
 		
 		//Jewelry, added by Kitteh6660
-		public function get jewelry():Jewelry
-		{
-			return _jewelry;
+		public function get jewelry():Jewelry {
+			return _equipment.getItem(Equipment.JEWELS) as Jewelry;
 		}
 
 		public function setJewelry(newJewelry:Jewelry):Jewelry {
-			//Returns the old jewelry, allowing the caller to discard it, store it or try to place it in the player's inventory
-			//Can return null, in which case caller should discard.
-			var oldJewelry:Jewelry = _jewelry.playerRemove(); //The armor is responsible for removing any bonuses, perks, etc.
-			if (newJewelry == null) {
-				CoC_Settings.error(short + ".jewelry is set to null");
-				newJewelry = JewelryLib.NOTHING;
-			}
-			_jewelry = newJewelry.playerEquip(); //The jewelry can also choose to equip something else - useful for Ceraph's trap armor
-			return oldJewelry;
-		}
-		// in case you don't want to call the value.equip
-		public function setJewelryHiddenField(value:Jewelry):void
-		{
-			this._jewelry = value;
+			return equipment.equip(this, newJewelry) as Jewelry;
 		}
 		
 		public function setShield(newShield:Shield):Shield {
-			//Returns the old shield, allowing the caller to discard it, store it or try to place it in the player's inventory
-			//Can return null, in which case caller should discard.
-			var oldShield:Shield = _shield.playerRemove(); //The shield is responsible for removing any bonuses, perks, etc.
-			if (newShield == null) {
-				CoC_Settings.error(short + ".shield is set to null");
-				newShield = ShieldLib.NOTHING;
-			}
-			_shield = newShield.playerEquip(); //The shield can also choose to equip something else.
-			return oldShield;
-		}
-		
-		// in case you don't want to call the value.equip
-		public function setShieldHiddenField(value:Shield):void
-		{
-			this._shield = value;
+			return equipment.equip(this, newShield) as Shield;
 		}
 
-		public function setUndergarment(newUndergarment:Undergarment, typeOverride:int = -1):Undergarment {
-			//Returns the old undergarment, allowing the caller to discard it, store it or try to place it in the player's inventory
-			//Can return null, in which case caller should discard.
-			var oldUndergarment:Undergarment = UndergarmentLib.NOTHING;
-			if (newUndergarment.type == UndergarmentLib.TYPE_UPPERWEAR || typeOverride == 0) { 
-				oldUndergarment = _upperGarment.playerRemove(); //The undergarment is responsible for removing any bonuses, perks, etc.
-				if (newUndergarment == null) {
-					CoC_Settings.error(short + ".upperGarment is set to null");
-					newUndergarment = UndergarmentLib.NOTHING;
-				}
-				_upperGarment = newUndergarment.playerEquip(); //The undergarment can also choose to equip something else.
-			}
-			else if (newUndergarment.type == UndergarmentLib.TYPE_LOWERWEAR || typeOverride == 1) { 
-				oldUndergarment = _lowerGarment.playerRemove(); //The undergarment is responsible for removing any bonuses, perks, etc.
-				if (newUndergarment == null) {
-					CoC_Settings.error(short + ".lowerGarment is set to null");
-					newUndergarment = UndergarmentLib.NOTHING;
-				}
-				_lowerGarment = newUndergarment.playerEquip(); //The undergarment can also choose to equip something else.
-			}
-			return oldUndergarment;
-		}
-		
-		// in case you don't want to call the value.equip
-		public function setUndergarmentHiddenField(value:Undergarment, type:int):void
-		{
-			if (type == UndergarmentLib.TYPE_UPPERWEAR) this._upperGarment = value;
-			else this._lowerGarment = value;
+		public function setUndergarment(newUndergarment:Undergarment):Undergarment {
+			return _equipment.equip(this, newUndergarment) as Undergarment;
 		}
 		
 		public function reduceDamage(damage:Number):Number {
@@ -1755,12 +1624,14 @@ package classes
 				}
 				//Non virgins as usual
 				else if(spacingsF) outputText("  ");
-				if(vaginas[0].vaginalLooseness == VaginaClass.LOOSENESS_LEVEL_CLOWN_CAR) outputText("<b>Your " + Appearance.vaginaDescript(this,0)+ " is stretched painfully wide, large enough to accommodate most beasts and demons.</b>");
-				if(vaginas[0].vaginalLooseness == VaginaClass.LOOSENESS_GAPING_WIDE) outputText("<b>Your " + Appearance.vaginaDescript(this,0) + " is stretched so wide that it gapes continually.</b>");
-				if(vaginas[0].vaginalLooseness == VaginaClass.LOOSENESS_GAPING) outputText("<b>Your " + Appearance.vaginaDescript(this,0) + " painfully stretches, the lips now wide enough to gape slightly.</b>");
-				if(vaginas[0].vaginalLooseness == VaginaClass.LOOSENESS_LOOSE) outputText("<b>Your " + Appearance.vaginaDescript(this,0) + " is now very loose.</b>");
-				if(vaginas[0].vaginalLooseness == VaginaClass.LOOSENESS_NORMAL) outputText("<b>Your " + Appearance.vaginaDescript(this,0) + " is now a little loose.</b>");
-				if(vaginas[0].vaginalLooseness == VaginaClass.LOOSENESS_TIGHT) outputText("<b>Your " + Appearance.vaginaDescript(this,0) + " is stretched out to a more normal size.</b>");
+				switch(vaginas[0].vaginalLooseness){
+					case VaginaClass.LOOSENESS_LEVEL_CLOWN_CAR:  outputText("<b>Your [vagina] is stretched painfully wide, large enough to accommodate most beasts and demons.</b>"); break;
+					case VaginaClass.LOOSENESS_GAPING_WIDE: outputText("<b>Your [vagina] is stretched so wide that it gapes continually.</b>"); break;
+					case VaginaClass.LOOSENESS_GAPING: outputText("<b>Your [vagina] painfully stretches, the lips now wide enough to gape slightly.</b>"); break;
+					case VaginaClass.LOOSENESS_LOOSE: outputText("<b>Your [vagina] is now very loose.</b>"); break;
+					case VaginaClass.LOOSENESS_NORMAL: outputText("<b>Your [vagina] is now a little loose.</b>"); break;
+					case VaginaClass.LOOSENESS_TIGHT: outputText("<b>Your [vagina] is stretched out to a more normal size.</b>"); break;
+				}
 				if(spacingsB) outputText("  ");
 			}
 			return stretched;
@@ -1845,25 +1716,22 @@ package classes
 		
 		// TODO @aimozg replace with isCorruptEnough/isPureEnough
 		public function corruptionTolerance():int {
-			if (flags[kFLAGS.MEANINGLESS_CORRUPTION] > 0) return 100;
-			return 0;
+			return flags[kFLAGS.MEANINGLESS_CORRUPTION] > 0 ? 100 : 0;
 		}
 		
 		public function newGamePlusMod():int {
-			var temp:int = flags[kFLAGS.NEW_GAME_PLUS_LEVEL];
-			//Constrains value between 0 and 5.
-			if (temp < 0) temp = 0;
-			if (temp > 5) temp = 5;
-			return temp;
+			return boundInt(0, flags[kFLAGS.NEW_GAME_PLUS_LEVEL], 5);
 		}
 		
 		public function buttChangeDisplay():void
 		{	//Allows the test for stretching and the text output to be separated
-			if (ass.analLooseness == 5) outputText("<b>Your " + Appearance.assholeDescript(this) + " is stretched even wider, capable of taking even the largest of demons and beasts.</b>");
-			if (ass.analLooseness == 4) outputText("<b>Your " + Appearance.assholeDescript(this) + " becomes so stretched that it gapes continually.</b>");
-			if (ass.analLooseness == 3) outputText("<b>Your " + Appearance.assholeDescript(this) + " is now very loose.</b>");
-			if (ass.analLooseness == 2) outputText("<b>Your " + Appearance.assholeDescript(this) + " is now a little loose.</b>");
-			if (ass.analLooseness == 1) outputText("<b>You have lost your anal virginity.</b>");
+			switch (ass.analLooseness) {
+				case 5: outputText("<b>Your [asshole] is stretched even wider, capable of taking even the largest of demons and beasts.</b>"); break;
+				case 4: outputText("<b>Your [asshole] becomes so stretched that it gapes continually.</b>"); break;
+				case 3: outputText("<b>Your [asshole] is now very loose.</b>"); break;
+				case 2: outputText("<b>Your [asshole] is now a little loose.</b>"); break;
+				case 1: outputText("<b>You have lost your anal virginity.</b>"); break;
+			}
 		}
 
 		public function slimeFeed():void{
@@ -1871,9 +1739,7 @@ package classes
 				//Reset craving value
 				changeStatusValue(StatusEffects.SlimeCraving,1,0);
 				//Flag to display feed update and restore stats in event parser
-				if(!hasStatusEffect(StatusEffects.SlimeCravingFeed)) {
-					createStatusEffect(StatusEffects.SlimeCravingFeed,0,0,0,0);
-				}
+				createOrFindStatusEffect(StatusEffects.SlimeCravingFeed);
 			}
 			if (hasPerk(PerkLib.Diapause)) {
 				flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00228] += 3 + rand(3);
@@ -1944,7 +1810,7 @@ package classes
 		
 		public function clothedOrNaked(clothedText:String, nakedText:String = ""):String
 		{
-			return (armorDescript() != "gear" ? clothedText : nakedText);
+			return armorDescript() == "gear" ? nakedText : clothedText;
 		}
 		
 		public function clothedOrNakedLower(clothedText:String, nakedText:String = ""):String

@@ -2,25 +2,27 @@
  * Coded by aimozg on 01.06.2017.
  */
 package classes.Items.Consumables {
-import classes.BodyParts.Arms;
-import classes.BodyParts.Ears;
-import classes.BodyParts.Face;
-import classes.BodyParts.Hair;
-import classes.BodyParts.Horns;
-import classes.BodyParts.LowerBody;
-import classes.BodyParts.Wings;
-import classes.CockTypesEnum;
-import classes.Items.Consumable;
-import classes.PerkLib;
-import classes.StatusEffects;
-import classes.VaginaClass;
+	import classes.BodyParts.Arms;
+	import classes.BodyParts.Ears;
+	import classes.BodyParts.Face;
+	import classes.BodyParts.Hair;
+	import classes.BodyParts.Horns;
+	import classes.BodyParts.LowerBody;
+	import classes.BodyParts.Wings;
+	import classes.CockTypesEnum;
+	import classes.Creature;
+	import classes.Items.Consumable;
+	import classes.PerkLib;
+	import classes.StatusEffects;
+	import classes.VaginaClass;
+	import classes.internals.Utils;
 
-public class MaraFruit extends Consumable{
+	public class MaraFruit extends Consumable{
 	public function MaraFruit() {
 		super("MaraFru", "MaraFruit", "an apple-shaped fruit", 10, "This green apple-shaped fruit that spread delicious scent around.  Thou it may as many thing in this realm also posses some transformative properties.");
 	}
 
-	override public function useItem():Boolean {
+	override public function useItem(host:Creature):Boolean {
 		var changes:Number = 0;
 		var changeLimit:Number = 1;
 		if (rand(3) == 0) changeLimit++;
@@ -126,7 +128,7 @@ public class MaraFruit extends Consumable{
 					temp++;
 				}
 				temp = choices[rand(choices.length)];
-				outputText("\n\nYour " + num2Text2(temp+1) + " penis itches, and you idly scratch at it.  As you do, it begins to grow longer and longer, all the way to the ground before you realize something is wrong.  You pull open your [armor] and look down, discovering your " + player.cockDescript(temp) + " has become a tentacle!  As you watch, it shortens back up; it's colored green except for a purplish head, and evidence seems to suggest you can make it stretch out at will.  <b>You now have a");
+				outputText("\n\nYour " + Utils.num2Text2(temp+1) + " penis itches, and you idly scratch at it.  As you do, it begins to grow longer and longer, all the way to the ground before you realize something is wrong.  You pull open your [armor] and look down, discovering your " + player.cockDescript(temp) + " has become a tentacle!  As you watch, it shortens back up; it's colored green except for a purplish head, and evidence seems to suggest you can make it stretch out at will.  <b>You now have a");
 				if(player.tentacleCocks() > 0) outputText("nother");
 				outputText(" tentacle-cock!</b>");
 				player.cocks[temp].cockType = CockTypesEnum.TENTACLE;
@@ -234,7 +236,7 @@ public class MaraFruit extends Consumable{
 			changes++;
 		}
 		//Arms
-		if ((player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.PLANT_ROOT_CLAWS) && !InCollection(player.arms.type, Arms.GARGOYLE, Arms.PLANT) && changes < changeLimit && rand(3) == 0) {
+		if ((player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.PLANT_ROOT_CLAWS) && !Utils.InCollection(player.arms.type, Arms.GARGOYLE, Arms.PLANT) && changes < changeLimit && rand(3) == 0) {
 			outputText("\n\nYou watch, spellbound, while your arms gradually changing it entire outer structure into plain human-like form. Soon after you start feel something new tickling and crawling its way into being, this time on your shoulders, working its way down your arms.  Looking on them you can see a thin, delicate vines, with spade-shaped leaves unfolding from them as they curl snugly around your biceps and deltoids all the way down to your wrists. <b>You now have vine-covered arms.</b>");
 			mutations.setArmType(Arms.PLANT);
 			changes++;

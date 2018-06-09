@@ -3,24 +3,25 @@
  */
 package classes.Items.Consumables
 {
-import classes.EngineCore;
-import classes.Items.Consumable;
-import classes.Scenes.SceneLib;
-import classes.internals.Utils;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.Items.Consumable;
+	import classes.Scenes.SceneLib;
+	import classes.internals.Utils;
 
-public final class GroPlus extends Consumable {
+	public final class GroPlus extends Consumable {
 		
 		public function GroPlus() {
 			super("GroPlus", "GroPlus", "a needle filled with Gro+", 50, "This is a small needle with a reservoir full of blue liquid.  A faded label marks it as 'GroPlus'.  Its purpose seems obvious.");
 		}
 
-		override public function canUse():Boolean {
+		override public function canUse(host:Creature):Boolean {
 			return true;
 		}
 		
 //		override public function hasSubMenu():Boolean { return true; } //Only GroPlus and Reducto use this.
 		
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			var gpBalls:Function	= (game.player.balls > 0 ? growPlusBalls : null);
 			var gpBreasts:Function	= (game.player.breastRows.length > 0 ? growPlusBreasts : null);
 			var gpClit:Function		= (game.player.vaginas.length > 0 ? growPlusClit : null);

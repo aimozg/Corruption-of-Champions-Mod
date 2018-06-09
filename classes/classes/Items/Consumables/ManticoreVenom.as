@@ -2,25 +2,27 @@
  * Coded by aimozg on 01.06.2017.
  */
 package classes.Items.Consumables {
-import classes.Appearance;
-import classes.BodyParts.Arms;
-import classes.BodyParts.Ears;
-import classes.BodyParts.Eyes;
-import classes.BodyParts.Face;
-import classes.BodyParts.LowerBody;
-import classes.BodyParts.RearBody;
-import classes.BodyParts.Tail;
-import classes.BodyParts.Tongue;
-import classes.BodyParts.Wings;
-import classes.Items.Consumable;
-import classes.PerkLib;
+	import classes.Appearance;
+	import classes.BodyParts.Arms;
+	import classes.BodyParts.Ears;
+	import classes.BodyParts.Eyes;
+	import classes.BodyParts.Face;
+	import classes.BodyParts.LowerBody;
+	import classes.BodyParts.RearBody;
+	import classes.BodyParts.Tail;
+	import classes.BodyParts.Tongue;
+	import classes.BodyParts.Wings;
+	import classes.Creature;
+	import classes.Items.Consumable;
+	import classes.PerkLib;
+	import classes.internals.Utils;
 
-public class ManticoreVenom extends Consumable {
+	public class ManticoreVenom extends Consumable {
 	public function ManticoreVenom() {
 		super("ManticV", "MantiVen", "a vial of manticore venom", 50, "This vial contains a clear green liquid. Ingesting poison directly might not be the smartest idea. Who knows what it could do to you?");
 	}
 
-	override public function useItem():Boolean {
+	override public function useItem(host:Creature):Boolean {
 		var changes:Number = 0;
 		var changeLimit:Number = 1;
 		if (rand(3) == 0) changeLimit++;
@@ -75,7 +77,7 @@ public class ManticoreVenom extends Consumable {
 			changes++;
 		}
 		//Arms
-		if (player.lowerBody == LowerBody.LION && !InCollection(player.arms.type, Arms.GARGOYLE, Arms.LION) && changes < changeLimit && rand(3) == 0) {
+		if (player.lowerBody == LowerBody.LION && !Utils.InCollection(player.arms.type, Arms.GARGOYLE, Arms.LION) && changes < changeLimit && rand(3) == 0) {
 			outputText("\n\n");
 			if (player.arms.type != Arms.HUMAN) outputText("You watch, spellbound, while your arms gradually changing it entire outer structure into plain human-like form. ");
 			outputText("Your hands suddenly start to hurt as your arms grows a thick coat of [skin coat.color] fur up to your shoulders where it turns [haircolor]. You watch enthralled as your nails fall off your fingers, feline claws taking their place on your now five-fingered paw-like hands. <b>You now have leonine paw hands.</b>");

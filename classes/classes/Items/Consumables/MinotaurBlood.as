@@ -2,28 +2,30 @@
  * Coded by aimozg on 01.06.2017.
  */
 package classes.Items.Consumables {
-import classes.Appearance;
-import classes.BodyParts.Arms;
-import classes.BodyParts.Ears;
-import classes.BodyParts.Face;
-import classes.BodyParts.Horns;
-import classes.BodyParts.LowerBody;
-import classes.BodyParts.Tail;
-import classes.CockTypesEnum;
-import classes.EngineCore;
-import classes.GlobalFlags.kFLAGS;
-import classes.Items.Consumable;
-import classes.PerkLib;
-import classes.StatusEffects;
-import classes.VaginaClass;
+	import classes.Appearance;
+	import classes.BodyParts.Arms;
+	import classes.BodyParts.Ears;
+	import classes.BodyParts.Face;
+	import classes.BodyParts.Horns;
+	import classes.BodyParts.LowerBody;
+	import classes.BodyParts.Tail;
+	import classes.CockTypesEnum;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.Items.Consumable;
+	import classes.PerkLib;
+	import classes.StatusEffects;
+	import classes.VaginaClass;
+	import classes.internals.Utils;
 
-public class MinotaurBlood extends Consumable {
+	public class MinotaurBlood extends Consumable {
 	public function MinotaurBlood() {
 		super("MinoBlo","MinoBlo", "a vial of Minotaur blood", 6, "You've got a scratched up looking vial full of bright red minotaur blood.  Any time you move it around it seems to froth up, as if eager to escape.")
 	}
 
 
-	override public function useItem():Boolean {
+	override public function useItem(host:Creature):Boolean {
 		player.slimeFeed();
 		//Changes done
 		var changes:Number = 0;
@@ -121,7 +123,7 @@ public class MinotaurBlood extends Consumable {
 			changes++;
 		}
 		//+hooves
-		if (changes < changeLimit && !InCollection(player.arms.type, Arms.HUMAN, Arms.GARGOYLE) && rand(4) == 0) {
+		if (changes < changeLimit && !Utils.InCollection(player.arms.type, Arms.HUMAN, Arms.GARGOYLE) && rand(4) == 0) {
 			mutations.humanizeArms();
 			changes++;
 		}

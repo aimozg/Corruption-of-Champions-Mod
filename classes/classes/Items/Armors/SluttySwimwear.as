@@ -1,47 +1,52 @@
 /**
  * Created by aimozg on 18.01.14.
  */
-package classes.Items.Armors
-{
+package classes.Items.Armors {
+	import classes.Creature;
 	import classes.Items.Armor;
-	import classes.Items.ArmorLib;
 	import classes.PerkLib;
-	import classes.Player;
 
-	public class SluttySwimwear extends ArmorWithPerk {
-		
+	public class SluttySwimwear extends Armor {
+
 		public function SluttySwimwear() {
-			super("S.Swmwr", "S.Swmwr", "slutty swimwear", "a skimpy black bikini", 0, 40, "An impossibly skimpy black bikini. You feel dirty just looking at it... and a little aroused, actually.", "Light", PerkLib.SluttySeduction, 6, 0, 0, 0, "", true, false);
+			super("S.Swmwr", "S.Swmwr", "slutty swimwear", "a skimpy black bikini", 0, 40, "An impossibly skimpy black bikini. You feel dirty just looking at it... and a little aroused, actually.", "Light", true, false, PerkLib.SluttySeduction, 6, 0, 0, 0, "");
 		}
-		
-		override public function useText():void { //Produces any text seen when equipping the armor normally
-			game.player.dynStats("lus", 5);
-			if (game.player.biggestTitSize() < 1) 
-				outputText("You feel rather stupid putting the top part on like this, but you're willing to bear with it. It could certainly be good for distracting.  ");
-			else {
-				outputText("The bikini top clings tightly to your bustline, sending a shiver of pleasure through your body. It serves to turn you on quite nicely.  ");
-				game.player.dynStats("lus", 5);
+
+		override public function useText(host:Creature):String { //Produces any text seen when equipping the armor normally
+			host.dynStats("lus", 5);
+			var text:String = "";
+			if (host.biggestTitSize() < 1) {
+				text += "You feel rather stupid putting the top part on like this, but you're willing to bear with it. It could certainly be good for distracting.  "
+			} else {
+				text += "The bikini top clings tightly to your bustline, sending a shiver of pleasure through your body. It serves to turn you on quite nicely.  ";
+				host.dynStats("lus", 5);
 			}
-			if (game.player.cockTotal() == 0) {
-				outputText("The thong moves over your smooth groin, clinging onto your buttocks nicely.  ");
-				if (game.player.balls > 0) {
-					if (game.player.ballSize > 5) outputText("You do your best to put the thong on, and while the material is very stretchy, it simply can't even begin to cover everything, and your " + game.player.ballsDescriptLight() + " hang on the sides, exposed.  Maybe if you shrunk your male parts down a little...");
-					else outputText("However, your testicles do serve as an area of discomfort, stretching the material and bulging out the sides slightly.  ");
+			if (host.cockTotal() == 0) {
+				text += "The thong moves over your smooth groin, clinging onto your buttocks nicely.  ";
+				if (host.balls > 0) {
+					if (host.ballSize > 5) {
+						text += "You do your best to put the thong on, and while the material is very stretchy, it simply can't even begin to cover everything, and your " + host.ballsDescriptLight() + " hang on the sides, exposed.  Maybe if you shrunk your male parts down a little..."
+					} else {
+						text += "However, your testicles do serve as an area of discomfort, stretching the material and bulging out the sides slightly.  "
+					}
 				}
 			}
 			else {
-				if (game.player.cockTotal() == 1) {
-					outputText("You grunt in discomfort, your " + game.player.cockDescript(0) + " flopping free from the thong's confines. The tight material rubbing against your dick does manage to turn you on slightly.  ");
+				if (host.cockTotal() == 1) {
+					text += "You grunt in discomfort, your " + host.cockDescript(0) + " flopping free from the thong's confines. The tight material rubbing against your dick does manage to turn you on slightly.  "
 				}
 				else {
-					outputText("You grunt in discomfort, your " + game.player.multiCockDescriptLight() + " flopping free from the thong's confines. The tight material rubbing against your dicks does manage to turn you on slightly.  ");
+					text += "You grunt in discomfort, your " + host.multiCockDescriptLight() + " flopping free from the thong's confines. The tight material rubbing against your dicks does manage to turn you on slightly.  "
 				}
-				game.player.dynStats("lus", 5);
-				if (game.player.biggestCockArea() >= 20) outputText("You do your best to put the thong on, and while the material is very stretchy, it simply can't even begin to cover everything, and your " + game.player.cockDescript(game.player.biggestCockIndex()) + " has popped out of the top, completely exposed.  Maybe if you shrunk your male parts down a little...");
-				//[If dick is 7+ inches OR balls are apple-sized]
-				else if (game.player.ballSize > 5) outputText("You do your best to put the thong on, and while the material is very stretchy, it simply can't even begin to cover everything, and your " + game.player.ballsDescriptLight() + " hang on the sides, exposed.  Maybe if you shrunk your male parts down a little...");
+				host.dynStats("lus", 5);
+				if (host.biggestCockArea() >= 20) {
+					text += "You do your best to put the thong on, and while the material is very stretchy, it simply can't even begin to cover everything, and your " + host.cockDescript(host.biggestCockIndex()) + " has popped out of the top, completely exposed.  Maybe if you shrunk your male parts down a little..."
+				}//[If dick is 7+ inches OR balls are apple-sized]
+				else if (host.ballSize > 5) {
+					text += "You do your best to put the thong on, and while the material is very stretchy, it simply can't even begin to cover everything, and your " + host.ballsDescriptLight() + " hang on the sides, exposed.  Maybe if you shrunk your male parts down a little..."
+				}
 			}
-			outputText("\n\n");
+			return text + "\n\n";
 		}
 	}
 }

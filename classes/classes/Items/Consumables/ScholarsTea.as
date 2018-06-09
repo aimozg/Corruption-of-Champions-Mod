@@ -1,7 +1,8 @@
 package classes.Items.Consumables
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
-	
+
 	/**
 	 * Item that increases INT
 	 */
@@ -14,7 +15,7 @@ package classes.Items.Consumables
 			super("Smart T", "Scholars T.", "a cup of scholar's tea", ITEM_VALUE, "This powerful brew supposedly has mind-strengthening effects.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			player.slimeFeed();
 			clearOutput();

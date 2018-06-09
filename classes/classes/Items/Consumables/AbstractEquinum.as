@@ -2,28 +2,30 @@
  * Coded by aimozg on 01.06.2017.
  */
 package classes.Items.Consumables {
-import classes.Appearance;
-import classes.BodyParts.Arms;
-import classes.BodyParts.Ears;
-import classes.BodyParts.Eyes;
-import classes.BodyParts.Face;
-import classes.BodyParts.Hair;
-import classes.BodyParts.Horns;
-import classes.BodyParts.LowerBody;
-import classes.BodyParts.Skin;
-import classes.BodyParts.Tail;
-import classes.BodyParts.Wings;
-import classes.CoC_Settings;
-import classes.CockTypesEnum;
-import classes.EngineCore;
-import classes.EventParser;
-import classes.GlobalFlags.kFLAGS;
-import classes.Items.Consumable;
-import classes.PerkLib;
-import classes.StatusEffects;
-import classes.VaginaClass;
+	import classes.Appearance;
+	import classes.BodyParts.Arms;
+	import classes.BodyParts.Ears;
+	import classes.BodyParts.Eyes;
+	import classes.BodyParts.Face;
+	import classes.BodyParts.Hair;
+	import classes.BodyParts.Horns;
+	import classes.BodyParts.LowerBody;
+	import classes.BodyParts.Skin;
+	import classes.BodyParts.Tail;
+	import classes.BodyParts.Wings;
+	import classes.CoC_Settings;
+	import classes.CockTypesEnum;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.EventParser;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.Items.Consumable;
+	import classes.PerkLib;
+	import classes.StatusEffects;
+	import classes.VaginaClass;
+	import classes.internals.Utils;
 
-public class AbstractEquinum extends Consumable {
+	public class AbstractEquinum extends Consumable {
 	public function AbstractEquinum(type:Number, id:String, shortName:String, longName:String, value:Number, description:String) {
 		super(id, shortName, longName, value, description);
 		this.type = type;
@@ -31,7 +33,7 @@ public class AbstractEquinum extends Consumable {
 
 	protected var type:Number;
 
-	override public function useItem():Boolean {
+	override public function useItem(host:Creature):Boolean {
 		player.slimeFeed();
 		//0 - normalne Equinum
 		//1 - Unicornum
@@ -188,7 +190,7 @@ public class AbstractEquinum extends Consumable {
 		}
 		if (player.hasPerk(PerkLib.TransformationImmunity)) changeLimit = 0;
 		//-Remove feather-arms (copy this for goblin ale, mino blood, equinum, centaurinum, canine pepps, demon items)
-		if (changes < changeLimit && !InCollection(player.arms.type, Arms.HUMAN, Arms.GARGOYLE) && rand(4) == 0) {
+		if (changes < changeLimit && !Utils.InCollection(player.arms.type, Arms.HUMAN, Arms.GARGOYLE) && rand(4) == 0) {
 			mutations.humanizeArms();
 			changes++;
 		}
@@ -501,7 +503,7 @@ public class AbstractEquinum extends Consumable {
 				outputText(" [skin.type].  At last the itching stops as <b>you brush a few more loose scales from your new coat of fur.</b>");
 			}
 			changes++;
-			if (type == 0) player.skin.growCoat(Skin.FUR, {color: randomChoice(["brown", "chocolate", "auburn", "sandy brown", "caramel", "peach", "black", "midnight black", "dark gray", "gray", "light gray", "silver", "white", "brown and white", "black and white"])});
+			if (type == 0) player.skin.growCoat(Skin.FUR, {color: Utils.randomChoice(["brown", "chocolate", "auburn", "sandy brown", "caramel", "peach", "black", "midnight black", "dark gray", "gray", "light gray", "silver", "white", "brown and white", "black and white"])});
 			else player.skin.growCoat(Skin.FUR, {color: "white"});
 		}
 		//Ears - requires tail

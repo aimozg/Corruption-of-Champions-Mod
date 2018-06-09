@@ -3,60 +3,48 @@
  */
 package classes.Items
 {
-	import classes.ItemType;
+	import classes.Creature;
 	import classes.PerkLib;
-	import classes.Player;
+	import classes.PerkType;
 
-	public class Armor extends Useable //Equipable
+	public class Armor extends BaseEquipable
 	{
-		private var _def:Number;
-		private var _perk:String;
-		private var _name:String;
 		private var _supportsBulge:Boolean;
 		private var _supportsUndergarment:Boolean;
-		
-		public function Armor(id:String, shortName:String, name:String, longName:String, def:Number, value:Number = 0, description:String = null, perk:String = "", supportsBulge:Boolean = false, supportsUndergarment:Boolean = true) {
-			super(id, shortName, longName, value, description);
+
+		public static const CLOTHING:String = "Clothing";
+		public static const LIGHT:String = "Light";
+		public static const MEDIUM:String = "Medium";
+		public static const HEAVY:String = "Heavy";
+
+		public function Armor(id:String, shortName:String, name:String, longName:String, def:Number, value:Number = 0, description:String = null, perk:String = "", supportsBulge:Boolean = false, supportsUndergarment:Boolean = true, ptype:PerkType = null, v1:Number = 0, v2:Number = 0, v3:Number = 0, v4:Number = 0, legacyPerkDesc:String = "") {
+			super(id, shortName, name, longName, value, perk, description);
 			this._name = name;
-			this._def = def;
+			this._defense = def;
 			this._perk = perk;
 			_supportsBulge = supportsBulge;
 			_supportsUndergarment = supportsUndergarment;
+			_slot = Equipment.ARMOUR;
+
+			if (!(name.indexOf("armor") >= 0 || name.indexOf("armour") >= 0 || name.indexOf("chain") >= 0 || name.indexOf("mail") >= 0 || name.indexOf("plates") >= 0)) {
+				_subType = CLOTHING;
+			}
+			if (perk != ""){
+				_modifiers.push(perk);
+			}
+			if (ptype) {
+				_itemPerks.push(ptype.create(v1,v2,v3,v4));
+			}
 		}
-		
-		public function get def():Number { return _def; }
-		
-		public function get perk():String { return _perk; }
-		
-		public function get name():String { return _name; }
-		
+
+		/**
+		 * This is used by Exgartuan to determine if it can modify the armor name
+		 */
 		public function get supportsBulge():Boolean { return _supportsBulge && game.player.modArmorName == ""; }
-			//For most clothes if the modArmorName is set then it's Exgartuan's doing. The comfortable clothes are the exception, they override this function.
-		
+
 		public function get supportsUndergarment():Boolean { return _supportsUndergarment; }
 		
-		override public function get description():String {
-			var desc:String = _description;
-			//Type
-			desc += "\n\nType: ";
-			if (name.indexOf("armor") >= 0 || name.indexOf("armour") >= 0 || name.indexOf("chain") >= 0 || name.indexOf("mail") >= 0 || name.indexOf("plates") >= 0) {
-				desc += "Armor ";
-				if (perk == "Light" || perk == "Medium") {
-					desc += "(Light)";
-				}
-				else if (perk == "Medium") desc += "(Medium)";
-				else if (perk == "Heavy") desc += "(Heavy)";
-				else if (perk == "Ayo") desc += "(Ayo)";
-			}
-			else desc += "Clothing ";
-			//Defense
-			desc += "\nDefense: " + String(def);
-			//Value
-			desc += "\nBase value: " + String(value);
-			return desc;
-		}
-		
-		override public function canUse():Boolean {
+		override public function canUse(host:Creature):Boolean {
 			if (this.supportsUndergarment == false && (game.player.upperGarment != UndergarmentLib.NOTHING || game.player.lowerGarment != UndergarmentLib.NOTHING)) {
 				var output:String = "";
 				var wornUpper:Boolean = false;
@@ -79,55 +67,20 @@ package classes.Items
 				outputText(output);
 				return false;
 			}
-			return super.canUse();
+			return super.canUse(host);
 		}
 
-		override public function useText():void {
-			outputText("You equip " + longName + ".  ");
-		}
-		
-		public function playerEquip():Armor { //This item is being equipped by the player. Add any perks, etc. - This function should only handle mechanics, not text output
+		//fixme @oxdeception update worn clothes array?
+		override public function equip(host:Creature):Equipable {
 			game.player.addToWornClothesArray(this);
-			return this;
-		}
-		
-		public function playerRemove():Armor { //This item is being removed by the player. Remove any perks, etc. - This function should only handle mechanics, not text output
-			while (game.player.hasPerk(PerkLib.BulgeArmor)) game.player.removePerk(PerkLib.BulgeArmor); //TODO remove this Exgartuan hack
-			if (game.player.modArmorName.length > 0) game.player.modArmorName = "";
-			return this;
-		}
-		
-		public function removeText():void {} //Produces any text seen when removing the armor normally
-		
-/*
-		override protected function equip(player:Player, returnOldItem:Boolean,output:Boolean):void
-		{
-			if (output) clearOutput();
-			if (canUse(player, true)) {
-				if(output) outputText("You equip your " + _name + ".  ");
-				var oldArmor:Armor = player.armor;
-				oldArmor.unequip(player, returnOldItem, output);
-				player.setArmorHiddenField(this);
-				equipped(player,output);
-			}
+			return super.equip(host);
 		}
 
-		override public function unequip(player:Player, returnToInventory:Boolean, output:Boolean = false):void
-		{
-			while(player.hasPerk(PerkLib.BulgeArmor)) player.removePerk(PerkLib.BulgeArmor);// TODO remove this Exgartuan hack
-			if (returnToInventory) {
-				var itype:ItemType = unequipReturnItem(player, output);
-				if (itype != null) {
-					game.itemSwapping = true;
-					if (output && itype == this)
-						outputText("You have your old set of " + longName + " left over.  ");
-					game.inventory.takeItem(this, false);
-				}
-			}
-			player.setArmorHiddenField(ArmorLib.COMFORTABLE_UNDERCLOTHES);
-			if (player.modArmorName.length > 0) player.modArmorName = "";
-			unequipped(player,output);
+		override public function unequip(host:Creature):Equipable {
+			//TODO remove this Exgartuan hack
+			while (host.hasPerk(PerkLib.BulgeArmor)) host.removePerk(PerkLib.BulgeArmor);
+			if (game.player.modArmorName.length > 0) game.player.modArmorName = "";
+			return super.unequip(host);
 		}
-*/
 	}
 }

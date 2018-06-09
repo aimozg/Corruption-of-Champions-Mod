@@ -1,17 +1,15 @@
 //idea from liadri, added to by others
 package classes.Items.Armors {
-import classes.Items.Armor;
-import classes.TimeAwareInterface;
-import classes.EventParser;
-import classes.Player;
 import classes.CoC;
+import classes.Creature;
+import classes.EventParser;
+import classes.Items.Armor;
 import classes.Scenes.SceneLib;
+import classes.TimeAwareInterface;
+import classes.internals.Utils;
 
 public class NagaSilkDress extends Armor implements TimeAwareInterface {
-    private var _name:String;
-	private function get player():Player{ //need the instance of player
-			return CoC.instance.player;
-	}
+
     public function NagaSilkDress() {
         super("NagaDress","Naga Dress","","a desert naga silk dress",0,0,
                 "",
@@ -25,21 +23,21 @@ public class NagaSilkDress extends Armor implements TimeAwareInterface {
         _longName = "a "+color+" desert naga silk dress";
         _description = "A very seductive dress made for naga or females without a human set of legs. It has a black collar, bikini top, sleeves with golden bangles and a waistcloth, all decorated with a golden trim. The bottom has a "+color+" silk veil that runs down to what would be the human knee while the center of the bikini is also covered by a small strand of silk. It helps accentuate your curves and increase your natural charm. The dress obviously is so minimalist that you could as well say you are naked yet it looks quite classy on a tauric or naga body giving you the air of a master seducer.";
     }
-    public override function get name():String{return _name;}
-	override public function useText():void{ //Produces any text seen when equipping the armor normally
-		outputText("You wear the dress and hiss like a snake. \n\n Where did that come from?.\n");
+	override public function useText(host:Creature):String {
+		return "You wear the dress and hiss like a snake. \n\n Where did that come from?.\n";
 	}
 
 	public function timeChangeLarge():Boolean {	return false;	}
-		
+
 	public function timeChange():Boolean {
-		if (player.armor is NagaSilkDress && CoC.instance.model.time.hours == 5) { //only call function once per day as time change is called every hour
-			Progression(); 
+		if (CoC.instance.player.armor is NagaSilkDress && CoC.instance.model.time.hours == 5) { //only call function once per day as time change is called every hour
+			Progression();
 			return true;
 		}
 		return false; //stop if not wearing
-		}
-	public function Progression():void {
+	}
+	//fixme @oxdeception move this out to XXC
+	private function Progression():void {
 
 		var dreams:Array = ["That night you have a strange dream. You are in the desert basking in the sun.   You look down and notice that there are not legs attached to your lower body. There is a large" +
 		" snake-like tail. Thinking about it seems to make your tail flip slightly.   \n\n"+
@@ -98,9 +96,9 @@ public class NagaSilkDress extends Armor implements TimeAwareInterface {
 		"As soon as you agree she hugs you tightly, enveloping your face with her voluptuous breasts.\n\n"+
 		"You awake wondering why you dream about nagas so often.\n\n"		];
 		clearOutput();
-		outputText("\n\n" + dreams[rand(dreams.length)] + "\n\n");
+		outputText("\n\n" + Utils.randomChoice(dreams) + "\n\n");
 		outputText("Lucky Day!   You find a vial of snake oil in your dress and quicky quaff it down.\n\n");
-		SceneLib.mutationsTable.snakeOil(player,false);
+		SceneLib.mutationsTable.snakeOil(CoC.instance.player,false);
 		
 	}
 }}

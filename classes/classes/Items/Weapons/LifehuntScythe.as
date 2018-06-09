@@ -13,7 +13,7 @@ package classes.Items.Weapons
 					"Large", PerkLib.Sanctuary, 1, 0, 0, 0
 			);
 		}
-		override public function get attack():Number{
+		override public function get attack():int{
 			return 20 + ((100 - game.player.cor) / 20);
 		}
 		

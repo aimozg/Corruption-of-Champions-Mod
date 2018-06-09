@@ -1,6 +1,7 @@
 package classes.Items.Weapons 
 {
 	import classes.Items.Weapon;
+
 	/**
 	 * ...
 	 * @author Liadri
@@ -12,7 +13,7 @@ package classes.Items.Weapons
 		{
 			super("W.GAXE", "Winged G.Axe", "winged greataxe", "a winged greataxe", "cleave", 28, 1280, "A greataxe made in untarnished steel and imbued with holy power. Its shaft is wrapped in feathery wings made of brass and gold. This holy artifact was created to execute demonic fiends, always finding their weakest spot.", "Large");
 		}
-		override public function get attack():Number{
+		override public function get attack():int{
 			var boost:int = 0;
 			if (game.player.str >= 100) boost += 9;
 			return (18 + boost + ((100-game.player.cor) / 10));

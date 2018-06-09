@@ -1,9 +1,10 @@
 package classes.Items.Consumables
 {
-import classes.EngineCore;
-import classes.Items.Consumable;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.Items.Consumable;
 
-/**
+	/**
 	 * Item that increases STR and/or VIT
 	 */
 	public class VitalityTincture extends Consumable
@@ -15,7 +16,7 @@ import classes.Items.Consumable;
 			super("Vital T", "Vitality T.", "a vitality tincture", ITEM_VALUE, "This potent tea is supposedly good for the strengthening the body.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			player.slimeFeed();
 			clearOutput();

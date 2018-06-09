@@ -1,9 +1,10 @@
 package classes.Items.Consumables 
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
 	import classes.PerkLib;
 	import classes.StatusEffects;
-	
+
 	/**
 	 * Lower lust significantly but has a chance of inducing the masturbation preventing effect from minotaur.
 	 */
@@ -16,7 +17,7 @@ package classes.Items.Consumables
 			super("NumbRox","Numb Rox", "a strange packet of candy called 'Numb Rocks'", ITEM_VALUE, "This packet of innocuous looking 'candy' guarantees to reduce troublesome sensations and taste delicious.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			clearOutput();
 			//Numb rocks lower lust significantly but have a chance of inducing the masturbation preventing effect from minotaur.

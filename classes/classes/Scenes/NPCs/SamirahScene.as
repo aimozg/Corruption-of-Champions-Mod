@@ -1,10 +1,10 @@
 package classes.Scenes.NPCs 
 {
-import classes.Scenes.Camp;
+	import classes.Scenes.Camp;
 
-import coc.view.ButtonDataList;
+	import coc.view.ButtonDataList;
 
-public class SamirahScene extends XXCNPC
+	public class SamirahScene extends XXCNPC
 	{
 		private static var _instance:SamirahScene;
         private var _status:int = 0;
@@ -132,7 +132,7 @@ public class SamirahScene extends XXCNPC
                         inventory.takeItem(player.setArmor(armors.NAGASLK), camp.returnToCampUseOneHour);
                     }
                     else {
-                        player.armor.removeText();
+                        outputText(player.armor.removeText(player));
                         player.setArmor(armors.NAGASLK);
                         doNext(camp.returnToCampUseOneHour);
                     }

@@ -1,7 +1,8 @@
 package classes.Items.Consumables 
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
-	
+
 	/**
 	 * Reduces corruption.
 	 */
@@ -14,7 +15,7 @@ package classes.Items.Consumables
 			super("PPhiltr","P.Philter", "a vial of purity philter", ITEM_VALUE, "This silver vial feels cool to the touch. In fact, it feels a bit cold. Given the label, you suspect this will help to erase corruption.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			clearOutput();
 			outputText("You uncap the small silver vial and place it to your lips. Tilting your head back, you pour the cold tasteless liquid down your throat.\n\n");

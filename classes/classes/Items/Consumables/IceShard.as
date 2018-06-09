@@ -1,8 +1,9 @@
 package classes.Items.Consumables 
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
 	import classes.Items.ConsumableLib;
-	
+
 	/**
 	 * A refreshing icicle.
 	 */
@@ -13,7 +14,7 @@ package classes.Items.Consumables
 			super("Icicle ","Icicle", "an ice shard", ConsumableLib.DEFAULT_VALUE,"An icicle that seems to be incapable of melting.  It numbs your hands as you hold it. ");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			clearOutput();
 			outputText("You give the icicle a tentative lick, careful not to stick your tongue to it. It tastes refreshing, like cool, clear glacier water.  The ice readily dissolves against the heat of your mouth as you continue to lick away at it.  Before long, the icicle has dwindled into a sliver small enough to pop into your mouth.  As the pinprick of ice melts you slide your chilled tongue around your mouth, savoring the crisp feeling.\n\n");

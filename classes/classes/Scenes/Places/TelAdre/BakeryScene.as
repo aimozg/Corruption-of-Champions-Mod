@@ -1,10 +1,10 @@
 ﻿package classes.Scenes.Places.TelAdre{
-import classes.*;
-import classes.GlobalFlags.kFLAGS;
-import classes.Scenes.Holidays;
-import classes.Scenes.SceneLib;
+	import classes.*;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.Scenes.Holidays;
+	import classes.Scenes.SceneLib;
 
-public class BakeryScene extends TelAdreAbstractContent {
+	public class BakeryScene extends TelAdreAbstractContent {
 
 	public function BakeryScene()
 	{
@@ -316,7 +316,7 @@ private function buyRoot():void {
 	player.gems -= 14;
 	statScreenRefresh();
 	if (flags[kFLAGS.SHIFT_KEY_DOWN] == 1) {
-		consumables.RDRROOT.useItem();
+		consumables.RDRROOT.useItem(CoC.instance.player);
 		doNext(ingredientsMenu);
 	}
 	else inventory.takeItem(consumables.RDRROOT, ingredientsMenu);

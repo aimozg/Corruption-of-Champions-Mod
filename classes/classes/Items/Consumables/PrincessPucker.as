@@ -1,17 +1,18 @@
 package classes.Items.Consumables 
 {
-import classes.BodyParts.LowerBody;
-import classes.Items.Consumable;
-import classes.Items.ConsumableLib;
+	import classes.BodyParts.LowerBody;
+	import classes.Creature;
+	import classes.Items.Consumable;
+	import classes.Items.ConsumableLib;
 
-public class PrincessPucker extends Consumable 
+	public class PrincessPucker extends Consumable
 	{
 		public function PrincessPucker() 
 		{
 			super("PrnsPkr", "P.Pucker", "a vial of pinkish fluid", ConsumableLib.DEFAULT_VALUE, "A vial filled with a viscous pink liquid. A label reads \"Princess Pucker\".");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			clearOutput();
 

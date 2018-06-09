@@ -4,6 +4,7 @@
  */
 package classes.Items
 {
+	import classes.Creature;
 	import classes.PerkType;
 
 	public class WeaponRange extends Weapon //Equipable
@@ -13,6 +14,7 @@ package classes.Items
 		public static const TYPE_THROWING:String = "Throwing";
 		public static const TYPE_PISTOL:String = "Pistol";
 		public static const TYPE_RIFLE:String = "Rifle";
+		public static const TYPE_TOME:String = "Tome";
 
 		private var _ammoWord:String;
 		private var _ammo:int = 0;
@@ -27,36 +29,15 @@ package classes.Items
 				case "Rifle":
 					_ammoWord = "bullet"
 			}
+			_subType = perk;
+			_slot = Equipment.RANGED;
 		}
 
 		public static function fromBuilder(ammo:int, builder:WeaponBuilder):WeaponRange {
+			if(!builder.verb){builder.verb = "shot";}
 			var weapon:WeaponRange = Weapon.fromBuilder(builder) as WeaponRange;
 			weapon._ammo = ammo;
 			return weapon;
-		}
-
-		override public function get description():String {
-			var desc:String = _description;
-			//Type
-			desc += "\n\nType: Range Weapon ";
-			if (perk == "Bow") desc += "(Bow)";
-			else if (perk == "Crossbow") desc += "(Crossbow)";
-			else if (perk == "Pistol") desc += "(Pistol)";
-			else if (perk == "Rifle") desc += "(Rifle)";
-			else if (perk == "Throwing") desc += "(Throwing)";
-			//Attack
-			desc += "\nRange Attack: " + String(attack);
-			//Value
-			desc += "\nBase value: " + String(value);
-			return desc;
-		}
-		
-		override public function useText():void {
-			outputText("You equip " + longName + ".  ");
-		}
-		
-		override public function canUse():Boolean {
-			return true;
 		}
 
 		public function get ammoWord():String{
@@ -69,6 +50,5 @@ package classes.Items
 		public function get ammo():int {
 			return _ammo;
 		}
-		
 	}
 }

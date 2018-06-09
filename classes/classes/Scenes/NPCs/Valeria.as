@@ -1,11 +1,11 @@
 ﻿package classes.Scenes.NPCs{
-import classes.*;
-import classes.BodyParts.Skin;
-import classes.GlobalFlags.kFLAGS;
-import classes.Items.Armor;
-import classes.Scenes.Areas.Lake.GooGirl;
+	import classes.*;
+	import classes.BodyParts.Skin;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.Items.Armor;
+	import classes.Scenes.Areas.Lake.GooGirl;
 
-public class Valeria extends NPCAwareContent implements TimeAwareInterface {
+	public class Valeria extends NPCAwareContent implements TimeAwareInterface {
 
 		public function Valeria()
 		{
@@ -474,8 +474,8 @@ private function takeValeria():void {
 	spriteSelect(79);
 	clearOutput();
 	outputText(images.showImage("valeria-take"));
-	armors.GOOARMR.useText();
-	player.armor.removeText();
+	outputText(armors.GOOARMR.useText(CoC.instance.player));
+	outputText(player.armor.removeText(player));
 	var item:Armor = player.setArmor(armors.GOOARMR); //Item is now the player's old armor
 	if (item == null)
 		doNext(playerMenu);

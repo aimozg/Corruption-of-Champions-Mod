@@ -1,12 +1,13 @@
 package classes.Items.Consumables 
 {
-import classes.EngineCore;
-import classes.Items.Consumable;
-import classes.Items.ConsumableLib;
-import classes.Scenes.SceneLib;
-import classes.PerkLib;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.Items.Consumable;
+	import classes.Items.ConsumableLib;
+	import classes.PerkLib;
+	import classes.Scenes.SceneLib;
 
-/**
+	/**
 	 * Skin oils, courtesy of Foxxling.
 	 * @author Kitteh6660
 	 */
@@ -24,7 +25,7 @@ import classes.PerkLib;
 			super(id, shortName, longName, value, description);
 		}
 		
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			if (game.player.skinTone == _color || player.hasPerk(PerkLib.TransformationImmunity)) {
 				outputText("You " + game.player.clothedOrNaked("take a second to disrobe before uncorking the bottle of oil and rubbing", "uncork the bottle of oil and rub") + " the smooth liquid across your body. Once you’ve finished you feel rejuvenated.");
 				EngineCore.fatigue(-10);

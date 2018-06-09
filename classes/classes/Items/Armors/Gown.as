@@ -3,17 +3,16 @@
 package classes.Items.Armors
 {
 	import classes.BodyParts.*;
-	import classes.Items.Armor;
-	import classes.BaseContent;
-	import classes.TimeAwareInterface;
-	import classes.lists.Gender;
-	import classes.lists.BreastCup;
 	import classes.CoC;
+	import classes.Creature;
 	import classes.EventParser;
+	import classes.Items.Armor;
 	import classes.Player;
-	import classes.Items.MutationsHelper;
 	import classes.Scenes.SceneLib;
-	import classes.EngineCore;
+	import classes.TimeAwareInterface;
+	import classes.internals.Utils;
+	import classes.lists.BreastCup;
+	import classes.lists.Gender;
 
 	public class Gown extends Armor implements TimeAwareInterface {
  
@@ -26,25 +25,23 @@ package classes.Items.Armors
 		private function get player():Player{ //need the instance of player
 			return CoC.instance.player;
 		}
-		override public function useText():void{ //Produces any text seen when equipping the armor normally
+		override public function useText(host:Creature):String { //Produces any text seen when equipping the armor normally
+			var text:String;
 			switch (player.gender) {
-				case Gender.GENDER_FEMALE:   
-					outputText("You comfortably slide into the forest gown.   You spin around several times and giggle happily."
-					          +" Where did that come from?\n");
+				case Gender.GENDER_FEMALE:
+					text = "You comfortably slide into the forest gown.   You spin around several times and giggle happily."
+							+ " Where did that come from?\n";
 					break;
 
 				case  Gender.GENDER_MALE:
-					outputText("You slide forest gown over your head and down to your toes. It obviously would fit someone more female."
-					          +" You feel sad and wish you had the svelte body that would look amazing in this gown."
-					          +" Wait, did you always think that way?\n");
+					text = "You slide forest gown over your head and down to your toes. It obviously would fit someone more female."
+							+ " You feel sad and wish you had the svelte body that would look amazing in this gown."
+							+ " Wait, did you always think that way?\n";
 					break;
-			  default :  //non-binary
-					outputText("You slide the gown over your head and slip it into place.\n");
+				default :  //non-binary
+					text = "You slide the gown over your head and slip it into place.\n";
 			}
-			if (player.hasCock()) 
-					outputText("You notice the bulge from [cock] in the folds of the dress and wish it wasn't there.\n");
-
-			
+			return text + "[if(hascock)You notice the bulge from [cock] in the folds of the dress and wish it wasn't there.\n]";
 		}
 		public function timeChangeLarge():Boolean {	return false;	}
 		
@@ -78,7 +75,7 @@ package classes.Items.Armors
 			];
 			//display a random dream
 			clearOutput();
-			outputText("\n\n"+dryadDreams[rand(dryadDreams.length)]+"\n\n");
+			outputText("\n\n"+Utils.randomChoice(dryadDreams)+"\n\n");
 			//build a list of non ideal parts 
 			if (player.hips.type != Hips.RATING_FERTILE)
 				 tfChoice.push("hips");
@@ -92,7 +89,7 @@ package classes.Items.Armors
 				tfChoice.push("girlyness");
 
 			//progress slowly to the ideal dryad build	
-			switch (randomChoice(tfChoice)) {
+			switch (Utils.randomChoice(tfChoice)) {
 				case "hips":
 						outputText("You wiggle around in your gown, pleasant feeling of flower petals rubbing against your skin washes over you.  The feeling settles on your [hips].\n");
 
@@ -183,7 +180,7 @@ package classes.Items.Armors
 		public function DryadProg():void {
 
 		//types of changes
-			var tfChoice:String = randomChoice("skin", "ears", "face", "lowerbody", "arms", "hair");
+			var tfChoice:String = Utils.randomChoice("skin", "ears", "face", "lowerbody", "arms", "hair");
 			outputText("\n\n");
 			switch (tfChoice) {
 			case "ears":

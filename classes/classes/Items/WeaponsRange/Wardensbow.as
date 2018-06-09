@@ -4,11 +4,11 @@
  */
 package classes.Items.WeaponsRange 
 {
-	import classes.Items.Weapon;
+	import classes.Creature;
+	import classes.Items.Equipable;
 	import classes.Items.WeaponRange;
 	import classes.PerkLib;
-	import classes.Player;
-	
+
 	public class Wardensbow extends WeaponRange
 	{
 		
@@ -33,21 +33,21 @@ package classes.Items.WeaponsRange
 			return desc;
 		}
 		
-		override public function playerEquip():Weapon {
-			while (game.player.hasPerk(PerkLib.DaoistsFocus)) game.player.removePerk(PerkLib.DaoistsFocus);
-			game.player.createPerk(PerkLib.DaoistsFocus,0.4,0,0,0);
-			while (game.player.hasPerk(PerkLib.BodyCultivatorsFocus)) game.player.removePerk(PerkLib.BodyCultivatorsFocus);
-			game.player.createPerk(PerkLib.BodyCultivatorsFocus,0.4,0,0,0);
-			while (game.player.hasPerk(PerkLib.WildWarden)) game.player.removePerk(PerkLib.WildWarden);
-			game.player.createPerk(PerkLib.WildWarden,0,0,0,0);
-			return super.playerEquip();
+		override public function equip(host:Creature):Equipable {
+			while (host.hasPerk(PerkLib.DaoistsFocus)) host.removePerk(PerkLib.DaoistsFocus);
+			host.createPerk(PerkLib.DaoistsFocus,0.4,0,0,0);
+			while (host.hasPerk(PerkLib.BodyCultivatorsFocus)) host.removePerk(PerkLib.BodyCultivatorsFocus);
+			host.createPerk(PerkLib.BodyCultivatorsFocus,0.4,0,0,0);
+			while (host.hasPerk(PerkLib.WildWarden)) host.removePerk(PerkLib.WildWarden);
+			host.createPerk(PerkLib.WildWarden,0,0,0,0);
+			return super.equip(host);
 		}
 		
-		override public function playerRemove():Weapon {
-			while (game.player.hasPerk(PerkLib.DaoistsFocus)) game.player.removePerk(PerkLib.DaoistsFocus);
-			while (game.player.hasPerk(PerkLib.BodyCultivatorsFocus)) game.player.removePerk(PerkLib.BodyCultivatorsFocus);
-			while (game.player.hasPerk(PerkLib.WildWarden)) game.player.removePerk(PerkLib.WildWarden);
-			return super.playerRemove();
+		override public function unequip(host:Creature):Equipable {
+			while (host.hasPerk(PerkLib.DaoistsFocus)) host.removePerk(PerkLib.DaoistsFocus);
+			while (host.hasPerk(PerkLib.BodyCultivatorsFocus)) host.removePerk(PerkLib.BodyCultivatorsFocus);
+			while (host.hasPerk(PerkLib.WildWarden)) host.removePerk(PerkLib.WildWarden);
+			return super.unequip(host);
 		}
 		
 	}

@@ -3,20 +3,19 @@
  */
 package classes.Items
 {
-import classes.CoC;
-import classes.DefaultDict;
-import classes.EngineCore;
-import classes.GlobalFlags.*;
-import classes.Player;
-import classes.Scenes.Camp;
-import classes.Scenes.SceneLib;
-import classes.internals.Utils;
+	import classes.CoC;
+	import classes.DefaultDict;
+	import classes.EngineCore;
+	import classes.Player;
+	import classes.Scenes.Camp;
+	import classes.Scenes.SceneLib;
+	import classes.internals.Utils;
 
-/**
+	/**
 	 * An item, that is consumed by player, and disappears after use. Direct subclasses should override "doEffect" method
 	 * and NOT "useItem" method.
 	 */
-	public class Consumable extends Useable
+	public class Consumable extends BaseUseable
 	{
 
         protected function get mutations():Mutations { return CoC.instance.mutations; }

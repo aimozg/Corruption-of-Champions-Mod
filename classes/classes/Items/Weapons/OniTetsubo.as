@@ -5,7 +5,6 @@
 package classes.Items.Weapons 
 {
 	import classes.Items.Weapon;
-	import classes.Player;
 
 	public class OniTetsubo extends Weapon
 	{
@@ -15,7 +14,7 @@ package classes.Items.Weapons
 			super("O.Tetsu", "OniTetsubo", "Oni Tetsubo", "an Oni Tetsubo", "smash", 45, 3600, "This unrealistically large two handed mace was clearly made for Oni warriors to wield. You likely will need some ridiculous strength just to lift it.", "Large");
 		}
 		
-		override public function get attack():Number {
+		override public function get attack():int {
 			var boost:int = 0;
 			if (game.player.str >= 180) boost += 15;
 			if (game.player.str >= 120) boost += 15;

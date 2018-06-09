@@ -4,9 +4,10 @@
  */
 package classes.Items.Jewelries 
 {
+	import classes.Creature;
+	import classes.Items.Equipable;
 	import classes.Items.Jewelry;
 	import classes.PerkLib;
-	import classes.Player;
 
 	public class SeersHairpin extends Jewelry
 	{
@@ -27,15 +28,15 @@ package classes.Items.Jewelries
 			return desc;
 		}
 		
-		override public function playerEquip():Jewelry {
-			while (game.player.hasPerk(PerkLib.SeersInsight)) game.player.removePerk(PerkLib.SeersInsight);
-			game.player.createPerk(PerkLib.SeersInsight,0.2,0,0,0);
-			return super.playerEquip();
+		override public function equip(host:Creature):Equipable {
+			while (host.hasPerk(PerkLib.SeersInsight)) host.removePerk(PerkLib.SeersInsight);
+			host.createPerk(PerkLib.SeersInsight,0.2,0,0,0);
+			return super.equip(host);
 		}
 		
-		override public function playerRemove():Jewelry {
-			while (game.player.hasPerk(PerkLib.SeersInsight)) game.player.removePerk(PerkLib.SeersInsight);
-			return super.playerRemove();
+		override public function unequip(host:Creature):Equipable {
+			while (host.hasPerk(PerkLib.SeersInsight)) host.removePerk(PerkLib.SeersInsight);
+			return super.unequip(host);
 		}
 		
 	}

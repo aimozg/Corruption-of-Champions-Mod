@@ -25,6 +25,7 @@ package classes.Items
 	
 	public final class JewelryLib
 	{
+		//todo @Aimozg @Oxdeception convert these to BaseEquipment._buffs
 		public static const MODIFIER_MINIMUM_LUST:int = 1;
 		public static const MODIFIER_FERTILITY:int = 	2;
 		public static const MODIFIER_SF:int = 			3;

@@ -33,7 +33,7 @@ public class AbstractSuccubus extends Monster
 				if (temp == 1) {
 					if (player.breastRows.length > 0 && player.biggestTitSize() > 0) outputText(player.allBreastsDescript() + "");
 					else outputText("chest");
-					damage = 9 - player.armor.def;
+					damage = 9 - player.armor.defense;
 					if (damage <= 0) {
 						outputText(" but you feel no pain thanks to your protection");
 						damage = 0;

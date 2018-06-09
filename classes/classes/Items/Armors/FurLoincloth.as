@@ -5,7 +5,6 @@
 package classes.Items.Armors
 {
 	import classes.Items.Armor;
-	import classes.Items.ArmorLib;
 
 	public final class FurLoincloth extends Armor
 	{

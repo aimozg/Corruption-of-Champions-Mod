@@ -3,15 +3,14 @@
  */
 package classes.Items
 {
-import classes.BaseContent;
-import classes.CoC;
-import classes.Items.Other.DebugWand;
-import classes.Items.Other.SimpleUseable;
-import classes.Scenes.SceneLib;
+	import classes.CoC;
+	import classes.Items.Other.DebugWand;
+	import classes.Items.Other.SimpleUseable;
+	import classes.Scenes.SceneLib;
 
-use namespace CoC;
+	use namespace CoC;
 
-	public final class UseableLib extends BaseContent
+	public final class UseableLib
 	{
 		public function UseableLib() {}
 		

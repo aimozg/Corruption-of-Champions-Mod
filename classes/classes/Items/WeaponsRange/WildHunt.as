@@ -2,6 +2,7 @@ package classes.Items.WeaponsRange
 {
 	import classes.Items.WeaponRange;
 	import classes.PerkLib;
+
 	/**
 	 * ...
 	 * @author Oxdeception
@@ -16,7 +17,7 @@ package classes.Items.WeaponsRange
 					"Bow", PerkLib.Accuracy2,30,0,0,0
 			);
 		}
-		override public function get attack():Number{
+		override public function get attack():int{
 			return (20 + (game.player.cor / 20));
 		}
 		

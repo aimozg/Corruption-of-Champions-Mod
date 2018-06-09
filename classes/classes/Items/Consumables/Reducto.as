@@ -3,25 +3,26 @@
  */
 package classes.Items.Consumables
 {
-import classes.CockTypesEnum;
-import classes.EngineCore;
-import classes.Items.Consumable;
-import classes.Scenes.SceneLib;
-import classes.internals.Utils;
+	import classes.CockTypesEnum;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.Items.Consumable;
+	import classes.Scenes.SceneLib;
+	import classes.internals.Utils;
 
-public final class Reducto extends Consumable {
+	public final class Reducto extends Consumable {
 		
 		public function Reducto() {
 			super("Reducto", "Reducto", "a salve marked as 'Reducto'", 30, "This container full of paste can be used to shrink a body part down by a significant amount.");
 		}
 
-		override public function canUse():Boolean {
+		override public function canUse(host:Creature):Boolean {
 			return true;
 		}
 		
 //		override public function hasSubMenu():Boolean { return true; } //Only GroPlus and Reducto use this.
 		
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			var rdtBalls:Function	= (game.player.balls > 0 && game.player.ballSize > 1 ? reductoBalls : null);
 			var rdtBreasts:Function	= (game.player.breastRows.length > 0 && game.player.biggestTitSize() > 0 ? reductoBreasts : null);
 			var rdtButt:Function	= (game.player.butt.type > 1 ? reductoButt : null);

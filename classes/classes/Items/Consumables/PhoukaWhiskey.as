@@ -3,22 +3,23 @@
  */
 package classes.Items.Consumables
 {
-import classes.EngineCore;
-import classes.GlobalFlags.kFLAGS;
-import classes.Items.Consumable;
-import classes.Player;
-import classes.PregnancyStore;
-import classes.StatusEffectClass;
-import classes.StatusEffects;
-import classes.internals.Utils;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.Items.Consumable;
+	import classes.Player;
+	import classes.PregnancyStore;
+	import classes.StatusEffectClass;
+	import classes.StatusEffects;
+	import classes.internals.Utils;
 
-public class PhoukaWhiskey extends Consumable {
+	public class PhoukaWhiskey extends Consumable {
 		
 		public function PhoukaWhiskey() {
 			super("P_Whsky", "Ph. Whiskey", "a small bottle of whiskey", 20, "A small, corked glass bottle with a dark amber liquid inside.  The whiskey smells strongly of peat.");
 		}
 		
-        override public function canUse():Boolean {
+        override public function canUse(host:Creature):Boolean {
 			switch (phoukaWhiskeyAcceptable(game.player)) {
 				case -4:
 					outputText("You stare at the bottle for a moment, but decide not to risk harming one of the children growing inside you.\n\n");
@@ -37,7 +38,7 @@ public class PhoukaWhiskey extends Consumable {
             return true; //Zero and up will return true
         }
 		
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			game.player.slimeFeed();
 			switch (phoukaWhiskeyDrink(game.player)) {
 				case 0: //Player isn't pregnant

@@ -3,8 +3,8 @@
  */
 package classes.Items.Consumables
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
-	import classes.Player;
 
 	public class SimpleConsumable extends Consumable {
 		private var effect:Function;
@@ -17,7 +17,7 @@ package classes.Items.Consumables
 			this.effect = effect;
 		}
 		
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			clearOutput();
 			effect(game.player);
 			return(false); //Any normal consumable does not have a sub-menu. Return false so that the inventory runs the itemDoNext function after useItem.

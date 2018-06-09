@@ -7,12 +7,12 @@ package classes.Items
 	import classes.PerkClass;
 	import classes.PerkLib;
 	import classes.PerkType;
-import classes.Player;
-import classes.Scenes.SceneLib;
+	import classes.Player;
+	import classes.Scenes.SceneLib;
 	import classes.Stats.StatUtils;
 	import classes.lists.DamageType;
 
-	public class Weapon extends Useable //Equipable
+	public class Weapon extends BaseEquipable
 	{
 		public static const MOD_DUAL:String = "Dual";
 		public static const MOD_LARGE:String = "Large";
@@ -26,22 +26,15 @@ import classes.Scenes.SceneLib;
 		public static const TYPE_STAFF:String = "Staff";
 
 		private var _verb:String;
-		private var _attack:Number;
-		private var _perk:String;
-		private var _name:String;
-		private var _type:String;
-		private var _weaponPerks:Vector.<PerkClass> = new Vector.<PerkClass>();
-		private var _modifiers:Array = [];
-		private var _buffs:Object;
 
-		private var _baseElement:DamageType = DamageType.PHYSICAL;
+		protected var _baseElement:DamageType = DamageType.PHYSICAL;
 		
 		private function get host():Player {
 			return game.player;
 		}
 
 		public function Weapon(id:String, shortName:String, name:String, longName:String, verb:String, attack:Number, value:Number = 0, description:String = null, perk:String = "", ptype:PerkType = null, v1:Number = 0, v2:Number = 0, v3:Number = 0, v4:Number = 0, buffs:Object = null) {
-			super(id, shortName, longName, value, description);
+			super(id, shortName, name, longName, value, perk, description);
 			this._name = name;
 			this._verb = verb;
 			this._attack = attack;
@@ -49,33 +42,41 @@ import classes.Scenes.SceneLib;
 				case "Dual": _modifiers.push(MOD_DUAL); break;
 				case "Large": _modifiers.push(MOD_LARGE); break;
 				case "Dual Large": _modifiers.push(MOD_DUAL, MOD_LARGE); break;
-				case "Staff": _type = TYPE_STAFF; break;
+				case "Staff": _subType = TYPE_STAFF; break;
 			}
+			if (verb.indexOf("whip") >= 0) _subType = TYPE_WHIP;
+			else if (verb.indexOf("punch") >= 0) _subType = TYPE_GAUNTLET;
+			else if (verb == "slash" || verb == "keen cut") _subType = TYPE_SWORD;
+			else if (verb == "stab") _subType = TYPE_DAGGER;
+			else if (verb == "smash") _subType = TYPE_BLUNT;
+			else if (verb.indexOf("cleave") >= 0) _subType = TYPE_AXE;
 			this._perk = perk;
-			if(ptype){this._weaponPerks.push(ptype.create(v1, v2, v3, v4));}
+			if(ptype){this._itemPerks.push(ptype.create(v1,v2,v3,v4));}
 			this._buffs = buffs || {};
+
+			_slot = Equipment.WEAPON;
 		}
 
 		public static function fromBuilder(builder:WeaponBuilder):Weapon {
 			if(!builder.name){builder.name = builder.id.toLowerCase();}
 			if(!builder.longName){builder.longName = "a " + builder.name;}
 			if(!builder.verb){
-				var verbs:Object = {
-					(TYPE_AXE):"cleave",
-					(TYPE_SWORD):"slash",
-					(TYPE_STAFF):"smack",
-					(TYPE_DAGGER):"stab",
-					(TYPE_BLUNT):"smash",
-					(TYPE_WHIP):"whip-crack",
-					(TYPE_GAUNTLET):"punch"
-				};
-				builder.verb = verbs[builder.weaponType];
-				if(!builder.verb){builder.verb = "hit"}
+				switch(builder.weaponType){
+					case TYPE_AXE: builder.verb = "cleave"; break;
+					case TYPE_SWORD: builder.verb = "slash"; break;
+					case TYPE_STAFF: builder.verb = "smack"; break;
+					case TYPE_DAGGER: builder.verb = "stab"; break;
+					case TYPE_BLUNT: builder.verb = "smash"; break;
+					case TYPE_WHIP: builder.verb = "whip-crack"; break;
+					case TYPE_GAUNTLET: builder.verb = "punch"; break;
+					default: builder.verb = "hit";
+				}
 			}
 			var weapon:Weapon = new Weapon(builder.id, builder.shortName, builder.name, builder.longName, builder.verb, builder.attack, builder.value, builder.description);
-			weapon._weaponPerks = builder.weaponPerks;
+			weapon._itemPerks = builder.weaponPerks;
 			weapon._modifiers = builder.modifiers;
 			weapon._buffs = builder.buffs;
+			weapon._subType = builder.weaponType;
 			return weapon;
 		}
 		
@@ -87,56 +88,13 @@ import classes.Scenes.SceneLib;
 		}
 
 		public function get element():DamageType { return _baseElement; }
-
-		public function get attack():Number { return _attack; }
 		
-		public function get perk():String { return _perk; }
-
-		public function get baseType():String { return _type; }
-		
-		public function get name():String { return _name; }
-		
-		override public function get description():String {
-			var desc:String = _description;
-			//Type
-			desc += "\n\nType: Melee Weapon ";
-			if(_type) {
-				desc += "(" + _modifiers.join(" ") + " " + _type + ")";
-			} else {
-				if (_perk == "Large") desc += "(Large)";
-				else if (_perk == "Staff") desc += "(Staff)";
-				else if (_perk == "Dual") desc += "(Dual)";
-				else if (_perk == "Dual Large") desc += "(Dual Large)";
-				else if (verb.indexOf("whip") >= 0) desc += "(Whip)";
-				else if (verb.indexOf("punch") >= 0) desc += "(Gauntlet)";
-				else if (verb == "slash" || verb == "keen cut") desc += "(Sword)";
-				else if (verb == "stab") desc += "(Dagger)";
-				else if (verb == "smash") desc += "(Blunt)";
+		override public function useText(host:Creature):String {
+			var text:String = super.useText(host);
+			if (is2hWeapon(host) && (host as Player).shield != ShieldLib.NOTHING) {
+				text += "Because the weapon requires the use of two hands, you have unequipped your shield. ";
 			}
-			//Attack
-			desc += "\nAttack: " + String(attack);
-			//Value
-			desc += "\nBase value: " + String(value);
-
-			for each(var perk:PerkClass in _weaponPerks){
-				desc += "\nSpecial: " + perk.perkName + " ";
-				desc += perk.perkDesc;
-			}
-			for (var statname:String in _buffs) {
-				desc += "\nSpecial: "+StatUtils.explainBuff(statname,_buffs[statname]);
-			}
-			return desc;
-		}
-		
-		override public function useText():void {
-			outputText("You equip " + longName + ".  ");
-			if (is2hWeapon(host) && host.shield != ShieldLib.NOTHING) {
-				outputText("Because the weapon requires the use of two hands, you have unequipped your shield. ");
-			}
-		}
-		
-		override public function canUse():Boolean {
-			return true;
+			return text;
 		}
 
 		public function isLarge():Boolean {
@@ -148,33 +106,23 @@ import classes.Scenes.SceneLib;
 			return dual || (isLarge() && !host.hasPerk(PerkLib.TitanGrip));
 		}
 
-		public function playerEquip():Weapon { //This item is being equipped by the player. Add any perks, etc. - This function should only handle mechanics, not text output
-			if (is2hWeapon(host) && host.shield != ShieldLib.NOTHING) {
+		override public function equip(host:Creature):Equipable {
+			//fixme @Oxdeception creature does not have a shield
+			if (is2hWeapon(host) && (host as Player).shield != ShieldLib.NOTHING) {
 				SceneLib.inventory.unequipShield();
 			}
-			for each(var perk:PerkClass in _weaponPerks){
+			for each(var perk:PerkClass in _itemPerks){
 				while (host.hasPerk(perk.ptype)) {
 					host.removePerk(perk.ptype);
 				}
 				host.createPerk(perk.ptype, perk.value1, perk.value2, perk.value3, perk.value4);
 			}
-			applyBuffs();
+			applyBuffs(host);
 			return this;
 		}
-		
-		public function get tagForBuffs():String {
-			return 'item/'+id;
-		}
-		private function applyBuffs():void {
-			StatUtils.applyBuffObject(host, _buffs, tagForBuffs, {save:false,text:name}, this);
-		}
-		
-		public function saveLoaded():void {
-			applyBuffs();
-		}
-		
-		public function playerRemove():Weapon { //This item is being removed by the player. Remove any perks, etc. - This function should only handle mechanics, not text output
-			for each (var perk:PerkClass in _weaponPerks){
+
+		override public function unequip(host:Creature):Equipable { //This item is being removed by the player. Remove any perks, etc. - This function should only handle mechanics, not text output
+			for each (var perk:PerkClass in _itemPerks){
 				while (host.hasPerk(perk.ptype)){
 					host.removePerk(perk.ptype);
 				}
@@ -182,8 +130,5 @@ import classes.Scenes.SceneLib;
 			host.removeStatEffects(tagForBuffs);
 			return this;
 		}
-		
-		public function removeText():void {} //Produces any text seen when removing the armor normally
-
 	}
 }

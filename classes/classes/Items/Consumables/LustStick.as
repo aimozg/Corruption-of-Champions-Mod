@@ -3,10 +3,10 @@
  */
 package classes.Items.Consumables
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
 	import classes.Items.ConsumableLib;
 	import classes.PerkLib;
-	import classes.Player;
 	import classes.StatusEffects;
 	import classes.internals.Utils;
 
@@ -16,7 +16,7 @@ package classes.Items.Consumables
 			super("LustStk", "LustStk", "a tube of golden lipstick", ConsumableLib.DEFAULT_VALUE, "This tube of golden lipstick is used by harpies to keep males aroused.  It has aphrodisiac properties on anyone with male genitalia and is most effective when applied to the lips or groin.");
 		}
 
-		override public function canUse():Boolean {
+		override public function canUse(host:Creature):Boolean {
 			if (game.player.hasCock() && !game.player.hasPerk(PerkLib.LuststickAdapted)) {
 				outputText("You look at the tube of lipstick, but get the idea it would be a pretty bad idea to smear a thick coating of cock-hardening aphrodisiacs over your own lips.  ");
 				return false;
@@ -24,7 +24,7 @@ package classes.Items.Consumables
 			return true;
 		}
 		
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			if (game.player.hasStatusEffect(StatusEffects.LustStickApplied)) {
 				game.player.addStatusValue(StatusEffects.LustStickApplied, 1, Utils.rand(12) + 12);
 				outputText("You carefully open the sweet-smelling tube and smear the lipstick over the coat you already have on your lips.  <b>No doubt another layer will make it last even longer!</b>  ");

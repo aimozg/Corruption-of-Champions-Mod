@@ -1,5 +1,6 @@
 package classes.Items.Consumables
 {
+	import classes.Creature;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.Items.Consumable;
 	import classes.StatusEffects;
@@ -16,7 +17,7 @@ package classes.Items.Consumables
 			super("Cerul P", "Cerulean P.", "a cerulean-tinted potion", ITEM_VALUE, "This is a mysterious bottle filled with a sky-blue liquid that sloshes gently inside.  Supposedly it will make you irresistible, though to what or who you cannot say.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			clearOutput();
 			player.slimeFeed();

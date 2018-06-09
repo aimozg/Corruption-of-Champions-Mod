@@ -3,9 +3,9 @@
  */
 package classes.Items.Consumables
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
 	import classes.PerkLib;
-	import classes.Player;
 
 	public final class DeBimbo extends Consumable {
 		
@@ -21,37 +21,36 @@ package classes.Items.Consumables
 				return "This draft is concocted from five scholar's teas and who knows what else.  Supposedly it will correct the stupifying effects of Bimbo Liqueur. \n\nType: Consumable";
 		}
 		
-		override public function canUse():Boolean {
-			if (game.player.hasPerk(PerkLib.BimboBrains) || game.player.hasPerk(PerkLib.FutaFaculties) || game.player.hasPerk(PerkLib.BroBrains)) return true;
+		override public function canUse(host:Creature):Boolean {
+			if (host.hasPerk(PerkLib.BimboBrains) || host.hasPerk(PerkLib.FutaFaculties) || host.hasPerk(PerkLib.BroBrains)) return true;
 			outputText("You can't use this right now, and it's too expensive to waste!\n\n");
 			return false;
 		}
 		
-		override public function useItem():Boolean {
-			if (game.player.hasPerk(PerkLib.BimboBrains)) {
+		override public function useItem(host:Creature):Boolean {
+			if (host.hasPerk(PerkLib.BimboBrains)) {
 				outputText("\n\n(<b>Perk Removed:  Bimbo Brains - Your intelligence and speech patterns are no longer limited to that of a bimbo.</b>)");
-				game.player.removePerk(PerkLib.BimboBrains);
+				host.removePerk(PerkLib.BimboBrains);
 			}
-			else if (game.player.hasPerk(PerkLib.FutaFaculties)) {
+			else if (host.hasPerk(PerkLib.FutaFaculties)) {
 				outputText("\n\n(<b>Perk Removed:  Futa Faculties - Your intelligence and speech patterns are no longer limited to that of a futanari bimbo.</b>)");
-				game.player.removePerk(PerkLib.FutaFaculties);
+				host.removePerk(PerkLib.FutaFaculties);
 			}
-			else if (game.player.hasPerk(PerkLib.BroBrains)) {
+			else if (host.hasPerk(PerkLib.BroBrains)) {
 				outputText("\n\n(<b>Perk Removed:  Bro Brains - Your intelligence and speech patterns are no longer limited to that of a male who constantly works out.</b>)");
-				game.player.removePerk(PerkLib.BroBrains);
+				host.removePerk(PerkLib.BroBrains);
 			}
 			return(false);
 		}
-		
-		override public function useText():void {
-			if (game.player.hasPerk(PerkLib.BroBrains)) {
-				outputText("You pinch your nose and swallow the foul-tasting mixture with a grimace.  Oh, that's just <i>nasty!</i>  You drop the vial, which shatters on the ground, clutching at your head as a wave of nausea rolls over you.  Stumbling back against a rock for support, you close your eyes.  A constant, pounding ache throbs just behind your temples, and for once, you find yourself speechless.  A pained groan slips through your lips as thoughts and memories come rushing back.  One after another, threads of cognizant thought plow through the simple matrices of your bro mind, shredding and replacing them.");
-				outputText("\n\nYou... you were a brute who constantly thinks of working out and fucking!  You shudder as your faculties return, the pain diminishing with each passing moment.");
+
+		override public function useText(host:Creature):String {
+			if (host.hasPerk(PerkLib.BroBrains)) {
+				return "You pinch your nose and swallow the foul-tasting mixture with a grimace.  Oh, that's just <i>nasty!</i>  You drop the vial, which shatters on the ground, clutching at your head as a wave of nausea rolls over you.  Stumbling back against a rock for support, you close your eyes.  A constant, pounding ache throbs just behind your temples, and for once, you find yourself speechless.  A pained groan slips through your lips as thoughts and memories come rushing back.  One after another, threads of cognizant thought plow through the simple matrices of your bro mind, shredding and replacing them."
+						+ "\n\nYou... you were a brute who constantly thinks of working out and fucking!  You shudder as your faculties return, the pain diminishing with each passing moment.";
 			}
-			else {
-				outputText("Well, time to see what this smelly, old rat was on about!  You pinch your nose and swallow the foul-tasting mixture with a grimace.  Oh, that's just <i>nasty!</i>  You drop the vial, which shatters on the ground, clutching at your head as a wave of nausea rolls over you.  Stumbling back against a rock for support, you close your eyes.  A constant, pounding ache throbs just behind your temples, and for once, you find yourself speechless.  A pained groan slips through your lips as thoughts and memories come rushing back.  One after another, threads of cognizant thought plow through the simple matrices of your bimbo mind, shredding and replacing them.");
-				outputText("\n\nYou... you were an air-headed ditz!  A vacuous, idiot-girl with nothing between her ears but hunger for dick and pleasure!  You shudder as your faculties return, the pain diminishing with each passing moment.");
-			}
+
+			return "Well, time to see what this smelly, old rat was on about!  You pinch your nose and swallow the foul-tasting mixture with a grimace.  Oh, that's just <i>nasty!</i>  You drop the vial, which shatters on the ground, clutching at your head as a wave of nausea rolls over you.  Stumbling back against a rock for support, you close your eyes.  A constant, pounding ache throbs just behind your temples, and for once, you find yourself speechless.  A pained groan slips through your lips as thoughts and memories come rushing back.  One after another, threads of cognizant thought plow through the simple matrices of your bimbo mind, shredding and replacing them."
+					+ "\n\nYou... you were an air-headed ditz!  A vacuous, idiot-girl with nothing between her ears but hunger for dick and pleasure!  You shudder as your faculties return, the pain diminishing with each passing moment.";
 		}
 	}
 }

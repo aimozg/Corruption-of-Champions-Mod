@@ -7,7 +7,7 @@ import classes.internals.Utils;
 
 import flash.utils.Dictionary;
 
-	public class ItemType extends Utils
+	public class ItemType
 	{
 		private static var ITEM_LIBRARY:Dictionary = new Dictionary();
 		private static var ITEM_SHORT_LIBRARY:Dictionary = new Dictionary();

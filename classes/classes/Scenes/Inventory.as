@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Created by aimozg on 12.01.14.
  */
 package classes.Scenes
@@ -7,7 +7,10 @@ package classes.Scenes
 	import classes.GlobalFlags.kFLAGS;
 	import classes.Items.Armor;
 	import classes.Items.ArmorLib;
+	import classes.Items.BaseUseable;
 	import classes.Items.Consumable;
+	import classes.Items.Equipable;
+	import classes.Items.Equipment;
 	import classes.Items.Jewelry;
 	import classes.Items.JewelryLib;
 	import classes.Items.Shield;
@@ -409,7 +412,7 @@ package classes.Scenes
 			takeItemFull(itype, true, source);
 		}
 		
-		public function returnItemToInventory(item:Useable, showNext:Boolean = true):void { //Used only by items that have a sub menu if the player cancels
+		public function returnItemToInventory(item:BaseUseable, showNext:Boolean = true):void { //Used only by items that have a sub menu if the player cancels
 			if (!debug) {
 				if (currentItemSlot == null) {
 					takeItem(item, callNext, callNext, null); //Give player another chance to put item in inventory
@@ -552,13 +555,13 @@ package classes.Scenes
 		
 		private function useItemInInventory(slotNum:int):void {
 			clearOutput();
-			if (player.itemSlots[slotNum].itype is Useable) {
-				var item:Useable = player.itemSlots[slotNum].itype as Useable;
+			if (player.itemSlots[slotNum].itype is BaseUseable) {
+				var item:BaseUseable = player.itemSlots[slotNum].itype as BaseUseable;
 				if (flags[kFLAGS.SHIFT_KEY_DOWN] == 1) {
 					deleteItemPrompt(item, slotNum);
 					return;
 				}
-				if (item.canUse()) { //If an item cannot be used then canUse should provide a description of why the item cannot be used
+				if (item.canUse(CoC.instance.player)) { //If an item cannot be used then canUse should provide a description of why the item cannot be used
 					if (!debug) player.itemSlots[slotNum].removeOneItem();
 					useItem(item, player.itemSlots[slotNum]);
 					return;
@@ -576,7 +579,7 @@ package classes.Scenes
 			outputText("\n\n");
 			enemyAI();
 		}
-		private function deleteItemPrompt(item:Useable, slotNum:int):void {
+		private function deleteItemPrompt(item:BaseUseable, slotNum:int):void {
 			clearOutput();
 			outputText("Are you sure you want to destroy " + player.itemSlots[slotNum].quantity + "x " + item.shortName + "?  You won't be able to retrieve " + (player.itemSlots[slotNum].quantity == 1 ? "it": "them") + "!");
 			menu();
@@ -585,7 +588,7 @@ package classes.Scenes
 			//doYesNo(deleteItem, inventoryMenu);
 		}
 		
-		private function deleteItem(item:Useable, slotNum:int):void {
+		private function deleteItem(item:BaseUseable, slotNum:int):void {
 			clearOutput();
 			outputText(player.itemSlots[slotNum].quantity + "x " + item.shortName + " " + (player.itemSlots[slotNum].quantity == 1 ? "has": "have") + " been destroyed.");
 			player.destroyItems(item, player.itemSlots[slotNum].quantity);
@@ -593,56 +596,22 @@ package classes.Scenes
 		}
 		
 		private function useItem(item:Useable, fromSlot:ItemSlotClass):void {
-			item.useText();
-			if (item is Armor) {
-				player.armor.removeText();
-				item = player.setArmor(item as Armor); //Item is now the player's old armor
-				if (item == null)
+			outputText(item.useText(CoC.instance.player));
+			var equipable:Equipable;
+			if (item is Equipable) {
+				outputText(player.equipment.getItem((item as Equipable).slot).removeText(player));
+				equipable = player.equipment.equip(player, item as Equipable);
+				if(equipable == null){
 					itemGoNext();
-				else takeItem(item, callNext);
-			}
-			else if (item is WeaponRange) {
-				player.weaponRange.removeText();
-				item = player.setWeaponRange(item as WeaponRange); //Item is now the player's old weapon range
-				if (item == null)
-					itemGoNext();
-				else takeItem(item, callNext);
-			}
-			else if (item is Weapon) {
-				player.weapon.removeText();
-				item = player.setWeapon(item as Weapon); //Item is now the player's old weapon
-				if (item == null)
-					itemGoNext();
-				else takeItem(item, callNext);
-			}
-			else if (item is Jewelry) {
-				player.jewelry.removeText();
-				item = player.setJewelry(item as Jewelry); //Item is now the player's old jewelry
-				if (item == null)
-					itemGoNext();
-				else takeItem(item, callNext);
-			}
-			else if (item is Shield) {
-				player.shield.removeText();
-				item = player.setShield(item as Shield); //Item is now the player's old shield
-				if (item == null)
-					itemGoNext();
-				else takeItem(item, callNext);
-			}
-			else if (item is Undergarment) {
-				if (item["type"] == 0) player.upperGarment.removeText();
-				else player.lowerGarment.removeText();
-				item = player.setUndergarment(item as Undergarment, item["type"]); //Item is now the player's old shield
-				if (item == null)
-					itemGoNext();
-				else takeItem(item, callNext);
+				} else {
+					takeItem(equipable as ItemType, callNext)
+				}
 			}
 			else {
 				currentItemSlot = fromSlot;
-				if (!item.useItem()) itemGoNext(); //Items should return true if they have provided some form of sub-menu.
+				if (!item.useItem(CoC.instance.player)) itemGoNext(); //Items should return true if they have provided some form of sub-menu.
 					//This is used for Reducto and GroPlus (which always present the player with a sub-menu)
 					//and for the Kitsune Gift (which may show a sub-menu if the player has a full inventory)
-//				if (!item.hasSubMenu()) itemGoNext(); //Don't call itemGoNext if there's a sub menu, otherwise it would never be displayed
 			}
 		}
 		
@@ -657,13 +626,13 @@ package classes.Scenes
 				currentItemSlot = source;
 				addButton(12, "Put Back", createCallBackFunction2(returnItemToInventory, itype, false));
 			}
-			if (showUseNow && itype is Useable) addButton(13, "Use Now", createCallBackFunction2(useItemNow, itype as Useable, source));
+			if (showUseNow && itype is BaseUseable) addButton(13, "Use Now", createCallBackFunction2(useItemNow, itype as BaseUseable, source));
 			addButton(14, "Abandon", callOnAbandon); //Does not doNext - immediately executes the callOnAbandon function
 		}
 		
-		private function useItemNow(item:Useable, source:ItemSlotClass):void {
+		private function useItemNow(item:BaseUseable, source:ItemSlotClass):void {
 			clearOutput();
-			if (item.canUse()) { //If an item cannot be used then canUse should provide a description of why the item cannot be used
+			if (item.canUse(CoC.instance.player)) { //If an item cannot be used then canUse should provide a description of why the item cannot be used
 				useItem(item, source);
 			}
 			else {
@@ -803,16 +772,16 @@ package classes.Scenes
 		public function unequipArmor():void {
 			if (player.armorName != "goo armor") takeItem(player.setArmor(ArmorLib.NOTHING), inventoryMenu); 
 			else { //Valeria belongs in the camp, not in your inventory!
-				player.armor.removeText();
+				outputText(player.armor.removeText(player));
 				player.setArmor(ArmorLib.NOTHING);
 				doNext(manageEquipment);
 			}
 		}
 		public function unequipUpperwear():void {
-			takeItem(player.setUndergarment(UndergarmentLib.NOTHING, UndergarmentLib.TYPE_UPPERWEAR), inventoryMenu);
+			takeItem(player.equipment.unequip(player, Equipment.UPPER_GARMENT) as Undergarment, inventoryMenu);
 		}
 		public function unequipLowerwear():void {
-			takeItem(player.setUndergarment(UndergarmentLib.NOTHING, UndergarmentLib.TYPE_LOWERWEAR), inventoryMenu);
+			takeItem(player.equipment.unequip(player, Equipment.LOWER_GARMENT) as Undergarment, inventoryMenu);
 		}
 		public function unequipJewel():void {
 			takeItem(player.setJewelry(JewelryLib.NOTHING), inventoryMenu);

@@ -3,30 +3,32 @@
  */
 package classes.Items.Armors
 {
-import classes.EngineCore;
-import classes.GlobalFlags.kFLAGS;
-import classes.Items.Armor;
-import classes.Monster;
-import classes.PerkLib;
-import classes.Player;
-import classes.Scenes.Areas.HighMountains.MinotaurMob;
-import classes.Scenes.Areas.Mountain.Minotaur;
-import classes.Scenes.SceneLib;
-import classes.lists.BreastCup;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.GlobalFlags.kFLAGS;
+	import classes.Items.Armor;
+	import classes.Items.Equipable;
+	import classes.Monster;
+	import classes.PerkLib;
+	import classes.Player;
+	import classes.Scenes.Areas.HighMountains.MinotaurMob;
+	import classes.Scenes.Areas.Mountain.Minotaur;
+	import classes.Scenes.SceneLib;
+	import classes.lists.BreastCup;
 
-public final class LustyMaidensArmor extends Armor {
+	public final class LustyMaidensArmor extends Armor {
 		
 		public function LustyMaidensArmor() {
 			super("LMArmor", "LMArmor", "lusty maiden's armor", "a bikini-like set of armor that could only belong to a lusty maiden", 10, 400, "This skimpy chain bikini barely qualifies as armor.  Indeed, the chain is made from links much finer and lighter than normal, so fine that it feels almost silken under your fingertips.  A simple seal in the g-string-like undergarment states, \"Virgins only.\" \nRequirements: breast size of at least DD-cups and be a female.", "Light", false, false);
 		}
 		
-		override public function get def():Number {
+		override public function get defense():int {
 			if (game.player.hasVirginVagina()) return 15 + game.flags[kFLAGS.BIKINI_ARMOR_BONUS];
 			return 10 + game.flags[kFLAGS.BIKINI_ARMOR_BONUS];
 		}
 		
-		override public function canUse():Boolean {
-			if (!super.canUse()) {
+		override public function canUse(host:Creature):Boolean {
+			if (!super.canUse(host)) {
 				return false;
 			}
 			if (game.player.biggestTitSize() < BreastCup.A) { //{No titties}
@@ -68,20 +70,20 @@ public final class LustyMaidensArmor extends Armor {
 			return true;
 		}
 		
-		override public function playerEquip():Armor {
-			while (game.player.hasPerk(PerkLib.SluttySeduction)) game.player.removePerk(PerkLib.SluttySeduction);
-			if (game.player.hasVirginVagina()) {
-				game.player.createPerk(PerkLib.SluttySeduction, 10 + game.flags[kFLAGS.BIKINI_ARMOR_BONUS],0,0,0);
+		override public function equip(host:Creature):Equipable {
+			while (host.hasPerk(PerkLib.SluttySeduction)) host.removePerk(PerkLib.SluttySeduction);
+			if (host.hasVirginVagina()) {
+				host.createPerk(PerkLib.SluttySeduction, 10 + game.flags[kFLAGS.BIKINI_ARMOR_BONUS],0,0,0);
 			}
 			else {
-				game.player.createPerk(PerkLib.SluttySeduction, 6 + game.flags[kFLAGS.BIKINI_ARMOR_BONUS],0,0,0);
+				host.createPerk(PerkLib.SluttySeduction, 6 + game.flags[kFLAGS.BIKINI_ARMOR_BONUS],0,0,0);
 			}
-			return super.playerEquip();
+			return super.equip(host);
 		}
 		
-		override public function playerRemove():Armor {
-			while (game.player.hasPerk(PerkLib.SluttySeduction)) game.player.removePerk(PerkLib.SluttySeduction);
-			return super.playerRemove();
+		override public function unequip(host:Creature):Equipable {
+			while (host.hasPerk(PerkLib.SluttySeduction)) host.removePerk(PerkLib.SluttySeduction);
+			return super.unequip(host);
 		}
 		
 		//"Chaste" Paizuri - works for most foes with penises.

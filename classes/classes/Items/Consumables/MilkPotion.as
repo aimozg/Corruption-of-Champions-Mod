@@ -1,8 +1,9 @@
 package classes.Items.Consumables 
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
 	import classes.PerkLib;
-	
+
 	/**
 	 * Item that boost milk production.
 	 */
@@ -15,7 +16,7 @@ package classes.Items.Consumables
 			super("MilkPtn", "ProLactaid", "a bottle labelled \"Pro Lactaid\"", ITEM_VALUE, "A bottle filled with white liquid which is distilled from Lactaid and LaBovas.  Rathazul mentioned that this potion will greatly improve your lactation. There's the possibility of permanently lactating, even if you're a male.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			clearOutput();
 			player.slimeFeed();

@@ -3,8 +3,10 @@ import classes.BodyParts.Hair;
 import classes.GlobalFlags.kACHIEVEMENTS;
 import classes.GlobalFlags.kFLAGS;
 import classes.Items.ArmorLib;
-import classes.Items.ShieldLib;
-import classes.Items.UndergarmentLib;
+	import classes.Items.Equipment;
+	import classes.Items.ShieldLib;
+	import classes.Items.Undergarment;
+	import classes.Items.UndergarmentLib;
 import classes.Items.WeaponLib;
 import classes.Scenes.Dungeons.DungeonAbstractContent;
 import classes.Scenes.SceneLib;
@@ -299,7 +301,7 @@ public class EventParser {
         if (player.lowerGarment != UndergarmentLib.NOTHING) {
             if (player.isTaur() || player.isDrider() || player.isScylla() || (player.isNaga() && player.lowerGarmentPerk != "NagaWearable")) {
                 EngineCore.outputText("You feel something slipping off as if by magic. Looking down on the ground, you realize it's your [lowergarment]. Looking down at your lower body, you let out a sigh and pick up your [lowergarment]. ");
-                SceneLib.inventory.takeItem(player.setUndergarment(UndergarmentLib.NOTHING, 1), playerMenu);
+                SceneLib.inventory.takeItem(player.equipment.unequip(player, Equipment.LOWER_GARMENT) as Undergarment, playerMenu);
                 return true;
             }
         }

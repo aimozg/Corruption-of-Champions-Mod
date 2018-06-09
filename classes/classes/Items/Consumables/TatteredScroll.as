@@ -2,10 +2,11 @@
  * Coded by aimozg on 01.06.2017.
  */
 package classes.Items.Consumables {
-import classes.Items.Consumable;
-import classes.PerkLib;
+	import classes.Creature;
+	import classes.Items.Consumable;
+	import classes.PerkLib;
 
-public class TatteredScroll extends Consumable {
+	public class TatteredScroll extends Consumable {
 	public static const ITEM_VALUE:int = 6;
 
 	public function TatteredScroll() {
@@ -13,7 +14,7 @@ public class TatteredScroll extends Consumable {
 	}
 
 
-	override public function useItem():Boolean {
+	override public function useItem(host:Creature):Boolean {
 		clearOutput();
 		outputText("Your wobbly [legs] give out underneath you as your body's willpower seems to evaporate, your mouth reading the words on the scroll with a backwards sounding sing-song voice.\n\n");
 		if (player.hairColor == "sandy blonde" && !player.hasPerk(PerkLib.TransformationImmunity)) {

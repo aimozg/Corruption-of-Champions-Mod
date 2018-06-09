@@ -1,7 +1,8 @@
 package classes.Items.Consumables 
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
-	
+
 	/**
 	 * Oil that reduces sensitivity.
 	 */
@@ -14,7 +15,7 @@ package classes.Items.Consumables
 			super("NumbOil","Numb Oil", "a bottle of numbing oil", ITEM_VALUE, "This bottle feels a bit warm to the touch. From the look of the label on the bottle of oil, you suspect this will make you less sensitive.");			
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			outputText("You open the bottle and begin pouring the oil all over your body.\r\r");
 			if (player.sens < 20) {

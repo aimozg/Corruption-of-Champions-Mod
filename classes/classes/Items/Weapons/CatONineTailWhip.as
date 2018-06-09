@@ -4,9 +4,9 @@
  */
 package classes.Items.Weapons 
 {
-	import classes.PerkLib;
-	import classes.Player;
+	import classes.Creature;
 	import classes.Items.Weapon;
+	import classes.PerkLib;
 
 	public class CatONineTailWhip extends Weapon
 	{
@@ -16,7 +16,7 @@ package classes.Items.Weapons
 			super("CNTWhip", "CatONineTailWhip", "Bastet Whip", "a Bastet Whip", "whipping", 27, 1080, "A rope made from unknown magic beast fur that unravelled into three small ropes, each of which is unravelled again designed to whip and cut your foes into submission.", "Large");
 		}
 		
-		override public function get attack():Number {
+		override public function get attack():int {
 			var boost:int = 0;
 			if ((game.player.str + game.player.spe) >= 270) {
 				boost += 18;
@@ -34,7 +34,7 @@ package classes.Items.Weapons
 			return (9 + boost);
         }
 		
-		override public function canUse():Boolean {
+		override public function canUse(host:Creature):Boolean {
 			if (game.player.hasPerk(PerkLib.TitanGrip)) return true;
 			outputText("You aren't skilled in handling large weapons with one hand yet to effectively use this whip. Unless you want to hurt yourself instead enemies when trying to use it...  ");
 			return false;

@@ -1,10 +1,11 @@
 package classes.Items.Consumables 
 {
-import classes.EngineCore;
-import classes.Items.Consumable;
-import classes.Items.ConsumableLib;
+	import classes.Creature;
+	import classes.EngineCore;
+	import classes.Items.Consumable;
+	import classes.Items.ConsumableLib;
 
-/**
+	/**
 	 * Moderate boost to HP.
 	 * 
 	 * Retro UTG stuff!
@@ -16,7 +17,7 @@ import classes.Items.ConsumableLib;
 			super("H. Pill", "Heal Pill", "a small healing pill", ConsumableLib.DEFAULT_VALUE, "A small healing pill that's guaranteed to heal you by a bit.");
 		}
 		
-		override public function useItem():Boolean
+		override public function useItem(host:Creature):Boolean
 		{
 			var rand:int = Math.random() * 100;
 			outputText("You pop the small pill into your mouth and swallow. ");

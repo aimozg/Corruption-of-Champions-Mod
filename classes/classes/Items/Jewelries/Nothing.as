@@ -1,9 +1,9 @@
 package classes.Items.Jewelries 
 {
-	import classes.ItemType;
+	import classes.Creature;
+	import classes.Items.Equipable;
 	import classes.Items.Jewelry;
-	import classes.Player;
-	
+
 	public class Nothing extends Jewelry
 	{
 		public function Nothing()
@@ -11,7 +11,7 @@ package classes.Items.Jewelries
 			super("nojewel", "nojewel", "nothing", "nothing", 0, 0, 0, "no jewelry", "ring");
 		}
 		
-		override public function playerRemove():Jewelry {
+		override public function unequip(host:Creature):Equipable {
 			return null; //There is nothing!
 		}
 	}

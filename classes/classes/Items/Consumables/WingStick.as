@@ -3,8 +3,8 @@
  */
 package classes.Items.Consumables
 {
+	import classes.Creature;
 	import classes.Items.Consumable;
-	import classes.Player;
 	import classes.internals.Utils;
 
 	public final class WingStick extends Consumable {
@@ -13,13 +13,13 @@ package classes.Items.Consumables
 			super("W.Stick", "Wingstick", "a wingstick", 10, "A tri-bladed throwing weapon.  Though good for only a single use, it's guaranteed to do high damage if it hits.  Inflicts 40 to 100 base damage, affected by strength.");
 		}
 		
-		override public function canUse():Boolean {
+		override public function canUse(host:Creature):Boolean {
 			if (game.inCombat) return true;
 			outputText("There's no one to throw it at!");
 			return false;
 		}
 		
-		override public function useItem():Boolean {
+		override public function useItem(host:Creature):Boolean {
 			clearOutput();
 			outputText("You toss a wingstick at your foe!  It flies straight and true, almost as if it has a mind of its own as it arcs towards " + game.monster.a + game.monster.short + "!\n");
 			if (game.monster.spe - 80 > Utils.rand(100) + 1) { //1% dodge for each point of speed over 80

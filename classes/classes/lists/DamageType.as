@@ -9,6 +9,7 @@ package classes.lists {
 		public static const WATER:DamageType = new DamageType("water", 5, "#0000fe", Creature.damage_MAGIC);
 		public static const EARTH:DamageType = new DamageType("earth", 5, "#7d4021", Creature.damage_MAGIC);
 		public static const AIR:DamageType = new DamageType("air", 5, "#00d36d", Creature.damage_MAGIC);
+		public static const DARKNESS:DamageType = new DamageType("darkness", 5, "#4d1667", Creature.damage_MAGIC);
 
 		private var _name:String;
 		private var _baseCost:int;
