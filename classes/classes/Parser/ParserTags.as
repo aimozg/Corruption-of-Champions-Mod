@@ -99,7 +99,7 @@ public class ParserTags {
         "skinfurscales"         : function ():* { return CoC.instance.player.skin.describe('coat'); },
         "skintone"              : function ():* { return CoC.instance.player.skinTone; },
         "tallness"              : function ():* { return Measurements.footInchOrMetres(CoC.instance.player.tallness); },
-        "teasetext"             : function ():* { return SceneLib.combat.teaseText(); },
+        "teasetext"             : function ():* { SceneLib.combat.teases.tease(true); return "";},
         "tongue"                : function ():* { return Appearance.tongueDescription(CoC.instance.player); },
         "uppergarment"          : function ():* { return CoC.instance.player.upperGarmentName; },
         "vag"                   : function ():* { return CoC.instance.player.vaginaDescript(); },

@@ -162,31 +162,31 @@ public class CombatUI extends BaseCombatContent {
 			addButton(4, "Release", SceneLib.desert.nagaScene.nagaLeggoMyEggo);
 		} else if (monster.hasStatusEffect(StatusEffects.ConstrictedScylla)) {
 			menu();
-			addButton(0, "Squeeze", combat.ScyllaSqueeze);
+			addButton(0, "Squeeze", combat.racials.ScyllaSqueeze);
 			if (monster.plural) {
 				button(0).hint("Squeeze your foes with your tentacles attempting to break them appart! \n\nFatigue Cost: " + physicalCost(50) + "");
 			} else {
 				button(0).hint("Squeeze your foe with your tentacle attempting to break it appart! \n\nFatigue Cost: " + physicalCost(20) + "");
 			}
-			addButton(1, "Tease", combat.ScyllaTease).hint("Use a free limb to caress and pleasure your grappled foe. \n\nFatigue Cost: " + physicalCost(20) + "");
-			addButton(4, "Release", combat.ScyllaLeggoMyEggo);
+			addButton(1, "Tease", combat.racials.ScyllaTease).hint("Use a free limb to caress and pleasure your grappled foe. \n\nFatigue Cost: " + physicalCost(20) + "");
+			addButton(4, "Release", combat.racials.ScyllaLeggoMyEggo);
 		} else if (monster.hasStatusEffect(StatusEffects.GooEngulf)) {
 			menu();
-			addButton(0, "Tease", combat.GooTease).hint("Mold limb to caress and pleasure your grappled foe. \n\nFatigue Cost: " + physicalCost(20) + "");
-			addButton(4, "Release", combat.GooLeggoMyEggo);
+			addButton(0, "Tease", combat.racials.GooTease).hint("Mold limb to caress and pleasure your grappled foe. \n\nFatigue Cost: " + physicalCost(20) + "");
+			addButton(4, "Release", combat.racials.GooLeggoMyEggo);
 		} else if (monster.hasStatusEffect(StatusEffects.EmbraceVampire)) {
 			menu();
 			if (player.faceType == Face.VAMPIRE) {
-				addButton(0, "Bite", combat.VampiricBite).hint("Suck on the blood of an opponent. \n\nFatigue Cost: " + physicalCost(20) + "");
+				addButton(0, "Bite", combat.racials.VampiricBite).hint("Suck on the blood of an opponent. \n\nFatigue Cost: " + physicalCost(20) + "");
 				if (player.fatigueLeft() <= combat.physicalCost(20)) {
 					button(0).disable("You are too tired to bite " + monster.a + " " + monster.short + ".");
 				}
 			}
 			else addButtonDisabled(0, "Bite", "If only you had fangs.");
-			addButton(4, "Release", combat.VampireLeggoMyEggo);
+			addButton(4, "Release", combat.racials.VampireLeggoMyEggo);
 		} else if (monster.hasStatusEffect(StatusEffects.Pounce)) {
 			menu();
-			addButton(0, "Claws", combat.clawsRend).hint("Rend your enemy using your claws. \n\nFatigue Cost: " + physicalCost(20) + "");
+			addButton(0, "Claws", combat.racials.clawsRend).hint("Rend your enemy using your claws. \n\nFatigue Cost: " + physicalCost(20) + "");
 			if (player.fatigueLeft() <= combat.physicalCost(20)) {
 				button(0).disable("You are too tired to bite " + monster.a + " " + monster.short + ".");
 			}

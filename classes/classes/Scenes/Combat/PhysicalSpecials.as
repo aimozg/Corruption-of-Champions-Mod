@@ -244,7 +244,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 	}
 	internal function buildMenuForFlying(buttons:ButtonDataList):void {
 		var bd:ButtonData;
-		buttons.add("Great Dive", combat.greatDive).hint("Make a Great Dive to deal TONS of damage!");
+		buttons.add("Great Dive", combat.racials.greatDive).hint("Make a Great Dive to deal TONS of damage!");
 		//Embrace
 		if ((player.wings.type == Wings.BAT_ARM || player.wings.type == Wings.VAMPIRE) && !monster.hasPerk(PerkLib.EnemyGroupType)) {
 			buttons.add("Embrace", vampireEmbrace).hint("Embrace an opponent in your wings.");

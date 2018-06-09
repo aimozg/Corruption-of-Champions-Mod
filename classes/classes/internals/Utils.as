@@ -376,6 +376,15 @@ package classes.internals
 			return Math.random()*n < 1;
 		}
 
+		/**
+		 * Rolls a random percent chance
+		 * @param chance Whole number percentage chance (15 = 15%)
+		 * @return
+		 */
+		public static function randomChance(chance:Number):Boolean {
+			return rand(100) < chance;
+		}
+
 		public static function validateNonNegativeNumberFields(obj:Object, func:String, nnf:Array):String
 		{
 			var error:String = "";

@@ -1095,11 +1095,11 @@ public function naggaTease():void {
         }
         monster.teased(monster.lustVuln * damage);
         if (crit == true) outputText(" <b>Critical!</b>");
-        SceneLib.combat.teaseXP(1);
+        SceneLib.combat.teases.teaseXP(1);
     }
     //Nuttin honey
     else {
-        SceneLib.combat.teaseXP(5);
+        SceneLib.combat.teases.teaseXP(5);
         outputText("\n" + monster.capitalA + monster.short + " seems unimpressed.");
     }
     outputText("\n\n");
