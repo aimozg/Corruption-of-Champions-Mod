@@ -9,6 +9,55 @@
     <hook type="daily">
         <set var="status" value="false"/>
     </hook>
+    <monster id="Diva">
+        <a></a>
+        <short>Diva</short>
+        <desc>
+            <display ref="../combat/battleDescript"/>
+        </desc>
+        <body>
+            <vagina virgin="false" wetness="NORMAL" looseness="NORMAL"/>
+            <breasts>DD</breasts>
+            <anal looseness="NORMAL" wetness="DRY"/>
+            <height>5'6"</height>
+            <hips>CURVY</hips>
+            <butt>NOTICEABLE</butt>
+            <skin coverage="NONE">
+                <base color="pale"/>
+            </skin>
+            <hair length="16" color="blonde"/>
+            <wings>BAT_LIKE_LARGE</wings>
+        </body>
+        <combat>
+            <level>20</level>
+            <str>30</str>
+            <tou>60</tou>
+            <spe>80</spe>
+            <int>90</int>
+            <wis>90</wis>
+            <lib>40</lib>
+            <sen>50</sen>
+            <cor>50</cor>
+            <weapon name="dive" verb="swoop" attack="0"/>
+            <armor name="dress" defense="20"/>
+            <bonusHP>10000</bonusHP>
+            <loot>
+                <item>RedVial</item>
+            </loot>
+        </combat>
+    </monster>
+    <monster id="Diva_firstFight" base="Diva">
+        <combat>
+            <level>50</level>
+            <str>75</str>
+            <tou>150</tou>
+            <spe>200</spe>
+            <int>225</int>
+            <wis>225</wis>
+            <armor name="dress" defense="50"/>
+            <bonusHP>25000</bonusHP>
+        </combat>
+    </monster>
     <lib name="combat">
         <lib name="moves">
             <lib name="embrace">

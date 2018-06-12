@@ -2,10 +2,10 @@
  * Coded by aimozg on 12.06.2018.
  */
 package coc.xxc {
+import coc.xlogic.Declaration;
 import coc.xlogic.ExecContext;
-import coc.xlogic.Statement;
 
-public class NamedNode extends Statement {
+public class NamedNode extends Declaration {
 	public var parent:NamedNode;
 	public var name:String;
 	public var lib:Object;

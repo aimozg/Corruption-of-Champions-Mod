@@ -50,7 +50,9 @@ public class StoryCompiler extends Compiler {
 	}
 	public function compileMod(x:XML):Statement {
 		var name:String = x.@name;
-		return new ModStmt(name, x.@version, stack[0]);
+		var mod:ModStmt = new ModStmt(name, x.@version, stack[0]);
+		
+		return mod;
 	}
 	override protected function compileTag(tag:String, x:XML):Statement {
 		switch (tag) {

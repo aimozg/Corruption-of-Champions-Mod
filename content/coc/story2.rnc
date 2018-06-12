@@ -1,12 +1,14 @@
 default namespace = "xxc-story2"
 
 start = mod
+# #############################################
 # mod structure
 mod = element mod {
     attribute name { text },
     attribute version { text }?,
     import*,
     state?,
+    hook*,
 #    export*,
     exportable*
 }
@@ -16,6 +18,10 @@ import = element import {
 state = element state {
     var*
 }
+hook = element hook {
+    attribute type { 'daily' | 'hourly' },
+    content*
+}
 var = element var {
     attribute name { text },
     (text | empty)
@@ -23,7 +29,7 @@ var = element var {
 #export = element export {
 #    attribute ref { text }
 #}
-exportable = lib | Text | scene
+exportable = monster | lib | Text | scene
 lib = element lib {
     attribute name { text },
     exportable*
@@ -37,9 +43,86 @@ scene = element scene {
     content*
 }
 
-# content
+# #############################################
+# monster
+monster = element monster {
+    attribute id { text },
+    attribute base { text }?,
+    element a { content }?,
+    element short { content }?,
+    element long { content }?,
+    element desc { content }?,
+    monsterBody?,
+    monsterCombat?
+}
+monsterBody = element body {
+    element vagina {
+        attribute virgin { 'true' | 'false' }?,
+        attribute wetness { text }?,
+        attribute looseness { text }?
+    }?,
+    element breasts { text }?,
+    element anal {
+        attribute looseness { text }?,
+        attribute wetness { text }?
+    }?,
+    element height { text }?,
+    element hips { text }?,
+    element butt { text }?,
+    element skin {
+        attribute coverage { text },
+        element base {
+            skinLayer
+        }?,
+        element coat {
+            skinLayer
+        }?
+    }?,
+    element hair {
+        attribute length { text }?,
+        attribute color { text }?,
+        attribute type { text }?
+    }?,
+    element wings { text }?
+}
+skinLayer = (
+    attribute type { text }?,
+    attribute color { text }?,
+    attribute color2 { text }?,
+    attribute pattern { text }?,
+    attribute adj { text }?,
+    attribute desc { text }?
+)
+monsterCombat = element combat {
+    element level { text }?,
+    element str { text }?,
+    element tou { text }?,
+    element spe { text }?,
+    element int { text }?,
+    element wis { text }?,
+    element lib { text }?,
+    element sen { text }?,
+    element cor { text }?,
+    element weapon {
+        attribute name { text }?,
+        attribute verb { text }?,
+        attribute attack { text }?
+    }?,
+    element armor {
+        attribute name { text }?,
+        attribute defense { text }?
+    },
+    element bonusHP { text }?,
+    element loot {
+        loot
+    }?
+}
+loot = element item { text }
+
+# #############################################
+# textual content
 content =
-    text | b | i | font | if | switch # | xcc-content
+    text | b | i | font | if | switch | xcc-content
 b = element b { content* }
 i = element i { content* }
 font = element font {
@@ -47,15 +130,19 @@ font = element font {
     content*
 }
 #xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone
-#xcc-content = xcc-named-content | display | dynStats | output | Include | set
+xcc-content = display | set # | xcc-named-content | | dynStats | output | Include
 #namedBlock = attribute name { text }?, content*
 #String = element string { namedBlock }
-#set = element set {
-#    attribute var { text },
-#    attribute value { expression }?,
-#    attribute op { 'append' | 'set' | 'add' | "+=" | '=' }?,
-#    text*
-#}
+set = element set {
+    attribute var { text },
+    attribute value { expression }?,
+    attribute op { 'append' | 'set' | 'add' | "+=" | '=' }?,
+    text*
+}
+display = element display {
+    attribute ref { text },
+    empty
+}
 #extend-story = element extend-story { namedBlock }
 #zone = element zone {
 #    namedBlock,
@@ -70,10 +157,6 @@ font = element font {
 #    attribute chance { expression }?,
 #    attribute when { expression }?,
 #    content*
-#}
-#display = element display {
-#    attribute ref { text },
-#    empty
 #}
 #dynStats = element dynStats {
 #    attribute str { expression }?,
@@ -94,6 +177,7 @@ font = element font {
 #    empty
 #}
 
+# #############################################
 # xlogic
 expression = text
 array-content-expression = text

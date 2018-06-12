@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="xxc-story2" xmlns:ns1="xxc-story2">
-    <!-- mod structure -->
+    <!--
+        #############################################
+        mod structure
+    -->
     <xs:element name="mod">
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:import"/>
                 <xs:element minOccurs="0" ref="ns1:state"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:hook"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:exportable"/>
             </xs:sequence>
             <xs:attribute name="name" use="required"/>
@@ -22,6 +26,19 @@
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:var"/>
             </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="hook">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="daily"/>
+                        <xs:enumeration value="hourly"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="var">
@@ -55,7 +72,170 @@
             <xs:attribute name="name" use="required"/>
         </xs:complexType>
     </xs:element>
-    <!-- content -->
+    <!--
+        #############################################
+        monster
+    -->
+    <xs:element name="monster" substitutionGroup="ns1:exportable">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="ns1:a"/>
+                <xs:element minOccurs="0" ref="ns1:short"/>
+                <xs:element minOccurs="0" ref="ns1:long"/>
+                <xs:element minOccurs="0" ref="ns1:desc"/>
+                <xs:element minOccurs="0" ref="ns1:body"/>
+                <xs:element minOccurs="0" ref="ns1:combat"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required"/>
+            <xs:attribute name="base"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="a">
+        <xs:complexType mixed="true">
+            <xs:group ref="ns1:content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="short">
+        <xs:complexType mixed="true">
+            <xs:group ref="ns1:content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="long">
+        <xs:complexType mixed="true">
+            <xs:group ref="ns1:content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="desc">
+        <xs:complexType mixed="true">
+            <xs:group ref="ns1:content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="ns1:vagina"/>
+                <xs:element minOccurs="0" ref="ns1:breasts"/>
+                <xs:element minOccurs="0" ref="ns1:anal"/>
+                <xs:element minOccurs="0" ref="ns1:height"/>
+                <xs:element minOccurs="0" ref="ns1:hips"/>
+                <xs:element minOccurs="0" ref="ns1:butt"/>
+                <xs:element minOccurs="0" ref="ns1:skin"/>
+                <xs:element minOccurs="0" ref="ns1:hair"/>
+                <xs:element minOccurs="0" ref="ns1:wings"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="vagina">
+        <xs:complexType>
+            <xs:attribute name="virgin">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                        <xs:enumeration value="false"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="wetness"/>
+            <xs:attribute name="looseness"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="breasts" type="xs:string"/>
+    <xs:element name="anal">
+        <xs:complexType>
+            <xs:attribute name="looseness"/>
+            <xs:attribute name="wetness"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="height" type="xs:string"/>
+    <xs:element name="hips" type="xs:string"/>
+    <xs:element name="butt" type="xs:string"/>
+    <xs:element name="skin">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="ns1:base"/>
+                <xs:element minOccurs="0" ref="ns1:coat"/>
+            </xs:sequence>
+            <xs:attribute name="coverage" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="base">
+        <xs:complexType>
+            <xs:attributeGroup ref="ns1:skinLayer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="coat">
+        <xs:complexType>
+            <xs:attributeGroup ref="ns1:skinLayer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="hair">
+        <xs:complexType>
+            <xs:attribute name="length"/>
+            <xs:attribute name="color"/>
+            <xs:attribute name="type"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="wings" type="xs:string"/>
+    <xs:attributeGroup name="skinLayer">
+        <xs:attribute name="type"/>
+        <xs:attribute name="color"/>
+        <xs:attribute name="color2"/>
+        <xs:attribute name="pattern"/>
+        <xs:attribute name="adj"/>
+        <xs:attribute name="desc"/>
+    </xs:attributeGroup>
+    <xs:element name="combat">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="ns1:level"/>
+                <xs:element minOccurs="0" ref="ns1:str"/>
+                <xs:element minOccurs="0" ref="ns1:tou"/>
+                <xs:element minOccurs="0" ref="ns1:spe"/>
+                <xs:element minOccurs="0" ref="ns1:int"/>
+                <xs:element minOccurs="0" ref="ns1:wis"/>
+                <xs:element minOccurs="0" name="lib" type="xs:string"/>
+                <xs:element minOccurs="0" ref="ns1:sen"/>
+                <xs:element minOccurs="0" ref="ns1:cor"/>
+                <xs:element minOccurs="0" ref="ns1:weapon"/>
+                <xs:element ref="ns1:armor"/>
+                <xs:element minOccurs="0" ref="ns1:bonusHP"/>
+                <xs:element minOccurs="0" ref="ns1:loot"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="level" type="xs:string"/>
+    <xs:element name="str" type="xs:string"/>
+    <xs:element name="tou" type="xs:string"/>
+    <xs:element name="spe" type="xs:string"/>
+    <xs:element name="int" type="xs:string"/>
+    <xs:element name="wis" type="xs:string"/>
+    <xs:element name="sen" type="xs:string"/>
+    <xs:element name="cor" type="xs:string"/>
+    <xs:element name="weapon">
+        <xs:complexType>
+            <xs:attribute name="name"/>
+            <xs:attribute name="verb"/>
+            <xs:attribute name="attack"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="armor">
+        <xs:complexType>
+            <xs:attribute name="name"/>
+            <xs:attribute name="defense"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="bonusHP" type="xs:string"/>
+    <xs:element name="loot" type="ns1:loot"/>
+    <xs:complexType name="loot">
+        <xs:sequence>
+            <xs:element ref="ns1:item"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="item" type="xs:string"/>
+    <!--
+        #############################################
+        textual content
+    -->
     <xs:group name="content">
         <xs:sequence>
             <xs:choice minOccurs="0">
@@ -64,10 +244,10 @@
                 <xs:element ref="ns1:font"/>
                 <xs:element ref="ns1:if"/>
                 <xs:element ref="ns1:switch"/>
+                <xs:element ref="ns1:xcc-content"/>
             </xs:choice>
         </xs:sequence>
     </xs:group>
-    <!-- | xcc-content -->
     <xs:element name="b">
         <xs:complexType mixed="true">
             <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
@@ -84,17 +264,36 @@
             <xs:attribute name="color"/>
         </xs:complexType>
     </xs:element>
+    <!-- xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone -->
+    <xs:element name="xcc-content" abstract="true"/>
     <!--
-        xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone
-        xcc-content = xcc-named-content | display | dynStats | output | Include | set
+        | xcc-named-content | | dynStats | output | Include
         namedBlock = attribute name { text }?, content*
         String = element string { namedBlock }
-        set = element set {
-           attribute var { text },
-           attribute value { expression }?,
-           attribute op { 'append' | 'set' | 'add' | "+=" | '=' }?,
-           text*
-        }
+    -->
+    <xs:element name="set" substitutionGroup="ns1:xcc-content">
+        <xs:complexType mixed="true">
+            <xs:attribute name="var" use="required"/>
+            <xs:attribute name="value"/>
+            <xs:attribute name="op">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="append"/>
+                        <xs:enumeration value="set"/>
+                        <xs:enumeration value="add"/>
+                        <xs:enumeration value="+="/>
+                        <xs:enumeration value="="/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="display" substitutionGroup="ns1:xcc-content">
+        <xs:complexType>
+            <xs:attribute name="ref" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <!--
         extend-story = element extend-story { namedBlock }
         zone = element zone {
            namedBlock,
@@ -109,10 +308,6 @@
            attribute chance { expression }?,
            attribute when { expression }?,
            content*
-        }
-        display = element display {
-           attribute ref { text },
-           empty
         }
         dynStats = element dynStats {
            attribute str { expression }?,
@@ -133,7 +328,10 @@
            empty
         }
     -->
-    <!-- xlogic -->
+    <!--
+        #############################################
+        xlogic
+    -->
     <xs:element name="if">
         <xs:complexType mixed="true">
             <xs:group minOccurs="0" ref="ns1:if-big"/>
