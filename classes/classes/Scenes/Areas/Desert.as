@@ -12,7 +12,7 @@ import classes.Scenes.API.GroupEncounter;
 import classes.Scenes.Areas.Desert.*;
 import classes.Scenes.SceneLib;
 
-import coc.xxc.BoundStory;
+import coc.xxc.BoundNode;
 import coc.xxc.stmts.ZoneStmt;
 
 use namespace CoC;
@@ -29,7 +29,7 @@ use namespace CoC;
 		{
 			onGameInit(init);
 		}
-		private var story:BoundStory;
+		private var story:BoundNode;
 		
 		private var _desertEncounter:GroupEncounter = null;
 		public function get desertEncounter():GroupEncounter {

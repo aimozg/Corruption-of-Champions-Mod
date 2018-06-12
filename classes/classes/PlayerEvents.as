@@ -12,7 +12,6 @@ import classes.GlobalFlags.*;
 import classes.Items.*;
 import classes.Scenes.Dreams;
 import classes.Scenes.Holidays;
-import classes.Scenes.NPCs.DivaScene;
 import classes.Scenes.SceneLib;
 import classes.StatusEffects.VampireThirstEffect;
 
@@ -553,8 +552,6 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 				if (flags[kFLAGS.CHI_CHI_DAILY_TRAINING] > 0) flags[kFLAGS.CHI_CHI_DAILY_TRAINING] = 0;
 				//Reset Luna Meal CD
 				if (flags[kFLAGS.LUNA_MEAL] > 0) flags[kFLAGS.LUNA_MEAL] = 0;
-				//Reset Diva Red Vial daiy limit
-				DivaScene.instance.tookVialToday = false;
 				//Clear sidewinder cooldown
 				if (player.hasStatusEffect(StatusEffects.CooldownSideWinder)) player.removeStatusEffect(StatusEffects.CooldownSideWinder);
 				//Daily Fishery production

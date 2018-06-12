@@ -16,7 +16,7 @@ import classes.Scenes.NPCs.JojoScene;
 import classes.Scenes.SceneLib;
 import classes.Scenes.Areas.Forest.DryadScene;
 
-import coc.xxc.BoundStory;
+import coc.xxc.BoundNode;
 import coc.xxc.stmts.ZoneStmt;
 
 use namespace CoC;
@@ -81,8 +81,8 @@ use namespace CoC;
 		public function get deepwoodsEncounter():GroupEncounter {
 			return _deepwoodsEncounter
 		}
-		private var forestStory:BoundStory;
-		private var deepwoodsStory:BoundStory;
+		private var forestStory:BoundNode;
+		private var deepwoodsStory:BoundNode;
 		private function init():void {
             const game:CoC = CoC.instance;
             const fn:FnHelpers = Encounters.fn;

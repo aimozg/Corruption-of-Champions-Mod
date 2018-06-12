@@ -5,10 +5,11 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:import"/>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:export"/>
+                <xs:element minOccurs="0" ref="ns1:state"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:exportable"/>
             </xs:sequence>
-            <xs:attribute name="ref" use="required"/>
+            <xs:attribute name="name" use="required"/>
+            <xs:attribute name="version"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="import">
@@ -16,11 +17,23 @@
             <xs:attribute name="ref" use="required"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="export">
+    <xs:element name="state">
         <xs:complexType>
-            <xs:attribute name="ref" use="required"/>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:var"/>
+            </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <xs:element name="var">
+        <xs:complexType mixed="true">
+            <xs:attribute name="name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <!--
+        export = element export {
+           attribute ref { text }
+        }
+    -->
     <xs:element name="exportable" abstract="true"/>
     <xs:element name="lib" substitutionGroup="ns1:exportable">
         <xs:complexType>

@@ -10,7 +10,7 @@ package classes.Items.Consumables {
 	import classes.PerkLib;
 	import classes.internals.Utils;
 
-	import coc.xxc.BoundStory;
+	import coc.xxc.BoundNode;
 
 	public class VampireBlood extends Consumable {
     private var pure:Boolean;
@@ -38,7 +38,7 @@ package classes.Items.Consumables {
     }
     override public function useItem(host:Creature):Boolean{
         clearOutput();
-        var story:BoundStory = CoC.instance.rootStory.locate("diva/item").bind(CoC.instance.context);
+        var story:BoundNode = CoC.instance.rootStory.locate("diva/item").bind(CoC.instance.context);
         if(first){
             story.display("useText/first");
             first = false;

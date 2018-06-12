@@ -4,19 +4,20 @@
 package coc.xxc.stmts {
 import coc.xlogic.ExecContext;
 import coc.xlogic.Statement;
+import coc.xxc.NamedNode;
 import coc.xxc.Story;
 
 public class DisplayStmt extends Statement{
-	private var story:Story;
+	private var node:NamedNode;
 	private var ref:/*String*/Array;
-	public function DisplayStmt(story:Story,ref:String) {
-		this.story = story;
+	public function DisplayStmt(node:NamedNode,ref:String) {
+		this.node = node;
 		this.ref = ref.split('/');
 	}
 
 	override public function execute(context:ExecContext):void {
 		context.debug(this,'enter');
-		var obj:Story = Story.locateSplit(story,ref);
+		var obj:Story = NamedNode.locateSplit(node,ref) as Story;
 		if (!obj) {
 			context.error(this,"Cannot dereference "+ref.join('/'));
 			return;

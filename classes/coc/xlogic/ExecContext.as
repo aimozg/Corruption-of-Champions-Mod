@@ -38,7 +38,7 @@ public class ExecContext {
 			statement.execute(this);
 		}
 	}
-	public function error(where:Statement,message:String):void {
+	public function error(where:*,message:String):void {
 		throw new Error("In "+where+": "+message);
 	}
 	public function pushScope(scope:Object):void {
@@ -50,7 +50,7 @@ public class ExecContext {
 	/**
 	 * For debugging
 	 */
-	public function debug(where:Statement,s:String):void {
+	public function debug(where:*,s:String):void {
 		trace(''+where+' '+s);
 	}
 }

@@ -18,12 +18,12 @@ public class StoryCompiler extends Compiler {
 		this._basedir = basedir;
 		if (basedir.charAt(basedir.length-1)!='/') this._basedir+='/';
 	}
-	private var stack:/*Story*/Array = [];
+	private var stack:/*NamedNode*/Array = [];
 	public function clone(basedir:String=""):StoryCompiler {
 		return new StoryCompiler(basedir?basedir:_basedir);
 	}
 
-	public function attach(story:Story):StoryCompiler {
+	public function attach(story:NamedNode):StoryCompiler {
 		if (stack.length>0) throw new Error("StoryCompiler.attach called mid-compilation");
 		while(story) {
 			stack.push(story);
@@ -31,13 +31,26 @@ public class StoryCompiler extends Compiler {
 		}
 		return this;
 	}
-	public function detach(story:Story):StoryCompiler {
+	public function detach(story:NamedNode):StoryCompiler {
 		while(story) {
 			if (stack.length == 0) throw new Error("Inconsistent stack during detach");
 			if (stack.pop() != story) throw new Error("Inconsistent stack during detach");
 			story = story.parent;
 		}
 		return this;
+	}
+	public function compileFile(x:XML):Statement {
+		if (x.nodeKind() != 'element') throw new Error("Not an XML element in compile.File:" +x);
+		var tag:String = x.localName();
+		if (tag == "mod") {
+			return compileMod(x);
+		} else {
+			return compileTag(tag,x);
+		}
+	}
+	public function compileMod(x:XML):Statement {
+		var name:String = x.@name;
+		return new ModStmt(name, x.@version, stack[0]);
 	}
 	override protected function compileTag(tag:String, x:XML):Statement {
 		switch (tag) {
@@ -72,9 +85,9 @@ public class StoryCompiler extends Compiler {
 			/*case "extend-encounter":
 				return extendEncounter(x);*/
 			case "extend-story":
-				return compileStoryBody(locate(x.@name), x);
+				return compileStoryBody(locate(x.@name) as Story, x);
 			case "extend-zone":
-				return compileStoryBody(locate(x.@name), x) as ZoneStmt;
+				return compileStoryBody(locate(x.@name) as ZoneStmt, x) as ZoneStmt;
 			default:
 				return super.compileTag(tag, x);
 		}
@@ -125,7 +138,7 @@ public class StoryCompiler extends Compiler {
 	}
 	protected function compileStoryBody(story:Story, x:XML):Story {
 		stack.unshift(story);
-		compileChildrenInto(x, story.stmts);
+		compileChildrenInto(x, story.body.stmts);
 		stack.shift();
 		return story;
 	}
@@ -143,8 +156,8 @@ public class StoryCompiler extends Compiler {
 		}
 		return new TextStmt(s, trimStyle);
 	}
-	protected function locate(ref:String):Story {
-		var story:Story = stack[0].locate(ref);
+	protected function locate(ref:String):NamedNode {
+		var story:NamedNode = stack[0].locate(ref);
 		if (!story) throw new Error("Unable to locate ref="+ref+" from "+stack[0].toString().substr(0,20));
 		return story;
 	}

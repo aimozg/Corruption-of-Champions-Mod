@@ -3,17 +3,26 @@ default namespace = "xxc-story2"
 start = mod
 # mod structure
 mod = element mod {
-    attribute ref { text },
+    attribute name { text },
+    attribute version { text }?,
     import*,
-    export*,
+    state?,
+#    export*,
     exportable*
 }
 import = element import {
     attribute ref { text }
 }
-export = element export {
-    attribute ref { text }
+state = element state {
+    var*
 }
+var = element var {
+    attribute name { text },
+    (text | empty)
+}
+#export = element export {
+#    attribute ref { text }
+#}
 exportable = lib | Text | scene
 lib = element lib {
     attribute name { text },

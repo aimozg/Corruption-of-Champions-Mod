@@ -5,6 +5,7 @@ package coc.xxc.stmts {
 import coc.view.CoCLoader;
 import coc.xlogic.ExecContext;
 import coc.xlogic.Statement;
+import coc.xxc.NamedNode;
 import coc.xxc.Story;
 import coc.xxc.StoryCompiler;
 
@@ -17,18 +18,19 @@ public class IncludeStmt extends Statement{
 	public function get loaded():Boolean {
 		return _loaded;
 	}
-	public function IncludeStmt(story:Story,compiler:StoryCompiler,path:String,required:Boolean=true) {
+	public function IncludeStmt(parent:NamedNode,compiler:StoryCompiler,path:String,required:Boolean=true) {
 		this.path = path;
 		CoCLoader.loadText(compiler.basedir+path,function(success:Boolean,content:*,event:Event):void {
 			if (_loaded) return;
 			if (!success && required) throw new Error("Required scenario not found: "+path);
 			_loaded = true;
 			XML.ignoreWhitespace = false;
+			var xml:XML = XML(content);
 			try {
-				body = compiler.attach(story).compile(XML(content));
+				body = compiler.attach(parent).compileFile(xml);
 			} catch (e:Error) {
 				_loaded = false;
-				compiler.detach(story);
+				compiler.detach(parent);
 				if (required) throw e;
 			}
 		});

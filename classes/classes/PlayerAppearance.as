@@ -16,7 +16,7 @@ import classes.BodyParts.Wings;
 import classes.GlobalFlags.kFLAGS;
 import classes.Scenes.NPCs.JojoScene;
 
-import coc.xxc.BoundStory;
+import coc.xxc.BoundNode;
 import coc.xxc.Story;
 
 public class PlayerAppearance extends BaseContent {
@@ -25,7 +25,7 @@ public class PlayerAppearance extends BaseContent {
 	public function PlayerAppearance() {
 		onGameInit(init);
 	}
-	private var story:BoundStory;
+	private var story:BoundNode;
 	private function init():void {
         story = new Story("story", CoC.instance.rootStory, "appearance").bind(CoC.instance.context);
     }

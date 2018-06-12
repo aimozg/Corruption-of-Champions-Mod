@@ -66,11 +66,11 @@ use namespace CoC;
 		public var HolliPure:HolliPureScene = new HolliPureScene();
 		public var templeofdivine:TempleOfTheDivine = new TempleOfTheDivine();
 		
-		private static var _campFollowers:Vector.<XXCNPC> = new Vector.<XXCNPC>;
+		private static var _campFollowers:Vector.<INPC> = new Vector.<INPC>;
 		
-		public static function addFollower(newEntry:XXCNPC):void {_campFollowers.push(newEntry); }
+		public static function addFollower(newEntry:INPC):void {_campFollowers.push(newEntry); }
 		
-		public static function removeFollower(toRemove:XXCNPC):void{
+		public static function removeFollower(toRemove:INPC):void{
 			var i:int = _campFollowers.indexOf(toRemove);
 			if (i >= 0){_campFollowers.splice(i, 1); }
 		}
@@ -430,7 +430,7 @@ CoC.instance.saves.saveGame(player.slotName);
 		hideMenus();
 		return;
 	}
-	for each (var npc:XXCNPC in _campFollowers){
+	for each (var npc:INPC in _campFollowers){
 		if (npc.checkCampEvent()){return;}
 	}
 	//Exgartuan clearing
@@ -912,7 +912,7 @@ public function followersCount():Number {
 	if (flags[kFLAGS.KONSTANTIN_FOLLOWER] >= 2) counter++;
     if (flags[kFLAGS.SIDONIE_FOLLOWER] >= 1) counter++;
     if (flags[kFLAGS.LUNA_FOLLOWER] >= 4) counter++;
-	for each (var npc:XXCNPC in _campFollowers){
+	for each (var npc:INPC in _campFollowers){
         if(npc.isCompanion(XXCNPC.FOLLOWER)){counter++;}
     }
 	return counter;
@@ -929,7 +929,7 @@ public function slavesCount():Number {
 	if (flags[kFLAGS.PATCHOULI_FOLLOWER] >= 5) counter++;
 	if (ceraphIsFollower()) counter++;
 	if (milkSlave() && flags[kFLAGS.FOLLOWER_AT_FARM_BATH_GIRL] == 0) counter++;
-    for each (var npc:XXCNPC in _campFollowers){
+    for each (var npc:INPC in _campFollowers){
         if(npc.isCompanion(XXCNPC.SLAVE)){counter++;}
     }
 	return counter;
@@ -950,7 +950,7 @@ public function loversCount():Number {
 	if (followerKiha()) counter++;
 	if (flags[kFLAGS.NIEVE_STAGE] == 5) counter++;
 	if (flags[kFLAGS.ANT_WAIFU] > 0) counter++;
-	for each (var npc:XXCNPC in _campFollowers){
+	for each (var npc:INPC in _campFollowers){
         if(npc.isCompanion(XXCNPC.LOVER)){counter++;}
     }
 	return counter;
@@ -1312,7 +1312,7 @@ public function campLoversMenu(descOnly:Boolean = false):void {
 		outputText("\n\n");
         buttons.add( "Nieve", Holidays.approachNieve);
     }
-    for each(var npc:XXCNPC in _campFollowers){
+    for each(var npc:INPC in _campFollowers){
 		npc.campDescription(buttons,XXCNPC.LOVER);
     }
 	if(!descOnly){buttons.submenu(playerMenu);}
@@ -1371,7 +1371,7 @@ public function campSlavesMenu(descOnly:Boolean = false):void {
 		sophieBimbo.sophieCampLines();
 		buttons.add( "Sophie", sophieBimbo.approachBimboSophieInCamp);
 	}
-    for each(var npc:XXCNPC in _campFollowers){
+    for each(var npc:INPC in _campFollowers){
         npc.campDescription(buttons,XXCNPC.SLAVE);
     }
     if(!descOnly){buttons.submenu(playerMenu);}
@@ -1559,7 +1559,7 @@ public function campFollowers(descOnly:Boolean = false):void {
 		outputText("\n\n");
 		buttons.add( "Luna", SceneLib.lunaFollower.mainLunaMenu).hint("Visit Luna.").disableIf(player.statusEffectv1(StatusEffects.CampSparingNpcsTimers3) > 0,"Training.");
 	}
-    for each(var npc:XXCNPC in _campFollowers){
+    for each(var npc:INPC in _campFollowers){
         npc.campDescription(buttons,XXCNPC.FOLLOWER);
     }
     if(!descOnly){buttons.submenu(playerMenu);}

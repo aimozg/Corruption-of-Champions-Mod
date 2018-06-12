@@ -4,6 +4,8 @@ import classes.Items.Consumables.VampireBlood;
 import classes.Scenes.Camp;
 
 import coc.view.ButtonDataList;
+import coc.xxc.BoundNode;
+import coc.xxc.NamedNode;
 
 import flash.utils.getQualifiedClassName;
 
@@ -125,40 +127,40 @@ public class DivaScene extends XXCNPC{
     }
 
     public function moonlightSonata(fromCombat:Boolean=false):void{
-        var baseRef:String = "camp/sexMenu/moonlightSonata/";
+        var base:BoundNode = story.locate("camp/sexMenu/moonlightSonata/");
         if(status == 0){status = 1;}
         clearOutput();
         if(fromCombat){
-            display(baseRef + "intro/combat");
+            base.display("intro/combat");
         } else {
-            display(baseRef + "intro/camp");
+            base.display("intro/camp");
         }
 
-        if( player.biggestCockLength() > 24) {
-            display(baseRef + "male/tooBig");
+        if(player.biggestCockLength() > 24) {
+            base.display("male/tooBig");
             player.cocks[player.biggestCockIndex()].cockLength = 18;
             if(timesReduced < 5){timesReduced++;}
         }
         if(player.batScore() >= 6 || player.vampireScore() >= 6){
-            if(player.isFemale()){display(baseRef + "female/bat");}
+            if(player.isFemale()){base.display("female/bat");}
             else if(player.isMaleOrHerm()){
-                display(baseRef + "female/bat");
-                display(baseRef + "male/regular",{$combat:fromCombat})
+                base.display("female/bat");
+                base.display("male/regular",{$combat:fromCombat})
             }
         } else if(player.isMaleOrHerm()){
-            display(baseRef + "male/regular",{$combat:fromCombat});
+            base.display("male/regular",{$combat:fromCombat});
         } else {
-            display(baseRef + "female/regular",{$combat:fromCombat});
+            base.display("female/regular",{$combat:fromCombat});
         }
         if(fromCombat){
             if(firstLoss){
-                display(baseRef + "outro/combat/initial");
+                base.display("outro/combat/initial");
             } else {
-                display(baseRef + "outro/combat/regular");
+                base.display("outro/combat/regular");
             }
             firstLoss=false;
         } else{
-            display(baseRef + "outro/camp");
+            base.display("outro/camp");
         }
         if(!fromCombat){
             doNext(camp.returnToCampUseOneHour);

@@ -27,8 +27,10 @@ package classes.Scenes
 
 	import coc.view.ButtonDataList;
 	import coc.view.Color;
+import coc.xxc.NamedNode;
+import coc.xxc.Story;
 
-	import flash.events.Event;
+import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.TextEvent;
 	import flash.text.TextFieldType;
@@ -168,8 +170,22 @@ package classes.Scenes
 			if(!selected){selected = SceneLib;}
 			selectedScene = selected;
 			mainView.mainText.addEventListener(TextEvent.LINK, linkhandler);
-			getFun("variable",selected);
-			getFun("method",selected);
+			if (selected is NamedNode) {
+				var node:NamedNode = selected as NamedNode;
+				if (keys(node.lib).length>0) {
+					outputText("<b><u>SCENE</u></b>");
+					for each (var inode:NamedNode in node.lib) {
+						if (inode.name) {
+							outputText('<u><a href="event:' + inode.name + '">' + inode.name + '</a></u>\n');
+						}
+					}
+				} else {
+					node.execute(context);
+				}
+			} else {
+				getFun("variable", selected);
+				getFun("method", selected);
+			}
 			menu();
 			addButton(0,"Back",linkhandler,new TextEvent(TextEvent.LINK,false,false,"-1"));
 			
@@ -193,7 +209,10 @@ package classes.Scenes
 					else{accessDebugMenu();}
 					return;
 				}
-				if(selectedScene[e.text] is Function){
+				if (selectedScene is NamedNode) {
+					selectedScene = (selectedScene as NamedNode).locate(e.text);
+					testScene(selectedScene);
+				} else if(selectedScene[e.text] is Function){
 					clearOutput();
 					doNext(accessDebugMenu);
 					var selected:Function = selectedScene[e.text];

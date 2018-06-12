@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<mod ref="diva" xmlns="xxc-story2">
+<mod name="diva" version="1" xmlns="xxc-story2">
+    <state>
+        <var name="status">0</var>
+        <var name="firstLoss">true</var>
+        <var name="tookVialToday">false</var>
+        <var name="timesReduced">0</var>
+    </state>
+    <hook type="daily">
+        <set var="status" value="false"/>
+    </hook>
     <lib name="combat">
         <lib name="moves">
             <lib name="embrace">

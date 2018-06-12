@@ -60,17 +60,55 @@ public class Compiler {
 		var iff:IfStmt = new IfStmt(attrs['test']);
 		if ('then' in attrs) iff.thenBlock.push(compileText(x.@then[0]));
 		if ('else' in attrs) iff.elseBlock = compileText(x.attribute('else')[0]);
+		//noinspection JSMismatchedCollectionQueryUpdate
+		var currentThen:/*Statement*/Array = iff.thenBlock;
+		var currentIf:IfStmt = iff;
+		var versionLock:int = 0;
+		var hasElse:Boolean = false;
+		var hasElseIf:Boolean = false;
 		for each(item in x.children()) {
 			switch (item.localName()) {
 				case 'else':
-					iff.elseBlock = compileChildren(item);
+					if (hasElse) {
+						throw new Error("Duplicate <else> element");
+					}
+					if (item.children() > 0) {
+						iff.elseBlock = compileChildren(item);
+						hasElse = true;
+						versionLock = 1;
+					} else {
+						currentIf.elseBlock = new StmtList();
+						currentThen = (currentIf.elseBlock as StmtList).stmts;
+						hasElse = true;
+						versionLock = 1;
+					}
 					break;
 				case 'elseif':
-					iff.elseBlock = compileIf(item);
+					if (hasElse) {
+						throw new Error("<elseif> after <else>");
+					}
+					if (item.children() > 0) {
+						if (versionLock == 2) {
+							throw new Error("Inconsistent <elseif> versions (v2 after v1)")
+						}
+						if (hasElseIf) {
+							throw new Error("Duplicate <elseif> in v1 <if>-block")
+						}
+						iff.elseBlock = compileIf(item);
+						versionLock = 1;
+						hasElseIf = true;
+					} else {
+						if (versionLock == 1) {
+							throw new Error("Inconsistent <elseif> versions (v1 after v2)")
+						}
+						currentIf.elseBlock = new StmtList();
+						currentThen = (currentIf.elseBlock as StmtList).stmts;
+						versionLock = 2;
+					}
 					break;
 				default:
 					var e:Statement = compile(item);
-					if (e) iff.thenBlock.push(e);
+					if (e) currentThen.push(e);
 			}
 		}
 		return iff;
