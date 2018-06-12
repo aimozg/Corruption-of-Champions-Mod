@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Corruption-of-Champions.iml" filepath="$PROJECT_DIR$/Corruption-of-Champions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/devTools/spred/spred.iml" filepath="$PROJECT_DIR$/devTools/spred/spred.iml" />
     </modules>
   </component>
 </project>

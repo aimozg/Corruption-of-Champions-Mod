@@ -1327,8 +1327,16 @@ namespace spred {
 </button>*/
 	}
 	
-	$(() => {
-		
+	export function initSpred() {
 		loadFile(basedir + 'res/model.xml', 'xml').then(loadModel);
+	}
+	let loaded=false;
+	$(()=>{
+		$('a[href="#tab-spred"]').on('shown.bs.tab', function (e) {
+			if (!loaded) {
+				loaded = true;
+				initSpred();
+			}
+		})
 	});
 }

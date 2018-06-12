@@ -1203,7 +1203,34 @@ var spred;
 </button>*/
     }
     spred.saveSpritemaps = saveSpritemaps;
-    $(() => {
+    function initSpred() {
         loadFile(spred.basedir + 'res/model.xml', 'xml').then(loadModel);
+    }
+    spred.initSpred = initSpred;
+    let loaded = false;
+    $(() => {
+        $('a[href="#tab-spred"]').on('shown.bs.tab', function (e) {
+            if (!loaded) {
+                loaded = true;
+                initSpred();
+            }
+        });
     });
 })(spred || (spred = {}));
+///<reference path="typings/jquery.d.ts"/>
+///<reference path="utils.ts"/>
+var monsters;
+(function (monsters) {
+    function initMonsters() {
+    }
+    monsters.initMonsters = initMonsters;
+    let loaded = false;
+    $(() => {
+        $('a[href="#tab-monsters"]').on('shown.bs.tab', function (e) {
+            if (!loaded) {
+                loaded = true;
+                initMonsters();
+            }
+        });
+    });
+})(monsters || (monsters = {}));

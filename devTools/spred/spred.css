@@ -1,11 +1,13 @@
-#main {
+body {
     height: 100vh;
     display: flex;
     flex-flow: column;
 }
 
-#main > .row {
-    margin: .5rem;
+.vstretch {
+    display: flex;
+    flex-flow: column;
+    flex-grow: 1;
 }
 
 .canvas {
