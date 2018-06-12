@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="xxc-story2" xmlns:ns1="xxc-story2">
+    <!-- mod structure -->
+    <xs:element name="mod">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:import"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:export"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:exportable"/>
+            </xs:sequence>
+            <xs:attribute name="ref" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="import">
+        <xs:complexType>
+            <xs:attribute name="ref" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="export">
+        <xs:complexType>
+            <xs:attribute name="ref" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="exportable" abstract="true"/>
+    <xs:element name="lib" substitutionGroup="ns1:exportable">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:exportable"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="text" substitutionGroup="ns1:exportable">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:attribute name="name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="scene" substitutionGroup="ns1:exportable">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:attribute name="name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- content -->
+    <xs:group name="content">
+        <xs:sequence>
+            <xs:choice minOccurs="0">
+                <xs:element ref="ns1:b"/>
+                <xs:element ref="ns1:i"/>
+                <xs:element ref="ns1:font"/>
+                <xs:element ref="ns1:if"/>
+                <xs:element ref="ns1:switch"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+    <!-- | xcc-content -->
+    <xs:element name="b">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="i">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="font">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:attribute name="color"/>
+        </xs:complexType>
+    </xs:element>
+    <!--
+        xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone
+        xcc-content = xcc-named-content | display | dynStats | output | Include | set
+        namedBlock = attribute name { text }?, content*
+        String = element string { namedBlock }
+        set = element set {
+           attribute var { text },
+           attribute value { expression }?,
+           attribute op { 'append' | 'set' | 'add' | "+=" | '=' }?,
+           text*
+        }
+        extend-story = element extend-story { namedBlock }
+        zone = element zone {
+           namedBlock,
+           encounter*
+        }
+        extend-zone = element extend-zone {
+           namedBlock,
+           encounter*
+        }
+        encounter = element encounter {
+           attribute name { text },
+           attribute chance { expression }?,
+           attribute when { expression }?,
+           content*
+        }
+        display = element display {
+           attribute ref { text },
+           empty
+        }
+        dynStats = element dynStats {
+           attribute str { expression }?,
+           attribute tou { expression }?,
+           attribute spe { expression }?,
+           attribute int { expression }?,
+           attribute lib { expression }?,
+           attribute sen { expression }?,
+           attribute lus { expression }?,
+           attribute cor { expression }?,
+           attribute scale { expression }?,
+           empty
+        }
+        output = element output { expression }
+        Include = element include {
+           attribute path { text },
+           attribute required { "true" | "false" }?,
+           empty
+        }
+    -->
+    <!-- xlogic -->
+    <xs:element name="if">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" ref="ns1:if-big"/>
+            <xs:attribute name="test" use="required"/>
+            <xs:attribute name="then"/>
+            <xs:attribute name="else"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:group name="if-big">
+        <xs:sequence>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:elseif"/>
+            <xs:group minOccurs="0" ref="ns1:else"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:attributeGroup name="if-short">
+        <xs:attribute name="then" use="required"/>
+        <xs:attribute name="else"/>
+    </xs:attributeGroup>
+    <xs:group name="elseif">
+        <xs:sequence>
+            <xs:element ref="ns1:elseif"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:element name="elseif">
+        <xs:complexType>
+            <xs:attribute name="test" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:group name="else">
+        <xs:sequence>
+            <xs:element ref="ns1:else"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:element name="else">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="switch">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:case"/>
+                <xs:element minOccurs="0" ref="ns1:default"/>
+            </xs:sequence>
+            <xs:attribute name="value"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="case">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:attribute name="test"/>
+            <xs:attribute name="value"/>
+            <xs:attribute name="values"/>
+            <xs:attribute name="lt"/>
+            <xs:attribute name="gt"/>
+            <xs:attribute name="ne"/>
+            <xs:attribute name="lte"/>
+            <xs:attribute name="gte"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="default">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
