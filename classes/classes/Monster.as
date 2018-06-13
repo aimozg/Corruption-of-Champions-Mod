@@ -865,16 +865,22 @@ import flash.utils.getQualifiedClassName;
 
 		protected function initStrTouSpeInte(str:Number, tou:Number, spe:Number, inte:Number):void
 		{
+			this.strStat.core.max = Math.max(100,str*2);
 			this.strStat.core.value = str;
+			this.touStat.core.max = Math.max(100,tou*2);
 			this.touStat.core.value = tou;
+			this.speStat.core.max = Math.max(100,spe*2);
 			this.speStat.core.value = spe;
+			this.intStat.core.max = Math.max(100,inte*2);
 			this.intStat.core.value = inte;
 			initedStrTouSpeInte = true;
 		}
 
 		protected function initWisLibSensCor(wis:Number, lib:Number, sens:Number, cor:Number):void
 		{
+			this.wisStat.core.max = Math.max(100,wis*2);
 			this.wisStat.core.value = wis;
+			this.libStat.core.max = Math.max(100,lib*2);
 			this.libStat.core.value = lib;
 			this.sens = sens;
 			this.cor = cor;
