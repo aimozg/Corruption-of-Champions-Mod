@@ -48,10 +48,15 @@ scene = element scene {
 monster = element monster {
     attribute id { text },
     attribute base { text }?,
-    element a { content }?,
-    element short { content }?,
-    element long { content }?,
+    element name { content }?,
     element desc { content }?,
+    element plural { empty }?,
+    element a { content }?,
+    element pronouns {
+        attribute he { text },
+        attribute his { text },
+        attribute him { text }
+    }?,
     monsterBody?,
     monsterCombat?
 }

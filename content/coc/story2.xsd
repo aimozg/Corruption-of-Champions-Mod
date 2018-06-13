@@ -79,10 +79,11 @@
     <xs:element name="monster" substitutionGroup="ns1:exportable">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" ref="ns1:a"/>
-                <xs:element minOccurs="0" ref="ns1:short"/>
-                <xs:element minOccurs="0" ref="ns1:long"/>
+                <xs:element minOccurs="0" ref="ns1:name"/>
                 <xs:element minOccurs="0" ref="ns1:desc"/>
+                <xs:element minOccurs="0" ref="ns1:plural"/>
+                <xs:element minOccurs="0" ref="ns1:a"/>
+                <xs:element minOccurs="0" ref="ns1:pronouns"/>
                 <xs:element minOccurs="0" ref="ns1:body"/>
                 <xs:element minOccurs="0" ref="ns1:combat"/>
             </xs:sequence>
@@ -90,17 +91,7 @@
             <xs:attribute name="base"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="a">
-        <xs:complexType mixed="true">
-            <xs:group ref="ns1:content"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="short">
-        <xs:complexType mixed="true">
-            <xs:group ref="ns1:content"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="long">
+    <xs:element name="name">
         <xs:complexType mixed="true">
             <xs:group ref="ns1:content"/>
         </xs:complexType>
@@ -108,6 +99,21 @@
     <xs:element name="desc">
         <xs:complexType mixed="true">
             <xs:group ref="ns1:content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="plural">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="a">
+        <xs:complexType mixed="true">
+            <xs:group ref="ns1:content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="pronouns">
+        <xs:complexType>
+            <xs:attribute name="he" use="required"/>
+            <xs:attribute name="his" use="required"/>
+            <xs:attribute name="him" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="body">

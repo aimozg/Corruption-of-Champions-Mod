@@ -10,11 +10,24 @@
         <set var="status" value="false"/>
     </hook>
     <monster id="Diva">
-        <a></a>
-        <short>Diva</short>
+        <name>Diva</name>
         <desc>
-            <display ref="../combat/battleDescript"/>
+            Diva appears to be a vampire, the fangs and wings kind of give it away.
+            She circles above and around you, waiting for an opening while she constantly screeches.
+            Huh, she might be more bat-like that you initially thought.
+            Girl certainly has quite the pair of lungs if nothing else.
+            Her red and black dress gives her quite the villainous look, while having some unfortunate consequences what with it having a skirt and she being a flyer.
+            Somehow, she manages to keep herself from having a rather intimate reunion with the walls despite not looking at where she is flying in favour of drooling at the sight of your neck.
+            Guess all that screeching has an actual purpose aside from annoying you.
+            <if test="$final">
+                Looks like she got one hell of a power-up thanks to your generous blood donations. Masochism much, Champ?
+                <if test="silly()">
+                    Git gud, scrub.
+                </if>
+            </if>
         </desc>
+        <a></a>
+        <pronouns he="she" him="her" his="her"/>
         <body>
             <vagina virgin="false" wetness="NORMAL" looseness="NORMAL"/>
             <breasts>DD</breasts>
@@ -295,21 +308,6 @@
                 </lib>
             </lib>
         </lib>
-        <text name="battleDescript">
-            Diva appears to be a vampire, the fangs and wings kind of give it away.
-            She circles above and around you, waiting for an opening while she constantly screeches.
-            Huh, she might be more bat-like that you initially thought.
-            Girl certainly has quite the pair of lungs if nothing else.
-            Her red and black dress gives her quite the villainous look, while having some unfortunate consequences what with it having a skirt and she being a flyer.
-            Somehow, she manages to keep herself from having a rather intimate reunion with the walls despite not looking at where she is flying in favour of drooling at the sight of your neck.
-            Guess all that screeching has an actual purpose aside from annoying you.
-            <if test="$final">
-                Looks like she got one hell of a power-up thanks to your generous blood donations. Masochism much, Champ?
-                <if test="silly()">
-                    Git gud, scrub.
-                </if>
-            </if>
-        </text>
     </lib>
     <lib name="camp">
         <lib name="campDescript">

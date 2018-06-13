@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Sprite model editor</title>
+	<title>EJ editor</title>
 	<link rel="stylesheet" href="css/tether.min.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -16,7 +16,7 @@
 </head>
 <body>
 <nav class="navbar flex-shrink-0 navbar-expand-lg navbar-light bg-info">
-	<span class="navbar-brand">CoC EJ Editor</span>
+	<span class="navbar-brand">Endless Journey Editor</span>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -34,25 +34,7 @@
 			<li class="nav-item">
 				<a class="nav-link" href="#tab-monsters" data-toggle="tab">Monsters</a>
 			</li>
-			<!--<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
-					Dropdown
-				</a>
-				<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					<a class="dropdown-item" href="#">Action</a>
-					<a class="dropdown-item" href="#">Another action</a>
-					<div class="dropdown-divider"></div>
-					<a class="dropdown-item" href="#">Something else here</a>
-				</div>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link disabled" href="#">Disabled</a>
-			</li>-->
 		</ul>
-		<!--<form class="form-inline my-2 my-lg-0">
-			<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-		</form>-->
 	</div>
 </nav>
 <main class="container-fluid vstretch">
@@ -68,7 +50,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="main" class="tab-content vstretch">
+	<div id="main" class="tab-content vstretch pt-2">
 		<div id="tab-spred" class="tab-pane vstretch">
 			<div class="row">
 				<div class="col-12">
@@ -188,11 +170,140 @@
 			</div>
 		</div>
 		<div id="tab-monsters" class="tab-pane vstretch">
-			<div class="row">
+			<form class="row">
 				<div class="col-12">
 					<h3>Monster Editor</h3>
 				</div>
-			</div>
+				<div class="col-lg-3">
+					<div>Select monster:</div>
+					<div class="list-group" id="monsterList" role="tablist">
+						<a class="list-group-item list-group-item-action active" id="list-home-list" href="#">Home</a>
+					</div>
+				</div>
+				<div class="col-lg-9 card" id="monsterEditor">
+					<div class="card-header">
+						<ul class="nav nav-tabs card-header-tabs">
+							<li class="nav-item">
+								<a class="nav-link active" data-toggle="tab" href="#monsterBasic">Core</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#monsterBody">Body</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#monsterDesc">Description</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link disabled" data-toggle="tab" href="#monsterSpecial">Special moves</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link disabled" data-toggle="tab" href="#monsterScripts">Scripts</a>
+							</li>
+						</ul>
+					</div>
+					<div class="card-body tab-content">
+						<div class="tab-pane active" id="monsterBasic">
+							<div class="row">
+								<div class="col-md-6 col-lg-5 col-xl-5">
+									<div class="form-group row">
+										<label for="monster-id" class="col-4 col-form-label col-form-label-sm">ID</label>
+										<input type="text" id="monster-id" class="col-8 form-control form-control-sm" placeholder="(unique name)">
+									</div>
+									<div class="form-group row">
+										<label for="monster-base" class="col-4 col-form-label col-form-label-sm">Prototype</label>
+										<select id="monster-base" class="col-8 form-control form-control-sm">
+											<option value="">(No prototype)</option>
+										</select>
+									</div>
+									<div class="form-group row">
+										<label for="monster-name" class="col-4 col-form-label col-form-label-sm">Name</label>
+										<input type="text" id="monster-name" class="col-8 form-control form-control-sm" placeholder="(visible name)"/>
+									</div>
+									<div class="form-group row">
+										<div class="col-4">Grammar</div>
+										<div class="col-8 form-row">
+											<label class="col-4" for="monster-plural">Group</label>
+											<div class="col-8">
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox" id="monster-plural"/>
+													<label class="form-check-label" for="monster-plural">(use plural form)</label>
+												</div>
+											</div>
+											<label class="col-4 col-form-label col-form-label-sm" for="monster-article">Article</label>
+											<select id="monster-article" class="col-8 form-control form-control-sm">
+												<option value="">(none)</option>
+												<option value="a">a</option>
+												<option value="an">an</option>
+												<option value="the">the</option>
+											</select>
+											<!--<label for="monster-pronouns" class="col-4 col-form-label col-form-label-sm">Pronouns</label>
+											<select id="monster-pronouns" class="col-8 form-control form-control-sm">
+												<option value="he/him/his">he/him/his</option>
+												<option value="she/her/her">she/her/her</option>
+												<option value="it/it/its">it/it/its</option>
+												<option value="they/them/their">they/them/their</option>
+											</select>-->
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6 col-lg-5 col-xl-5 offset-xl-1">
+									<div class="form-row">
+										<div class="form-group col-4">
+											<label for="monster-level" class="w-100 text-center">Level</label>
+											<input type="text" id="monster-level" class="form-control form-control-sm"/>
+										</div>
+										<div class="w-100"></div>
+										<div class="form-group col-2">
+											<label class="w-100 text-center" for="monster-str">STR</label>
+											<input class="form-control form-control-sm" type="text" id="monster-str"/>
+										</div>
+										<div class="form-group col-2">
+											<label class="w-100 text-center" for="monster-tou">TOU</label>
+											<input class="form-control form-control-sm" type="text" id="monster-tou"/>
+										</div>
+										<div class="form-group col-2">
+											<label class="w-100 text-center" for="monster-spe">SPE</label>
+											<input class="form-control form-control-sm" type="text" id="monster-spe"/>
+										</div>
+										<div class="form-group col-2">
+											<label class="w-100 text-center" for="monster-int">INT</label>
+											<input class="form-control form-control-sm" type="text" id="monster-int"/>
+										</div>
+										<div class="form-group col-2">
+											<label class="w-100 text-center" for="monster-wis">WIS</label>
+											<input class="form-control form-control-sm" type="text" id="monster-wis"/>
+										</div>
+										<div class="form-group col-2">
+											<label class="w-100 text-center" for="monster-lib">LIB</label>
+											<input class="form-control form-control-sm" type="text" id="monster-lib"/>
+										</div>
+										<div class="form-group col-4">
+											<label class="w-100 text-center" for="monster-sen">Sensitivity</label>
+											<input class="form-control form-control-sm" type="text" id="monster-sen"/>
+										</div>
+										<div class="form-group col-4">
+											<label class="w-100 text-center" for="monster-cor">Corruption</label>
+											<input class="form-control form-control-sm" type="text" id="monster-cor">
+										</div>
+										<div class="form-group col-4">
+											<label class="w-100 text-center" for="monster-bonushp">Bonus HP</label>
+											<input class="form-control form-control-sm" type="text" id="monster-bonushp" placeholder="(999)">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="monsterBody">
+							TODO
+						</div>
+						<div class="tab-pane" id="monsterDesc">
+							<div class="form-group">
+								<label for="monster-desc">Description</label>
+								<textarea id="monster-desc" class="form-control form-control-sm" rows="20" placeholder="(You're fighting the...)"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
 </main>
