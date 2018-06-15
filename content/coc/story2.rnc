@@ -88,6 +88,38 @@ monsterBody = element body {
         attribute color { text }?,
         attribute type { text }?
     }?,
+    element antennae { text }?,
+    element arms { text }?,
+    element beard {
+        attribute style { text }?,
+        attribute length { text }?
+    }?,
+    element claws {
+        attribute type { text }?,
+        attribute color { text }?
+    }?,
+    element ears { text }?,
+    element eyes {
+        attribute type { text }?,
+        attribute count { text }?,
+        attribute color { text }?
+    }?,
+    element face { text }?,
+    element gills { text }?,
+    element horns {
+        attribute type { text }?,
+        attribute count { text }?
+    }?,
+    element legs {
+        attribute type { text }?,
+        attribute count { text }?
+    }?,
+    element rearBody { text }?,
+    element tail {
+        attribute type { text }?,
+        attribute count { text }?
+    }?,
+    element tongue { text }?,
     element wings { text }?
 }
 skinLayer = (

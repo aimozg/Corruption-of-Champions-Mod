@@ -195,6 +195,13 @@ namespace utils {
 		if (!x) return undefined;
 		return x.innerHTML;
 	}
+	export function unindent(s:string|undefined):string|undefined {
+		if (s === undefined) return undefined;
+		let m = s.match(/^(\n\s+)/);
+		if (m) s = s.replace(new RegExp(m[1],'g'),'\n').substr(1);
+		s = s.replace(/(\n\s+)$/,'');
+		return s;
+	}
 	export function xmlgeti(x:Element,query:string):number|undefined {
 		let s = xmlget(x,query);
 		if (s === undefined) return undefined;
@@ -215,10 +222,41 @@ namespace utils {
 		if (m) return (+m[1])*12+ +m[2];
 		throw "Not a valid length: "+JSON.stringify(s);
 	}
+	export function lengthString(n:number|undefined):string|undefined {
+		if (n === undefined) return undefined;
+		if (n > -0.05 && n < +0.05) return '0';
+		let s = '';
+		if (n < 0) {
+			s = '-';
+			n = -n;
+		}
+		let ft = (n/12)|0;
+		if (ft>0) s += ft+"'";
+		let ic = (((n - ft*12)*10)|0)/10;
+		if (ic != (ic|0)) s += ic.toFixed(1)+'"';
+		else if (ic != 0) s += ic.toFixed(0)+'"';
+		return s;
+	}
 	export function dictLookup(dict:any, s:string|undefined):number|undefined {
 		if (typeof s === 'undefined') return undefined;
 		if (s in dict) return dict[s];
 		if (!isNaN(+s)) return +s;
 		throw "Not a valid number or enum constant: "+JSON.stringify(s);
+	}
+	export function dictLookupName(dict:any, s:number|undefined):string|undefined {
+		if (s === undefined) return undefined;
+		if (s in dict) return dict[s];
+		return ""+s;
+	}
+	export function enumNames(E:any):string[] {
+		return Object.keys(E).filter(k => typeof E[k as any] === "number");
+	}
+	export function enumValues(E:any):string[] {
+		return enumNames(E).map(k => E[k as any]);
+	}
+	export function enumAsOptions(E:any):HTMLOptionElement[] {
+		return enumNames(E).map(k=>
+			$('<option>').val(E[k]).html(k)[0] as HTMLOptionElement
+		)
 	}
 }

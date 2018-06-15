@@ -579,6 +579,16 @@ var utils;
         return x.innerHTML;
     }
     utils.xmlget = xmlget;
+    function unindent(s) {
+        if (s === undefined)
+            return undefined;
+        let m = s.match(/^(\n\s+)/);
+        if (m)
+            s = s.replace(new RegExp(m[1], 'g'), '\n').substr(1);
+        s = s.replace(/(\n\s+)$/, '');
+        return s;
+    }
+    utils.unindent = unindent;
     function xmlgeti(x, query) {
         let s = xmlget(x, query);
         if (s === undefined)
@@ -606,6 +616,27 @@ var utils;
         throw "Not a valid length: " + JSON.stringify(s);
     }
     utils.parseLength = parseLength;
+    function lengthString(n) {
+        if (n === undefined)
+            return undefined;
+        if (n > -0.05 && n < +0.05)
+            return '0';
+        let s = '';
+        if (n < 0) {
+            s = '-';
+            n = -n;
+        }
+        let ft = (n / 12) | 0;
+        if (ft > 0)
+            s += ft + "'";
+        let ic = (((n - ft * 12) * 10) | 0) / 10;
+        if (ic != (ic | 0))
+            s += ic.toFixed(1) + '"';
+        else if (ic != 0)
+            s += ic.toFixed(0) + '"';
+        return s;
+    }
+    utils.lengthString = lengthString;
     function dictLookup(dict, s) {
         if (typeof s === 'undefined')
             return undefined;
@@ -616,10 +647,38 @@ var utils;
         throw "Not a valid number or enum constant: " + JSON.stringify(s);
     }
     utils.dictLookup = dictLookup;
+    function dictLookupName(dict, s) {
+        if (s === undefined)
+            return undefined;
+        if (s in dict)
+            return dict[s];
+        return "" + s;
+    }
+    utils.dictLookupName = dictLookupName;
+    function enumNames(E) {
+        return Object.keys(E).filter(k => typeof E[k] === "number");
+    }
+    utils.enumNames = enumNames;
+    function enumValues(E) {
+        return enumNames(E).map(k => E[k]);
+    }
+    utils.enumValues = enumValues;
+    function enumAsOptions(E) {
+        return enumNames(E).map(k => $('<option>').val(E[k]).html(k)[0]);
+    }
+    utils.enumAsOptions = enumAsOptions;
 })(utils || (utils = {}));
 ///<reference path="typings/jquery.d.ts"/>
 ///<reference path="utils.ts"/>
 ///<reference path="dump.ts"/>
+var SkinCoverages;
+(function (SkinCoverages) {
+    SkinCoverages[SkinCoverages["NONE"] = 0] = "NONE";
+    SkinCoverages[SkinCoverages["LOW"] = 1] = "LOW";
+    SkinCoverages[SkinCoverages["MEDIUM"] = 2] = "MEDIUM";
+    SkinCoverages[SkinCoverages["HIGH"] = 3] = "HIGH";
+    SkinCoverages[SkinCoverages["COMPLETE"] = 4] = "COMPLETE";
+})(SkinCoverages || (SkinCoverages = {}));
 var monsters;
 (function (monsters) {
     var loadFile = utils.loadFile;
@@ -628,6 +687,7 @@ var monsters;
     var parseLength = utils.parseLength;
     var dictLookup = utils.dictLookup;
     var xmlgeti = utils.xmlgeti;
+    var unindent = utils.unindent;
     const DefaultVagina = {
         virgin: true, wetness: 1, looseness: 0
     };
@@ -635,7 +695,7 @@ var monsters;
         size: 0, nipplesPerBreast: 1
     };
     const DefaultSkinData = {
-        skinCoverage: 0,
+        coverage: 0,
         baseType: SkinTypes.PLAIN,
         baseColor: 'pale',
         baseColor2: '',
@@ -662,6 +722,7 @@ var monsters;
         armsType: ArmTypes.HUMAN,
         clawsType: ClawTypes.NORMAL,
         clawsTone: '',
+        earsType: EarTypes.HUMAN,
         eyeCount: 2,
         eyeType: EyeTypes.HUMAN,
         eyeColor: 'brown',
@@ -703,6 +764,7 @@ var monsters;
             this.id = id;
             this.data = {};
             this.body = {};
+            this.skin = {};
         }
         get baseMonster() {
             return this.base ? monsters.lib[this.base] : undefined;
@@ -710,34 +772,71 @@ var monsters;
         inherit() {
             let m = new Monster(this.id);
             let base = this.baseMonster;
-            if (!base)
-                return m.merge(Monster.DefaultMonster);
-            return m.merge(base.inherit());
+            m = m.merge(base ? base.inherit() : Monster.DefaultMonster);
+            return m.merge(this);
         }
         merge(m) {
             this.data = $.extend(this.data, m.data);
             this.body = $.extend(this.body, m.body);
+            this.skin = $.extend(this.skin, m.skin);
             return this;
         }
     }
     Monster.DefaultMonster = ((m) => {
         m.data = $.extend({}, DefaultData);
         m.body = $.extend({}, DefaultBodyData);
+        m.skin = $.extend({}, DefaultSkinData);
         return m;
     })(new Monster(undefined));
+    monsters.Monster = Monster;
     function loadMonster(x) {
         let m = new Monster(x.getAttribute('id'));
         m.base = xmlget(x, '@base');
         m.data.a = xmlget(x, 'a');
         m.data.name = xmlget(x, 'name');
-        m.data.desc = xmlget(x, 'desc');
-        if (m.data.desc)
-            m.data.desc = m.data.desc.replace(/ {2,}/g, ' ');
+        m.data.desc = unindent(xmlget(x, 'desc'));
         m.body.height = parseLength(xmlget(x, 'body > height'));
+        m.body.hipRating = xmlgeti(x, 'body > hips');
+        m.body.buttRating = xmlgeti(x, 'body > butt');
+        m.body.beardStyle = dictLookup(BeardTypes, xmlget(x, 'body > beard@style'));
+        m.body.beardLength = parseLength(xmlgeti(x, 'body > beard@length'));
         m.body.hairType = dictLookup(HairTypes, xmlget(x, 'body > hair@type'));
         m.body.hairColor = xmlget(x, 'body > hair@color');
         m.body.hairLength = parseLength(xmlget(x, 'body > hair@length'));
+        m.skin.coverage = dictLookup(SkinCoverages, xmlget(x, 'body > skin@coverage'));
+        m.skin.baseType = dictLookup(SkinTypes, xmlget(x, 'body > skin > base@type'));
+        m.skin.baseColor = xmlget(x, 'body > skin > base@color');
+        m.skin.baseColor2 = xmlget(x, 'body > skin > base@color2');
+        m.skin.baseAdj = xmlget(x, 'body > skin > base@adj');
+        m.skin.baseDesc = xmlget(x, 'body > skin > base@desc');
+        m.skin.basePattern = dictLookup(SkinPatterns, xmlget(x, 'body > skin > base@pattern'));
+        m.skin.coatType = dictLookup(SkinTypes, xmlget(x, 'body > skin > coat@type'));
+        m.skin.coatColor = xmlget(x, 'body > skin > coat@color');
+        m.skin.coatColor2 = xmlget(x, 'body > skin > coat@color2');
+        m.skin.coatAdj = xmlget(x, 'body > skin > coat@adj');
+        m.skin.coatDesc = xmlget(x, 'body > skin > coat@desc');
+        m.skin.coatPattern = dictLookup(SkinPatterns, xmlget(x, 'body > skin > coat@pattern'));
+        m.body.antennaeType = dictLookup(AntennaeTypes, xmlget(x, 'body > antennae'));
+        m.body.armsType = dictLookup(ArmTypes, xmlget(x, 'body > arms'));
+        m.body.clawsType = dictLookup(ClawTypes, xmlget(x, 'body > claws@type'));
+        m.body.clawsTone = xmlget(x, 'body > claws@tone');
+        m.body.earsType = dictLookup(EarTypes, xmlget(x, 'body > ears'));
+        m.body.eyeCount = xmlgeti(x, 'body > eyes@count');
+        m.body.eyeType = dictLookup(EyeTypes, xmlget(x, 'body > eyes@type'));
+        m.body.eyeColor = xmlget(x, 'body > eyes@color');
+        m.body.faceType = dictLookup(FaceTypes, xmlget(x, 'body > face'));
+        m.body.gillsType = dictLookup(GillTypes, xmlget(x, 'body > gills'));
+        m.body.hornsType = dictLookup(HornTypes, xmlget(x, 'body > horns@type'));
+        m.body.hornsCount = xmlgeti(x, 'body > horns@count');
+        m.body.legsType = dictLookup(LowerBodyTypes, xmlget(x, 'body > legs@type'));
+        m.body.legsCount = xmlgeti(x, 'body > legs@count');
+        m.body.rearBodyType = dictLookup(RearBodyTypes, xmlget(x, 'body > rearBody'));
+        m.body.tailType = dictLookup(TailTypes, xmlget(x, 'body > tail@type'));
+        m.body.tailsCount = xmlgeti(x, 'body > tail@count');
+        m.body.tongueType = dictLookup(TongueTypes, xmlget(x, 'body > tongue'));
         m.body.wingsType = dictLookup(WingTypes, xmlget(x, 'body > wings'));
+        m.body.analLooseness = xmlgeti(x, 'body > anal@looseness');
+        m.body.analWetness = xmlgeti(x, 'body > anal@wetness');
         m.data.level = xmlgeti(x, 'combat > level');
         m.data.str = xmlgeti(x, 'combat > str');
         m.data.tou = xmlgeti(x, 'combat > tou');
@@ -759,12 +858,21 @@ var monsters;
         for (let k in m.body)
             if (m.body[k] === undefined)
                 delete m.body[k];
+        for (let k in m.skin)
+            if (m.skin[k] === undefined)
+                delete m.skin[k];
         return m;
     }
     monsters.loadMonster = loadMonster;
     monsters.lib = {};
     monsters.currentMonster = undefined;
+    function forEachMonsterInput(cb) {
+        $('#monsterEditor [data-mget]').each((i, e) => {
+            cb($(e));
+        });
+    }
     function showMonster(m) {
+        m = m.inherit();
         let monsterList = $('#monsterList');
         let monsterBase = $('#monster-base');
         monsterList.find('.list-group-item.active').removeClass('active');
@@ -772,21 +880,9 @@ var monsters;
         monsters.currentMonster = m;
         monsterBase.find('option').removeAttr('disabled');
         monsterBase.find('option[value=' + m.id + ']').attr('disabled', 'true');
-        $('#monster-id').val(m.id);
-        monsterBase.val(m.base || '');
-        $('#monster-name').val(m.data.name);
-        $('#monster-a').val(m.data.a);
-        $('#monster-desc').val(m.data.desc);
-        $('#monster-level').val(m.data.level);
-        $('#monster-str').val(m.data.str);
-        $('#monster-tou').val(m.data.tou);
-        $('#monster-spe').val(m.data.spe);
-        $('#monster-int').val(m.data.int);
-        $('#monster-wis').val(m.data.wis);
-        $('#monster-lib').val(m.data.lib);
-        $('#monster-sen').val(m.data.sen);
-        $('#monster-cor').val(m.data.cor);
-        $('#monster-bonushp').val(m.data.bonusHP);
+        forEachMonsterInput(e => {
+            e.val(eval(e.attr('data-mget')));
+        });
     }
     monsters.showMonster = showMonster;
     function listMonsters() {
@@ -829,6 +925,26 @@ var monsters;
     monsters.initMonsters = initMonsters;
     let loaded = false;
     $(() => {
+        $('#monster-beard-style').append(utils.enumAsOptions(BeardTypes));
+        $('#monster-hair-type').append(utils.enumAsOptions(HairTypes));
+        $('#monster-antennae-type').append(utils.enumAsOptions(AntennaeTypes));
+        $('#monster-arms-type').append(utils.enumAsOptions(ArmTypes));
+        $('#monster-claws-type').append(utils.enumAsOptions(ClawTypes));
+        $('#monster-ears-type').append(utils.enumAsOptions(EarTypes));
+        $('#monster-eye-type').append(utils.enumAsOptions(EyeTypes));
+        $('#monster-face-type').append(utils.enumAsOptions(FaceTypes));
+        $('#monster-gills-type').append(utils.enumAsOptions(GillTypes));
+        $('#monster-horns-type').append(utils.enumAsOptions(HornTypes));
+        $('#monster-legs-type').append(utils.enumAsOptions(LowerBodyTypes));
+        $('#monster-rearBody-type').append(utils.enumAsOptions(RearBodyTypes));
+        $('#monster-tail-type').append(utils.enumAsOptions(TailTypes));
+        $('#monster-tongue-type').append(utils.enumAsOptions(TongueTypes));
+        $('#monster-wings-type').append(utils.enumAsOptions(WingTypes));
+        $('#monster-skin-coverage').append(utils.enumAsOptions(SkinCoverages));
+        $('#monster-skin-base-type').append(utils.enumAsOptions(SkinTypes));
+        $('#monster-skin-base-pattern').append(utils.enumAsOptions(SkinPatterns));
+        $('#monster-skin-coat-type').append(utils.enumAsOptions(SkinTypes));
+        $('#monster-skin-coat-pattern').append(utils.enumAsOptions(SkinPatterns));
         $('a[href="#tab-monsters"]').on('shown.bs.tab', function (e) {
             if (!loaded) {
                 loaded = true;

@@ -2,6 +2,13 @@
 ///<reference path="utils.ts"/>
 ///<reference path="dump.ts"/>
 
+enum SkinCoverages {
+	NONE=0,
+	LOW=1,
+	MEDIUM=2,
+	HIGH=3,
+	COMPLETE=4
+}
 namespace monsters {
 	
 	import loadFile = utils.loadFile;
@@ -10,6 +17,7 @@ namespace monsters {
 	import parseLength = utils.parseLength;
 	import dictLookup = utils.dictLookup;
 	import xmlgeti = utils.xmlgeti;
+	import unindent = utils.unindent;
 	
 	interface Vagina {
 		virgin?: boolean;
@@ -31,66 +39,66 @@ namespace monsters {
 	};
 	
 	interface SkinData {
-		skinCoverage?: number;
-		baseType?: number;
+		coverage?: number;
+		baseType?: SkinTypes;
 		baseColor?: string;
 		baseColor2?: string;
 		baseAdj?: string;
 		baseDesc?: string;
-		basePattern?: number;
-		coatType?: number;
+		basePattern?: SkinPatterns;
+		coatType?: SkinTypes;
 		coatColor?: string;
 		coatColor2?: string;
 		coatAdj?: string;
 		coatDesc?: string;
-		coatPattern?: number;
+		coatPattern?: SkinPatterns;
 	}
 	
 	const DefaultSkinData: SkinData = {
-		skinCoverage: 0,
-		baseType    : SkinTypes.PLAIN,
-		baseColor   : 'pale',
-		baseColor2  : '',
-		baseAdj     : '',
-		baseDesc    : '',
-		basePattern : SkinPatterns.PATTERN_NONE,
-		coatType    : SkinTypes.PLAIN,
-		coatColor   : 'pale',
-		coatColor2  : '',
-		coatAdj     : '',
-		coatDesc    : '',
-		coatPattern : SkinPatterns.PATTERN_NONE,
+		coverage   : 0,
+		baseType   : SkinTypes.PLAIN,
+		baseColor  : 'pale',
+		baseColor2 : '',
+		baseAdj    : '',
+		baseDesc   : '',
+		basePattern: SkinPatterns.PATTERN_NONE,
+		coatType   : SkinTypes.PLAIN,
+		coatColor  : 'pale',
+		coatColor2 : '',
+		coatAdj    : '',
+		coatDesc   : '',
+		coatPattern: SkinPatterns.PATTERN_NONE,
 	};
 	
 	interface BodyData {
 		height?: number;
 		hipRating?: number;
 		buttRating?: number;
-		beardStyle?: number;
+		beardStyle?: BeardTypes;
 		beardLength?: number;
-		hairType?: number;
+		hairType?: HairTypes;
 		hairColor?: string;
 		hairLength?: number;
 		
-		antennaeType?: number;
-		armsType?: number;
-		clawsType?: number;
+		antennaeType?: AntennaeTypes;
+		armsType?: ArmTypes;
+		clawsType?: ClawTypes;
 		clawsTone?: string;
-		earsType?: number;
+		earsType?: EarTypes;
 		eyeCount?: number;
-		eyeType?: number;
+		eyeType?: EyeTypes;
 		eyeColor?: string;
-		faceType?: number;
-		gillsType?: number;
-		hornsType?: number;
+		faceType?: FaceTypes;
+		gillsType?: GillTypes;
+		hornsType?: HornTypes;
 		hornsCount?: number;
-		legsType?: number;
+		legsType?: LowerBodyTypes;
 		legsCount?: number;
-		rearBodyType?: number;
-		tailType?: number;
+		rearBodyType?: RearBodyTypes;
+		tailType?: TailTypes;
 		tailsCount?: number;
-		tongueType?: number;
-		wingsType?: number;
+		tongueType?: TongueTypes;
+		wingsType?: WingTypes;
 		
 		analLooseness?: number;
 		analWetness?: number;
@@ -110,6 +118,7 @@ namespace monsters {
 		armsType    : ArmTypes.HUMAN,
 		clawsType   : ClawTypes.NORMAL,
 		clawsTone   : '',
+		earsType    : EarTypes.HUMAN,
 		eyeCount    : 2,
 		eyeType     : EyeTypes.HUMAN,
 		eyeColor    : 'brown',
@@ -129,7 +138,7 @@ namespace monsters {
 		analWetness  : 0,
 	};
 	
-	interface MonsterData {
+	export interface MonsterData {
 		name?: string;
 		desc?: string;
 		a?: string;
@@ -163,7 +172,7 @@ namespace monsters {
 		bonusHP   : 0,
 	};
 	
-	class Monster {
+	export class Monster {
 		// text
 		public base: string;
 		
@@ -173,6 +182,7 @@ namespace monsters {
 		
 		public data: MonsterData = {};
 		public body: BodyData    = {};
+		public skin: SkinData    = {};
 		// combat
 		/*
 			element loot {
@@ -188,82 +198,122 @@ namespace monsters {
 		public inherit(): Monster {
 			let m    = new Monster(this.id);
 			let base = this.baseMonster;
-			if (!base) return m.merge(Monster.DefaultMonster);
-			return m.merge(base.inherit());
+			m        = m.merge(base ? base.inherit() : Monster.DefaultMonster);
+			return m.merge(this);
 		}
 		
 		public merge(m: Monster): Monster {
 			this.data = $.extend(this.data, m.data);
 			this.body = $.extend(this.body, m.body);
+			this.skin = $.extend(this.skin, m.skin);
 			return this;
 		}
 		
 		public static DefaultMonster = ((m: Monster) => {
 			m.data = $.extend({}, DefaultData);
 			m.body = $.extend({}, DefaultBodyData);
+			m.skin = $.extend({}, DefaultSkinData);
 			return m
 		})(new Monster(undefined))
 	}
 	
 	export function loadMonster(x: Element): Monster {
-		let m               = new Monster(x.getAttribute('id'));
-		m.base              = xmlget(x, '@base');
-		m.data.a            = xmlget(x, 'a');
-		m.data.name         = xmlget(x, 'name');
-		m.data.desc         = xmlget(x, 'desc');
-		if (m.data.desc) m.data.desc = m.data.desc.replace(/ {2,}/g,' ');
-		m.body.height       = parseLength(xmlget(x, 'body > height'));
-		m.body.hairType     = dictLookup(HairTypes, xmlget(x, 'body > hair@type'));
-		m.body.hairColor    = xmlget(x, 'body > hair@color');
-		m.body.hairLength   = parseLength(xmlget(x, 'body > hair@length'));
-		m.body.wingsType    = dictLookup(WingTypes, xmlget(x, 'body > wings'));
-		m.data.level        = xmlgeti(x, 'combat > level');
-		m.data.str          = xmlgeti(x, 'combat > str');
-		m.data.tou          = xmlgeti(x, 'combat > tou');
-		m.data.spe          = xmlgeti(x, 'combat > spe');
-		m.data.int          = xmlgeti(x, 'combat > int');
-		m.data.wis          = xmlgeti(x, 'combat > wis');
-		m.data.lib          = xmlgeti(x, 'combat > lib');
-		m.data.sen          = xmlgeti(x, 'combat > sen');
-		m.data.cor          = xmlgeti(x, 'combat > cor');
-		m.data.weaponName   = xmlget(x, 'combat > weapon@name');
-		m.data.weaponVerb   = xmlget(x, 'combat > weapon@verb');
-		m.data.weaponAttack = xmlgeti(x, 'combat > weapon@attack');
-		m.data.armorName    = xmlget(x, 'combat > armor@name');
-		m.data.armorDefense = xmlgeti(x, 'combat > armor@defense');
-		m.data.bonusHP      = xmlgeti(x, 'combat > bonusHP');
+		let m                = new Monster(x.getAttribute('id'));
+		m.base               = xmlget(x, '@base');
+		m.data.a             = xmlget(x, 'a');
+		m.data.name          = xmlget(x, 'name');
+		m.data.desc          = unindent(xmlget(x, 'desc'));
+		
+		m.body.height        = parseLength(xmlget(x, 'body > height'));
+		m.body.hipRating     = xmlgeti(x, 'body > hips');
+		m.body.buttRating    = xmlgeti(x, 'body > butt');
+		m.body.beardStyle    = dictLookup(BeardTypes, xmlget(x, 'body > beard@style'));
+		m.body.beardLength   = parseLength(xmlgeti(x, 'body > beard@length'));
+		m.body.hairType      = dictLookup(HairTypes, xmlget(x, 'body > hair@type'));
+		m.body.hairColor     = xmlget(x, 'body > hair@color');
+		m.body.hairLength    = parseLength(xmlget(x, 'body > hair@length'));
+		
+		m.skin.coverage = dictLookup(SkinCoverages, xmlget(x, 'body > skin@coverage'));
+		m.skin.baseType = dictLookup(SkinTypes, xmlget(x, 'body > skin > base@type'));
+		m.skin.baseColor = xmlget(x, 'body > skin > base@color');
+		m.skin.baseColor2 = xmlget(x, 'body > skin > base@color2');
+		m.skin.baseAdj = xmlget(x, 'body > skin > base@adj');
+		m.skin.baseDesc = xmlget(x, 'body > skin > base@desc');
+		m.skin.basePattern = dictLookup(SkinPatterns, xmlget(x, 'body > skin > base@pattern'));
+		m.skin.coatType = dictLookup(SkinTypes, xmlget(x, 'body > skin > coat@type'));
+		m.skin.coatColor = xmlget(x, 'body > skin > coat@color');
+		m.skin.coatColor2 = xmlget(x, 'body > skin > coat@color2');
+		m.skin.coatAdj = xmlget(x, 'body > skin > coat@adj');
+		m.skin.coatDesc = xmlget(x, 'body > skin > coat@desc');
+		m.skin.coatPattern = dictLookup(SkinPatterns, xmlget(x, 'body > skin > coat@pattern'));
+		
+		m.body.antennaeType  = dictLookup(AntennaeTypes, xmlget(x, 'body > antennae'));
+		m.body.armsType      = dictLookup(ArmTypes, xmlget(x, 'body > arms'));
+		m.body.clawsType     = dictLookup(ClawTypes, xmlget(x, 'body > claws@type'));
+		m.body.clawsTone     = xmlget(x, 'body > claws@tone');
+		m.body.earsType      = dictLookup(EarTypes, xmlget(x, 'body > ears'));
+		m.body.eyeCount      = xmlgeti(x, 'body > eyes@count');
+		m.body.eyeType       = dictLookup(EyeTypes, xmlget(x, 'body > eyes@type'));
+		m.body.eyeColor      = xmlget(x, 'body > eyes@color');
+		m.body.faceType      = dictLookup(FaceTypes, xmlget(x, 'body > face'));
+		m.body.gillsType     = dictLookup(GillTypes, xmlget(x, 'body > gills'));
+		m.body.hornsType     = dictLookup(HornTypes, xmlget(x, 'body > horns@type'));
+		m.body.hornsCount    = xmlgeti(x, 'body > horns@count');
+		m.body.legsType      = dictLookup(LowerBodyTypes, xmlget(x, 'body > legs@type'));
+		m.body.legsCount     = xmlgeti(x, 'body > legs@count');
+		m.body.rearBodyType  = dictLookup(RearBodyTypes, xmlget(x, 'body > rearBody'));
+		m.body.tailType      = dictLookup(TailTypes, xmlget(x, 'body > tail@type'));
+		m.body.tailsCount    = xmlgeti(x, 'body > tail@count');
+		m.body.tongueType    = dictLookup(TongueTypes, xmlget(x, 'body > tongue'));
+		m.body.wingsType     = dictLookup(WingTypes, xmlget(x, 'body > wings'));
+		
+		m.body.analLooseness = xmlgeti(x, 'body > anal@looseness');
+		m.body.analWetness   = xmlgeti(x, 'body > anal@wetness');
+		
+		m.data.level         = xmlgeti(x, 'combat > level');
+		m.data.str           = xmlgeti(x, 'combat > str');
+		m.data.tou           = xmlgeti(x, 'combat > tou');
+		m.data.spe           = xmlgeti(x, 'combat > spe');
+		m.data.int           = xmlgeti(x, 'combat > int');
+		m.data.wis           = xmlgeti(x, 'combat > wis');
+		m.data.lib           = xmlgeti(x, 'combat > lib');
+		m.data.sen           = xmlgeti(x, 'combat > sen');
+		m.data.cor           = xmlgeti(x, 'combat > cor');
+		m.data.weaponName    = xmlget(x, 'combat > weapon@name');
+		m.data.weaponVerb    = xmlget(x, 'combat > weapon@verb');
+		m.data.weaponAttack  = xmlgeti(x, 'combat > weapon@attack');
+		m.data.armorName     = xmlget(x, 'combat > armor@name');
+		m.data.armorDefense  = xmlgeti(x, 'combat > armor@defense');
+		m.data.bonusHP       = xmlgeti(x, 'combat > bonusHP');
+		
 		for (let k in m.data) if (m.data[k] === undefined) delete m.data[k];
 		for (let k in m.body) if (m.body[k] === undefined) delete m.body[k];
+		for (let k in m.skin) if (m.skin[k] === undefined) delete m.skin[k];
 		return m;
 	}
 	
-	export let lib: Dict<Monster>                  = {};
+	export let lib: { [index: string]: Monster }   = {};
 	export let currentMonster: Monster | undefined = undefined;
 	
+	function forEachMonsterInput(cb: (input: JQuery) => void) {
+		$('#monsterEditor [data-mget]').each((i, e) => {
+			cb($(e));
+		});
+	}
+	
 	export function showMonster(m: Monster) {
+		m = m.inherit();
 		let monsterList = $('#monsterList');
 		let monsterBase = $('#monster-base');
 		monsterList.find('.list-group-item.active').removeClass('active');
 		monsterList.find('.list-group-item[href="#' + m.id + '"]').addClass('active');
 		currentMonster = m;
 		monsterBase.find('option').removeAttr('disabled');
-		monsterBase.find('option[value='+m.id+']').attr('disabled','true');
+		monsterBase.find('option[value=' + m.id + ']').attr('disabled', 'true');
 		
-		$('#monster-id').val(m.id);
-		monsterBase.val(m.base || '');
-		$('#monster-name').val(m.data.name);
-		$('#monster-a').val(m.data.a);
-		$('#monster-desc').val(m.data.desc);
-		$('#monster-level').val(m.data.level);
-		$('#monster-str').val(m.data.str);
-		$('#monster-tou').val(m.data.tou);
-		$('#monster-spe').val(m.data.spe);
-		$('#monster-int').val(m.data.int);
-		$('#monster-wis').val(m.data.wis);
-		$('#monster-lib').val(m.data.lib);
-		$('#monster-sen').val(m.data.sen);
-		$('#monster-cor').val(m.data.cor);
-		$('#monster-bonushp').val(m.data.bonusHP);
+		forEachMonsterInput(e => {
+			e.val(eval(e.attr('data-mget')));
+		});
 	}
 	
 	export function listMonsters() {
@@ -273,8 +323,8 @@ namespace monsters {
 		j2.html('');
 		j2.append($('<option>').html('(No prototype)').val(''));
 		for (let id in lib) {
-			let m    = lib[id].inherit();
-			let name = id + ' (' + m.data.name + ' lvl ' + m.data.level + ')';
+			let m: Monster = lib[id].inherit();
+			let name       = id + ' (' + m.data.name + ' lvl ' + m.data.level + ')';
 			j1.append($('<a>')
 				.addClass('list-group-item list-group-item-action')
 				.attr('href', '#' + id)
@@ -284,7 +334,7 @@ namespace monsters {
 					showMonster(lib[e.target.getAttribute('href').substring(1)]);
 					e.stopPropagation();
 				})
-			)
+			);
 			j2.append($('<option>').val(id).html(name));
 		}
 	}
@@ -307,6 +357,26 @@ namespace monsters {
 	
 	let loaded = false;
 	$(() => {
+		$('#monster-beard-style').append(utils.enumAsOptions(BeardTypes));
+		$('#monster-hair-type').append(utils.enumAsOptions(HairTypes));
+		$('#monster-antennae-type').append(utils.enumAsOptions(AntennaeTypes));
+		$('#monster-arms-type').append(utils.enumAsOptions(ArmTypes));
+		$('#monster-claws-type').append(utils.enumAsOptions(ClawTypes));
+		$('#monster-ears-type').append(utils.enumAsOptions(EarTypes));
+		$('#monster-eye-type').append(utils.enumAsOptions(EyeTypes));
+		$('#monster-face-type').append(utils.enumAsOptions(FaceTypes));
+		$('#monster-gills-type').append(utils.enumAsOptions(GillTypes));
+		$('#monster-horns-type').append(utils.enumAsOptions(HornTypes));
+		$('#monster-legs-type').append(utils.enumAsOptions(LowerBodyTypes));
+		$('#monster-rearBody-type').append(utils.enumAsOptions(RearBodyTypes));
+		$('#monster-tail-type').append(utils.enumAsOptions(TailTypes));
+		$('#monster-tongue-type').append(utils.enumAsOptions(TongueTypes));
+		$('#monster-wings-type').append(utils.enumAsOptions(WingTypes));
+		$('#monster-skin-coverage').append(utils.enumAsOptions(SkinCoverages));
+		$('#monster-skin-base-type').append(utils.enumAsOptions(SkinTypes));
+		$('#monster-skin-base-pattern').append(utils.enumAsOptions(SkinPatterns));
+		$('#monster-skin-coat-type').append(utils.enumAsOptions(SkinTypes));
+		$('#monster-skin-coat-pattern').append(utils.enumAsOptions(SkinPatterns));
 		$('a[href="#tab-monsters"]').on('shown.bs.tab', function (e) {
 			if (!loaded) {
 				loaded = true;
