@@ -57,13 +57,13 @@ namespace monsters {
 	const DefaultSkinData: SkinData = {
 		coverage   : 0,
 		baseType   : SkinTypes.PLAIN,
-		baseColor  : 'pale',
+		baseColor  : 'no',
 		baseColor2 : '',
 		baseAdj    : '',
 		baseDesc   : '',
 		basePattern: SkinPatterns.PATTERN_NONE,
 		coatType   : SkinTypes.PLAIN,
-		coatColor  : 'pale',
+		coatColor  : 'no',
 		coatColor2 : '',
 		coatAdj    : '',
 		coatDesc   : '',
@@ -177,7 +177,7 @@ namespace monsters {
 		public base: string;
 		
 		get baseMonster(): Monster | undefined {
-			return this.base ? lib[this.base] : undefined;
+			return this.base ? lib[this.base] : Monster.DefaultMonster;
 		}
 		
 		public data: MonsterData = {};
@@ -196,13 +196,15 @@ namespace monsters {
 		}
 		
 		public inherit(): Monster {
+			if (this == Monster.DefaultMonster) return this;
 			let m    = new Monster(this.id);
 			let base = this.baseMonster;
-			m        = m.merge(base ? base.inherit() : Monster.DefaultMonster);
+			m        = m.merge(base.inherit());
 			return m.merge(this);
 		}
 		
 		public merge(m: Monster): Monster {
+			if ('base' in m) this.base = m.base;
 			this.data = $.extend(this.data, m.data);
 			this.body = $.extend(this.body, m.body);
 			this.skin = $.extend(this.skin, m.skin);
@@ -301,18 +303,25 @@ namespace monsters {
 		});
 	}
 	
-	export function showMonster(m: Monster) {
-		m = m.inherit();
+	export function showMonster(monster: Monster) {
+		monster = monster.inherit();
 		let monsterList = $('#monsterList');
 		let monsterBase = $('#monster-base');
 		monsterList.find('.list-group-item.active').removeClass('active');
-		monsterList.find('.list-group-item[href="#' + m.id + '"]').addClass('active');
-		currentMonster = m;
+		monsterList.find('.list-group-item[href="#' + monster.id + '"]').addClass('active');
+		currentMonster = monster;
 		monsterBase.find('option').removeAttr('disabled');
-		monsterBase.find('option[value=' + m.id + ']').attr('disabled', 'true');
+		monsterBase.find('option[value=' + monster.id + ']').attr('disabled', 'true');
 		
 		forEachMonsterInput(e => {
-			e.val(eval(e.attr('data-mget')));
+			//noinspection JSUnusedAssignment
+			let m     = monster;
+			let thisVal = eval(e.attr('data-mget'));
+			e.val(thisVal);
+			//noinspection JSUnusedAssignment
+			m = monster.baseMonster;
+			let newVal = eval(e.attr('data-mget'));
+			e.toggleClass('is-valid',thisVal !== newVal);
 		});
 	}
 	
@@ -324,7 +333,7 @@ namespace monsters {
 		j2.append($('<option>').html('(No prototype)').val(''));
 		for (let id in lib) {
 			let m: Monster = lib[id].inherit();
-			let name       = id + ' (' + m.data.name + ' lvl ' + m.data.level + ')';
+			let name       = id;// + ' (' + m.data.name + ' lvl ' + m.data.level + ')';
 			j1.append($('<a>')
 				.addClass('list-group-item list-group-item-action')
 				.attr('href', '#' + id)
