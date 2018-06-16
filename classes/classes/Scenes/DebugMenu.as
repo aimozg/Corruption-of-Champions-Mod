@@ -27,6 +27,8 @@ package classes.Scenes
 	import classes.internals.EnumValue;
 	import classes.lists.Gender;
 
+	import coc.lua.LuaEngine;
+
 	import coc.view.ButtonDataList;
 	import coc.view.Color;
 	import coc.xxc.NamedNode;
@@ -78,6 +80,7 @@ import flash.events.Event;
 				//addButton(6, "MeaninglessCorr", toggleMeaninglessCorruption).hint("Toggles the Meaningless Corruption flag. If enabled, all corruption requirements are disabled for scenes.");
 				if (player.isPregnant()) addButton(4, "Abort Preg", abortPregnancy);
 				addButton(5, "DumpEffects", dumpEffectsMenu).hint("Display your status effects");
+				addButton(6, "Lua REPL", luaRepl).hint("Scripting Read-Eval-Print Loop");
 				addButton(7, "HACK STUFFZ", styleHackMenu).hint("H4X0RZ");
 	            addButton(8, "Test Scene", testScene).hint("Select a scene.  Don't use unless you are trying to test something.");
 				addButton(9, "Echo", echo).hint("Paste text into box to have it echo back.");
@@ -95,6 +98,32 @@ import flash.events.Event;
 				outputText("'"+effect.stype.id+"': "+effect.value1+" "+effect.value2+" "+effect.value3+" "+effect.value4+"\n");
 			}
 			doNext(playerMenu);
+		}
+		private function luaRepl():void {
+			var lua:LuaEngine = new LuaEngine();
+			clearOutput();
+			mainView.showTestInputPanel();
+			mainView.eventTestInput.text = "Print('Hello ' .. GetName(GetPlayer()))";
+			menu();
+			button(0).show("Exec",luaExec);
+			button(14).show("Back",luaBack);
+			
+			function luaExec():void {
+				clearOutput();
+				try {
+					var r:* = lua.eval(mainView.eventTestInput.text);
+					if (r !== null && r !== undefined) rawOutputText("&gt; " + JSON.stringify(r));
+				} catch (e:Error) {
+					rawOutputText(e.getStackTrace());
+				}
+				flushOutputTextToGUI();
+				mainView.showTestInputPanel();
+			}
+			function luaBack():void {
+				lua.dispose();
+				mainView.hideTestInputPanel();
+				accessDebugMenu();
+			}
 		}
 
 
@@ -192,15 +221,11 @@ import flash.events.Event;
 			addButton(0,"Back",linkhandler,new TextEvent(TextEvent.LINK,false,false,"-1"));
 			
 			function getFun(type:String, scene:*):void{
-				var funsxml:XML = describeType(scene);
-				var funs:Array = [];
-				for each(var item:XML in funsxml[type]){
-					funs.push(item);
-				}
-				funs.sortOn("@name");
+				var funs:Array = objectMembers(scene, type);
+				funs.sort();
 				if(funs.length > 0){outputText("<b><u>"+type.toUpperCase()+"</u></b>\n");}
 				for each (var fun:* in funs){
-					outputText("<u><a href=\"event:"+fun.@name+"\">"+fun.@name+"</a></u>\n")
+					outputText("<u><a href=\"event:"+fun+"\">"+fun+"</a></u>\n")
 				}
 			}
 			function linkhandler(e:TextEvent):void{

@@ -5,7 +5,9 @@ package classes.internals
 {
 	import classes.*;
 
-	public class Utils extends Object
+import flash.utils.describeType;
+
+public class Utils extends Object
 	{
 		private static const NUMBER_WORDS_NORMAL:Array		= ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
 		private static const NUMBER_WORDS_CAPITAL:Array		= ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
@@ -231,6 +233,22 @@ package classes.internals
 				}
 			}
 			return dest;
+		}
+		public static function objecAllMembers(o:Object):/*String*/Array {
+			var ox:XML = describeType(o);
+			var rslt:/*String*/Array = [];
+			for each(var item:XML in ox.*) {
+				rslt.push(item.@name);
+			}
+			return rslt;
+		}
+		public static function objectMembers(o:Object, type:String):/*String*/Array {
+			var ox:XML = describeType(o);
+			var rslt:/*String*/Array = [];
+			for each(var item:XML in ox[type]) {
+				rslt.push(item.@name);
+			}
+			return rslt;
 		}
 		/**
 		 * [ [key1,value1], [key2, value2], ... ] -> { key1: value1, key2: value2, ... }
