@@ -58,6 +58,27 @@
                 <item>RedVial</item>
             </loot>
         </combat>
+        <script>
+            local scene
+            ---@param me Creature
+            function setup(me)
+                me.extra.biteCounter = 0
+                scene = coc.rootStory:locate('diva/combat'):bind(game.context)
+            end
+            ---@param me Creature
+            function moveBite(me, target)
+                me:addHP(me:maxHP() * 0.2)
+                local dam = me.str() * 2
+                for i = 1, me.extra.biteCounter do
+                    dam = dam + dam * 0.5
+                end
+                me.extra.biteCounter = me.extra.biteCounter + 1
+                scene.display('moves/bite')
+                dam = math.floor(dam + 0.5)
+                target:takePhysDamage(dam)
+                target:takePhysDamage(math.random(2, 5))
+            end
+        </script>
     </monster>
     <monster id="Diva_firstFight" base="Diva">
         <combat>

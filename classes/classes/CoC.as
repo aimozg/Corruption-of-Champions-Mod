@@ -22,6 +22,8 @@ import classes.display.DebugInfo;
 import classes.display.PerkMenu;
 import classes.display.SpriteDb;
 
+import coc.lua.LuaEngine;
+
 import coc.model.GameModel;
 import coc.model.TimeModel;
 import coc.view.MainView;
@@ -107,6 +109,7 @@ public class CoC extends MovieClip
     public var rootStory:Story = new Story("story",null,"root",true);
     public var compiler:StoryCompiler = new StoryCompiler("content/").attach(rootStory);
     public var context:StoryContext;
+    public var lua:LuaEngine;
 
     public var perkTree:PerkTree = new PerkTree();
 
@@ -209,6 +212,7 @@ public class CoC extends MovieClip
         this.stage.addChild( this.mainView );
     }
     private function _postInit(e:Event):void {
+        this.lua = new LuaEngine();
         PerkLib.initDependencies();
         // Hooking things to MainView.
         this.mainView.onNewGameClick = charCreation.newGameGo;

@@ -58,7 +58,12 @@ monster = element monster {
         attribute him { text }
     }?,
     monsterBody?,
-    monsterCombat?
+    monsterCombat?,
+    script*
+}
+script = element script {
+    attribute language { 'lua' | text }?,
+    text
 }
 monsterBody = element body {
     element vagina {

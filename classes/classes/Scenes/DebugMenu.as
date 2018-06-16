@@ -20,7 +20,8 @@ package classes.Scenes
 	import classes.BodyParts.Tail;
 	import classes.BodyParts.Tongue;
 	import classes.BodyParts.Wings;
-	import classes.GlobalFlags.kFLAGS;
+import classes.CoC;
+import classes.GlobalFlags.kFLAGS;
 	import classes.Parser.Parser;
 	import classes.Scenes.NPCs.JojoScene;
 	import classes.Stats.PrimaryStat;
@@ -100,7 +101,6 @@ import flash.events.Event;
 			doNext(playerMenu);
 		}
 		private function luaRepl():void {
-			var lua:LuaEngine = new LuaEngine();
 			clearOutput();
 			mainView.showTestInputPanel();
 			mainView.eventTestInput.text = "Print('Hello ' .. GetName(GetPlayer()))";
@@ -111,16 +111,17 @@ import flash.events.Event;
 			function luaExec():void {
 				clearOutput();
 				try {
-					var r:* = lua.eval(mainView.eventTestInput.text);
+					var r:* = CoC.instance.lua.evalInNamespace('temp', mainView.eventTestInput.text);
 					if (r !== null && r !== undefined) rawOutputText("&gt; " + JSON.stringify(r));
 				} catch (e:Error) {
 					rawOutputText(e.getStackTrace());
+					CoC.instance.lua.recover();
 				}
 				flushOutputTextToGUI();
 				mainView.showTestInputPanel();
 			}
 			function luaBack():void {
-				lua.dispose();
+				CoC.instance.lua.removeNamespace('temp');
 				mainView.hideTestInputPanel();
 				accessDebugMenu();
 			}

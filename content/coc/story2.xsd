@@ -86,6 +86,7 @@
                 <xs:element minOccurs="0" ref="ns1:pronouns"/>
                 <xs:element minOccurs="0" ref="ns1:body"/>
                 <xs:element minOccurs="0" ref="ns1:combat"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:script"/>
             </xs:sequence>
             <xs:attribute name="id" use="required"/>
             <xs:attribute name="base"/>
@@ -116,6 +117,7 @@
             <xs:attribute name="him" use="required"/>
         </xs:complexType>
     </xs:element>
+    <xs:element name="script" type="xs:string"/>
     <xs:element name="body">
         <xs:complexType>
             <xs:sequence>
@@ -127,6 +129,19 @@
                 <xs:element minOccurs="0" ref="ns1:butt"/>
                 <xs:element minOccurs="0" ref="ns1:skin"/>
                 <xs:element minOccurs="0" ref="ns1:hair"/>
+                <xs:element minOccurs="0" ref="ns1:antennae"/>
+                <xs:element minOccurs="0" ref="ns1:arms"/>
+                <xs:element minOccurs="0" ref="ns1:beard"/>
+                <xs:element minOccurs="0" ref="ns1:claws"/>
+                <xs:element minOccurs="0" ref="ns1:ears"/>
+                <xs:element minOccurs="0" ref="ns1:eyes"/>
+                <xs:element minOccurs="0" ref="ns1:face"/>
+                <xs:element minOccurs="0" ref="ns1:gills"/>
+                <xs:element minOccurs="0" ref="ns1:horns"/>
+                <xs:element minOccurs="0" ref="ns1:legs"/>
+                <xs:element minOccurs="0" ref="ns1:rearBody"/>
+                <xs:element minOccurs="0" ref="ns1:tail"/>
+                <xs:element minOccurs="0" ref="ns1:tongue"/>
                 <xs:element minOccurs="0" ref="ns1:wings"/>
             </xs:sequence>
         </xs:complexType>
@@ -181,6 +196,50 @@
             <xs:attribute name="type"/>
         </xs:complexType>
     </xs:element>
+    <xs:element name="antennae" type="xs:string"/>
+    <xs:element name="arms" type="xs:string"/>
+    <xs:element name="beard">
+        <xs:complexType>
+            <xs:attribute name="style"/>
+            <xs:attribute name="length"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="claws">
+        <xs:complexType>
+            <xs:attribute name="type"/>
+            <xs:attribute name="color"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ears" type="xs:string"/>
+    <xs:element name="eyes">
+        <xs:complexType>
+            <xs:attribute name="type"/>
+            <xs:attribute name="count"/>
+            <xs:attribute name="color"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="face" type="xs:string"/>
+    <xs:element name="gills" type="xs:string"/>
+    <xs:element name="horns">
+        <xs:complexType>
+            <xs:attribute name="type"/>
+            <xs:attribute name="count"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="legs">
+        <xs:complexType>
+            <xs:attribute name="type"/>
+            <xs:attribute name="count"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="rearBody" type="xs:string"/>
+    <xs:element name="tail">
+        <xs:complexType>
+            <xs:attribute name="type"/>
+            <xs:attribute name="count"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="tongue" type="xs:string"/>
     <xs:element name="wings" type="xs:string"/>
     <xs:attributeGroup name="skinLayer">
         <xs:attribute name="type"/>
