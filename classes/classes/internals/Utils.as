@@ -234,7 +234,7 @@ public class Utils extends Object
 			}
 			return dest;
 		}
-		public static function objecAllMembers(o:Object):/*String*/Array {
+		public static function objectAllMembers(o:Object):/*String*/Array {
 			var ox:XML = describeType(o);
 			var rslt:/*String*/Array = [];
 			for each(var item:XML in ox.*) {
