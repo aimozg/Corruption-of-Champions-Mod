@@ -610,10 +610,17 @@ var utils;
             return s;
         if (!isNaN(+s))
             return +s;
-        let m = s.match(/^(?:(\d+)')(?:(\d+)")?$/);
-        if (m)
+        let m;
+        if ((m = s.match(/^(?:(\d+)')(?:(\d+)")?$/))) {
             return (+m[1]) * 12 + +m[2];
-        throw "Not a valid length: " + JSON.stringify(s);
+        }
+        else if ((m = s.match(/^(?:(\d+)m)?\s*(?:(\d+)cm)$/))) {
+            let cm = (+m[1]) * 100 + +m[2];
+            return +(cm / 2.54);
+        }
+        else {
+            throw "Not a valid length: " + JSON.stringify(s);
+        }
     }
     utils.parseLength = parseLength;
     function lengthString(n) {
@@ -802,7 +809,7 @@ var monsters;
         m.body.height = parseLength(xmlget(x, 'body > height'));
         m.body.hipRating = xmlgeti(x, 'body > hips');
         m.body.buttRating = xmlgeti(x, 'body > butt');
-        m.body.beardStyle = dictLookup(BeardTypes, xmlget(x, 'body > beard@style'));
+        m.body.beardStyle = dictLookup(BeardTypes, xmlget(x, 'body > beard@type'));
         m.body.beardLength = parseLength(xmlgeti(x, 'body > beard@length'));
         m.body.hairType = dictLookup(HairTypes, xmlget(x, 'body > hair@type'));
         m.body.hairColor = xmlget(x, 'body > hair@color');

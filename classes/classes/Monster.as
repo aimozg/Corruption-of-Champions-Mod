@@ -750,8 +750,14 @@ import flash.utils.getQualifiedClassName;
 			genitals:false,
 			breasts:false,
 			tallness:false,
-			str_tou_spe_inte:false,
-			wis_lib_sens_cor:false,
+			str:false,
+			tou:false,
+			spe:false,
+			int:false,
+			wis:false,
+			lib:false,
+			sens:false,
+			cor:false,
 			drop:false
 		};
 		// MONSTER INITIALIZATION HELPER FUNCTIONS
@@ -765,10 +771,16 @@ import flash.utils.getQualifiedClassName;
 			initsCalled.drop = value;
 		}
 		protected function set initedStrTouSpeInte(value:Boolean):void{
-			initsCalled.str_tou_spe_inte = value;
+			initsCalled.str = value;
+			initsCalled.tou = value;
+			initsCalled.spe = value;
+			initsCalled.int = value;
 		}
 		protected function set initedWisLibSensCor(value:Boolean):void{
-			initsCalled.wis_lib_sens_cor = value;
+			initsCalled.wis = value;
+			initsCalled.lib = value;
+			initsCalled.sens = value;
+			initsCalled.cor = value;
 		}
 		protected const NO_DROP:WeightedDrop = new WeightedDrop();
 

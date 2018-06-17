@@ -229,7 +229,7 @@ namespace monsters {
 		m.body.height        = parseLength(xmlget(x, 'body > height'));
 		m.body.hipRating     = xmlgeti(x, 'body > hips');
 		m.body.buttRating    = xmlgeti(x, 'body > butt');
-		m.body.beardStyle    = dictLookup(BeardTypes, xmlget(x, 'body > beard@style'));
+		m.body.beardStyle    = dictLookup(BeardTypes, xmlget(x, 'body > beard@type'));
 		m.body.beardLength   = parseLength(xmlgeti(x, 'body > beard@length'));
 		m.body.hairType      = dictLookup(HairTypes, xmlget(x, 'body > hair@type'));
 		m.body.hairColor     = xmlget(x, 'body > hair@color');

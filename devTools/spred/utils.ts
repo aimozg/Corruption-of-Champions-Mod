@@ -218,9 +218,15 @@ namespace utils {
 		if (typeof s === 'undefined') return undefined;
 		if (typeof s === 'number') return s;
 		if (!isNaN(+s)) return +s;
-		let m = s.match(/^(?:(\d+)')(?:(\d+)")?$/);
-		if (m) return (+m[1])*12+ +m[2];
-		throw "Not a valid length: "+JSON.stringify(s);
+		let m: RegExpMatchArray;
+		if ((m = s.match(/^(?:(\d+)')(?:(\d+)")?$/))) {
+			return (+m[1])*12+ +m[2];
+		} else if ((m = s.match(/^(?:(\d+)m)?\s*(?:(\d+)cm)$/))) {
+			let cm:number = (+m[1])*100 + +m[2];
+			return +(cm/2.54);
+		} else {
+			throw "Not a valid length: " + JSON.stringify(s);
+		}
 	}
 	export function lengthString(n:number|undefined):string|undefined {
 		if (n === undefined) return undefined;

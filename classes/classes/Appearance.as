@@ -2348,12 +2348,13 @@ public class Appearance extends Utils
 
 		/**
 		 * Returns breast size from cup name.
-		 * Acceptable input: "flat","A","B","C","D","DD","DD+",... "ZZZ","ZZZ+" or exact match from BREAST_CUP_NAMES array
+		 * Acceptable input: number (returned unchanged), "flat","A","B","C","D","DD","DD+",... "ZZZ","ZZZ+" or exact match from BREAST_CUP_NAMES array
 		 */
 		public static function breastCupInverse(name:String, defaultValue:Number = 0):Number
 		{
 			if (name.length == 0) return defaultValue;
 			if (name == "flat") return 0;
+			if (!isNaN(parseInt(name))) return parseInt(name);
 			var big:Boolean = name.charAt(name.length - 1) == "+";
 			if (big) name = name.substr(0, name.length - 1);
 			for (var i:int = 0; i < BREAST_CUP_NAMES.length; i++) {

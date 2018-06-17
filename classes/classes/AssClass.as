@@ -1,24 +1,26 @@
 ﻿package classes
 {
 import classes.BodyParts.IOrifice;
+import classes.internals.EnumValue;
 import classes.internals.Utils;
 
 	public class AssClass implements IOrifice
 	{
-		//constructor
-		public static const WETNESS_DRY:int            = 0;
-		public static const WETNESS_NORMAL:int         = 1;
-		public static const WETNESS_MOIST:int          = 2;
-		public static const WETNESS_SLIMY:int          = 3;
-		public static const WETNESS_DROOLING:int       = 4;
-		public static const WETNESS_SLIME_DROOLING:int = 5;
+		public static const WetnessValues:/*EnumValue*/Array = [];
+		public static const WETNESS_DRY:int            = EnumValue.add(WetnessValues, 0, 'DRY');
+		public static const WETNESS_NORMAL:int         = EnumValue.add(WetnessValues, 1, 'NORMAL');
+		public static const WETNESS_MOIST:int          = EnumValue.add(WetnessValues, 2, 'MOIST');
+		public static const WETNESS_SLIMY:int          = EnumValue.add(WetnessValues, 3, 'SLIMY');
+		public static const WETNESS_DROOLING:int       = EnumValue.add(WetnessValues, 4, 'DROOLING');
+		public static const WETNESS_SLIME_DROOLING:int = EnumValue.add(WetnessValues, 5, 'SLIME_DROOLING');
 		
-		public static const LOOSENESS_VIRGIN:int    = 0;
-		public static const LOOSENESS_TIGHT:int     = 1;
-		public static const LOOSENESS_NORMAL:int    = 2;
-		public static const LOOSENESS_LOOSE:int     = 3;
-		public static const LOOSENESS_STRETCHED:int = 4;
-		public static const LOOSENESS_GAPING:int    = 5;
+		public static const LoosenessValues:/*EnumValue*/Array = [];
+		public static const LOOSENESS_VIRGIN:int    = EnumValue.add(LoosenessValues, 0, 'VIRGIN');
+		public static const LOOSENESS_TIGHT:int     = EnumValue.add(LoosenessValues, 1, 'TIGHT');
+		public static const LOOSENESS_NORMAL:int    = EnumValue.add(LoosenessValues, 2, 'NORMAL');
+		public static const LOOSENESS_LOOSE:int     = EnumValue.add(LoosenessValues, 3, 'LOOSE');
+		public static const LOOSENESS_STRETCHED:int = EnumValue.add(LoosenessValues, 4, 'STRETCHED');
+		public static const LOOSENESS_GAPING:int    = EnumValue.add(LoosenessValues, 5, 'GAPING');
 		
 		public function AssClass()
 		{

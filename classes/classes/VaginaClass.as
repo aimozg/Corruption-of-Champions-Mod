@@ -1,6 +1,7 @@
 ﻿package classes
 {
 import classes.BodyParts.IOrifice;
+import classes.internals.EnumValue;
 import classes.internals.Utils;
 
 public class VaginaClass implements IOrifice
@@ -12,19 +13,21 @@ public class VaginaClass implements IOrifice
 		public static const EQUINE:int          = 1;
 		public static const BLACK_SAND_TRAP:int = 5;
 		
-		public static const WETNESS_DRY:int       = 0;
-		public static const WETNESS_NORMAL:int    = 1;
-		public static const WETNESS_WET:int       = 2;
-		public static const WETNESS_SLICK:int     = 3;
-		public static const WETNESS_DROOLING:int  = 4;
-		public static const WETNESS_SLAVERING:int = 5;
+		public static const WetnessValues:/*EnumValue*/Array = [];
+		public static const WETNESS_DRY:int       = EnumValue.add(WetnessValues, 0, 'DRY');
+		public static const WETNESS_NORMAL:int    = EnumValue.add(WetnessValues, 1, 'NORMAL');
+		public static const WETNESS_WET:int       = EnumValue.add(WetnessValues, 2, 'WET');
+		public static const WETNESS_SLICK:int     = EnumValue.add(WetnessValues, 3, 'SLICK');
+		public static const WETNESS_DROOLING:int  = EnumValue.add(WetnessValues, 4, 'DROOLING');
+		public static const WETNESS_SLAVERING:int = EnumValue.add(WetnessValues, 5, 'SLAVERING');
 		
-		public static const LOOSENESS_TIGHT:int           = 0;
-		public static const LOOSENESS_NORMAL:int          = 1;
-		public static const LOOSENESS_LOOSE:int           = 2;
-		public static const LOOSENESS_GAPING:int          = 3;
-		public static const LOOSENESS_GAPING_WIDE:int     = 4;
-		public static const LOOSENESS_LEVEL_CLOWN_CAR:int = 5;
+		public static const LoosenessValues:/*EnumValue*/Array = [];
+		public static const LOOSENESS_TIGHT:int           = EnumValue.add(LoosenessValues, 0, 'TIGHT');
+		public static const LOOSENESS_NORMAL:int          = EnumValue.add(LoosenessValues, 1, 'NORMAL');
+		public static const LOOSENESS_LOOSE:int           = EnumValue.add(LoosenessValues, 2, 'LOOSE');
+		public static const LOOSENESS_GAPING:int          = EnumValue.add(LoosenessValues, 3, 'GAPING');
+		public static const LOOSENESS_GAPING_WIDE:int     = EnumValue.add(LoosenessValues, 4, 'GAPING_WIDE');
+		public static const LOOSENESS_LEVEL_CLOWN_CAR:int = EnumValue.add(LoosenessValues, 5, 'CLOWN_CAR');
 		
 		//constructor
 		public function VaginaClass(vaginalWetness:Number = 1, vaginalLooseness:Number = 0, virgin:Boolean = false, clitLength:Number = DEFAULT_CLIT_LENGTH)

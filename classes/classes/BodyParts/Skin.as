@@ -19,12 +19,14 @@ import classes.internals.EnumValue;
  * @author Stadler76, aimozg
  */
 public class Skin extends SaveableBodyPart {
-
-    public static const COVERAGE_NONE:int     = 0;
-	public static const COVERAGE_LOW:int      = 1;
-	public static const COVERAGE_MEDIUM:int   = 2;
+	
+	public static const CoverageValues:/*EnumValue*/Array  = [];
+    public static const COVERAGE_NONE:int     = EnumValue.add(CoverageValues, 0, 'NONE');
+	public static const COVERAGE_LOW:int      = EnumValue.add(CoverageValues, 1, 'LOW');
+	public static const COVERAGE_MEDIUM:int   = EnumValue.add(CoverageValues, 2, 'MEDIUM');
 	public static const COVERAGE_HIGH:int     = 3;
-	public static const COVERAGE_COMPLETE:int = 4;
+	EnumValue.add(CoverageValues, COVERAGE_HIGH, 'HIGH');
+	public static const COVERAGE_COMPLETE:int = EnumValue.add(CoverageValues, 4, 'COMPLETE');
 	
 	public static const Types:/*EnumValue*/Array  = [];
 	public static const PLAIN:int                 = EnumValue.add(Types,0,"PLAIN",{name:"skin",adj:"",plural:false});

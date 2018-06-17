@@ -199,8 +199,6 @@ public class SceneLib {
     public static var metamorph:Metamorph = new Metamorph();
 
     public static var crafting:Crafting = new Crafting();
-    
-    public static var rootStory:NamedNode = CoC.instance.rootStory;
 
     public function SceneLib() {
     }

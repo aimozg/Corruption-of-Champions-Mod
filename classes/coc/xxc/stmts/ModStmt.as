@@ -7,10 +7,10 @@ import classes.Modding.GameMod;
 import coc.xxc.*;
 
 public class ModStmt extends NamedNode {
-	public var module:GameMod;
+	public var mod:GameMod;
 	public function ModStmt(name:String, version:int, parent:NamedNode) {
 		super("mod", parent, name);
-		this.module = new GameMod(name,version);
+		this.mod = new GameMod(name,version);
 	}
 }
 }

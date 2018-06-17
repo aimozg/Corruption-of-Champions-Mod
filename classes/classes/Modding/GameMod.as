@@ -13,51 +13,54 @@ public class GameMod implements Jsonable {
 	public var version:int;
 	public var state:Object    = {};
 	private var _lua:LuaEngine;
-	private var ns:LuaNamespace;
+	private var _ns:LuaNamespace;
 	private var _script:String = "";
+	private var _initialized:Boolean = false;
+	public var monsterList:/*MonsterPrototype*/Array = [];
 	public function GameMod(name:String, version:int) {
 		this.name = name;
 		this.version = version || 1;
 	}
 	public function set lua(value:LuaEngine):void {
+		if (this._lua == value) return;
 		_lua = value;
-		ns = _lua.createNamespace(name);
-		ns.expose('ModState', state);
+		_ns = _lua.createNamespace(name);
+		_ns.expose('ModState', state);
 		if (_script != "") {
-			ns.eval(_script);
-			_script = "";
+			_ns.eval(_script);
+			_initialized = true;
 		}
 	}
 	public function set script(value:String):void {
 		_script = value;
-		if (ns != null && value != "") {
-			ns.eval(_script);
-			_script = "";
+		if (_ns != null && !_initialized) {
+			if (_script!="") _ns.eval(_script);
+			_initialized = true;
 		}
 	}
 	public function scriptHas(fname:String):Boolean {
-		if (ns == null) throw new Error("Mod not initialized");
-		return ns.contains(fname);
+		if (!_initialized) throw new Error("Mod not initialized");
+		return _ns.contains(fname);
 	}
 	public function scriptGet(propname:String):* {
-		if (ns == null) throw new Error("Mod not initialized");
-		return ns.get(propname);
+		if (!_initialized) throw new Error("Mod not initialized");
+		return _ns.get(propname);
 	}
 	public function scriptSet(propname:String, propvalue:*):void {
-		if (ns == null) throw new Error("Mod not initialized");
+		if (!_initialized) throw new Error("Mod not initialized");
 		if (typeof propvalue == 'object' || typeof propvalue == 'function') {
-			ns.expose(propname, propvalue);
+			_ns.expose(propname, propvalue);
 		} else {
-			ns.set(propname, propvalue);
+			_ns.set(propname, propvalue);
 		}
 	}
 	public function scriptCall(fname:String, ...args):* {
-		if (ns == null) throw new Error("Mod not initialized");
-		return ns.callv(fname,args);
+		if (!_initialized) throw new Error("Mod not initialized");
+		return _ns.callv(fname,args);
 	}
 	public function scriptCallV(fname:String, args:Array):* {
-		if (ns == null) throw new Error("Mod not initialized");
-		return ns.callv(fname,args);
+		if (!_initialized) throw new Error("Mod not initialized");
+		return _ns.callv(fname,args);
 	}
 	public function upgrade(fromVersion:int, oldData:Object):void {
 		// default upgrade: just copy if dest exist
@@ -77,6 +80,15 @@ public class GameMod implements Jsonable {
 			state = {};
 			Utils.copyObject(state, o.state);
 		}
+	}
+	public function findMonsterPrototype(id:String):MonsterPrototype {
+		for each (var mp:MonsterPrototype in monsterList) {
+			if (mp.id == id) return mp;
+		}
+		return null;
+	}
+	public function spawnMonster(id:String):ModMonster {
+		return findMonsterPrototype(id).spawn();
 	}
 }
 }

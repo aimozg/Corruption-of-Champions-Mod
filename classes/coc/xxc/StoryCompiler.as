@@ -2,6 +2,9 @@
  * Coded by aimozg on 28.08.2017.
  */
 package coc.xxc {
+import classes.Modding.GameMod;
+import classes.Modding.MonsterPrototype;
+
 import coc.script.Eval;
 import coc.xlogic.Compiler;
 import coc.xlogic.Statement;
@@ -10,6 +13,9 @@ import coc.xxc.stmts.*;
 
 public class StoryCompiler extends Compiler {
 	private var _basedir:String;
+	public var mods:/*GameMod*/Array = [];
+	private var _includes:/*IncludeStmt*/Array = [];
+	public var onLoad:Function = null;
 
 	public function get basedir():String {
 		return _basedir;
@@ -20,7 +26,11 @@ public class StoryCompiler extends Compiler {
 	}
 	private var stack:/*NamedNode*/Array = [];
 	public function clone(basedir:String=""):StoryCompiler {
-		return new StoryCompiler(basedir?basedir:_basedir);
+		var cloned:StoryCompiler = new StoryCompiler(basedir?basedir:_basedir);
+		cloned.mods = this.mods;
+		cloned._includes = this._includes;
+		cloned.onLoad = this.onLoad;
+		return cloned;
 	}
 
 	public function attach(story:NamedNode):StoryCompiler {
@@ -43,16 +53,36 @@ public class StoryCompiler extends Compiler {
 		if (x.nodeKind() != 'element') throw new Error("Not an XML element in compile.File:" +x);
 		var tag:String = x.localName();
 		if (tag == "mod") {
-			return compileMod(x);
+			var mod:ModStmt = compileMod(x);
+			this.mods.push(mod.mod);
+			return mod;
 		} else {
 			return compileTag(tag,x);
 		}
 	}
-	public function compileMod(x:XML):Statement {
-		var name:String = x.@name;
-		var mod:ModStmt = new ModStmt(name, x.@version, stack[0]);
-		
-		return mod;
+	public function compileMod(x:XML):ModStmt {
+		var name:String    = x.@name;
+		var stmt:ModStmt   = new ModStmt(name, x.@version, stack[0]);
+		var mod:GameMod = stmt.mod;
+		for each(var item:XML in x.elements()) {
+			var tag:String = item.localName();
+			switch (tag) {
+				case 'monster':
+					mod.monsterList.push(new MonsterPrototype(mod, item));
+					break;
+				case 'state':
+				case 'import':
+				case 'hook':
+				case 'lib':
+				case 'text':
+				case 'scene':
+					trace('[WARNING] Not yet implemented');
+					break;
+				default:
+					unknownTag(tag,item);
+			}
+		}
+		return stmt;
 	}
 	override protected function compileTag(tag:String, x:XML):Statement {
 		switch (tag) {
@@ -101,7 +131,37 @@ public class StoryCompiler extends Compiler {
 			basedir += path.substring(0,l);
 			path = path.substring(l+1);
 		}
-		return new IncludeStmt(stack[0],clone(basedir),path,required);
+		var stmt:IncludeStmt = new IncludeStmt(stack[0],clone(basedir),path,required);
+		this._includes.push(stmt);
+		stmt.load();
+		return stmt;
+	}
+	public function isFullyLoaded():Boolean {
+		return includesLoaded() == includesTotal();
+	}
+	public function includesLoaded():int {
+		var n:int = 0;
+		for each (var stmt:IncludeStmt in _includes) {
+			if (stmt.loaded) n++;
+		}
+		return n;
+	}
+	public function includesTotal():int {
+		return _includes.length;
+	}
+	public function includeLoaded(stmt:IncludeStmt):void {
+		// TODO @aimozg properly register and kick compiler callback when some of the includes failed to load
+		
+		trace('loaded ' + includesLoaded() + '/' + includesTotal());
+		if (isFullyLoaded()) {
+			if (onLoad != null) {
+				if (onLoad.length == 1) {
+					onLoad(this);
+				} else {
+					onLoad();
+				}
+			}
+		}
 	}
 	protected function compileDisplay(x:XML):DisplayStmt {
 		return new DisplayStmt(stack[0],x.@ref);

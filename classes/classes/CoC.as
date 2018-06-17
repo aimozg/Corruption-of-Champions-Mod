@@ -15,6 +15,7 @@ import classes.GlobalFlags.kACHIEVEMENTS;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
 import classes.Items.*;
+import classes.Modding.GameMod;
 import classes.Parser.Parser;
 import classes.Scenes.*;
 import classes.Scenes.NPCs.JojoScene;
@@ -108,6 +109,7 @@ public class CoC extends MovieClip
     public var gameSettings:GameSettings = new GameSettings();
     public var rootStory:Story = new Story("story",null,"root",true);
     public var compiler:StoryCompiler = new StoryCompiler("content/").attach(rootStory);
+    public var mods:/*GameMod*/Array = [];
     public var context:StoryContext;
     public var lua:LuaEngine;
 
@@ -367,19 +369,30 @@ public class CoC extends MovieClip
         mainView.statsView.hideUpDown();
         new Story("lib",rootStory,"monsters",true);
         execPostInit();
-        loadStory();
         this.addFrameScript( 0, this.run );
         //setTimeout(this.run,0);
     }
 
     private function loadStory():void {
+        compiler.onLoad = initMods;
         compiler.includeFile("coc.xml", true);
+    }
+    private function initMods():void {
+		mods = compiler.mods.slice();
+        trace("loaded "+mods.length+" mods");
+		mainMenu.mainMenu();
+    }
+    public function findMod(name:String):GameMod {
+		for each (var mod:GameMod in mods) {
+            if (mod.name == name) return mod;
+		}
+        return null;
     }
 
     public function run():void
     {
 	    mainView.setTextBackground(flags[kFLAGS.TEXT_BACKGROUND_STYLE]);
-        mainMenu.mainMenu();
+		loadStory();
         this.stop();
 
         if (_updateHack) {

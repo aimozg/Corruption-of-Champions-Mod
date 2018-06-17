@@ -320,6 +320,19 @@ public class Utils extends Object
 			return number.toString();
 		}
 		
+		public static function parseLength(src:String):Number {
+			if (!isNaN(parseFloat(src))) return parseFloat(src);
+			var m:Array;
+			if ((m = src.match(/^(?:(\d+)')(?:(\d+)")?$/))) {
+				return (+m[1])*12+ +m[2];
+			} else if ((m = src.match(/^(?:(\d+)m)?\s*(?:(\d+)cm)$/))) {
+				var cm:Number = (+m[1])*100 + +m[2];
+				return parseFloat(floor(cm/2.54,1));
+			} else {
+				throw "Not a valid length: " + src;
+			}
+		}
+		
 		public static function addComma(num:int):String{
 			var str:String = "";
 			if (num <= 0) return "0";

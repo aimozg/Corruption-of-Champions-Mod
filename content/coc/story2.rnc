@@ -1,4 +1,3 @@
-default namespace = "xxc-story2"
 
 start = mod
 # #############################################
@@ -96,7 +95,7 @@ monsterBody = element body {
     element antennae { text }?,
     element arms { text }?,
     element beard {
-        attribute style { text }?,
+        attribute type { text }?,
         attribute length { text }?
     }?,
     element claws {

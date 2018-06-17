@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="xxc-story2" xmlns:ns1="xxc-story2">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <!--
         #############################################
         mod structure
@@ -7,10 +7,10 @@
     <xs:element name="mod">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:import"/>
-                <xs:element minOccurs="0" ref="ns1:state"/>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:hook"/>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:exportable"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="import"/>
+                <xs:element minOccurs="0" ref="state"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="hook"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="exportable"/>
             </xs:sequence>
             <xs:attribute name="name" use="required"/>
             <xs:attribute name="version"/>
@@ -24,13 +24,13 @@
     <xs:element name="state">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:var"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="var"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
     <xs:element name="hook">
         <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
             <xs:attribute name="type" use="required">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -52,23 +52,23 @@
         }
     -->
     <xs:element name="exportable" abstract="true"/>
-    <xs:element name="lib" substitutionGroup="ns1:exportable">
+    <xs:element name="lib" substitutionGroup="exportable">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:exportable"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="exportable"/>
             </xs:sequence>
             <xs:attribute name="name" use="required"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="text" substitutionGroup="ns1:exportable">
+    <xs:element name="text" substitutionGroup="exportable">
         <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
             <xs:attribute name="name" use="required"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="scene" substitutionGroup="ns1:exportable">
+    <xs:element name="scene" substitutionGroup="exportable">
         <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
             <xs:attribute name="name" use="required"/>
         </xs:complexType>
     </xs:element>
@@ -76,17 +76,17 @@
         #############################################
         monster
     -->
-    <xs:element name="monster" substitutionGroup="ns1:exportable">
+    <xs:element name="monster" substitutionGroup="exportable">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" ref="ns1:name"/>
-                <xs:element minOccurs="0" ref="ns1:desc"/>
-                <xs:element minOccurs="0" ref="ns1:plural"/>
-                <xs:element minOccurs="0" ref="ns1:a"/>
-                <xs:element minOccurs="0" ref="ns1:pronouns"/>
-                <xs:element minOccurs="0" ref="ns1:body"/>
-                <xs:element minOccurs="0" ref="ns1:combat"/>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:script"/>
+                <xs:element minOccurs="0" ref="name"/>
+                <xs:element minOccurs="0" ref="desc"/>
+                <xs:element minOccurs="0" ref="plural"/>
+                <xs:element minOccurs="0" ref="a"/>
+                <xs:element minOccurs="0" ref="pronouns"/>
+                <xs:element minOccurs="0" ref="body"/>
+                <xs:element minOccurs="0" ref="combat"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="script"/>
             </xs:sequence>
             <xs:attribute name="id" use="required"/>
             <xs:attribute name="base"/>
@@ -94,12 +94,12 @@
     </xs:element>
     <xs:element name="name">
         <xs:complexType mixed="true">
-            <xs:group ref="ns1:content"/>
+            <xs:group ref="content"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="desc">
         <xs:complexType mixed="true">
-            <xs:group ref="ns1:content"/>
+            <xs:group ref="content"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="plural">
@@ -107,7 +107,7 @@
     </xs:element>
     <xs:element name="a">
         <xs:complexType mixed="true">
-            <xs:group ref="ns1:content"/>
+            <xs:group ref="content"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="pronouns">
@@ -117,32 +117,36 @@
             <xs:attribute name="him" use="required"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="script" type="xs:string"/>
+    <xs:element name="script">
+        <xs:complexType mixed="true">
+            <xs:attribute name="language"/>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="body">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" ref="ns1:vagina"/>
-                <xs:element minOccurs="0" ref="ns1:breasts"/>
-                <xs:element minOccurs="0" ref="ns1:anal"/>
-                <xs:element minOccurs="0" ref="ns1:height"/>
-                <xs:element minOccurs="0" ref="ns1:hips"/>
-                <xs:element minOccurs="0" ref="ns1:butt"/>
-                <xs:element minOccurs="0" ref="ns1:skin"/>
-                <xs:element minOccurs="0" ref="ns1:hair"/>
-                <xs:element minOccurs="0" ref="ns1:antennae"/>
-                <xs:element minOccurs="0" ref="ns1:arms"/>
-                <xs:element minOccurs="0" ref="ns1:beard"/>
-                <xs:element minOccurs="0" ref="ns1:claws"/>
-                <xs:element minOccurs="0" ref="ns1:ears"/>
-                <xs:element minOccurs="0" ref="ns1:eyes"/>
-                <xs:element minOccurs="0" ref="ns1:face"/>
-                <xs:element minOccurs="0" ref="ns1:gills"/>
-                <xs:element minOccurs="0" ref="ns1:horns"/>
-                <xs:element minOccurs="0" ref="ns1:legs"/>
-                <xs:element minOccurs="0" ref="ns1:rearBody"/>
-                <xs:element minOccurs="0" ref="ns1:tail"/>
-                <xs:element minOccurs="0" ref="ns1:tongue"/>
-                <xs:element minOccurs="0" ref="ns1:wings"/>
+                <xs:element minOccurs="0" ref="vagina"/>
+                <xs:element minOccurs="0" ref="breasts"/>
+                <xs:element minOccurs="0" ref="anal"/>
+                <xs:element minOccurs="0" ref="height"/>
+                <xs:element minOccurs="0" ref="hips"/>
+                <xs:element minOccurs="0" ref="butt"/>
+                <xs:element minOccurs="0" ref="skin"/>
+                <xs:element minOccurs="0" ref="hair"/>
+                <xs:element minOccurs="0" ref="antennae"/>
+                <xs:element minOccurs="0" ref="arms"/>
+                <xs:element minOccurs="0" ref="beard"/>
+                <xs:element minOccurs="0" ref="claws"/>
+                <xs:element minOccurs="0" ref="ears"/>
+                <xs:element minOccurs="0" ref="eyes"/>
+                <xs:element minOccurs="0" ref="face"/>
+                <xs:element minOccurs="0" ref="gills"/>
+                <xs:element minOccurs="0" ref="horns"/>
+                <xs:element minOccurs="0" ref="legs"/>
+                <xs:element minOccurs="0" ref="rearBody"/>
+                <xs:element minOccurs="0" ref="tail"/>
+                <xs:element minOccurs="0" ref="tongue"/>
+                <xs:element minOccurs="0" ref="wings"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -173,20 +177,20 @@
     <xs:element name="skin">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" ref="ns1:base"/>
-                <xs:element minOccurs="0" ref="ns1:coat"/>
+                <xs:element minOccurs="0" ref="base"/>
+                <xs:element minOccurs="0" ref="coat"/>
             </xs:sequence>
             <xs:attribute name="coverage" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="base">
         <xs:complexType>
-            <xs:attributeGroup ref="ns1:skinLayer"/>
+            <xs:attributeGroup ref="skinLayer"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="coat">
         <xs:complexType>
-            <xs:attributeGroup ref="ns1:skinLayer"/>
+            <xs:attributeGroup ref="skinLayer"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="hair">
@@ -200,7 +204,7 @@
     <xs:element name="arms" type="xs:string"/>
     <xs:element name="beard">
         <xs:complexType>
-            <xs:attribute name="style"/>
+            <xs:attribute name="type"/>
             <xs:attribute name="length"/>
         </xs:complexType>
     </xs:element>
@@ -252,19 +256,19 @@
     <xs:element name="combat">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" ref="ns1:level"/>
-                <xs:element minOccurs="0" ref="ns1:str"/>
-                <xs:element minOccurs="0" ref="ns1:tou"/>
-                <xs:element minOccurs="0" ref="ns1:spe"/>
-                <xs:element minOccurs="0" ref="ns1:int"/>
-                <xs:element minOccurs="0" ref="ns1:wis"/>
+                <xs:element minOccurs="0" ref="level"/>
+                <xs:element minOccurs="0" ref="str"/>
+                <xs:element minOccurs="0" ref="tou"/>
+                <xs:element minOccurs="0" ref="spe"/>
+                <xs:element minOccurs="0" ref="int"/>
+                <xs:element minOccurs="0" ref="wis"/>
                 <xs:element minOccurs="0" name="lib" type="xs:string"/>
-                <xs:element minOccurs="0" ref="ns1:sen"/>
-                <xs:element minOccurs="0" ref="ns1:cor"/>
-                <xs:element minOccurs="0" ref="ns1:weapon"/>
-                <xs:element ref="ns1:armor"/>
-                <xs:element minOccurs="0" ref="ns1:bonusHP"/>
-                <xs:element minOccurs="0" ref="ns1:loot"/>
+                <xs:element minOccurs="0" ref="sen"/>
+                <xs:element minOccurs="0" ref="cor"/>
+                <xs:element minOccurs="0" ref="weapon"/>
+                <xs:element ref="armor"/>
+                <xs:element minOccurs="0" ref="bonusHP"/>
+                <xs:element minOccurs="0" ref="loot"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -290,10 +294,10 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="bonusHP" type="xs:string"/>
-    <xs:element name="loot" type="ns1:loot"/>
+    <xs:element name="loot" type="loot"/>
     <xs:complexType name="loot">
         <xs:sequence>
-            <xs:element ref="ns1:item"/>
+            <xs:element ref="item"/>
         </xs:sequence>
     </xs:complexType>
     <xs:element name="item" type="xs:string"/>
@@ -304,28 +308,28 @@
     <xs:group name="content">
         <xs:sequence>
             <xs:choice minOccurs="0">
-                <xs:element ref="ns1:b"/>
-                <xs:element ref="ns1:i"/>
-                <xs:element ref="ns1:font"/>
-                <xs:element ref="ns1:if"/>
-                <xs:element ref="ns1:switch"/>
-                <xs:element ref="ns1:xcc-content"/>
+                <xs:element ref="b"/>
+                <xs:element ref="i"/>
+                <xs:element ref="font"/>
+                <xs:element ref="if"/>
+                <xs:element ref="switch"/>
+                <xs:element ref="xcc-content"/>
             </xs:choice>
         </xs:sequence>
     </xs:group>
     <xs:element name="b">
         <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="i">
         <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="font">
         <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
             <xs:attribute name="color"/>
         </xs:complexType>
     </xs:element>
@@ -336,7 +340,7 @@
         namedBlock = attribute name { text }?, content*
         String = element string { namedBlock }
     -->
-    <xs:element name="set" substitutionGroup="ns1:xcc-content">
+    <xs:element name="set" substitutionGroup="xcc-content">
         <xs:complexType mixed="true">
             <xs:attribute name="var" use="required"/>
             <xs:attribute name="value"/>
@@ -353,7 +357,7 @@
             </xs:attribute>
         </xs:complexType>
     </xs:element>
-    <xs:element name="display" substitutionGroup="ns1:xcc-content">
+    <xs:element name="display" substitutionGroup="xcc-content">
         <xs:complexType>
             <xs:attribute name="ref" use="required"/>
         </xs:complexType>
@@ -399,7 +403,7 @@
     -->
     <xs:element name="if">
         <xs:complexType mixed="true">
-            <xs:group minOccurs="0" ref="ns1:if-big"/>
+            <xs:group minOccurs="0" ref="if-big"/>
             <xs:attribute name="test" use="required"/>
             <xs:attribute name="then"/>
             <xs:attribute name="else"/>
@@ -407,9 +411,9 @@
     </xs:element>
     <xs:group name="if-big">
         <xs:sequence>
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:elseif"/>
-            <xs:group minOccurs="0" ref="ns1:else"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="elseif"/>
+            <xs:group minOccurs="0" ref="else"/>
         </xs:sequence>
     </xs:group>
     <xs:attributeGroup name="if-short">
@@ -418,8 +422,8 @@
     </xs:attributeGroup>
     <xs:group name="elseif">
         <xs:sequence>
-            <xs:element ref="ns1:elseif"/>
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:element ref="elseif"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
         </xs:sequence>
     </xs:group>
     <xs:element name="elseif">
@@ -429,8 +433,8 @@
     </xs:element>
     <xs:group name="else">
         <xs:sequence>
-            <xs:element ref="ns1:else"/>
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:element ref="else"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
         </xs:sequence>
     </xs:group>
     <xs:element name="else">
@@ -439,15 +443,15 @@
     <xs:element name="switch">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ns1:case"/>
-                <xs:element minOccurs="0" ref="ns1:default"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="case"/>
+                <xs:element minOccurs="0" ref="default"/>
             </xs:sequence>
             <xs:attribute name="value"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="case">
         <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
             <xs:attribute name="test"/>
             <xs:attribute name="value"/>
             <xs:attribute name="values"/>
@@ -460,7 +464,7 @@
     </xs:element>
     <xs:element name="default">
         <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="ns1:content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>

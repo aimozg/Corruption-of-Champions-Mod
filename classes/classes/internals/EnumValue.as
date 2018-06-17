@@ -42,5 +42,15 @@ public dynamic class EnumValue {
 		}
 		return null;
 	}
+	/**
+	 * Parses input string as index or enum constant name
+	 */
+	public static function parse(list:/*EnumValue*/Array, input:String):EnumValue {
+		if (!isNaN(parseInt(input))) {
+			return list[parseInt(input)];
+		} else {
+			return findByProperty(list, 'id', input);
+		}
+	}
 }
 }

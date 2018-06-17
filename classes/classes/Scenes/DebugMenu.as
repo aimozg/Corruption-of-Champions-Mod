@@ -22,7 +22,10 @@ package classes.Scenes
 	import classes.BodyParts.Wings;
 import classes.CoC;
 import classes.GlobalFlags.kFLAGS;
-	import classes.Parser.Parser;
+import classes.Modding.GameMod;
+import classes.Modding.ModMonster;
+import classes.Modding.MonsterPrototype;
+import classes.Parser.Parser;
 	import classes.Scenes.NPCs.JojoScene;
 	import classes.Stats.PrimaryStat;
 	import classes.internals.EnumValue;
@@ -198,23 +201,40 @@ import flash.events.Event;
 		}
 		private var selectedScene:*;
 		private function testScene(selected:*=null):void{
+			function printlink(event:String,display:String=''):void {
+				outputText('<u><a href="event:'+event+'">'+(display||event)+'</a></u>\n');
+			}
 			clearOutput();
 			if(!selected){selected = SceneLib;}
 			selectedScene = selected;
 			mainView.mainText.addEventListener(TextEvent.LINK, linkhandler);
-			if (selected is NamedNode) {
+			if (selected is GameMod) {
+				var mod:GameMod = selected;
+				if (mod.monsterList.length>0) outputText("<b><u>MONSTERS</u></b>\n");
+				for each (var mon:MonsterPrototype in mod.monsterList) {
+					printlink("@monster:"+mon.id,mon.id);
+				}
+			} else if (selected is NamedNode) {
 				var node:NamedNode = selected as NamedNode;
 				if (keys(node.lib).length>0) {
-					outputText("<b><u>SCENE</u></b>");
+					outputText("<b><u>SCENE</u></b>\n");
 					for each (var inode:NamedNode in node.lib) {
 						if (inode.name) {
-							outputText('<u><a href="event:' + inode.name + '">' + inode.name + '</a></u>\n');
+							printlink(inode.name);
 						}
 					}
 				} else {
 					node.execute(context);
 				}
 			} else {
+				if (selected == SceneLib) {
+					printlink("@rootStory","Inspect scenes");
+					var mods:/*GameMod*/Array = CoC.instance.mods;
+					if (mods.length > 0) outputText("<b><u>MODS</u></b>\n");
+					for each (mod in mods) {
+						printlink("@mod:"+mod.name,mod.name);
+					}
+				}
 				getFun("variable", selected);
 				getFun("method", selected);
 			}
@@ -226,28 +246,48 @@ import flash.events.Event;
 				funs.sort();
 				if(funs.length > 0){outputText("<b><u>"+type.toUpperCase()+"</u></b>\n");}
 				for each (var fun:* in funs){
-					outputText("<u><a href=\"event:"+fun+"\">"+fun+"</a></u>\n")
+					printlink(fun);
 				}
 			}
 			function linkhandler(e:TextEvent):void{
+				var m:Array;
 				mainView.mainText.removeEventListener(TextEvent.LINK, linkhandler);
 				if(e.text == "-1"){
+					// Special event: go back
 					mainView.mainText.removeEventListener(TextEvent.LINK, linkhandler);
 					if(selectedScene != SceneLib){testScene();}
 					else{accessDebugMenu();}
 					return;
+				} else if (e.text == "@rootStory") {
+					// Special event: inspect rootStory
+					testScene(CoC.instance.rootStory);
+					return;
+				} else if ((m = e.text.match(/^@mod:(.*)$/))) {
+					// Special event: inspect mod
+					testScene(CoC.instance.findMod(m[1]));
+					return;
 				}
+				// Not a special event, inspect selectedScene[e.text]
 				if (selectedScene is NamedNode) {
 					selectedScene = (selectedScene as NamedNode).locate(e.text);
 					testScene(selectedScene);
+				} else if (selectedScene is GameMod) {
+					clearOutput();
+					if ((m = e.text.match(/^@monster:(.*)$/))) {
+						outputText("You will be fighting "+m[1]+"\n");
+						var monster:ModMonster = (selectedScene as GameMod).spawnMonster(m[1]);
+						startCombat(monster);
+					} else {
+						outputText("ERROR UNKNOWN URL "+e.text);
+						doNext(accessDebugMenu);
+					}
 				} else if(selectedScene[e.text] is Function){
 					clearOutput();
 					doNext(accessDebugMenu);
 					var selected:Function = selectedScene[e.text];
 					selectedScene = null;
 					selected();
-				}
-				else{
+				} else{
 					selectedScene = selectedScene[e.text];
 					testScene(selectedScene);
 				}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<mod name="diva" version="1" xmlns="xxc-story2">
+<mod name="diva" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="../story2.xsd">
     <state>
         <var name="status">0</var>
         <var name="firstLoss">true</var>
