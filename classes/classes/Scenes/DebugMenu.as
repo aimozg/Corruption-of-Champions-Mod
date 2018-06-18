@@ -115,7 +115,7 @@ import flash.events.Event;
 				clearOutput();
 				try {
 					var r:* = CoC.instance.lua.evalInNamespace('temp', mainView.eventTestInput.text);
-					if (r !== null && r !== undefined) rawOutputText("&gt; " + JSON.stringify(r));
+					if (r !== null && r !== undefined) rawOutputText("&gt; " + r);
 				} catch (e:Error) {
 					rawOutputText(e.getStackTrace());
 					CoC.instance.lua.recover();

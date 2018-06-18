@@ -236,18 +236,18 @@ package com.remesch.easyLua
     }
 
     protected function stringToAs3(index:int):String {
-      return Lua.lua_tolstring(_luaState, index, null);
+      return Lua.lua_tolstring(_luaState, index, 0);
     }
 
-    protected function booleanToAs3(index):Boolean {
+    protected function booleanToAs3(index:int):Boolean {
       return !!Lua.lua_toboolean(_luaState, index);
     }
 
-    protected function numberToAs3(index):Number {
+    protected function numberToAs3(index:int):Number {
       return Lua.lua_tonumberx(_luaState, index, 0);
     }
 
-    protected function nilToAs3(index):Object {
+    protected function nilToAs3(index:int):Object {
       return null;
     }
 

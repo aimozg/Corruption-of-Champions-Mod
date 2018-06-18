@@ -55,6 +55,7 @@
   <libraryPaths>
     <element path="lib\bin\MainView.swc" />
     <element path="lib\bin\ScrollPane.swc" />
+    <element path="lib\bin\lua.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
