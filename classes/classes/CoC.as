@@ -376,11 +376,12 @@ public class CoC extends MovieClip
     private function loadStory():void {
         compiler.onLoad = initMods;
         compiler.includeFile("coc.xml", true);
+		mainMenu.mainMenu();
     }
     private function initMods():void {
 		mods = compiler.mods.slice();
         trace("loaded "+mods.length+" mods");
-		mainMenu.mainMenu();
+		//mainMenu.mainMenu();
     }
     public function findMod(name:String):GameMod {
 		for each (var mod:GameMod in mods) {
