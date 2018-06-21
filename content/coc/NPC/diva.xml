@@ -1,7 +1,117 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--TODO @Oxdeception convert strings to XXC XML-->
-<story name="diva" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../story.xsd">
+<mod name="diva" version="2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="../story2.xsd">
+    <state>
+        <var name="status">0</var>
+        <var name="firstLoss">true</var>
+        <var name="tookVialToday">false</var>
+        <var name="timesReduced">0</var>
+        <var name="bloodUsed">false</var>
+    </state>
+    <hook type="daily">
+        <set var="tookVialToday" value="false"/>
+    </hook>
+    <script language="lua">
+        function upgrade(fromVersion, o)
+            if fromVersion == 1 then
+                print('upgrading from version 1 to 2')
+                o.bloodUsed = false;
+            else
+                mod.reset()
+                return
+            end
+            mod.state.status = o.status;
+            mod.state.firstLoss = o.firstLoss;
+            mod.state.tookVialToday = o.tookVialToday;
+            mod.state.timesReduced = o.timesReduced;
+            mod.state.status = o.status;
+        end
+    </script>
+    <monster id="Diva">
+        <name>Diva</name>
+        <desc>
+            Diva appears to be a vampire, the fangs and wings kind of give it away.
+            She circles above and around you, waiting for an opening while she constantly screeches.
+            Huh, she might be more bat-like that you initially thought.
+            Girl certainly has quite the pair of lungs if nothing else.
+            Her red and black dress gives her quite the villainous look, while having some unfortunate consequences what with it having a skirt and she being a flyer.
+            Somehow, she manages to keep herself from having a rather intimate reunion with the walls despite not looking at where she is flying in favour of drooling at the sight of your neck.
+            Guess all that screeching has an actual purpose aside from annoying you.
+
+            $me.mp.id = <output>$me.mp.id</output>, mod.name = <output>mod.name</output>, mod.state.timesReduced = <output>mod.state.timesReduced</output>.
+            <set in="mod.state" var="timesReduced" op="+=" value="1"/>
+            <if test="$final">
+                Looks like she got one hell of a power-up thanks to your generous blood donations. Masochism much, Champ?
+                <if test="silly()">
+                    Git gud, scrub.
+                </if>
+            </if>
+        </desc>
+        <a></a>
+        <pronouns he="she" him="her" his="her"/>
+        <body>
+            <vagina virgin="false" wetness="NORMAL" looseness="NORMAL"/>
+            <breasts>DD</breasts>
+            <anal looseness="NORMAL" wetness="DRY"/>
+            <height>5'6"</height>
+            <hips>10</hips>
+            <butt>6</butt>
+            <skin coverage="NONE">
+                <base color="pale"/>
+            </skin>
+            <hair length="16" color="blonde"/>
+            <wings>BAT_LIKE_LARGE</wings>
+        </body>
+        <combat>
+            <level>20</level>
+            <str>30</str>
+            <tou>60</tou>
+            <spe>80</spe>
+            <int>90</int>
+            <wis>90</wis>
+            <lib>40</lib>
+            <sen>50</sen>
+            <cor>50</cor>
+            <weapon name="dive" verb="swoop" attack="0"/>
+            <armor name="dress" defense="20"/>
+            <bonusHP>10000</bonusHP>
+            <loot>
+                <item>RedVial</item>
+            </loot>
+        </combat>
+        <script language="lua"><![CDATA[
+            local scene
+            ---@param me Creature
+            function setup(me)
+                me.extra.biteCounter = 0
+            end
+            ---@param me Creature
+            function moveBite(me, target)
+                me:addHP(me:maxHP() * 0.2)
+                local dam = me.str() * 2
+                for i = 1, me.extra.biteCounter do
+                    dam = dam + dam * 0.5
+                end
+                me.extra.biteCounter = me.extra.biteCounter + 1
+                mod.display('diva/combat/moves/bite')
+                dam = math.floor(dam + 0.5)
+                target:takePhysDamage(dam)
+                target:takePhysDamage(math.random(2, 5))
+            end
+            ]]></script>
+    </monster>
+    <monster id="Diva_firstFight" base="Diva">
+        <combat>
+            <level>50</level>
+            <str>75</str>
+            <tou>150</tou>
+            <spe>200</spe>
+            <int>225</int>
+            <wis>225</wis>
+            <armor name="dress" defense="50"/>
+            <bonusHP>25000</bonusHP>
+        </combat>
+    </monster>
     <lib name="combat">
         <lib name="moves">
             <lib name="embrace">
@@ -22,10 +132,8 @@
             </text>
             <text name="bitePlant">
                 Diva tries to bite you but just as her fang pierce her skin she shove you off and start spitting.
-
-				<i>
+                <i>
                     “Puaaah what the hell did I taste just now! Your blood taste like saps and flower nectar. How disgusting!”
-
                 </i>
                 Well now you're kind of offended by her reaction... guess plant sap really tastes bad for her.
             </text>
@@ -33,7 +141,8 @@
                 Diva makes a pass bare inches above your head, using her momentum to snatch
                 <if test="$final">
                     and toss you across the room and into an intimate reunion between your face and the wall.
-                    <else>you only to drop you from higher height.</else>
+                    <else/>
+                    you only to drop you from higher height.
                 </if>
             </text>
             <lib name="darkness">
@@ -55,9 +164,8 @@
                     Diva suddenly lets out an agonising screech which echoes through the entire room, shattering all the glass along it’s path and forcing you to reflexively try to cover your ears with your hands, dropping your weapons in the process and still staggering you despite your efforts.
                     The scream is so powerful that, in addition to damaging your eardrums and fucking your balance something fierce, it also bodily throws you into a nearby wall.
                     At least you didn’t wind up impaled on some weapon’s rack, that would be plain embarrassing.
-                    <else>
-                        Diva gets what look like a conical item out of her bag and suddenly lets out an agonising screech which echoes through the entire room, forcing you to reflexively try to cover your ears with your hands, dropping your weapons in the process and still staggering you despite your efforts.
-                    </else>
+                    <else/>
+                    Diva gets what look like a conical item out of her bag and suddenly lets out an agonising screech which echoes through the entire room, forcing you to reflexively try to cover your ears with your hands, dropping your weapons in the process and still staggering you despite your efforts.
                 </if>
             </text>
         </lib>
@@ -241,21 +349,6 @@
                 </lib>
             </lib>
         </lib>
-        <text name="battleDescript">
-            Diva appears to be a vampire, the fangs and wings kind of give it away.
-            She circles above and around you, waiting for an opening while she constantly screeches.
-            Huh, she might be more bat-like that you initially thought.
-            Girl certainly has quite the pair of lungs if nothing else.
-            Her red and black dress gives her quite the villainous look, while having some unfortunate consequences what with it having a skirt and she being a flyer.
-            Somehow, she manages to keep herself from having a rather intimate reunion with the walls despite not looking at where she is flying in favour of drooling at the sight of your neck.
-            Guess all that screeching has an actual purpose aside from annoying you.
-            <if test="$final">
-                Looks like she got one hell of a power-up thanks to your generous blood donations. Masochism much, Champ?
-                <if test="silly()">
-                    Git gud, scrub.
-                </if>
-            </if>
-        </text>
     </lib>
     <lib name="camp">
         <lib name="campDescript">
@@ -338,7 +431,8 @@
 
                         <if test="$combat">
                             <i>“Thou get to taste my second mouth, so thou should feel honored. It's more than you deserve.”</i>
-                            <else><i>“Your neck taste good [name] but I will need more than that to be satisfied.”</i></else>
+                            <else/>
+                            <i>“Your neck taste good [name] but I will need more than that to be satisfied.”</i>
                         </if>
 
                         Diva slowly slide down on your slick [cock], giving you a fanged smile of bliss as she slowly takes your length in.
@@ -368,7 +462,8 @@
 
                         <if test="timesReduced ge 5">
                             <i>“It's the fifth time I have to fix thou art thou seriously enjoying this?”</i>
-                            <else><i>“And now for the main course…”</i></else>
+                            <else/>
+                            <i>“And now for the main course…”</i>
                         </if>
                     </text>
                     <text name="bat">
@@ -482,18 +577,17 @@
                     Both of you scream in ecstasy, breaking out of the bite, blood still dripping from each other chin as you cum your load in her greedy vagina
                     <if test="player.cumQ() ge 20"> the excess dripping to the ground</if>.
 
-                    <elseif test="player.isFemale">
-                        You begin to feel more than blood oozing out of you.
-                        Your pussy lips are drooling and you can feel Diva juices slowly running down your leg.
-                        You are panting from the feeling in your neck and you desire more, Diva too, so on a common nod you get to step two.
-                        You start to grind your wet cunt against Diva’s, both of you moaning in each other neck.
-                        Blood is good but blood and sex is simply divine.
-                        Your pussies are literally eating each others seeking for a cock that is not there as you feel your vagina pulse with delightful pleasure, every single nerve aflame.
-                        Both of you slide against each other for several minutes, never parting away as a constant fountain of female fluids runs down your respective legs.
-                        Diva wings are flapping wildly behind her <if test="player.wings.type == VAMPIRE">, yours too and you try not to take flight as a the winds created by your combined flapping shake the tent</if>.
-                        The both of you scream in ecstasy breaking out of the bite, blood still dripping from each other chin as you and Diva reach your orgasm.
-                        Unsatisfied the both of you keep at it for several hours. After about the sixth orgasm
-                    </elseif>
+                    <elseif test="player.isFemale"/>
+                    You begin to feel more than blood oozing out of you.
+                    Your pussy lips are drooling and you can feel Diva juices slowly running down your leg.
+                    You are panting from the feeling in your neck and you desire more, Diva too, so on a common nod you get to step two.
+                    You start to grind your wet cunt against Diva’s, both of you moaning in each other neck.
+                    Blood is good but blood and sex is simply divine.
+                    Your pussies are literally eating each others seeking for a cock that is not there as you feel your vagina pulse with delightful pleasure, every single nerve aflame.
+                    Both of you slide against each other for several minutes, never parting away as a constant fountain of female fluids runs down your respective legs.
+                    Diva wings are flapping wildly behind her <if test="player.wings.type == VAMPIRE">, yours too and you try not to take flight as a the winds created by your combined flapping shake the tent</if>.
+                    The both of you scream in ecstasy breaking out of the bite, blood still dripping from each other chin as you and Diva reach your orgasm.
+                    Unsatisfied the both of you keep at it for several hours. After about the sixth orgasm
                 </if>
 
                 You start to doze off tired as Diva pull you down in her coffin still embracing you.
@@ -553,11 +647,10 @@
                 You ask Diva if she would mind giving you some blood.
 
                 <if test="player.batScore() gt 6 or player.vampireScore() gt 6">
-				She blush with embarrassment and reply <i>“Thy know thou could've just asked to drink straight from the tap I wouldn’t had minded. Perhaps another time.”</i>
-				<else>
-				<i>“I wouldn’t mind [name] but be warned that it is highly infectious.”</i>
-				</else>
-				</if>
+                She blush with embarrassment and reply <i>“Thy know thou could've just asked to drink straight from the tap I wouldn’t had minded. Perhaps another time.”</i>
+                <else/>
+                <i>“I wouldn’t mind [name] but be warned that it is highly infectious.”</i>
+                </if>
 
                 She hands to you a vial right away.
             </text>
@@ -606,36 +699,31 @@
                         Understandable, since your arms breaking themselves several times over tends to take priority over such things, attention-wise.
                         You shakily stand up, your balance still thrown off by the new limb, inwardly grumbling at how long is it going to take you to get used to them. Distracted as you are, both from the ordeal and your inner grumbling, your first attempt at walking inevitably ends with an intimate reunion of your face and the ground.
                         This time, you don’t bother to keep your cursing to the confines of your own mind.
-                        <else>
-                            <if test="player.isVampire()">
-                                As soon as the last drop of blood passes your now crimson lips, a terrible pain flares in the center of your back, a pain so intense that you black out briefly, coming back to your senses as you hit your head against the ground.
-                                You hear a horrifying ripping noise as your back stretches and tears to allow new bones to expand, black as tar and far lighter than most of the bones in your body.
-                                These new bones shift under your shoulder blade skin as you fall on all groaning in pain and clawing at the ground.
-                                In a flash of pain they violently break out of your skin sending blood everywhere as you make a chilling scream your wounds slowly closing on their own.
-                                Still panting from the pain, you take a look at your new appendage.
-                                It's a pair of large vampire wings of impressive size.
-                                Feeling chilly you fold them back on your body and you ought to admit they indeed look like a large cape.
-                                <else>
-                                    You drop the vial, the glass shattering, as intense pain flares around your shoulder blades.
-                                    The pain intensifies, causing you to drop to the ground, clawing and screaming in agony as your back suddenly explodes with a wet ripping noise, blood splattering around you as a large pair of black leathery wings emerge from the bloody ruin that is your back right now, stretching to their full span.
-                                    The pain finally starts to recede, leaving a bone-deep weariness in it’s wake.
-                                    After a while, you manage to recover enough to be sure that trying to stand up won’t result in graceless, and painful, flopping, so you do just that, wrapping your new wings around you on instinct as you rise.
-                                    Huh, wrapped like this you could probably pass them off as a long cape so long as nobody looks too closely, but you are certain they are the real deal.
-                                    After all that pain, flying better be worth it.
-                                </else>
-                            </if>
-                        </else>
+                        <elseif test="player.isVampire()"/>
+                        As soon as the last drop of blood passes your now crimson lips, a terrible pain flares in the center of your back, a pain so intense that you black out briefly, coming back to your senses as you hit your head against the ground.
+                        You hear a horrifying ripping noise as your back stretches and tears to allow new bones to expand, black as tar and far lighter than most of the bones in your body.
+                        These new bones shift under your shoulder blade skin as you fall on all groaning in pain and clawing at the ground.
+                        In a flash of pain they violently break out of your skin sending blood everywhere as you make a chilling scream your wounds slowly closing on their own.
+                        Still panting from the pain, you take a look at your new appendage.
+                        It's a pair of large vampire wings of impressive size.
+                        Feeling chilly you fold them back on your body and you ought to admit they indeed look like a large cape.
+                        <else/>
+                        You drop the vial, the glass shattering, as intense pain flares around your shoulder blades.
+                        The pain intensifies, causing you to drop to the ground, clawing and screaming in agony as your back suddenly explodes with a wet ripping noise, blood splattering around you as a large pair of black leathery wings emerge from the bloody ruin that is your back right now, stretching to their full span.
+                        The pain finally starts to recede, leaving a bone-deep weariness in it’s wake.
+                        After a while, you manage to recover enough to be sure that trying to stand up won’t result in graceless, and painful, flopping, so you do just that, wrapping your new wings around you on instinct as you rise.
+                        Huh, wrapped like this you could probably pass them off as a long cape so long as nobody looks too closely, but you are certain they are the real deal.
+                        After all that pain, flying better be worth it.
                     </if>
                     <b>You will be able to enjoy nightly flight using your brand new vampire wings.</b>
-                    <else>
-                        Large bones surge out of your wrists and elbows.
-                        You can feel your bones shifting and grinding all over your body as your skeletal structure begins changing into one more fit for a flying creature, with light, hollow bones.
-                        You collapse to the ground as they begin shifting proportions becoming thinner and longer to maximize area while reducing their density.
-                        Leathery flesh begins to cover your new bony protrusions, spreading between each of them like creeping moss.
-                        Eventually, the skin stops growing and you admire your new arms.
-                        They are very obviously bat wings. You close them around your waist, like this they could easily be mistaken for a large cape when seen from afar.
-                        <b>You now have large bat wings.</b>
-                    </else>
+                    <else/>
+                    Large bones surge out of your wrists and elbows.
+                    You can feel your bones shifting and grinding all over your body as your skeletal structure begins changing into one more fit for a flying creature, with light, hollow bones.
+                    You collapse to the ground as they begin shifting proportions becoming thinner and longer to maximize area while reducing their density.
+                    Leathery flesh begins to cover your new bony protrusions, spreading between each of them like creeping moss.
+                    Eventually, the skin stops growing and you admire your new arms.
+                    They are very obviously bat wings. You close them around your waist, like this they could easily be mistaken for a large cape when seen from afar.
+                    <b>You now have large bat wings.</b>
                 </if>
 
             </text>
@@ -646,10 +734,9 @@
                     </if>
                     Your ears begin to prickle as they elongate to a point, being now reminiscent of those of elves, goblins, or in your case, vampires. Aside from looking cute, you find your new ears have drastically improved your hearing.
                     <b>Sound has become an entirely new experience now that you have pointy vampire ears!</b>
-                    <else>
-                        Your ears begin to prickle and burn as the skin tears and stretches, changing into wide, deep ears, perfect for catching any stray sound. Which becomes apparent when your hearing becomes far more clear than it has ever been.
-                        <b>Sound has become an entirely new experience now that you have bat ears!</b>
-                    </else>
+                    <else/>
+                    Your ears begin to prickle and burn as the skin tears and stretches, changing into wide, deep ears, perfect for catching any stray sound. Which becomes apparent when your hearing becomes far more clear than it has ever been.
+                    <b>Sound has become an entirely new experience now that you have bat ears!</b>
                 </if>
             </text>
             <text name="eyes.type">
@@ -680,4 +767,4 @@
             <text name="noChange">Odd.  You don't feel any different.</text>
         </lib>
     </lib>
-</story>
+</mod>

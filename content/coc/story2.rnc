@@ -30,7 +30,7 @@ var = element var {
 #export = element export {
 #    attribute ref { text }
 #}
-exportable = monster | lib | Text | scene
+exportable = monster | script | lib | Text | scene
 lib = element lib {
     attribute name { text },
     exportable*

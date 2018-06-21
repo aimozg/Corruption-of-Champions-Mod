@@ -80,37 +80,48 @@ public class LuaEngine extends EasyLua {
 		Lua.lua_getglobal(_luaState, "_NAMESPACES");
 		// Stack: [ table _NAMESPACES | ??? ]
 		
+		Lua.lua_pushstring(_luaState, nsname);
+		// Stack: [ string nsname | table _NAMESPACES | ??? ]
+		
+		Lua.lua_gettable(_luaState, -2);
+		// > Pushes onto the stack the value t[k], where t is the value at the given index and k is the value at the top of the stack.
+		// > //This function pops the key from the stack (putting the resulting value in its place)
+		// t = Stack[-2] = _NAMESPACES
+		// k = Stack[-1] = nsname
+		// t[k] = _NAMESPACES[nsname] = Namespace
+		// Stack: [ table Namespace | table _NAMESPACES | ??? ]
+		
 		Lua.lua_pushstring(_luaState, membername);
 		// Stack: [ string membername | table _NAMESPACES | ??? ]
 		
 		switch (typeof value) {
 			case 'number':
 				Lua.lua_pushnumber(_luaState, Number(value));
-				// Stack: [ number value | string membername | table _NAMESPACES | ??? ]
+				// Stack: [ number value | string membername | table Namespace | table _NAMESPACES | ??? ]
 				break;
 			case 'string':
 				Lua.lua_pushstring(_luaState, String(value));
-				// Stack: [ string value | string membername | table _NAMESPACES | ??? ]
+				// Stack: [ string value | string membername | table Namespace | table _NAMESPACES | ??? ]
 				break;
 			case 'boolean':
 				Lua.lua_pushboolean(_luaState, Boolean(value)?1:0);
-				// Stack: [ boolean value | string membername | table _NAMESPACES | ??? ]
+				// Stack: [ boolean value | string membername | table Namespace | table _NAMESPACES | ??? ]
 				break;
 			case 'undefined':
 				Lua.lua_pushnil(_luaState);
-				// Stack: [ nil | string membername | table _NAMESPACES | ??? ]
+				// Stack: [ nil | string membername | table Namespace | table _NAMESPACES | ??? ]
 				break;
 			default:
 				if (value == null) {
 					Lua.lua_pushnil(_luaState);
-					// Stack: [ nil | string membername | table _NAMESPACES | ??? ]
+					// Stack: [ nil | string membername | table Namespace | table _NAMESPACES | ??? ]
 				} else {
 					var udptr:int                   = Lua.push_flashref(_luaState);
 					sample.lua.__lua_objrefs[udptr] = value;
-					// Stack: [ userdata value | string membername | table _NAMESPACES | ??? ]
+					// Stack: [ userdata value | string membername | table Namespace | table _NAMESPACES | ??? ]
 				}
 		}
-		// Stack: [ ??? value | string membername | table _NAMESPACES | ??? ]
+		// Stack: [ ??? value | string membername | table Namespace | table _NAMESPACES | ??? ]
 		
 		Lua.lua_settable(_luaState, -3);
 		// > Does the equivalent to t[k] = v, where
@@ -118,13 +129,13 @@ public class LuaEngine extends EasyLua {
 		// > v is the value at the top of the stack, and
 		// > k is the value just below the top.
 		// > This function pops both the key and the value from the stack.
-		// t = Stack[-3] = _NAMESPACES
+		// t = Stack[-3] = Namespace
 		// v = Stack[-1] = value
 		// k = Stack[-2] = membername
-		// _NAMESPACES[membername] = value
-		// Stack: [ table _NAMESPACES | ??? ]
+		// Namespace[membername] = value
+		// Stack: [ table Namespace | table _NAMESPACES | ??? ]
 		
-		Lua.lua_pop(_luaState, 1);
+		Lua.lua_pop(_luaState, 2);
 		// Stack: [ ??? ]
 	}
 }

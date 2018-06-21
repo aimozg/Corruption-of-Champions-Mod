@@ -110,7 +110,7 @@
             <xs:attribute name="him" use="required"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="script">
+    <xs:element name="script" substitutionGroup="exportable">
         <xs:complexType mixed="true">
             <xs:attribute name="language">
                 <xs:simpleType>

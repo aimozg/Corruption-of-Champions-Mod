@@ -1,3 +1,11 @@
+for n,ns in pairs(_NAMESPACES) do
+    Print('Namespace ' .. n .. '\n')
+    for k,v in pairs(ns) do
+        Print('> ' .. k .. ': ' .. type(v) .. ' = ' .. tostring(v) .. '\n')
+    end
+end
+
+
 local function show(name,value)
     Print('var ' .. name .. ': ' .. typeof(value))
     if type(value)=='table' then

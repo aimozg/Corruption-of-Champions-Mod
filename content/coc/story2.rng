@@ -71,6 +71,7 @@
     <define name="exportable">
         <choice>
             <ref name="monster"/>
+            <ref name="script"/>
             <ref name="lib"/>
             <ref name="Text"/>
             <ref name="scene"/>

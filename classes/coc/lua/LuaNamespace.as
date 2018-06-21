@@ -36,7 +36,7 @@ public class LuaNamespace {
 		return callv(funcname,args);
 	}
 	public function callv(funcname:String, args:Array):* {
-		var src:String = 'return '+name+'.'+funcname+'(';
+		var src:String = 'return getNamespace('+EasyLua.toLuaString(name)+').'+funcname+'(';
 		for (var i:int = 0; i < args.length; i++) {
 			if (i != 0) src+=',';
 			src += EasyLua.toLuaString(args[i]);

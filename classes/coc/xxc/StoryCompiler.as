@@ -4,12 +4,15 @@
 package coc.xxc {
 import classes.Modding.GameMod;
 import classes.Modding.MonsterPrototype;
+import classes.internals.Utils;
 
 import coc.script.Eval;
 import coc.xlogic.Compiler;
 import coc.xlogic.Statement;
 import coc.xlogic.StmtList;
 import coc.xxc.stmts.*;
+
+import flash.utils.setTimeout;
 
 public class StoryCompiler extends Compiler {
 	private var _basedir:String;
@@ -87,6 +90,9 @@ public class StoryCompiler extends Compiler {
 					for each(var subitem:XML in item.elements('var')) {
 						mod.initialState[subitem.@name] = subitem.text();
 					}
+					break;
+				case 'script':
+					mod.addScript(item.text());
 					break;
 				case 'import':
 				case 'hook':
@@ -172,14 +178,17 @@ public class StoryCompiler extends Compiler {
 	public function includeLoaded(stmt:IncludeStmt):void {
 		// TODO @aimozg properly register and kick compiler callback when some of the includes failed to load
 		if (onProgress != null) {
-			onProgress(this,includesLoaded(),includesTotal());
+			setTimeout(Utils.curry(onProgress,this,includesLoaded(),includesTotal()),0);
+			//onProgress(this,includesLoaded(),includesTotal());
 		}
 		if (isFullyLoaded()) {
 			if (onLoad != null) {
 				if (onLoad.length == 1) {
-					onLoad(this);
+					setTimeout(Utils.curry(onLoad,this),0);
+					//onLoad(this);
 				} else {
-					onLoad();
+					setTimeout(onLoad,0);
+					//onLoad();
 				}
 			}
 		}
