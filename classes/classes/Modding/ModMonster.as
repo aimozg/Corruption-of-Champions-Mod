@@ -181,15 +181,12 @@ public class ModMonster extends Monster {
 					var stat:PrimaryStat = this.stats[xml.localName()] as PrimaryStat;
 					stat.core.max = Math.max(100,x*2);
 					stat.core.value = x;
-					this.initsCalled[stat.name] = true;
 					break;
 				case 'sen':
 					this.sens = xml.text();
-					this.initsCalled.sens = true;
 					break;
 				case 'cor':
 					this.cor = xml.text();
-					this.initsCalled.cor = true;
 					break;
 				case 'weapon':
 					if ('@name' in xml) this.weaponName = xml.@name;

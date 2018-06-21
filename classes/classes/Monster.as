@@ -229,7 +229,6 @@ import flash.utils.getQualifiedClassName;
 		}
 		public function set long(value:String):void
 		{
-			initsCalled.long = true;
 			_long = value;
 		}
 
@@ -288,11 +287,7 @@ import flash.utils.getQualifiedClassName;
 
 		private var _drop:RandomDrop = new ChainedDrop();
 		public function get drop():RandomDrop { return _drop; }
-		public function set drop(value:RandomDrop):void
-		{
-			_drop = value;
-			initedDrop = true;
-		}
+		public function set drop(value:RandomDrop):void { _drop = value; }
 
 		protected override function maxHP_base():Number {
 			//Base HP
@@ -571,10 +566,6 @@ import flash.utils.getQualifiedClassName;
 
 			// super(mainClassPtr);
 
-			//// INIITIALIZERS
-			//// If you want to skip something that is REQUIRED, you shoud set corresponding
-			//// this.initedXXX property to true, e.g. this.initedGenitals = true;
-
 			//// 1. Names and plural/singular
 			///*REQUIRED*/ this.a = "a";
 			///*REQUIRED*/ this.short = "short";
@@ -595,7 +586,7 @@ import flash.utils.getQualifiedClassName;
 			//// 2.3. Hermaphrodite
 			//// Just create cocks and vaginas. Last call determines pronouns.
 			//// 2.4. Genderless
-			///*REQUIRED*/ initGenderless(); // this functions removes genitals!
+			////*OPTIONAL*/ initGenderless(); // this functions removes genitals!
 
 			//// Note for 2.: during initialization pronouns are set in:
 			//// * createCock: he/him/his
@@ -743,77 +734,12 @@ import flash.utils.getQualifiedClassName;
 		private var _checkCalled:Boolean = false;
 		public function get checkCalled():Boolean { return _checkCalled; }
 		public var checkError:String = "";
-		public var initsCalled:Object = {
-			a:false,
-			short:false,
-			long:false,
-			genitals:false,
-			breasts:false,
-			tallness:false,
-			str:false,
-			tou:false,
-			spe:false,
-			int:false,
-			wis:false,
-			lib:false,
-			sens:false,
-			cor:false,
-			drop:false
-		};
+		
 		// MONSTER INITIALIZATION HELPER FUNCTIONS
-		protected function set initedGenitals(value:Boolean):void{
-			initsCalled.genitals = value;
-		}
-		protected function set initedBreasts(value:Boolean):void{
-			initsCalled.breasts = value;
-		}
-		protected function set initedDrop(value:Boolean):void{
-			initsCalled.drop = value;
-		}
-		protected function set initedStrTouSpeInte(value:Boolean):void{
-			initsCalled.str = value;
-			initsCalled.tou = value;
-			initsCalled.spe = value;
-			initsCalled.int = value;
-		}
-		protected function set initedWisLibSensCor(value:Boolean):void{
-			initsCalled.wis = value;
-			initsCalled.lib = value;
-			initsCalled.sens = value;
-			initsCalled.cor = value;
-		}
 		protected const NO_DROP:WeightedDrop = new WeightedDrop();
-
-		public function isFullyInit():Boolean {
-			for each (var phase:Object in initsCalled) {
-				if (phase is Boolean && phase == false) return false;
-			}
-			return true;
-		}
-		public function missingInits():String{
-			var result:String = "";
-			for (var phase:String in initsCalled){
-				if (initsCalled[phase] is Boolean && initsCalled[phase] == false){
-					if (result == "") result = phase;
-					else result+=", "+phase;
-				}
-			}
-			return result;
-		}
-
-		override public function set a(value:String):void {
-			initsCalled.a = true;
-			super.a = value;
-		}
-
-		override public function set short(value:String):void {
-			initsCalled.short = true;
-			super.short = value;
-		}
-
+		
 		override public function createCock(clength:Number = 5.5, cthickness:Number = 1, ctype:CockTypesEnum = null):Boolean
 		{
-			initedGenitals = true;
 			if (!_checkCalled) {
 				if (plural) {
 					this.pronoun1 = "they";
@@ -831,7 +757,6 @@ import flash.utils.getQualifiedClassName;
 
 		override public function createVagina(virgin:Boolean = true, vaginalWetness:Number = 1, vaginalLooseness:Number = 0):Boolean
 		{
-			initedGenitals = true;
 			if (!_checkCalled) {
 				if (plural) {
 					this.pronoun1 = "they";
@@ -851,7 +776,6 @@ import flash.utils.getQualifiedClassName;
 		{
 			this.cocks = [];
 			this.vaginas = new <VaginaClass>[];
-			initedGenitals = true;
 			if (plural) {
 				this.pronoun1 = "they";
 				this.pronoun2 = "them";
@@ -861,18 +785,6 @@ import flash.utils.getQualifiedClassName;
 				this.pronoun2 = "it";
 				this.pronoun3 = "its";
 			}
-		}
-
-		override public function createBreastRow(size:Number = 0, nipplesPerBreast:Number = 1):Boolean
-		{
-			initedBreasts = true;
-			return super.createBreastRow(size, nipplesPerBreast);
-		}
-
-		override public function set tallness(value:Number):void
-		{
-			initsCalled.tallness = true;
-			super.tallness = value;
 		}
 
 		protected function initStrTouSpeInte(str:Number, tou:Number, spe:Number, inte:Number):void
@@ -885,7 +797,6 @@ import flash.utils.getQualifiedClassName;
 			this.speStat.core.value = spe;
 			this.intStat.core.max = Math.max(100,inte*2);
 			this.intStat.core.value = inte;
-			initedStrTouSpeInte = true;
 		}
 
 		protected function initWisLibSensCor(wis:Number, lib:Number, sens:Number, cor:Number):void
@@ -896,16 +807,12 @@ import flash.utils.getQualifiedClassName;
 			this.libStat.core.value = lib;
 			this.sens = sens;
 			this.cor = cor;
-			initedWisLibSensCor = true;
 		}
 
 		override public function validate():String
 		{
 			var error:String = "";
 			// 1. Required fields must be set
-			if (!isFullyInit()) {
-				error += "Missing phases: "+missingInits()+". ";
-			}
 			this.HP = maxHP();
 			this.XP = totalXP();
 			error += super.validate();
