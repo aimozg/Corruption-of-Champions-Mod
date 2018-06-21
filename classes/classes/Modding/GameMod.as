@@ -2,11 +2,13 @@
  * Coded by aimozg on 12.06.2018.
  */
 package classes.Modding {
+import classes.CoC;
 import classes.internals.Jsonable;
 import classes.internals.Utils;
 
 import coc.lua.LuaEngine;
 import coc.lua.LuaNamespace;
+import coc.xxc.NamedNode;
 
 public class GameMod implements Jsonable {
 	public var name:String;
@@ -16,10 +18,13 @@ public class GameMod implements Jsonable {
 	private var _ns:LuaNamespace;
 	private var _script:String = "";
 	private var _initialized:Boolean = false;
+	private var _compiled:Boolean = false;
+	public var story:NamedNode;
 	public var monsterList:/*MonsterPrototype*/Array = [];
-	public function GameMod(name:String, version:int) {
+	public function GameMod(name:String, version:int, story:NamedNode) {
 		this.name = name;
 		this.version = version || 1;
+		this.story = story;
 	}
 	public function set lua(value:LuaEngine):void {
 		if (this._lua == value) return;
@@ -28,15 +33,21 @@ public class GameMod implements Jsonable {
 		_ns.expose('ModState', state);
 		if (_script != "") {
 			_ns.eval(_script);
-			_initialized = true;
+			_compiled = true;
 		}
 	}
 	public function set script(value:String):void {
 		_script = value;
-		if (_ns != null && !_initialized) {
+		if (_ns != null && !_compiled) {
 			if (_script!="") _ns.eval(_script);
-			_initialized = true;
+			_compiled = true;
 		}
+	}
+	public function finishInit(game:CoC):void {
+		for each (var mp:MonsterPrototype in monsterList) {
+			if (mp.baseId) mp.base = game.findModMonster(mp.baseId);
+		}
+		_initialized = true;
 	}
 	public function scriptHas(fname:String):Boolean {
 		if (!_initialized) throw new Error("Mod not initialized");
@@ -63,8 +74,12 @@ public class GameMod implements Jsonable {
 		return _ns.callv(fname,args);
 	}
 	public function upgrade(fromVersion:int, oldData:Object):void {
-		// default upgrade: just copy if dest exist
-		Utils.copyObjectEx(state, oldData, Utils.keys(state));
+		if (scriptHas("upgrade")) {
+			scriptCall("upgrade",fromVersion,oldData)
+		} else {
+			// default upgrade: just copy if dest exist
+			Utils.copyObjectEx(state, oldData, Utils.keys(state));
+		}
 	}
 	public function saveToObject():Object {
 		return {

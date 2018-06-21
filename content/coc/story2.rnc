@@ -1,3 +1,4 @@
+namespace xsi = "http://www.w3.org/2001/XMLSchema-instance"
 
 start = mod
 # #############################################
@@ -5,6 +6,7 @@ start = mod
 mod = element mod {
     attribute name { text },
     attribute version { text }?,
+    attribute xsi:noNamespaceSchemaLocation { text }?,
     import*,
     state?,
     hook*,
@@ -47,10 +49,10 @@ scene = element scene {
 monster = element monster {
     attribute id { text },
     attribute base { text }?,
-    element name { content }?,
-    element desc { content }?,
+    element name { text }?,
+    element desc { content* }?,
     element plural { empty }?,
-    element a { content }?,
+    element a { text }?,
     element pronouns {
         attribute he { text },
         attribute his { text },
@@ -61,7 +63,7 @@ monster = element monster {
     script*
 }
 script = element script {
-    attribute language { 'lua' | text }?,
+    attribute language { 'lua' }?,
     text
 }
 monsterBody = element body {
@@ -70,7 +72,16 @@ monsterBody = element body {
         attribute wetness { text }?,
         attribute looseness { text }?
     }?,
-    element breasts { text }?,
+    element penis {
+        attribute length { text }?,
+        attribute thickness { text }?,
+        attribute type { text }?
+    }*,
+    element balls {
+        attribute count { text }?,
+        attribute size { text }?
+    },
+    element breasts { text }*,
     element anal {
         attribute looseness { text }?,
         attribute wetness { text }?
@@ -155,10 +166,23 @@ monsterCombat = element combat {
     },
     element bonusHP { text }?,
     element loot {
-        loot
+        element gems {
+            (
+                (
+                    attribute min { text },
+                    attribute max { text }
+                ) | (
+                    attribute value { text }
+                ) | text
+            )
+        }?,
+        lootItem*
     }?
 }
-loot = element item { text }
+lootItem = element item {
+    attribute weight { text }?,
+    text
+}
 
 # #############################################
 # textual content

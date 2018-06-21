@@ -24,6 +24,12 @@ public class BoundNode {
 		obj.forceExecute(context);
 		context.popScope();
 	}
+	public function displayToString(ref:String,locals:Object=null):String {
+		var storyContext:StoryContext = (context as StoryContext);
+		storyContext.startRecording();
+		display(ref,locals);
+		return storyContext.stopRecording();
+	}
 	public function locate(ref:String):BoundNode {
 		var obj:NamedNode = node.locate(ref);
 		if (!obj) {

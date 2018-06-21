@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://relaxng.org/ns/structure/1.0">
+    <start>
+        <ref name="mod"/>
+    </start>
+    <!--
+        #############################################
+        mod structure
+    -->
+    <define name="mod">
+        <element name="mod">
+            <attribute name="name"/>
+            <optional>
+                <attribute name="version"/>
+            </optional>
+            <optional>
+                <attribute name="xsi:noNamespaceSchemaLocation"/>
+            </optional>
+            <zeroOrMore>
+                <ref name="import"/>
+            </zeroOrMore>
+            <optional>
+                <ref name="state"/>
+            </optional>
+            <zeroOrMore>
+                <ref name="hook"/>
+            </zeroOrMore>
+            <zeroOrMore>
+                <!--    export*, -->
+                <ref name="exportable"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="import">
+        <element name="import">
+            <attribute name="ref"/>
+        </element>
+    </define>
+    <define name="state">
+        <element name="state">
+            <zeroOrMore>
+                <ref name="var"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="hook">
+        <element name="hook">
+            <attribute name="type">
+                <choice>
+                    <value>daily</value>
+                    <value>hourly</value>
+                </choice>
+            </attribute>
+            <zeroOrMore>
+                <ref name="content"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="var">
+        <element name="var">
+            <attribute name="name"/>
+            <choice>
+                <text/>
+                <empty/>
+            </choice>
+        </element>
+    </define>
+    <!--
+        export = element export {
+           attribute ref { text }
+        }
+    -->
+    <define name="exportable">
+        <choice>
+            <ref name="monster"/>
+            <ref name="lib"/>
+            <ref name="Text"/>
+            <ref name="scene"/>
+        </choice>
+    </define>
+    <define name="lib">
+        <element name="lib">
+            <attribute name="name"/>
+            <zeroOrMore>
+                <ref name="exportable"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="Text">
+        <element name="text">
+            <attribute name="name"/>
+            <zeroOrMore>
+                <ref name="content"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="scene">
+        <element name="scene">
+            <attribute name="name"/>
+            <zeroOrMore>
+                <ref name="content"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <!--
+        #############################################
+        monster
+    -->
+    <define name="monster">
+        <element name="monster">
+            <attribute name="id"/>
+            <optional>
+                <attribute name="base"/>
+            </optional>
+            <optional>
+                <element name="name">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="desc">
+                    <zeroOrMore>
+                        <ref name="content"/>
+                    </zeroOrMore>
+                </element>
+            </optional>
+            <optional>
+                <element name="plural">
+                    <empty/>
+                </element>
+            </optional>
+            <optional>
+                <element name="a">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="pronouns">
+                    <attribute name="he"/>
+                    <attribute name="his"/>
+                    <attribute name="him"/>
+                </element>
+            </optional>
+            <optional>
+                <ref name="monsterBody"/>
+            </optional>
+            <optional>
+                <ref name="monsterCombat"/>
+            </optional>
+            <zeroOrMore>
+                <ref name="script"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="script">
+        <element name="script">
+            <optional>
+                <attribute name="language">
+                    <value>lua</value>
+                </attribute>
+            </optional>
+            <text/>
+        </element>
+    </define>
+    <define name="monsterBody">
+        <element name="body">
+            <optional>
+                <element name="vagina">
+                    <optional>
+                        <attribute name="virgin">
+                            <choice>
+                                <value>true</value>
+                                <value>false</value>
+                            </choice>
+                        </attribute>
+                    </optional>
+                    <optional>
+                        <attribute name="wetness"/>
+                    </optional>
+                    <optional>
+                        <attribute name="looseness"/>
+                    </optional>
+                </element>
+            </optional>
+            <optional>
+                <element name="breasts">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="anal">
+                    <optional>
+                        <attribute name="looseness"/>
+                    </optional>
+                    <optional>
+                        <attribute name="wetness"/>
+                    </optional>
+                </element>
+            </optional>
+            <optional>
+                <element name="height">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="hips">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="butt">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="skin">
+                    <attribute name="coverage"/>
+                    <optional>
+                        <element name="base">
+                            <ref name="skinLayer"/>
+                        </element>
+                    </optional>
+                    <optional>
+                        <element name="coat">
+                            <ref name="skinLayer"/>
+                        </element>
+                    </optional>
+                </element>
+            </optional>
+            <optional>
+                <element name="hair">
+                    <optional>
+                        <attribute name="length"/>
+                    </optional>
+                    <optional>
+                        <attribute name="color"/>
+                    </optional>
+                    <optional>
+                        <attribute name="type"/>
+                    </optional>
+                </element>
+            </optional>
+            <optional>
+                <element name="antennae">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="arms">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="beard">
+                    <optional>
+                        <attribute name="type"/>
+                    </optional>
+                    <optional>
+                        <attribute name="length"/>
+                    </optional>
+                </element>
+            </optional>
+            <optional>
+                <element name="claws">
+                    <optional>
+                        <attribute name="type"/>
+                    </optional>
+                    <optional>
+                        <attribute name="color"/>
+                    </optional>
+                </element>
+            </optional>
+            <optional>
+                <element name="ears">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="eyes">
+                    <optional>
+                        <attribute name="type"/>
+                    </optional>
+                    <optional>
+                        <attribute name="count"/>
+                    </optional>
+                    <optional>
+                        <attribute name="color"/>
+                    </optional>
+                </element>
+            </optional>
+            <optional>
+                <element name="face">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="gills">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="horns">
+                    <optional>
+                        <attribute name="type"/>
+                    </optional>
+                    <optional>
+                        <attribute name="count"/>
+                    </optional>
+                </element>
+            </optional>
+            <optional>
+                <element name="legs">
+                    <optional>
+                        <attribute name="type"/>
+                    </optional>
+                    <optional>
+                        <attribute name="count"/>
+                    </optional>
+                </element>
+            </optional>
+            <optional>
+                <element name="rearBody">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="tail">
+                    <optional>
+                        <attribute name="type"/>
+                    </optional>
+                    <optional>
+                        <attribute name="count"/>
+                    </optional>
+                </element>
+            </optional>
+            <optional>
+                <element name="tongue">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="wings">
+                    <text/>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="skinLayer">
+        <optional>
+            <attribute name="type"/>
+        </optional>
+        <optional>
+            <attribute name="color"/>
+        </optional>
+        <optional>
+            <attribute name="color2"/>
+        </optional>
+        <optional>
+            <attribute name="pattern"/>
+        </optional>
+        <optional>
+            <attribute name="adj"/>
+        </optional>
+        <optional>
+            <attribute name="desc"/>
+        </optional>
+    </define>
+    <define name="monsterCombat">
+        <element name="combat">
+            <optional>
+                <element name="level">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="str">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="tou">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="spe">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="int">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="wis">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="lib">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="sen">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="cor">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="weapon">
+                    <optional>
+                        <attribute name="name"/>
+                    </optional>
+                    <optional>
+                        <attribute name="verb"/>
+                    </optional>
+                    <optional>
+                        <attribute name="attack"/>
+                    </optional>
+                </element>
+            </optional>
+            <element name="armor">
+                <optional>
+                    <attribute name="name"/>
+                </optional>
+                <optional>
+                    <attribute name="defense"/>
+                </optional>
+            </element>
+            <optional>
+                <element name="bonusHP">
+                    <text/>
+                </element>
+            </optional>
+            <optional>
+                <element name="loot">
+                    <optional>
+                        <element name="gems">
+                            <choice>
+                                <group>
+                                    <attribute name="min"/>
+                                    <attribute name="max"/>
+                                </group>
+                                <attribute name="value"/>
+                                <text/>
+                            </choice>
+                        </element>
+                    </optional>
+                    <zeroOrMore>
+                        <ref name="lootItem"/>
+                    </zeroOrMore>
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="lootItem">
+        <element name="item">
+            <optional>
+                <attribute name="weight"/>
+            </optional>
+            <text/>
+        </element>
+    </define>
+    <!--
+        #############################################
+        textual content
+    -->
+    <define name="content">
+        <choice>
+            <text/>
+            <ref name="b"/>
+            <ref name="i"/>
+            <ref name="font"/>
+            <ref name="if"/>
+            <ref name="switch"/>
+            <ref name="xcc-content"/>
+        </choice>
+    </define>
+    <define name="b">
+        <element name="b">
+            <zeroOrMore>
+                <ref name="content"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="i">
+        <element name="i">
+            <zeroOrMore>
+                <ref name="content"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="font">
+        <element name="font">
+            <optional>
+                <attribute name="color"/>
+            </optional>
+            <zeroOrMore>
+                <ref name="content"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <!-- xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone -->
+    <define name="xcc-content">
+        <choice>
+            <ref name="display"/>
+            <ref name="set"/>
+        </choice>
+    </define>
+    <!--
+        | xcc-named-content | | dynStats | output | Include
+        namedBlock = attribute name { text }?, content*
+        String = element string { namedBlock }
+    -->
+    <define name="set">
+        <element name="set">
+            <attribute name="var"/>
+            <optional>
+                <attribute name="value">
+                    <ref name="expression"/>
+                </attribute>
+            </optional>
+            <optional>
+                <attribute name="op">
+                    <choice>
+                        <value>append</value>
+                        <value>set</value>
+                        <value>add</value>
+                        <value>+=</value>
+                        <value>=</value>
+                    </choice>
+                </attribute>
+            </optional>
+            <zeroOrMore>
+                <text/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="display">
+        <element name="display">
+            <attribute name="ref"/>
+            <empty/>
+        </element>
+    </define>
+    <!--
+        extend-story = element extend-story { namedBlock }
+        zone = element zone {
+           namedBlock,
+           encounter*
+        }
+        extend-zone = element extend-zone {
+           namedBlock,
+           encounter*
+        }
+        encounter = element encounter {
+           attribute name { text },
+           attribute chance { expression }?,
+           attribute when { expression }?,
+           content*
+        }
+        dynStats = element dynStats {
+           attribute str { expression }?,
+           attribute tou { expression }?,
+           attribute spe { expression }?,
+           attribute int { expression }?,
+           attribute lib { expression }?,
+           attribute sen { expression }?,
+           attribute lus { expression }?,
+           attribute cor { expression }?,
+           attribute scale { expression }?,
+           empty
+        }
+        output = element output { expression }
+        Include = element include {
+           attribute path { text },
+           attribute required { "true" | "false" }?,
+           empty
+        }
+    -->
+    <!--
+        #############################################
+        xlogic
+    -->
+    <define name="expression">
+        <text/>
+    </define>
+    <define name="array-content-expression">
+        <text/>
+    </define>
+    <define name="if">
+        <element name="if">
+            <attribute name="test">
+                <ref name="expression"/>
+            </attribute>
+            <choice>
+                <ref name="if-big"/>
+                <ref name="if-short"/>
+            </choice>
+        </element>
+    </define>
+    <define name="if-big">
+        <zeroOrMore>
+            <ref name="content"/>
+        </zeroOrMore>
+        <zeroOrMore>
+            <ref name="elseif"/>
+        </zeroOrMore>
+        <optional>
+            <ref name="else"/>
+        </optional>
+    </define>
+    <define name="if-short">
+        <empty/>
+        <attribute name="then"/>
+        <optional>
+            <attribute name="else"/>
+        </optional>
+    </define>
+    <define name="elseif">
+        <element name="elseif">
+            <attribute name="test">
+                <ref name="expression"/>
+            </attribute>
+        </element>
+        <zeroOrMore>
+            <ref name="content"/>
+        </zeroOrMore>
+    </define>
+    <define name="else">
+        <element name="else">
+            <empty/>
+        </element>
+        <zeroOrMore>
+            <ref name="content"/>
+        </zeroOrMore>
+    </define>
+    <define name="switch">
+        <element name="switch">
+            <optional>
+                <attribute name="value">
+                    <ref name="expression"/>
+                </attribute>
+            </optional>
+            <zeroOrMore>
+                <ref name="case"/>
+            </zeroOrMore>
+            <optional>
+                <ref name="Default"/>
+            </optional>
+        </element>
+    </define>
+    <define name="case">
+        <element name="case">
+            <optional>
+                <attribute name="test">
+                    <ref name="expression"/>
+                </attribute>
+            </optional>
+            <optional>
+                <attribute name="value">
+                    <ref name="expression"/>
+                </attribute>
+            </optional>
+            <optional>
+                <attribute name="values">
+                    <ref name="array-content-expression"/>
+                </attribute>
+            </optional>
+            <optional>
+                <attribute name="lt">
+                    <ref name="expression"/>
+                </attribute>
+            </optional>
+            <optional>
+                <attribute name="gt">
+                    <ref name="expression"/>
+                </attribute>
+            </optional>
+            <optional>
+                <attribute name="ne">
+                    <ref name="expression"/>
+                </attribute>
+            </optional>
+            <optional>
+                <attribute name="lte">
+                    <ref name="expression"/>
+                </attribute>
+            </optional>
+            <optional>
+                <attribute name="gte">
+                    <ref name="expression"/>
+                </attribute>
+            </optional>
+            <zeroOrMore>
+                <ref name="content"/>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="Default">
+        <element name="default">
+            <zeroOrMore>
+                <ref name="content"/>
+            </zeroOrMore>
+        </element>
+    </define>
+</grammar>

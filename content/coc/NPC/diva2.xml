@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mod name="diva" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:noNamespaceSchemaLocation="../story2.xsd">
+     xsi:noNamespaceSchemaLocation="../story2.rng">
     <state>
         <var name="status">0</var>
         <var name="firstLoss">true</var>
@@ -59,12 +59,11 @@
                 <item>RedVial</item>
             </loot>
         </combat>
-        <script>
+        <script language="lua">
             local scene
             ---@param me Creature
             function setup(me)
                 me.extra.biteCounter = 0
-                scene = coc.rootStory:locate('diva/combat'):bind(game.context)
             end
             ---@param me Creature
             function moveBite(me, target)
@@ -74,7 +73,7 @@
                     dam = dam + dam * 0.5
                 end
                 me.extra.biteCounter = me.extra.biteCounter + 1
-                scene.display('moves/bite')
+                mod.display('diva/combat/moves/bite')
                 dam = math.floor(dam + 0.5)
                 target:takePhysDamage(dam)
                 target:takePhysDamage(math.random(2, 5))
@@ -628,10 +627,10 @@
                 You ask Diva if she would mind giving you some blood.
 
                 <if test="player.batScore() gt 6 or player.vampireScore() gt 6">
-				She blush with embarrassment and reply <i>“Thy know thou could've just asked to drink straight from the tap I wouldn’t had minded. Perhaps another time.”</i>
-				<else/>
-				<i>“I wouldn’t mind [name] but be warned that it is highly infectious.”</i>
-				</if>
+                She blush with embarrassment and reply <i>“Thy know thou could've just asked to drink straight from the tap I wouldn’t had minded. Perhaps another time.”</i>
+                <else/>
+                <i>“I wouldn’t mind [name] but be warned that it is highly infectious.”</i>
+                </if>
 
                 She hands to you a vial right away.
             </text>

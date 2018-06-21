@@ -27,7 +27,7 @@ public class Story extends NamedNode {
 	 */
 	public function forceExecute(context:ExecContext):void {
 		context.debug(this,'enter');
-		super.execute(context);
+		body.execute(context);
 	}
 }
 }

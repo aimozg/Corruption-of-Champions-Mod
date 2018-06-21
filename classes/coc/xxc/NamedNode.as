@@ -28,6 +28,9 @@ public class NamedNode extends Declaration {
 		if (child.name in lib) throw new Error("Duplicate story name " + child.name);
 		lib[child.name] = child;
 	}
+	public function addLib(name:String):Story {
+		return new Story("lib",this,name,true);
+	}
 	public function locate(ref:String):NamedNode {
 		return locateSplit(this,ref.split("/"));
 	}

@@ -16,6 +16,7 @@ import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
 import classes.Items.*;
 import classes.Modding.GameMod;
+import classes.Modding.MonsterPrototype;
 import classes.Parser.Parser;
 import classes.Scenes.*;
 import classes.Scenes.NPCs.JojoScene;
@@ -367,25 +368,40 @@ public class CoC extends MovieClip
         mainView.hideSprite();
         //Hide up/down arrows
         mainView.statsView.hideUpDown();
-        new Story("lib",rootStory,"monsters",true);
+        rootStory.addLib("monsters");
         execPostInit();
         this.addFrameScript( 0, this.run );
         //setTimeout(this.run,0);
     }
 
     private function loadStory():void {
+		mainMenu.progressText = "Loading content files...";
         compiler.onLoad = initMods;
+        compiler.onProgress = loadingMods;
         compiler.includeFile("coc.xml", true);
 		mainMenu.mainMenu();
     }
+    private function loadingMods(compiler:StoryCompiler,nLoaded:int,nTotal:int):void {
+        mainMenu.progressText = "Loaded "+nLoaded+"/"+nTotal+" content files";
+    }
     private function initMods():void {
 		mods = compiler.mods.slice();
-        trace("loaded "+mods.length+" mods");
+		for each (var mod:GameMod in mods) {
+            mod.finishInit(this);
+		}
+		mainMenu.progressText = "Loaded "+mods.length+" mod(s) from "+compiler.includesTotal()+" content files";
 		//mainMenu.mainMenu();
     }
     public function findMod(name:String):GameMod {
 		for each (var mod:GameMod in mods) {
             if (mod.name == name) return mod;
+		}
+        return null;
+    }
+    public function findModMonster(id:String):MonsterPrototype {
+		for each (var mod:GameMod in mods) {
+            var mon:MonsterPrototype = mod.findMonsterPrototype(id);
+            if (mon) return mon;
 		}
         return null;
     }

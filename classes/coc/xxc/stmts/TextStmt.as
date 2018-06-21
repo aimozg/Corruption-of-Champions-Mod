@@ -8,6 +8,7 @@ import classes.internals.Utils;
 import coc.script.Eval;
 import coc.xlogic.ExecContext;
 import coc.xlogic.Statement;
+import coc.xxc.StoryContext;
 
 public class TextStmt extends Statement {
 	public static const TRIMSTYLE_NONE:int = 0;
@@ -42,8 +43,7 @@ public class TextStmt extends Statement {
 	}
 
 	override public function execute(context:ExecContext):void {
-		context.debug(this,'print');
-		EngineCore.outputText(content);
+		(context as StoryContext).output(content);
 	}
 
 	public function toString():String {

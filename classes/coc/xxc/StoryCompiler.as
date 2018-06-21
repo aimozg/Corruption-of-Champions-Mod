@@ -15,7 +15,8 @@ public class StoryCompiler extends Compiler {
 	private var _basedir:String;
 	public var mods:/*GameMod*/Array = [];
 	private var _includes:/*IncludeStmt*/Array = [];
-	public var onLoad:Function = null;
+	public var onLoad:Function = null; // (StoryCompiler)->void or ()->void
+	public var onProgress:Function = null; // (StoryCompiler, loaded:int, total:int)->void
 
 	public function get basedir():String {
 		return _basedir;
@@ -60,15 +61,27 @@ public class StoryCompiler extends Compiler {
 			return compileTag(tag,x);
 		}
 	}
+	public function compileModMonster(mod:GameMod, x:XML):MonsterPrototype {
+		var monsterPrototype:MonsterPrototype = new MonsterPrototype(mod, x);
+		mod.monsterList.push(monsterPrototype);
+		if ('desc' in x) {
+			stack.unshift(monsterPrototype.localStory);
+			compileStoryBody(new Story('desc', stack[0], '$desc', false), x.desc[0]);
+			stack.shift();
+		}
+		// TODO scripts
+		return monsterPrototype;
+	}
 	public function compileMod(x:XML):ModStmt {
 		var name:String    = x.@name;
 		var stmt:ModStmt   = new ModStmt(name, x.@version, stack[0]);
+		stack.unshift(stmt);
 		var mod:GameMod = stmt.mod;
 		for each(var item:XML in x.elements()) {
 			var tag:String = item.localName();
 			switch (tag) {
 				case 'monster':
-					mod.monsterList.push(new MonsterPrototype(mod, item));
+					compileModMonster(mod,item);
 					break;
 				case 'state':
 				case 'import':
@@ -82,6 +95,7 @@ public class StoryCompiler extends Compiler {
 					unknownTag(tag,item);
 			}
 		}
+		stack.shift();
 		return stmt;
 	}
 	override protected function compileTag(tag:String, x:XML):Statement {
@@ -151,8 +165,9 @@ public class StoryCompiler extends Compiler {
 	}
 	public function includeLoaded(stmt:IncludeStmt):void {
 		// TODO @aimozg properly register and kick compiler callback when some of the includes failed to load
-		
-		trace('loaded ' + includesLoaded() + '/' + includesTotal());
+		if (onProgress != null) {
+			onProgress(this,includesLoaded(),includesTotal());
+		}
 		if (isFullyLoaded()) {
 			if (onLoad != null) {
 				if (onLoad.length == 1) {

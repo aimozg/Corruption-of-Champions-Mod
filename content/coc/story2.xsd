@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xs:import namespace="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="xsi.xsd"/>
     <!--
         #############################################
         mod structure
@@ -14,6 +15,7 @@
             </xs:sequence>
             <xs:attribute name="name" use="required"/>
             <xs:attribute name="version"/>
+            <xs:attribute ref="xsi:noNamespaceSchemaLocation"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="import">
@@ -92,24 +94,16 @@
             <xs:attribute name="base"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="name">
-        <xs:complexType mixed="true">
-            <xs:group ref="content"/>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="name" type="xs:string"/>
     <xs:element name="desc">
         <xs:complexType mixed="true">
-            <xs:group ref="content"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="plural">
         <xs:complexType/>
     </xs:element>
-    <xs:element name="a">
-        <xs:complexType mixed="true">
-            <xs:group ref="content"/>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="a" type="xs:string"/>
     <xs:element name="pronouns">
         <xs:complexType>
             <xs:attribute name="he" use="required"/>
@@ -119,7 +113,13 @@
     </xs:element>
     <xs:element name="script">
         <xs:complexType mixed="true">
-            <xs:attribute name="language"/>
+            <xs:attribute name="language">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="lua"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="body">
@@ -294,13 +294,26 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="bonusHP" type="xs:string"/>
-    <xs:element name="loot" type="loot"/>
-    <xs:complexType name="loot">
-        <xs:sequence>
-            <xs:element ref="item"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:element name="item" type="xs:string"/>
+    <xs:element name="loot">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="gems"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="item"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="gems">
+        <xs:complexType mixed="true">
+            <xs:attribute name="min"/>
+            <xs:attribute name="max"/>
+            <xs:attribute name="value"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="item">
+        <xs:complexType mixed="true">
+            <xs:attribute name="weight"/>
+        </xs:complexType>
+    </xs:element>
     <!--
         #############################################
         textual content

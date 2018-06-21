@@ -5,6 +5,7 @@ package coc.xxc {
 import classes.Appearance;
 import classes.BodyParts.Skin;
 import classes.CockTypesEnum;
+import classes.EngineCore;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
 import classes.Scenes.SceneLib;
@@ -13,6 +14,29 @@ import coc.xlogic.ExecContext;
 
 public class StoryContext extends ExecContext{
 	public var game:CoC;
+	private var _recording:Boolean = false;
+	public var outputBuffer:String = "";
+	public function get recording():Boolean {
+		return _recording;
+	}
+	public function output(content:String):void {
+		debug(this,'print');
+		if (_recording) {
+			outputBuffer += content;
+		} else {
+			EngineCore.outputText(content);
+		}
+	}
+	public function startRecording():void {
+		outputBuffer = "";
+		_recording   = true;
+	}
+	public function stopRecording():String {
+		var s:String = outputBuffer;
+		outputBuffer = "";
+		_recording   = true;
+		return s;
+	}
 	public function StoryContext(game:CoC) {
 		super([
 			game,

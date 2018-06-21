@@ -10,7 +10,7 @@ public class ModStmt extends NamedNode {
 	public var mod:GameMod;
 	public function ModStmt(name:String, version:int, parent:NamedNode) {
 		super("mod", parent, name);
-		this.mod = new GameMod(name,version);
+		this.mod = new GameMod(name,version,this);
 	}
 }
 }

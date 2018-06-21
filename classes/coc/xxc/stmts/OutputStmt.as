@@ -7,6 +7,7 @@ import classes.EngineCore;
 import coc.script.Eval;
 import coc.xlogic.ExecContext;
 import coc.xlogic.Statement;
+import coc.xxc.StoryContext;
 
 public class OutputStmt extends Statement{
 	private var content:Eval;
@@ -17,7 +18,7 @@ public class OutputStmt extends Statement{
 	override public function execute(context:ExecContext):void {
 		var value:String = ""+content.vcall(context.scopes);
 		context.debug(this,'value = "'+Eval.escapeString(value)+'"');
-		EngineCore.outputText(""+ value);
+		(context as StoryContext).output(""+ value);
 	}
 
 	public function toString():String {
