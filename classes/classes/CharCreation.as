@@ -75,6 +75,7 @@
 		public function newGameGo():void {
 			CoC.instance.mainMenu.hideMainMenu();
 			XXCNPC.unloadSavedNPCs();
+			CoC.instance.resetMods();
 			mainView.eventTestInput.x = -10207.5;
 			mainView.eventTestInput.y = -1055.1;
 			hideStats();

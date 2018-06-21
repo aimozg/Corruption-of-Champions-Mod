@@ -392,6 +392,11 @@ public class CoC extends MovieClip
 		mainMenu.progressText = "Loaded "+mods.length+" mod(s) from "+compiler.includesTotal()+" content files";
 		//mainMenu.mainMenu();
     }
+    public function resetMods():void {
+		for each (var mod:GameMod in mods) {
+            mod.reset();
+		}
+    }
     public function findMod(name:String):GameMod {
 		for each (var mod:GameMod in mods) {
             if (mod.name == name) return mod;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<extend-story name="appearance" xmlns="xxc-story">
+<extend-story name="appearance" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="story.xsd">
     <text name="race">
         <if test="player.race() != player.startingRace">
             <string>You began your journey as a <output>player.startingRace</output>, but gave that up as you explored the dangers of this realm.

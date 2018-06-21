@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--content/coc/desert.xml-->
-<extend-zone name="desert" xmlns="xxc-story">
+<extend-zone name="desert" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="story.xsd">
     <lib name="strings">
         <lib name="chest">
             <text name="a">

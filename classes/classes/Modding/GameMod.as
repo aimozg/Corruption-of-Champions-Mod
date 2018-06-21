@@ -8,12 +8,14 @@ import classes.internals.Utils;
 
 import coc.lua.LuaEngine;
 import coc.lua.LuaNamespace;
+import coc.script.Eval;
 import coc.xxc.NamedNode;
 
 public class GameMod implements Jsonable {
 	public var name:String;
 	public var version:int;
 	public var state:Object    = {};
+	public var initialState:Object    = {}; // Scripts to eval, not values
 	private var _lua:LuaEngine;
 	private var _ns:LuaNamespace;
 	private var _script:String = "";
@@ -21,6 +23,7 @@ public class GameMod implements Jsonable {
 	private var _compiled:Boolean = false;
 	public var story:NamedNode;
 	public var monsterList:/*MonsterPrototype*/Array = [];
+	private var game:CoC;
 	public function GameMod(name:String, version:int, story:NamedNode) {
 		this.name = name;
 		this.version = version || 1;
@@ -29,49 +32,60 @@ public class GameMod implements Jsonable {
 	public function set lua(value:LuaEngine):void {
 		if (this._lua == value) return;
 		_lua = value;
-		_ns = _lua.createNamespace(name);
-		_ns.expose('ModState', state);
 		if (_script != "") {
-			_ns.eval(_script);
+			ns.eval(_script);
 			_compiled = true;
 		}
 	}
 	public function set script(value:String):void {
 		_script = value;
-		if (_ns != null && !_compiled) {
-			if (_script!="") _ns.eval(_script);
+		if (ns != null && !_compiled) {
+			if (_script!="") ns.eval(_script);
 			_compiled = true;
 		}
 	}
+	public function get ns():LuaNamespace {
+		if (!_ns && _lua) {
+			_ns = _lua.createNamespace(name);
+			_ns.expose('ModState', state);
+		}
+		return _ns;
+	}
 	public function finishInit(game:CoC):void {
+		this.game = game;
 		for each (var mp:MonsterPrototype in monsterList) {
 			if (mp.baseId) mp.base = game.findModMonster(mp.baseId);
 		}
 		_initialized = true;
+		reset();
+	}
+	public function reset():void {
+		state = {};
+		for (var s:String in initialState) state[s] = Eval.eval(game,initialState[s]);
 	}
 	public function scriptHas(fname:String):Boolean {
 		if (!_initialized) throw new Error("Mod not initialized");
-		return _ns.contains(fname);
+		return ns.contains(fname);
 	}
 	public function scriptGet(propname:String):* {
 		if (!_initialized) throw new Error("Mod not initialized");
-		return _ns.get(propname);
+		return ns.get(propname);
 	}
 	public function scriptSet(propname:String, propvalue:*):void {
 		if (!_initialized) throw new Error("Mod not initialized");
 		if (typeof propvalue == 'object' || typeof propvalue == 'function') {
-			_ns.expose(propname, propvalue);
+			ns.expose(propname, propvalue);
 		} else {
-			_ns.set(propname, propvalue);
+			ns.set(propname, propvalue);
 		}
 	}
 	public function scriptCall(fname:String, ...args):* {
 		if (!_initialized) throw new Error("Mod not initialized");
-		return _ns.callv(fname,args);
+		return ns.callv(fname,args);
 	}
 	public function scriptCallV(fname:String, args:Array):* {
 		if (!_initialized) throw new Error("Mod not initialized");
-		return _ns.callv(fname,args);
+		return ns.callv(fname,args);
 	}
 	public function upgrade(fromVersion:int, oldData:Object):void {
 		if (scriptHas("upgrade")) {
@@ -89,10 +103,10 @@ public class GameMod implements Jsonable {
 		};
 	}
 	public function loadFromObject(o:Object, ignoreErrors:Boolean):void {
+		reset();
 		if (o.version != version) {
 			upgrade(o.version, o.state);
 		} else {
-			state = {};
 			Utils.copyObject(state, o.state);
 		}
 	}

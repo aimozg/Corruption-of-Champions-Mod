@@ -84,12 +84,18 @@ public class StoryCompiler extends Compiler {
 					compileModMonster(mod,item);
 					break;
 				case 'state':
+					for each(var subitem:XML in item.elements('var')) {
+						mod.initialState[subitem.@name] = subitem.text();
+					}
+					break;
 				case 'import':
 				case 'hook':
+					trace('[WARNING] Not yet implemented');
+					break;
 				case 'lib':
 				case 'text':
 				case 'scene':
-					trace('[WARNING] Not yet implemented');
+					compileStory(item,true);
 					break;
 				default:
 					unknownTag(tag,item);
@@ -203,12 +209,14 @@ public class StoryCompiler extends Compiler {
 	}
 	protected function compileSet(x:XML):SetStmt {
 		var attrs:* = attrMap(x);
-		var expr:String,op:String;
+		var expr:String,op:String,inObj:String;
 		if ('value' in attrs) expr = attrs['value'];
 		else expr = "'"+Eval.escapeString(x.text().toString())+"'";
 		if ('op' in attrs) op = attrs['op'];
 		else op = '=';
-		return new SetStmt(attrs['var'],expr,op);
+		if ('in' in attrs) inObj = attrs['in'];
+		else inObj = '';
+		return new SetStmt(attrs['var'],expr,op,inObj);
 	}
 	protected function compileStory(x:XML, isLib:Boolean = false):Story {
 		return compileStoryBody(new Story(x.localName(),stack[0], x.@name, isLib), x);

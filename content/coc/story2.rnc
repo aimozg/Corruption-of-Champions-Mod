@@ -7,15 +7,15 @@ mod = element mod {
     attribute name { text },
     attribute version { text }?,
     attribute xsi:noNamespaceSchemaLocation { text }?,
-    import*,
+#    import*,
     state?,
     hook*,
 #    export*,
     exportable*
 }
-import = element import {
-    attribute ref { text }
-}
+#import = element import {
+#    attribute ref { text }
+#}
 state = element state {
     var*
 }
@@ -195,19 +195,23 @@ font = element font {
     content*
 }
 #xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone
-xcc-content = display | set # | xcc-named-content | | dynStats | output | Include
+xcc-content = display | set | output # | xcc-named-content | dynStats | Include
 #namedBlock = attribute name { text }?, content*
 #String = element string { namedBlock }
 set = element set {
     attribute var { text },
-    attribute value { expression }?,
+    attribute in { text }?,
     attribute op { 'append' | 'set' | 'add' | "+=" | '=' }?,
-    text*
+    (
+        attribute value { expression }
+        | text
+    )
 }
 display = element display {
     attribute ref { text },
     empty
 }
+output = element output { expression }
 #extend-story = element extend-story { namedBlock }
 #zone = element zone {
 #    namedBlock,
@@ -235,7 +239,6 @@ display = element display {
 #    attribute scale { expression }?,
 #    empty
 #}
-#output = element output { expression }
 #Include = element include {
 #    attribute path { text },
 #    attribute required { "true" | "false" }?,

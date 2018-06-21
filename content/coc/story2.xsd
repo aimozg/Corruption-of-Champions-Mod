@@ -8,7 +8,6 @@
     <xs:element name="mod">
         <xs:complexType>
             <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="import"/>
                 <xs:element minOccurs="0" ref="state"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="hook"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="exportable"/>
@@ -18,11 +17,11 @@
             <xs:attribute ref="xsi:noNamespaceSchemaLocation"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="import">
-        <xs:complexType>
-            <xs:attribute name="ref" use="required"/>
-        </xs:complexType>
-    </xs:element>
+    <!--
+        import = element import {
+           attribute ref { text }
+        }
+    -->
     <xs:element name="state">
         <xs:complexType>
             <xs:sequence>
@@ -126,7 +125,9 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="vagina"/>
-                <xs:element minOccurs="0" ref="breasts"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="penis"/>
+                <xs:element ref="balls"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="breasts"/>
                 <xs:element minOccurs="0" ref="anal"/>
                 <xs:element minOccurs="0" ref="height"/>
                 <xs:element minOccurs="0" ref="hips"/>
@@ -162,6 +163,19 @@
             </xs:attribute>
             <xs:attribute name="wetness"/>
             <xs:attribute name="looseness"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="penis">
+        <xs:complexType>
+            <xs:attribute name="length"/>
+            <xs:attribute name="thickness"/>
+            <xs:attribute name="type"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="balls">
+        <xs:complexType>
+            <xs:attribute name="count"/>
+            <xs:attribute name="size"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="breasts" type="xs:string"/>
@@ -349,14 +363,14 @@
     <!-- xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone -->
     <xs:element name="xcc-content" abstract="true"/>
     <!--
-        | xcc-named-content | | dynStats | output | Include
+        | xcc-named-content | dynStats | Include
         namedBlock = attribute name { text }?, content*
         String = element string { namedBlock }
     -->
     <xs:element name="set" substitutionGroup="xcc-content">
         <xs:complexType mixed="true">
             <xs:attribute name="var" use="required"/>
-            <xs:attribute name="value"/>
+            <xs:attribute name="in"/>
             <xs:attribute name="op">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -368,6 +382,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="value"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="display" substitutionGroup="xcc-content">
@@ -375,6 +390,7 @@
             <xs:attribute name="ref" use="required"/>
         </xs:complexType>
     </xs:element>
+    <xs:element name="output" substitutionGroup="xcc-content" type="xs:string"/>
     <!--
         extend-story = element extend-story { namedBlock }
         zone = element zone {
@@ -403,7 +419,6 @@
            attribute scale { expression }?,
            empty
         }
-        output = element output { expression }
         Include = element include {
            attribute path { text },
            attribute required { "true" | "false" }?,

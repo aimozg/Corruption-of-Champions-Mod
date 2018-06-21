@@ -282,7 +282,7 @@ public class ModMonster extends Monster {
 	}
 	
 	override public function get long():String {
-		if (descStory) return descStory.displayToString('.');
+		if (descStory) return descStory.displayToString('.',{$me:this,$mod:_mp.mod});
 		return super.long;
 	}
 	public function ModMonster(mp:MonsterPrototype) {

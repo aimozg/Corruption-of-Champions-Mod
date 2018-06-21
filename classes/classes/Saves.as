@@ -12,7 +12,8 @@ import classes.BodyParts.Tongue;
 import classes.GlobalFlags.kACHIEVEMENTS;
 import classes.GlobalFlags.kFLAGS;
 import classes.Items.*;
-	import classes.Scenes.Areas.Desert.SandWitchScene;
+import classes.Modding.GameMod;
+import classes.Scenes.Areas.Desert.SandWitchScene;
 	import classes.Scenes.Dungeons.DungeonAbstractContent;
 import classes.Scenes.NPCs.JojoScene;
 import classes.Scenes.NPCs.XXCNPC;
@@ -1167,6 +1168,10 @@ public function saveGameObject(slot:String, isFile:Boolean):void
 		for each(var npc:XXCNPC in XXCNPC.SavedNPCs){
 			npc.save(saveFile.data.world.x);
 		}
+		saveFile.data.world.mods = [];
+		for each(var mod:GameMod in CoC.instance.mods) {
+			saveFile.data.world.mods[mod.name] = mod.saveToObject();
+		}
 	}
 	catch (error:Error)
 	{
@@ -2299,7 +2304,15 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
                 ref["instance"].load(saveFile.data.world.x);
 			}
 		}
-		
+		if (saveFile.data.world.mods == undefined) saveFile.data.world.mods = [];
+		for each(var mod:GameMod in CoC.instance.mods) {
+			var d:* = saveFile.data.world.mods[mod.name];
+			if (d) {
+				mod.loadFromObject(d,true);
+			} else {
+				mod.reset();
+			}
+		}
 		player.dynStats();
 		doNext(playerMenu);
 	}

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--TODO @Oxdeception convert strings to XXC XML-->
-<story name="diva" xmlns="xxc-story">
+<story name="diva" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../story.xsd">
     <lib name="combat">
         <lib name="moves">
             <lib name="embrace">

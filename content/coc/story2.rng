@@ -16,10 +16,8 @@
             <optional>
                 <attribute name="xsi:noNamespaceSchemaLocation"/>
             </optional>
-            <zeroOrMore>
-                <ref name="import"/>
-            </zeroOrMore>
             <optional>
+                <!--    import*, -->
                 <ref name="state"/>
             </optional>
             <zeroOrMore>
@@ -31,11 +29,11 @@
             </zeroOrMore>
         </element>
     </define>
-    <define name="import">
-        <element name="import">
-            <attribute name="ref"/>
-        </element>
-    </define>
+    <!--
+        import = element import {
+           attribute ref { text }
+        }
+    -->
     <define name="state">
         <element name="state">
             <zeroOrMore>
@@ -182,11 +180,32 @@
                     </optional>
                 </element>
             </optional>
-            <optional>
+            <zeroOrMore>
+                <element name="penis">
+                    <optional>
+                        <attribute name="length"/>
+                    </optional>
+                    <optional>
+                        <attribute name="thickness"/>
+                    </optional>
+                    <optional>
+                        <attribute name="type"/>
+                    </optional>
+                </element>
+            </zeroOrMore>
+            <element name="balls">
+                <optional>
+                    <attribute name="count"/>
+                </optional>
+                <optional>
+                    <attribute name="size"/>
+                </optional>
+            </element>
+            <zeroOrMore>
                 <element name="breasts">
                     <text/>
                 </element>
-            </optional>
+            </zeroOrMore>
             <optional>
                 <element name="anal">
                     <optional>
@@ -511,10 +530,11 @@
         <choice>
             <ref name="display"/>
             <ref name="set"/>
+            <ref name="output"/>
         </choice>
     </define>
     <!--
-        | xcc-named-content | | dynStats | output | Include
+        | xcc-named-content | dynStats | Include
         namedBlock = attribute name { text }?, content*
         String = element string { namedBlock }
     -->
@@ -522,9 +542,7 @@
         <element name="set">
             <attribute name="var"/>
             <optional>
-                <attribute name="value">
-                    <ref name="expression"/>
-                </attribute>
+                <attribute name="in"/>
             </optional>
             <optional>
                 <attribute name="op">
@@ -537,15 +555,23 @@
                     </choice>
                 </attribute>
             </optional>
-            <zeroOrMore>
+            <choice>
+                <attribute name="value">
+                    <ref name="expression"/>
+                </attribute>
                 <text/>
-            </zeroOrMore>
+            </choice>
         </element>
     </define>
     <define name="display">
         <element name="display">
             <attribute name="ref"/>
             <empty/>
+        </element>
+    </define>
+    <define name="output">
+        <element name="output">
+            <ref name="expression"/>
         </element>
     </define>
     <!--
@@ -576,7 +602,6 @@
            attribute scale { expression }?,
            empty
         }
-        output = element output { expression }
         Include = element include {
            attribute path { text },
            attribute required { "true" | "false" }?,

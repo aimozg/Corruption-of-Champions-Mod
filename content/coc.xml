@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extend-story name="/" xmlns="xxc-story">
+<extend-story name="/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="coc/story.xsd">
     <!--Areas-->
     <include path="coc/desert.xml"/>
     <include path="coc/forest.xml"/>

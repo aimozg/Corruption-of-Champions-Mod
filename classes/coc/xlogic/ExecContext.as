@@ -13,11 +13,41 @@ public class ExecContext {
 	public function set scopes(value:Array):void {
 		_scopes = value;
 	}
-	public function getValue(varname:String):* {
+	public function getObject(path:String):* {
+		var p:/*String*/Array = path.split('.');
+		var o:* = getValue(p[0]);
+		for (var j:int = 1; j < p.length; j++) {
+			if (!o) {
+				trace("[ERROR] getObject('"+path+"') -> "+o);
+				return null;
+			}
+			o = o[p[j]];
+		}
+		if (!o) {
+			trace("[ERROR] getObject('"+path+"') -> "+o);
+		}
+		return o;
+	}
+	public function getValue(varname:String,inObj:String=""):* {
+		if (inObj) {
+			var obj:* = getObject(inObj);
+			if (obj) return obj[varname];
+			return undefined;
+		}
 		for each (var s:* in _scopes) if (varname in s) return s[varname];
 		return undefined;
 	}
-	public function setValue(varname:String,value:*):void {
+	public function setValue(varname:String,value:*,inObj:String=""):void {
+		if (inObj) {
+			var obj:* = getObject(inObj);
+			if (obj) {
+				obj[varname] = value;
+				return;
+			}
+			// TODO log error
+			_scopes[0][varname] = value;
+			return;
+		}
 		for each (var s:* in _scopes) {
 			if (varname in s) {
 				s[varname] = value;

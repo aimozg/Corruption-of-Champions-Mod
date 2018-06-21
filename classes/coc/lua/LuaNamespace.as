@@ -17,6 +17,9 @@ public class LuaNamespace {
 	public function remove():void {
 		lua.removeNamespace(name);
 	}
+	public function addChild(childName:String):LuaNamespace {
+		return lua.createNamespace(name+'.'+childName,name);
+	}
 	public function contains(memberName:String):Boolean {
 		return lua.checkNamespaceMember(name, memberName);
 	}

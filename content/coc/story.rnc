@@ -1,4 +1,4 @@
-default namespace = "xxc-story"
+# default namespace = "xxc-story"
 
 start = story | zone
 # core xlogic

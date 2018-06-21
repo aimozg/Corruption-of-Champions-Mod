@@ -27,7 +27,7 @@ class ForestScene { /*...*/
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!--content/coc/desert.xml-->
-<extend-story name="/" xmlns="xxc-story">
+<extend-story name="/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="story.xsd">
     <extend-zone name="forest">
         <lib name="strings">
             <text name="trip">
@@ -81,7 +81,7 @@ TODO
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!--content/coc/desert.xml-->
-<extend-zone name="desert" xmlns="xxc-story">
+<extend-zone name="desert" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="story.xsd">
     <encounter name="walk" chance="50" when="model.time.hours eq 23">
         <lib name="ss">
             <string name="intro">You walk through the shifting sands for an hour, finding nothing. </string>

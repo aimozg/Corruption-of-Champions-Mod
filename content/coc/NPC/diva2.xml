@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mod name="diva" version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:noNamespaceSchemaLocation="../story2.rng">
+     xsi:noNamespaceSchemaLocation="../story2.xsd">
     <state>
         <var name="status">0</var>
         <var name="firstLoss">true</var>
@@ -20,6 +20,9 @@
             Her red and black dress gives her quite the villainous look, while having some unfortunate consequences what with it having a skirt and she being a flyer.
             Somehow, she manages to keep herself from having a rather intimate reunion with the walls despite not looking at where she is flying in favour of drooling at the sight of your neck.
             Guess all that screeching has an actual purpose aside from annoying you.
+
+            $me.mp.id = <output>$me.mp.id</output>, $mod.name = <output>$mod.name</output>, $mod.state.timesReduced = <output>$mod.state.timesReduced</output>.
+            <set in="$mod.state" var="timesReduced" op="+=" value="1"/>
             <if test="$final">
                 Looks like she got one hell of a power-up thanks to your generous blood donations. Masochism much, Champ?
                 <if test="silly()">
@@ -59,7 +62,7 @@
                 <item>RedVial</item>
             </loot>
         </combat>
-        <script language="lua">
+        <script language="lua"><![CDATA[
             local scene
             ---@param me Creature
             function setup(me)
@@ -78,7 +81,7 @@
                 target:takePhysDamage(dam)
                 target:takePhysDamage(math.random(2, 5))
             end
-        </script>
+            ]]></script>
     </monster>
     <monster id="Diva_firstFight" base="Diva">
         <combat>

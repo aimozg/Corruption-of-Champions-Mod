@@ -5,16 +5,18 @@ import coc.xlogic.Statement;
 
 public class SetStmt extends Statement {
 	private var varname:String;
+	private var inObj:String;
 	private var content:Eval;
 	private var op:String;
-	public function SetStmt(varname:String,content:String,op:String="=") {
+	public function SetStmt(varname:String,content:String,op:String,inObj:String) {
 		this.varname = varname;
 		this.content = Eval.compile(content);
 		this.op = op;
+		this.inObj = inObj;
 	}
 
 	override public function execute(context:ExecContext):void {
-		var left:* = context.getValue(varname);
+		var left:* = context.getValue(varname,inObj);
 		var right:* = content.vcall(context.scopes);
 		var rslt:*;
 		switch (op) {
@@ -31,12 +33,12 @@ public class SetStmt extends Statement {
 				rslt = Eval.calculateOp(left,op,right);
 		}
 		context.debug(this,'left = '+left+', right = '+right+', rslt = '+rslt);
-		context.setValue(varname,rslt);
+		context.setValue(varname,rslt,inObj);
 	}
 
 
 	public function toString():String {
-		return '<set var="'+varname+'" value="'+content.src+'" op="'+op+'"/>'
+		return '<set in="' + inObj + '" var="'+varname+'" value="'+content.src+'" op="'+op+'"/>'
 	}
 }
 }

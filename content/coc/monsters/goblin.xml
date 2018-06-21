@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extend-story name="/monsters/goblin" xmlns="xxc-story">
+<extend-story name="/monsters/goblin" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../story.xsd">
     <lib name="strings">
         <lib name="defeated">
             <text name="intro">

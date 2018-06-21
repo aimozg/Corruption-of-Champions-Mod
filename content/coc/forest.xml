@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extend-story name="/" xmlns="xxc-story">
+<extend-story name="/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="story.xsd">
 	<extend-zone name="forest">
 		<lib name = "strings">
 			<text name="trip">
