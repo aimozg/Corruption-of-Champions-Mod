@@ -5,38 +5,46 @@ package coc.xxc {
 import coc.xlogic.ExecContext;
 
 public class BoundNode {
-	private var node:NamedNode;
-	private var context:ExecContext;
+	private var _node:NamedNode;
+	private var _context:ExecContext;
+	
+	public function get node():NamedNode {
+		return _node;
+	}
+	
+	public function get context():ExecContext {
+		return _context;
+	}
 	public function BoundNode(node:NamedNode, context:ExecContext) {
-		this.node = node;
-		this.context = context;
+		this._node    = node;
+		this._context = context;
 	}
 	public function execute():void {
-		node.execute(context);
+		_node.execute(_context);
 	}
 	public function display(ref:String,locals:Object=null):void {
-		var obj:Story = node.locate(ref) as Story;
+		var obj:Story = _node.locate(ref) as Story;
 		if (!obj) {
-			context.error(node,"Cannot dereference "+ref);
+			_context.error(_node, "Cannot dereference " + ref);
 			return;
 		}
-		context.pushScope(locals||{});
-		obj.forceExecute(context);
-		context.popScope();
+		_context.pushScope(locals || {});
+		obj.forceExecute(_context);
+		_context.popScope();
 	}
 	public function displayToString(ref:String,locals:Object=null):String {
-		var storyContext:StoryContext = (context as StoryContext);
+		var storyContext:StoryContext = (_context as StoryContext);
 		storyContext.startRecording();
 		display(ref,locals);
 		return storyContext.stopRecording();
 	}
 	public function locate(ref:String):BoundNode {
-		var obj:NamedNode = node.locate(ref);
+		var obj:NamedNode = _node.locate(ref);
 		if (!obj) {
-			context.error(node,"Cannot dereference "+ref);
+			_context.error(_node, "Cannot dereference " + ref);
 			return null;
 		}
-		return new BoundNode(obj,context);
+		return new BoundNode(obj,_context);
 	}
 }
 }

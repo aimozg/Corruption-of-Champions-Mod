@@ -38,7 +38,7 @@ import coc.xxc.Story;
 
 public class ModMonster extends Monster {
 	private var _mp:MonsterPrototype;
-	public var extra:Object;
+	public var extra:Object = {};
 	
 	public function get mp():MonsterPrototype {
 		return _mp;
@@ -52,6 +52,15 @@ public class ModMonster extends Monster {
 		if ('@desc' in data) layer.desc = data.@desc;
 	}
 	private var descStory:BoundNode;
+	private function callFunctionSimple(fn:String,args:Array):* {
+		return mp.ns.callSimpleV(fn,args);
+	}
+	private function callFunctionComplex(fn:String,args:Array):* {
+		return mp.ns.callComplexV(fn,args);
+	}
+	private function hasFunction(fn:String):Boolean {
+		return mp.ns.contains(fn);
+	}
 	internal function setup(src:MonsterPrototype):void {
 		if (src.base) setup(src.base);
 		for each(var xml:XML in src.descriptor.elements()) {
@@ -62,7 +71,7 @@ public class ModMonster extends Monster {
 					break;
 				case 'desc':
 					if (xml.hasComplexContent()) {
-						this.descStory = src.localStory.locate('$desc').bind(game.context);
+						this.descStory = src.localStory.locate('$desc');
 					} else {
 						this.long = xml.text();
 					}
@@ -279,8 +288,20 @@ public class ModMonster extends Monster {
 		// 16. Tail
 		/*OPTIONAL*/ //this.tailVenom = ; // default 0
 		/*OPTIONAL*/ //this.tailRecharge = ; // default 5
+		if (src.ns.contains('setup')) {
+			// setup(me)
+			src.ns.callComplex('setup',this);
+		}
 	}
 	
+	override protected function performCombatAction():void {
+		if (hasFunction('performCombatAction')) {
+			// performCombatAction(me, target)
+			callFunctionComplex('performCombatAction', [this, player]);
+		} else {
+			super.performCombatAction();
+		}
+	}
 	override public function get long():String {
 		if (descStory) return descStory.displayToString('.',{me:this,mod:_mp.mod});
 		return super.long;

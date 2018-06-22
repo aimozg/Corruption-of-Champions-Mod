@@ -65,15 +65,16 @@ public class StoryCompiler extends Compiler {
 		}
 	}
 	public function compileModMonster(mod:GameMod, x:XML):MonsterPrototype {
-		var monsterPrototype:MonsterPrototype = new MonsterPrototype(mod, x);
-		mod.monsterList.push(monsterPrototype);
+		var mp:MonsterPrototype = new MonsterPrototype(mod, x);
+		mod.monsterList.push(mp);
+		var node:Story = stack[0].addLib("$monster_"+mp.id);
 		if ('desc' in x) {
-			stack.unshift(monsterPrototype.localStory);
+			stack.unshift(node);
 			compileStoryBody(new Story('desc', stack[0], '$desc', false), x.desc[0]);
 			stack.shift();
 		}
 		// TODO scripts
-		return monsterPrototype;
+		return mp;
 	}
 	public function compileMod(x:XML):ModStmt {
 		var name:String    = x.@name;
@@ -96,7 +97,7 @@ public class StoryCompiler extends Compiler {
 					break;
 				case 'import':
 				case 'hook':
-					trace('[WARNING] Not yet implemented');
+					trace('[WARNING] Not yet implemented mod/'+tag);
 					break;
 				case 'lib':
 				case 'text':

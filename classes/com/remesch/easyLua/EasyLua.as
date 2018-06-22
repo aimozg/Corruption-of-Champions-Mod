@@ -135,9 +135,13 @@ package com.remesch.easyLua
       // Easy Lua is designed to make working with AS3 + Lua as easy as possible.
       // By collecting garbage after every eval(), I hope to prevent inefficient Lua
       // scripts from hogging memory (especially on mobile devices).
-      Lua.lua_gc(_luaState, Lua.LUA_GCCOLLECT, 0);
+      gc();
 
       return result;
+    }
+    
+    public function gc():void {
+        Lua.lua_gc(_luaState, Lua.LUA_GCCOLLECT, 0);
     }
 
     public function evalEmbedded(klass:Class):* {

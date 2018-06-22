@@ -24,7 +24,7 @@
             mod.state.firstLoss = o.firstLoss;
             mod.state.tookVialToday = o.tookVialToday;
             mod.state.timesReduced = o.timesReduced;
-            mod.state.status = o.status;
+            mod.state.bloodUsed = o.bloodUsed;
         end
     </script>
     <monster id="Diva">
@@ -38,8 +38,7 @@
             Somehow, she manages to keep herself from having a rather intimate reunion with the walls despite not looking at where she is flying in favour of drooling at the sight of your neck.
             Guess all that screeching has an actual purpose aside from annoying you.
 
-            $me.mp.id = <output>$me.mp.id</output>, mod.name = <output>mod.name</output>, mod.state.timesReduced = <output>mod.state.timesReduced</output>.
-            <set in="mod.state" var="timesReduced" op="+=" value="1"/>
+            me.mp.id = <output>me.mp.id</output>, mod.name = <output>mod.name</output>, me.extra.biteCounter = <output>me.extra.biteCounter</output>.
             <if test="$final">
                 Looks like she got one hell of a power-up thanks to your generous blood donations. Masochism much, Champ?
                 <if test="silly()">
@@ -83,20 +82,27 @@
             local scene
             ---@param me Creature
             function setup(me)
+                print('called setup')
                 me.extra.biteCounter = 0
+                me.extra.sonicScreamCooldown = 0
             end
             ---@param me Creature
             function moveBite(me, target)
+                print('called moveBite')
                 me:addHP(me:maxHP() * 0.2)
-                local dam = me.str() * 2
+                local dam = me.str * 2
                 for i = 1, me.extra.biteCounter do
                     dam = dam + dam * 0.5
                 end
                 me.extra.biteCounter = me.extra.biteCounter + 1
-                mod.display('diva/combat/moves/bite')
+                mod:display('combat/moves/bite')
                 dam = math.floor(dam + 0.5)
                 target:takePhysDamage(dam)
                 target:takePhysDamage(math.random(2, 5))
+            end
+
+            function performCombatAction(me, enemy)
+                moveBite(me, enemy)
             end
             ]]></script>
     </monster>

@@ -3,6 +3,7 @@
  */
 package classes.Modding {
 import coc.lua.LuaNamespace;
+import coc.xxc.BoundNode;
 import coc.xxc.NamedNode;
 
 public class MonsterPrototype {
@@ -16,9 +17,6 @@ public class MonsterPrototype {
 	public function get descriptor():XML {
 		return _descriptor;
 	}
-	public function initialized():Boolean {
-		return base != null || !('@base' in descriptor); // TODO and scripts called
-	}
 	public function get baseId():String {
 		return descriptor.@base;
 	}
@@ -31,12 +29,17 @@ public class MonsterPrototype {
 	}
 	public var id:String;
 	public var base:MonsterPrototype;
-	public var localStory:NamedNode;
+	private var _localStory:BoundNode;
+	public function get localStory():BoundNode {
+		if (!_localStory) _localStory = mod.story.locate("$monster_"+id);
+		return _localStory;
+	}
 	public function MonsterPrototype(mod:GameMod, descriptor:XML) {
 		this._mod        = mod;
 		this._descriptor = descriptor;
 		this.id = descriptor.@id;
-		this.localStory = mod.story.addLib("$monster_"+id);
+	}
+	public function finishInit():void {
 	}
 	public function spawn():ModMonster {
 		return new ModMonster(this);

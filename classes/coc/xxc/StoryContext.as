@@ -34,7 +34,7 @@ public class StoryContext extends ExecContext{
 	public function stopRecording():String {
 		var s:String = outputBuffer;
 		outputBuffer = "";
-		_recording   = true;
+		_recording   = false;
 		return s;
 	}
 	public function StoryContext(game:CoC) {

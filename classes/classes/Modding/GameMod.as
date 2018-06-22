@@ -9,6 +9,7 @@ import classes.internals.Utils;
 import coc.lua.LuaEngine;
 import coc.lua.LuaNamespace;
 import coc.script.Eval;
+import coc.xxc.BoundNode;
 import coc.xxc.NamedNode;
 
 public class GameMod implements Jsonable {
@@ -22,22 +23,14 @@ public class GameMod implements Jsonable {
 	private var _newScript:String = "";
 	private var _initialized:Boolean = false;
 	private var _compiled:Boolean = false;
-	public var story:NamedNode;
+	private var _unboundNode:NamedNode;
+	public var story:BoundNode;
 	public var monsterList:/*MonsterPrototype*/Array = [];
 	private var game:CoC;
 	public function GameMod(name:String, version:int, story:NamedNode) {
 		this.name = name;
 		this.version = version || 1;
-		this.story = story;
-	}
-	public function set lua(value:LuaEngine):void {
-		if (this._lua == value) return;
-		_lua = value;
-		if (_script != "") {
-			ns.eval(_script);
-			_newScript = "";
-			_compiled = true;
-		}
+		this._unboundNode = story;
 	}
 	public function addScript(value:String):void {
 		if (_script) _script += "\n";
@@ -48,6 +41,8 @@ public class GameMod implements Jsonable {
 			if (_newScript) ns.eval(_newScript);
 			_compiled = true;
 			_newScript = "";
+		} else {
+			_compiled = false;
 		}
 	}
 	public function get ns():LuaNamespace {
@@ -62,12 +57,25 @@ public class GameMod implements Jsonable {
 	}
 	public function finishInit(game:CoC):void {
 		this.game = game;
-		this.lua = game.lua;
+		_lua = game.lua;
+		if (_script != "") {
+			ns.eval(_script);
+			_newScript = "";
+			_compiled = true;
+		}
+		story = _unboundNode.bind(game.context);
 		for each (var mp:MonsterPrototype in monsterList) {
 			if (mp.baseId) mp.base = game.findModMonster(mp.baseId);
+			mp.finishInit();
+			for each (var script:XML in mp.descriptor.script) {
+				mp.ns.eval(script.text());
+			}
 		}
 		_initialized = true;
 		reset();
+	}
+	public function display(ref:String,locals:Object=null):void {
+		story.display(ref,locals);
 	}
 	public function reset():void {
 		state = {};
@@ -92,17 +100,17 @@ public class GameMod implements Jsonable {
 			ns.set(propname, propvalue);
 		}
 	}
-	public function scriptCall(fname:String, ...args):* {
+	public function scriptCallSimple(fname:String, ...args):* {
 		verifyInitialized();
-		return ns.callv(fname,args);
+		return ns.callSimpleV(fname,args);
 	}
-	public function scriptCallV(fname:String, args:Array):* {
+	public function scriptCallSimpleV(fname:String, args:Array):* {
 		verifyInitialized();
-		return ns.callv(fname,args);
+		return ns.callSimpleV(fname,args);
 	}
 	public function upgrade(fromVersion:int, oldData:Object):void {
 		if (scriptHas("upgrade")) {
-			scriptCall("upgrade",fromVersion,oldData)
+			scriptCallSimple("upgrade",fromVersion,oldData)
 		} else {
 			// default upgrade: just copy if dest exist
 			Utils.copyObjectEx(state, oldData, Utils.keys(state));

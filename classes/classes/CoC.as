@@ -215,7 +215,11 @@ public class CoC extends MovieClip
         this.stage.addChild( this.mainView );
     }
     private function _postInit(e:Event):void {
-        this.lua = new LuaEngine();
+        try {
+            this.lua = new LuaEngine();
+        } catch (e:Error) {
+            trace(e.getStackTrace());
+        }
         PerkLib.initDependencies();
         // Hooking things to MainView.
         this.mainView.onNewGameClick = charCreation.newGameGo;
@@ -385,11 +389,16 @@ public class CoC extends MovieClip
         mainMenu.progressText = "Loaded "+nLoaded+"/"+nTotal+" content files";
     }
     private function initMods():void {
-		mods = compiler.mods.slice();
-		for each (var mod:GameMod in mods) {
-            mod.finishInit(this);
-		}
-		mainMenu.progressText = "Loaded "+mods.length+" mod(s) from "+compiler.includesTotal()+" content files";
+        if (lua) {
+			mods = compiler.mods.slice();
+			for each (var mod:GameMod in mods) {
+				mod.finishInit(this);
+			}
+			mainMenu.progressText = "Loaded " + mods.length + " mod(s) from " + compiler.includesTotal() + " content files";
+		} else {
+            mods = [];
+            mainMenu.progressText = "Loaded "  + compiler.includesTotal() + " content files, failed to load mods";
+        }
 		//mainMenu.mainMenu();
     }
     public function resetMods():void {
