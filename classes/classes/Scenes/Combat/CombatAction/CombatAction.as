@@ -1,17 +1,19 @@
-package classes.Scenes.Combat {
-
+package classes.Scenes.Combat.CombatAction {
+	import classes.BaseContent;
 	import classes.Creature;
 	import classes.EngineCore;
 	import classes.Monster;
 	import classes.PerkLib;
 	import classes.PerkType;
 	import classes.Player;
+	import classes.Scenes.Combat.*;
 	import classes.Scenes.SceneLib;
 	import classes.StatusEffectClass;
 	import classes.StatusEffectType;
 	import classes.StatusEffects;
 	import classes.internals.Utils;
 	import classes.lists.DamageType;
+	import classes.lists.Gender;
 
 	import coc.view.ButtonData;
 
@@ -19,9 +21,18 @@ package classes.Scenes.Combat {
 
 	public class CombatAction {
 		public static const KiAction:String = "KiAction";
+		public static const ManaAction:String = "ManaAction";
+		public static const FatigueAction:String = "FatigueAction";
+		public static const WrathAction:String = "WrathAction";
+
+		public static const AlignmentBlack:int = -1;
+		public static const AlignmentNone:int = 0;
+		public static const AlignmentWhite:int = 1;
 
 		private var _name:String;
 		private var _cost:int;
+		private var _alignment:int = 0;
+		private var _healCost:Boolean = false;
 		private var _actionType:String;
 		private var _lastActionType:int;
 		private var _action:Function;
@@ -36,6 +47,8 @@ package classes.Scenes.Combat {
 
 		private var _dodgeEnable:Boolean = false;
 		private var _dodgeAttack:String = "";
+
+		private var _failReasons:Array = [];
 
 		private var _damage:Array = [];
 		private var _statuses:Array = [];
@@ -146,9 +159,9 @@ package classes.Scenes.Combat {
 				damage.push({value:_action(host, target), type:DamageType.PHYSICAL});
 			}
 
-			if (_dodgeEnable) {
-				if (dodgeRoll(host, target)) {
-					return endAction(host, target, [{type:null,value:0}]);
+			for each (var failChance:Function in _failReasons){
+				if(failChance(host,target)){
+					return endAction(host, target, [{type:null, value:0}])
 				}
 			}
 
@@ -161,15 +174,8 @@ package classes.Scenes.Combat {
 
 			var crit:Boolean = critRoll(host, target);
 
-			//todo statuses that only apply on crit
 			for each (var proc:StatusProc in _statuses) {
-				if ((!proc.critonly || crit) && Utils.rand(100) <= proc.chance) {
-					if (proc.self) {
-						host.createStatusEffect(proc.stype, proc.dur, 0, 0, 0)
-					} else {
-						target.createStatusEffect(proc.stype, proc.dur, 0, 0, 0)
-					}
-				}
+				proc.apply(host,target,crit);
 			}
 			if(damage.length == 0){
 				damage.push({value:0, type:DamageType.PHYSICAL})
@@ -200,6 +206,12 @@ package classes.Scenes.Combat {
 			switch (_actionType) {
 				case KiAction:
 					return bd.requireKi(cost);
+				case ManaAction:
+					return bd.requireMana(host.spellCost(cost, _alignment,_healCost),!_healCost);
+				case FatigueAction:
+					return bd.requireFatigue(host.spellCost(cost,_alignment,_healCost),!_healCost);
+				case WrathAction:
+					return bd.requireWrath(cost);
 				default:
 					return bd.requireFatigue(cost);
 			}
@@ -215,9 +227,41 @@ package classes.Scenes.Combat {
 				case KiAction:
 					host.ki -= cost;
 					break;
+				case ManaAction:
+					SceneLib.combat.useManaImpl(cost,costType);
+					break;
+				case FatigueAction:
+					EngineCore.fatigue(cost, costType);
+					break;
 				default:
 					host.fatigue += cost;
 			}
+		}
+
+		/**
+		 * Converts actiontype + alignment + heal to cost type for fatigue or useMana
+		 */
+		private function get costType():int{
+			//todo @Oxdeception some of these should be moved and simplified
+			if (_actionType == ManaAction) {
+				if (_alignment == AlignmentBlack) {
+					return _healCost ? Combat.USEMANA_BLACK_HEAL : Combat.USEMANA_BLACK;
+				}
+				if (_alignment == AlignmentWhite) {
+					return _healCost ? Combat.USEMANA_WHITE_HEAL : Combat.USEMANA_WHITE;
+				}
+				return Combat.USEMANA_MAGIC;
+			}
+			if (_actionType == FatigueAction) {
+				if (_alignment == AlignmentBlack) {
+					return _healCost ? BaseContent.USEFATG_BLACK_NOBM : BaseContent.USEFATG_BLACK;
+				}
+				if (_alignment == AlignmentWhite) {
+					return _healCost ? BaseContent.USEFATG_MAGIC_NOBM : BaseContent.USEFATG_WHITE;
+				}
+				return BaseContent.USEFATG_NORMAL
+			}
+			return 0;
 		}
 
 		/**
@@ -274,7 +318,7 @@ package classes.Scenes.Combat {
 		 * @return the instance of the class to allow method chaining
 		 */
 		public function enableDodge(attackText:String):CombatAction {
-			_dodgeEnable = true;
+			_failReasons.push(dodgeRoll);
 			_dodgeAttack = attackText;
 			return this;
 		}
@@ -357,6 +401,7 @@ package classes.Scenes.Combat {
 		 */
 		private function endAction(host:Creature, target:Creature, damage:Array):void {
 			//fixme @oxdeception move below into combat?
+			//todo @Oxdeception spell specifics
 			if (!(host is Player)) {
 				SceneLib.combat.combatRoundOver()
 			} else {
@@ -549,23 +594,71 @@ package classes.Scenes.Combat {
 			_stunTurns = turns;
 			return this;
 		}
-	}
-}
 
-import classes.StatusEffectType;
+		/**
+		 * Adds the default black magic fail chance and text
+		 * @param baseChance the base chance to fail out of 100
+		 * @param intReducePercent how much intelligence should reduce the chance to fail
+		 * @param min the lowest chance to fail allowed out of 100
+		 * @return the instance of the class to allow method chaining
+		 */
+		public function blackMagicFail(baseChance:int = 30, intReducePercent:Number = 0.15, min:int = 15):CombatAction {
+			_failReasons.push(
+					function(host:Creature, target:Creature):Boolean {
+						if(!Utils.randomChance(Math.max(baseChance - (host.inte * intReducePercent), min))){
+							return false;
+						}
+						var text:String = "An errant sexual thought crosses your mind, and you lose control of the spell!  Your ";
+						switch(host.gender){
+							case Gender.GENDER_MALE: text += "[cocks] twitch[if(cocks <= 1)es] obscenely and drip[if(cocks <=1)s] with pre-cum as your libido spins out of control."; break;
+							case Gender.GENDER_FEMALE: text += "[vagina] becomes puffy, hot, and ready to be touched as the magic diverts into it."; break;
+							case Gender.GENDER_HERM: text += "[vagina] and [cocks] overfill with blood, becoming puffy and incredibly sensitive as the magic focuses on them."; break;
+							default: text += "[ass] tingles with a desire to be filled as your libido spins out of control.";
+						}
+						EngineCore.outputText(text);
+						host.takeLustDamage(15);
+						return true;
+					}
+			);
+			return this;
+		}
 
-class StatusProc {
-	internal var stype:StatusEffectType;
-	internal var dur:int;
-	internal var self:Boolean;
-	internal var chance:int;
-	internal var critonly:Boolean;
+		/**
+		 * Adds a custom fail chance, which is called after start text and custom damage is calculated
+		 * @param baseChance the base chance to fail out of 100
+		 * @param failText text to display if the action failed
+		 * @param statReduce the name of the stat to reduce the failure chance by
+		 * @param reducePercent the percent of statReduce to reduce failure chance by
+		 * @param min the minimum chance to fail out of 100
+		 * @return the instance of the class to allow method chaining
+		 */
+		public function customFail(baseChance:int, failText:String, statReduce:String = "", reducePercent:Number = 0.0, min:int = 0):CombatAction{
+			_failReasons.push(
+					function(host:Creature, target:Creature):Boolean{
+						var failed:Boolean;
+						if(statReduce != ""){
+							baseChance -= host.stats[statReduce].value * reducePercent;
+						}
+						if(!Utils.randomChance(Math.max(baseChance, min))){
+							return false;
+						}
+						EngineCore.outputText(failText);
+						return true;
+					}
+			);
+			return this;
+		}
 
-	public function StatusProc(type:StatusEffectType, dur:int, self:Boolean, chance:int, critonly:Boolean) {
-		this.stype = type;
-		this.dur = dur;
-		this.self = self;
-		this.chance = chance;
-		this.critonly = critonly;
+		/**
+		 * Sets the alignment of the combat action. This is mostly used to calculate cost
+		 * @param align -1 for black, 0 for none, 1 for white
+		 * @param heal if this action should not allow bloodmage and offense specific cost
+		 * @return the instance of the class to allow method chaining
+		 */
+		public function alignment(align:int, heal:Boolean = false):CombatAction {
+			_alignment = align;
+			_healCost = heal;
+			return this;
+		}
 	}
 }

@@ -21,8 +21,10 @@ import classes.StatusEffectClass;
 import classes.StatusEffectClass;
 import classes.StatusEffects;
 import classes.VaginaClass;
+	import classes.internals.Utils;
+	import classes.lists.Gender;
 
-import coc.view.ButtonData;
+	import coc.view.ButtonData;
 import coc.view.ButtonDataList;
 
 public class CombatMagic extends BaseCombatContent {
@@ -37,22 +39,22 @@ public class CombatMagic extends BaseCombatContent {
 		if (player.hasPerk(PerkLib.Spellsword) && player.lust < getWhiteMagicLustCap() && player.mana >= spellCostWhite(30) && flags[kFLAGS.AUTO_CAST_CHARGE_WEAPON] == 0 && player.weaponName != "fists") {
 			spellChargeWeapon(true);
 			useMana(30, Combat.USEMANA_WHITE);
-			spellCasted(0);
+			spellCasted(0, true);
 		}
 		if (player.hasPerk(PerkLib.Spellarmor) && player.lust < getWhiteMagicLustCap() && player.mana >= spellCostWhite(40) && flags[kFLAGS.AUTO_CAST_CHARGE_ARMOR] == 0 && !player.isNaked()) {
 			spellChargeArmor(true);
 			useMana(40, Combat.USEMANA_WHITE);
-			spellCasted(0);
+			spellCasted(0, true);
 		}
 		if (player.hasPerk(PerkLib.Battlemage) && (player.lust >= 50) && player.mana >= spellCostBlack(50) && flags[kFLAGS.AUTO_CAST_MIGHT] == 0) {
 			spellMight(true);
 			useMana(50, Combat.USEMANA_BLACK);
-			spellCasted(0);
+			spellCasted(0, true);
 		}
 		if (player.hasPerk(PerkLib.Battleflash) && (player.lust >= 50) && player.mana >= spellCostBlack(40) && flags[kFLAGS.AUTO_CAST_BLINK] == 0) {
 			spellBlink(true);
 			useMana(40, Combat.USEMANA_BLACK);
-			spellCasted(0);
+			spellCasted(0, true);
 		}
 	}
 
@@ -374,59 +376,19 @@ public class CombatMagic extends BaseCombatContent {
 		
 		spellCasted(0);
 	}
-	/**
-	 * Generates from (x1,x2,x3,y1,y2) log-scale parameters (a,b,c) that will return:
-	 * y1= 10 at x1=  10
-	 * y2= 55 at x2= 100
-	 * y3=100 at x3=1000
-	 */
-	private static const MightABC:Object = FnHelpers.FN.buildLogScaleABC(10,100,1000,10,100);
-//(25) Might – increases strength/toughness by 5 * (Int / 10) * spellMod, up to a
-//maximum of 15, allows it to exceed the maximum.  Chance of backfiring
-//and increasing lust by 15.
-	public function spellMight(silent:Boolean = false):void {
 
+	public function spellMight(silent:Boolean = false):void {
 		var doEffect:Function = function():* {
-			var MightBoost:Number = 10;
-			if (player.hasPerk(PerkLib.JobSorcerer) && player.inte >= 25) MightBoost += 5;
-			if (player.hasPerk(PerkLib.Spellpower) && player.inte >= 50) MightBoost += 5;
-			if (player.hasPerk(PerkLib.JobEnchanter) && player.inte >= 50) MightBoost += 5;
-			if (player.hasPerk(PerkLib.Battlemage) && player.inte >= 50) MightBoost += 15;
-			if (player.hasPerk(PerkLib.JobDervish)) MightBoost -= 10;
-			if (player.hasPerk(PerkLib.IronFists)) MightBoost -= 10;
-			if (player.hasPerk(PerkLib.AdvancedJobMonk)) MightBoost -= 15;
-			if (player.hasPerk(PerkLib.Berzerker)) MightBoost -= 15;
-			if (player.hasPerk(PerkLib.Lustzerker)) MightBoost -= 15;
-			if (player.hasPerk(PerkLib.WeaponMastery)) MightBoost -= 15;
-			if (player.hasPerk(PerkLib.HeavyArmorProficiency)) MightBoost -= 15;
-			if (player.hasPerk(PerkLib.Agility)) MightBoost -= 10;
-			if (player.hasPerk(PerkLib.LightningStrikes)) MightBoost -= 10;
-		//	MightBoost += player.inte / 10;player.inte * 0.1 - może tylko jak bedzie mieć perk z prestige job: magus/warock/inny związany z spells
-			if (MightBoost < 10) MightBoost = 10;
-			if (player.hasPerk(PerkLib.JobEnchanter)) MightBoost *= 1.2;
-			MightBoost *= spellModBlack();
-			MightBoost = FnHelpers.FN.logScale(MightBoost,MightABC,10);
-			MightBoost = Math.round(MightBoost);
+			var MightBoost:Number = 10 * spellModBlack();
 			var MightDuration:Number = 5;
-			tempTou = MightBoost;
-			if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) {
-				var MightIntBoost:Number = 0;
-				MightIntBoost += 25 * spellModBlack() * (1 + player.newGamePlusMod());
-				tempInt = MightIntBoost;
-			} else {
-				tempStr = MightBoost;
-			}
 			var oldHPratio:Number = player.hp100/100;
-			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.Might,0,0,MightDuration,0);
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.Might,MightBoost,MightBoost,MightDuration,0);
 			if (player.hasStatusEffect(StatusEffects.FortressOfIntellect)) {
-				sec.value1 = tempInt;
-				sec.buffHost('int',tempInt);
+				sec.buffHost('int',MightBoost);
 			} else {
-				sec.value1 = tempStr;
-				sec.buffHost('str',tempStr);
+				sec.buffHost('str',MightBoost);
 			}
-			sec.value2 = tempTou;
-			sec.buffHost('tou',tempTou);
+			sec.buffHost('tou',MightBoost);
 			player.HP = oldHPratio*player.maxHP();
 			statScreenRefresh();
 		};
@@ -438,23 +400,10 @@ public class CombatMagic extends BaseCombatContent {
 
 		if(spellSetup(50, Combat.USEMANA_BLACK, false)){return;}
 
-		var tempStr:Number = 0;
-		var tempTou:Number = 0;
-		var tempInt:Number = 0;
 		outputText("You flush, drawing on your body's desires to empower your muscles and toughen you up.\n\n");
 		//30% backfire!
-		var backfire:int = 30;
-		if (backfire < 15) backfire = 15;
-		if(rand(100) < backfire) {
-			outputText("An errant sexual thought crosses your mind, and you lose control of the spell!  Your ");
-			if(player.gender == 0) outputText(assholeDescript() + " tingles with a desire to be filled as your libido spins out of control.");
-			if(player.gender == 1) {
-				if(player.cockTotal() == 1) outputText(player.cockDescript(0) + " twitches obscenely and drips with pre-cum as your libido spins out of control.");
-				else outputText(player.multiCockDescriptLight() + " twitch obscenely and drip with pre-cum as your libido spins out of control.");
-			}
-			if(player.gender == 2) outputText(vaginaDescript(0) + " becomes puffy, hot, and ready to be touched as the magic diverts into it.");
-			if(player.gender == 3) outputText(vaginaDescript(0) + " and [cocks] overfill with blood, becoming puffy and incredibly sensitive as the magic focuses on them.");
-			dynStats("lib", .25, "lus", 15);
+		if(spellFailure(30, 0.15, 15)){
+			blackMagicFail();
 		}
 		else {
 			outputText("The rush of success and power flows through your body.  You feel like you can do anything!");
@@ -465,43 +414,11 @@ public class CombatMagic extends BaseCombatContent {
 		spellCasted(0);
 	}
 
-	/**
-	 * Generates from (x1,x2,x3,y1,y2) log-scale parameters (a,b,c) that will return:
-	 * y1= 10 at x1=  10
-	 * y2= 55 at x2= 100
-	 * y3=100 at x3=1000
-	 */
-	private static const BlinkABC:Object = FnHelpers.FN.buildLogScaleABC(10,100,1000,10,100);
-//(25) Blink – increases speed by 5 * (Int / 10) * spellMod, up to a
-//maximum of 15, allows it to exceed the maximum.  Chance of backfiring
-//and increasing lust by 15.
 	public function spellBlink(silent:Boolean = false):void {
-
 		var doEffect:Function = function():* {
-			var BlinkBoost:Number = 10;
-			if (player.hasPerk(PerkLib.JobSorcerer) && player.inte >= 25) BlinkBoost += 5;
-			if (player.hasPerk(PerkLib.Spellpower) && player.inte >= 50) BlinkBoost += 5;
-			if (player.hasPerk(PerkLib.JobEnchanter) && player.inte >= 50) BlinkBoost += 5;
-			if (player.hasPerk(PerkLib.Battleflash) && player.inte >= 50) BlinkBoost += 15;
-			if (player.hasPerk(PerkLib.JobDervish)) BlinkBoost -= 10;
-			if (player.hasPerk(PerkLib.IronFists)) BlinkBoost -= 10;
-			if (player.hasPerk(PerkLib.AdvancedJobMonk)) BlinkBoost -= 15;
-			if (player.hasPerk(PerkLib.Berzerker)) BlinkBoost -= 15;
-			if (player.hasPerk(PerkLib.Lustzerker)) BlinkBoost -= 15;
-			if (player.hasPerk(PerkLib.WeaponMastery)) BlinkBoost -= 15;
-			if (player.hasPerk(PerkLib.HeavyArmorProficiency)) BlinkBoost -= 15;
-			if (player.hasPerk(PerkLib.Agility)) BlinkBoost -= 10;
-			if (player.hasPerk(PerkLib.LightningStrikes)) BlinkBoost -= 10;
-		//	BlinkBoost += player.inte / 10;player.inte * 0.1 - może tylko jak bedzie mieć perk z prestige job: magus/warock/inny związany z spells
-			if (BlinkBoost < 10) BlinkBoost = 10;
-			BlinkBoost *= 1.2;
-			if (player.hasPerk(PerkLib.JobEnchanter)) BlinkBoost *= 1.25;
-			BlinkBoost *= spellModBlack();
-			BlinkBoost = FnHelpers.FN.logScale(BlinkBoost,BlinkABC,10);
-			BlinkBoost = Math.round(BlinkBoost);
+			var BlinkBoost:Number = 10 * spellModBlack();
 			var BlinkDuration:Number = 5;
-			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.Blink,0,0,BlinkDuration,0);
-			sec.value1 = BlinkBoost;
+			var sec:StatusEffectClass = player.createStatusEffect(StatusEffects.Blink,BlinkBoost,0,BlinkDuration,0);
 			sec.buffHost('spe',BlinkBoost);
 			statScreenRefresh();
 		};
@@ -513,19 +430,10 @@ public class CombatMagic extends BaseCombatContent {
 
 		if(spellSetup(40, Combat.USEMANA_BLACK, false)){return;}
 
-		var tempSpe:Number = 0;
 		outputText("You flush, drawing on your body's desires to empower your muscles and hasten you up.\n\n");
 		//30% backfire!
 		if(spellFailure(30, 0.15, 15)){
-			outputText("An errant sexual thought crosses your mind, and you lose control of the spell!  Your ");
-			if(player.gender == 0) outputText(assholeDescript() + " tingles with a desire to be filled as your libido spins out of control.");
-			if(player.gender == 1) {
-				if(player.cockTotal() == 1) outputText(player.cockDescript(0) + " twitches obscenely and drips with pre-cum as your libido spins out of control.");
-				else outputText(player.multiCockDescriptLight() + " twitch obscenely and drip with pre-cum as your libido spins out of control.");
-			}
-			if(player.gender == 2) outputText(vaginaDescript(0) + " becomes puffy, hot, and ready to be touched as the magic diverts into it.");
-			if(player.gender == 3) outputText(vaginaDescript(0) + " and [cocks] overfill with blood, becoming puffy and incredibly sensitive as the magic focuses on them.");
-			dynStats("lib", .25, "lus", 15);
+			blackMagicFail();
 		}
 		else {
 			outputText("The rush of success and power flows through your body.  You feel like you can do anything!");
@@ -663,15 +571,7 @@ public class CombatMagic extends BaseCombatContent {
 		outputText("You focus on your magic, trying to draw on it without enhancing your own arousal.\n");
 		//30% backfire!
 		if(spellFailure(30, 0.15, 15)){
-			outputText("An errant sexual thought crosses your mind, and you lose control of the spell!  Your ");
-			if(player.gender == 0) outputText(assholeDescript() + " tingles with a desire to be filled as your libido spins out of control.");
-			if(player.gender == 1) {
-				if(player.cockTotal() == 1) outputText(player.cockDescript(0) + " twitches obscenely and drips with pre-cum as your libido spins out of control.");
-				else outputText(player.multiCockDescriptLight() + " twitch obscenely and drip with pre-cum as your libido spins out of control.");
-			}
-			if(player.gender == 2) outputText(vaginaDescript(0) + " becomes puffy, hot, and ready to be touched as the magic diverts into it.");
-			if(player.gender == 3) outputText(vaginaDescript(0) + " and [cocks] overfill with blood, becoming puffy and incredibly sensitive as the magic focuses on them.");
-			dynStats("lib", .25, "lus", 15);
+			blackMagicFail();
 		}
 		else {
 			var nosferatu:Number = 0;
@@ -688,36 +588,8 @@ public class CombatMagic extends BaseCombatContent {
 		spellCasted(0);
 	}
 
-	/**
-	 * Generates from (x1,x2,x3,y1,y2) log-scale parameters (a,b,c) that will return:
-	 * y1= 10 at x1=  10
-	 * y2= 55 at x2= 100
-	 * y3=100 at x3=1000
-	 */
-	private static const ChargeWeaponABC:Object = FnHelpers.FN.buildLogScaleABC(10,100,1000,10,100);
-//(15) Charge Weapon – boosts your weapon attack value by 5 + (player.inte/10) * SpellMod till the end of combat.
 	public function spellChargeWeapon(silent:Boolean = false):void {
-		var ChargeWeaponBoost:Number = 10;
-		if (player.hasPerk(PerkLib.JobSorcerer) && player.inte >= 25) ChargeWeaponBoost += 5;
-		if (player.hasPerk(PerkLib.Spellpower) && player.inte >= 50) ChargeWeaponBoost += 5;
-		if (player.hasPerk(PerkLib.JobEnchanter) && player.inte >= 50) ChargeWeaponBoost += 5;
-		if (player.hasPerk(PerkLib.Spellsword) && player.inte >= 50) ChargeWeaponBoost += 15;
-		if (player.hasPerk(PerkLib.JobDervish)) ChargeWeaponBoost -= 10;
-		if (player.hasPerk(PerkLib.IronFists)) ChargeWeaponBoost -= 10;
-		if (player.hasPerk(PerkLib.AdvancedJobMonk)) ChargeWeaponBoost -= 15;
-		if (player.hasPerk(PerkLib.Berzerker)) ChargeWeaponBoost -= 15;
-		if (player.hasPerk(PerkLib.Lustzerker)) ChargeWeaponBoost -= 15;
-		if (player.hasPerk(PerkLib.WeaponMastery)) ChargeWeaponBoost -= 15;
-		if (player.hasPerk(PerkLib.HeavyArmorProficiency)) ChargeWeaponBoost -= 15;
-		if (player.hasPerk(PerkLib.Agility)) ChargeWeaponBoost -= 10;
-		if (player.hasPerk(PerkLib.LightningStrikes)) ChargeWeaponBoost -= 10;
-	//	ChargeWeaponBoost += player.inte / 10;player.inte * 0.1 - może tylko jak bedzie mieć perk z prestige job: magus/warock/inny związany z spells
-		if (ChargeWeaponBoost < 10) ChargeWeaponBoost = 10;
-		ChargeWeaponBoost *= 1.5;
-		if (player.hasPerk(PerkLib.JobEnchanter)) ChargeWeaponBoost *= 1.2;
-		ChargeWeaponBoost *= spellModWhite();
-		ChargeWeaponBoost = FnHelpers.FN.logScale(ChargeWeaponBoost,ChargeWeaponABC,10);
-		ChargeWeaponBoost = Math.round(ChargeWeaponBoost);
+		var ChargeWeaponBoost:Number = 10 * spellMod();
 		var ChargeWeaponDuration:Number = 5;
 		if (silent) {
 			player.createStatusEffect(StatusEffects.ChargeWeapon,ChargeWeaponBoost,ChargeWeaponDuration,0,0);
@@ -732,35 +604,10 @@ public class CombatMagic extends BaseCombatContent {
 		spellCasted(0);
 	}
 
-	/**
-	 * Generates from (x1,x2,x3,y1,y2) log-scale parameters (a,b,c) that will return:
-	 * y1= 10 at x1=  10
-	 * y2= 55 at x2= 100
-	 * y3=100 at x3=1000
-	 */
-	private static const ChargeArmorABC:Object = FnHelpers.FN.buildLogScaleABC(10,100,1000,10,100);
-//(35) Charge Armor – boosts your armor value by 5 + (player.inte/10) * SpellMod till the end of combat.
 	public function spellChargeArmor(silent:Boolean = false):void {
-		var ChargeArmorBoost:Number = 10;
-		if (player.hasPerk(PerkLib.JobSorcerer) && player.inte >= 25) ChargeArmorBoost += 5;
-		if (player.hasPerk(PerkLib.Spellpower) && player.inte >= 50) ChargeArmorBoost += 5;
-		if (player.hasPerk(PerkLib.JobEnchanter) && player.inte >= 50) ChargeArmorBoost += 5;
-		if (player.hasPerk(PerkLib.Spellarmor) && player.inte >= 50) ChargeArmorBoost += 15;
-		if (player.hasPerk(PerkLib.JobDervish)) ChargeArmorBoost -= 10;
-		if (player.hasPerk(PerkLib.IronFists)) ChargeArmorBoost -= 10;
-		if (player.hasPerk(PerkLib.AdvancedJobMonk)) ChargeArmorBoost -= 15;
-		if (player.hasPerk(PerkLib.Berzerker)) ChargeArmorBoost -= 15;
-		if (player.hasPerk(PerkLib.Lustzerker)) ChargeArmorBoost -= 15;
-		if (player.hasPerk(PerkLib.WeaponMastery)) ChargeArmorBoost -= 15;
-		if (player.hasPerk(PerkLib.HeavyArmorProficiency)) ChargeArmorBoost -= 15;
-		if (player.hasPerk(PerkLib.Agility)) ChargeArmorBoost -= 10;
-		if (player.hasPerk(PerkLib.LightningStrikes)) ChargeArmorBoost -= 10;
-		if (ChargeArmorBoost < 10) ChargeArmorBoost = 10;
-		if (player.hasPerk(PerkLib.JobEnchanter)) ChargeArmorBoost *= 1.2;
-		ChargeArmorBoost *= spellModWhite();
-		ChargeArmorBoost = FnHelpers.FN.logScale(ChargeArmorBoost,ChargeArmorABC,10);
-		ChargeArmorBoost = Math.round(ChargeArmorBoost);
+		var ChargeArmorBoost:Number = 10 * spellMod();
 		var ChargeArmorDuration:Number = 5;
+
 		if (silent) {
 			player.createStatusEffect(StatusEffects.ChargeArmor,ChargeArmorBoost,ChargeArmorDuration,0,0);
 			statScreenRefresh();
@@ -772,8 +619,7 @@ public class CombatMagic extends BaseCombatContent {
 		if (player.isNaked() && player.haveNaturalArmor()) outputText(" natural armor.");
 		else outputText(" [armor].");
 		outputText("  It crackles loudly, ensuring you'll have more protection for the rest of the fight.\n\n");
-		player.createStatusEffect(StatusEffects.ChargeArmor, ChargeArmorBoost, ChargeArmorDuration, 0, 0);
-		
+
 		spellCasted(0);
 	}
 	public function spellHeal():void {
@@ -785,8 +631,6 @@ public class CombatMagic extends BaseCombatContent {
 	}
 	public function spellHealEffect():void {
 		var heal:Number = scalingBonusIntelligence() * healModWhite();
-		if (player.unicornScore() >= 5) heal *= ((player.unicornScore() - 4) * 0.5);
-		if (player.alicornScore() >= 6) heal *= ((player.alicornScore() - 5) * 0.5);
 		if (player.armorName == "skimpy nurse's outfit") heal *= 1.2;
 		if (player.weaponName == "unicorn staff") heal *= 1.5;
 		//Determine if critical heal!
@@ -1041,6 +885,7 @@ public class CombatMagic extends BaseCombatContent {
 	}
 
 	private function spellSetup(manaCost:int, costType:int, isOffense:Boolean, lastAttack:int = -1, isFatigue:Boolean = false):Boolean {
+		combat.lastAttack = lastAttack;
 		clearOutput();
 		doNext(combatMenu);
 		if(isFatigue){
@@ -1062,7 +907,7 @@ public class CombatMagic extends BaseCombatContent {
 		return false;
 	}
 
-	private function spellCasted(damage:Number = 0):void {
+	private function spellCasted(damage:Number = 0, silent:Boolean = false):void {
 		if (player.weapon == weapons.DEMSCYT && player.cor < 90) dynStats("cor", 0.3);
 		if(damage > 0){
 			monster.HP -= damage;
@@ -1073,7 +918,7 @@ public class CombatMagic extends BaseCombatContent {
 		player.createOrFindStatusEffect(StatusEffects.CastedSpell);
 		spellPerkUnlock();
 		statScreenRefresh();
-		if(combatIsOver()){
+		if(combatIsOver() || silent){
 			return;
 		}
 		enemyAI();
@@ -1086,6 +931,18 @@ public class CombatMagic extends BaseCombatContent {
 			return true;
 		}
 		return false;
+	}
+
+	private function blackMagicFail():void {
+		var text:String = "An errant sexual thought crosses your mind, and you lose control of the spell!  Your ";
+		switch(player.gender){
+			case Gender.GENDER_MALE: text += "[cocks] twitch[if(cocks <= 1)es] obscenely and drip[if(cocks <=1)s] with pre-cum as your libido spins out of control."; break;
+			case Gender.GENDER_FEMALE: text += "[vagina] becomes puffy, hot, and ready to be touched as the magic diverts into it."; break;
+			case Gender.GENDER_HERM: text += "[vagina] and [cocks] overfill with blood, becoming puffy and incredibly sensitive as the magic focuses on them."; break;
+			default: text += "[ass] tingles with a desire to be filled as your libido spins out of control.";
+		}
+		outputText(text);
+		player.takeLustDamage(15);
 	}
 
 

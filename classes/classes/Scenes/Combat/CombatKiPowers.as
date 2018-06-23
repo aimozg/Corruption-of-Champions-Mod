@@ -9,6 +9,7 @@ package classes.Scenes.Combat {
 	import classes.Items.WeaponLib;
 	import classes.PerkLib;
 	import classes.Scenes.API.FnHelpers;
+	import classes.Scenes.Combat.CombatAction.CombatAction;
 	import classes.Scenes.SceneLib;
 	import classes.StatusEffectClass;
 	import classes.StatusEffectClass;
