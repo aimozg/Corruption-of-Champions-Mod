@@ -192,7 +192,6 @@ public class Combat extends BaseContent {
 	}
 //combat is over. Clear shit out and go to main
 public function cleanupAfterCombatImpl(nextFunc:Function = null):void {
-	magic.cleanupAfterCombatImpl();
 	if (nextFunc == null) nextFunc = camp.returnToCampUseOneHour;
 	if (inCombat) {
 		clearStatuses(false);

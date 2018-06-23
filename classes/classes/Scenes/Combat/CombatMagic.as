@@ -30,60 +30,34 @@ public class CombatMagic extends BaseCombatContent {
 	}
 	internal function applyAutocast():void {
 		outputText("\n\n");
-		if (player.hasPerk(PerkLib.Spellsword) && player.lust < getWhiteMagicLustCap() && player.mana >= (spellCostWhite(30) * spellChargeWeaponCostMultiplier()) && flags[kFLAGS.AUTO_CAST_CHARGE_WEAPON] == 0 && player.weaponName != "fists") {
+		if (player.hasPerk(PerkLib.Spellsword) && player.lust < getWhiteMagicLustCap() && player.mana >= spellCostWhite(30) && flags[kFLAGS.AUTO_CAST_CHARGE_WEAPON] == 0 && player.weaponName != "fists") {
 			spellChargeWeapon(true);
-			useMana((30 * spellChargeWeaponCostMultiplier()),5);
+			useMana(30 ,5);
 			flags[kFLAGS.SPELLS_CAST]++;
 			if(!player.hasStatusEffect(StatusEffects.CastedSpell)) player.createStatusEffect(StatusEffects.CastedSpell,0,0,0,0);
 			spellPerkUnlock(); // XXX: message?
 		}
-		if (player.hasPerk(PerkLib.Spellarmor) && player.lust < getWhiteMagicLustCap() && player.mana >= (spellCostWhite(40) * spellChargeArmorCostMultiplier()) && flags[kFLAGS.AUTO_CAST_CHARGE_ARMOR] == 0 && !player.isNaked()) {
+		if (player.hasPerk(PerkLib.Spellarmor) && player.lust < getWhiteMagicLustCap() && player.mana >= spellCostWhite(40) && flags[kFLAGS.AUTO_CAST_CHARGE_ARMOR] == 0 && !player.isNaked()) {
 			spellChargeArmor(true);
-			useMana((40 * spellChargeArmorCostMultiplier()),5);
+			useMana(40,5);
 			flags[kFLAGS.SPELLS_CAST]++;
 			if(!player.hasStatusEffect(StatusEffects.CastedSpell)) player.createStatusEffect(StatusEffects.CastedSpell,0,0,0,0);
 			spellPerkUnlock(); // XXX: message?
 		}
-		if (player.hasPerk(PerkLib.Battlemage) && (player.lust >= 50) && player.mana >= (spellCostBlack(50) * spellMightCostMultiplier()) && flags[kFLAGS.AUTO_CAST_MIGHT] == 0) {
+		if (player.hasPerk(PerkLib.Battlemage) && (player.lust >= 50) && player.mana >= spellCostBlack(50) && flags[kFLAGS.AUTO_CAST_MIGHT] == 0) {
 			spellMight(true);
-			useMana((50 * spellMightCostMultiplier()),6);
+			useMana(50,6);
 			flags[kFLAGS.SPELLS_CAST]++;
 			if(!player.hasStatusEffect(StatusEffects.CastedSpell)) player.createStatusEffect(StatusEffects.CastedSpell,0,0,0,0);
 			spellPerkUnlock(); // XXX: message?
 		}
-		if (player.hasPerk(PerkLib.Battleflash) && (player.lust >= 50) && player.mana >= (spellCostBlack(40) * spellBlinkCostMultiplier()) && flags[kFLAGS.AUTO_CAST_BLINK] == 0) {
+		if (player.hasPerk(PerkLib.Battleflash) && (player.lust >= 50) && player.mana >= spellCostBlack(40) && flags[kFLAGS.AUTO_CAST_BLINK] == 0) {
 			spellBlink(true);
-			useMana((40 * spellBlinkCostMultiplier()),6);
+			useMana(40,6);
 			flags[kFLAGS.SPELLS_CAST]++;
 			if(!player.hasStatusEffect(StatusEffects.CastedSpell)) player.createStatusEffect(StatusEffects.CastedSpell,0,0,0,0);
 			spellPerkUnlock(); // XXX: message?
 		}
-	}
-	internal function cleanupAfterCombatImpl():void {
-		fireMagicLastTurn = -100;
-		iceMagicLastTurn = -100;
-		lightningMagicLastTurn = -100;
-		darknessMagicLastTurn = -100;
-	}
-	
-	public function spellMightCostMultiplier():Number {
-		var spellMightMultiplier:Number = 1;
-		return spellMightMultiplier;
-	}
-
-	public function spellBlinkCostMultiplier():Number {
-		var spellBlinkMultiplier:Number = 1;
-		return spellBlinkMultiplier;
-	}
-
-	public function spellChargeWeaponCostMultiplier():Number {
-		var spellChargeWeaponMultiplier:Number = 1;
-		return spellChargeWeaponMultiplier;
-	}
-
-	public function spellChargeArmorCostMultiplier():Number {
-		var spellChargeArmorMultiplier:Number = 1;
-		return spellChargeArmorMultiplier;
 	}
 
 	public function getBlackMagicMinLust():Number {
@@ -93,31 +67,6 @@ public class CombatMagic extends BaseCombatContent {
 		var whiteLustCap:int = player.maxLust() * 0.75;
 		if (player.hasPerk(PerkLib.Enlightened) && player.cor < (10 + player.corruptionTolerance())) whiteLustCap += (player.maxLust() * 0.1);
 		return whiteLustCap;
-	}
-
-
-	private var fireMagicLastTurn:int = -100;
-	private var fireMagicCumulated:int = 0;
-	internal function calcInfernoModImpl(damage:Number):int {
-		return damage;
-	}
-
-	private var iceMagicLastTurn:int = -100;
-	private var iceMagicCumulated:int = 0;
-	internal function calcGlacialModImpl(damage:Number):int {
-		return damage;
-	}
-
-	private var lightningMagicLastTurn:int = -100;
-	private var lightningMagicCumulated:int = 0;
-	internal function calcVoltageModImpl(damage:Number):int {
-		return damage;
-	}
-
-	private var darknessMagicLastTurn:int = -100;
-	private var darknessMagicCumulated:int = 0;
-	internal function calcEclypseModImpl(damage:Number):int {
-		return damage;
 	}
 	
 	internal function buildMenu(buttons:ButtonDataList):void {
@@ -169,32 +118,32 @@ public class CombatMagic extends BaseCombatContent {
 		if (player.hasStatusEffect(StatusEffects.KnowsCharge)) {
 			bd = buttons.add("Charge W.", spellChargeWeapon)
 						.hint("The Charge Weapon spell will surround your weapon in electrical energy, causing it to do even more damage.  The effect lasts for a few combat turns.  " +
-							  "\n\nMana Cost: " + spellCostWhite(30) * spellChargeWeaponCostMultiplier() + "", "Charge Weapon");
+							  "\n\nMana Cost: " + spellCostWhite(30) + "", "Charge Weapon");
 			if (player.weaponName == "fists") {
 				bd.disable("Charge weapon can't be casted on your own fists.");
 			} else if (badLustForWhite) {
 				bd.disable("You are far too aroused to focus on white magic.");
 			} else if (player.hasStatusEffect(StatusEffects.ChargeWeapon)){
 				bd.disable("Charge weapon is already active and cannot be cast again.");
-			} else if(!player.hasPerk(PerkLib.BloodMage) && !player.hasPerk(PerkLib.LastResort) && player.mana < (spellCostWhite(30) * spellChargeWeaponCostMultiplier())) {
+			} else if(!player.hasPerk(PerkLib.BloodMage) && !player.hasPerk(PerkLib.LastResort) && player.mana < spellCostWhite(30)) {
 				bd.disable("Your mana is too low to cast this spell.");
-			} else if(player.hasPerk(PerkLib.LastResort) && player.mana < (spellCostWhite(30) * spellChargeWeaponCostMultiplier()) && player.HP < (spellCostWhite(30) * spellChargeWeaponCostMultiplier())) {
+			} else if(player.hasPerk(PerkLib.LastResort) && player.mana < spellCostWhite(30) && player.HP < spellCostWhite(30)) {
 				bd.disable("Your hp is too low to cast this spell.");
 			}
 		}
 		if (player.hasStatusEffect(StatusEffects.KnowsChargeA)) {
 			bd = buttons.add("Charge A.", spellChargeArmor)
 						.hint("The Charge Armor spell will surround your armor with electrical energy, causing it to do provide additional protection.  The effect lasts for a few combat turns.  " +
-							  "\n\nMana Cost: " + spellCostWhite(40) * spellChargeArmorCostMultiplier() + "", "Charge Armor");
+							  "\n\nMana Cost: " + spellCostWhite(40) + "", "Charge Armor");
 			if (player.isNaked() && (!player.haveNaturalArmor())) {
 				bd.disable("Charge armor can't be casted without wearing any armor or even underwear.");
 			} else if (badLustForWhite) {
 				bd.disable("You are far too aroused to focus on white magic.");
 			} else if (player.hasStatusEffect(StatusEffects.ChargeArmor)) {
 				bd.disable("Charge armor is already active and cannot be cast again.");
-			} else if(!player.hasPerk(PerkLib.BloodMage) && !player.hasPerk(PerkLib.LastResort) && player.mana < (spellCostWhite(40) * spellChargeArmorCostMultiplier())) {
+			} else if(!player.hasPerk(PerkLib.BloodMage) && !player.hasPerk(PerkLib.LastResort) && player.mana < spellCostWhite(40)) {
 				bd.disable("Your mana is too low to cast this spell.");
-			} else if(player.hasPerk(PerkLib.LastResort) && player.mana < (spellCostWhite(40) * spellChargeArmorCostMultiplier()) && player.HP < (spellCostWhite(40) * spellChargeArmorCostMultiplier())) {
+			} else if(player.hasPerk(PerkLib.LastResort) && player.mana < (spellCostWhite(40)) && player.HP < spellCostWhite(40)) {
 				bd.disable("Your hp is too low to cast this spell.");
 			}
 		}
@@ -275,28 +224,28 @@ public class CombatMagic extends BaseCombatContent {
 		if (player.hasStatusEffect(StatusEffects.KnowsMight)) {
 			bd = buttons.add("Might", spellMight)
 						.hint("The Might spell draws upon your lust and uses it to fuel a temporary increase in muscle size and power.  It does carry the risk of backfiring and raising lust, like all black magic used on oneself.  " +
-							  "\n\nMana Cost: " + spellCostBlack(50) * spellMightCostMultiplier() + "");
+							  "\n\nMana Cost: " + spellCostBlack(50) + "");
 			if (badLustForBlack) {
 				bd.disable("You aren't turned on enough to use any black magics.");
 			} else if (player.hasStatusEffect(StatusEffects.Might)) {
 				bd.disable("You are already under the effects of Might and cannot cast it again.");
-			} else if(!player.hasPerk(PerkLib.BloodMage) && !player.hasPerk(PerkLib.LastResort) && player.mana < (spellCostBlack(50) * spellMightCostMultiplier())) {
+			} else if(!player.hasPerk(PerkLib.BloodMage) && !player.hasPerk(PerkLib.LastResort) && player.mana < spellCostBlack(50)) {
 				bd.disable("Your mana is too low to cast this spell.");
-			} else if(player.hasPerk(PerkLib.LastResort) && player.mana < (spellCostBlack(50) * spellMightCostMultiplier()) && player.HP < (spellCostBlack(50) * spellMightCostMultiplier())) {
+			} else if(player.hasPerk(PerkLib.LastResort) && player.mana < spellCostBlack(50) && player.HP < spellCostBlack(50)) {
 				bd.disable("Your hp is too low to cast this spell.");
 			}
 		}
 		if (player.hasStatusEffect(StatusEffects.KnowsBlink)) {
 			bd= buttons.add("Blink", spellBlink)
 					   .hint("The Blink spell draws upon your lust and uses it to fuel a temporary increase in moving speed and if it's needed teleport over short distances.  It does carry the risk of backfiring and raising lust, like all black magic used on oneself.  " +
-							 "\n\nMana Cost: " + spellCostBlack(40) * spellBlinkCostMultiplier() + "");
+							 "\n\nMana Cost: " + spellCostBlack(40) + "");
 			if (badLustForBlack) {
 				bd.disable("You aren't turned on enough to use any black magics.");
 			} else if (player.hasStatusEffect(StatusEffects.Blink)) {
 				bd.disable("You are already under the effects of Blink and cannot cast it again.");
-			} else if(!player.hasPerk(PerkLib.BloodMage) && !player.hasPerk(PerkLib.LastResort) && player.mana < (spellCostBlack(40) * spellBlinkCostMultiplier())) {
+			} else if(!player.hasPerk(PerkLib.BloodMage) && !player.hasPerk(PerkLib.LastResort) && player.mana < spellCostBlack(40)) {
 				bd.disable("Your mana is too low to cast this spell.");
-			} else if(player.hasPerk(PerkLib.LastResort) && player.mana < (spellCostBlack(40) * spellBlinkCostMultiplier()) && player.HP < (spellCostBlack(40) * spellBlinkCostMultiplier())) {
+			} else if(player.hasPerk(PerkLib.LastResort) && player.mana < spellCostBlack(40) && player.HP < spellCostBlack(40)) {
 				bd.disable("Your hp is too low to cast this spell.");
 			}
 		}
@@ -541,8 +490,8 @@ public class CombatMagic extends BaseCombatContent {
 
 		clearOutput();
 		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < (50 * spellMightCostMultiplier())) player.HP -= (50 * spellMightCostMultiplier());
-		else useMana((50 * spellMightCostMultiplier()),6);
+		if (player.hasPerk(PerkLib.LastResort) && player.mana < 50) player.HP -= 50;
+		else useMana(50,6);
 		var tempStr:Number = 0;
 		var tempTou:Number = 0;
 		var tempInt:Number = 0;
@@ -627,8 +576,8 @@ public class CombatMagic extends BaseCombatContent {
 
 		clearOutput();
 		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < (40 * spellBlinkCostMultiplier())) player.HP -= (40 * spellBlinkCostMultiplier());
-		else useMana((40 * spellBlinkCostMultiplier()),6);
+		if (player.hasPerk(PerkLib.LastResort) && player.mana < 40) player.HP -= 40;
+		else useMana(40,6);
 		var tempSpe:Number = 0;
 		if (monster is FrostGiant && player.hasStatusEffect(StatusEffects.GiantBoulder)) {
 			(monster as FrostGiant).giantBoulderHit(2);
@@ -700,7 +649,6 @@ public class CombatMagic extends BaseCombatContent {
 			damage *= 1.75;
 		}
 		//High damage to goes.
-		damage = calcGlacialMod(damage);
 		if (monster.hasPerk(PerkLib.IceNature)) damage *= 0.2;
 		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 0.5;
 		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 2;
@@ -767,7 +715,6 @@ public class CombatMagic extends BaseCombatContent {
 			damage *= 1.75;
 		}
 		//High damage to goes.
-		damage = calcEclypseMod(damage);
 		if (monster.hasPerk(PerkLib.DarknessNature)) damage *= 0.2;
 		if (monster.hasPerk(PerkLib.LightningVulnerability)) damage *= 0.5;
 		if (monster.hasPerk(PerkLib.DarknessVulnerability)) damage *= 2;
@@ -838,7 +785,6 @@ public class CombatMagic extends BaseCombatContent {
 			damage *= 1.75;
 		}
 		//High damage to goes.
-		damage = calcGlacialMod(damage);
 		if (monster.hasPerk(PerkLib.IceNature)) damage *= 0.2;
 		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 0.5;
 		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 2;
@@ -911,7 +857,6 @@ public class CombatMagic extends BaseCombatContent {
 			damage *= 1.75;
 		}
 		//High damage to goes.
-		damage = calcInfernoMod(damage);
 		if (monster.short == "goo-girl") damage = Math.round(damage * 1.5);
 		if (monster.short == "tentacle beast") damage = Math.round(damage * 1.2);
 		if (monster.plural == true) damage *= 5;
@@ -1040,8 +985,8 @@ public class CombatMagic extends BaseCombatContent {
 		}
 
 		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < (30 * spellChargeWeaponCostMultiplier())) player.HP -= (30 * spellChargeWeaponCostMultiplier());
-		else useMana((30 * spellChargeWeaponCostMultiplier()), 5);
+		if (player.hasPerk(PerkLib.LastResort) && player.mana < 30) player.HP -= 30;
+		else useMana(30, 5);
 		if (monster is FrostGiant && player.hasStatusEffect(StatusEffects.GiantBoulder)) {
 			(monster as FrostGiant).giantBoulderHit(2);
 			enemyAI();
@@ -1095,8 +1040,8 @@ public class CombatMagic extends BaseCombatContent {
 		}
 
 		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < (40 * spellChargeArmorCostMultiplier())) player.HP -= (40 * spellChargeArmorCostMultiplier());
-		else useMana((40 * spellChargeArmorCostMultiplier()), 5);
+		if (player.hasPerk(PerkLib.LastResort) && player.mana < 40) player.HP -= 40;
+		else useMana(40, 5);
 		if (monster is FrostGiant && player.hasStatusEffect(StatusEffects.GiantBoulder)) {
 			(monster as FrostGiant).giantBoulderHit(2);
 			enemyAI();
@@ -1319,7 +1264,6 @@ public class CombatMagic extends BaseCombatContent {
 				damage *= 1.75;
 			}
 			//High damage to goes.
-			damage = calcInfernoMod(damage);
 			if (monster.short == "goo-girl") damage = Math.round(damage * 1.5);
 			if (monster.short == "tentacle beast") damage = Math.round(damage * 1.2);
 			if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
@@ -1398,7 +1342,6 @@ public class CombatMagic extends BaseCombatContent {
 			damage *= 1.75;
 		}
 		//High damage to goes.
-		damage = calcVoltageMod(damage);
 		if (monster.hasPerk(PerkLib.DarknessNature)) damage *= 5;
 		if (monster.hasPerk(PerkLib.LightningVulnerability)) damage *= 2;
 		if (monster.hasPerk(PerkLib.DarknessVulnerability)) damage *= 0.5;

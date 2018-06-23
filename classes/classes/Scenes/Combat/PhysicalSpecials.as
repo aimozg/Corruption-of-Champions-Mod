@@ -904,7 +904,6 @@ public class PhysicalSpecials extends BaseCombatContent {
 			else outputText("  Twirling like a top, you bat your opponents with your tail.");
 			var damage:Number = unarmedAttack();
 			damage += player.str;
-			damage = calcInfernoMod(damage);
 			if (monster.plural == true) damage *= 5;
 			if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
 			if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;

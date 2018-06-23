@@ -423,7 +423,6 @@ public class MagicSpecials extends BaseCombatContent {
 		fatigue(150, USEFATG_MAGIC_NOBM);
 		player.createStatusEffect(StatusEffects.CooldownFreezingBreath,10,0,0,0);
 		var damage:Number = int(player.level * (8 + player.wolfScore()) + rand(60));
-		damage = calcGlacialMod(damage);
 		if (monster.hasPerk(PerkLib.EnemyGroupType)) damage *= 5;
 		if (monster.hasPerk(PerkLib.IceNature)) damage *= 0.2;
 		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 0.5;
@@ -526,7 +525,6 @@ public class MagicSpecials extends BaseCombatContent {
 		if (player.tou >= 901 && player.tou < 951) damage += ((player.tou * 5.25) + rand(player.tou * 5.75));
 		if (player.tou >= 951) damage += ((player.tou * 5.5) + rand(player.tou * 6));
 		else damage += (player.tou/3 + rand(player.tou/2));
-		damage = calcGlacialMod(damage);
 		if (monster.hasPerk(PerkLib.IceNature)) damage *= 0.2;
 		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 0.5;
 		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 2;
@@ -778,7 +776,6 @@ public class MagicSpecials extends BaseCombatContent {
 		var damage:Number = 0;
 		damage += 50 + rand(20);
 		damage += (player.level * 10);
-		damage = calcInfernoMod(damage);
 		if (player.hasPerk(PerkLib.DraconicLungsEvolved)) damage *= 3;
 		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
 		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
@@ -902,7 +899,6 @@ public class MagicSpecials extends BaseCombatContent {
 		damage += scalingBonusIntelligence();// * 0.5
 		damage += scalingBonusWisdom();// * 0.5
 		damage += rand(player.level + player.dragonScore());
-		damage = calcInfernoMod(damage);
 		if(player.hasStatusEffect(StatusEffects.DragonBreathBoost)) {
 			player.removeStatusEffect(StatusEffects.DragonBreathBoost);
 			damage *= 1.5;
@@ -1027,7 +1023,6 @@ public class MagicSpecials extends BaseCombatContent {
 		damage += scalingBonusIntelligence();// * 0.5
 		damage += scalingBonusWisdom();// * 0.5
 		damage += rand(player.level + player.dragonScore());
-		damage = calcGlacialMod(damage);
 		if(player.hasStatusEffect(StatusEffects.DragonBreathBoost)) {
 			player.removeStatusEffect(StatusEffects.DragonBreathBoost);
 			damage *= 1.5;
@@ -1117,7 +1112,6 @@ public class MagicSpecials extends BaseCombatContent {
 		damage += scalingBonusIntelligence();// * 0.5
 		damage += scalingBonusWisdom();// * 0.5
 		damage += rand(player.level + player.dragonScore());
-		damage = calcVoltageMod(damage);
 		if(player.hasStatusEffect(StatusEffects.DragonBreathBoost)) {
 			player.removeStatusEffect(StatusEffects.DragonBreathBoost);
 			damage *= 1.5;
@@ -1208,7 +1202,6 @@ public class MagicSpecials extends BaseCombatContent {
 		damage += scalingBonusIntelligence();// * 0.5
 		damage += scalingBonusWisdom();// * 0.5
 		damage += rand(player.level + player.dragonScore());
-		damage = calcEclypseMod(damage);
 		if(player.hasStatusEffect(StatusEffects.DragonBreathBoost)) {
 			player.removeStatusEffect(StatusEffects.DragonBreathBoost);
 			damage *= 1.5;
@@ -1309,7 +1302,6 @@ public class MagicSpecials extends BaseCombatContent {
 
 		var damage:Number;
 		damage = int(player.level * 10 + 45 + rand(10));
-		damage = calcInfernoMod(damage);
 		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
 		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
 		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
@@ -1435,7 +1427,6 @@ public class MagicSpecials extends BaseCombatContent {
 		clearOutput();
 		fatigue(20, USEFATG_MAGIC_NOBM);
 		var damage:Number = (player.level * 8 + rand(10) + player.inte / 2 + player.cor / 5);
-		damage = calcInfernoMod(damage);
 		//Amily!
 		if(monster.hasStatusEffect(StatusEffects.Concentration)) {
 			clearOutput();
@@ -1774,7 +1765,6 @@ public class MagicSpecials extends BaseCombatContent {
 		else if (monster.cor >= 10) damage = Math.round(damage * 1.3);
 		else damage = Math.round(damage * 1.4);
 		//High damage to goes.
-		damage = calcInfernoMod(damage);
 		if (monster.short == "goo-girl") damage = Math.round(damage * 1.5);
 		if (monster.short == "tentacle beast") damage = Math.round(damage * 1.2);
 		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
@@ -1980,7 +1970,6 @@ public class MagicSpecials extends BaseCombatContent {
 			crit = true;
 			damage *= 1.75;
 		}
-		damage = calcInfernoMod(damage);
 		damage *= 0.125;
 		if (player.hasPerk(PerkLib.CorruptedNinetails) && player.tailType == Tail.FOX && player.tailCount == 9) damage *= 0.5;
 		var corruptedfoxfiredmgmulti:Number = 1;
@@ -2100,7 +2089,6 @@ public class MagicSpecials extends BaseCombatContent {
 			crit = true;
 			damage *= 1.75;
 		}
-		damage = calcInfernoMod(damage);
 		damage *= 0.5;
 		if (player.tailType == Tail.FOX && player.tailCount == 9) damage *= 2;
 		var fusedfoxfiredmgmulti:Number = 1;
@@ -2213,7 +2201,6 @@ public class MagicSpecials extends BaseCombatContent {
 			crit = true;
 			damage *= 1.75;
 		}
-		damage = calcInfernoMod(damage);
 		damage *= 0.5;
 		if (player.hasPerk(PerkLib.EnlightenedNinetails) && player.tailType == Tail.FOX && player.tailCount == 9) damage *= 2;
 		var purefoxfiredmgmulti:Number = 1;
@@ -3236,7 +3223,6 @@ public class MagicSpecials extends BaseCombatContent {
 		clearOutput();
 		outputText("You gather energy in your Talisman and unleash the spell contained within.  A wave of burning flames gathers around " + monster.a + monster.short + ", slowly burning " + monster.pronoun2 + ".");
 		var damage:int = int(100+(player.inte/2 + rand(player.inte)) * spellMod());
-		damage = calcInfernoMod(damage);
 		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
 		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
 		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
@@ -3266,7 +3252,6 @@ public class MagicSpecials extends BaseCombatContent {
 		clearOutput();
 		outputText("You gather energy in your Talisman and unleash the spell contained within.  A wave of cold air gathers around " + monster.a + monster.short + ", slowly freezing " + monster.pronoun2 + ".");
 		var damage:int = int(100+(player.inte/2 + rand(player.inte)) * spellMod());
-		damage = calcGlacialMod(damage);
 		if (monster.hasPerk(PerkLib.IceNature)) damage *= 0.2;
 		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 0.5;
 		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 2;
