@@ -340,15 +340,8 @@ public class CombatMagic extends BaseCombatContent {
 			}
 		}
 		//Determine if critical tease!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.CriticalPerformance)) {
-			if (player.lib <= 100) critChance += player.lib / 5;
-			if (player.lib > 100) critChance += 20;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll(true);
+		if (crit) {
 			lustDmg *= 1.75;
 		}
 		lustDmg = Math.round(lustDmg);
@@ -362,10 +355,7 @@ public class CombatMagic extends BaseCombatContent {
 		if(spellSetup(50, Combat.USEMANA_BLACK_HEAL, false)){return;}
 		outputText("You focus on your body and its desire to end pain, trying to draw on your arousal without enhancing it.\n");
 		//30% backfire!
-		var backfire:int = 30;
-		backfire -= (player.inte * 0.15);
-		if (backfire < 15) backfire = 15;
-		if(rand(100) < backfire) {
+		if(spellFailure(30, 0.15, 15)){
 			outputText("An errant sexual thought crosses your mind, and you lose control of the spell!  Your ");
 			if(player.gender == 0) outputText(assholeDescript() + " tingles with a desire to be filled as your libido spins out of control.");
 			if(player.gender == 1) {
@@ -526,9 +516,7 @@ public class CombatMagic extends BaseCombatContent {
 		var tempSpe:Number = 0;
 		outputText("You flush, drawing on your body's desires to empower your muscles and hasten you up.\n\n");
 		//30% backfire!
-		var backfire:int = 30;
-		if (backfire < 15) backfire = 15;
-		if(rand(100) < backfire) {
+		if(spellFailure(30, 0.15, 15)){
 			outputText("An errant sexual thought crosses your mind, and you lose control of the spell!  Your ");
 			if(player.gender == 0) outputText(assholeDescript() + " tingles with a desire to be filled as your libido spins out of control.");
 			if(player.gender == 1) {
@@ -554,15 +542,8 @@ public class CombatMagic extends BaseCombatContent {
 		outputText("You narrow your eyes, focusing your own lust with deadly intent.  At the palm of your hand form ice spike that shots toward " + monster.a + monster.short + " !\n");
 		var damage:Number = scalingBonusIntelligence() * spellModBlack();
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll();
+		if (crit) {
 			damage *= 1.75;
 		}
 		//High damage to goes.
@@ -586,15 +567,8 @@ public class CombatMagic extends BaseCombatContent {
 		outputText("You narrow your eyes, focusing your own lust with deadly intent.  At the palm of your hand form a shard from pure darkness that shots toward " + monster.a + monster.short + " !\n");
 		var damage:Number = scalingBonusIntelligence() * spellModBlack();
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll();
+		if (crit) {
 			damage *= 1.75;
 		}
 		//High damage to goes.
@@ -616,15 +590,8 @@ public class CombatMagic extends BaseCombatContent {
 		outputText("You narrow your eyes, focusing your own lust and willpower with a deadly intent.  Above you starting to form small darn cloud that soon becoming quite wide and long.  Then almost endless rain of ice shards start to downpour on " + monster.a + monster.short + " and the rest of your surrounding!\n");
 		var damage:Number = scalingBonusIntelligence() * spellMod();
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll();
+		if (crit) {
 			damage *= 1.75;
 		}
 		//High damage to goes.
@@ -650,15 +617,8 @@ public class CombatMagic extends BaseCombatContent {
 		outputText("You narrow your eyes, focusing your own lust and willpower with a deadly intent.  Around you starting to form small vortex of flames that soon becoming quite wide.  Then with a single thought you sends all that fire like a unstoppable storm toward " + monster.a + monster.short + " and the rest of your surrounding!\n");
 		var damage:Number = scalingBonusIntelligence() * spellMod();
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll();
+		if (crit) {
 			damage *= 1.75;
 		}
 		//High damage to goes.
@@ -702,10 +662,7 @@ public class CombatMagic extends BaseCombatContent {
 		if (spellSetup(50, Combat.USEMANA_MAGIC, false)) {return;}
 		outputText("You focus on your magic, trying to draw on it without enhancing your own arousal.\n");
 		//30% backfire!
-		var backfire:int = 30;
-		backfire -= (player.inte * 0.15);
-		if (backfire < 15) backfire = 15;
-		if(rand(100) < backfire) {
+		if(spellFailure(30, 0.15, 15)){
 			outputText("An errant sexual thought crosses your mind, and you lose control of the spell!  Your ");
 			if(player.gender == 0) outputText(assholeDescript() + " tingles with a desire to be filled as your libido spins out of control.");
 			if(player.gender == 1) {
@@ -827,22 +784,14 @@ public class CombatMagic extends BaseCombatContent {
 		spellCasted(0);
 	}
 	public function spellHealEffect():void {
-		var heal:Number = 0;
-		heal += scalingBonusIntelligence();
-		heal *= healModWhite();
+		var heal:Number = scalingBonusIntelligence() * healModWhite();
 		if (player.unicornScore() >= 5) heal *= ((player.unicornScore() - 4) * 0.5);
 		if (player.alicornScore() >= 6) heal *= ((player.alicornScore() - 5) * 0.5);
 		if (player.armorName == "skimpy nurse's outfit") heal *= 1.2;
 		if (player.weaponName == "unicorn staff") heal *= 1.5;
 		//Determine if critical heal!
-		var crit:Boolean = false;
-		var critHeal:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critHeal += (player.inte - 50) / 50;
-			if (player.inte > 100) critHeal += 10;
-		}
-		if (rand(100) < critHeal) {
-			crit = true;
+		var crit:Boolean = critRoll();
+		if (crit) {
 			heal *= 1.75;
 		}
 		heal = Math.round(heal);
@@ -853,39 +802,34 @@ public class CombatMagic extends BaseCombatContent {
 //(20) Blind – reduces your opponent's accuracy, giving an additional 50% miss chance to physical attacks.
 	public function spellBlind():void {
 		if (spellSetup(30, Combat.USEMANA_WHITE, false, Combat.HPSPELL)) {return;}
-		var successrate:int = 60;
-		successrate -= (player.inte * 0.4);
-		if (successrate > 20) successrate = 20;
-		if (rand(100) > successrate) {
-			if(handleShell()){return;}
-			if (monster is JeanClaude)
-			{
+		if (spellFailure(40, 0.4, 20)) {
+			outputText(monster.capitalA + monster.short + " blinked!"); }
+		else {
+			if (handleShell()) {return;}
+			if (monster is JeanClaude) {
 				outputText("Jean-Claude howls, reeling backwards before turning back to you, rage clenching his dragon-like face and enflaming his eyes. Your spell seemed to cause him physical pain, but did nothing to blind his lidless sight.");
 
 				outputText("\n\n“<i>You think your hedge magic will work on me, intrus?</i>” he snarls. “<i>Here- let me show you how it’s really done.</i>” The light of anger in his eyes intensifies, burning a retina-frying white as it demands you stare into it...");
 
-				if (rand(player.spe) >= 50 || rand(player.inte) >= 50)
-				{
+				if (rand(player.spe) >= 50 || rand(player.inte) >= 50) {
 					outputText("\n\nThe light sears into your eyes, but with the discipline of conscious effort you escape the hypnotic pull before it can mesmerize you, before Jean-Claude can blind you.");
 
 					outputText("\n\n“<i>You fight dirty,</i>” the monster snaps. He sounds genuinely outraged. “<i>I was told the interloper was a dangerous warrior, not a little [boy] who accepts duels of honour and then throws sand into his opponent’s eyes. Look into my eyes, little [boy]. Fair is fair.</i>”");
 
-					monster.HP -= int(10+(player.inte/3 + rand(player.inte/2)) * spellModWhite());
+					monster.HP -= int(10 + (player.inte / 3 + rand(player.inte / 2)) * spellModWhite());
 				}
-				else
-				{
+				else {
 					outputText("\n\nThe light sears into your eyes and mind as you stare into it. It’s so powerful, so infinite, so exquisitely painful that you wonder why you’d ever want to look at anything else, at anything at- with a mighty effort, you tear yourself away from it, gasping. All you can see is the afterimages, blaring white and yellow across your vision. You swipe around you blindly as you hear Jean-Claude bark with laughter, trying to keep the monster at arm’s length.");
 
 					outputText("\n\n“<i>The taste of your own medicine, it is not so nice, eh? I will show you much nicer things in there in time intrus, don’t worry. Once you have learnt your place.</i>”");
 
 					player.createStatusEffect(StatusEffects.Blind, 2 + player.inte / 20, 0, 0, 0);
 				}
-				if(frostBoulder()){return;}
+				if (frostBoulder()) {return;}
 				spellCasted(0);
 				return;
 			}
-			else if (monster is Lethice && (monster as Lethice).fightPhase == 2)
-			{
+			else if (monster is Lethice && (monster as Lethice).fightPhase == 2) {
 				outputText("You hold your [weapon] aloft and thrust your will forward, causing it to erupt in a blinding flash of light. The demons of the court scream and recoil from the radiant burst, clutching at their eyes and trampling over each other to get back.");
 
 				outputText("\n\n<i>“Damn you, fight!”</i> Lethice screams, grabbing her whip and lashing out at the back-most demons, driving them forward -- and causing the middle bunch to be crushed between competing forces of retreating demons! <i>“Fight, or you'll be in the submission tanks for the rest of your miserable lives!”</i>");
@@ -897,27 +841,34 @@ public class CombatMagic extends BaseCombatContent {
 			}
 			clearOutput();
 			outputText("You glare at " + monster.a + monster.short + " and point at " + monster.pronoun2 + ".  A bright flash erupts before " + monster.pronoun2 + "!\n");
-			if (monster is LivingStatue)
-			{
+			if (monster is LivingStatue) {
 				// noop
 			}
-			else if(rand(3) != 0) {
+			else if (rand(3) != 0) {
 				outputText(" <b>" + monster.capitalA + monster.short + " ");
-				if(monster.plural && monster.short != "imp horde") outputText("are blinded!</b>");
-				else outputText("is blinded!</b>");
-				monster.createStatusEffect(StatusEffects.Blind, 2 + player.inte / 20,0,0,0);
-                if(monster is Diva){(monster as Diva).handlePlayerSpell("blind");}
-				if(monster.short == "Isabella")
-					if (SceneLib.isabellaFollowerScene.isabellaAccent()) outputText("\n\n\"<i>Nein! I cannot see!</i>\" cries Isabella.");
-					else outputText("\n\n\"<i>No! I cannot see!</i>\" cries Isabella.");
-				if(monster.short == "Kiha") outputText("\n\n\"<i>You think blindness will slow me down?  Attacks like that are only effective on those who don't know how to see with their other senses!</i>\" Kiha cries defiantly.");
-				if(monster.short == "plain girl") {
+				if (monster.plural && monster.short != "imp horde") {
+					outputText("are blinded!</b>");
+				} else {
+					outputText("is blinded!</b>");
+				}
+				monster.createStatusEffect(StatusEffects.Blind, 2 + player.inte / 20, 0, 0, 0);
+				if (monster is Diva) {(monster as Diva).handlePlayerSpell("blind");}
+				if (monster.short == "Isabella") {
+					if (SceneLib.isabellaFollowerScene.isabellaAccent()) {
+						outputText("\n\n\"<i>Nein! I cannot see!</i>\" cries Isabella.");
+					} else {
+						outputText("\n\n\"<i>No! I cannot see!</i>\" cries Isabella.");
+					}
+				}
+				if (monster.short == "Kiha") {
+					outputText("\n\n\"<i>You think blindness will slow me down?  Attacks like that are only effective on those who don't know how to see with their other senses!</i>\" Kiha cries defiantly.");
+				}
+				if (monster.short == "plain girl") {
 					outputText("  Remarkably, it seems as if your spell has had no effect on her, and you nearly get clipped by a roundhouse as you stand, confused. The girl flashes a radiant smile at you, and the battle continues.");
 					monster.removeStatusEffect(StatusEffects.Blind);
 				}
 			}
 		}
-		else outputText(monster.capitalA + monster.short + " blinked!");
 		outputText("\n\n");
 		
 		spellCasted(0);
@@ -925,7 +876,11 @@ public class CombatMagic extends BaseCombatContent {
 	//(30) Whitefire – burns the enemy for 10 + int/3 + rand(int/2) * spellMod.
 	public function spellWhitefire():void {
 		if (spellSetup(40, Combat.USEMANA_WHITE, true, Combat.HPSPELL)) {return;}
-		var damage:Number;
+		var damage:Number = scalingBonusIntelligence() * spellModWhite();
+		var crit:Boolean = critRoll();
+		if(crit) {
+			damage *= 1.75;
+		}
 		if (monster is Doppleganger)
 		{
 			(monster as Doppleganger).handleSpellResistance("whitefire");
@@ -937,20 +892,6 @@ public class CombatMagic extends BaseCombatContent {
 			//Attack gains burn DoT for 2-3 turns.
 			outputText("You let loose a roiling cone of flames that wash over the horde of demons like a tidal wave, scorching at their tainted flesh with vigor unlike anything you've seen before. Screams of terror as much as, maybe more than, pain fill the air as the mass of corrupted bodies try desperately to escape from you! Though more demons pile in over the affected front ranks, you've certainly put the fear of your magic into them!");
 			monster.createStatusEffect(StatusEffects.OnFire, 2 + rand(2), 0, 0, 0);
-			damage = scalingBonusIntelligence() * spellModWhite();
-			//Determine if critical hit!
-			var crit:Boolean = false;
-			var critChance:int = 5;
-			if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-				if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-				if (player.inte > 100) critChance += 10;
-			}
-			if (monster.isImmuneToCrits()) critChance = 0;
-			if (rand(100) < critChance) {
-				crit = true;
-				damage *= 1.75;
-			}
-			damage *= 1.75;
 			outputText(" (" + damage + ")");
 			if (crit == true) outputText(" <b>*Critical Hit!*</b>");
 		}
@@ -958,18 +899,6 @@ public class CombatMagic extends BaseCombatContent {
 		{
 			outputText("You narrow your eyes, focusing your mind with deadly intent.  You snap your fingers and " + monster.a + monster.short + " is enveloped in a flash of white flames!\n");
 			if(monster is Diva){(monster as Diva).handlePlayerSpell("whitefire");}
-			damage = scalingBonusIntelligence() * spellModWhite();
-			//Determine if critical hit!
-			var crit2:Boolean = false;
-			var critChance2:int = 5;
-			if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-				if (player.inte <= 100) critChance2 += (player.inte - 50) / 50;
-				if (player.inte > 100) critChance2 += 10;
-			}
-			if (rand(100) < critChance2) {
-				crit = true;
-				damage *= 1.75;
-			}
 			//High damage to goes.
 			if (monster.short == "goo-girl") damage = Math.round(damage * 1.5);
 			if (monster.short == "tentacle beast") damage = Math.round(damage * 1.2);
@@ -1003,15 +932,8 @@ public class CombatMagic extends BaseCombatContent {
 		outputText("You charge out energy in your hand and fire it out in the form of a powerful bolt of lightning at " + monster.a + monster.short + " !\n");
 		var damage:Number = scalingBonusIntelligence() * spellModWhite();
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll();
+		if(crit){
 			damage *= 1.75;
 		}
 		//High damage to goes.
@@ -1045,12 +967,7 @@ public class CombatMagic extends BaseCombatContent {
 
 	public function spellCleansingPalm():void
 	{
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
-		clearOutput();
-		doNext(combatMenu);
-		fatigue(30, USEFATG_MAGIC);
-		if(handleShell()){return;}
-
+		if (spellSetup(30, USEFATG_MAGIC, true, Combat.HPSPELL, true)) {return;}
 		if (monster.short == "Jojo")
 		{
 			// Not a completely corrupted monkmouse
@@ -1084,15 +1001,8 @@ public class CombatMagic extends BaseCombatContent {
 			outputText(" back a few feet.\n\n");
 			if (silly() && corruptionMulti >= 1.75) outputText("It's super effective!  ");
 			//Determine if critical hit!
-			var crit:Boolean = false;
-			var critChance:int = 5;
-			if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-				if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-				if (player.inte > 100) critChance += 10;
-			}
-			if (monster.isImmuneToCrits()) critChance = 0;
-			if (rand(100) < critChance) {
-				crit = true;
+			var crit:Boolean = critRoll();
+			if (crit) {
 				damage *= 1.75;
 			}
 			outputText(monster.capitalA + monster.short + " takes <b><font color=\"#800000\">" + damage + "</font></b> damage.\n\n");
@@ -1106,13 +1016,41 @@ public class CombatMagic extends BaseCombatContent {
 		spellCasted(damage);
 	}
 
-	private function spellSetup(manaCost:int, costType:int, isOffense:Boolean, lastAttack:int = -1):Boolean {
+	private function spellFailure(base:int, intReductionPercent:Number, min:int):Boolean {
+		return randomChance(Math.max(base - (player.inte * intReductionPercent), min));
+	}
+
+	private function critRoll(tease:Boolean = false):Boolean{
+		if (monster.isImmuneToCrits()) return false;
+		var critChance:int = 5;
+		if(tease){
+			if (player.hasPerk(PerkLib.CriticalPerformance)) {
+				if (player.lib <= 100) critChance += player.lib / 5;
+				if (player.lib > 100) critChance += 20;
+			}
+		}
+		else if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
+			if (player.inte <= 100) {
+				critChance += (player.inte - 50) / 50;
+			}
+			if (player.inte > 100) {
+				critChance += 10;
+			}
+		}
+		return randomChance(critChance);
+	}
+
+	private function spellSetup(manaCost:int, costType:int, isOffense:Boolean, lastAttack:int = -1, isFatigue:Boolean = false):Boolean {
 		clearOutput();
 		doNext(combatMenu);
-		useMana(40, Combat.USEMANA_WHITE);
+		if(isFatigue){
+			fatigue(manaCost, costType);
+		} else {
+			useMana(manaCost, costType);
+		}
 		if(isOffense && handleShell()){return true;}
-		if(frostBoulder()){return true;}
-		return false;
+		return frostBoulder();
+
 	}
 
 	private function frostBoulder():Boolean{
