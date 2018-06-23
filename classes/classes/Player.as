@@ -372,10 +372,7 @@ package classes
 			return weaponRange == game.weaponsrange.BOWGUID || weaponRange == game.weaponsrange.BOWHODR;
 		}
 		//Using Tome
-		public function isUsingTome():Boolean
-		{
-			return weaponRangeName == "nothing" || weaponRangeName == "Inquisitor’s Tome" || weaponRangeName == "Sage’s Sketchbook";
-		}
+
 		//override public function get weapons
 		override public function get weaponRangeName():String {
 			return weaponRange.name;

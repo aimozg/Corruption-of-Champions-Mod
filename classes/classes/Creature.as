@@ -1,4 +1,4 @@
-﻿//CoC Creature.as
+//CoC Creature.as
 package classes
 {
 
@@ -4333,6 +4333,89 @@ import classes.Stats.BuffableStat;
 				if(weaponName == weap){return true}
 			}
 			return false;
+		}
+		public function isUsingTome():Boolean
+		{
+			return weaponRangeName == "nothing" || weaponRangeName == "Inquisitor’s Tome" || weaponRangeName == "Sage’s Sketchbook";
+		}
+
+		public function spellCost(mod:Number, type:int = 0, heal:Boolean = false):Number{
+			var white:Boolean = type ===  1;
+			var black:Boolean = type === -1;
+			var costPercent:Number = 100;
+			costPercent -= (100 * perkv1(PerkLib.SeersInsight));
+			costPercent -= perkv1(PerkLib.SpellcastingAffinity);
+			costPercent -= perkv1(PerkLib.WizardsEnduranceAndSluttySeduction);
+			costPercent -= perkv1(PerkLib.WizardsAndDaoistsEndurance);
+			costPercent -= perkv1(PerkLib.WizardsEndurance);
+
+			if (jewelryName == game.jewelries.FOXHAIR.name) costPercent -= 20;
+			if (weaponName == game.weapons.ASCENSU.name) costPercent -= 15;
+			if (weaponName == game.weapons.N_STAFF.name) costPercent += 200;
+
+			if(white){
+				costPercent -= (100 * perkv2(PerkLib.Ambition));
+				if (weaponName == game.weapons.PURITAS.name) costPercent -= 15;
+			}
+			else if (black) {
+				costPercent -= (100 * perkv2(PerkLib.Obsession));
+				if (weaponName == game.weapons.DEPRAVA.name) costPercent -= 15;
+			}
+
+			var sMod:Number = spellMod(type, heal);
+			if (sMod > 1) costPercent += Math.round(sMod - 1) * 10;
+			//Limiting it and multiplicative mods
+			if(!heal && hasPerk(PerkLib.BloodMage) && costPercent < 50) costPercent = 50;
+			mod *= costPercent/100;
+			if (!heal && hasPerk(PerkLib.HistoryScholar)) {
+				if(mod > 2) mod *= .8;
+			}
+
+			if ((heal || hasPerk(PerkLib.BloodMage)) && mod < 5) mod = 5;
+			else if(mod < 2) mod = 2;
+			mod = Math.round(mod * 100)/100;
+			return mod;
+		}
+		public function spellMod(type:int = 0, heal:Boolean = false):Number {
+			var white:Boolean = type ===  1;
+			var black:Boolean = type === -1;
+			var mod:Number = spellPower;
+			if(!heal) {
+				if(hasPerk(PerkLib.JobSorcerer) && inte >= 25) mod += .1;
+				if(hasPerk(PerkLib.Spellpower) && inte >= 50) mod += .1;
+				if(hasPerk(PerkLib.TraditionalMage) && weaponPerk == "Staff" && isUsingTome()) mod += 1;
+			}
+			if(!white) {
+				mod += perkv1(PerkLib.Obsession);
+			}
+			if(!black) {
+				mod += perkv1(PerkLib.Ambition);
+			}
+			if (white) {
+				mod += statusEffectv2(StatusEffects.BlessingOfDivineMarae);
+				if (hasPerk(PerkLib.UnicornBlessing) && cor <= 20) mod += 20;
+			}
+			if (black && hasPerk(PerkLib.BicornBlessing) && cor >= 80) mod += 20;
+
+			mod += perkv1(PerkLib.WizardsAndDaoistsFocus);
+			mod += perkv1(PerkLib.SagesKnowledge);
+			mod += perkv1(PerkLib.SeersInsight);
+
+			if (hasPerk(PerkLib.ChiReflowMagic)) mod += UmasShop.NEEDLEWORK_MAGIC_SPELL_MULTI;
+			if (jewelryEffectId == JewelryLib.MODIFIER_SPELL_POWER) mod += (jewelryEffectMagnitude / 100);
+			if (countCockSocks("blue") > 0) mod += (countCockSocks("blue") * .05);
+			if (shieldName == game.shields.SPI_FOC.name) mod += .2;
+			if (shieldName == game.shields.MABRACE.name) mod += .5;
+			if (weaponName == game.weapons.N_STAFF.name) mod += cor * .01;
+			if (weaponName == game.weapons.U_STAFF.name) mod += (100 - cor) * .01;
+			if (hasStatusEffect(StatusEffects.Maleficium)) mod += 1;
+
+			if (!black && weaponName == game.weapons.PURITAS.name) mod *= 1.6;
+			if (!white && weaponName == game.weapons.DEPRAVA.name) mod *= 1.6;
+			if (weaponName == game.weapons.ASCENSU.name) mod *= 1.8;
+
+			mod = Math.round(mod * 100)/100;
+			return mod;
 		}
 	}
 }

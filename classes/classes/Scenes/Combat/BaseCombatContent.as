@@ -124,40 +124,40 @@ public class BaseCombatContent extends BaseContent {
 		return player.scalingBonusLibido();
 	}
 	protected function spellCost(mod:Number):Number {
-		return combat.magic.spellCostImpl(mod);
+		return combat.spellCost(mod);
 	}
 	protected function spellCostWhite(mod:Number):Number {
-		return combat.magic.spellCostWhiteImpl(mod);
+		return combat.spellCostWhite(mod);
 	}
 	protected function spellCostBlack(mod:Number):Number {
-		return combat.magic.spellCostBlackImpl(mod);
+		return combat.spellCostBlack(mod);
 	}
 	protected function healCost(mod:Number):Number {
-		return combat.magic.healCostImpl(mod);
+		return combat.healCost(mod);
 	}
 	protected function healCostWhite(mod:Number):Number {
-		return combat.magic.healCostWhiteImpl(mod);
+		return combat.healCostWhite(mod);
 	}
 	protected function healCostBlack(mod:Number):Number {
-		return combat.magic.healCostBlackImpl(mod);
+		return combat.healCostBlack(mod);
 	}
 	protected function spellMod():Number {
-		return combat.magic.spellModImpl();
+		return combat.spellMod();
 	}
 	protected function spellModBlack():Number {
-		return combat.magic.spellModBlackImpl();
+		return combat.spellModBlack();
 	}
 	protected function spellModWhite():Number {
-		return combat.magic.spellModWhiteImpl();
+		return combat.spellModWhite();
 	}
 	protected function healMod():Number {
-		return combat.magic.healModImpl();
+		return combat.healMod();
 	}
 	protected function healModBlack():Number {
-		return combat.magic.healModBlackImpl();
+		return combat.healModBlack();
 	}
 	protected function healModWhite():Number {
-		return combat.magic.healModWhiteImpl();
+		return combat.healModWhite();
 	}
 	protected function calcInfernoMod(damage:Number):int {
 		return combat.magic.calcInfernoModImpl(damage);
