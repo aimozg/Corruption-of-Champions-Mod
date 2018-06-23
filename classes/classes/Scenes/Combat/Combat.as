@@ -2067,12 +2067,14 @@ public function doDamage(damage:Number, apply:Boolean = true, display:Boolean = 
 				break;
 		}
 		//Blood mages use HP for spells
-		if (player.hasPerk(PerkLib.BloodMage)
-			&& (type == USEMANA_MAGIC || type == USEMANA_WHITE || type == USEMANA_BLACK)) {
-			player.takePhysDamage(mod);
-			statScreenRefresh();
-			return;
+		if ((type == USEMANA_MAGIC || type == USEMANA_WHITE || type == USEMANA_BLACK)) {
+			if ((player.hasPerk(PerkLib.BloodMage) || player.hasPerk(PerkLib.LastResort) && player.mana < mod)) {
+				player.takePhysDamage(mod);
+				statScreenRefresh();
+				return;
+			}
 		}
+
 		//Mana restoration buffs!
 		if (mod < 0) {
 			mod *= manaRecoveryMultiplier();

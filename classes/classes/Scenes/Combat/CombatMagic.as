@@ -26,28 +26,32 @@ import coc.view.ButtonData;
 import coc.view.ButtonDataList;
 
 public class CombatMagic extends BaseCombatContent {
+	public static const WHITE:int =  1;
+	public static const BLACK:int = -1;
+	public static const NORMAL:int = 0;
+
 	public function CombatMagic() {
 	}
 	internal function applyAutocast():void {
 		outputText("\n\n");
 		if (player.hasPerk(PerkLib.Spellsword) && player.lust < getWhiteMagicLustCap() && player.mana >= spellCostWhite(30) && flags[kFLAGS.AUTO_CAST_CHARGE_WEAPON] == 0 && player.weaponName != "fists") {
 			spellChargeWeapon(true);
-			useMana(30 ,5);
+			useMana(30, Combat.USEMANA_WHITE);
 			spellCasted(0);
 		}
 		if (player.hasPerk(PerkLib.Spellarmor) && player.lust < getWhiteMagicLustCap() && player.mana >= spellCostWhite(40) && flags[kFLAGS.AUTO_CAST_CHARGE_ARMOR] == 0 && !player.isNaked()) {
 			spellChargeArmor(true);
-			useMana(40,5);
+			useMana(40, Combat.USEMANA_WHITE);
 			spellCasted(0);
 		}
 		if (player.hasPerk(PerkLib.Battlemage) && (player.lust >= 50) && player.mana >= spellCostBlack(50) && flags[kFLAGS.AUTO_CAST_MIGHT] == 0) {
 			spellMight(true);
-			useMana(50,6);
+			useMana(50, Combat.USEMANA_BLACK);
 			spellCasted(0);
 		}
 		if (player.hasPerk(PerkLib.Battleflash) && (player.lust >= 50) && player.mana >= spellCostBlack(40) && flags[kFLAGS.AUTO_CAST_BLINK] == 0) {
 			spellBlink(true);
-			useMana(40,6);
+			useMana(40, Combat.USEMANA_BLACK);
 			spellCasted(0);
 		}
 	}
@@ -288,12 +292,7 @@ public class CombatMagic extends BaseCombatContent {
 	}
 	
 	public function spellArouse():void {
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < spellCostBlack(20)) player.HP -= spellCostBlack(20);
-		else useMana(20,6);
-		statScreenRefresh();
-		if(frostBoulder()){return;}
-		if(handleShell()){return;}
+		if (spellSetup(20, Combat.USEMANA_BLACK, true)) {return;}
 		outputText("You make a series of arcane gestures, drawing on your own lust to inflict it upon your foe!\n");
 		//Worms be immune
 		if(monster.short == "worms") {
@@ -360,10 +359,7 @@ public class CombatMagic extends BaseCombatContent {
 		spellCasted(0);
 	}
 	public function spellRegenerate():void {
-		clearOutput();
-		doNext(combatMenu);
-		useMana(50, 11);
-		if(frostBoulder()){return;}
+		if(spellSetup(50, Combat.USEMANA_BLACK_HEAL, false)){return;}
 		outputText("You focus on your body and its desire to end pain, trying to draw on your arousal without enhancing it.\n");
 		//30% backfire!
 		var backfire:int = 30;
@@ -450,14 +446,11 @@ public class CombatMagic extends BaseCombatContent {
 			return;
 		}
 
-		clearOutput();
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < 50) player.HP -= 50;
-		else useMana(50,6);
+		if(spellSetup(50, Combat.USEMANA_BLACK, false)){return;}
+
 		var tempStr:Number = 0;
 		var tempTou:Number = 0;
 		var tempInt:Number = 0;
-		if(frostBoulder()){return;}
 		outputText("You flush, drawing on your body's desires to empower your muscles and toughen you up.\n\n");
 		//30% backfire!
 		var backfire:int = 30;
@@ -528,12 +521,9 @@ public class CombatMagic extends BaseCombatContent {
 			return;
 		}
 
-		clearOutput();
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < 40) player.HP -= 40;
-		else useMana(40,6);
+		if(spellSetup(40, Combat.USEMANA_BLACK, false)){return;}
+
 		var tempSpe:Number = 0;
-		if(frostBoulder()){return;}
 		outputText("You flush, drawing on your body's desires to empower your muscles and hasten you up.\n\n");
 		//30% backfire!
 		var backfire:int = 30;
@@ -560,14 +550,7 @@ public class CombatMagic extends BaseCombatContent {
 
 //(45) Ice Spike - ice version of whitefire
 	public function spellIceSpike():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
-		clearOutput();
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < spellCostBlack(40)) player.HP -= spellCostBlack(40);
-		else useMana(40,6);
-		if(handleShell()){return;}
-		if(frostBoulder()){return;}
-		clearOutput();
+		if(spellSetup(40, Combat.USEMANA_BLACK, true, Combat.HPSPELL)){return;}
 		outputText("You narrow your eyes, focusing your own lust with deadly intent.  At the palm of your hand form ice spike that shots toward " + monster.a + monster.short + " !\n");
 		var damage:Number = scalingBonusIntelligence() * spellModBlack();
 		//Determine if critical hit!
@@ -599,14 +582,7 @@ public class CombatMagic extends BaseCombatContent {
 
 //(45) Darkness Shard
 	public function spellDarknessShard():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
-		clearOutput();
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < spellCostBlack(40)) player.HP -= spellCostBlack(40);
-		else useMana(40,6);
-		if(handleShell()){return;}
-		if(frostBoulder()){return;}
-		clearOutput();
+		if(spellSetup(40, Combat.USEMANA_BLACK, true, Combat.HPSPELL)){return;}
 		outputText("You narrow your eyes, focusing your own lust with deadly intent.  At the palm of your hand form a shard from pure darkness that shots toward " + monster.a + monster.short + " !\n");
 		var damage:Number = scalingBonusIntelligence() * spellModBlack();
 		//Determine if critical hit!
@@ -636,18 +612,7 @@ public class CombatMagic extends BaseCombatContent {
 
 //(100) Ice Rain - AoE Ice spell
 	public function spellIceRain():void {
-		if (trueOnceInN(2)) {
-			SceneLib.combat.lastAttack = Combat.HPSPELL;
-		} else {
-			SceneLib.combat.lastAttack = Combat.LUSTSPELL;
-		}
-		clearOutput();
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < spellCost(200)) player.HP -= spellCost(200);
-		else useMana(200,1);
-		if(handleShell()){return;}
-		if(frostBoulder()){return;}
-		clearOutput();
+		if(spellSetup(200, Combat.USEMANA_MAGIC, true, trueOnceInN(2)? Combat.HPSPELL : Combat.LUSTSPELL)){return;}
 		outputText("You narrow your eyes, focusing your own lust and willpower with a deadly intent.  Above you starting to form small darn cloud that soon becoming quite wide and long.  Then almost endless rain of ice shards start to downpour on " + monster.a + monster.short + " and the rest of your surrounding!\n");
 		var damage:Number = scalingBonusIntelligence() * spellMod();
 		//Determine if critical hit!
@@ -681,18 +646,7 @@ public class CombatMagic extends BaseCombatContent {
 
 //(100) Fire Storm - AoE Fire spell
 	public function spellFireStorm():void {
-		if (trueOnceInN(2)) {
-			SceneLib.combat.lastAttack = Combat.HPSPELL;
-		} else {
-			SceneLib.combat.lastAttack = Combat.LUSTSPELL;
-		}
-		clearOutput();
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < spellCost(200)) player.HP -= spellCost(200);
-		else useMana(200,1);
-		if(handleShell()){return;}
-		if(frostBoulder()){return;}
-		clearOutput();
+		if(spellSetup(200, Combat.USEMANA_MAGIC, true, trueOnceInN(2)? Combat.HPSPELL : Combat.LUSTSPELL)){return;}
 		outputText("You narrow your eyes, focusing your own lust and willpower with a deadly intent.  Around you starting to form small vortex of flames that soon becoming quite wide.  Then with a single thought you sends all that fire like a unstoppable storm toward " + monster.a + monster.short + " and the rest of your surrounding!\n");
 		var damage:Number = scalingBonusIntelligence() * spellMod();
 		//Determine if critical hit!
@@ -745,10 +699,7 @@ public class CombatMagic extends BaseCombatContent {
 	}
 	
 	public function spellNosferatu():void {
-		clearOutput();
-		doNext(combatMenu);
-		useMana(50, 9);
-		if(frostBoulder()){return;}
+		if (spellSetup(50, Combat.USEMANA_MAGIC, false)) {return;}
 		outputText("You focus on your magic, trying to draw on it without enhancing your own arousal.\n");
 		//30% backfire!
 		var backfire:int = 30;
@@ -817,11 +768,7 @@ public class CombatMagic extends BaseCombatContent {
 			return;
 		}
 
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < 30) player.HP -= 30;
-		else useMana(30, 5);
-		if(frostBoulder()){return;}
-		clearOutput();
+		if(spellSetup(30, Combat.USEMANA_WHITE, false)){return;}
 		outputText("You utter words of power, summoning an electrical charge around your [weapon].  It crackles loudly, ensuring you'll do more damage with it for the rest of the fight.\n\n");
 		player.createStatusEffect(StatusEffects.ChargeWeapon, ChargeWeaponBoost, ChargeWeaponDuration, 0, 0);
 
@@ -863,11 +810,7 @@ public class CombatMagic extends BaseCombatContent {
 			return;
 		}
 
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < 40) player.HP -= 40;
-		else useMana(40, 5);
-		if(frostBoulder()){return;}
-		clearOutput();
+		if(spellSetup(40, Combat.USEMANA_WHITE, false)){return;}
 		outputText("You utter words of power, summoning an electrical charge around your");
 		if (player.isNaked() && player.haveNaturalArmor()) outputText(" natural armor.");
 		else outputText(" [armor].");
@@ -877,10 +820,7 @@ public class CombatMagic extends BaseCombatContent {
 		spellCasted(0);
 	}
 	public function spellHeal():void {
-		clearOutput();
-		doNext(combatMenu);
-		useMana(30, 10);
-		if(frostBoulder()){return;}
+		if(spellSetup(30, Combat.USEMANA_WHITE_HEAL, false)){return;}
 		spellHealEffect();
 		outputText("\n\n");
 		
@@ -912,11 +852,7 @@ public class CombatMagic extends BaseCombatContent {
 	}
 //(20) Blind – reduces your opponent's accuracy, giving an additional 50% miss chance to physical attacks.
 	public function spellBlind():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
-		clearOutput();
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < spellCostWhite(30)) player.HP -= spellCostWhite(30);
-		else useMana(30,5);
+		if (spellSetup(30, Combat.USEMANA_WHITE, false, Combat.HPSPELL)) {return;}
 		var successrate:int = 60;
 		successrate -= (player.inte * 0.4);
 		if (successrate > 20) successrate = 20;
@@ -957,6 +893,7 @@ public class CombatMagic extends BaseCombatContent {
 				monster.createStatusEffect(StatusEffects.Blind, 5 * spellModWhite(), 0, 0, 0);
 				outputText("\n\n");
 				spellCasted(0);
+				return;
 			}
 			clearOutput();
 			outputText("You glare at " + monster.a + monster.short + " and point at " + monster.pronoun2 + ".  A bright flash erupts before " + monster.pronoun2 + "!\n");
@@ -987,20 +924,14 @@ public class CombatMagic extends BaseCombatContent {
 	}
 	//(30) Whitefire – burns the enemy for 10 + int/3 + rand(int/2) * spellMod.
 	public function spellWhitefire():void {
+		if (spellSetup(40, Combat.USEMANA_WHITE, true, Combat.HPSPELL)) {return;}
 		var damage:Number;
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
-		clearOutput();
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < spellCostWhite(40)) player.HP -= spellCostWhite(40);
-		else useMana(40,5);
-		if(handleShell()){return;}
 		if (monster is Doppleganger)
 		{
 			(monster as Doppleganger).handleSpellResistance("whitefire");
 			spellCasted(0);
 			return;
 		}
-		if(frostBoulder()){return;}
 		else if (monster is Lethice && (monster as Lethice).fightPhase == 2)
 		{
 			//Attack gains burn DoT for 2-3 turns.
@@ -1025,7 +956,6 @@ public class CombatMagic extends BaseCombatContent {
 		}
 		else
 		{
-			clearOutput();
 			outputText("You narrow your eyes, focusing your mind with deadly intent.  You snap your fingers and " + monster.a + monster.short + " is enveloped in a flash of white flames!\n");
 			if(monster is Diva){(monster as Diva).handlePlayerSpell("whitefire");}
 			damage = scalingBonusIntelligence() * spellModWhite();
@@ -1069,14 +999,7 @@ public class CombatMagic extends BaseCombatContent {
 
 //(45) Lightning Bolt - base lighting spell
 	public function spellLightningBolt():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
-		clearOutput();
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < spellCostWhite(40)) player.HP -= spellCostWhite(40);
-		else useMana(40,5);
-		if(handleShell()){return;}
-		if(frostBoulder()){return;}
-		clearOutput();
+		if(spellSetup(40, Combat.USEMANA_WHITE, true, Combat.HPSPELL)){return;}
 		outputText("You charge out energy in your hand and fire it out in the form of a powerful bolt of lightning at " + monster.a + monster.short + " !\n");
 		var damage:Number = scalingBonusIntelligence() * spellModWhite();
 		//Determine if critical hit!
@@ -1108,12 +1031,7 @@ public class CombatMagic extends BaseCombatContent {
 
 //(35) Blizzard
 	public function spellBlizzard():void {
-		clearOutput();
-		doNext(combatMenu);
-		if (player.hasPerk(PerkLib.LastResort) && player.mana < spellCostWhite(50)) player.HP -= spellCostWhite(50);
-		else useMana(50,5);
-		if(frostBoulder()){return;}
-		clearOutput();
+		if(spellSetup(50, Combat.USEMANA_WHITE, false)){return;}
 		outputText("You utter words of power, summoning an ice storm.  It swirls arounds you, ensuring that you'll have more protection from the fire attacks for a few moments.\n\n");
 		if (player.hasPerk(PerkLib.ColdMastery) || player.hasPerk(PerkLib.ColdAffinity)) {
 			player.createStatusEffect(StatusEffects.Blizzard, 2 + player.inte / 10,0,0,0);
@@ -1186,6 +1104,15 @@ public class CombatMagic extends BaseCombatContent {
 			outputText("You thrust your palm forward, causing a blast of pure energy to slam against " + monster.a + monster.short + ", which they ignore. It is probably best you don’t use this technique against the pure.\n\n");
 		}
 		spellCasted(damage);
+	}
+
+	private function spellSetup(manaCost:int, costType:int, isOffense:Boolean, lastAttack:int = -1):Boolean {
+		clearOutput();
+		doNext(combatMenu);
+		useMana(40, Combat.USEMANA_WHITE);
+		if(isOffense && handleShell()){return true;}
+		if(frostBoulder()){return true;}
+		return false;
 	}
 
 	private function frostBoulder():Boolean{
