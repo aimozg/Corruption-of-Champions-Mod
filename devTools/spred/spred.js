@@ -937,7 +937,7 @@ var monsters;
     }
     monsters.loadMod = loadMod;
     function initMonsters() {
-        loadFile(basedir + 'content/coc/NPC/diva2.xml', 'xml')
+        loadFile(basedir + 'content/coc/NPC/diva.xml', 'xml')
             .then(loadMod);
     }
     monsters.initMonsters = initMonsters;

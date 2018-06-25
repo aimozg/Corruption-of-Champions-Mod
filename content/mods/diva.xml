@@ -79,14 +79,14 @@
             </loot>
         </combat>
         <script language="lua"><![CDATA[
-            local scene
             ---@param me Creature
-            function setup(me)
+            function setup(me,options)
                 print('called setup')
                 me.extra.biteCounter = 0
                 me.extra.sonicScreamCooldown = 0
             end
-            ---@param me Creature
+            ---@param me Creature (Monster)
+            ---@param target Creature (Player)
             function moveBite(me, target)
                 print('called moveBite')
                 me:addHP(me:maxHP() * 0.2)
@@ -100,9 +100,22 @@
                 target:takePhysDamage(dam)
                 target:takePhysDamage(math.random(2, 5))
             end
-
+            ---@param me Creature (Monster)
+            ---@param enemy Creature (Player)
             function performCombatAction(me, enemy)
+                if me.extra.sonicScreamCooldown > 0 then
+                    me.extra.sonicScreamCooldown = me.extra.sonicScreamCooldown - 1
+                end
+                --if enemy:isBound() then
+                --    moveBite(me, enemy)
+                --else
+                --local options = { moveEmbrace; moveSwoopToss }
+                --if me.extra.sonicScreamCooldown == 0 then
+                --    table.insert(moveSonicScream)
+                --end
+                --options[math.random(1, #options)](me,enemy)
                 moveBite(me, enemy)
+                --end
             end
             ]]></script>
     </monster>

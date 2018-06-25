@@ -23,6 +23,7 @@ import classes.Scenes.NPCs.JojoScene;
 import classes.display.DebugInfo;
 import classes.display.PerkMenu;
 import classes.display.SpriteDb;
+import classes.internals.Utils;
 
 import coc.lua.LuaEngine;
 
@@ -388,19 +389,28 @@ public class CoC extends MovieClip
     private function loadingMods(compiler:StoryCompiler,nLoaded:int,nTotal:int):void {
         mainMenu.progressText = "Loaded "+nLoaded+"/"+nTotal+" content files";
     }
-    private function initMods():void {
-        if (lua) {
-			mods = compiler.mods.slice();
-			for each (var mod:GameMod in mods) {
-				mod.finishInit(this);
+	private function initMods():void {
+		var failed:/*GameMod*/Array = [];
+		if (lua) {
+			mods = [];
+			for each (var mod:GameMod in compiler.mods) {
+				try {
+					mod.finishInit(this);
+					mods.push(mod);
+				} catch (e:Error) {
+					trace(e.getStackTrace());
+					failed.push(mod);
+				}
 			}
-			mainMenu.progressText = "Loaded " + mods.length + " mod(s) from " + compiler.includesTotal() + " content files";
 		} else {
-            mods = [];
-            mainMenu.progressText = "Loaded "  + compiler.includesTotal() + " content files, failed to load mods";
-        }
+			mods                  = [];
+		}
+		var s:String = "Loaded " + compiler.includesTotal() + " content files";
+        if (mods.length>0) s += ", "+mods.length+" mods";
+        if (failed.length>0) s += "; failed to load mods: "+Utils.mapOneProp(failed,"name").join(", ");
+        mainMenu.progressText = s;
 		//mainMenu.mainMenu();
-    }
+	}
     public function resetMods():void {
 		for each (var mod:GameMod in mods) {
             mod.reset();

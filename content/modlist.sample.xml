@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--content/modlist.xml-->
+<extend-story name="/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="story.xsd">
+    <include path="mods/diva.xml"/>
+</extend-story>

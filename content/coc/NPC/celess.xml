@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <story name="celess" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:noNamespaceSchemaLocation="../story.xsd">
+	   xsi:noNamespaceSchemaLocation="../../story.xsd">
 	<lib name="strings">
 		<lib name="birth">
 			<text name="intro">

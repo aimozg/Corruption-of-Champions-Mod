@@ -101,6 +101,16 @@ public class Utils extends Object
 			return r;
 		}
 		/**
+		 * @return src.map( el => el['propname'] )
+		 */
+		public static function mapOneProp(src:Array,propname:String):Array {
+			var result:Array = [];
+			for (var i:int = 0; i< src.length; i++) {
+				result.push(src[i][propname]);
+			}
+			return result;
+		}
+		/**
 		 * @return src.filter(el=>el).map( el => mapping.map(prop => el[prop]) )
 		 * if keepNulls = true: src.map( el => el ? mapping.map(prop => el[prop]) : null )
 		 */

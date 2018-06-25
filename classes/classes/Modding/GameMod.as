@@ -65,7 +65,17 @@ public class GameMod implements Jsonable {
 		}
 		story = _unboundNode.bind(game.context);
 		for each (var mp:MonsterPrototype in monsterList) {
-			if (mp.baseId) mp.base = game.findModMonster(mp.baseId);
+			if (mp.baseId) {
+				for each (var mp2:MonsterPrototype in monsterList) {
+					if (mp.baseId == mp2.id) {
+						mp.base = mp2;
+						break;
+					}
+				}
+				if (!mp.base) {
+					mp.base = game.findModMonster(mp.baseId);
+				}
+			}
 			mp.finishInit();
 			for each (var script:XML in mp.descriptor.script) {
 				mp.ns.eval(script.text());

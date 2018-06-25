@@ -19,7 +19,7 @@ public class GoblinScene extends BaseContent
 		}
 		private var story:BoundNode;
 		private function init():void {
-            story = new Story("story", CoC.instance.rootStory.locate("monsters"), "goblin").bind(CoC.instance.context);
+            story = CoC.instance.rootStory.locate("monsters").addLib("goblin").bind(CoC.instance.context);
         }
 
 		/*Goblins

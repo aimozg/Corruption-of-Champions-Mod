@@ -19,13 +19,13 @@ mod = element mod {
 state = element state {
     var*
 }
-hook = element hook {
-    attribute type { 'daily' | 'hourly' },
-    content*
-}
 var = element var {
     attribute name { text },
     (text | empty)
+}
+hook = element hook {
+    attribute type { 'daily' | 'hourly' },
+    content*
 }
 #export = element export {
 #    attribute ref { text }
@@ -187,7 +187,7 @@ lootItem = element item {
 # #############################################
 # textual content
 content =
-    text | b | i | font | if | switch | xcc-content
+    text | b | i | font | xcc-logic | xcc-content
 b = element b { content* }
 i = element i { content* }
 font = element font {
@@ -195,7 +195,7 @@ font = element font {
     content*
 }
 #xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone
-xcc-content = display | set | output # | xcc-named-content | dynStats | Include
+xcc-content = display | set | output | menu # | xcc-named-content | Include
 #namedBlock = attribute name { text }?, content*
 #String = element string { namedBlock }
 set = element set {
@@ -212,6 +212,9 @@ display = element display {
     empty
 }
 output = element output { expression }
+menu = element menu {
+
+}
 #extend-story = element extend-story { namedBlock }
 #zone = element zone {
 #    namedBlock,
@@ -227,18 +230,6 @@ output = element output { expression }
 #    attribute when { expression }?,
 #    content*
 #}
-#dynStats = element dynStats {
-#    attribute str { expression }?,
-#    attribute tou { expression }?,
-#    attribute spe { expression }?,
-#    attribute int { expression }?,
-#    attribute lib { expression }?,
-#    attribute sen { expression }?,
-#    attribute lus { expression }?,
-#    attribute cor { expression }?,
-#    attribute scale { expression }?,
-#    empty
-#}
 #Include = element include {
 #    attribute path { text },
 #    attribute required { "true" | "false" }?,
@@ -247,6 +238,7 @@ output = element output { expression }
 
 # #############################################
 # xlogic
+xxc-logic = if | switch
 expression = text
 array-content-expression = text
 if = element if {
