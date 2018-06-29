@@ -2727,7 +2727,7 @@ package classes
 
 			var size:Number = 8;
 			if ('size' in options) size = options.size;
-			else if (tool is Cock) size = (tool as Cock).cArea();
+			else if (tool is Cock) size = (tool as Cock).cArea;
 
 			var otype:String = 'Default';
 			if (where is AssClass) {

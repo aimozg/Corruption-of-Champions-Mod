@@ -689,7 +689,7 @@ import classes.Stats.BuffableStat;
 		//MALE STUFF
 		//public var cocks:Array;
 		//TODO: Tuck away into Male genital class?
-		public var cocks:Array;
+		public var cocks:/*Cock*/Array;
 		//balls
 		public var balls:Number = 0;
 		public var cumMultiplier:Number = 1;
@@ -1382,518 +1382,195 @@ import classes.Stats.BuffableStat;
 		[    ? ? ?    ]
 		
 		*/
-		public function biggestTitSize():Number
-		{
-			if (breastRows.length == 0)
+		public function biggestTitSize():Number {
+			if (breastRows.length == 0) {
 				return -1;
-			var counter:Number = breastRows.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (breastRows[index].breastRating < breastRows[counter].breastRating)
-					index = counter;
 			}
-			return breastRows[index].breastRating;
+			return breastRows.concat().sortOn("breastRating", Array.NUMERIC | Array.DESCENDING)[0];
 		}
 
-		public function cockArea(i_cockIndex:Number):Number
-		{
-			if (i_cockIndex >= cocks.length || i_cockIndex < 0)
+		public function cockArea(i_cockIndex:uint):Number {
+			if (i_cockIndex >= cocks.length) {
 				return 0;
-			return (cocks[i_cockIndex].cockThickness * cocks[i_cockIndex].cockLength);
+			}
+			return cocks[i_cockIndex].cArea;
 		}
 
-		public function biggestCockLength():Number
-		{
-			if (cocks.length == 0)
+		public function biggestCockLength():Number {
+			if (cocks.length == 0) {
 				return 0;
+			}
 			return cocks[biggestCockIndex()].cockLength;
 		}
 
-		public function biggestCockArea():Number
-		{
-			if (cocks.length == 0)
+		public function biggestCockArea():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) < cockArea(counter))
-					index = counter;
 			}
-			return cockArea(index);
+			return cocks[biggestCockIndex()].cArea;
 		}
 
 		//Find the second biggest dick and it's area.
-		public function biggestCockArea2():Number
-		{
-			if (cocks.length <= 1)
+		public function biggestCockArea2():Number {
+			if (cocks.length <= 1) {
 				return 0;
+			}
+			return cocks[biggestCockIndex(1)].cArea;
+		}
+
+		public function longestCock():Number {
+			if (cocks.length == 0) {
+				return 0;
+			}
+			var arr:Array = cocks.concat().sortOn("cockLength", Array.NUMERIC | Array.DESCENDING);
+			return cocks.indexOf(arr[0]);
+		}
+
+		public function longestCockLength():Number {
+			if (cocks.length == 0) {
+				return 0;
+			}
+			return cocks[longestCock()].cockLength;
+		}
+
+		public function longestHorseCockLength():Number {
+			if (cocks.length == 0) {
+				return 0;
+			}
 			var counter:Number = cocks.length;
 			var index:Number = 0;
-			var index2:Number = -1;
-			//Find the biggest
-			while (counter > 0)
-			{
+			while (counter > 0) {
 				counter--;
-				if (cockArea(index) < cockArea(counter))
+				if ((cocks[index].cockType != CockTypesEnum.HORSE && cocks[counter].cockType == CockTypesEnum.HORSE) || (cocks[index].cockLength < cocks[counter].cockLength && cocks[counter].cockType == CockTypesEnum.HORSE)) {
 					index = counter;
-			}
-			//Reset counter and find the next biggest
-			counter = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//Is this spot claimed by the biggest?
-				if (counter != index)
-				{
-					//Not set yet?
-					if (index2 == -1)
-						index2 = counter;
-					//Is the stored value less than the current one?
-					if (cockArea(index2) < cockArea(counter))
-					{
-						index2 = counter;
-					}
 				}
 			}
-			//If it couldn't find a second biggest...
-			if (index == index2)
-				return 0;
-			return cockArea(index2);
-		}
-
-		public function longestCock():Number
-		{
-			if (cocks.length == 0)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockLength < cocks[counter].cockLength)
-					index = counter;
-			}
-			return index;
-		}
-
-		public function longestCockLength():Number
-		{
-			if (cocks.length == 0)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockLength < cocks[counter].cockLength)
-					index = counter;
-			}
 			return cocks[index].cockLength;
 		}
 
-		public function longestHorseCockLength():Number
-		{
-			if (cocks.length == 0)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if ((cocks[index].cockType != CockTypesEnum.HORSE && cocks[counter].cockType == CockTypesEnum.HORSE) || (cocks[index].cockLength < cocks[counter].cockLength && cocks[counter].cockType == CockTypesEnum.HORSE))
-					index = counter;
-			}
-			return cocks[index].cockLength;
-		}
-
-		public function twoDickRadarSpecial(width:int):Boolean
-		{
-			//No two dicks?  FUCK OFF
-			if (cockTotal() < 2)
-				return false;
-
-			//Set up vars
-			//Get thinnest, work done already
-			var thinnest:int = thinnestCockIndex();
-			var thinnest2:int = 0;
-			//For ze loop
-			var temp:int = 0;
-			//Make sure they arent the same at initialization
-			if (thinnest2 == thinnest)
-				thinnest2 = 1;
-			//Loop through to find 2nd thinnest
-			while (temp < cocks.length)
-			{
-				if (cocks[thinnest2].cockThickness > cocks[temp].cockThickness && temp != thinnest)
-					thinnest2 = temp;
-				temp++;
-			}
-			//If the two thicknesses added together are less than the arg, true, else false
-			return cocks[thinnest].cockThickness + cocks[thinnest2].cockThickness < width;
-		}
-
-		public function totalCockThickness():Number
-		{
+		public function totalCockThickness():Number {
 			var thick:Number = 0;
-			var counter:Number = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				thick += cocks[counter].cockThickness;
+			for each (var cock:Cock in cocks) {
+				thick += cock.cockThickness;
 			}
 			return thick;
 		}
 
-		public function thickestCock():Number
-		{
-			if (cocks.length == 0)
+		public function thickestCock():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockThickness < cocks[counter].cockThickness)
-					index = counter;
 			}
-			return index;
+			var arr:Array = cocks.concat().sortOn("cockThickness", Array.NUMERIC | Array.DESCENDING);
+			return cocks.indexOf(arr[0]);
 		}
 
-		public function thickestCockThickness():Number
-		{
-			if (cocks.length == 0)
+		public function thickestCockThickness():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockThickness < cocks[counter].cockThickness)
-					index = counter;
 			}
-			return cocks[index].cockThickness;
+			return cocks[thinnestCockIndex()].cockThickness;
 		}
 
-		public function thinnestCockIndex():Number
-		{
-			if (cocks.length == 0)
+		public function thinnestCockIndex():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockThickness > cocks[counter].cockThickness)
-					index = counter;
 			}
-			return index;
+			var arr:Array = cocks.concat().sortOn("cockThickness", Array.NUMERIC);
+			return cocks.indexOf(arr[0]);
 		}
 
-		public function smallestCockIndex():Number
-		{
-			if (cocks.length == 0)
+		public function smallestCockIndex(rank:uint = 0):Number {
+			if (cocks.length <= rank) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) > cockArea(counter))
-				{
-					index = counter;
-				}
 			}
-			return index;
+			var arr:Array = cocks.concat().sortOn("cArea", Array.NUMERIC);
+			return cocks.indexOf(arr[rank]);
 		}
 
-		public function smallestCockLength():Number
-		{
-			if (cocks.length == 0)
+		public function smallestCockLength():Number {
+			if (cocks.length == 0) {
 				return 0;
+			}
 			return cocks[smallestCockIndex()].cockLength;
 		}
 
-		public function shortestCockIndex():Number
-		{
-			if (cocks.length == 0)
+		public function shortestCockIndex():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockLength > cocks[counter].cockLength)
-					index = counter;
 			}
-			return index;
+			var arr:Array = cocks.concat().sortOn("cockLength", Array.NUMERIC);
+			return cocks.indexOf(arr[0]);
 		}
 
-		public function shortestCockLength():Number
-		{
-			if (cocks.length == 0)
+		public function shortestCockLength():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockLength > cocks[counter].cockLength)
-					index = counter;
 			}
-			return cocks[index].cockLength;
+			return cocks[shortestCockIndex()].cockLength;
 		}
 
 		//Find the biggest cock that fits inside a given range
-		public function cockThatFits(i_fits:Number, type:String = "area", i_min:Number = 0):Number
-		{
-			if (cocks.length <= 0)
+		public function cockThatFits(i_fits:Number, type:String = "area", i_min:Number = 0):Number {
+			if (cocks.length <= 0) {
 				return -1;
-			var i:int = cocks.length;
-			//Current largest fitter
-			var best:int = -1;
-			while (i > 0)
-			{
-				i--;
-				var ival:Number;
-				var bestval:Number;
-				if (type == "area") {
-					ival   = cockArea(i);
-					bestval = best==-1?0:cockArea(best);
-				} else if (type == "length") {
-					ival = cocks[i].cockLength;
-					bestval = best==-1?0:cocks[best].cockLength;
-				}
-				if (i_min <= ival && ival <= i_fits)
-				{
-					//If one already fits
-					if (best >= 0)
-					{
-						//See if the newcomer beats the saved small guy
-						if (ival > bestval)
-							best = i;
-					}
-					//Store the index of fitting dick
-					else
-						best = i;
-				}
 			}
-			return best;
+			var i:int = cocks.length;
+			var arr:Array = cocks.filter(function (element:*, index:int, arr:Array):Boolean {
+				var stat:Number = type == "area" ? element.cArea : element.cockLength;
+				return i_min <= stat && stat <= i_fits;
+			}).sortOn(type == "area" ? "cArea" : "cockLength", Array.NUMERIC | Array.DESCENDING);
+			if (arr.length == 0) {return -1}
+			return cocks.indexOf(arr[0]);
 		}
 
 		//Find the 2nd biggest cock that fits inside a given value
-		public function cockThatFits2(fits:Number = 0):Number
-		{
-			if (cockTotal() == 1)
+		public function cockThatFits2(fits:Number = 0):Number {
+			if (cockTotal() <= 1) {
 				return -1;
-			var counter:Number = cocks.length;
-			//Current largest fitter
-			var index:Number = -1;
-			var index2:Number = -1;
-			while (counter > 0)
-			{
-				counter--;
-				//Does this one fit?
-				if (cockArea(counter) <= fits)
-				{
-					//If one already fits
-					if (index >= 0)
-					{
-						//See if the newcomer beats the saved small guy
-						if (cockArea(counter) > cockArea(index))
-						{
-							//Save old wang
-							if (index != -1)
-								index2 = index;
-							index = counter;
-						}
-						//If this one fits and is smaller than the other great
-						else
-						{
-							if ((cockArea(index2) < cockArea(counter)) && counter != index)
-							{
-								index2 = counter;
-							}
-						}
-						if (index >= 0 && index == index2)
-							trace("FUCK ERROR COCKTHATFITS2 SHIT IS BROKED!");
-					}
-					//Store the index of fitting dick
-					else
-						index = counter;
-				}
 			}
-			return index2;
+			var arr:Array = cocks.filter(function (element:*, index:int, arr:Array):Boolean {
+				return element.cArea <= fits;
+			}).sortOn("cArea", Array.NUMERIC | Array.DESCENDING);
+			return cocks.indexOf(arr[0]);
 		}
 
-		public function smallestCockArea():Number
-		{
-			if (cockTotal() == 0)
+		public function smallestCockArea():Number {
+			if (cockTotal() == 0) {
 				return -1;
+			}
 			return cockArea(smallestCockIndex());
 		}
 
-		public function smallestCock():Number
-		{
+		public function smallestCock():Number {
 			return cockArea(smallestCockIndex());
 		}
 
-		public function biggestCockIndex():Number
-		{
-			if (cocks.length == 0)
+		/**
+		 * Returns the index of the cock with the largest area.
+		 * @param rank 0 = 1st biggest, 1 = 2nd biggest
+		 * @return
+		 */
+		public function biggestCockIndex(rank:uint = 0):Number {
+			if (cocks.length <= rank) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) < cockArea(counter))
-					index = counter;
 			}
-			return index;
+			//Concat creates a shallow copy of the original array to preserve original ordering.
+			var arr:Array = cocks.concat().sortOn("cArea", Array.NUMERIC | Array.DESCENDING);
+			return cocks.indexOf(arr[rank]);
 		}
 
 		//Find the second biggest dick's index.
-		public function biggestCockIndex2():Number
-		{
-			if (cocks.length <= 1)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			var index2:Number = 0;
-			//Find the biggest
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) < cockArea(counter))
-					index = counter;
-			}
-			//Reset counter and find the next biggest
-			counter = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//Make sure index2 doesn't get stuck
-				//at the same value as index1 if the
-				//initial location is biggest.
-				if (index == index2 && counter != index)
-					index2 = counter;
-				//Is the stored value less than the current one?
-				if (cockArea(index2) < cockArea(counter))
-				{
-					//Make sure we don't set index2 to be the same
-					//as the biggest dick.
-					if (counter != index)
-						index2 = counter;
-				}
-			}
-			//If it couldn't find a second biggest...
-			if (index == index2)
-				return 0;
-			return index2;
+		public function biggestCockIndex2():Number {
+			return biggestCockIndex(1);
 		}
 
-		public function smallestCockIndex2():Number
-		{
-			if (cocks.length <= 1)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			var index2:Number = 0;
-			//Find the smallest
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) > cockArea(counter))
-					index = counter;
-			}
-			//Reset counter and find the next biggest
-			counter = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//Make sure index2 doesn't get stuck
-				//at the same value as index1 if the
-				//initial location is biggest.
-				if (index == index2 && counter != index)
-					index2 = counter;
-				//Is the stored value less than the current one?
-				if (cockArea(index2) > cockArea(counter))
-				{
-					//Make sure we don't set index2 to be the same
-					//as the biggest dick.
-					if (counter != index)
-						index2 = counter;
-				}
-			}
-			//If it couldn't find a second biggest...
-			if (index == index2)
-				return 0;
-			return index2;
+		public function smallestCockIndex2():Number {
+			return smallestCockIndex(1);
 		}
 
 		//Find the third biggest dick index.
-		public function biggestCockIndex3():Number
-		{
-			if (cocks.length <= 2)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			var index2:Number = -1;
-			var index3:Number = -1;
-			//Find the biggest
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) < cockArea(counter))
-					index = counter;
-			}
-			//Reset counter and find the next biggest
-			counter = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//If this index isn't used already
-				if (counter != index)
-				{
-					//Has index been set to anything yet?
-					if (index2 == -1)
-						index2 = counter;
-					//Is the stored value less than the current one?
-					else if (cockArea(index2) < cockArea(counter))
-					{
-						index2 = counter;
-					}
-				}
-			}
-			//If it couldn't find a second biggest...
-			if (index == index2 || index2 == -1)
-				index2 = 0;
-			//Reset counter and find the next biggest
-			counter = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//If this index isn't used already
-				if (counter != index && counter != index2)
-				{
-					//Has index been set to anything yet?
-					if (index3 == -1)
-						index3 = counter;
-					//Is the stored value less than the current one?
-					else if (cockArea(index3) < cockArea(counter))
-					{
-						index3 = counter;
-					}
-				}
-			}
-			//If it fails for some reason.
-			if (index3 == -1)
-				index3 = 0;
-			return index3;
+		public function biggestCockIndex3():Number {
+			return biggestCockIndex(2);
 		}
 
 
@@ -1912,10 +1589,7 @@ import classes.Stats.BuffableStat;
 
 		public function wetness():Number
 		{
-			if (vaginas.length == 0)
-				return 0;
-			else
-				return vaginas[0].vaginalWetness;
+			return hasVagina() ? vaginas[0].vaginalWetness : 0;
 		}
 
 		public function vaginaType(newType:int = -1):int
@@ -1931,17 +1605,10 @@ import classes.Stats.BuffableStat;
 
 		public function looseness(vag:Boolean = true):Number
 		{
-			if (vag)
-			{
-				if (vaginas.length == 0)
-					return 0;
-				else
-					return vaginas[0].vaginalLooseness;
+			if (vag) {
+				return hasVagina() ? vaginas[0].vaginalLooseness : 0;
 			}
-			else
-			{
-				return ass.analLooseness;
-			}
+			return ass.analLooseness;
 		}
 
 		public function vaginalCapacity():Number
@@ -1993,42 +1660,14 @@ import classes.Stats.BuffableStat;
 
 		public function hasFuckableNipples():Boolean
 		{
-			var counter:Number = breastRows.length;
-			while (counter > 0)
-			{
-				counter--;
-				if (breastRows[counter].fuckable)
-					return true;
-			}
-			return false;
+			return breastRows.some(function(element:*, index:int, arr:Array):Boolean {
+				return element.fuckable;
+			});
 		}
 
 		public function hasBreasts():Boolean
 		{
-			if (breastRows.length > 0)
-			{
-				if (biggestTitSize() >= 1)
-					return true;
-			}
-			return false;
-		}
-
-		public function hasNipples():Boolean
-		{
-			var counter:Number = breastRows.length;
-			while (counter > 0)
-			{
-				counter--;
-				if (breastRows[counter].nipplesPerBreast > 0)
-					return true;
-			}
-			return false;
-		}
-
-		public function lactationSpeed():Number
-		{
-			//Lactation * breastSize x 10 (milkPerBreast) determines scene
-			return biggestLactation() * biggestTitSize() * 10;
+			return breastRows.length > 0 && biggestTitSize() >= 1;
 		}
 
 		public function biggestLactation():Number
@@ -2153,14 +1792,11 @@ import classes.Stats.BuffableStat;
 		{
 			if (breastRows.length == 0)
 				return 0;
-			var counter:Number = breastRows.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				index += breastRows[counter].lactationMultiplier;
+			var total:Number = 0;
+			for each(var breastRow:BreastRowClass in breastRows){
+				total += breastRow.lactationMultiplier;
 			}
-			return Math.floor(index / breastRows.length);
+			return Math.floor(total / breastRows.length);
 		}
 
 		//Calculate bonus virility rating!
@@ -2320,12 +1956,9 @@ import classes.Stats.BuffableStat;
 		}
 
 		public function countCocksOfType(type:CockTypesEnum):int {
-			if (cocks.length == 0) return 0;
-			var counter:int = 0;
-			for (var x:int = 0; x < cocks.length; x++) {
-				if (cocks[x].cockType == type) counter++;
-			}
-			return counter;
+			return cocks.filter(function(element:*, index:int, arr:Array):Boolean {
+				return element.cockType == type;
+			}).length;
 		}
 
 		public function anemoneCocks():int { //How many anemonecocks?
@@ -2348,12 +1981,9 @@ import classes.Stats.BuffableStat;
 		// of the PC's attributes, and this is recaluculated every hour spent at camp.
 		// As such, delineating between the two is kind of silly.
 		public function dogCocks():int { //How many dogCocks
-			if (cocks.length == 0) return 0;
-			var counter:int = 0;
-			for (var x:int = 0; x < cocks.length; x++) {
-				if (cocks[x].cockType == CockTypesEnum.DOG || cocks[x].cockType == CockTypesEnum.FOX || cocks[x].cockType == CockTypesEnum.WOLF) counter++;
-			}
-			return counter;
+			return countCocksOfType(CockTypesEnum.DOG)
+					+ countCocksOfType(CockTypesEnum.FOX)
+					+ countCocksOfType(CockTypesEnum.WOLF);
 		}
 
 		public function dragonCocks():int { //How many dragonCocks?
@@ -2480,58 +2110,34 @@ import classes.Stats.BuffableStat;
 			}
 			return -1;
 		}
+
 		//How many cocks?
-		public function cockTotal():Number
-		{
+		public function cockTotal():int {
 			return (cocks.length);
 		}
 
 		//BOolean alternate
-		public function hasCock():Boolean
-		{
+		public function hasCock():Boolean {
 			return cocks.length >= 1;
-
 		}
 
-		public function hasSockRoom():Boolean
-		{
-			var index:int = cocks.length;
-			while (index > 0)
-			{
-				index--;
-				if (cocks[index].sock == "")
-					return true;
-			}
-			return false
+		public function hasSockRoom():Boolean {
+			return cocks.some(function (element:*, index:int, arr:Array):Boolean {
+				return element.sock == "";
+			});
 		}
 
-	//	[Deprecated]
-		public function hasSock(arg:String = ""):Boolean
-		{
-			var index:int = cocks.length;
-
-			while (index > 0)
-			{
-				index--;
-				if (cocks[index].sock != "")
-				{
-				if (arg == "" || cocks[index].sock == arg)
-					return true;
-				}
-			}
-			return false
+		//	[Deprecated]
+		public function hasSock(arg:String = ""):Boolean {
+			return cocks.some(function (element:*, index:int, arr:Array):Boolean {
+				return element.sock == arg || (arg == "" && element.sock != "");
+			});
 		}
-		public function countCockSocks(type:String):int
-		{
-			var count:int = 0;
 
-			for (var i:Number = 0; i < cocks.length; i++) {
-				if (cocks[i].sock == type) {
-					count++
-				}
-			}
-			//trace("countCockSocks found " + count + " " + type);
-			return count;
+		public function countCockSocks(type:String):int {
+			return cocks.filter(function (element:*, index:int, arr:Array):Boolean {
+				return element.sock == type;
+			}).length;
 		}
 
 		public function canAutoFellate():Boolean
@@ -2594,7 +2200,6 @@ import classes.Stats.BuffableStat;
 		public function canSwimUnderwater():Boolean
 		{
 			return gills.type != Gills.NONE;
-
 		}
 
 		//Naked
@@ -2607,77 +2212,33 @@ import classes.Stats.BuffableStat;
 		public function isImmuneToCrits():Boolean
 		{
 			return hasPerk(PerkLib.EnemyConstructType) || hasPerk(PerkLib.EnemyPlantType);
-
 		}
 		//check for vagoo
 		public function hasVagina():Boolean
 		{
 			return vaginas.length > 0;
-
 		}
 
 		public function hasVirginVagina():Boolean
 		{
-			if (vaginas.length > 0)
-				return vaginas[0].virgin;
-			return false;
+			return hasVagina() ? vaginas[0].virgin : false;
 		}
 
 		//GENDER IDENTITIES
 		public function genderText(male:String = "man", female:String = "woman", futa:String = "herm", eunuch:String = "eunuch"):String
 		{
-			if (vaginas.length > 0) {
-				if (cocks.length > 0) return futa;
-				return female;
-			}
-			else if (cocks.length > 0) {
-				return male;
-			}
-			return eunuch;
-		}
-
-		public function manWoman(caps:Boolean = false):String
-		{
-			//Dicks?
-			if (cockTotal() > 0)
-			{
-				if (hasVagina())
-				{
-					if (caps)
-						return "Futa";
-					else
-						return "futa";
-				}
-				else
-				{
-					if (caps)
-						return "Man";
-					else
-						return "man";
-				}
-			}
-			else
-			{
-				if (hasVagina())
-				{
-					if (caps)
-						return "Woman";
-					else
-						return "woman";
-				}
-				else
-				{
-					if (caps)
-						return "Eunuch";
-					else
-						return "eunuch";
-				}
+			switch(gender){
+				case Gender.GENDER_HERM: return futa;
+				case Gender.GENDER_FEMALE: return female;
+				case Gender.GENDER_MALE: return male;
+				case Gender.GENDER_NONE:
+				default: return eunuch;
 			}
 		}
 
 		public function mfn(male:String, female:String, neuter:String):String
 		{
-			if (gender == 0)
+			if (gender == Gender.GENDER_NONE)
 				return neuter;
 			else
 				return mf(male, female);
@@ -2685,18 +2246,19 @@ import classes.Stats.BuffableStat;
 		public function looksMale():Boolean {
 			return !looksFemale();
 		}
-		
+
 		public function looksFemale():Boolean {
 			var tits:Number = biggestTitSize();
-			switch(gender) {
+			switch (gender) {
 				case Gender.GENDER_HERM:
-                case Gender.GENDER_NONE:
-                    return ((tits >= 3 || tits == 2 && femininity >= 15 || tits == 1 && femininity >= 40 || femininity >= 65) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
+				case Gender.GENDER_NONE:
+					return ((tits >= 3 || tits == 2 && femininity >= 15 || tits == 1 && femininity >= 40 || femininity >= 65) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
 				case Gender.GENDER_MALE:
-                    return ((tits >= 3 && femininity >= 5 || tits == 2 && femininity >= 35 || tits == 1 && femininity >= 65 || femininity >= 95) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
-                case Gender.GENDER_FEMALE:
-                    return ((tits > 1 || tits == 1 && femininity >= 15 || femininity >= 45) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
-				default: return false;
+					return ((tits >= 3 && femininity >= 5 || tits == 2 && femininity >= 35 || tits == 1 && femininity >= 65 || femininity >= 95) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
+				case Gender.GENDER_FEMALE:
+					return ((tits > 1 || tits == 1 && femininity >= 15 || femininity >= 45) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
+				default:
+					return false;
 			}
 		}
 		//Rewritten!
@@ -2715,54 +2277,48 @@ import classes.Stats.BuffableStat;
 				default: return "<b>Gender error!</b>";
 			}
 		}
-		
+
 		/**
 		 * Checks if the creature is technically male: has cock but not vagina.
 		 */
-		public function isMale():Boolean
-		{
+		public function isMale():Boolean {
 			return gender == Gender.GENDER_MALE;
 		}
-		
+
 		/**
 		 * Checks if the creature is technically female: has vagina but not cock.
 		 */
-		public function isFemale():Boolean
-		{
+		public function isFemale():Boolean {
 			return gender == Gender.GENDER_FEMALE;
-					}
+		}
 
 		/**
 		 * Checks if the creature is technically herm: has both cock and vagina.
 		 */
-		public function isHerm():Boolean
-					{
+		public function isHerm():Boolean {
 			return gender == Gender.GENDER_HERM;
-					}
+		}
 
 		/**
 		 * Checks if the creature is technically genderless: has neither cock nor vagina.
 		 */
-		public function isGenderless():Boolean
-				{
+		public function isGenderless():Boolean {
 			return gender == Gender.GENDER_NONE;
-				}
+		}
 
 		/**
 		 * Checks if the creature is technically male or herm: has at least a cock.
 		 */
-		public function isMaleOrHerm():Boolean
-			{
+		public function isMaleOrHerm():Boolean {
 			return (gender & Gender.GENDER_MALE) != 0;
-				}
+		}
 
 		/**
 		 * Checks if the creature is technically female or herm: has at least a vagina.
 		 */
-		public function isFemaleOrHerm():Boolean
-				{
+		public function isFemaleOrHerm():Boolean {
 			return (gender & Gender.GENDER_FEMALE) != 0;
-					}
+		}
 
 		//Create a cock. Default type is HUMAN
 		public function createCock(clength:Number = 5.5, cthickness:Number = 1,ctype:CockTypesEnum=null):Boolean
@@ -2772,10 +2328,7 @@ import classes.Stats.BuffableStat;
 				return false;
 			var newCock:Cock = new Cock(clength, cthickness,ctype);
 			newCock.host = this;
-			//var newCock:cockClass = new cockClass();
 			cocks.push(newCock);
-			cocks[cocks.length-1].cockThickness = cthickness;
-			cocks[cocks.length-1].cockLength = clength;
 			return true;
 		}
 
@@ -2803,111 +2356,53 @@ import classes.Stats.BuffableStat;
 		}
 
 		//Remove cocks
-		public function removeCock(arraySpot:int, totalRemoved:int):void
-		{
+		public function removeCock(arraySpot:int, totalRemoved:int):void {
 			//Various Errors preventing action
-			if (arraySpot < 0 || totalRemoved <= 0)
-			{
-				//trace("ERROR: removeCock called but arraySpot is negative or totalRemoved is 0.");
+			if (arraySpot < 0 || totalRemoved <= 0 || cocks.length == 0 || arraySpot >= cocks.length) {
 				return;
 			}
-			if (cocks.length == 0)
-			{
-				//trace("ERROR: removeCock called but cocks do not exist.");
-			}
-			else
-			{
-				if (arraySpot > cocks.length - 1)
-				{
-					//trace("ERROR: removeCock failed - array location is beyond the bounds of the array.");
+			try {
+				var cock:Cock = cocks[arraySpot];
+				if (cock.sock == "viridian") {
+					removePerk(PerkLib.LustyRegeneration);
 				}
-				else
-				{
-					try
-					{
-						var cock:Cock = cocks[arraySpot];
-						if (cock.sock == "viridian")
-						{
-							removePerk(PerkLib.LustyRegeneration);
+				else if (cock.sock == "cockring") {
+					var numRings:int = 0;
+					for (var i:int = 0; i < cocks.length; i++) {
+						if (cocks[i].sock == "cockring") {
+							numRings++;
 						}
-						else if (cock.sock == "cockring")
-						{
-							var numRings:int = 0;
-							for (var i:int = 0; i < cocks.length; i++)
-							{
-								if (cocks[i].sock == "cockring") numRings++;
-							}
+					}
 
-							if (numRings == 0) removePerk(PerkLib.PentUp);
-							else setPerkValue(PerkLib.PentUp, 1, 5 + (numRings * 5));
-						}
-						cocks.splice(arraySpot, totalRemoved);
+					if (numRings == 0) {
+						removePerk(PerkLib.PentUp);
+					} else {
+						setPerkValue(PerkLib.PentUp, 1, 5 + (numRings * 5));
 					}
-					catch (e:Error)
-					{
-						trace("Argument error in Creature[" + this._short + "]: " + e.message);
-					}
-					//trace("Attempted to remove " + totalRemoved + " cocks.");
 				}
+				cocks.splice(arraySpot, totalRemoved);
+			}
+			catch (e:Error) {
+				trace("Argument error in Creature[" + this._short + "]: " + e.message);
 			}
 		}
 
 		//REmove vaginas
-		public function removeVagina(arraySpot:int = 0, totalRemoved:int = 1):void
-		{
+		public function removeVagina(arraySpot:int = 0, totalRemoved:int = 1):void {
 			//Various Errors preventing action
-			if (arraySpot < -1 || totalRemoved <= 0)
-			{
-				//trace("ERROR: removeVagina called but arraySpot is negative or totalRemoved is 0.");
+			if (arraySpot < -1 || totalRemoved <= 0 || vaginas.length == 0 || arraySpot >= vaginas.length) {
 				return;
 			}
-			if (vaginas.length == 0)
-			{
-				//trace("ERROR: removeVagina called but cocks do not exist.");
-			}
-			else
-			{
-				if (arraySpot > vaginas.length - 1)
-				{
-					//trace("ERROR: removeVagina failed - array location is beyond the bounds of the array.");
-				}
-				else
-				{
-					vaginas.splice(arraySpot, totalRemoved);
-					//trace("Attempted to remove " + totalRemoved + " vaginas.");
-				}
-			}
+			vaginas.splice(arraySpot, totalRemoved);
 		}
 
 		//Remove a breast row
-		public function removeBreastRow(arraySpot:int, totalRemoved:int):void
-		{
+		public function removeBreastRow(arraySpot:int, totalRemoved:int):void {
 			//Various Errors preventing action
-			if (arraySpot < -1 || totalRemoved <= 0)
-			{
-				//trace("ERROR: removeBreastRow called but arraySpot is negative or totalRemoved is 0.");
+			if (arraySpot < -1 || totalRemoved <= 0 || breastRows.length - totalRemoved < 1 || arraySpot >= breastRows.length) {
 				return;
 			}
-			if (breastRows.length == 0)
-			{
-				//trace("ERROR: removeBreastRow called but cocks do not exist.");
-			}
-			else if (breastRows.length == 1 || breastRows.length - totalRemoved < 1)
-			{
-				//trace("ERROR: Removing the current breast row would break the Creature classes assumptions about breastRow contents.");
-			}
-			else
-			{
-				if (arraySpot > breastRows.length - 1)
-				{
-					//trace("ERROR: removeBreastRow failed - array location is beyond the bounds of the array.");
-				}
-				else
-				{
-					breastRows.splice(arraySpot, totalRemoved);
-					//trace("Attempted to remove " + totalRemoved + " breastRows.");
-				}
-			}
+			breastRows.splice(arraySpot, totalRemoved);
 		}
 
 		// This is placeholder shit whilst I work out a good way of BURNING ENUM TO THE FUCKING GROUND

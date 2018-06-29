@@ -64,7 +64,7 @@ import classes.CockTypesEnum;
 		}
 		
 		//MEMBER FUNCTIONS
-		public function cArea():Number
+		public function get cArea():Number
 		{
 			return cockThickness * cockLength;
 		}
