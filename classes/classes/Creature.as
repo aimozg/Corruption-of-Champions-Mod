@@ -877,105 +877,30 @@ import classes.Stats.BuffableStat;
 			Begin("Player","racialScore","chimera");
 			var chimeraCounter:Number = 0;
 			var racialScores:* = this.racialScores();
-			if (racialScores[Race.CAT.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.LIZARD.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DRAGON.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.RACCOON.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DOG.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.WOLF.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.WEREWOLF.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.FOX.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.FERRET.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.KITSUNE.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.HORSE.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MINOTAUR.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.COW.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.BEE.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.GOBLIN.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DEMON.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.DEVILKIN.name] >= 7)
-				chimeraCounter++;
-			if (racialScores[Race.SHARK.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.ORCA.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.ONI.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.ELF.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.RAIJU.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.BUNNY.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.HARPY.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.SPIDER.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.KANGA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MOUSE.name] >= 3)
-				chimeraCounter++;
-			if (racialScores[Race.SCORPION.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MANTIS.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.SALAMANDER.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.NAGA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.PHOENIX.name] >= 10)
-				chimeraCounter++;
-			if (racialScores[Race.SCYLLA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.PLANT.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.PIG.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.SATYR.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.RHINO.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.ECHIDNA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DEER.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MANTICORE.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.REDPANDA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.SIREN.name] >= 10)
-				chimeraCounter++;
-			if (racialScores[Race.YETI.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.BAT.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.VAMPIRE.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.JABBERWOCKY.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.AVIAN.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.GARGOYLE.name] >= 21)
-				chimeraCounter++;
-			if (racialScores[Race.GOO.name] >= 4)
-				chimeraCounter++;
-			
+			var races:Array = [
+				[Race.CAT.name,         4], [Race.LIZARD.name,    4], [Race.DRAGON.name,     4],
+				[Race.RACCOON.name,     4], [Race.DOG.name,       4], [Race.WOLF.name,       6],
+				[Race.WEREWOLF.name,    6], [Race.FOX.name,       4], [Race.FERRET.name,     4],
+				[Race.KITSUNE.name,     5], [Race.HORSE.name,     4], [Race.MINOTAUR.name,   4],
+				[Race.COW.name,         4], [Race.BEE.name,       5], [Race.GOBLIN.name,     4],
+				[Race.DEMON.name,       5], [Race.DEVILKIN.name,  7], [Race.SHARK.name,      4],
+				[Race.ORCA.name,        6], [Race.ONI.name,       6], [Race.ELF.name,        5],
+				[Race.RAIJU.name,       5], [Race.BUNNY.name,     4], [Race.HARPY.name,      4],
+				[Race.SPIDER.name,      4], [Race.KANGA.name,     4], [Race.MOUSE.name,      3],
+				[Race.SCORPION.name,    4], [Race.MANTIS.name,    6], [Race.SALAMANDER.name, 4],
+				[Race.NAGA.name,        4], [Race.PHOENIX.name,  10], [Race.SCYLLA.name,     4],
+				[Race.PLANT.name,       6], [Race.PIG.name,       4], [Race.SATYR.name,      4],
+				[Race.RHINO.name,       4], [Race.ECHIDNA.name,   4], [Race.DEER.name,       4],
+				[Race.MANTICORE.name,   6], [Race.REDPANDA.name,  4], [Race.SIREN.name,     10],
+				[Race.YETI.name,        6], [Race.BAT.name,       6], [Race.VAMPIRE.name,    6],
+				[Race.AVIAN.name,       4], [Race.GARGOYLE.name, 21], [Race.GOO.name,        4],
+				[Race.JABBERWOCKY.name, 4],
+			];
+			for each(var arr:Array in races){
+				if(racialScores[arr[0]] >= arr[1]){
+					chimeraCounter++;
+				}
+			}
 			End("Player","racialScore");
 			return chimeraCounter;
 		}
@@ -985,125 +910,38 @@ import classes.Stats.BuffableStat;
 			Begin("Player","racialScore","grandchimera");
 			var grandchimeraCounter:Number = 0;
 			var racialScores:* = this.racialScores();
-			if (racialScores[Race.CAT.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.NEKOMATA.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.CHESHIRE.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.LIZARD.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.DRAGON.name] >= 10)
-				grandchimeraCounter++;
-			/*			if (racialScores[Race.RACCOON.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.DOG.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.WOLF.name] >= 6)
-							grandchimeraCounter++;
-			*/			if (racialScores[Race.WEREWOLF.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.FOX.name] >= 7)
-				grandchimeraCounter++;
-//			if (racialScores[Race.FERRET.name] >= 4)
-//				grandchimeraCounter++;
+			var races:Array = [
+				[Race.CAT.name,        8], [Race.NEKOMATA.name, 11], [Race.CHESHIRE.name,    11],
+				[Race.LIZARD.name,     8], [Race.DRAGON.name,   10], [Race.WEREWOLF.name,    12],
+				[Race.FOX.name,        7], [Race.HORSE.name,     7], [Race.UNICORN.name,      9],
+				[Race.ALICORN.name,   11], [Race.CENTAUR.name,   8], [Race.MINOTAUR.name,     9],
+				[Race.COW.name,        9], [Race.BEE.name,       9], [Race.DEMON.name,       11],
+				[Race.DEVILKIN.name,  10], [Race.SHARK.name,     8], [Race.ORCA.name,        12],
+				[Race.ONI.name,       12], [Race.ELF.name,      11], [Race.RAIJU.name,       10],
+				[Race.HARPY.name,      8], [Race.SPIDER.name,    7], [Race.MANTIS.name,      12],
+				[Race.SALAMANDER.name, 7], [Race.NAGA.name,      8], [Race.GORGON.name,      11],
+				[Race.VOUIVRE.name,   11], [Race.COUATL.name,   11], [Race.PHOENIX.name,     10],
+				[Race.SCYLLA.name,     7], [Race.ALRAUNE.name,  10], [Race.YGGDRASIL.name,   10],
+				[Race.REDPANDA.name,   8], [Race.SIREN.name,    10], [Race.YETI.name,        12],
+				[Race.BAT.name,       10], [Race.VAMPIRE.name,  10], [Race.JABBERWOCKY.name, 10],
+				[Race.AVIAN.name,      9], [Race.GARGOYLE.name, 21], [Race.GOO.name,          8],
+/*
+				[Race.FERRET.name,     4], [Race.GOBLIN.name,    4], [Race.BUNNY.name,        4],
+				[Race.PLANT.name,      6], [Race.RACCOON.name,   4], [Race.DOG.name,          4],
+				[Race.WOLF.name,       6], [Race.KANGA.name,     4], [Race.MOUSE.name,        3],
+				[Race.SCORPION.name,   4], [Race.PIG.name,       4], [Race.SATYR.name,        4],
+				[Race.RHINO.name,      4], [Race.ECHIDNA.name,   4], [Race.DEER.name,         4],
+*/
+			];
+			for each(var arr:Array in races){
+				if(racialScores[arr[0]] >= arr[1]){
+					grandchimeraCounter++;
+				}
+			}
 			if (racialScores[Race.KITSUNE.name] >= 6 && tailType == 13 && tailCount >= 2)
 				grandchimeraCounter++;
-			if (racialScores[Race.HORSE.name] >= 7)
-				grandchimeraCounter++;
-			if (racialScores[Race.UNICORN.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.ALICORN.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.CENTAUR.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.MINOTAUR.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.COW.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.BEE.name] >= 9)
-				grandchimeraCounter++;
-//			if (racialScores[Race.GOBLIN.name] >= 4)
-//				grandchimeraCounter++;
-			if (racialScores[Race.DEMON.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.DEVILKIN.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.SHARK.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.ORCA.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.ONI.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.ELF.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.RAIJU.name] >= 10)
-				grandchimeraCounter++;
-//			if (racialScores[Race.BUNNY.name] >= 4)
-//				grandchimeraCounter++;
-			if (racialScores[Race.HARPY.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.SPIDER.name] >= 7)
-				grandchimeraCounter++;
-			/*			if (racialScores[Race.KANGA.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.MOUSE.name] >= 3)
-							grandchimeraCounter++;
-						if (racialScores[Race.SCORPION.name] >= 4)
-							grandchimeraCounter++;
-			*/			if (racialScores[Race.MANTIS.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.SALAMANDER.name] >= 7)
-				grandchimeraCounter++;
-			if (racialScores[Race.NAGA.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.GORGON.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.VOUIVRE.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.COUATL.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.PHOENIX.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.SCYLLA.name] >= 7)
-				grandchimeraCounter++;
-//			if (racialScores[Race.PLANT.name] >= 6)
-//				grandchimeraCounter++;
-			if (racialScores[Race.ALRAUNE.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.YGGDRASIL.name] >= 10)
-				grandchimeraCounter++;
-			/*			if (racialScores[Race.PIG.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.SATYR.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.RHINO.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.ECHIDNA.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.DEER.name] >= 4)
-							grandchimeraCounter++;
-			*/			if (racialScores[Race.MANTICORE.name] >= 12)
+			if (racialScores[Race.MANTICORE.name] >= 12)
 				grandchimeraCounter += 2;
-			if (racialScores[Race.REDPANDA.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.SIREN.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.YETI.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.BAT.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.VAMPIRE.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.JABBERWOCKY.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.AVIAN.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.GARGOYLE.name] >= 21)
-				grandchimeraCounter++;
-			if (racialScores[Race.GOO.name] >= 8)
-				grandchimeraCounter++;
-			
 			End("Player","racialScore");
 			return grandchimeraCounter;
 		}
@@ -1112,46 +950,24 @@ import classes.Stats.BuffableStat;
 		public function internalChimeraScore():Number {
 			Begin("Player","racialScore","internalChimeraScore");
 			var internalChimeraCounter:Number = 0;
-			if (hasPerk(PerkLib.BlackHeart))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.CatlikeNimbleness))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.CatlikeNimblenessEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.DraconicLungs))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.DraconicLungsEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.GorgonsEyes))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGland))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.LizanMarrow))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.LizanMarrowEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.ManticoreMetabolism))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.MantislikeAgility))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.MantislikeAgilityEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlands))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.ScyllaInkGlands))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.TrachealSystem))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.TrachealSystemEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.TrachealSystemFinalForm))
-				internalChimeraCounter++;
-			//	if (hasPerk(PerkLib.TrachealSystemEvolved))
-			//		internalChimeraCounter++;
+			var pkarr:Array = [
+				PerkLib.BlackHeart,                     PerkLib.CatlikeNimbleness,
+				PerkLib.CatlikeNimblenessEvolved,       PerkLib.DraconicLungs,
+				PerkLib.DraconicLungsEvolved,           PerkLib.GorgonsEyes,
+				PerkLib.KitsuneThyroidGland,            PerkLib.KitsuneThyroidGlandEvolved,
+				PerkLib.LizanMarrow,                    PerkLib.LizanMarrowEvolved,
+				PerkLib.ManticoreMetabolism,            PerkLib.MantislikeAgility,
+				PerkLib.MantislikeAgilityEvolved,       PerkLib.SalamanderAdrenalGlands,
+				PerkLib.SalamanderAdrenalGlandsEvolved, PerkLib.ScyllaInkGlands,
+				PerkLib.TrachealSystem,                 PerkLib.TrachealSystemEvolved,
+				PerkLib.TrachealSystemFinalForm
+//				PerkLib.TrachealSystemEvolved
+			];
+			for each(var pk:PerkType in pkarr){
+				if(hasPerk(pk)){
+					internalChimeraCounter++;
+				}
+			}
 			
 			End("Player","racialScore");
 			return internalChimeraCounter;
@@ -1160,47 +976,7 @@ import classes.Stats.BuffableStat;
 		//Determine Inner Chimera Rating
 		public function internalChimeraRating():Number {
 			Begin("Player","racialScore","internalChimeraRating");
-			var internalChimeraRatingCounter:Number = 0;
-			if (hasPerk(PerkLib.BlackHeart))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.CatlikeNimbleness))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.CatlikeNimblenessEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.DraconicLungs))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.DraconicLungsEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.GorgonsEyes))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGland))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.LizanMarrow))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.LizanMarrowEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.ManticoreMetabolism))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.MantislikeAgility))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.MantislikeAgilityEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlands))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.ScyllaInkGlands))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.TrachealSystem))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.TrachealSystemEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.TrachealSystemFinalForm))
-				internalChimeraRatingCounter++;
-			//	if (hasPerk(PerkLib.TrachealSystemEvolved))
-			//		internalChimeraRatingCounter++;
+			var internalChimeraRatingCounter:Number = internalChimeraScore();
 			if (hasPerk(PerkLib.ChimericalBodyInitialStage))
 				internalChimeraRatingCounter -= 2;
 			if (hasPerk(PerkLib.ChimericalBodyBasicStage))
