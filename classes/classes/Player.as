@@ -473,8 +473,8 @@ package classes
 		
 		public function setArmor(newArmor:Armor):Armor {
 			var armor:Armor = _equipment.equip(this, newArmor) as Armor;
-			if(previouslyWornClothes.indexOf(armor.id) == -1){
-				previouslyWornClothes.push(armor.id);
+			if(newArmor && previouslyWornClothes.indexOf(newArmor.id) == -1){
+				previouslyWornClothes.push(newArmor.id);
 			}
 			return armor;
 		}
