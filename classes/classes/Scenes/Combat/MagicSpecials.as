@@ -314,7 +314,6 @@ package classes.Scenes.Combat {
 		SceneLib.combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		if (monster.short == "pod" || monster.inte == 0) {
-			clearOutput();
 			outputText("You reach for the enemy's mind, but cannot find anything.  You frantically search around, but there is no consciousness as you know it in the room.\n\n");
 			fatigue(1);
 			enemyAI();
@@ -328,11 +327,7 @@ package classes.Scenes.Combat {
 			return;
 		}
 		fatigue(10, USEFATG_MAGIC_NOBM);
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		if (monster.hasPerk(PerkLib.Focused)) {
 			if (!monster.plural) outputText(monster.capitalA + monster.short + " is too focused for your whispers to influence!\n\n");
 			enemyAI();
@@ -363,34 +358,12 @@ package classes.Scenes.Combat {
 		fatigue(150, USEFATG_MAGIC_NOBM);
 		player.createStatusEffect(StatusEffects.CooldownFreezingBreath,10,0,0,0);
 		var damage:Number = int(player.level * (8 + player.wolfScore()) + rand(60));
-		if (monster.hasPerk(PerkLib.EnemyGroupType)) damage *= 5;
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 0.2;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 5;
-		if (player.hasPerk(PerkLib.ColdMastery)) damage *= 2;
-		if (player.hasPerk(PerkLib.ColdAffinity)) damage *= 2;
-		damage = Math.round(damage);
 		outputText("Tapping into the power deep within you, you let loose a bellowing roar at your enemy, a powerful wave of cold blasting the area in front of you.  " + monster.capitalA + monster.short + " does " + monster.pronoun3 + " best to avoid it, but the wave of freezing air is too fast.");
 		//Shell
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		//Amily!
-		if (monster.hasStatusEffect(StatusEffects.Concentration)) {
-			clearOutput();
-			outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
-			enemyAI();
-			return;
-		}
-		if (monster is LivingStatue)
-		{
-			outputText("The ice courses by the stone skin harmlessly. Thou it does leave the surface of the statue shimerring with a thin layer of the ice.");
-			enemyAI();
-			return;
-		}
+		if (handleConcentration()) {return;}
+		if (handleStatue("The ice courses by the stone skin harmlessly. Thou it does leave the surface of the statue shimerring with a thin layer of the ice.")) {return;}
 		//Special enemy avoidances
 		if (monster.short == "Vala" && !monster.hasStatusEffect(StatusEffects.Stunned)) {
 			outputText("Vala beats her wings with surprising strength, blowing the ice wave back at you! ");
@@ -421,8 +394,7 @@ package classes.Scenes.Combat {
 				else outputText("are");
 				outputText("too resolute to be frozen by your attack.</b>");
 			}
-			damage = doDamage(damage);
-			outputText(" <b>(<font color=\"#800000\">" + damage + "</font>)</b>");
+			damage = doDamage(damage, true, true);
 		}
 		outputText("\n\n");
 		checkAchievementDamage(damage);
@@ -441,57 +413,13 @@ package classes.Scenes.Combat {
 		clearOutput();
 		fatigue(50, USEFATG_MAGIC_NOBM);
 		player.createStatusEffect(StatusEffects.CooldownFreezingBreathYeti,10,0,0,0);
-		var damage:Number = 0;
-		if (player.tou >= 21 && player.tou < 41) damage += (player.tou / 2 + rand((player.tou * 3) / 4));
-		if (player.tou >= 41 && player.tou < 61) damage += ((player.tou * 2) / 3 + rand(player.tou));
-		if (player.tou >= 61 && player.tou < 81) damage += ((player.tou * 5) / 6 + rand(player.tou * 1.25));
-		if (player.tou >= 81 && player.tou < 101) damage += (player.tou + rand(player.tou * 1.5));
-		if (player.tou >= 101 && player.tou < 151) damage += ((player.tou * 1.25) + rand(player.tou * 1.75));
-		if (player.tou >= 151 && player.tou < 201) damage += ((player.tou * 1.5) + rand(player.tou * 2));
-		if (player.tou >= 201 && player.tou < 251) damage += ((player.tou * 1.75) + rand(player.tou * 2.25));
-		if (player.tou >= 251 && player.tou < 301) damage += ((player.tou * 2) + rand(player.tou * 2.5));
-		if (player.tou >= 301 && player.tou < 351) damage += ((player.tou * 2.25) + rand(player.tou * 2.75));
-		if (player.tou >= 351 && player.tou < 401) damage += ((player.tou * 2.5) + rand(player.tou * 3));
-		if (player.tou >= 401 && player.tou < 451) damage += ((player.tou * 2.75) + rand(player.tou * 3.25));
-		if (player.tou >= 451 && player.tou < 501) damage += ((player.tou * 3) + rand(player.tou * 3.5));
-		if (player.tou >= 501 && player.tou < 551) damage += ((player.tou * 3.25) + rand(player.tou * 3.75));
-		if (player.tou >= 551 && player.tou < 601) damage += ((player.tou * 3.5) + rand(player.tou * 4));
-		if (player.tou >= 601 && player.tou < 651) damage += ((player.tou * 3.75) + rand(player.tou * 4.25));
-		if (player.tou >= 651 && player.tou < 701) damage += ((player.tou * 4) + rand(player.tou * 4.5));
-		if (player.tou >= 701 && player.tou < 751) damage += ((player.tou * 4.25) + rand(player.tou * 4.75));
-		if (player.tou >= 751 && player.tou < 801) damage += ((player.tou * 4.5) + rand(player.tou * 5));
-		if (player.tou >= 801 && player.tou < 851) damage += ((player.tou * 4.75) + rand(player.tou * 5.25));
-		if (player.tou >= 851 && player.tou < 901) damage += ((player.tou * 5) + rand(player.tou * 5.5));
-		if (player.tou >= 901 && player.tou < 951) damage += ((player.tou * 5.25) + rand(player.tou * 5.75));
-		if (player.tou >= 951) damage += ((player.tou * 5.5) + rand(player.tou * 6));
-		else damage += (player.tou/3 + rand(player.tou/2));
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 0.2;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 5;
-		if (player.hasPerk(PerkLib.ColdMastery)) damage *= 2;
-		if (player.hasPerk(PerkLib.ColdAffinity)) damage *= 2;
-		damage = Math.round(damage);
+		var damage:Number = Math.round(player.tou/3 + rand(player.tou/2));
 		outputText("You inhale deeply, then blow a freezing breath attack at your opponent, encasing it in ice!");
 		//Shell
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		//Amily!
-		if (monster.hasStatusEffect(StatusEffects.Concentration)) {
-			clearOutput();
-			outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
-			enemyAI();
-			return;
-		}
-		if (monster is LivingStatue)
-		{
-			outputText("The ice courses by the stone skin harmlessly. Thou it does leave the surface of the statue shimerring with a thin layer of the ice.");
-			enemyAI();
-			return;
-		}
+		if (handleConcentration()) {return;}
+		if (handleStatue("The ice courses by the stone skin harmlessly. Thou it does leave the surface of the statue shimerring with a thin layer of the ice.")) {return;}
 		//Special enemy avoidances
 		if (monster.short == "Vala" && !monster.hasStatusEffect(StatusEffects.Stunned)) {
 			outputText("Vala beats her wings with surprising strength, blowing the ice wave back at you! ");
@@ -525,8 +453,7 @@ package classes.Scenes.Combat {
 				else outputText("are");
 				outputText("too resolute to be frozen by your attack.</b>");
 			}
-			damage = doDamage(damage);
-			outputText(" <b>(<font color=\"#800000\">" + damage + "</font>)</b>");
+			damage = doDamage(damage, true, true);
 		}
 		outputText("\n\n");
 		checkAchievementDamage(damage);
@@ -562,9 +489,7 @@ package classes.Scenes.Combat {
 			{
 				outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
 				monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-				enemyAI();
 			}
-			else enemyAI();
 		}
 		else if (player.statusEffectv1(StatusEffects.ChanneledAttack) == 1) {
 			outputText("You are still singing. Your compelling aria reaches far up to your opponent");
@@ -575,8 +500,6 @@ package classes.Scenes.Combat {
 			lustDmg2 = Math.round(lustDmg2);
 			monster.teased(lustDmg2);
 			player.addStatusValue(StatusEffects.ChanneledAttack, 1, 1);
-			outputText("\n\n");
-			enemyAI();
 		}
 		else {
 			fatigue(50, USEFATG_MAGIC_NOBM);
@@ -588,36 +511,44 @@ package classes.Scenes.Combat {
 			monster.teased(lustDmg);
 			player.createStatusEffect(StatusEffects.ChanneledAttack, 1, 0, 0, 0);
 			player.createStatusEffect(StatusEffects.ChanneledAttackType, 1, 0, 0, 0);
-			outputText("\n\n");
-			enemyAI();
 		}
+		enemyAI();
 	}
 	
 	public function OrgasmicLightningStrike():void {
 		SceneLib.combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
-		var temp2:Number = 0;
-		if (player.statusEffectv1(StatusEffects.ChanneledAttack) == 2) {
+		var lust:Number = 5 + rand(player.lib / 5 + player.cor / 10);
+		dynStats("lus", lust, "scale", false);
+
+		if (!player.hasStatusEffect(StatusEffects.ChanneledAttack)){
+			outputText("You begin to fiercely masturbate,"
+					+ "[if(isMale) jerking your [cock]]. "
+					+ "[if(isFemale) fingering your [pussy]. "
+					+ "[if(isHerm) jerking your [cock] and fingering your [pussy]. "
+					+ "Static electricity starts to build in your body.\n\n"
+			);
+			player.createStatusEffect(StatusEffects.ChanneledAttack, 1, 0, 0, 0);
+			player.createStatusEffect(StatusEffects.ChanneledAttackType, 3, 0, 0, 0);
+		}
+		else if (player.statusEffectv1(StatusEffects.ChanneledAttack) == 1) {
+			outputText("You continue masturbating, lost in the sensation as lightning run across your form. You are almost there!\n\n");
+			player.addStatusValue(StatusEffects.ChanneledAttack, 1, 1);
+		}
+		else if (player.statusEffectv1(StatusEffects.ChanneledAttack) == 2) {
 			outputText("You achieve a thundering orgasm, lightning surging out of your body as you direct it toward [monster a][monster name], gleefully zapping " + monster.pronoun2 + " body with your accumulated lust! Your desire, however, only continue to ramp up.\n\n");
-			temp2 = 5 + rand(player.lib / 5 + player.cor / 10);
-			dynStats("lus", temp2, "scale", false);
 			var lustDmgF:Number = 20 + rand(6);
-			var bimbo:Boolean   = false;
-			var bro:Boolean     = false;
-			var futa:Boolean    = false;
 			if (player.hasPerk(PerkLib.SensualLover)) {
 				lustDmgF += 2;
 			}
 			if (player.hasPerk(PerkLib.Seduction)) lustDmgF += 5;
-			if (player.hasPerk(PerkLib.SluttySeduction)) lustDmgF += player.perkv1(PerkLib.SluttySeduction);
-			if (player.hasPerk(PerkLib.WizardsEnduranceAndSluttySeduction)) lustDmgF += player.perkv2(PerkLib.WizardsEnduranceAndSluttySeduction);
-			if (bimbo || bro || futa) {
-				lustDmgF += 5;
-			}
+			lustDmgF += player.perkv1(PerkLib.SluttySeduction);
+			lustDmgF += player.perkv2(PerkLib.WizardsEnduranceAndSluttySeduction);
 			lustDmgF += scalingBonusLibido() * 0.1;
 			if (player.hasPerk(PerkLib.JobSeducer)) lustDmgF += player.teaseLevel * 3;
 			else lustDmgF += player.teaseLevel * 2;
 			if (player.hasPerk(PerkLib.JobCourtesan) && monster.hasPerk(PerkLib.EnemyBossType)) lustDmgF *= 1.2;
+
 			switch (player.coatType()) {
 				case Skin.FUR:
 					lustDmgF += (1 + player.newGamePlusMod());
@@ -632,6 +563,7 @@ package classes.Scenes.Combat {
 					lustDmgF += (4 * (1 + player.newGamePlusMod()));
 					break;
 			}
+
 			if (player.hasPerk(PerkLib.SluttySimplicity) && player.armorName == "nothing") lustDmgF *= (1 + ((10 + rand(11)) / 100));
 			if (player.hasPerk(PerkLib.ElectrifiedDesire)) {
 				lustDmgF *= (1 + (player.lust100 * 0.01));
@@ -659,30 +591,11 @@ package classes.Scenes.Combat {
 			if (crit == true) outputText(" <b>Critical!</b>");
 			outputText("\n\n");
 			if (!monster.hasPerk(PerkLib.Resolute)) monster.createStatusEffect(StatusEffects.Stunned,2,0,0,0);
+
 			player.removeStatusEffect(StatusEffects.ChanneledAttack);
 			player.removeStatusEffect(StatusEffects.ChanneledAttackType);
-			enemyAI();
 		}
-		else if (player.statusEffectv1(StatusEffects.ChanneledAttack) == 1) {
-			outputText("You continue masturbating, lost in the sensation as lightning run across your form. You are almost there!\n\n");
-			temp2 = 5 + rand(player.lib / 5 + player.cor / 10);
-			dynStats("lus", temp2, "scale", false);
-			player.addStatusValue(StatusEffects.ChanneledAttack, 1, 1);
-			enemyAI();
-		}
-		else {
-			clearOutput();
-			outputText("You begin to fiercely masturbate, ");
-			if (player.gender == 2) outputText("fingering your [pussy]");
-			if (player.gender == 1) outputText("jerking your [cock]");
-			if (player.gender == 3) outputText("jerking your [cock] and fingering your [pussy]");
-			outputText(". Static electricity starts to build in your body.\n\n");
-			temp2 = 5 + rand(player.lib / 5 + player.cor / 10);
-			dynStats("lus", temp2, "scale", false);
-			player.createStatusEffect(StatusEffects.ChanneledAttack, 1, 0, 0, 0);
-			player.createStatusEffect(StatusEffects.ChanneledAttackType, 3, 0, 0, 0);
-			enemyAI();
-		}
+		enemyAI();
 	}
 
 	public function startOniRampage():void {
@@ -717,31 +630,12 @@ package classes.Scenes.Combat {
 		damage += 50 + rand(20);
 		damage += (player.level * 10);
 		if (player.hasPerk(PerkLib.DraconicLungsEvolved)) damage *= 3;
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 0.2;
-		if (player.hasPerk(PerkLib.FireAffinity)) damage *= 2;
 		damage = Math.round(damage);
 		//Shell
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		//Amily!
-		if (monster.hasStatusEffect(StatusEffects.Concentration)) {
-			clearOutput();
-			outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
-			enemyAI();
-			return;
-		}
-		if (monster is LivingStatue)
-		{
-			outputText("The fire courses by the stone skin harmlessly. It does leave the surface of the statue glossier in its wake.");
-			enemyAI();
-			return;
-		}
+		if (handleConcentration()) {return;}
+		if (handleStatue("The fire courses by the stone skin harmlessly. It does leave the surface of the statue glossier in its wake.")) {return;}
 		else if (monster is Lethice && (monster as Lethice).fightPhase == 2)
 		{
 			//Attack gains burn DoT for 2-3 turns.
@@ -753,8 +647,7 @@ package classes.Scenes.Combat {
 				damage *= 1.5;
 			}
 			damage *= 1.75;
-			outputText(" (" + damage + ")");
-			monster.HP -= damage;
+			doDamage(damage, true, true);
 			combatRoundOver();
 			return;
 		}
@@ -844,31 +737,12 @@ package classes.Scenes.Combat {
 			damage *= 1.5;
 		}
 		if (player.hasPerk(PerkLib.DraconicLungsEvolved)) damage *= 3;
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 0.2;
-		if (player.hasPerk(PerkLib.FireAffinity)) damage *= 2;
 		damage = Math.round(damage);
 		//Shell
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		//Amily!
-		if (monster.hasStatusEffect(StatusEffects.Concentration)) {
-			clearOutput();
-			outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
-			enemyAI();
-			return;
-		}
-		if (monster is LivingStatue)
-		{
-			outputText("The fire courses by the stone skin harmlessly. It does leave the surface of the statue glossier in its wake.");
-			enemyAI();
-			return;
-		}
+		if (handleConcentration()) {return;}
+		if (handleStatue("The fire courses by the stone skin harmlessly. It does leave the surface of the statue glossier in its wake.")) {return;}
 		else if (monster is Lethice && (monster as Lethice).fightPhase == 2)
 		{
 			//Attack gains burn DoT for 2-3 turns.
@@ -968,31 +842,12 @@ package classes.Scenes.Combat {
 			damage *= 1.5;
 		}
 		if (player.hasPerk(PerkLib.DraconicLungsEvolved)) damage *= 3;
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 0.2;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 5;
-		if (player.hasPerk(PerkLib.ColdMastery) || player.hasPerk(PerkLib.ColdAffinity)) damage *= 2;
 		damage = Math.round(damage);
-		//Shell
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
-		//Amily!
-		if (monster.hasStatusEffect(StatusEffects.Concentration)) {
-			clearOutput();
-			outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
-			enemyAI();
-			return;
-		}
-		if (monster is LivingStatue)
-		{
-			outputText("The ice courses by the stone skin harmlessly. Thou it does leave the surface of the statue shimerring with a thin layer of the ice.");
-			enemyAI();
-			return;
-		}
+
+		if (handleShell()) {return;}
+		if (handleConcentration()) {return;}
+		if (handleStatue("The ice courses by the stone skin harmlessly. Thou it does leave the surface of the statue shimerring with a thin layer of the ice.")) {return;}
+
 		outputText("Tapping into the power deep within you, you let loose a bellowing roar at your enemy, so forceful that even the environs crumble around " + monster.pronoun2 + ".  " + monster.capitalA + monster.short + " does " + monster.pronoun3 + " best to avoid it, but the wave of force is too fast.");
 		//Miss:
 		if ((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
@@ -1057,32 +912,13 @@ package classes.Scenes.Combat {
 			damage *= 1.5;
 		}
 		if (player.hasPerk(PerkLib.DraconicLungsEvolved)) damage *= 3;
-		if (monster.hasPerk(PerkLib.LightningNature)) damage *= 0.2;
-		if (monster.hasPerk(PerkLib.DarknessVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.LightningVulnerability)) damage *= 2;
-        if (monster.hasPerk(PerkLib.DarknessNature)) damage *= 5;
-        if (player.hasPerk(PerkLib.LightningAffinity)) damage *= 2;
 		if (player.hasPerk(PerkLib.ElectrifiedDesire)) damage *= (1 + (player.lust100 * 0.01));
 		damage = Math.round(damage);
-		//Shell
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
-		//Amily!
-		if (monster.hasStatusEffect(StatusEffects.Concentration)) {
-			clearOutput();
-			outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
-			enemyAI();
-			return;
-		}
-		if (monster is LivingStatue)
-		{
-			outputText("The lightning courses by the stone skin harmlessly. Thou it does leave the surface of the statue sparkling with a few residual lighting discharges.");
-			enemyAI();
-			return;
-		}
+
+		if (handleShell()) {return;}
+		if (handleConcentration()) {return;}
+		if (handleStatue("The lightning courses by the stone skin harmlessly. Thou it does leave the surface of the statue sparkling with a few residual lighting discharges.")){return;}
+
 		outputText("Tapping into the power deep within you, you let loose a bellowing roar at your enemy, so forceful that even the environs crumble around " + monster.pronoun2 + ".  " + monster.capitalA + monster.short + " does " + monster.pronoun3 + " best to avoid it, but the wave of force is too fast.");
 		//Miss:
 		if ((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
@@ -1147,31 +983,12 @@ package classes.Scenes.Combat {
 			damage *= 1.5;
 		}
 		if (player.hasPerk(PerkLib.DraconicLungsEvolved)) damage *= 3;
-		if (monster.hasPerk(PerkLib.DarknessNature)) damage *= 0.2;
-		if (monster.hasPerk(PerkLib.LightningVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.DarknessVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.LightningNature)) damage *= 5;
-//	if (player.hasPerk(PerkLib.ColdMastery) || player.hasPerk(PerkLib.ColdAffinity)) damage *= 2;
 		damage = Math.round(damage);
-		//Shell
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
-		//Amily!
-		if (monster.hasStatusEffect(StatusEffects.Concentration)) {
-			clearOutput();
-			outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
-			enemyAI();
-			return;
-		}
-		if (monster is LivingStatue)
-		{
-			outputText("The darkness courses by the stone skin harmlessly. Thou it does leave the surface of the statue with a thin layer of dark glow.");
-			enemyAI();
-			return;
-		}
+
+		if (handleShell()) {return;}
+		if (handleConcentration()) {return;}
+		if (handleStatue("The darkness courses by the stone skin harmlessly. Thou it does leave the surface of the statue with a thin layer of dark glow.")) {return;}
+
 		outputText("Tapping into the power deep within you, you let loose a bellowing roar at your enemy, so forceful that even the environs crumble around " + monster.pronoun2 + ".  " + monster.capitalA + monster.short + " does " + monster.pronoun3 + " best to avoid it, but the wave of force is too fast.");
 		//Miss:
 		if ((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
@@ -1242,31 +1059,12 @@ package classes.Scenes.Combat {
 
 		var damage:Number;
 		damage = int(player.level * 10 + 45 + rand(10));
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 0.2;
-		if (player.hasPerk(PerkLib.FireAffinity)) damage *= 2;
 		damage = Math.round(damage);
 
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
-		//Amily!
-		if (monster.hasStatusEffect(StatusEffects.Concentration)) {
-			clearOutput();
-			outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
-			enemyAI();
-			return;
-		}
-		if (monster is LivingStatue)
-		{
-			outputText("The fire courses by the stone skin harmlessly. It does leave the surface of the statue glossier in its wake.");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
+		if (handleConcentration()) {return;}
+		if (handleStatue("The fire courses by the stone skin harmlessly. It does leave the surface of the statue glossier in its wake.")){return;}
+
 		if (monster is Doppleganger)
 		{
 			(monster as Doppleganger).handleSpellResistance("fireball");
@@ -1321,16 +1119,9 @@ package classes.Scenes.Combat {
 			monster.createStatusEffect(StatusEffects.OnFire, 2 + rand(2), 0, 0, 0);
 			damage = int(player.level * 10 + 45 + rand(10));
 			damage *= 1.75;
-			outputText(" (" + damage + ")");
-			monster.HP -= damage;
-			if (monster.HP < 1) {
-				doNext(endHpVictory);
-			}
-			else if (monster.lust >= 99) {
-				doNext(endLustVictory);
-			}
-			else enemyAI();
-			return;
+			doDamage(damage, true, true);
+			if(combatIsOver()){return;}
+			enemyAI();
 		}
 		else {
 			//Using fire attacks on the goo]
@@ -1343,16 +1134,13 @@ package classes.Scenes.Combat {
 				outputText("<b>Your breath is massively dissipated by the swirling vortex, causing it to hit with far less force!</b>  ");
 				damage = Math.round(0.5 * damage);
 			}
-			outputText("<b>(<font color=\"#800000\">" + damage + "</font>)</b>\n\n");
-			monster.HP -= damage;
+			doDamage(damage, true, true);
 			if (monster.short == "Holli" && !monster.hasStatusEffect(StatusEffects.HolliBurning)) (monster as Holli).lightHolliOnFireMagically();
 		}
 		checkAchievementDamage(damage);
 		combat.heroBaneProc(damage);
-		if (monster.HP < 1) {
-			doNext(endHpVictory);
-		}
-		else enemyAI();
+		if(combatIsOver()){return;}
+		enemyAI();
 	}
 
 	//player gains hellfire perk.
@@ -1368,36 +1156,19 @@ package classes.Scenes.Combat {
 		fatigue(20, USEFATG_MAGIC_NOBM);
 		var damage:Number = (player.level * 8 + rand(10) + player.inte / 2 + player.cor / 5);
 		//Amily!
-		if (monster.hasStatusEffect(StatusEffects.Concentration)) {
-			clearOutput();
-			outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.\n\n");
-			enemyAI();
-			return;
-		}
-		if (monster is LivingStatue)
-		{
-			outputText("The fire courses over the stone behemoths skin harmlessly. It does leave the surface of the statue glossier in its wake.");
-			enemyAI();
-			return;
-		}
+		if(handleConcentration()){return;}
+		if(handleStatue("The fire courses over the stone behemoths skin harmlessly. It does leave the surface of the statue glossier in its wake.")) {return;}
 
-		else if (monster is Lethice && (monster as Lethice).fightPhase == 2)
+		if (monster is Lethice && (monster as Lethice).fightPhase == 2)
 		{
 			//Attack gains burn DoT for 2-3 turns.
 			outputText("You let loose a roiling cone of flames that wash over the horde of demons like a tidal wave, scorching at their tainted flesh with vigor unlike anything you've seen before. Screams of terror as much as, maybe more than, pain fill the air as the mass of corrupted bodies try desperately to escape from you! Though more demons pile in over the affected front ranks, you've certainly put the fear of your magic into them!");
 			monster.createStatusEffect(StatusEffects.OnFire, 2 + rand(2), 0, 0, 0);
 			damage = int(player.level * 8 + rand(10) + player.cor / 5);
 			damage *= 1.75;
-			outputText(" (" + damage + ")");
-			monster.HP -= damage;
-			if (monster.HP < 1) {
-				doNext(endHpVictory);
-			}
-			else if (monster.lust >= monster.maxLust()) {
-				doNext(endLustVictory);
-			}
-			else enemyAI();
-			return;
+			doDamage(damage, true, true);
+			if(combatIsOver()){return;}
+			return enemyAI();
 		}
 
 		if (!player.hasStatusEffect(StatusEffects.GooArmorSilence)) outputText("You take in a deep breath and unleash a wave of corrupt red flames from deep within.");
@@ -1441,15 +1212,8 @@ package classes.Scenes.Combat {
 		else {
 			if (monster.inte < 10) {
 				outputText("  Your foe lets out a shriek as their form is engulfed in the blistering flames.");
-				if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-				if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-				if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
-				if (monster.hasPerk(PerkLib.FireNature)) damage *= 0.2;
-				if (player.hasPerk(PerkLib.FireAffinity)) damage *= 2;
 				damage = Math.round(damage);
-				damage = int(damage);
-				outputText("<b>(<font color=\"#800000\">+" + damage + "</font>)</b>\n");
-				monster.HP -= damage;
+				doDamage(damage, true, true);
 			}
 			else {
 				if (monster.lustVuln > 0) {
@@ -1465,21 +1229,13 @@ package classes.Scenes.Combat {
 		outputText("\n");
 		combat.heroBaneProc(damage);
 		if (monster.short == "Holli" && !monster.hasStatusEffect(StatusEffects.HolliBurning)) (monster as Holli).lightHolliOnFireMagically();
-		if (monster.HP < 1) {
-			doNext(endHpVictory);
-		}
-		else if (monster.lust >= monster.maxLust()) {
-			doNext(endLustVictory);
-		}
-		else
+		if (combatIsOver()){return;}
+		if (monster is Lethice && (monster as Lethice).fightPhase == 3)
 		{
-			if (monster is Lethice && (monster as Lethice).fightPhase == 3)
-			{
-				outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
-				monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-			}
-			enemyAI();
+			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
+			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
 		}
+		enemyAI();
 	}
 	public function magicbolt():void {
 		SceneLib.combat.lastAttack = Combat.HPSPELL;
@@ -1496,42 +1252,10 @@ package classes.Scenes.Combat {
 		outputText("You narrow your eyes, focusing your mind with deadly intent.  ");
 		if (player.hasPerk(PerkLib.StaffChanneling) && player.weaponPerk == "Staff") outputText("You point your staff and shots magic bolt toward [monster a][monster name]!\n\n");
 		else outputText("You point your hand toward [monster a][monster name] and shots magic bolt!\n\n");
-		var damage:Number = player.inte;
-		if (player.inte >= 21) damage += ((player.inte - 20) * 0.25);
-		if (player.inte >= 41) damage += ((player.inte - 40) * 0.25);
-		if (player.inte >= 61) damage += ((player.inte - 60) * 0.25);
-		if (player.inte >= 81) damage += ((player.inte - 80) * 0.25);
-		if (player.inte >= 101) damage += ((player.inte - 100) * 0.25);
-		if (player.inte >= 151) damage += ((player.inte - 150) * 0.25);
-		if (player.inte >= 201) damage += ((player.inte - 200) * 0.25);
-		if (player.inte >= 251) damage += ((player.inte - 250) * 0.25);
-		if (player.inte >= 301) damage += ((player.inte - 300) * 0.25);
-		if (player.inte >= 351) damage += ((player.inte - 350) * 0.25);
-		if (player.inte >= 401) damage += ((player.inte - 400) * 0.25);
-		if (player.inte >= 451) damage += ((player.inte - 450) * 0.25);
-		if (player.inte >= 501) damage += ((player.inte - 500) * 0.25);
-		if (player.inte >= 551) damage += ((player.inte - 550) * 0.25);
-		if (player.inte >= 601) damage += ((player.inte - 600) * 0.25);
-		if (player.inte >= 651) damage += ((player.inte - 650) * 0.25);
-		if (player.inte >= 701) damage += ((player.inte - 700) * 0.25);
-		if (player.inte >= 751) damage += ((player.inte - 750) * 0.25);
-		if (player.inte >= 801) damage += ((player.inte - 800) * 0.25);
-		if (player.inte >= 851) damage += ((player.inte - 850) * 0.25);
-		if (player.inte >= 901) damage += ((player.inte - 900) * 0.25);
-		if (player.inte >= 951) damage += ((player.inte - 950) * 0.25);
-		if (player.inte >= 1001) damage += ((player.inte - 1000) * 0.25);
-		if (player.inte >= 1051) damage += ((player.inte - 1050) * 0.25);
-		if (player.inte >= 1101) damage += ((player.inte - 1100) * 0.25);
-		if (player.inte >= 1151) damage += ((player.inte - 1150) * 0.25);
-		if (player.inte >= 1201) damage += ((player.inte - 1200) * 0.25);
-		if (damage < 10) damage = 10;
+		var damage:Number = Math.max(player.inte * 0.25, 10);
 		//weapon bonus
 		if (player.hasPerk(PerkLib.StaffChanneling) && player.weaponPerk == "Staff") {
-			if (player.weaponAttack < 51) damage *= (1 + (player.weaponAttack * 0.04));
-			else if (player.weaponAttack >= 51 && player.weaponAttack < 101) damage *= (3 + ((player.weaponAttack - 50) * 0.035));
-			else if (player.weaponAttack >= 101 && player.weaponAttack < 151) damage *= (4.75 + ((player.weaponAttack - 100) * 0.03));
-			else if (player.weaponAttack >= 151 && player.weaponAttack < 201) damage *= (6.25 + ((player.weaponAttack - 150) * 0.025));
-			else damage *= (7.5 + ((player.weaponAttack - 200) * 0.02));
+			damage *= 1 + (player.weaponAttack * 0.04);
 		}
 		//Determine if critical hit!
 		var crit:Boolean = false;
@@ -1546,31 +1270,17 @@ package classes.Scenes.Combat {
 			damage *= 1.75;
 		}
 		damage = Math.round(damage);
-		outputText(monster.capitalA + monster.short + " takes <b><font color=\"#800000\">" + damage + "</font></b> damage.");
-		if (crit == true) outputText(" <b>*Critical Hit!*</b>");
-		outputText("\n\n");
+		doDamage(damage, true, true)
 		checkAchievementDamage(damage);
-		monster.HP -= damage;
 		combat.heroBaneProc(damage);
 		statScreenRefresh();
-		if (monster.HP < 1)
+		if(combatIsOver()){return;}
+		if (monster is Lethice && (monster as Lethice).fightPhase == 3)
 		{
-			doNext(endHpVictory);
+			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
+			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
 		}
-		else
-		{
-			if (monster is Lethice && (monster as Lethice).fightPhase == 3)
-			{
-				outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
-				monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-			}
-			enemyAI();
-		}
-//	if (monster.lustVuln > 0) {
-//			if (player.weaponPerk == "Aphrodisiac Weapon") {
-//				outputText("\n" + monster.capitalA + monster.short + " shivers as your weapon's 'poison' goes to work.");
-//				monster.teased(monster.lustVuln * (5 + player.cor / 10));
-//			}
+		enemyAI();
 	}
 	
 	public function dwarfrage():void {
@@ -1707,11 +1417,6 @@ package classes.Scenes.Combat {
 		//High damage to goes.
 		if (monster.short == "goo-girl") damage = Math.round(damage * 1.5);
 		if (monster.short == "tentacle beast") damage = Math.round(damage * 1.2);
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 0.2;
-		if (player.hasPerk(PerkLib.FireAffinity)) damage *= 2;
 		damage = Math.round(damage);
 		outputText("for <b><font color=\"#800000\">" + damage + "</font></b> damage.");
 		if (crit == true) outputText(" <b>*Critical Hit!*</b>");
@@ -1812,11 +1517,6 @@ package classes.Scenes.Combat {
 			outputText("  Your flames lick the girl's body and she opens her mouth in pained protest as you evaporate much of her moisture. When the fire passes, she seems a bit smaller and her slimy " + monster.skinTone + " skin has lost some of its shimmer.  ");
 			if (!monster.hasPerk(PerkLib.Acid)) monster.createPerk(PerkLib.Acid,0,0,0,0);
 		}
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 0.2;
-		if (player.hasPerk(PerkLib.FireAffinity)) damage *= 2;
 		if (player.jewelryName == "fox hairpin") damage *= 1.2;
 		damage = Math.round(damage);
 		damage = doDamage(damage);
@@ -1859,11 +1559,7 @@ package classes.Scenes.Combat {
 	}
 	public function fusedFoxFire2():void {
 		fatigue((250 * kitsuneskillCost()),USEFATG_MAGIC);
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		outputText("Holding out your palms, you conjure an ethereal blue on one palm and corrupted purple flame on other which dances across your fingertips.  After well practised move of fusing them both into one of mixed colors ball of fire you launch it at [monster a][monster name] with a ferocious throw, and it bursts on impact, showering dazzling azure and lavender sparks everywhere.  ");
 		var damage:Number = (scalingBonusWisdom() * 0.5) + (scalingBonusIntelligence() * 0.5);
 		//Determine if critical hit!
@@ -1898,11 +1594,6 @@ package classes.Scenes.Combat {
 			outputText("  Your flames lick the girl's body and she opens her mouth in pained protest as you evaporate much of her moisture. When the fire passes, she seems a bit smaller and her slimy " + monster.skinTone + " skin has lost some of its shimmer.  ");
 			if (!monster.hasPerk(PerkLib.Acid)) monster.createPerk(PerkLib.Acid,0,0,0,0);
 		}
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 0.2;
-		if (player.hasPerk(PerkLib.FireAffinity)) damage *= 2;
 		damage = Math.round(damage);
 		damage = doDamage(damage);
 		if(teasedText()){
@@ -1941,11 +1632,7 @@ package classes.Scenes.Combat {
 	}
 	public function pureFoxFire2():void {
 		fatigue((100 * kitsuneskillCost()),USEFATG_MAGIC);
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		outputText("Holding out your palm, you conjure an ethereal blue flame that dances across your fingertips.  You launch it at [monster a][monster name] with a ferocious throw, and it bursts on impact, showering dazzling azure sparks everywhere.  ");
 		var damage:Number = (scalingBonusIntelligence() * 0.5) + (scalingBonusWisdom() * 0.5);
 		//Determine if critical hit!
@@ -1985,11 +1672,6 @@ package classes.Scenes.Combat {
 			outputText("  Your flames lick the girl's body and she opens her mouth in pained protest as you evaporate much of her moisture. When the fire passes, she seems a bit smaller and her slimy " + monster.skinTone + " skin has lost some of its shimmer.  ");
 			if (!monster.hasPerk(PerkLib.Acid)) monster.createPerk(PerkLib.Acid,0,0,0,0);
 		}
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 0.2;
-		if (player.hasPerk(PerkLib.FireAffinity)) damage *= 2;
 		damage = Math.round(damage);
 		damage = doDamage(damage);
 		if (teasedText()) {
@@ -2032,11 +1714,7 @@ package classes.Scenes.Combat {
 	public function kitsuneTerror():void {
 		clearOutput();
 		//Fatigue Cost: 25
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		if (monster.short == "pod" || monster.inte == 0) {
 			outputText("You reach for the enemy's mind, but cannot find anything.  You frantically search around, but there is no consciousness as you know it in the room.\n\n");
 			fatigue(1);
@@ -2093,11 +1771,7 @@ package classes.Scenes.Combat {
 			player.createStatusEffect(StatusEffects.CooldownIllusion,9,0,0,0);
 			fatigue(50, USEFATG_MAGIC_NOBM);
 		}
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		//Decrease enemy speed and increase their susceptibility to lust attacks if already 110% or more
 		outputText("The world begins to twist and distort around you as reality bends to your will, [monster a][monster name]'s mind blanketed in the thick fog of your illusions.");
 		player.createStatusEffect(StatusEffects.Illusion,3,0,0,0);
@@ -2108,77 +1782,80 @@ package classes.Scenes.Combat {
 			monster.teased(lustDmg);
 		}
 		outputText("\n\n");
-		if (monster.lust < monster.maxLust()) enemyAI();
-		else {
-			if (monster.lust >= monster.maxLust()) doNext(endLustVictory);
-		}
+		if(combatIsOver()){return;}
+		enemyAI();
 	}
 
 	//cursed riddle
-	public function CursedRiddle():void {
-		clearOutput();
-		player.createStatusEffect(StatusEffects.CooldownCursedRiddle, 0, 0, 0, 0);
-		outputText("You stop fighting for a second and speak aloud a magical riddle.\n\n");
-		var chosen:String = randomChoice(
-		"\"<i>If you speak my name, you destroy me. Who am I?</i>\"\n\n",
-		"\"<i>It belongs to me, but both my friends and enemies use it more than me. What is it?</i>\"\n\n",
-		"\"<i>What is the part of the bird that is not in the sky, which can swim in the ocean and always stay dry.</i>\"\n\n",
-		"\"<i>What comes once in a minute, twice in a moment, but never in a thousand years?</i>\"\n\n",
-		"\"<i>The more you take, the more you leave behind. What am I?</i>\"\n\n",
-		"\"<i>I reach for the sky, but clutch to the ground; sometimes I leave, but I am always around. What am I?</i>\"\n\n",
-		"\"<i>I am a path situated between high natural masses. Remove my first letter & you have a path situated between man-made masses. What am I?</i>\"\n\n",
-		"\"<i>I am two-faced but bear only one, I have no legs but travel widely. Men spill much blood over me, kings leave there imprint on me. I have greatest power when given away, yet lust for me keeps me locked away. What am I?</i>\"\n\n",
-		"\"<i>I always follow you around, everywhere you go at night. I look very bright to people, but I can make the sun dark. I can be in many different forms and shapes. What am I?</i>\"\n\n",
-		"\"<i>I have hundreds of legs but I can only lean. You make me feel dirty so you feel clean. What am I?</i>\"\n\n",
-		"\"<i>My tail is long, my coat is brown, I like the country, I like the town. I can live in a house or live in a shed, and I come out to play when you are in bed. What am I?</i>\"\n\n",
-		"\"<i>I welcome the day with a show of light, I steathily came here in the night. I bathe the earthy stuff at dawn, But by the noon, alas! I'm gone. What am I?</i>\"\n\n",
-		"\"<i>Which creature in the morning goes on four feet, at noon on two, and in the evening upon three?</i>\"\n\n"
-		);
-		outputText(chosen);
-		outputText("Startled by your query, [monster a][monster name] gives you a troubled look, everyone knows of the terrifying power of a sphinx riddle used as a curse. You give [monster a][monster name] some time crossing your forepaws in anticipation. ");
+		public function CursedRiddle():void {
+			clearOutput();
+			player.createStatusEffect(StatusEffects.CooldownCursedRiddle, 0, 0, 0, 0);
+			outputText("You stop fighting for a second and speak aloud a magical riddle.\n\n"
+					+ randomChoice(
+							"[say: If you speak my name, you destroy me. Who am I?]",
+							"[say: It belongs to me, but both my friends and enemies use it more than me. What is it?]",
+							"[say: What is the part of the bird that is not in the sky, which can swim in the ocean and always stay dry.]",
+							"[say: What comes once in a minute, twice in a moment, but never in a thousand years?]",
+							"[say: The more you take, the more you leave behind. What am I?]",
+							"[say: I reach for the sky, but clutch to the ground; sometimes I leave, but I am always around. What am I?]",
+							"[say: I am a path situated between high natural masses. Remove my first letter & you have a path situated between man-made masses. What am I?]",
+							"[say: I am two-faced but bear only one, I have no legs but travel widely. Men spill much blood over me, kings leave there imprint on me. I have greatest power when given away, yet lust for me keeps me locked away. What am I?]",
+							"[say: I always follow you around, everywhere you go at night. I look very bright to people, but I can make the sun dark. I can be in many different forms and shapes. What am I?]",
+							"[say: I have hundreds of legs but I can only lean. You make me feel dirty so you feel clean. What am I?]",
+							"[say: My tail is long, my coat is brown, I like the country, I like the town. I can live in a house or live in a shed, and I come out to play when you are in bed. What am I?]",
+							"[say: I welcome the day with a show of light, I steathily came here in the night. I bathe the earthy stuff at dawn, But by the noon, alas! I'm gone. What am I?]",
+							"[say: Which creature in the morning goes on four feet, at noon on two, and in the evening upon three?]"
+					)
+					+ "\n\nStartled by your query, [monster a][monster name] gives you a troubled look, everyone knows of the terrifying power of a sphinx riddle used as a curse. You give [monster a][monster name] some time crossing your forepaws in anticipation. "
+			);
 
-		//odds of success
-		var baseInteReq:Number = 200
-		var chance:Number = Math.max(player.inte/baseInteReq, 0.05) + 25
-		chance = Math.min(chance, 0.80);
+			//odds of success
+			var baseInteReq:Number = 200;
+			var chance:Number = Math.max(player.inte / baseInteReq, 0.05) + 25;
+			chance = Math.min(chance, 0.80);
 
-		if (Math.random() < chance){
-		outputText("\n\n[monster a][monster name] hazard an answer and your smirk as you respond, “Sadly incorrect!” Your curse smiting your foe for its mistake, leaving it stunned by pain and pleasure.");
-		//damage dealth
-		var damage:Number = ((scalingBonusWisdom() * 0.5) + scalingBonusIntelligence()) * spellMod();
-		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
-			damage *= 1.75;
-		}
-		damage = Math.round(damage);
-		damage = doDamage(damage);
-		outputText("<b>(<font color=\"#800000\">" + damage + "</font>)</b>");
+			if (Math.random() < chance) {
+				outputText("\n\n[monster a][monster name] hazard an answer and your smirk as you respond, “Sadly incorrect!” Your curse smiting your foe for its mistake, leaving it stunned by pain and pleasure.");
+				//damage dealth
+				var damage:Number = ((scalingBonusWisdom() * 0.5) + scalingBonusIntelligence()) * spellMod();
+				//Determine if critical hit!
+				var crit:Boolean = false;
+				var critChance:int = 5;
+				if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
+					if (player.inte <= 100) {
+						critChance += (player.inte - 50) / 50;
+					}
+					if (player.inte > 100) {
+						critChance += 10;
+					}
+				}
+				if (monster.isImmuneToCrits()) {
+					critChance = 0;
+				}
+				if (rand(100) < critChance) {
+					crit = true;
+					damage *= 1.75;
+				}
+				damage = Math.round(damage);
+				damage = doDamage(damage);
+				outputText("<b>(<font color=\"#800000\">" + damage + "</font>)</b>");
 
-		//Lust damage dealth
-		if (monster.lustVuln > 0) {
-			outputText(" ");
-			var lustDmg:Number = monster.lustVuln * ((player.inte + (player.wis * 0.50)) / 5 * spellMod() + rand(monster.lib - monster.inte * 2 + monster.cor) / 5);
-			monster.teased(lustDmg);
+				//Lust damage dealth
+				if (monster.lustVuln > 0) {
+					outputText(" ");
+					var lustDmg:Number = monster.lustVuln * ((player.inte + (player.wis * 0.50)) / 5 * spellMod() + rand(monster.lib - monster.inte * 2 + monster.cor) / 5);
+					monster.teased(lustDmg);
+				}
+				monster.createStatusEffect(StatusEffects.Stunned, 1, 0, 0, 0);
+				outputText("\n\n");
+				combat.heroBaneProc(damage);
+			}
+			else {
+				outputText("\n\nTo your complete frustration, [monster a][monster name] answers correctly.\n\n");
+			}
+			if (combatIsOver()) {return;}
+			enemyAI();
 		}
-		monster.createStatusEffect(StatusEffects.Stunned, 1, 0, 0, 0);
-		outputText("\n\n");
-		combat.heroBaneProc(damage);
-		}
-		else {
-		outputText("\n\nTo your complete frustration, [monster a][monster name] answers correctly.");
-		outputText("\n\n");
-		}
-	if (monster.HP < 1) doNext(endHpVictory);
-	else enemyAI();
-	}
 
 //Transfer
 	public function lustTransfer():void {
@@ -2192,20 +1869,14 @@ package classes.Scenes.Combat {
 			monster.lust += lusttransfered;
 		}
 		outputText("\n\n");
-		doNext(playerMenu);
-		if (monster.lust >= monster.maxLust()) doNext(endLustVictory);
-		else enemyAI();
-		return;
+		if (combatIsOver()) {return;}
+		enemyAI();
 	}
 
 //Fascinate
 	public function Fascinate():void {
 		clearOutput();
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		if (monster.short == "pod" || monster.inte == 0) {
 			outputText("You reach for the enemy's mind, but cannot find anything.  You frantically search around, but there is no consciousness as you know it in the room.\n\n");
 			fatigue(1);
@@ -2226,20 +1897,14 @@ package classes.Scenes.Combat {
 			}
 		}
 		outputText("\n\n");
-		doNext(playerMenu);
-		if (monster.lust >= monster.maxLust()) doNext(endLustVictory);
-		else enemyAI();
-		return;
+		if (combatIsOver()) {return;}
+		enemyAI();
 	}
 
 //Lust strike
 	public function LustStrike():void {
 		clearOutput();
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		fatigue(30, USEFATG_MAGIC_NOBM);
 		outputText("You start drawing symbols in the air toward [monster a][monster name].");
 		var lustDmg:Number = player.lust / 10 + player.lib / 10;
@@ -2248,21 +1913,16 @@ package classes.Scenes.Combat {
 			monster.teased(lustDmg);
 			outputText("\n\n");
 		}
-		doNext(playerMenu);
-		if (monster.lust >= monster.maxLust()) doNext(endLustVictory);
-		else enemyAI();
-		return;
+		if (combatIsOver()) {return;}
+		enemyAI();
 	}
 	
 	public function possess():void {
 		SceneLib.combat.lastAttack = Combat.LUSTSPELL;
 		clearOutput();
+		if(handleStatue("There is nothing to possess inside the golem.")) {return;}
 		if (monster.short == "plain girl" || monster.hasPerk(PerkLib.Incorporeality)) {
 			outputText("With a smile and a wink, your form becomes completely intangible, and you waste no time in throwing yourself toward the opponent's frame.  Sadly, it was doomed to fail, as you bounce right off your foe's ghostly form.");
-		}
-		else if (monster is LivingStatue)
-		{
-			outputText("There is nothing to possess inside the golem.");
 		}
 		//Sample possession text (>79 int, perhaps?):
 		else if ((!monster.hasCock() && !monster.hasVagina()) || monster.lustVuln == 0 || monster.inte == 0 || monster.inte > 100) {
@@ -2301,11 +1961,7 @@ package classes.Scenes.Combat {
 		var thirst:VampireThirstEffect = player.statusEffectByType(StatusEffects.VampireThirst) as VampireThirstEffect;
 		thirst.modSatiety(-20);
 		player.createStatusEffect(StatusEffects.CooldownSonicScream, 15, 0, 0, 0);
-		if (monster.hasStatusEffect(StatusEffects.Shell)) {
-			outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-			enemyAI();
-			return;
-		}
+		if (handleShell()) {return;}
 		var damage:Number = 0;
 		damage += scalingBonusToughness();
 		if (monster.hasPerk(PerkLib.EnemyGroupType)) damage *= 5;
@@ -2350,10 +2006,6 @@ package classes.Scenes.Combat {
 		var effectv2:Number = player.statusEffectv2(StatusEffects.SummonedElementalsFire);
 		var damage:Number = scalingBonusIntelligence() + scalingBonusWisdom();
 		damage *= Utils.boundFloat(0.1, effectv2/10, 1.0);
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 0.2;
 		damage = Math.round(damage);
 		outputText("Your fire elemental douses your opponent with a torrent of fire!");
 		doDamage(damage, true, true);
@@ -2380,15 +2032,6 @@ package classes.Scenes.Combat {
 		var effectv2:Number = player.statusEffectv2(StatusEffects.SummonedElementalsEther);
 		var damage:Number = scalingBonusIntelligence() + scalingBonusWisdom();
 		damage *= Utils.boundFloat(0.1, effectv2/10, 1.0);
-
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.LightningNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.LightningVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.DarknessNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.DarknessVulnerability)) damage *= 2;
 		damage = Math.round(damage);
 		outputText("Your elemental unleash a barrage of star shaped bolts of arcane energy, blasting your opponent!");
 		doDamage(damage, true, true);
@@ -2429,12 +2072,6 @@ package classes.Scenes.Combat {
 		var effectv2:Number = player.statusEffectv2(StatusEffects.SummonedElementalsIce);
 		var damage:Number = scalingBonusIntelligence() + scalingBonusWisdom();
 		damage *= Utils.boundFloat(0.1, effectv2/10, 1.0);
-
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 0.2;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 5;
-		if (player.hasPerk(PerkLib.ColdMastery) || player.hasPerk(PerkLib.ColdAffinity)) damage *= 2;
 		damage = Math.round(damage);
 		outputText("Your elemental produces a ray of hyper condensed cold and aims it straight at [monster a][monster name]!");
 		doDamage(damage, true, true);
@@ -2448,11 +2085,6 @@ package classes.Scenes.Combat {
 		var effectv2:Number = player.statusEffectv2(StatusEffects.SummonedElementalsLightning);
 		var damage:Number = scalingBonusIntelligence() + scalingBonusWisdom();
 		damage *= Utils.boundFloat(0.1, effectv2/10, 1.0);
-
-		if (monster.hasPerk(PerkLib.LightningNature)) damage *= 0.2;
-		if (monster.hasPerk(PerkLib.DarknessVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.LightningVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.DarknessNature)) damage *= 5;
 		damage = Math.round(damage);
 		outputText("Your elemental charges electricity, then discharges it with a blinding bolt!");
 		doDamage(damage, true, true);
@@ -2466,11 +2098,6 @@ package classes.Scenes.Combat {
 		var effectv2:Number = player.statusEffectv2(StatusEffects.SummonedElementalsDarkness);
 		var damage:Number = scalingBonusIntelligence() + scalingBonusWisdom();
 		damage *= Utils.boundFloat(0.1, effectv2/10, 1.0);
-
-		if (monster.hasPerk(PerkLib.DarknessNature)) damage *= 0.2;
-		if (monster.hasPerk(PerkLib.LightningVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.DarknessVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.LightningNature)) damage *= 5;
 		damage = Math.round(damage);
 		outputText("Your darkness elemental condenses shadows into solid matter, striking your opponent with them!");
 		doDamage(damage, true, true);
@@ -2484,11 +2111,6 @@ package classes.Scenes.Combat {
 		clearOutput();
 		outputText("You gather energy in your Talisman and unleash the spell contained within.  A wave of burning flames gathers around [monster a][monster name], slowly burning " + monster.pronoun2 + ".");
 		var damage:int = int(100+(player.inte/2 + rand(player.inte)) * spellMod());
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 5;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 0.2;
-//	if (player.hasPerk(PerkLib.FireAffinity)) damage *= 2;
 		damage = Math.round(damage);
 		damage = doDamage(damage, true, true);
 		player.removeStatusEffect(StatusEffects.ImmolationSpell);
@@ -2512,12 +2134,6 @@ package classes.Scenes.Combat {
 		clearOutput();
 		outputText("You gather energy in your Talisman and unleash the spell contained within.  A wave of cold air gathers around [monster a][monster name], slowly freezing " + monster.pronoun2 + ".");
 		var damage:int = int(100+(player.inte/2 + rand(player.inte)) * spellMod());
-		if (monster.hasPerk(PerkLib.IceNature)) damage *= 0.2;
-		if (monster.hasPerk(PerkLib.FireVulnerability)) damage *= 0.5;
-		if (monster.hasPerk(PerkLib.IceVulnerability)) damage *= 2;
-		if (monster.hasPerk(PerkLib.FireNature)) damage *= 5;
-//	if (player.hasPerk(PerkLib.ColdMastery)) damage *= 2;
-//	if (player.hasPerk(PerkLib.ColdAffinity)) damage *= 2;
 		damage = Math.round(damage);
 		damage = doDamage(damage);
 		outputText(" <b>(<font color=\"#800000\">" + damage + "</font>)</b>\n\n");
@@ -2591,6 +2207,33 @@ package classes.Scenes.Combat {
 				}
 			}
 			return true;
+		}
+		
+		private function handleShell():Boolean {
+			if (monster.hasStatusEffect(StatusEffects.Shell)) {
+				outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
+				enemyAI();
+				return true;
+			}
+			return false;
+		}
+		
+		private function handleConcentration():Boolean {
+			if (monster.hasStatusEffect(StatusEffects.Concentration)) {
+				outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
+				enemyAI();
+				return true;
+			}
+			return false;
+		}
+
+		private function handleStatue(text:String):Boolean {
+			if(monster is LivingStatue){
+				outputText(text);
+				enemyAI();
+				return true;
+			}
+			return false;
 		}
 
 }
