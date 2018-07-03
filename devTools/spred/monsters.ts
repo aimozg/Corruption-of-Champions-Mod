@@ -166,7 +166,7 @@ namespace monsters {
 		a         : 'a ',
 		plural    : false,
 		level     : 1,
-		str       : 1, tou: 1, spe: 1, int: 1, wis: 1, lib: 1, sen: 1, cor: 1,
+		str       : 1, tou: 1, spe: 1, int: 1, wis: 1, lib: 1, sen: 0, cor: 0,
 		weaponName: '', weaponVerb: '', weaponAttack: 0,
 		armorName : '', armorDefense: 0,
 		bonusHP   : 0,
