@@ -29,7 +29,6 @@ import classes.VaginaClass;
 import classes.internals.EnumValue;
 import classes.internals.Utils;
 import classes.internals.WeightedDrop;
-import classes.internals.XmlUtils;
 
 import coc.xxc.BoundNode;
 
@@ -67,7 +66,7 @@ public class ModMonster extends Monster {
 			var tag:String = xml.localName();
 			switch(tag) {
 				case 'name':
-					this.short = XmlUtils.unindent(xml.text());
+					this.short = xml.text();
 					break;
 				case 'desc':
 					if (xml.hasComplexContent()) {
