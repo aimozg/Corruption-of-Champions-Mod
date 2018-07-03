@@ -70,12 +70,6 @@ package classes.Items
 			return super.canUse(host);
 		}
 
-		//fixme @oxdeception update worn clothes array?
-		override public function equip(host:Creature):Equipable {
-			game.player.addToWornClothesArray(this);
-			return super.equip(host);
-		}
-
 		override public function unequip(host:Creature):Equipable {
 			//TODO remove this Exgartuan hack
 			while (host.hasPerk(PerkLib.BulgeArmor)) host.removePerk(PerkLib.BulgeArmor);

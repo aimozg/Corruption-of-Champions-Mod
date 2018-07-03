@@ -2983,7 +2983,7 @@ public function marbleBadEndFollowup():void {
 		//does that person have a noteworthy stature?
 		if(approxHeight!="average height")
 			outputText(approxHeight + " ");
-		outputText(player.mf("male", "female") + " human leaning against one of the barn doors in a farm hand outfit.  It looks like " + player.mf("he", "she") + "'s taking a break from something.  With a big smile on his face, the young champion strides up to " + player.mf("him", "her") + " and says, \"<i>Hello there, it's rare to see a human in this world.</i>\"  The other looks up at him for a few moments before smiling in recognition and saying \"<i>So they picked you to go after me, huh?</i>\"  The young champion stared at the " + player.manWoman() + " for a few moments, unable to answer, this was better than he could have ever hoped for!  He was looking at last year's champion, [name]!\n\n");
+		outputText(player.mf("male", "female") + " human leaning against one of the barn doors in a farm hand outfit.  It looks like " + player.mf("he", "she") + "'s taking a break from something.  With a big smile on his face, the young champion strides up to " + player.mf("him", "her") + " and says, \"<i>Hello there, it's rare to see a human in this world.</i>\"  The other looks up at him for a few moments before smiling in recognition and saying \"<i>So they picked you to go after me, huh?</i>\"  The young champion stared at the " + player.genderText() + " for a few moments, unable to answer, this was better than he could have ever hoped for!  He was looking at last year's champion, [name]!\n\n");
 		outputText("\"<i>I'm so glad to have found a friend like you in this world, [name]. ");
 	}
 	//that's no human!

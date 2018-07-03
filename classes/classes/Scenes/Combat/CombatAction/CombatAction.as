@@ -1,17 +1,19 @@
-package classes.Scenes.Combat {
-
+package classes.Scenes.Combat.CombatAction {
+	import classes.BaseContent;
 	import classes.Creature;
 	import classes.EngineCore;
 	import classes.Monster;
 	import classes.PerkLib;
 	import classes.PerkType;
 	import classes.Player;
+	import classes.Scenes.Combat.*;
 	import classes.Scenes.SceneLib;
 	import classes.StatusEffectClass;
 	import classes.StatusEffectType;
 	import classes.StatusEffects;
 	import classes.internals.Utils;
 	import classes.lists.DamageType;
+	import classes.lists.Gender;
 
 	import coc.view.ButtonData;
 
@@ -19,35 +21,45 @@ package classes.Scenes.Combat {
 
 	public class CombatAction {
 		public static const KiAction:String = "KiAction";
+		public static const ManaAction:String = "ManaAction";
+		public static const FatigueAction:String = "FatigueAction";
+		public static const WrathAction:String = "WrathAction";
 
-		private var _name:String;
-		private var _cost:int;
-		private var _actionType:String;
-		private var _lastActionType:int;
-		private var _action:Function;
-		private var _toolTip:String;
-		private var _disables:Array = [];
+		public static const AlignmentBlack:int = -1;
+		public static const AlignmentNone:int = 0;
+		public static const AlignmentWhite:int = 1;
 
-		private var _critChance:int = 5;
-		private var _critMult:Number = 1.75;
+		internal var _name:String;
+		internal var _cost:int;
+		internal var _alignment:int = 0;
+		internal var _healCost:Boolean = false;
+		internal var _actionType:String;
+		internal var _lastActionType:int;
+		internal var _action:Function;
+		internal var _toolTip:String;
+		internal var _disables:Array = [];
 
-		private var _critChanceMods:Array = [];
-		private var _critMultMods:Array = [];
+		internal var _critChance:int = 5;
+		internal var _critMult:Number = 1.75;
 
-		private var _dodgeEnable:Boolean = false;
-		private var _dodgeAttack:String = "";
+		internal var _critChanceMods:Array = [];
+		internal var _critMultMods:Array = [];
 
-		private var _damage:Array = [];
-		private var _statuses:Array = [];
+		internal var _dodgeAttack:String = "";
 
-		private var _cooldown:int = 0;
-		private var _cooldowns:Dictionary = new Dictionary();
+		internal var _failReasons:Array = [];
 
-		private var _startText:String = "";
-		private var _hitText:String = "";
-		private var _rageEnabled:Boolean;
-		private var _customActions:Array = [];
-		private var _stunTurns:int = 0;
+		internal var _damage:Array = [];
+		internal var _statuses:Array = [];
+
+		internal var _cooldown:int = 0;
+		internal var _cooldowns:Dictionary = new Dictionary();
+
+		internal var _startText:String = "";
+		internal var _hitText:String = "";
+		internal var _rageEnabled:Boolean;
+		internal var _customActions:Array = [];
+		internal var _stunTurns:int = 0;
 
 
 		//todo create object to pass to combat
@@ -57,39 +69,6 @@ package classes.Scenes.Combat {
 			_actionType = actionType;
 			_lastActionType = lastAttackType;
 			_toolTip = toolTip;
-		}
-
-		/**
-		 * Adds an additional disabling condition to this action.
-		 * Disabling for Sealed, cost, and lust are handled automatically by type, and *do not* need to be added
-		 * @param fun Creature -> Boolean, true to disable the button for this action
-		 * @param tooltip the text to display on the button if disabled
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function disableWhen(fun:Function, tooltip:String = ""):CombatAction {
-			_disables.push([fun, tooltip]);
-			return this;
-		}
-
-		/**
-		 * Adds a status to the list of disabling conditions.
-		 * @param status the status type that will prevent using the action
-		 * @param tooltip the tooltip to show on the disabled button
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function disablingStatus(status:StatusEffectType, tooltip:String = ""):CombatAction {
-			return disableWhen(function (host:Creature):Boolean {return host.hasStatusEffect(status)}, tooltip)
-		}
-
-
-		/**
-		 * Adds a perk to the list of disabling conditions
-		 * @param perk the perk type that will prevent using the action
-		 * @param tooltip the tooltip to show on the disabled button
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function disablingPerk(perk:PerkType, tooltip:String = ""):CombatAction {
-			return disableWhen(function (host:Creature):Boolean {return host.hasPerk(perk)}, tooltip);
 		}
 
 		/**
@@ -146,9 +125,9 @@ package classes.Scenes.Combat {
 				damage.push({value:_action(host, target), type:DamageType.PHYSICAL});
 			}
 
-			if (_dodgeEnable) {
-				if (dodgeRoll(host, target)) {
-					return endAction(host, target, [{type:null,value:0}]);
+			for each (var failChance:Function in _failReasons){
+				if(failChance(host,target)){
+					return endAction(host, target, [{type:null, value:0}])
 				}
 			}
 
@@ -161,15 +140,8 @@ package classes.Scenes.Combat {
 
 			var crit:Boolean = critRoll(host, target);
 
-			//todo statuses that only apply on crit
 			for each (var proc:StatusProc in _statuses) {
-				if ((!proc.critonly || crit) && Utils.rand(100) <= proc.chance) {
-					if (proc.self) {
-						host.createStatusEffect(proc.stype, proc.dur, 0, 0, 0)
-					} else {
-						target.createStatusEffect(proc.stype, proc.dur, 0, 0, 0)
-					}
-				}
+				proc.apply(host,target,crit);
 			}
 			if(damage.length == 0){
 				damage.push({value:0, type:DamageType.PHYSICAL})
@@ -200,6 +172,12 @@ package classes.Scenes.Combat {
 			switch (_actionType) {
 				case KiAction:
 					return bd.requireKi(cost);
+				case ManaAction:
+					return bd.requireMana(host.spellCost(cost, _alignment,_healCost),!_healCost);
+				case FatigueAction:
+					return bd.requireFatigue(host.spellCost(cost,_alignment,_healCost),!_healCost);
+				case WrathAction:
+					return bd.requireWrath(cost);
 				default:
 					return bd.requireFatigue(cost);
 			}
@@ -215,9 +193,41 @@ package classes.Scenes.Combat {
 				case KiAction:
 					host.ki -= cost;
 					break;
+				case ManaAction:
+					SceneLib.combat.useManaImpl(cost,costType);
+					break;
+				case FatigueAction:
+					EngineCore.fatigue(cost, costType);
+					break;
 				default:
 					host.fatigue += cost;
 			}
+		}
+
+		/**
+		 * Converts actiontype + alignment + heal to cost type for fatigue or useMana
+		 */
+		private function get costType():int{
+			//todo @Oxdeception some of these should be moved and simplified
+			if (_actionType == ManaAction) {
+				if (_alignment == AlignmentBlack) {
+					return _healCost ? Combat.USEMANA_BLACK_HEAL : Combat.USEMANA_BLACK;
+				}
+				if (_alignment == AlignmentWhite) {
+					return _healCost ? Combat.USEMANA_WHITE_HEAL : Combat.USEMANA_WHITE;
+				}
+				return Combat.USEMANA_MAGIC;
+			}
+			if (_actionType == FatigueAction) {
+				if (_alignment == AlignmentBlack) {
+					return _healCost ? BaseContent.USEFATG_BLACK_NOBM : BaseContent.USEFATG_BLACK;
+				}
+				if (_alignment == AlignmentWhite) {
+					return _healCost ? BaseContent.USEFATG_MAGIC_NOBM : BaseContent.USEFATG_WHITE;
+				}
+				return BaseContent.USEFATG_NORMAL
+			}
+			return 0;
 		}
 
 		/**
@@ -225,16 +235,6 @@ package classes.Scenes.Combat {
 		 */
 		public function get actionType():String {
 			return _actionType;
-		}
-
-		/**
-		 * Add damage to the action, multiple damages can be added.
-		 * @param dam the damage the action should do
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function addDamage(dam:CombatDamage):CombatAction {
-			_damage.push(dam);
-			return this;
 		}
 
 		/**
@@ -255,65 +255,6 @@ package classes.Scenes.Combat {
 		}
 
 		/**
-		 * Adds a status effect for the action to apply
-		 * @param status the status type
-		 * @param duration the duration of the status. Sets value1 of the status class
-		 * @param self true if the status should apply to the caster rather than the target
-		 * @param hitChance chance to apply the status, in whole numbers
-		 * @param critOnly if the status should only be applied on a critical hit
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function addStatus(status:StatusEffectType, duration:int, self:Boolean = false, hitChance:int = 100, critOnly:Boolean = false):CombatAction {
-			_statuses.push(new StatusProc(status, duration, self, hitChance, critOnly));
-			return this;
-		}
-
-		/**
-		 * Allows this action to be dodged
-		 * @param attackText description of the attack, used like: the target dodges [attackText]!
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function enableDodge(attackText:String):CombatAction {
-			_dodgeEnable = true;
-			_dodgeAttack = attackText;
-			return this;
-		}
-
-		/**
-		 * Adds a function that adds its result to critical chance.
-		 * Critical chance is a whole number (50 is 50% chance)
-		 * @param mod (host:Creature, target:Creature) -> additionalChance:Number
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function addCritChanceMod(mod:Function):CombatAction {
-			_critChanceMods.push(mod);
-			return this;
-		}
-
-		/**
-		 * Adds a function that adds its result to the critical hit damage multiplier
-		 * Critical hit damage multiplier is a number that the damage is multiplied by (0.50 is 50% extra damage)
-		 * @param mod (host:Creature, target:Creature) -> additionalMultiplier:Number
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function addCritMultiplierMod(mod:Function):CombatAction {
-			_critMultMods.push(mod);
-			return this;
-		}
-
-		/**
-		 * Sets a cooldown on this action
-		 * @param turns number of turns that the user has to wait after using before this action is available again
-		 * @param tooltip text to display on the button when disabled for cooldown
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function setCooldown(turns:int, tooltip:String = "You need to wait a few more turns to use this."):CombatAction {
-			_cooldown = turns;
-			_toolTip += "\n\nCooldown: " + turns;
-			return disableWhen(function (host:Creature):Boolean {return _cooldowns[host] > 0;}, tooltip);
-		}
-
-		/**
 		 * Used to update the cooldowns every round of combat
 		 */
 		public function onCombatRound():void {
@@ -331,7 +272,7 @@ package classes.Scenes.Combat {
 		 * @param target creature attempting to dodge
 		 * @return true if the action was dodged
 		 */
-		private function dodgeRoll(host:Creature, target:Creature):Boolean {
+		internal function dodgeRoll(host:Creature, target:Creature):Boolean {
 			var diff:Number = target.spe - host.spe;
 			var blind:Boolean = host.hasStatusEffect(StatusEffects.Blind) && Utils.trueOnceInN(2);
 			var roll:Boolean = int(Math.random() * ((diff / 4) + 80)) > 80;
@@ -357,6 +298,7 @@ package classes.Scenes.Combat {
 		 */
 		private function endAction(host:Creature, target:Creature, damage:Array):void {
 			//fixme @oxdeception move below into combat?
+			//todo @Oxdeception spell specifics
 			if (!(host is Player)) {
 				SceneLib.combat.combatRoundOver()
 			} else {
@@ -368,37 +310,6 @@ package classes.Scenes.Combat {
 				SceneLib.combat.heroBaneProc(dam);
 				SceneLib.combat.enemyAIImpl();
 			}
-		}
-
-		/**
-		 * Allows a custom damage calculation
-		 * CombatDamage is added to the result of this calculation if present
-		 * @param fun (host:Creature, target:Creature) -> damage:Number
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function customDamage(fun:Function):CombatAction {
-			_action = fun;
-			return this;
-		}
-
-		/**
-		 * Sets the text to display at the beginning of this action
-		 * @param value the text to display
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function startText(value:String):CombatAction {
-			_startText = value;
-			return this;
-		}
-
-		/**
-		 * Sets the text to display at the end of this action, if it was not dodged
-		 * @param value the text to display
-		 * @return the instance of the class to allow method chaining
-		 */
-		public function hitText(value:String):CombatAction {
-			_hitText = value;
-			return this;
 		}
 
 		/**
@@ -483,29 +394,6 @@ package classes.Scenes.Combat {
 		}
 
 		/**
-		 * Custom actions to call after initial damage calc, but before applying
-		 * The number returned from the function overrides the damage dealt before this action was taken
-		 *
-		 * @param action (host:Creature, target:Creature, damage:Number, crit:Boolean) -> updatedDamage:Number
-		 * @return
-		 */
-		public function addCustomAction(action:Function):CombatAction {
-			_customActions.push(action);
-			return this;
-		}
-
-		/**
-		 * Sets the action to update rage status, applies a bonus to crit chance based on rage status value
-		 * @return
-		 */
-		public function rageEnabled():CombatAction {
-			_rageEnabled = true;
-			_critChanceMods.push(function (host:Creature, target:Creature):Number {return host.statusEffectv1(StatusEffects.Rage)});
-			_customActions.push(rageUpdate);
-			return this;
-		}
-
-		/**
 		 * Updates the rage status
 		 * If a critical hit was scored, remove the status. Otherwise increase its value by 10 up to 50
 		 * @param host creature to have rage status updated
@@ -514,7 +402,7 @@ package classes.Scenes.Combat {
 		 * @param crit if a critical hit was scored in this action
 		 * @return updated damage
 		 */
-		private static function rageUpdate(host:Creature, target:Creature, damage:Number, crit:Boolean):Number {
+		internal static function rageUpdate(host:Creature, target:Creature, damage:Number, crit:Boolean):Number {
 			if (crit) {
 				host.removeStatusEffect(StatusEffects.Rage);
 			} else {
@@ -539,33 +427,5 @@ package classes.Scenes.Combat {
 				EngineCore.outputText("\n\n[b: " + target.capitalA + target.short + isare + "too resolute to be stunned by your attack.]");
 			}
 		}
-
-		/**
-		 * Adds a stun attempt to the action, which fails if the target has Resolute
-		 * @param turns the number of turns the stun should last
-		 * @return
-		 */
-		public function stunAttempt(turns:int):CombatAction {
-			_stunTurns = turns;
-			return this;
-		}
-	}
-}
-
-import classes.StatusEffectType;
-
-class StatusProc {
-	internal var stype:StatusEffectType;
-	internal var dur:int;
-	internal var self:Boolean;
-	internal var chance:int;
-	internal var critonly:Boolean;
-
-	public function StatusProc(type:StatusEffectType, dur:int, self:Boolean, chance:int, critonly:Boolean) {
-		this.stype = type;
-		this.dur = dur;
-		this.self = self;
-		this.chance = chance;
-		this.critonly = critonly;
 	}
 }

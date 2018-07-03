@@ -372,10 +372,7 @@ package classes
 			return weaponRange == game.weaponsrange.BOWGUID || weaponRange == game.weaponsrange.BOWHODR;
 		}
 		//Using Tome
-		public function isUsingTome():Boolean
-		{
-			return weaponRangeName == "nothing" || weaponRangeName == "Inquisitor’s Tome" || weaponRangeName == "Sage’s Sketchbook";
-		}
+
 		//override public function get weapons
 		override public function get weaponRangeName():String {
 			return weaponRange.name;
@@ -475,7 +472,11 @@ package classes
 		}
 		
 		public function setArmor(newArmor:Armor):Armor {
-			return _equipment.equip(this, newArmor) as Armor;
+			var armor:Armor = _equipment.equip(this, newArmor) as Armor;
+			if(previouslyWornClothes.indexOf(armor.id) == -1){
+				previouslyWornClothes.push(armor.id);
+			}
+			return armor;
 		}
 
 		public function get weapon():Weapon {
@@ -1817,14 +1818,7 @@ package classes
 		{
 			return (armorName != "gear" && (armorName != "lethicite armor" && lowerGarmentName == "nothing") && !isTaur() ? clothedText : nakedText);
 		}
-		
-		public function addToWornClothesArray(armor:Armor):void {
-			for (var i:int = 0; i < previouslyWornClothes.length; i++) {
-				if (previouslyWornClothes[i] == armor.shortName) return; //Already have?
-			}
-			previouslyWornClothes.push(armor.shortName);
-		}
-		
+
 		public function shrinkTits(ignore_hyper_happy:Boolean=false):void
 		{
 			if (flags[kFLAGS.HYPER_HAPPY] && !ignore_hyper_happy)
@@ -2733,7 +2727,7 @@ package classes
 
 			var size:Number = 8;
 			if ('size' in options) size = options.size;
-			else if (tool is Cock) size = (tool as Cock).cArea();
+			else if (tool is Cock) size = (tool as Cock).cArea;
 
 			var otype:String = 'Default';
 			if (where is AssClass) {

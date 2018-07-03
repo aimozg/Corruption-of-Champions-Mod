@@ -1,6 +1,6 @@
 package classes.StatusEffects {
 
-	import classes.Scenes.Combat.CombatAction;
+	import classes.Scenes.Combat.CombatAction.CombatAction;
 	import classes.StatusEffectClass;
 	import classes.StatusEffectType;
 

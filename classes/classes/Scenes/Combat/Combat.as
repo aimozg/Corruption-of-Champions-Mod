@@ -29,7 +29,8 @@ import classes.Scenes.Areas.GlacialRift.WinterWolf;
 import classes.Scenes.Areas.HighMountains.Basilisk;
 import classes.Scenes.Areas.HighMountains.Harpy;
 import classes.Scenes.Areas.Mountain.Minotaur;
-import classes.Scenes.Dungeons.D3.*;
+	import classes.Scenes.Combat.CombatAction.CombatAction;
+	import classes.Scenes.Dungeons.D3.*;
 import classes.Scenes.Dungeons.HelDungeon.HarpyMob;
 import classes.Scenes.Dungeons.HelDungeon.HarpyQueen;
 import classes.Scenes.NPCs.*;
@@ -106,40 +107,40 @@ public class Combat extends BaseContent {
 		return teases.maxTeaseLevel();
 	}
 	public function spellCost(mod:Number):Number {
-		return magic.spellCostImpl(mod);
+		return player.spellCost(mod, 0);
 	}
 	public function spellCostWhite(mod:Number):Number {
-		return magic.spellCostWhiteImpl(mod);
+		return player.spellCost(mod, 1);
 	}
 	public function spellCostBlack(mod:Number):Number {
-		return magic.spellCostBlackImpl(mod);
+		return player.spellCost(mod, -1);
 	}
 	public function healCost(mod:Number):Number {
-		return magic.healCostImpl(mod);
+		return player.spellCost(mod, 0, true);
 	}
 	public function healCostWhite(mod:Number):Number {
-		return magic.healCostWhiteImpl(mod);
+		return player.spellCost(mod, 1, true);
 	}
 	public function healCostBlack(mod:Number):Number {
-		return magic.healCostBlackImpl(mod);
+		return player.spellCost(mod, -1, true);
 	}
 	public function spellMod():Number {
-		return magic.spellModImpl();
+		return player.spellMod(0);
 	}
 	public function spellModWhite():Number {
-		return magic.spellModWhiteImpl();
+		return player.spellMod(1);
 	}
 	public function spellModBlack():Number {
-		return magic.spellModBlackImpl();
+		return player.spellMod(-1);
 	}
 	public function healMod():Number {
-		return magic.healModImpl();
+		return player.spellMod(0, true);
 	}
 	public function healModWhite():Number {
-		return magic.healModWhiteImpl();
+		return player.spellMod(1, true);
 	}
 	public function healModBlack():Number {
-		return magic.healModBlackImpl();
+		return player.spellMod(-1, true);
 	}
 
 	public function endHpVictory():void
@@ -192,7 +193,6 @@ public class Combat extends BaseContent {
 	}
 //combat is over. Clear shit out and go to main
 public function cleanupAfterCombatImpl(nextFunc:Function = null):void {
-	magic.cleanupAfterCombatImpl();
 	if (nextFunc == null) nextFunc = camp.returnToCampUseOneHour;
 	if (inCombat) {
 		clearStatuses(false);
@@ -2068,12 +2068,14 @@ public function doDamage(damage:Number, apply:Boolean = true, display:Boolean = 
 				break;
 		}
 		//Blood mages use HP for spells
-		if (player.hasPerk(PerkLib.BloodMage)
-			&& (type == USEMANA_MAGIC || type == USEMANA_WHITE || type == USEMANA_BLACK)) {
-			player.takePhysDamage(mod);
-			statScreenRefresh();
-			return;
+		if ((type == USEMANA_MAGIC || type == USEMANA_WHITE || type == USEMANA_BLACK)) {
+			if ((player.hasPerk(PerkLib.BloodMage) || player.hasPerk(PerkLib.LastResort) && player.mana < mod)) {
+				player.takePhysDamage(mod);
+				statScreenRefresh();
+				return;
+			}
 		}
+
 		//Mana restoration buffs!
 		if (mod < 0) {
 			mod *= manaRecoveryMultiplier();

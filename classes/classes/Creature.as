@@ -1,4 +1,4 @@
-﻿//CoC Creature.as
+//CoC Creature.as
 package classes
 {
 
@@ -689,7 +689,7 @@ import classes.Stats.BuffableStat;
 		//MALE STUFF
 		//public var cocks:Array;
 		//TODO: Tuck away into Male genital class?
-		public var cocks:Array;
+		public var cocks:/*Cock*/Array;
 		//balls
 		public var balls:Number = 0;
 		public var cumMultiplier:Number = 1;
@@ -877,105 +877,30 @@ import classes.Stats.BuffableStat;
 			Begin("Player","racialScore","chimera");
 			var chimeraCounter:Number = 0;
 			var racialScores:* = this.racialScores();
-			if (racialScores[Race.CAT.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.LIZARD.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DRAGON.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.RACCOON.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DOG.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.WOLF.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.WEREWOLF.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.FOX.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.FERRET.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.KITSUNE.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.HORSE.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MINOTAUR.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.COW.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.BEE.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.GOBLIN.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DEMON.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.DEVILKIN.name] >= 7)
-				chimeraCounter++;
-			if (racialScores[Race.SHARK.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.ORCA.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.ONI.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.ELF.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.RAIJU.name] >= 5)
-				chimeraCounter++;
-			if (racialScores[Race.BUNNY.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.HARPY.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.SPIDER.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.KANGA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MOUSE.name] >= 3)
-				chimeraCounter++;
-			if (racialScores[Race.SCORPION.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MANTIS.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.SALAMANDER.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.NAGA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.PHOENIX.name] >= 10)
-				chimeraCounter++;
-			if (racialScores[Race.SCYLLA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.PLANT.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.PIG.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.SATYR.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.RHINO.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.ECHIDNA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.DEER.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.MANTICORE.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.REDPANDA.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.SIREN.name] >= 10)
-				chimeraCounter++;
-			if (racialScores[Race.YETI.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.BAT.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.VAMPIRE.name] >= 6)
-				chimeraCounter++;
-			if (racialScores[Race.JABBERWOCKY.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.AVIAN.name] >= 4)
-				chimeraCounter++;
-			if (racialScores[Race.GARGOYLE.name] >= 21)
-				chimeraCounter++;
-			if (racialScores[Race.GOO.name] >= 4)
-				chimeraCounter++;
-			
+			var races:Array = [
+				[Race.CAT.name,         4], [Race.LIZARD.name,    4], [Race.DRAGON.name,     4],
+				[Race.RACCOON.name,     4], [Race.DOG.name,       4], [Race.WOLF.name,       6],
+				[Race.WEREWOLF.name,    6], [Race.FOX.name,       4], [Race.FERRET.name,     4],
+				[Race.KITSUNE.name,     5], [Race.HORSE.name,     4], [Race.MINOTAUR.name,   4],
+				[Race.COW.name,         4], [Race.BEE.name,       5], [Race.GOBLIN.name,     4],
+				[Race.DEMON.name,       5], [Race.DEVILKIN.name,  7], [Race.SHARK.name,      4],
+				[Race.ORCA.name,        6], [Race.ONI.name,       6], [Race.ELF.name,        5],
+				[Race.RAIJU.name,       5], [Race.BUNNY.name,     4], [Race.HARPY.name,      4],
+				[Race.SPIDER.name,      4], [Race.KANGA.name,     4], [Race.MOUSE.name,      3],
+				[Race.SCORPION.name,    4], [Race.MANTIS.name,    6], [Race.SALAMANDER.name, 4],
+				[Race.NAGA.name,        4], [Race.PHOENIX.name,  10], [Race.SCYLLA.name,     4],
+				[Race.PLANT.name,       6], [Race.PIG.name,       4], [Race.SATYR.name,      4],
+				[Race.RHINO.name,       4], [Race.ECHIDNA.name,   4], [Race.DEER.name,       4],
+				[Race.MANTICORE.name,   6], [Race.REDPANDA.name,  4], [Race.SIREN.name,     10],
+				[Race.YETI.name,        6], [Race.BAT.name,       6], [Race.VAMPIRE.name,    6],
+				[Race.AVIAN.name,       4], [Race.GARGOYLE.name, 21], [Race.GOO.name,        4],
+				[Race.JABBERWOCKY.name, 4],
+			];
+			for each(var arr:Array in races){
+				if(racialScores[arr[0]] >= arr[1]){
+					chimeraCounter++;
+				}
+			}
 			End("Player","racialScore");
 			return chimeraCounter;
 		}
@@ -985,125 +910,38 @@ import classes.Stats.BuffableStat;
 			Begin("Player","racialScore","grandchimera");
 			var grandchimeraCounter:Number = 0;
 			var racialScores:* = this.racialScores();
-			if (racialScores[Race.CAT.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.NEKOMATA.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.CHESHIRE.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.LIZARD.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.DRAGON.name] >= 10)
-				grandchimeraCounter++;
-			/*			if (racialScores[Race.RACCOON.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.DOG.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.WOLF.name] >= 6)
-							grandchimeraCounter++;
-			*/			if (racialScores[Race.WEREWOLF.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.FOX.name] >= 7)
-				grandchimeraCounter++;
-//			if (racialScores[Race.FERRET.name] >= 4)
-//				grandchimeraCounter++;
+			var races:Array = [
+				[Race.CAT.name,        8], [Race.NEKOMATA.name, 11], [Race.CHESHIRE.name,    11],
+				[Race.LIZARD.name,     8], [Race.DRAGON.name,   10], [Race.WEREWOLF.name,    12],
+				[Race.FOX.name,        7], [Race.HORSE.name,     7], [Race.UNICORN.name,      9],
+				[Race.ALICORN.name,   11], [Race.CENTAUR.name,   8], [Race.MINOTAUR.name,     9],
+				[Race.COW.name,        9], [Race.BEE.name,       9], [Race.DEMON.name,       11],
+				[Race.DEVILKIN.name,  10], [Race.SHARK.name,     8], [Race.ORCA.name,        12],
+				[Race.ONI.name,       12], [Race.ELF.name,      11], [Race.RAIJU.name,       10],
+				[Race.HARPY.name,      8], [Race.SPIDER.name,    7], [Race.MANTIS.name,      12],
+				[Race.SALAMANDER.name, 7], [Race.NAGA.name,      8], [Race.GORGON.name,      11],
+				[Race.VOUIVRE.name,   11], [Race.COUATL.name,   11], [Race.PHOENIX.name,     10],
+				[Race.SCYLLA.name,     7], [Race.ALRAUNE.name,  10], [Race.YGGDRASIL.name,   10],
+				[Race.REDPANDA.name,   8], [Race.SIREN.name,    10], [Race.YETI.name,        12],
+				[Race.BAT.name,       10], [Race.VAMPIRE.name,  10], [Race.JABBERWOCKY.name, 10],
+				[Race.AVIAN.name,      9], [Race.GARGOYLE.name, 21], [Race.GOO.name,          8],
+/*
+				[Race.FERRET.name,     4], [Race.GOBLIN.name,    4], [Race.BUNNY.name,        4],
+				[Race.PLANT.name,      6], [Race.RACCOON.name,   4], [Race.DOG.name,          4],
+				[Race.WOLF.name,       6], [Race.KANGA.name,     4], [Race.MOUSE.name,        3],
+				[Race.SCORPION.name,   4], [Race.PIG.name,       4], [Race.SATYR.name,        4],
+				[Race.RHINO.name,      4], [Race.ECHIDNA.name,   4], [Race.DEER.name,         4],
+*/
+			];
+			for each(var arr:Array in races){
+				if(racialScores[arr[0]] >= arr[1]){
+					grandchimeraCounter++;
+				}
+			}
 			if (racialScores[Race.KITSUNE.name] >= 6 && tailType == 13 && tailCount >= 2)
 				grandchimeraCounter++;
-			if (racialScores[Race.HORSE.name] >= 7)
-				grandchimeraCounter++;
-			if (racialScores[Race.UNICORN.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.ALICORN.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.CENTAUR.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.MINOTAUR.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.COW.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.BEE.name] >= 9)
-				grandchimeraCounter++;
-//			if (racialScores[Race.GOBLIN.name] >= 4)
-//				grandchimeraCounter++;
-			if (racialScores[Race.DEMON.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.DEVILKIN.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.SHARK.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.ORCA.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.ONI.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.ELF.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.RAIJU.name] >= 10)
-				grandchimeraCounter++;
-//			if (racialScores[Race.BUNNY.name] >= 4)
-//				grandchimeraCounter++;
-			if (racialScores[Race.HARPY.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.SPIDER.name] >= 7)
-				grandchimeraCounter++;
-			/*			if (racialScores[Race.KANGA.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.MOUSE.name] >= 3)
-							grandchimeraCounter++;
-						if (racialScores[Race.SCORPION.name] >= 4)
-							grandchimeraCounter++;
-			*/			if (racialScores[Race.MANTIS.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.SALAMANDER.name] >= 7)
-				grandchimeraCounter++;
-			if (racialScores[Race.NAGA.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.GORGON.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.VOUIVRE.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.COUATL.name] >= 11)
-				grandchimeraCounter++;
-			if (racialScores[Race.PHOENIX.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.SCYLLA.name] >= 7)
-				grandchimeraCounter++;
-//			if (racialScores[Race.PLANT.name] >= 6)
-//				grandchimeraCounter++;
-			if (racialScores[Race.ALRAUNE.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.YGGDRASIL.name] >= 10)
-				grandchimeraCounter++;
-			/*			if (racialScores[Race.PIG.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.SATYR.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.RHINO.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.ECHIDNA.name] >= 4)
-							grandchimeraCounter++;
-						if (racialScores[Race.DEER.name] >= 4)
-							grandchimeraCounter++;
-			*/			if (racialScores[Race.MANTICORE.name] >= 12)
+			if (racialScores[Race.MANTICORE.name] >= 12)
 				grandchimeraCounter += 2;
-			if (racialScores[Race.REDPANDA.name] >= 8)
-				grandchimeraCounter++;
-			if (racialScores[Race.SIREN.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.YETI.name] >= 12)
-				grandchimeraCounter++;
-			if (racialScores[Race.BAT.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.VAMPIRE.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.JABBERWOCKY.name] >= 10)
-				grandchimeraCounter++;
-			if (racialScores[Race.AVIAN.name] >= 9)
-				grandchimeraCounter++;
-			if (racialScores[Race.GARGOYLE.name] >= 21)
-				grandchimeraCounter++;
-			if (racialScores[Race.GOO.name] >= 8)
-				grandchimeraCounter++;
-			
 			End("Player","racialScore");
 			return grandchimeraCounter;
 		}
@@ -1112,46 +950,24 @@ import classes.Stats.BuffableStat;
 		public function internalChimeraScore():Number {
 			Begin("Player","racialScore","internalChimeraScore");
 			var internalChimeraCounter:Number = 0;
-			if (hasPerk(PerkLib.BlackHeart))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.CatlikeNimbleness))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.CatlikeNimblenessEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.DraconicLungs))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.DraconicLungsEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.GorgonsEyes))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGland))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.LizanMarrow))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.LizanMarrowEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.ManticoreMetabolism))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.MantislikeAgility))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.MantislikeAgilityEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlands))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.ScyllaInkGlands))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.TrachealSystem))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.TrachealSystemEvolved))
-				internalChimeraCounter++;
-			if (hasPerk(PerkLib.TrachealSystemFinalForm))
-				internalChimeraCounter++;
-			//	if (hasPerk(PerkLib.TrachealSystemEvolved))
-			//		internalChimeraCounter++;
+			var pkarr:Array = [
+				PerkLib.BlackHeart,                     PerkLib.CatlikeNimbleness,
+				PerkLib.CatlikeNimblenessEvolved,       PerkLib.DraconicLungs,
+				PerkLib.DraconicLungsEvolved,           PerkLib.GorgonsEyes,
+				PerkLib.KitsuneThyroidGland,            PerkLib.KitsuneThyroidGlandEvolved,
+				PerkLib.LizanMarrow,                    PerkLib.LizanMarrowEvolved,
+				PerkLib.ManticoreMetabolism,            PerkLib.MantislikeAgility,
+				PerkLib.MantislikeAgilityEvolved,       PerkLib.SalamanderAdrenalGlands,
+				PerkLib.SalamanderAdrenalGlandsEvolved, PerkLib.ScyllaInkGlands,
+				PerkLib.TrachealSystem,                 PerkLib.TrachealSystemEvolved,
+				PerkLib.TrachealSystemFinalForm
+//				PerkLib.TrachealSystemEvolved
+			];
+			for each(var pk:PerkType in pkarr){
+				if(hasPerk(pk)){
+					internalChimeraCounter++;
+				}
+			}
 			
 			End("Player","racialScore");
 			return internalChimeraCounter;
@@ -1160,47 +976,7 @@ import classes.Stats.BuffableStat;
 		//Determine Inner Chimera Rating
 		public function internalChimeraRating():Number {
 			Begin("Player","racialScore","internalChimeraRating");
-			var internalChimeraRatingCounter:Number = 0;
-			if (hasPerk(PerkLib.BlackHeart))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.CatlikeNimbleness))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.CatlikeNimblenessEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.DraconicLungs))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.DraconicLungsEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.GorgonsEyes))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGland))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.KitsuneThyroidGlandEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.LizanMarrow))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.LizanMarrowEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.ManticoreMetabolism))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.MantislikeAgility))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.MantislikeAgilityEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlands))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.SalamanderAdrenalGlandsEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.ScyllaInkGlands))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.TrachealSystem))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.TrachealSystemEvolved))
-				internalChimeraRatingCounter++;
-			if (hasPerk(PerkLib.TrachealSystemFinalForm))
-				internalChimeraRatingCounter++;
-			//	if (hasPerk(PerkLib.TrachealSystemEvolved))
-			//		internalChimeraRatingCounter++;
+			var internalChimeraRatingCounter:Number = internalChimeraScore();
 			if (hasPerk(PerkLib.ChimericalBodyInitialStage))
 				internalChimeraRatingCounter -= 2;
 			if (hasPerk(PerkLib.ChimericalBodyBasicStage))
@@ -1606,518 +1382,195 @@ import classes.Stats.BuffableStat;
 		[    ? ? ?    ]
 		
 		*/
-		public function biggestTitSize():Number
-		{
-			if (breastRows.length == 0)
+		public function biggestTitSize():Number {
+			if (breastRows.length == 0) {
 				return -1;
-			var counter:Number = breastRows.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (breastRows[index].breastRating < breastRows[counter].breastRating)
-					index = counter;
 			}
-			return breastRows[index].breastRating;
+			return breastRows.concat().sortOn("breastRating", Array.NUMERIC | Array.DESCENDING)[0];
 		}
 
-		public function cockArea(i_cockIndex:Number):Number
-		{
-			if (i_cockIndex >= cocks.length || i_cockIndex < 0)
+		public function cockArea(i_cockIndex:uint):Number {
+			if (i_cockIndex >= cocks.length) {
 				return 0;
-			return (cocks[i_cockIndex].cockThickness * cocks[i_cockIndex].cockLength);
+			}
+			return cocks[i_cockIndex].cArea;
 		}
 
-		public function biggestCockLength():Number
-		{
-			if (cocks.length == 0)
+		public function biggestCockLength():Number {
+			if (cocks.length == 0) {
 				return 0;
+			}
 			return cocks[biggestCockIndex()].cockLength;
 		}
 
-		public function biggestCockArea():Number
-		{
-			if (cocks.length == 0)
+		public function biggestCockArea():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) < cockArea(counter))
-					index = counter;
 			}
-			return cockArea(index);
+			return cocks[biggestCockIndex()].cArea;
 		}
 
 		//Find the second biggest dick and it's area.
-		public function biggestCockArea2():Number
-		{
-			if (cocks.length <= 1)
+		public function biggestCockArea2():Number {
+			if (cocks.length <= 1) {
 				return 0;
+			}
+			return cocks[biggestCockIndex(1)].cArea;
+		}
+
+		public function longestCock():Number {
+			if (cocks.length == 0) {
+				return 0;
+			}
+			var arr:Array = cocks.concat().sortOn("cockLength", Array.NUMERIC | Array.DESCENDING);
+			return cocks.indexOf(arr[0]);
+		}
+
+		public function longestCockLength():Number {
+			if (cocks.length == 0) {
+				return 0;
+			}
+			return cocks[longestCock()].cockLength;
+		}
+
+		public function longestHorseCockLength():Number {
+			if (cocks.length == 0) {
+				return 0;
+			}
 			var counter:Number = cocks.length;
 			var index:Number = 0;
-			var index2:Number = -1;
-			//Find the biggest
-			while (counter > 0)
-			{
+			while (counter > 0) {
 				counter--;
-				if (cockArea(index) < cockArea(counter))
+				if ((cocks[index].cockType != CockTypesEnum.HORSE && cocks[counter].cockType == CockTypesEnum.HORSE) || (cocks[index].cockLength < cocks[counter].cockLength && cocks[counter].cockType == CockTypesEnum.HORSE)) {
 					index = counter;
-			}
-			//Reset counter and find the next biggest
-			counter = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//Is this spot claimed by the biggest?
-				if (counter != index)
-				{
-					//Not set yet?
-					if (index2 == -1)
-						index2 = counter;
-					//Is the stored value less than the current one?
-					if (cockArea(index2) < cockArea(counter))
-					{
-						index2 = counter;
-					}
 				}
 			}
-			//If it couldn't find a second biggest...
-			if (index == index2)
-				return 0;
-			return cockArea(index2);
-		}
-
-		public function longestCock():Number
-		{
-			if (cocks.length == 0)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockLength < cocks[counter].cockLength)
-					index = counter;
-			}
-			return index;
-		}
-
-		public function longestCockLength():Number
-		{
-			if (cocks.length == 0)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockLength < cocks[counter].cockLength)
-					index = counter;
-			}
 			return cocks[index].cockLength;
 		}
 
-		public function longestHorseCockLength():Number
-		{
-			if (cocks.length == 0)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if ((cocks[index].cockType != CockTypesEnum.HORSE && cocks[counter].cockType == CockTypesEnum.HORSE) || (cocks[index].cockLength < cocks[counter].cockLength && cocks[counter].cockType == CockTypesEnum.HORSE))
-					index = counter;
-			}
-			return cocks[index].cockLength;
-		}
-
-		public function twoDickRadarSpecial(width:int):Boolean
-		{
-			//No two dicks?  FUCK OFF
-			if (cockTotal() < 2)
-				return false;
-
-			//Set up vars
-			//Get thinnest, work done already
-			var thinnest:int = thinnestCockIndex();
-			var thinnest2:int = 0;
-			//For ze loop
-			var temp:int = 0;
-			//Make sure they arent the same at initialization
-			if (thinnest2 == thinnest)
-				thinnest2 = 1;
-			//Loop through to find 2nd thinnest
-			while (temp < cocks.length)
-			{
-				if (cocks[thinnest2].cockThickness > cocks[temp].cockThickness && temp != thinnest)
-					thinnest2 = temp;
-				temp++;
-			}
-			//If the two thicknesses added together are less than the arg, true, else false
-			return cocks[thinnest].cockThickness + cocks[thinnest2].cockThickness < width;
-		}
-
-		public function totalCockThickness():Number
-		{
+		public function totalCockThickness():Number {
 			var thick:Number = 0;
-			var counter:Number = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				thick += cocks[counter].cockThickness;
+			for each (var cock:Cock in cocks) {
+				thick += cock.cockThickness;
 			}
 			return thick;
 		}
 
-		public function thickestCock():Number
-		{
-			if (cocks.length == 0)
+		public function thickestCock():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockThickness < cocks[counter].cockThickness)
-					index = counter;
 			}
-			return index;
+			var arr:Array = cocks.concat().sortOn("cockThickness", Array.NUMERIC | Array.DESCENDING);
+			return cocks.indexOf(arr[0]);
 		}
 
-		public function thickestCockThickness():Number
-		{
-			if (cocks.length == 0)
+		public function thickestCockThickness():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockThickness < cocks[counter].cockThickness)
-					index = counter;
 			}
-			return cocks[index].cockThickness;
+			return cocks[thinnestCockIndex()].cockThickness;
 		}
 
-		public function thinnestCockIndex():Number
-		{
-			if (cocks.length == 0)
+		public function thinnestCockIndex():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockThickness > cocks[counter].cockThickness)
-					index = counter;
 			}
-			return index;
+			var arr:Array = cocks.concat().sortOn("cockThickness", Array.NUMERIC);
+			return cocks.indexOf(arr[0]);
 		}
 
-		public function smallestCockIndex():Number
-		{
-			if (cocks.length == 0)
+		public function smallestCockIndex(rank:uint = 0):Number {
+			if (cocks.length <= rank) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) > cockArea(counter))
-				{
-					index = counter;
-				}
 			}
-			return index;
+			var arr:Array = cocks.concat().sortOn("cArea", Array.NUMERIC);
+			return cocks.indexOf(arr[rank]);
 		}
 
-		public function smallestCockLength():Number
-		{
-			if (cocks.length == 0)
+		public function smallestCockLength():Number {
+			if (cocks.length == 0) {
 				return 0;
+			}
 			return cocks[smallestCockIndex()].cockLength;
 		}
 
-		public function shortestCockIndex():Number
-		{
-			if (cocks.length == 0)
+		public function shortestCockIndex():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockLength > cocks[counter].cockLength)
-					index = counter;
 			}
-			return index;
+			var arr:Array = cocks.concat().sortOn("cockLength", Array.NUMERIC);
+			return cocks.indexOf(arr[0]);
 		}
 
-		public function shortestCockLength():Number
-		{
-			if (cocks.length == 0)
+		public function shortestCockLength():Number {
+			if (cocks.length == 0) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cocks[index].cockLength > cocks[counter].cockLength)
-					index = counter;
 			}
-			return cocks[index].cockLength;
+			return cocks[shortestCockIndex()].cockLength;
 		}
 
 		//Find the biggest cock that fits inside a given range
-		public function cockThatFits(i_fits:Number, type:String = "area", i_min:Number = 0):Number
-		{
-			if (cocks.length <= 0)
+		public function cockThatFits(i_fits:Number, type:String = "area", i_min:Number = 0):Number {
+			if (cocks.length <= 0) {
 				return -1;
-			var i:int = cocks.length;
-			//Current largest fitter
-			var best:int = -1;
-			while (i > 0)
-			{
-				i--;
-				var ival:Number;
-				var bestval:Number;
-				if (type == "area") {
-					ival   = cockArea(i);
-					bestval = best==-1?0:cockArea(best);
-				} else if (type == "length") {
-					ival = cocks[i].cockLength;
-					bestval = best==-1?0:cocks[best].cockLength;
-				}
-				if (i_min <= ival && ival <= i_fits)
-				{
-					//If one already fits
-					if (best >= 0)
-					{
-						//See if the newcomer beats the saved small guy
-						if (ival > bestval)
-							best = i;
-					}
-					//Store the index of fitting dick
-					else
-						best = i;
-				}
 			}
-			return best;
+			var i:int = cocks.length;
+			var arr:Array = cocks.filter(function (element:*, index:int, arr:Array):Boolean {
+				var stat:Number = type == "area" ? element.cArea : element.cockLength;
+				return i_min <= stat && stat <= i_fits;
+			}).sortOn(type == "area" ? "cArea" : "cockLength", Array.NUMERIC | Array.DESCENDING);
+			if (arr.length == 0) {return -1}
+			return cocks.indexOf(arr[0]);
 		}
 
 		//Find the 2nd biggest cock that fits inside a given value
-		public function cockThatFits2(fits:Number = 0):Number
-		{
-			if (cockTotal() == 1)
+		public function cockThatFits2(fits:Number = 0):Number {
+			if (cockTotal() <= 1) {
 				return -1;
-			var counter:Number = cocks.length;
-			//Current largest fitter
-			var index:Number = -1;
-			var index2:Number = -1;
-			while (counter > 0)
-			{
-				counter--;
-				//Does this one fit?
-				if (cockArea(counter) <= fits)
-				{
-					//If one already fits
-					if (index >= 0)
-					{
-						//See if the newcomer beats the saved small guy
-						if (cockArea(counter) > cockArea(index))
-						{
-							//Save old wang
-							if (index != -1)
-								index2 = index;
-							index = counter;
-						}
-						//If this one fits and is smaller than the other great
-						else
-						{
-							if ((cockArea(index2) < cockArea(counter)) && counter != index)
-							{
-								index2 = counter;
-							}
-						}
-						if (index >= 0 && index == index2)
-							trace("FUCK ERROR COCKTHATFITS2 SHIT IS BROKED!");
-					}
-					//Store the index of fitting dick
-					else
-						index = counter;
-				}
 			}
-			return index2;
+			var arr:Array = cocks.filter(function (element:*, index:int, arr:Array):Boolean {
+				return element.cArea <= fits;
+			}).sortOn("cArea", Array.NUMERIC | Array.DESCENDING);
+			return cocks.indexOf(arr[0]);
 		}
 
-		public function smallestCockArea():Number
-		{
-			if (cockTotal() == 0)
+		public function smallestCockArea():Number {
+			if (cockTotal() == 0) {
 				return -1;
+			}
 			return cockArea(smallestCockIndex());
 		}
 
-		public function smallestCock():Number
-		{
+		public function smallestCock():Number {
 			return cockArea(smallestCockIndex());
 		}
 
-		public function biggestCockIndex():Number
-		{
-			if (cocks.length == 0)
+		/**
+		 * Returns the index of the cock with the largest area.
+		 * @param rank 0 = 1st biggest, 1 = 2nd biggest
+		 * @return
+		 */
+		public function biggestCockIndex(rank:uint = 0):Number {
+			if (cocks.length <= rank) {
 				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) < cockArea(counter))
-					index = counter;
 			}
-			return index;
+			//Concat creates a shallow copy of the original array to preserve original ordering.
+			var arr:Array = cocks.concat().sortOn("cArea", Array.NUMERIC | Array.DESCENDING);
+			return cocks.indexOf(arr[rank]);
 		}
 
 		//Find the second biggest dick's index.
-		public function biggestCockIndex2():Number
-		{
-			if (cocks.length <= 1)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			var index2:Number = 0;
-			//Find the biggest
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) < cockArea(counter))
-					index = counter;
-			}
-			//Reset counter and find the next biggest
-			counter = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//Make sure index2 doesn't get stuck
-				//at the same value as index1 if the
-				//initial location is biggest.
-				if (index == index2 && counter != index)
-					index2 = counter;
-				//Is the stored value less than the current one?
-				if (cockArea(index2) < cockArea(counter))
-				{
-					//Make sure we don't set index2 to be the same
-					//as the biggest dick.
-					if (counter != index)
-						index2 = counter;
-				}
-			}
-			//If it couldn't find a second biggest...
-			if (index == index2)
-				return 0;
-			return index2;
+		public function biggestCockIndex2():Number {
+			return biggestCockIndex(1);
 		}
 
-		public function smallestCockIndex2():Number
-		{
-			if (cocks.length <= 1)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			var index2:Number = 0;
-			//Find the smallest
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) > cockArea(counter))
-					index = counter;
-			}
-			//Reset counter and find the next biggest
-			counter = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//Make sure index2 doesn't get stuck
-				//at the same value as index1 if the
-				//initial location is biggest.
-				if (index == index2 && counter != index)
-					index2 = counter;
-				//Is the stored value less than the current one?
-				if (cockArea(index2) > cockArea(counter))
-				{
-					//Make sure we don't set index2 to be the same
-					//as the biggest dick.
-					if (counter != index)
-						index2 = counter;
-				}
-			}
-			//If it couldn't find a second biggest...
-			if (index == index2)
-				return 0;
-			return index2;
+		public function smallestCockIndex2():Number {
+			return smallestCockIndex(1);
 		}
 
 		//Find the third biggest dick index.
-		public function biggestCockIndex3():Number
-		{
-			if (cocks.length <= 2)
-				return 0;
-			var counter:Number = cocks.length;
-			var index:Number = 0;
-			var index2:Number = -1;
-			var index3:Number = -1;
-			//Find the biggest
-			while (counter > 0)
-			{
-				counter--;
-				if (cockArea(index) < cockArea(counter))
-					index = counter;
-			}
-			//Reset counter and find the next biggest
-			counter = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//If this index isn't used already
-				if (counter != index)
-				{
-					//Has index been set to anything yet?
-					if (index2 == -1)
-						index2 = counter;
-					//Is the stored value less than the current one?
-					else if (cockArea(index2) < cockArea(counter))
-					{
-						index2 = counter;
-					}
-				}
-			}
-			//If it couldn't find a second biggest...
-			if (index == index2 || index2 == -1)
-				index2 = 0;
-			//Reset counter and find the next biggest
-			counter = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//If this index isn't used already
-				if (counter != index && counter != index2)
-				{
-					//Has index been set to anything yet?
-					if (index3 == -1)
-						index3 = counter;
-					//Is the stored value less than the current one?
-					else if (cockArea(index3) < cockArea(counter))
-					{
-						index3 = counter;
-					}
-				}
-			}
-			//If it fails for some reason.
-			if (index3 == -1)
-				index3 = 0;
-			return index3;
+		public function biggestCockIndex3():Number {
+			return biggestCockIndex(2);
 		}
 
 
@@ -2136,10 +1589,7 @@ import classes.Stats.BuffableStat;
 
 		public function wetness():Number
 		{
-			if (vaginas.length == 0)
-				return 0;
-			else
-				return vaginas[0].vaginalWetness;
+			return hasVagina() ? vaginas[0].vaginalWetness : 0;
 		}
 
 		public function vaginaType(newType:int = -1):int
@@ -2155,17 +1605,10 @@ import classes.Stats.BuffableStat;
 
 		public function looseness(vag:Boolean = true):Number
 		{
-			if (vag)
-			{
-				if (vaginas.length == 0)
-					return 0;
-				else
-					return vaginas[0].vaginalLooseness;
+			if (vag) {
+				return hasVagina() ? vaginas[0].vaginalLooseness : 0;
 			}
-			else
-			{
-				return ass.analLooseness;
-			}
+			return ass.analLooseness;
 		}
 
 		public function vaginalCapacity():Number
@@ -2217,42 +1660,14 @@ import classes.Stats.BuffableStat;
 
 		public function hasFuckableNipples():Boolean
 		{
-			var counter:Number = breastRows.length;
-			while (counter > 0)
-			{
-				counter--;
-				if (breastRows[counter].fuckable)
-					return true;
-			}
-			return false;
+			return breastRows.some(function(element:*, index:int, arr:Array):Boolean {
+				return element.fuckable;
+			});
 		}
 
 		public function hasBreasts():Boolean
 		{
-			if (breastRows.length > 0)
-			{
-				if (biggestTitSize() >= 1)
-					return true;
-			}
-			return false;
-		}
-
-		public function hasNipples():Boolean
-		{
-			var counter:Number = breastRows.length;
-			while (counter > 0)
-			{
-				counter--;
-				if (breastRows[counter].nipplesPerBreast > 0)
-					return true;
-			}
-			return false;
-		}
-
-		public function lactationSpeed():Number
-		{
-			//Lactation * breastSize x 10 (milkPerBreast) determines scene
-			return biggestLactation() * biggestTitSize() * 10;
+			return breastRows.length > 0 && biggestTitSize() >= 1;
 		}
 
 		public function biggestLactation():Number
@@ -2377,14 +1792,11 @@ import classes.Stats.BuffableStat;
 		{
 			if (breastRows.length == 0)
 				return 0;
-			var counter:Number = breastRows.length;
-			var index:Number = 0;
-			while (counter > 0)
-			{
-				counter--;
-				index += breastRows[counter].lactationMultiplier;
+			var total:Number = 0;
+			for each(var breastRow:BreastRowClass in breastRows){
+				total += breastRow.lactationMultiplier;
 			}
-			return Math.floor(index / breastRows.length);
+			return Math.floor(total / breastRows.length);
 		}
 
 		//Calculate bonus virility rating!
@@ -2544,12 +1956,9 @@ import classes.Stats.BuffableStat;
 		}
 
 		public function countCocksOfType(type:CockTypesEnum):int {
-			if (cocks.length == 0) return 0;
-			var counter:int = 0;
-			for (var x:int = 0; x < cocks.length; x++) {
-				if (cocks[x].cockType == type) counter++;
-			}
-			return counter;
+			return cocks.filter(function(element:*, index:int, arr:Array):Boolean {
+				return element.cockType == type;
+			}).length;
 		}
 
 		public function anemoneCocks():int { //How many anemonecocks?
@@ -2572,12 +1981,9 @@ import classes.Stats.BuffableStat;
 		// of the PC's attributes, and this is recaluculated every hour spent at camp.
 		// As such, delineating between the two is kind of silly.
 		public function dogCocks():int { //How many dogCocks
-			if (cocks.length == 0) return 0;
-			var counter:int = 0;
-			for (var x:int = 0; x < cocks.length; x++) {
-				if (cocks[x].cockType == CockTypesEnum.DOG || cocks[x].cockType == CockTypesEnum.FOX || cocks[x].cockType == CockTypesEnum.WOLF) counter++;
-			}
-			return counter;
+			return countCocksOfType(CockTypesEnum.DOG)
+					+ countCocksOfType(CockTypesEnum.FOX)
+					+ countCocksOfType(CockTypesEnum.WOLF);
 		}
 
 		public function dragonCocks():int { //How many dragonCocks?
@@ -2704,58 +2110,34 @@ import classes.Stats.BuffableStat;
 			}
 			return -1;
 		}
+
 		//How many cocks?
-		public function cockTotal():Number
-		{
+		public function cockTotal():int {
 			return (cocks.length);
 		}
 
 		//BOolean alternate
-		public function hasCock():Boolean
-		{
+		public function hasCock():Boolean {
 			return cocks.length >= 1;
-
 		}
 
-		public function hasSockRoom():Boolean
-		{
-			var index:int = cocks.length;
-			while (index > 0)
-			{
-				index--;
-				if (cocks[index].sock == "")
-					return true;
-			}
-			return false
+		public function hasSockRoom():Boolean {
+			return cocks.some(function (element:*, index:int, arr:Array):Boolean {
+				return element.sock == "";
+			});
 		}
 
-	//	[Deprecated]
-		public function hasSock(arg:String = ""):Boolean
-		{
-			var index:int = cocks.length;
-
-			while (index > 0)
-			{
-				index--;
-				if (cocks[index].sock != "")
-				{
-				if (arg == "" || cocks[index].sock == arg)
-					return true;
-				}
-			}
-			return false
+		//	[Deprecated]
+		public function hasSock(arg:String = ""):Boolean {
+			return cocks.some(function (element:*, index:int, arr:Array):Boolean {
+				return element.sock == arg || (arg == "" && element.sock != "");
+			});
 		}
-		public function countCockSocks(type:String):int
-		{
-			var count:int = 0;
 
-			for (var i:Number = 0; i < cocks.length; i++) {
-				if (cocks[i].sock == type) {
-					count++
-				}
-			}
-			//trace("countCockSocks found " + count + " " + type);
-			return count;
+		public function countCockSocks(type:String):int {
+			return cocks.filter(function (element:*, index:int, arr:Array):Boolean {
+				return element.sock == type;
+			}).length;
 		}
 
 		public function canAutoFellate():Boolean
@@ -2818,7 +2200,6 @@ import classes.Stats.BuffableStat;
 		public function canSwimUnderwater():Boolean
 		{
 			return gills.type != Gills.NONE;
-
 		}
 
 		//Naked
@@ -2831,77 +2212,33 @@ import classes.Stats.BuffableStat;
 		public function isImmuneToCrits():Boolean
 		{
 			return hasPerk(PerkLib.EnemyConstructType) || hasPerk(PerkLib.EnemyPlantType);
-
 		}
 		//check for vagoo
 		public function hasVagina():Boolean
 		{
 			return vaginas.length > 0;
-
 		}
 
 		public function hasVirginVagina():Boolean
 		{
-			if (vaginas.length > 0)
-				return vaginas[0].virgin;
-			return false;
+			return hasVagina() ? vaginas[0].virgin : false;
 		}
 
 		//GENDER IDENTITIES
 		public function genderText(male:String = "man", female:String = "woman", futa:String = "herm", eunuch:String = "eunuch"):String
 		{
-			if (vaginas.length > 0) {
-				if (cocks.length > 0) return futa;
-				return female;
-			}
-			else if (cocks.length > 0) {
-				return male;
-			}
-			return eunuch;
-		}
-
-		public function manWoman(caps:Boolean = false):String
-		{
-			//Dicks?
-			if (cockTotal() > 0)
-			{
-				if (hasVagina())
-				{
-					if (caps)
-						return "Futa";
-					else
-						return "futa";
-				}
-				else
-				{
-					if (caps)
-						return "Man";
-					else
-						return "man";
-				}
-			}
-			else
-			{
-				if (hasVagina())
-				{
-					if (caps)
-						return "Woman";
-					else
-						return "woman";
-				}
-				else
-				{
-					if (caps)
-						return "Eunuch";
-					else
-						return "eunuch";
-				}
+			switch(gender){
+				case Gender.GENDER_HERM: return futa;
+				case Gender.GENDER_FEMALE: return female;
+				case Gender.GENDER_MALE: return male;
+				case Gender.GENDER_NONE:
+				default: return eunuch;
 			}
 		}
 
 		public function mfn(male:String, female:String, neuter:String):String
 		{
-			if (gender == 0)
+			if (gender == Gender.GENDER_NONE)
 				return neuter;
 			else
 				return mf(male, female);
@@ -2909,18 +2246,19 @@ import classes.Stats.BuffableStat;
 		public function looksMale():Boolean {
 			return !looksFemale();
 		}
-		
+
 		public function looksFemale():Boolean {
 			var tits:Number = biggestTitSize();
-			switch(gender) {
+			switch (gender) {
 				case Gender.GENDER_HERM:
-                case Gender.GENDER_NONE:
-                    return ((tits >= 3 || tits == 2 && femininity >= 15 || tits == 1 && femininity >= 40 || femininity >= 65) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
+				case Gender.GENDER_NONE:
+					return ((tits >= 3 || tits == 2 && femininity >= 15 || tits == 1 && femininity >= 40 || femininity >= 65) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
 				case Gender.GENDER_MALE:
-                    return ((tits >= 3 && femininity >= 5 || tits == 2 && femininity >= 35 || tits == 1 && femininity >= 65 || femininity >= 95) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
-                case Gender.GENDER_FEMALE:
-                    return ((tits > 1 || tits == 1 && femininity >= 15 || femininity >= 45) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
-				default: return false;
+					return ((tits >= 3 && femininity >= 5 || tits == 2 && femininity >= 35 || tits == 1 && femininity >= 65 || femininity >= 95) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
+				case Gender.GENDER_FEMALE:
+					return ((tits > 1 || tits == 1 && femininity >= 15 || femininity >= 45) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
+				default:
+					return false;
 			}
 		}
 		//Rewritten!
@@ -2939,54 +2277,48 @@ import classes.Stats.BuffableStat;
 				default: return "<b>Gender error!</b>";
 			}
 		}
-		
+
 		/**
 		 * Checks if the creature is technically male: has cock but not vagina.
 		 */
-		public function isMale():Boolean
-		{
+		public function isMale():Boolean {
 			return gender == Gender.GENDER_MALE;
 		}
-		
+
 		/**
 		 * Checks if the creature is technically female: has vagina but not cock.
 		 */
-		public function isFemale():Boolean
-		{
+		public function isFemale():Boolean {
 			return gender == Gender.GENDER_FEMALE;
-					}
+		}
 
 		/**
 		 * Checks if the creature is technically herm: has both cock and vagina.
 		 */
-		public function isHerm():Boolean
-					{
+		public function isHerm():Boolean {
 			return gender == Gender.GENDER_HERM;
-					}
+		}
 
 		/**
 		 * Checks if the creature is technically genderless: has neither cock nor vagina.
 		 */
-		public function isGenderless():Boolean
-				{
+		public function isGenderless():Boolean {
 			return gender == Gender.GENDER_NONE;
-				}
+		}
 
 		/**
 		 * Checks if the creature is technically male or herm: has at least a cock.
 		 */
-		public function isMaleOrHerm():Boolean
-			{
+		public function isMaleOrHerm():Boolean {
 			return (gender & Gender.GENDER_MALE) != 0;
-				}
+		}
 
 		/**
 		 * Checks if the creature is technically female or herm: has at least a vagina.
 		 */
-		public function isFemaleOrHerm():Boolean
-				{
+		public function isFemaleOrHerm():Boolean {
 			return (gender & Gender.GENDER_FEMALE) != 0;
-					}
+		}
 
 		//Create a cock. Default type is HUMAN
 		public function createCock(clength:Number = 5.5, cthickness:Number = 1,ctype:CockTypesEnum=null):Boolean
@@ -2996,10 +2328,7 @@ import classes.Stats.BuffableStat;
 				return false;
 			var newCock:Cock = new Cock(clength, cthickness,ctype);
 			newCock.host = this;
-			//var newCock:cockClass = new cockClass();
 			cocks.push(newCock);
-			cocks[cocks.length-1].cockThickness = cthickness;
-			cocks[cocks.length-1].cockLength = clength;
 			return true;
 		}
 
@@ -3027,111 +2356,53 @@ import classes.Stats.BuffableStat;
 		}
 
 		//Remove cocks
-		public function removeCock(arraySpot:int, totalRemoved:int):void
-		{
+		public function removeCock(arraySpot:int, totalRemoved:int):void {
 			//Various Errors preventing action
-			if (arraySpot < 0 || totalRemoved <= 0)
-			{
-				//trace("ERROR: removeCock called but arraySpot is negative or totalRemoved is 0.");
+			if (arraySpot < 0 || totalRemoved <= 0 || cocks.length == 0 || arraySpot >= cocks.length) {
 				return;
 			}
-			if (cocks.length == 0)
-			{
-				//trace("ERROR: removeCock called but cocks do not exist.");
-			}
-			else
-			{
-				if (arraySpot > cocks.length - 1)
-				{
-					//trace("ERROR: removeCock failed - array location is beyond the bounds of the array.");
+			try {
+				var cock:Cock = cocks[arraySpot];
+				if (cock.sock == "viridian") {
+					removePerk(PerkLib.LustyRegeneration);
 				}
-				else
-				{
-					try
-					{
-						var cock:Cock = cocks[arraySpot];
-						if (cock.sock == "viridian")
-						{
-							removePerk(PerkLib.LustyRegeneration);
+				else if (cock.sock == "cockring") {
+					var numRings:int = 0;
+					for (var i:int = 0; i < cocks.length; i++) {
+						if (cocks[i].sock == "cockring") {
+							numRings++;
 						}
-						else if (cock.sock == "cockring")
-						{
-							var numRings:int = 0;
-							for (var i:int = 0; i < cocks.length; i++)
-							{
-								if (cocks[i].sock == "cockring") numRings++;
-							}
+					}
 
-							if (numRings == 0) removePerk(PerkLib.PentUp);
-							else setPerkValue(PerkLib.PentUp, 1, 5 + (numRings * 5));
-						}
-						cocks.splice(arraySpot, totalRemoved);
+					if (numRings == 0) {
+						removePerk(PerkLib.PentUp);
+					} else {
+						setPerkValue(PerkLib.PentUp, 1, 5 + (numRings * 5));
 					}
-					catch (e:Error)
-					{
-						trace("Argument error in Creature[" + this._short + "]: " + e.message);
-					}
-					//trace("Attempted to remove " + totalRemoved + " cocks.");
 				}
+				cocks.splice(arraySpot, totalRemoved);
+			}
+			catch (e:Error) {
+				trace("Argument error in Creature[" + this._short + "]: " + e.message);
 			}
 		}
 
 		//REmove vaginas
-		public function removeVagina(arraySpot:int = 0, totalRemoved:int = 1):void
-		{
+		public function removeVagina(arraySpot:int = 0, totalRemoved:int = 1):void {
 			//Various Errors preventing action
-			if (arraySpot < -1 || totalRemoved <= 0)
-			{
-				//trace("ERROR: removeVagina called but arraySpot is negative or totalRemoved is 0.");
+			if (arraySpot < -1 || totalRemoved <= 0 || vaginas.length == 0 || arraySpot >= vaginas.length) {
 				return;
 			}
-			if (vaginas.length == 0)
-			{
-				//trace("ERROR: removeVagina called but cocks do not exist.");
-			}
-			else
-			{
-				if (arraySpot > vaginas.length - 1)
-				{
-					//trace("ERROR: removeVagina failed - array location is beyond the bounds of the array.");
-				}
-				else
-				{
-					vaginas.splice(arraySpot, totalRemoved);
-					//trace("Attempted to remove " + totalRemoved + " vaginas.");
-				}
-			}
+			vaginas.splice(arraySpot, totalRemoved);
 		}
 
 		//Remove a breast row
-		public function removeBreastRow(arraySpot:int, totalRemoved:int):void
-		{
+		public function removeBreastRow(arraySpot:int, totalRemoved:int):void {
 			//Various Errors preventing action
-			if (arraySpot < -1 || totalRemoved <= 0)
-			{
-				//trace("ERROR: removeBreastRow called but arraySpot is negative or totalRemoved is 0.");
+			if (arraySpot < -1 || totalRemoved <= 0 || breastRows.length - totalRemoved < 1 || arraySpot >= breastRows.length) {
 				return;
 			}
-			if (breastRows.length == 0)
-			{
-				//trace("ERROR: removeBreastRow called but cocks do not exist.");
-			}
-			else if (breastRows.length == 1 || breastRows.length - totalRemoved < 1)
-			{
-				//trace("ERROR: Removing the current breast row would break the Creature classes assumptions about breastRow contents.");
-			}
-			else
-			{
-				if (arraySpot > breastRows.length - 1)
-				{
-					//trace("ERROR: removeBreastRow failed - array location is beyond the bounds of the array.");
-				}
-				else
-				{
-					breastRows.splice(arraySpot, totalRemoved);
-					//trace("Attempted to remove " + totalRemoved + " breastRows.");
-				}
-			}
+			breastRows.splice(arraySpot, totalRemoved);
 		}
 
 		// This is placeholder shit whilst I work out a good way of BURNING ENUM TO THE FUCKING GROUND
@@ -4333,6 +3604,89 @@ import classes.Stats.BuffableStat;
 				if(weaponName == weap){return true}
 			}
 			return false;
+		}
+		public function isUsingTome():Boolean
+		{
+			return weaponRangeName == "nothing" || weaponRangeName == "Inquisitor’s Tome" || weaponRangeName == "Sage’s Sketchbook";
+		}
+
+		public function spellCost(mod:Number, type:int = 0, heal:Boolean = false):Number{
+			var white:Boolean = type ===  1;
+			var black:Boolean = type === -1;
+			var costPercent:Number = 100;
+			costPercent -= (100 * perkv1(PerkLib.SeersInsight));
+			costPercent -= perkv1(PerkLib.SpellcastingAffinity);
+			costPercent -= perkv1(PerkLib.WizardsEnduranceAndSluttySeduction);
+			costPercent -= perkv1(PerkLib.WizardsAndDaoistsEndurance);
+			costPercent -= perkv1(PerkLib.WizardsEndurance);
+
+			if (jewelryName == game.jewelries.FOXHAIR.name) costPercent -= 20;
+			if (weaponName == game.weapons.ASCENSU.name) costPercent -= 15;
+			if (weaponName == game.weapons.N_STAFF.name) costPercent += 200;
+
+			if(white){
+				costPercent -= (100 * perkv2(PerkLib.Ambition));
+				if (weaponName == game.weapons.PURITAS.name) costPercent -= 15;
+			}
+			else if (black) {
+				costPercent -= (100 * perkv2(PerkLib.Obsession));
+				if (weaponName == game.weapons.DEPRAVA.name) costPercent -= 15;
+			}
+
+			var sMod:Number = spellMod(type, heal);
+			if (sMod > 1) costPercent += Math.round(sMod - 1) * 10;
+			//Limiting it and multiplicative mods
+			if(!heal && hasPerk(PerkLib.BloodMage) && costPercent < 50) costPercent = 50;
+			mod *= costPercent/100;
+			if (!heal && hasPerk(PerkLib.HistoryScholar)) {
+				if(mod > 2) mod *= .8;
+			}
+
+			if ((heal || hasPerk(PerkLib.BloodMage)) && mod < 5) mod = 5;
+			else if(mod < 2) mod = 2;
+			mod = Math.round(mod * 100)/100;
+			return mod;
+		}
+		public function spellMod(type:int = 0, heal:Boolean = false):Number {
+			var white:Boolean = type ===  1;
+			var black:Boolean = type === -1;
+			var mod:Number = spellPower;
+			if(!heal) {
+				if(hasPerk(PerkLib.JobSorcerer) && inte >= 25) mod += .1;
+				if(hasPerk(PerkLib.Spellpower) && inte >= 50) mod += .1;
+				if(hasPerk(PerkLib.TraditionalMage) && weaponPerk == "Staff" && isUsingTome()) mod += 1;
+			}
+			if(!white) {
+				mod += perkv1(PerkLib.Obsession);
+			}
+			if(!black) {
+				mod += perkv1(PerkLib.Ambition);
+			}
+			if (white) {
+				mod += statusEffectv2(StatusEffects.BlessingOfDivineMarae);
+				if (hasPerk(PerkLib.UnicornBlessing) && cor <= 20) mod += 20;
+			}
+			if (black && hasPerk(PerkLib.BicornBlessing) && cor >= 80) mod += 20;
+
+			mod += perkv1(PerkLib.WizardsAndDaoistsFocus);
+			mod += perkv1(PerkLib.SagesKnowledge);
+			mod += perkv1(PerkLib.SeersInsight);
+
+			if (hasPerk(PerkLib.ChiReflowMagic)) mod += UmasShop.NEEDLEWORK_MAGIC_SPELL_MULTI;
+			if (jewelryEffectId == JewelryLib.MODIFIER_SPELL_POWER) mod += (jewelryEffectMagnitude / 100);
+			if (countCockSocks("blue") > 0) mod += (countCockSocks("blue") * .05);
+			if (shieldName == game.shields.SPI_FOC.name) mod += .2;
+			if (shieldName == game.shields.MABRACE.name) mod += .5;
+			if (weaponName == game.weapons.N_STAFF.name) mod += cor * .01;
+			if (weaponName == game.weapons.U_STAFF.name) mod += (100 - cor) * .01;
+			if (hasStatusEffect(StatusEffects.Maleficium)) mod += 1;
+
+			if (!black && weaponName == game.weapons.PURITAS.name) mod *= 1.6;
+			if (!white && weaponName == game.weapons.DEPRAVA.name) mod *= 1.6;
+			if (weaponName == game.weapons.ASCENSU.name) mod *= 1.8;
+
+			mod = Math.round(mod * 100)/100;
+			return mod;
 		}
 	}
 }
