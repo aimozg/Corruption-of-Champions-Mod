@@ -27,8 +27,8 @@ class ForestScene { /*...*/
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!--content/coc/desert.xml-->
-<extend-story name="/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="story.xsd">
-    <extend-zone name="forest">
+<extend-story name="/">
+    <extend-story name="forest">
         <lib name="strings">
             <text name="trip">
                 You trip on an exposed root, scraping yourself somewhat, but otherwise the hour is uneventful.
@@ -37,7 +37,7 @@ class ForestScene { /*...*/
                 You spot something unusual. Taking a closer look, it's definitely a truffle of some sort.
             </text>
         </lib>
-    </extend-zone>
+    </extend-story>
 </extend-story>
 ```
 
@@ -78,33 +78,7 @@ TODO
 
 ### Creating new encounters
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<!--content/coc/desert.xml-->
-<extend-zone name="desert" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="story.xsd">
-    <encounter name="walk" chance="50" when="model.time.hours eq 23">
-        <lib name="ss">
-            <string name="intro">You walk through the shifting sands for an hour, finding nothing. </string>
-            <string name="str">The effort of struggling with the uncertain footing has made you STRONGEST.</string>
-            <string name="tou">The effort of struggling with the uncertain footing has made you TOUGHEST.</string>
-        </lib>
-        <!-- logic -->
-        <display ref="ss/intro"/>
-        <if test="rand(2) eq 0">
-            <if test="rand(2)==0 and player.str lt 500">
-                <display ref="ss/str"/>
-                <dynStats str="50"/>
-                <elseif test="player.tou lt 500">
-                    <display ref="ss/tou"/>
-                    <dynStats tou="50"/>
-                </elseif>
-            </if>
-        </if>
-    </encounter>
-</extend-zone>
-```
-
-TODO
+(Removed from XXC)
 
 ## Reference
 
@@ -154,10 +128,6 @@ Locates
 
 TODO
 
-#### zone, encounter
-
-TODO
-
 ### Action elements
 
 #### set
@@ -182,22 +152,22 @@ TODO
 
 TODO
 
-#### extend-zone
-
-TODO
-
 ### Logic elements
 
 #### if-elseif-else
 
 ```xml
-<if test="condition" then="thenString" else="elseString">
+<if test="condition">
     thenContent
-    <elseif>...</elseif>
-    <else>
+    <elseif test="condition"/>
+    then2Content
+    <else/>
     elseContent
-    </else>
 </if>
+```
+or (deprecated)
+```xml
+<if test="condition" then="thenString" else="elseString"/>
 ```
 
 * `condition` (expression) is required;

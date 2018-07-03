@@ -4,14 +4,14 @@
     <!--Areas-->
     <include path="coc/desert.xml"/>
     <include path="coc/forest.xml"/>
-    <extend-zone name="deepwoods">
+    <extend-story name="deepwoods">
         <lib name="strings">
             <text name="walk">
                 You enjoy a peaceful walk in the deepwoods.  It gives you time to think over the recent, disturbing events.
                 <dynStats tou="0.5" int="1"/>
             </text>
         </lib>
-    </extend-zone>
+    </extend-story>
 
     <!-- Monsters -->
     <include path="coc/monsters/goblin.xml"/>

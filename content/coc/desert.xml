@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--content/coc/desert.xml-->
-<extend-zone name="desert" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../story.xsd">
+<extend-story name="desert" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../story.xsd">
     <lib name="strings">
         <lib name="chest">
             <text name="a">
@@ -33,8 +33,7 @@
             </text>
         </lib>
     </lib>
-    <!-- This encounter is not present in the code and added through xml only -->
-    <encounter name="walk">
+    <story name="walk">
         <lib name="ss">
             <string name="intro">You walk through the shifting sands for an hour, finding nothing. </string>
             <string name="str">The effort of struggling with the uncertain footing has made you stronger.</string>
@@ -52,5 +51,5 @@
                 </elseif>
             </if>
         </if>
-    </encounter>
-</extend-zone>
+    </story>
+</extend-story>

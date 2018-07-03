@@ -143,8 +143,6 @@ public class StoryCompiler extends Compiler {
 				return compileDisplay(x);
 			case "dynStats":
 				return compileDynStats(x);
-			case "encounter":
-				return compileEncounter(x);
 			case "include":
 				return includeFile(x.@path, x.@required != "false");
 			case "output":
@@ -158,14 +156,8 @@ public class StoryCompiler extends Compiler {
 				return null;
 			case "set":
 				return compileSet(x);
-			case "zone":
-				return compileStoryBody(new ZoneStmt(stack[0], x.@name), x) as ZoneStmt;
-			/*case "extend-encounter":
-				return extendEncounter(x);*/
 			case "extend-story":
 				return compileStoryBody(locate(x.@name) as Story, x);
-			case "extend-zone":
-				return compileStoryBody(locate(x.@name) as ZoneStmt, x) as ZoneStmt;
 			default:
 				return super.compileTag(tag, x);
 		}
@@ -238,16 +230,6 @@ public class StoryCompiler extends Compiler {
 		var d:DynStatsStmt = new DynStatsStmt();
 		for (var attr:String in attrs) d.setAttr(attr,attrs[attr]);
 		return d;
-	}
-	protected function peekZone():ZoneStmt {
-		var zone:ZoneStmt = stack[0] as ZoneStmt;
-		if (!zone) throw new Error("Not a <zone> "+stack[0].toString().substr(0,20));
-		return zone;
-	}
-	protected function compileEncounter(x:XML):Statement {
-		var encounter:Story = compileStory(x);
-		peekZone().add(encounter,x.@chance,x.@when);
-		return null;
 	}
 	protected function compileOutput(x:XML):OutputStmt {
 		return new OutputStmt(x.text().toString());

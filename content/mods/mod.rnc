@@ -219,20 +219,6 @@ battle = element battle {
     attribute options { text }?
 }
 #extend-story = element extend-story { namedBlock }
-#zone = element zone {
-#    namedBlock,
-#    encounter*
-#}
-#extend-zone = element extend-zone {
-#    namedBlock,
-#    encounter*
-#}
-#encounter = element encounter {
-#    attribute name { text },
-#    attribute chance { expression }?,
-#    attribute when { expression }?,
-#    content*
-#}
 #Include = element include {
 #    attribute path { text },
 #    attribute required { "true" | "false" }?,
@@ -278,7 +264,7 @@ font = element font {
     ATrim?,
     content*
 }
-#xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone
+#xcc-named-content = Text | String | lib | story | macro | extend-story
 xcc-statement = display | set | output | lib # | xcc-named-content | Include | menu
 #namedBlock = attribute name { text }?, content*
 #String = element string { namedBlock }

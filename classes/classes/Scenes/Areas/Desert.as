@@ -13,7 +13,6 @@ import classes.Scenes.Areas.Desert.*;
 import classes.Scenes.SceneLib;
 
 import coc.xxc.BoundNode;
-import coc.xxc.stmts.ZoneStmt;
 
 use namespace CoC;
 
@@ -154,15 +153,20 @@ use namespace CoC;
 						call  : SceneLib.helScene.helSexualAmbush,
 						chance: 0.2,
 						when  : SceneLib.helScene.helSexualAmbushCondition
+					}, {
+						name: "walk",
+						call: function ():void {
+							story.locate("walk").execute();
+						}
 					});
-			story = ZoneStmt.wrap(_desertEncounter,game.rootStory).bind(game.context);
+			story = game.rootStory.addLib("desert").bind(game.context);
 		}
 		//Explore desert
 		public function exploreDesert():void {
 			player.exploredDesert++;
 			clearOutput();
 			doNext(camp.returnToCampUseOneHour); // default button
-			story.execute();
+			desertEncounter.execEncounter();
 			flushOutputTextToGUI();
 		}
 

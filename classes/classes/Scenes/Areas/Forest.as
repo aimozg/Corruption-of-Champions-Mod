@@ -17,7 +17,6 @@ import classes.Scenes.SceneLib;
 import classes.Scenes.Areas.Forest.DryadScene;
 
 import coc.xxc.BoundNode;
-import coc.xxc.stmts.ZoneStmt;
 
 use namespace CoC;
 
@@ -84,7 +83,7 @@ use namespace CoC;
 		private var forestStory:BoundNode;
 		private var deepwoodsStory:BoundNode;
 		private function init():void {
-            const game:CoC = CoC.instance;
+			const game:CoC = CoC.instance;
             const fn:FnHelpers = Encounters.fn;
 			_forestEncounter = Encounters.group("forest", {
 						//General Golems, Goblin and Imp Encounters
@@ -371,13 +370,12 @@ use namespace CoC;
 				chance	:  	0.5
 			}
 		);
-			// what we do here: create a Story (ZoneStmt) and register it in game.rootStory
-			// so it will be accessible from external files
-			forestStory = ZoneStmt.wrap(_forestEncounter,game.rootStory).bind(game.context);
-			deepwoodsStory = ZoneStmt.wrap(_deepwoodsEncounter,game.rootStory).bind(game.context);
+			// story libraries for XMLs to fill
+			forestStory = game.rootStory.addLib("forest").bind(game.context);
+			deepwoodsStory = game.rootStory.addLib("deepwoods").bind(game.context);
 		}
 		public function exploreDeepwoods():void {
-			deepwoodsStory.execute();
+			deepwoodsEncounter.execEncounter();
 		}
 
 		public function tripOnARoot():void {
@@ -414,8 +412,7 @@ use namespace CoC;
 			doNext(camp.returnToCampUseOneHour);
 			//Increment forest exploration counter.
 			player.exploredForest++;
-			forestStory.execute();
-//			forestEncounter.execEncounter();
+			forestEncounter.execEncounter();
 			flushOutputTextToGUI();
 		}
 		//[FOREST]

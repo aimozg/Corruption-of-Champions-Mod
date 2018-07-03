@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extend-story name="/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../story.xsd">
-	<extend-zone name="forest">
+	<extend-story name="forest">
 		<lib name = "strings">
 			<text name="trip">
                 You trip on an exposed root, scraping yourself somewhat, but otherwise the hour is uneventful.
@@ -404,5 +404,5 @@
 				</text>
 			</lib>
 		</lib>
-	</extend-zone>
+	</extend-story>
 </extend-story>
