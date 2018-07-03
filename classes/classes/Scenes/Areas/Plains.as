@@ -42,7 +42,7 @@ use namespace CoC;
 		private function init():void {
 			const game:CoC     = CoC.instance;
 			const fn:FnHelpers = Encounters.fn;
-			explorationEncounter = Encounters.group(/*SceneLib.commonEncounters,*/ {
+			explorationEncounter = game.getEncounterPool("plains").add(/*SceneLib.commonEncounters,*/ {
 				//General Golems, Goblin and Imp Encounters
 				name: "common",
 				call: SceneLib.exploration.genericGolGobImpEncounters

@@ -37,7 +37,7 @@ public class Mountain extends BaseContent
 			const game:CoC     = CoC.instance;
 			const fn:FnHelpers = Encounters.fn;
 			explorationEncounter =
-					Encounters.group(/*game.commonEncounters.withImpGob,*/{
+					game.getEncounterPool("mountain").add(/*game.commonEncounters.withImpGob,*/{
 						//General Golems, Goblin and Imp Encounters
 						name: "common",
 						call: SceneLib.exploration.genericGolGobImpEncounters

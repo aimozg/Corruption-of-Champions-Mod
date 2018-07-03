@@ -19,6 +19,7 @@ import classes.Modding.GameMod;
 import classes.Modding.MonsterPrototype;
 import classes.Parser.Parser;
 import classes.Scenes.*;
+import classes.Scenes.API.GroupEncounter;
 import classes.Scenes.NPCs.JojoScene;
 import classes.display.DebugInfo;
 import classes.display.PerkMenu;
@@ -113,6 +114,7 @@ public class CoC extends MovieClip
     public var rootStory:Story = new Story("story",null,"root");
     public var compiler:StoryCompiler = new StoryCompiler("content/").attach(rootStory);
     public var mods:/*GameMod*/Array = [];
+    public var encounterPools:/*[index:string] => GroupEncounter*/Object = {};
     public var context:StoryContext;
     public var lua:LuaEngine;
 
@@ -378,6 +380,9 @@ public class CoC extends MovieClip
         execPostInit();
         this.addFrameScript( 0, this.run );
         //setTimeout(this.run,0);
+    }
+    public function getEncounterPool(name:String):GroupEncounter {
+        return encounterPools[name] || ((encounterPools[name] = new GroupEncounter(name,[])));
     }
 
     private function loadStory():void {

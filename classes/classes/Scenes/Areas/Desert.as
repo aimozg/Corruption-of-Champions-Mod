@@ -37,7 +37,7 @@ use namespace CoC;
 		private function init():void {
             const game:CoC = CoC.instance;
             const fn:FnHelpers = Encounters.fn;
-			_desertEncounter = Encounters.group("desert",
+			_desertEncounter = game.getEncounterPool("desert").add(
 					//game.commonEncounters,
 					{
 						name: "naga",

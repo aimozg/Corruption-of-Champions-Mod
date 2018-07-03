@@ -29,10 +29,11 @@ public class GroupEncounter implements Encounter {
 	 *   chance: function():Number {}, // default 1
 	  *  when: function():Boolean {} // default true
 	 * })
-	 * @param defs Array of defs objects or Encounter-s.
+	 * @param defs Array of defs objects or Encounter-s. Safe to call as add([array])
 	 * @see Encounters.build
 	 */
 	public function add(...defs):GroupEncounter {
+		if (defs.length==1 && defs[0] instanceof Array) defs = defs[0];
 		for each (var def:* in defs) {
 			if (def is Encounter) components.push(def);
 			else components.push(Encounters.build(def));

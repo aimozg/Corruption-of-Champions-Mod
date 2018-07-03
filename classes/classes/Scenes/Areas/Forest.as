@@ -85,7 +85,7 @@ use namespace CoC;
 		private function init():void {
 			const game:CoC = CoC.instance;
             const fn:FnHelpers = Encounters.fn;
-			_forestEncounter = Encounters.group("forest", {
+			_forestEncounter = game.getEncounterPool("forest").add({
 						//General Golems, Goblin and Imp Encounters
 						name: "common",
 						call: SceneLib.exploration.genericGolGobImpEncounters
@@ -249,7 +249,7 @@ use namespace CoC;
 						chance: 0.10
 					}
 					*/
-			_deepwoodsEncounter = Encounters.group("deepwoods", /*CoC.instance.commonEncounters,*/ {
+			_deepwoodsEncounter = game.getEncounterPool("deepwoods").add(/*CoC.instance.commonEncounters,*/ {
 				name: "shrine",
 				when: function():Boolean {
 					return flags[kFLAGS.KITSUNE_SHRINE_UNLOCKED] < 1;
