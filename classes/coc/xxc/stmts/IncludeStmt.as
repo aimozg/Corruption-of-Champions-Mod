@@ -13,11 +13,19 @@ import flash.events.Event;
 
 public class IncludeStmt extends Statement{
 	private var _loaded:Boolean = false;
+	private var _error:Error    = null;
 	private var _body:Statement = null;
 	private var _path:String;
 	private var _callback:Function;
 	public function get loaded():Boolean {
 		return _loaded;
+	}
+	
+	public function get path():String {
+		return _path;
+	}
+	public function get error():Error {
+		return _error;
 	}
 	public function IncludeStmt(parent:NamedNode,compiler:StoryCompiler,path:String,required:Boolean=true) {
 		this._path = compiler.basedir + path;
@@ -34,6 +42,8 @@ public class IncludeStmt extends Statement{
 			} catch (e:Error) {
 				_loaded = false;
 				compiler.detach(parent);
+				_error = e;
+				compiler.includeFailed(IncludeStmt$this);
 				if (required) throw e;
 			}
 		};

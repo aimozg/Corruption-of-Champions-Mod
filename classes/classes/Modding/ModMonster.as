@@ -61,8 +61,8 @@ public class ModMonster extends Monster {
 	private function hasFunction(fn:String):Boolean {
 		return mp.ns.contains(fn);
 	}
-	internal function setup(src:MonsterPrototype):void {
-		if (src.base) setup(src.base);
+	internal function setup(src:MonsterPrototype,options:*):void {
+		if (src.base) setup(src.base,options);
 		for each(var xml:XML in src.descriptor.elements()) {
 			var tag:String = xml.localName();
 			switch(tag) {
@@ -290,7 +290,7 @@ public class ModMonster extends Monster {
 		/*OPTIONAL*/ //this.tailRecharge = ; // default 5
 		if (src.ns.contains('setup')) {
 			// setup(me)
-			src.ns.callComplex('setup',this);
+			src.ns.callComplex('setup',this,options);
 		}
 	}
 	
@@ -306,11 +306,11 @@ public class ModMonster extends Monster {
 		if (descStory) return descStory.displayToString('.',{me:this,mod:_mp.mod});
 		return super.long;
 	}
-	public function ModMonster(mp:MonsterPrototype) {
+	public function ModMonster(mp:MonsterPrototype,options:*=null) {
 		this._mp = mp;
 		this.extra = {};
 		
-		setup(mp);
+		setup(mp,options);
 		checkMonster();
 	}
 }

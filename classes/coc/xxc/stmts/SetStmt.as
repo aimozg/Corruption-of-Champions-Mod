@@ -21,6 +21,7 @@ public class SetStmt extends Statement {
 		var rslt:*;
 		switch (op) {
 			case 'append':
+			case 'add':
 			case '+':
 			case '+=':
 				rslt = Eval.calculateOp(left,'+',right);

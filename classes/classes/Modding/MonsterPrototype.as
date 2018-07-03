@@ -41,8 +41,8 @@ public class MonsterPrototype {
 	}
 	public function finishInit():void {
 	}
-	public function spawn():ModMonster {
-		return new ModMonster(this);
+	public function spawn(options:*=null):ModMonster {
+		return new ModMonster(this,options);
 	}
 }
 }

@@ -34,8 +34,11 @@ import classes.Parser.Parser;
 	import coc.lua.LuaEngine;
 
 	import coc.view.ButtonDataList;
-	import coc.view.Color;
-	import coc.xxc.NamedNode;
+import coc.view.CoCButton;
+import coc.view.Color;
+import coc.view.MainView;
+import coc.xxc.BoundNode;
+import coc.xxc.NamedNode;
 
 import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -204,25 +207,43 @@ import flash.events.Event;
 			function printlink(event:String,display:String=''):void {
 				outputText('<u><a href="event:'+event+'">'+(display||event)+'</a></u>\n');
 			}
+			var node:NamedNode;
 			clearOutput();
-			if(!selected){selected = SceneLib;}
+			if (!selected) {
+				selected = SceneLib;
+			}
 			selectedScene = selected;
 			mainView.mainText.addEventListener(TextEvent.LINK, linkhandler);
 			if (selected is GameMod) {
 				var mod:GameMod = selected;
-				if (mod.monsterList.length>0) outputText("<b><u>MONSTERS</u></b>\n");
+				if (mod.monsterList.length > 0) outputText("<b>MONSTERS</b>\n");
 				for each (var mon:MonsterPrototype in mod.monsterList) {
-					printlink("@monster:"+mon.id,mon.id);
+					printlink("@monster:" + mon.id, mon.id);
 				}
-			} else if (selected is NamedNode) {
-				var node:NamedNode = selected as NamedNode;
+				node = mod.story.node;
 				if (keys(node.lib).length>0) {
-					outputText("<b><u>SCENE</u></b>\n");
+					outputText("<b>SCENES</b>\n");
+					for each (inode in node.lib) {
+						if (inode.name) {
+							printlink('@scene:'+inode.name,inode.name);
+						}
+					}
+				}
+			} else if (selected is NamedNode || selected is BoundNode) {
+				node = selected as NamedNode || (selected as BoundNode).node;
+				if (keys(node.lib).length>0) {
+					outputText("<b>SCENE</b>\n");
+					if (node.tagname != "lib") {
+						printlink('this','(Play scene)');
+						outputText('<b>Subscenes</b>\n');
+					}
 					for each (var inode:NamedNode in node.lib) {
 						if (inode.name) {
 							printlink(inode.name);
 						}
 					}
+				} else if (selected is BoundNode) {
+					(selected as BoundNode).execute();
 				} else {
 					node.execute(context);
 				}
@@ -230,7 +251,7 @@ import flash.events.Event;
 				if (selected == SceneLib) {
 					printlink("@rootStory","Inspect scenes");
 					var mods:/*GameMod*/Array = CoC.instance.mods;
-					if (mods.length > 0) outputText("<b><u>MODS</u></b>\n");
+					if (mods.length > 0) outputText("<b>MODS</b>\n");
 					for each (mod in mods) {
 						printlink("@mod:"+mod.name,mod.name);
 					}
@@ -268,15 +289,41 @@ import flash.events.Event;
 					return;
 				}
 				// Not a special event, inspect selectedScene[e.text]
-				if (selectedScene is NamedNode) {
-					selectedScene = (selectedScene as NamedNode).locate(e.text);
-					testScene(selectedScene);
+				if (selectedScene is NamedNode || selectedScene is BoundNode) {
+					var bnode:BoundNode = (selectedScene as BoundNode);
+					var node:NamedNode = (selectedScene as NamedNode) || bnode.node;
+					if (e.text == 'this') {
+						clearOutput();
+						menu();
+						if (bnode) {
+							bnode.execute();
+						} else {
+							node.execute(context);
+						}
+						for each (var b:CoCButton in mainView.bottomButtons) {
+							if (b.visible) return;
+						}
+						flushOutputTextToGUI();
+						addButton(0,"Back",linkhandler,new TextEvent(TextEvent.LINK,false,false,"-1"));
+					} else {
+						if (bnode) {
+							selectedScene = bnode.locate(e.text);
+							testScene(selectedScene);
+						} else {
+							selectedScene = node.locate(e.text);
+							testScene(selectedScene);
+						}
+					}
 				} else if (selectedScene is GameMod) {
 					clearOutput();
 					if ((m = e.text.match(/^@monster:(.*)$/))) {
-						outputText("You will be fighting "+m[1]+"\n");
+						outputText("You will be fighting " + m[1] + "\n");
 						var monster:ModMonster = (selectedScene as GameMod).spawnMonster(m[1]);
 						startCombat(monster);
+					} else if ((m = e.text.match(/^@scene:(.*)$/))) {
+						selectedScene = (selectedScene as GameMod).story;
+						e.text = m[1];
+						linkhandler(e);
 					} else {
 						outputText("ERROR UNKNOWN URL "+e.text);
 						doNext(accessDebugMenu);

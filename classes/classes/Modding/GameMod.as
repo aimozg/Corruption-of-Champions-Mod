@@ -11,6 +11,8 @@ import coc.lua.LuaNamespace;
 import coc.script.Eval;
 import coc.xxc.BoundNode;
 import coc.xxc.NamedNode;
+import coc.xxc.Story;
+import coc.xxc.StoryContext;
 
 public class GameMod implements Jsonable {
 	public var name:String;
@@ -27,6 +29,7 @@ public class GameMod implements Jsonable {
 	public var story:BoundNode;
 	public var monsterList:/*MonsterPrototype*/Array = [];
 	private var game:CoC;
+	public var context:StoryContext;
 	public function GameMod(name:String, version:int, story:NamedNode) {
 		this.name = name;
 		this.version = version || 1;
@@ -57,13 +60,14 @@ public class GameMod implements Jsonable {
 	}
 	public function finishInit(game:CoC):void {
 		this.game = game;
+		setupContext();
 		_lua = game.lua;
 		if (_script != "") {
 			ns.eval(_script);
 			_newScript = "";
 			_compiled = true;
 		}
-		story = _unboundNode.bind(game.context);
+		story = _unboundNode.bind(context);
 		for each (var mp:MonsterPrototype in monsterList) {
 			if (mp.baseId) {
 				for each (var mp2:MonsterPrototype in monsterList) {
@@ -84,11 +88,17 @@ public class GameMod implements Jsonable {
 		_initialized = true;
 		reset();
 	}
+	private function setupContext():void {
+		context = new StoryContext(game);
+		context.pushScope(this);
+		context.pushScope(state);
+	}
 	public function display(ref:String,locals:Object=null):void {
 		story.display(ref,locals);
 	}
 	public function reset():void {
 		state = {};
+		if (context && game) setupContext();
 		for (var s:String in initialState) state[s] = Eval.eval(game,initialState[s]);
 	}
 	public function scriptHas(fname:String):Boolean {

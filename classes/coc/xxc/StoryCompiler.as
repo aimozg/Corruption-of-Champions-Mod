@@ -70,7 +70,7 @@ public class StoryCompiler extends Compiler {
 		var node:Story = stack[0].addLib("$monster_"+mp.id);
 		if ('desc' in x) {
 			stack.unshift(node);
-			compileStoryBody(new Story('desc', stack[0], '$desc', false), x.desc[0]);
+			compileStoryBody(new Story('desc', stack[0], '$desc'), x.desc[0]);
 			stack.shift();
 		}
 		// TODO scripts
@@ -102,7 +102,7 @@ public class StoryCompiler extends Compiler {
 				case 'lib':
 				case 'text':
 				case 'scene':
-					compileStory(item,true);
+					compileStory(item);
 					break;
 				default:
 					unknownTag(tag,item);
@@ -112,14 +112,33 @@ public class StoryCompiler extends Compiler {
 		return stmt;
 	}
 	override protected function compileTag(tag:String, x:XML):Statement {
+		var list:StmtList;
 		switch (tag) {
 			case "b":
 			case "i":
-				var list:StmtList = new StmtList();
+				var attrs:String = "";
+				if (tag == "font") {
+					if ('@color' in x) attrs += " color='" + x.@color + "'";
+					if ('@face' in x) attrs += " face='" + x.@face + "'";
+					if ('@size' in x) attrs += " size='" + x.@size + "'";
+				}
+				list = new StmtList();
 				list.stmts.push(new TextStmt("<"+tag+">",0));
 				compileChildrenInto(x,list.stmts);
 				list.stmts.push(new TextStmt("</"+tag+">",0));
 				return list;
+			case "t":
+				compileChildrenInto(x, (stack[0] as Story).body.stmts);
+				return null;
+			case "r":
+				var s:String = x.text();
+				var fmt:/*String*/Array = String(x.@style||"").match(/^(b?)(i?)(?:c([^;]+);)?$/);
+				if (fmt && fmt[3]) s = "<font color='"+fmt[3]+"'>"+s + "</font>";
+				if (fmt && fmt[1]) s = "<b>"+s+"</b>";
+				if (fmt && fmt[2]) s = "<i>"+s+"</i>";
+				return new TextStmt(s,0);
+			case "battle":
+				return compileBattle(x);
 			case "display":
 				return compileDisplay(x);
 			case "dynStats":
@@ -132,13 +151,13 @@ public class StoryCompiler extends Compiler {
 				return compileOutput(x);
 			case "lib":
 			case "macro":
-				return compileStory(x, true);
-			case "set":
-				return compileSet(x);
 			case "story":
 			case "string":
 			case "text":
-				return compileStory(x, false);
+				compileStory(x);
+				return null;
+			case "set":
+				return compileSet(x);
 			case "zone":
 				return compileStoryBody(new ZoneStmt(stack[0], x.@name), x) as ZoneStmt;
 			/*case "extend-encounter":
@@ -150,6 +169,11 @@ public class StoryCompiler extends Compiler {
 			default:
 				return super.compileTag(tag, x);
 		}
+	}
+	private function compileBattle(x:XML):BattleStmt {
+		var monsterref:String = x.@monster;
+		var options:String = ('@options' in x) ? x.@options : "";
+		return new BattleStmt(monsterref, options);
 	}
 	public function includeFile(path:String,required:Boolean):IncludeStmt {
 		var basedir:String = _basedir;
@@ -164,7 +188,7 @@ public class StoryCompiler extends Compiler {
 		return stmt;
 	}
 	public function isFullyLoaded():Boolean {
-		return includesLoaded() == includesTotal();
+		return includesLoaded() + failedIncludes().length == includesTotal();
 	}
 	public function includesLoaded():int {
 		var n:int = 0;
@@ -173,11 +197,24 @@ public class StoryCompiler extends Compiler {
 		}
 		return n;
 	}
+	public function failedIncludes():/*IncludeStmt*/Array {
+		var rslt:Array = [];
+		for each (var stmt:IncludeStmt in _includes) {
+			if (stmt.error != null) rslt.push(stmt);
+		}
+		return rslt;
+	}
 	public function includesTotal():int {
 		return _includes.length;
 	}
-	public function includeLoaded(stmt:IncludeStmt):void {
+	public function includeFailed(stmt:IncludeStmt):void {
 		// TODO @aimozg properly register and kick compiler callback when some of the includes failed to load
+		updProgress();
+	}
+	public function includeLoaded(stmt:IncludeStmt):void {
+		updProgress();
+	}
+	private function updProgress():void {
 		if (onProgress != null) {
 			setTimeout(Utils.curry(onProgress,this,includesLoaded(),includesTotal()),0);
 			//onProgress(this,includesLoaded(),includesTotal());
@@ -186,10 +223,8 @@ public class StoryCompiler extends Compiler {
 			if (onLoad != null) {
 				if (onLoad.length == 1) {
 					setTimeout(Utils.curry(onLoad,this),0);
-					//onLoad(this);
 				} else {
 					setTimeout(onLoad,0);
-					//onLoad();
 				}
 			}
 		}
@@ -228,8 +263,8 @@ public class StoryCompiler extends Compiler {
 		else inObj = '';
 		return new SetStmt(attrs['var'],expr,op,inObj);
 	}
-	protected function compileStory(x:XML, isLib:Boolean = false):Story {
-		return compileStoryBody(new Story(x.localName(),stack[0], x.@name, isLib), x);
+	protected function compileStory(x:XML):Story {
+		return compileStoryBody(new Story(x.localName(),stack[0], x.@name), x);
 	}
 	protected function compileStoryBody(story:Story, x:XML):Story {
 		stack.unshift(story);

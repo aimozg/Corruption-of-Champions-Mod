@@ -110,10 +110,10 @@ TODO
 
 ### Display elements
 
-#### text, string, story, lib, macro
+#### story, lib, text, macro, string
 
 ```relax-ng
-Text = element text { 
+story = element story { 
     attribute name { text }?, 
     content*
 }
@@ -125,21 +125,21 @@ Outputs its content, processing whitespace __in XML text during compilation__ (i
 
 This _story_ is saved in the outer text block as `name`.
 
-##### <string>
-
-As `<text>` but no whitespace processing is done.
-
 ##### <lib>
 
 Used for grouping. Can only contain named display elements 
 
-##### <macro>
+##### <text>
 
 Skipped when iterated from outer element, but can be displayed by name
 
-##### <story>
+##### <macro>
 
 Same as `<text>`  
+
+##### <string>
+
+As `<text>` but no whitespace processing is done.
 
 #### display
 
@@ -275,11 +275,11 @@ Supported:
 3. Predefined constants 
 3. Dot operator `object_expr.key`
 4. Array element access `array[index_expr]`
-5. Array creation `[element_expr, element_expr, ..., element_expr]`
+5. Array literal `[element_expr, element_expr, ..., element_expr]`
+6. Object literal `{key:expr,'key':expr,"key":expr,...}`
 6. Function call `function_expr(arg_expr, arg_expr, ..., arg_expr)`
 
 **NOT** supported:
-1. (might be added) Object literals.
 1. (some might be added) `is`, `instanceof`, `as`, `|`, `&`, `^`, unary `+` `-` `~`
 1. L-values (and all asignment operators).
 2. Control structures (basically everything that isn't a statement)

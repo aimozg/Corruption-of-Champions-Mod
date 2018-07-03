@@ -22,7 +22,7 @@ public class DisplayStmt extends Statement{
 			context.error(this,"Cannot dereference "+ref.join('/'));
 			return;
 		}
-		obj.forceExecute(context);
+		obj.execute(context);
 	}
 
 	public function toString():String {

@@ -16,7 +16,7 @@ public class ZoneStmt extends Story {
 	public var encounters:GroupEncounter;
 	private var lastContext:ExecContext;
 	public function ZoneStmt(parent:NamedNode, name:String) {
-		super('zone',parent, name, true);
+		super('zone',parent, name);
 		this.encounters = new GroupEncounter(name,[]);
 	}
 	public static function wrap(group:GroupEncounter,parent:Story,rename:String=""):ZoneStmt {

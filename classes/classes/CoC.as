@@ -33,6 +33,7 @@ import coc.view.MainView;
 import coc.xxc.Story;
 import coc.xxc.StoryCompiler;
 import coc.xxc.StoryContext;
+import coc.xxc.stmts.IncludeStmt;
 
 import flash.display.MovieClip;
 import flash.display.Sprite;
@@ -109,7 +110,7 @@ public class CoC extends MovieClip
     public var playerInfo:PlayerInfo = new PlayerInfo();
     public var debugInfoMenu:DebugInfo = new DebugInfo();
     public var gameSettings:GameSettings = new GameSettings();
-    public var rootStory:Story = new Story("story",null,"root",true);
+    public var rootStory:Story = new Story("story",null,"root");
     public var compiler:StoryCompiler = new StoryCompiler("content/").attach(rootStory);
     public var mods:/*GameMod*/Array = [];
     public var context:StoryContext;
@@ -390,7 +391,7 @@ public class CoC extends MovieClip
         mainMenu.progressText = "Loaded "+nLoaded+"/"+nTotal+" content files";
     }
 	private function initMods():void {
-		var failed:/*GameMod*/Array = [];
+		var failedMods:/*GameMod*/Array = [];
 		if (lua) {
 			mods = [];
 			for each (var mod:GameMod in compiler.mods) {
@@ -399,15 +400,18 @@ public class CoC extends MovieClip
 					mods.push(mod);
 				} catch (e:Error) {
 					trace(e.getStackTrace());
-					failed.push(mod);
+					failedMods.push(mod);
 				}
 			}
 		} else {
 			mods                  = [];
+			failedMods = mods.slice();
 		}
+		var failedIncludes:/*IncludeStmt*/Array = compiler.failedIncludes();
 		var s:String = "Loaded " + compiler.includesTotal() + " content files";
         if (mods.length>0) s += ", "+mods.length+" mods";
-        if (failed.length>0) s += "; failed to load mods: "+Utils.mapOneProp(failed,"name").join(", ");
+		if (failedIncludes.length>0) s += "; failed to load files: "+Utils.mapOneProp(failedIncludes,"path").join(", ");
+        if (failedMods.length>0) s += "; failed to load mods: "+Utils.mapOneProp(failedMods,"name").join(", ");
         mainMenu.progressText = s;
 		//mainMenu.mainMenu();
 	}

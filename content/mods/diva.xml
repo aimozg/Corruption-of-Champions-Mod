@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <mod name="diva" version="2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:noNamespaceSchemaLocation="../story2.xsd">
+     xsi:noNamespaceSchemaLocation="mod.rnc">
     <state>
         <var name="status">0</var>
         <var name="firstLoss">true</var>
@@ -29,7 +29,7 @@
     </script>
     <monster id="Diva">
         <name>Diva</name>
-        <desc>
+        <desc trim="unindent">
             Diva appears to be a vampire, the fangs and wings kind of give it away.
             She circles above and around you, waiting for an opening while she constantly screeches.
             Huh, she might be more bat-like that you initially thought.
@@ -131,7 +131,7 @@
             <bonusHP>25000</bonusHP>
         </combat>
     </monster>
-    <lib name="combat">
+    <lib name="combat" trim="unindent">
         <lib name="moves">
             <lib name="embrace">
                 <text name="hit">
@@ -192,100 +192,6 @@
             <text name="blinded">
                 Diva recoils in pain as the bright light strike her like a hammer, temporarily pinning her to the ground and stunning her.
             </text>
-            <lib name="intro">
-                <text name="first">
-                    You are taking a walk through the mountain area when, much to your annoyance, a thunderstorm begins.
-                    However unlike the ones you hear of back home... This thunderstorm has no rain.. peculiar.
-                    Ever since you shut down the factory the weather has been erratic switching from clear to a full fledged thunderstorm randomly.
-                    Deciding not to head back to camp yet, more out of spite than anything else, you seek shelter instead.
-                    Your efforts are rewarded when you spot a large abandoned castle atop a particularly steep hill.
-                    Thankfully, it’s not so steep as to require climbing, since the regular lightning bolt would have made that a rather dangerous task what with the risk of a rocky avalanche!
-                    As is, you manage to make your way to the front gate without much effort, at least not when compared to some of the climbs you had to do on occasion while exploring this zone.
-                    The aforementioned massive wooden doors opening to reveal a rather large vestibule, fitting for a castle this size, you guess.
-                    Sadly, there’s no lighting.
-                    While you were expecting as much, since the castle did look abandoned and thus has probably been looted down to the bedrock already, it’s still a bother.
-                    At least the chances of demons being here has gone down considerably, since it’s unlikely one powerful enough to have gotten themselves night-vision worth a damn would stoop so low as to make their residence look abandoned just to get a cheap shot in.
-                    Something else with night vision making this their home, however, still remains a distinct possibility. So either spiders or bats, probably.
-
-                    The gate should make a good choke point, so you pick some debris as silently as you can and get back there, leaving it in a small pile by your side.
-                    You unsheathe your weapons, square your shoulders and enter a combat-ready stance, that done, you pick from the little pile of debris whatever looks like it will make the most noise.
-                    A metal scrap rusted beyond recognition will do nicely. Your pick made, you proceed to throw it as hard and far as you can into the castle’s depths, ready for anything to jump at you.
-                    Nothing does jump out, which scratches out the possibility of anything feral living here, at least on this part of the castle.
-                    Sadly, with all the noise the rain is making something could have been startled and, so long as it was far away enough, you wouldn’t have heard it, and since nothing charged at you, it means that if that’s the case it’s either an ambush or someone hiding.
-                    With an annoyed sigh you move deeper into the castle, keeping an eye on your back and repeating the same tactic you used at the gate to check for possible traps or ambushes.
-                    As you go deeper, you start noticing something moving on the edges of your peripheral vision every now and then, which coupled with the feeling of being watched makes you increasingly paranoid.
-                    The fact that whatever or whoever it is makes no noise, or none that you can hear above the rain’s, doesn’t put you at ease, either.
-                    You eventually find yourself in what you assume was used as a ball room.
-                    As you move to the other end of it to check for anything worthwhile to loot (while you assume everything here has already been looted, you’ll be stuck here until the rain eases, so you might as well), when the door suddenly slams shut behind you, followed by the familiar click of a lock.
-                    Between you and the door stands an odd woman, sporting a large leathery cape which covers her entire body.
-                    What little you can see of her looks surprisingly human, with her pointy ears being the single exception, then again, you have seen more than one demon use capes like that to “flash” others with their assets, so what she has under her neck is anyone’s guess.
-                    Her smile reveals a pair of sharp canines as she announces her intentions.
-
-                    <i>
-                        “Fufufufu… foolish mortal! Thou hast walked into mine trap! Abandon all hope of escaping mine castle unscathed, for I am Diva, grand Countess of Dusk!
-                        <if test="silly()">You were expecting Dio, but it was I, Diva! </if>
-                        Prepare to forfeit thine blood and body to me! TREMBLE BEFORE MINE POWER!”
-
-                    </i>
-                    She opens her cape, or rather, her pair of very large bat wings and makes what you assume she thinks is a dramatic leap, diving toward you.
-                </text>
-                <text name="second">
-                    It doesn’t take long before a thunderstorm, yet again, begins.
-                    If anyone had told you shutting down the factory would fuck up the weather this much, you would have had second thoughts before taking a wrench to that contol panel.
-                    Granted, you would probably have done so anyways, that fucking hellhole deserved no less.
-                    Anyhow, knowing the drill already, you march your ass back to Diva’s castle.
-                    No sooner you enter that you can already feel movement on the edges of your peripheral vision.
-                    Diva is already stalking you, it seems.
-                    For one so arrogant and attention hungry, she sure is good at stealth.
-                    However, as you expected, the power of drama compels her, so she won’t be showing up until you get somewhere suitable for a dramatic fight.
-                    You steel your resolve and push down your exasperation as you decide to just bite the bullet and head to the ball room already, otherwise she will just keep staring at your back from shadowed corners like a lovestruck, socially awkward village girl for hours on end.
-                    <if test="silly()">Huh, you might be onto something. Is this that “chuunibyou” thing the mechanic at the factory kept raving on about? He also said something about “Senpais” noticing things and some creature called “tsundere”.</if>
-
-                    Just as you get inside, a triggering mechanism makes itself known, as the doors lock themselves with a click.
-                    Huh, she got up to some tinkering between visits, it seems. Neat.
-                    You might ask her about how she pulled off that automatic lock trick after you finish the fight <if test="$cabinBuilt">, would be nice to have in your cabin</if>.
-                    Diva, unwitting of your musings, appears in a cloud of smoke at the center of the room.
-                    special effects, too. You would give a polite clap if you didn’t know she would bitch at you for breaking the mood.
-
-                    <i>
-                        “Fufufu... thine foolishness knows no bounds, coming yet again to try and defeat the almighty Countess of Dusk.
-                        Dost thou not comprehend such thing is an exercise in futility?
-                        No matter, I shall vanquish thee once again and take thy blood and body as mine, hero!
-                        Prepare for thy demise!”
-
-                    </i>
-                    It takes all of your willpower to keep your palm from having an intimate reunion with it’s lover, your face.
-                    Let’s get this over with before you accidentally sigh and hurt her feelings.
-
-                </text>
-                <text name="final">
-                    This time you don’t even wait for a thunderstorm, you just head straight to Diva’s castle for another match.
-                    Truth be told, you are beginning to get endeared to her, somewhat.
-                    Not doing anything particularly distasteful to you when she defeated you for the first time certainly won her some points with you.
-                    Also, you don’t begrudge having a good sparring partner, it’s nice having someone strong to practice against without any real risks should you lose.
-
-                    Since there's no storm, Diva can’t really sneak around as easily, since there is no thunder to drown out the sound of her movement, so for once you will have to find her yourself.
-                    It takes you about three seconds to guess that she will probably be cooped up in the highest tower of the castle.
-                    The boarded windows are a bit of a give away, to be honest.
-                    Now the question is whether she will be sleeping or waiting for you while sitting in the single gaudiest chair on the whole castle.
-                    You eventually reach a room approaching whose gaudiness is nearing critical mass, everything is covered in red and gold, the drapes, the carpet, the coffin and even the fuckhuge throne Diva is sitting in.
-                    Unsurprisingly, your guess was right.
-                    What you didn’t expect, however is the deer-in-headlights look she is giving you.
-                    In that very moment you decide that you are going to learn, or make from scratch if you must, a spell to turn memories into pictures, then fucking frame this moment in the gaudiest frame you find in the castle.
-
-                    <i>“Aaaah...so the prey fancies itself a vampire hunter and dares come up to my very lair to slay me?! Thou shalt be found wanting for I will not go down easily! Prepare thyself, I shall not hold back this time!”</i>
-
-                    And the drama queen fancies herself a dungeon boss, doesn’t she? Seems like either she just keeps away from the sun due to the power of drama compelling her or she is more powerful than you initially thought.
-
-                    <i>“Enough! Cease this foolishness and surrender thine blood and body to me!”</i>
-
-                    She, in what you assume she thinks is an elegant way, throws a glass cup filled with what’s probably blood to the ground as she takes flight, in as much as she can while indoors, high ceilings or not.
-                    Aaaaaaand she has gotten herself a battle aura of darkness, of course she has.
-                    <if test="silly()">Such is life in the zon- Mareth.</if>
-                    But seriously, she is clearly stronger now.
-                    Well, it seems she is not holding back this time around.
-                </text>
-            </lib>
             <lib name="defeated">
                 <text name="normal">
                     <i>
@@ -369,7 +275,115 @@
             </lib>
         </lib>
     </lib>
-    <lib name="camp">
+    <scene name="encounter" trim="unindent">
+        <lib name="intro">
+            <text name="first">
+                You are taking a walk through the mountain area when, much to your annoyance, a thunderstorm begins.
+                However unlike the ones you hear of back home... This thunderstorm has no rain.. peculiar.
+                Ever since you shut down the factory the weather has been erratic switching from clear to a full fledged thunderstorm randomly.
+                Deciding not to head back to camp yet, more out of spite than anything else, you seek shelter instead.
+                Your efforts are rewarded when you spot a large abandoned castle atop a particularly steep hill.
+                Thankfully, it’s not so steep as to require climbing, since the regular lightning bolt would have made that a rather dangerous task what with the risk of a rocky avalanche!
+                As is, you manage to make your way to the front gate without much effort, at least not when compared to some of the climbs you had to do on occasion while exploring this zone.
+                The aforementioned massive wooden doors opening to reveal a rather large vestibule, fitting for a castle this size, you guess.
+                Sadly, there’s no lighting.
+                While you were expecting as much, since the castle did look abandoned and thus has probably been looted down to the bedrock already, it’s still a bother.
+                At least the chances of demons being here has gone down considerably, since it’s unlikely one powerful enough to have gotten themselves night-vision worth a damn would stoop so low as to make their residence look abandoned just to get a cheap shot in.
+                Something else with night vision making this their home, however, still remains a distinct possibility. So either spiders or bats, probably.
+
+                The gate should make a good choke point, so you pick some debris as silently as you can and get back there, leaving it in a small pile by your side.
+                You unsheathe your weapons, square your shoulders and enter a combat-ready stance, that done, you pick from the little pile of debris whatever looks like it will make the most noise.
+                A metal scrap rusted beyond recognition will do nicely. Your pick made, you proceed to throw it as hard and far as you can into the castle’s depths, ready for anything to jump at you.
+                Nothing does jump out, which scratches out the possibility of anything feral living here, at least on this part of the castle.
+                Sadly, with all the noise the rain is making something could have been startled and, so long as it was far away enough, you wouldn’t have heard it, and since nothing charged at you, it means that if that’s the case it’s either an ambush or someone hiding.
+                With an annoyed sigh you move deeper into the castle, keeping an eye on your back and repeating the same tactic you used at the gate to check for possible traps or ambushes.
+                As you go deeper, you start noticing something moving on the edges of your peripheral vision every now and then, which coupled with the feeling of being watched makes you increasingly paranoid.
+                The fact that whatever or whoever it is makes no noise, or none that you can hear above the rain’s, doesn’t put you at ease, either.
+                You eventually find yourself in what you assume was used as a ball room.
+                As you move to the other end of it to check for anything worthwhile to loot (while you assume everything here has already been looted, you’ll be stuck here until the rain eases, so you might as well), when the door suddenly slams shut behind you, followed by the familiar click of a lock.
+                Between you and the door stands an odd woman, sporting a large leathery cape which covers her entire body.
+                What little you can see of her looks surprisingly human, with her pointy ears being the single exception, then again, you have seen more than one demon use capes like that to “flash” others with their assets, so what she has under her neck is anyone’s guess.
+                Her smile reveals a pair of sharp canines as she announces her intentions.
+
+                <i>
+                    “Fufufufu… foolish mortal! Thou hast walked into mine trap! Abandon all hope of escaping mine castle unscathed, for I am Diva, grand Countess of Dusk!
+                    <if test="silly()">You were expecting Dio, but it was I, Diva! </if>
+                    Prepare to forfeit thine blood and body to me! TREMBLE BEFORE MINE POWER!”
+
+                </i>
+                She opens her cape, or rather, her pair of very large bat wings and makes what you assume she thinks is a dramatic leap, diving toward you.
+            </text>
+            <text name="second">
+                It doesn’t take long before a thunderstorm, yet again, begins.
+                If anyone had told you shutting down the factory would fuck up the weather this much, you would have had second thoughts before taking a wrench to that contol panel.
+                Granted, you would probably have done so anyways, that fucking hellhole deserved no less.
+                Anyhow, knowing the drill already, you march your ass back to Diva’s castle.
+                No sooner you enter that you can already feel movement on the edges of your peripheral vision.
+                Diva is already stalking you, it seems.
+                For one so arrogant and attention hungry, she sure is good at stealth.
+                However, as you expected, the power of drama compels her, so she won’t be showing up until you get somewhere suitable for a dramatic fight.
+                You steel your resolve and push down your exasperation as you decide to just bite the bullet and head to the ball room already, otherwise she will just keep staring at your back from shadowed corners like a lovestruck, socially awkward village girl for hours on end.
+                <if test="silly()">Huh, you might be onto something. Is this that “chuunibyou” thing the mechanic at the factory kept raving on about? He also said something about “Senpais” noticing things and some creature called “tsundere”.</if>
+
+                Just as you get inside, a triggering mechanism makes itself known, as the doors lock themselves with a click.
+                Huh, she got up to some tinkering between visits, it seems. Neat.
+                You might ask her about how she pulled off that automatic lock trick after you finish the fight <if test="$cabinBuilt">, would be nice to have in your cabin</if>.
+                Diva, unwitting of your musings, appears in a cloud of smoke at the center of the room.
+                special effects, too. You would give a polite clap if you didn’t know she would bitch at you for breaking the mood.
+
+                <i>
+                    “Fufufu... thine foolishness knows no bounds, coming yet again to try and defeat the almighty Countess of Dusk.
+                    Dost thou not comprehend such thing is an exercise in futility?
+                    No matter, I shall vanquish thee once again and take thy blood and body as mine, hero!
+                    Prepare for thy demise!”
+
+                </i>
+                It takes all of your willpower to keep your palm from having an intimate reunion with it’s lover, your face.
+                Let’s get this over with before you accidentally sigh and hurt her feelings.
+
+            </text>
+            <text name="final">
+                This time you don’t even wait for a thunderstorm, you just head straight to Diva’s castle for another match.
+                Truth be told, you are beginning to get endeared to her, somewhat.
+                Not doing anything particularly distasteful to you when she defeated you for the first time certainly won her some points with you.
+                Also, you don’t begrudge having a good sparring partner, it’s nice having someone strong to practice against without any real risks should you lose.
+
+                Since there's no storm, Diva can’t really sneak around as easily, since there is no thunder to drown out the sound of her movement, so for once you will have to find her yourself.
+                It takes you about three seconds to guess that she will probably be cooped up in the highest tower of the castle.
+                The boarded windows are a bit of a give away, to be honest.
+                Now the question is whether she will be sleeping or waiting for you while sitting in the single gaudiest chair on the whole castle.
+                You eventually reach a room approaching whose gaudiness is nearing critical mass, everything is covered in red and gold, the drapes, the carpet, the coffin and even the fuckhuge throne Diva is sitting in.
+                Unsurprisingly, your guess was right.
+                What you didn’t expect, however is the deer-in-headlights look she is giving you.
+                In that very moment you decide that you are going to learn, or make from scratch if you must, a spell to turn memories into pictures, then fucking frame this moment in the gaudiest frame you find in the castle.
+
+                <i>“Aaaah...so the prey fancies itself a vampire hunter and dares come up to my very lair to slay me?! Thou shalt be found wanting for I will not go down easily! Prepare thyself, I shall not hold back this time!”</i>
+
+                And the drama queen fancies herself a dungeon boss, doesn’t she? Seems like either she just keeps away from the sun due to the power of drama compelling her or she is more powerful than you initially thought.
+
+                <i>“Enough! Cease this foolishness and surrender thine blood and body to me!”</i>
+
+                She, in what you assume she thinks is an elegant way, throws a glass cup filled with what’s probably blood to the ground as she takes flight, in as much as she can while indoors, high ceilings or not.
+                Aaaaaaand she has gotten herself a battle aura of darkness, of course she has.
+                <if test="silly()">Such is life in the zon- Mareth.</if>
+                But seriously, she is clearly stronger now.
+                Well, it seems she is not holding back this time around.
+            </text>
+        </lib>
+        <if test="mod.state.status eq 2">
+            <display ref="intro/final"/>
+            <battle monster="Diva" options="{finalFight:true}"/>
+
+            <elseif test="mod.state.status eq 0"/>
+            <display ref="intro/first"/>
+            <battle monster="Diva"/>
+
+            <else/>
+            <display ref="intro/second"/>
+            <battle monster="Diva"/>
+        </if>
+    </scene>
+    <lib name="camp" trim="unindent">
         <lib name="campDescript">
             <text name="day">
                 Since it’s daytime Diva is likely sleeping in her coffin.
@@ -675,7 +689,7 @@
             </text>
         </lib>
     </lib>
-    <lib name="item">
+    <lib name="item" trim="unindent">
         <!-- TODO @Oxdeception: move this section? -->
         <lib name="useText">
             <text name="first">

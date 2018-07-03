@@ -29,7 +29,7 @@ public class BoundNode {
 			return;
 		}
 		_context.pushScope(locals || {});
-		obj.forceExecute(_context);
+		obj.execute(_context);
 		_context.popScope();
 	}
 	public function displayToString(ref:String,locals:Object=null):String {

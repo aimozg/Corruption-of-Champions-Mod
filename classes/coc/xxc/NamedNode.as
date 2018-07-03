@@ -29,7 +29,7 @@ public class NamedNode extends Declaration {
 		lib[child.name] = child;
 	}
 	public function addLib(name:String):Story {
-		return new Story("lib",this,name,true);
+		return new Story("lib",this,name);
 	}
 	public function locate(ref:String):NamedNode {
 		return locateSplit(this,ref.split("/"));
