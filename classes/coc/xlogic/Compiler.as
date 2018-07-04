@@ -40,7 +40,9 @@ public class Compiler {
 	protected function compileChildrenInto(x:XML,stmts:/*Statement*/Array):/*Statement*/Array {
 		for each(var item:XML in x.children()) {
 			var e:Statement = compile(item);
-			if (e) stmts.push(e);
+			if (e instanceof StmtList) {
+				stmts.push.apply(stmts,(e as StmtList).stmts)
+			} else if (e) stmts.push(e);
 		}
 		return stmts;
 	}
@@ -50,7 +52,9 @@ public class Compiler {
 	protected function compileXMLListInto(x:XMLList,stmts:/*Statement*/Array):/*Statement*/Array {
 		for each(var item:XML in x) {
 			var e:Statement = compile(item);
-			if (e) stmts.push(e);
+			if (e instanceof StmtList) {
+				stmts.push.apply(stmts,(e as StmtList).stmts)
+			} else if (e) stmts.push(e);
 		}
 		return stmts;
 	}
@@ -101,14 +105,19 @@ public class Compiler {
 						if (versionLock == 1) {
 							throw new Error("Inconsistent <elseif> versions (v1 after v2)")
 						}
-						currentIf.elseBlock = new StmtList();
-						currentThen = (currentIf.elseBlock as StmtList).stmts;
+						var newIf:IfStmt = new IfStmt(item.@test);
+						currentIf.elseBlock = newIf;
+						newIf.elseBlock = new StmtList();
+						currentThen = newIf.thenBlock;
+						currentIf = newIf;
 						versionLock = 2;
 					}
 					break;
 				default:
 					var e:Statement = compile(item);
-					if (e) currentThen.push(e);
+					if (e instanceof StmtList) {
+						currentThen.push.apply(currentThen,(e as StmtList).stmts)
+					} else if (e) currentThen.push(e);
 			}
 		}
 		return iff;

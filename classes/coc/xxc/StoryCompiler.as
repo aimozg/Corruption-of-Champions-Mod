@@ -128,8 +128,9 @@ public class StoryCompiler extends Compiler {
 				list.stmts.push(new TextStmt("</"+tag+">",0));
 				return list;
 			case "t":
-				compileChildrenInto(x, (stack[0] as Story).body.stmts);
-				return null;
+				list = new StmtList();
+				compileChildrenInto(x, list.stmts);
+				return list;
 			case "r":
 				var s:String = x.text();
 				var fmt:/*String*/Array = String(x.@style||"").match(/^(b?)(i?)(?:c([^;]+);)?$/);
