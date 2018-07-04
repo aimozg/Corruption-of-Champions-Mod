@@ -28,6 +28,7 @@ public class GameMod implements Jsonable {
 	private var _unboundNode:NamedNode;
 	public var story:BoundNode;
 	public var monsterList:/*MonsterPrototype*/Array = [];
+	public var encounterList:/*ModEncounter*/Array = [];
 	private var game:CoC;
 	public var context:StoryContext;
 	public function GameMod(name:String, version:int, story:NamedNode) {
@@ -85,12 +86,15 @@ public class GameMod implements Jsonable {
 				mp.ns.eval(script.text());
 			}
 		}
+		for each (var encounter:ModEncounter in encounterList) {
+			game.getEncounterPool(encounter.poolName).add(encounter);
+		}
 		_initialized = true;
 		reset();
 	}
 	private function setupContext():void {
 		context = new StoryContext(game);
-		context.pushScope(this);
+		context.pushScope({mod:this});
 		context.pushScope(state);
 	}
 	public function display(ref:String,locals:Object=null):void {

@@ -3,6 +3,7 @@
  */
 package coc.xxc {
 import classes.Modding.GameMod;
+import classes.Modding.ModEncounter;
 import classes.Modding.MonsterPrototype;
 import classes.internals.Utils;
 
@@ -76,6 +77,18 @@ public class StoryCompiler extends Compiler {
 		// TODO scripts
 		return mp;
 	}
+	public function compileModEncounter(mod:GameMod, x:XML):ModEncounter {
+		var me:ModEncounter = new ModEncounter(stack[0],mod, x.@pool, x.@name);
+		mod.encounterList.push(me);
+		if ('chance' in x) {
+			me.chance = Eval.compile(x.chance.text())
+		}
+		if ('condition' in x) {
+			me.condition = Eval.compile(x.condition.text())
+		}
+		compileStoryBody(me,x.scene[0]);
+		return me;
+	}
 	public function compileMod(x:XML):ModStmt {
 		var name:String    = x.@name;
 		var stmt:ModStmt   = new ModStmt(name, x.@version, stack[0]);
@@ -103,6 +116,9 @@ public class StoryCompiler extends Compiler {
 				case 'text':
 				case 'scene':
 					compileStory(item);
+					break;
+				case 'encounter':
+					compileModEncounter(mod,item);
 					break;
 				default:
 					unknownTag(tag,item);

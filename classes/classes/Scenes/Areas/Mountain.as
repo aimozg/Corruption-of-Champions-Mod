@@ -173,12 +173,12 @@ public class Mountain extends BaseContent
 							if (flags[kFLAGS.ELECTRA_AFFECTION] < 2) SceneLib.electraScene.firstEnc();
 							else SceneLib.electraScene.repeatMountainEnc();
 						}
-					}, {
+					/*}, {
 						name: "diva",
 						when: function():Boolean {
 							return flags[kFLAGS.FACTORY_SHUTDOWN] > 0 && DivaScene.instance.status >= 0;
 						},
-						call: DivaScene.encounter
+						call: DivaScene.encounter*/
 					},{
 						name:"darkelf",
 						call:darkelfScene.introDarkELfScout

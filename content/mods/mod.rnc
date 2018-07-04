@@ -31,7 +31,7 @@ hook = element hook {
     ATrim?,
     content*
 }
-exportable = monster | script | storynode
+exportable = monster | script | storynode | encounter
 storynode = lib | scene | Text
 lib = element lib {
     attribute name { text },
@@ -48,6 +48,24 @@ scene = element scene {
     ATrim?,
     content*,
     scene-fin
+}
+
+# #############################################
+# encounter
+encounter = element encounter {
+    attribute pool { text }
+    & attribute name { text }
+    & element condition {
+        expression
+    }?
+    & element chance {
+        expression
+    }?
+    & element scene {
+        ATrim?,
+        content*,
+        scene-fin
+    }
 }
 
 # #############################################
@@ -219,6 +237,20 @@ battle = element battle {
     attribute options { text }?
 }
 #extend-story = element extend-story { namedBlock }
+#zone = element zone {
+#    namedBlock,
+#    encounter*
+#}
+#extend-zone = element extend-zone {
+#    namedBlock,
+#    encounter*
+#}
+#encounter = element encounter {
+#    attribute name { text },
+#    attribute chance { expression }?,
+#    attribute when { expression }?,
+#    content*
+#}
 #Include = element include {
 #    attribute path { text },
 #    attribute required { "true" | "false" }?,
