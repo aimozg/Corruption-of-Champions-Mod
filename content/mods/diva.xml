@@ -151,9 +151,9 @@
             </text>
             <text name="bitePlant">
                 Diva tries to bite you but just as her fang pierce her skin she shove you off and start spitting.
-                <i>
+                &lt;i&gt;
                     “Puaaah what the hell did I taste just now! Your blood taste like saps and flower nectar. How disgusting!”
-                </i>
+                &lt;/i&gt;
                 Well now you're kind of offended by her reaction... guess plant sap really tastes bad for her.
             </text>
             <text name="swoopToss">
@@ -166,10 +166,10 @@
             </text>
             <lib name="darkness">
                 <text name="cast">
-                    <i>
+                    &lt;i&gt;
                         “Let us see how thou fight without this precious light of yours!”
 
-                    </i>
+                    &lt;/i&gt;
                     Diva lands, opening her wings wide as a pair of black orbs form at her fingertips.
                     She shatter them on the ground plunging the room in complete darkness and extinguishing all light.
                     You will be unable to locate her correctly without a proper visual.
@@ -194,24 +194,24 @@
             </text>
             <lib name="defeated">
                 <text name="normal">
-                    <i>
+                    &lt;i&gt;
                         “Wait, that wasn’t in the script! The hero was supposed to lose to the almighty vampire, be bitten, know love, marry, have children…no no no no and NO!”
 
-                    </i>
+                    &lt;/i&gt;
 
                     Is she for real... Does she really think this all was an elaborate play with her as the main character of some romance story?
 
-                    She take on an annoyed expression then declares <i>“Cough cough... ahem..Oh how terrible, I the almighty queen of darkness lost to the hero what will happen of me will thy hero rape me and make me his bride by force or will I be left alone in this castle as he/she goes on for a new quest.“
+                    She take on an annoyed expression then declares &lt;i&gt;“Cough cough... ahem..Oh how terrible, I the almighty queen of darkness lost to the hero what will happen of me will thy hero rape me and make me his bride by force or will I be left alone in this castle as he/she goes on for a new quest.“
 
-                </i>
+                &lt;/i&gt;
 
                     Tired of her nonsense you decide to give her exactly what she asked for.
                     But the girl screams a spell that clearly doesn’t exist and disappears in a cloud of smoke from what is obviously a smoke bomb leaving one last warning.
 
-                    <i>
+                    &lt;i&gt;
                         “I shall have my vengeance hero for I am the immortal invincible night terror Diva and believe me, I shall never be defeated again by the likes of thou!”
 
-                    </i>
+                    &lt;/i&gt;
 
                     It’s only when the smoke disappears that you notice a trap door under the carpet where she was standing.
                     When you try to open it you discover it’s locked.
@@ -221,7 +221,7 @@
                 <text name="combatGargPlant">
                     You fall to the ground unable to fight further as Diva declare.
 
-                    <i>“Look I will be honest with thee thou are completely inedible! Do me a favor and get out. I’m not interested into something I can’t drink from.”</i>
+                    &lt;i&gt;“Look I will be honest with thee thou are completely inedible! Do me a favor and get out. I’m not interested into something I can’t drink from.”&lt;/i&gt;
 
                     Well you can’t believe your luck guess you might as well get going.
                 </text>
@@ -229,12 +229,12 @@
                     <text name="intro">
                         Diva recoils defeated and falls to the ground on her knee.
 
-                        <i>
+                        &lt;i&gt;
                             “Thou are strong… defeating me despite the fact I was at my prime.
                             I would please ask mercy from thee for I have been drinking your blood out of love with thou and would like to become yours if thou would allow it.
                             Would thou be my knight/knightess?”
 
-                        </i>
+                        &lt;/i&gt;
                         Do you declare mutual love?
 
                     </text>
@@ -244,10 +244,10 @@
                         Diva nods and, still blushing, she gathers a few important item namely a tent and her coffin.
                         You ask her why she's so keen on bringing a coffin with her anyway, can’t she just sleep in a bedroll like everyone else?
 
-                        <i>
+                        &lt;i&gt;
                             “Proper lords only sleep in coffins, I would not have it any other way.
                             As for the tent thou may have figured I dislike bright light.”
-                        </i>
+                        &lt;/i&gt;
 
                         You shrug and just help her carry the heavy thing back to camp <if test="player.str lt 40">although Diva with her unholy strength still do most of the work</if>.
                         She settles not so far from you, under the shade of a dead tree.
@@ -255,10 +255,10 @@
                         She works all night and by the time she's done dawn is about to break.
                         She yawns, tired.
 
-                        <i>
+                        &lt;i&gt;
                             “I bid thee good day for I must rest now.
                             Should thou want to see me just wake me up or call my name after sunset.”
-                        </i>
+                        &lt;/i&gt;
 
                         On these words she enters the tent and heads to sleep.
                     </text>
@@ -305,12 +305,12 @@
                 What little you can see of her looks surprisingly human, with her pointy ears being the single exception, then again, you have seen more than one demon use capes like that to “flash” others with their assets, so what she has under her neck is anyone’s guess.
                 Her smile reveals a pair of sharp canines as she announces her intentions.
 
-                <i>
+                &lt;i&gt;
                     “Fufufufu… foolish mortal! Thou hast walked into mine trap! Abandon all hope of escaping mine castle unscathed, for I am Diva, grand Countess of Dusk!
                     <if test="silly()">You were expecting Dio, but it was I, Diva! </if>
                     Prepare to forfeit thine blood and body to me! TREMBLE BEFORE MINE POWER!”
 
-                </i>
+                &lt;/i&gt;
                 She opens her cape, or rather, her pair of very large bat wings and makes what you assume she thinks is a dramatic leap, diving toward you.
             </text>
             <text name="second">
@@ -331,13 +331,13 @@
                 Diva, unwitting of your musings, appears in a cloud of smoke at the center of the room.
                 special effects, too. You would give a polite clap if you didn’t know she would bitch at you for breaking the mood.
 
-                <i>
+                &lt;i&gt;
                     “Fufufu... thine foolishness knows no bounds, coming yet again to try and defeat the almighty Countess of Dusk.
                     Dost thou not comprehend such thing is an exercise in futility?
                     No matter, I shall vanquish thee once again and take thy blood and body as mine, hero!
                     Prepare for thy demise!”
 
-                </i>
+                &lt;/i&gt;
                 It takes all of your willpower to keep your palm from having an intimate reunion with it’s lover, your face.
                 Let’s get this over with before you accidentally sigh and hurt her feelings.
 
@@ -357,11 +357,11 @@
                 What you didn’t expect, however is the deer-in-headlights look she is giving you.
                 In that very moment you decide that you are going to learn, or make from scratch if you must, a spell to turn memories into pictures, then fucking frame this moment in the gaudiest frame you find in the castle.
 
-                <i>“Aaaah...so the prey fancies itself a vampire hunter and dares come up to my very lair to slay me?! Thou shalt be found wanting for I will not go down easily! Prepare thyself, I shall not hold back this time!”</i>
+                &lt;i&gt;“Aaaah...so the prey fancies itself a vampire hunter and dares come up to my very lair to slay me?! Thou shalt be found wanting for I will not go down easily! Prepare thyself, I shall not hold back this time!”&lt;/i&gt;
 
                 And the drama queen fancies herself a dungeon boss, doesn’t she? Seems like either she just keeps away from the sun due to the power of drama compelling her or she is more powerful than you initially thought.
 
-                <i>“Enough! Cease this foolishness and surrender thine blood and body to me!”</i>
+                &lt;i&gt;“Enough! Cease this foolishness and surrender thine blood and body to me!”&lt;/i&gt;
 
                 She, in what you assume she thinks is an elegant way, throws a glass cup filled with what’s probably blood to the ground as she takes flight, in as much as she can while indoors, high ceilings or not.
                 Aaaaaaand she has gotten herself a battle aura of darkness, of course she has.
@@ -400,20 +400,20 @@
                 Diva is belting a few bottles as she ready up for tonight hunt.
                 She notice you by the sound you make before you reach her.
 
-                <i>“Oh hello [name] thou aren’t going to sleep or can’t go to bed yet?”</i>
+                &lt;i&gt;“Oh hello [name] thou aren’t going to sleep or can’t go to bed yet?”&lt;/i&gt;
             </text>
             <text name="night">
                 Diva hears your call and flies back to you in a heartbeat.
 
-                <i>
+                &lt;i&gt;
                     “The sun is out it's time to fly out.
                     What about thou [name] would you like to hunt with me or are thou interested into something else?”
-                </i>
+                &lt;/i&gt;
             </text>
         </lib>
         <lib name="sexMenu">
             <text name="menu">
-                <i>“I agree and I’m in the mood for a few exchanges if they are. What thou propose?”</i>
+                &lt;i&gt;“I agree and I’m in the mood for a few exchanges if they are. What thou propose?”&lt;/i&gt;
             </text>
             <lib name="moonlightSonata">
                 <lib name="intro">
@@ -427,7 +427,7 @@
                     <text name="combat">
                         You fall to the ground unable to fight further as Diva declares:
 
-                        <i>“Thou have lost, therefore thou have to surrender to me both heart and body. Thy shall pay the blood price first.”</i>
+                        &lt;i&gt;“Thou have lost, therefore thou have to surrender to me both heart and body. Thy shall pay the blood price first.”&lt;/i&gt;
 
                         Diva close her wings and wrap her arms around you in an almost maternal way, you can feel her E cup breasts press gently against your chest, the temperature between you increasing steadily as she bite in your neck.
                         Her kiss is oddly pleasurable, like a warm bath after a rough day of work and you somehow feel at peace with letting the vampire drink on your blood.
@@ -442,7 +442,7 @@
                     </text>
                     <lib name="combat">
                         <text name="initial">
-                            <i>“It’s late and I ought to go before sunrise… thou welcome to come back some time again.”</i>
+                            &lt;i&gt;“It’s late and I ought to go before sunrise… thou welcome to come back some time again.”&lt;/i&gt;
 
                             Diva jump off taking flight as she disappears somewhere in a trap door in the roof. You are a little dazed from the blood loss but for some reason you still feel all right. She even left a an item for you.
                         </text>
@@ -463,9 +463,9 @@
                         You can feel her cunt right at your [cock] tip.
 
                         <if test="$combat">
-                            <i>“Thou get to taste my second mouth, so thou should feel honored. It's more than you deserve.”</i>
+                            &lt;i&gt;“Thou get to taste my second mouth, so thou should feel honored. It's more than you deserve.”&lt;/i&gt;
                             <else/>
-                            <i>“Your neck taste good [name] but I will need more than that to be satisfied.”</i>
+                            &lt;i&gt;“Your neck taste good [name] but I will need more than that to be satisfied.”&lt;/i&gt;
                         </if>
 
                         Diva slowly slide down on your slick [cock], giving you a fanged smile of bliss as she slowly takes your length in.
@@ -485,7 +485,7 @@
                     <text name="tooBig">
                         Diva sees the size of your already erect [cock] and sigh in annoyance.
 
-                        <i>“This thing is unsightly. I think thou will almost thank me for what I will do now.”</i>
+                        &lt;i&gt;“This thing is unsightly. I think thou will almost thank me for what I will do now.”&lt;/i&gt;
 
                         Diva force you to the ground and you scream as she literally bite your cock!
                         The sharp pain is only temporary however and as blood flow out of your dick you begin to moan from the pleasure forced unto your cock by some sort of aphrodisiac contained in her saliva.
@@ -494,9 +494,9 @@
                         Diva pulls her lips away from your cock the wound slowly closing.
 
                         <if test="timesReduced ge 5">
-                            <i>“It's the fifth time I have to fix thou art thou seriously enjoying this?”</i>
+                            &lt;i&gt;“It's the fifth time I have to fix thou art thou seriously enjoying this?”&lt;/i&gt;
                             <else/>
-                            <i>“And now for the main course…”</i>
+                            &lt;i&gt;“And now for the main course…”&lt;/i&gt;
                         </if>
                     </text>
                     <text name="bat">
@@ -522,7 +522,7 @@
                         She moves her head to your chest smiling with a lusty gaze as she gently caresses your breast.
                         Strangely the bite from earlier caused them to slowly inflate with milk buildup while you weren't looking.
 
-                        <i>“I think I will take my share here too. Thou can enjoy.”</i>
+                        &lt;i&gt;“I think I will take my share here too. Thou can enjoy.”&lt;/i&gt;
 
                         Before you know it, Diva kisses your areola and begins to gently suckle on your left teat.
                         She has experience in this, as not only she nurses from you without effort, but she even manage to avoid piercing your nipples with her sharp canines.
@@ -545,7 +545,7 @@
                         She rewards your attention by doing the same, filling your [pussy] just perfectly with her tongue.
                         However you realise the both of you are still thirsty as she move her head to your chest smiling with a lusty gaze, gently caressing your [breasts]. Of course her bite caused your breast to swiftly inflate with the telltale presence of milk.
 
-                        <i>“Milk is highly nutritious too, I think I will take my share there as well. Thou can enjoy.”</i>
+                        &lt;i&gt;“Milk is highly nutritious too, I think I will take my share there as well. Thou can enjoy.”&lt;/i&gt;
 
                         Before you know it Diva kisses your areola and begins to gently suckle on your left teat.
                         She has experience in this as not only she nurses from you without effort, but she even manage to avoid piercing your nipples with her sharp canines.
@@ -554,7 +554,7 @@
                         The two of you are barely getting started as you slide her finger inside her already sopping wet cunt.
                         Diva unplug and smile wide at your interest.
 
-                        <i>“Want to proceed to step three?”</i>
+                        &lt;i&gt;“Want to proceed to step three?”&lt;/i&gt;
 
                         Of course you do and fingering her to orgasm will be your pleasure.
                         Diva gasp as you begin to play inside her wet cunt.
@@ -570,7 +570,7 @@
             <text name="shareAMeal">
                 You offer to share a midnight meal with Diva something the vampire immediately grin to.
 
-                <i>“Thou inviting me to dine tonight? How galant.”</i>
+                &lt;i&gt;“Thou inviting me to dine tonight? How galant.”&lt;/i&gt;
 
                 The both of you move in the darkness that night, looking for an easy meal.
                 Not so surprisingly the mountain range is full of minotaurs and a sleeping minotaur is indeed the first thing the pair of you find.
@@ -584,7 +584,7 @@
                 Whether it's from blood loss or from the consecutive orgasm the both of you have been forcefully inflicting on him is unknown.
                 Diva and you break out from the embrace for a long coppery kiss, exchanging blood and saliva.
 
-                <i>“Not the highest quality… I prefer yours [name]. Still the feast is better enjoyed with two then alone don’t you think?”</i>
+                &lt;i&gt;“Not the highest quality… I prefer yours [name]. Still the feast is better enjoyed with two then alone don’t you think?”&lt;/i&gt;
 
                 This carry on for the whole night, the pair of you making love and feasting on numerous consecutive victims at the same time.
                 It's only when outside on the prowl that you notice how gracefully and efficiently she hunt at night, her technique both at lovemaking and hunting is simply flawless.
@@ -630,49 +630,49 @@
         </lib>
         <lib name="talkMenu">
             <text name="menu">
-                <i>“Oh? What thou want to talk about? I have things to do but I can take a few minutes.”</i>
+                &lt;i&gt;“Oh? What thou want to talk about? I have things to do but I can take a few minutes.”&lt;/i&gt;
             </text>
             <text name="vampirism">
                 Seriously why does she need blood to survive anyway. Couldn't she just eat a steak like everyone?
 
-                <i>
+                &lt;i&gt;
                     “Thou may not know but my very fragile stomach does not allow any other form of nutrition.
                     I wouldn't be able to eat like the others even if I wanted to.”
-                </i>
+                &lt;/i&gt;
 
                 So she literally get sick when eating normal food… well that's sad for her. What about garlic?
 
-                <i>“Simple allergy, nothing more.”</i>
+                &lt;i&gt;“Simple allergy, nothing more.”&lt;/i&gt;
 
                 Is her issue contagious?
 
-                <i>
+                &lt;i&gt;
                     “Not unless you drink some of my blood or blood I drank from.
                     My bite is not viral but can leave my prey weak and some time close to death from blood loss.
                     Now if thou would excuse me I need to prepare for tonight.”
-                </i>
+                &lt;/i&gt;
 
                 You nod and let the vampire to her thing going back to yours.
             </text>
             <text name="sunlight">
                 So, something came to your attention… why exactly does she hate sunlight.
 
-                <i>“It’s bad for my skin… also bright light just outright hurt my eyes. I’m almost blind at day and when I’m not I have to constantly cover my eyes to be able to see anything ahead of me.”</i>
+                &lt;i&gt;“It’s bad for my skin… also bright light just outright hurt my eyes. I’m almost blind at day and when I’m not I have to constantly cover my eyes to be able to see anything ahead of me.”&lt;/i&gt;
 
                 So it's not because she will turn to ashes or anything of the stories.
 
-                <i>“If you’re talking about vampire tales from foreign lands I will have you know I’m alive just like you are. I just happen to have a body closer to bats and nocturnal creatures then I do to the daywalkers. As far as it goes the only trait I share with your so called mythical vampire is that whenever I drink a lot of blood I begin to develop magical powers and tremendous strength. I know for a fact I age at a slowed rate although I will likely still die when I get too old, I only have an extended lifespan rather than true immortality. Furthermore drinking heals my wounds quickers thanks to my ability to swiftly metabolise food to repair my damaged tissue.”</i>
+                &lt;i&gt;“If you’re talking about vampire tales from foreign lands I will have you know I’m alive just like you are. I just happen to have a body closer to bats and nocturnal creatures then I do to the daywalkers. As far as it goes the only trait I share with your so called mythical vampire is that whenever I drink a lot of blood I begin to develop magical powers and tremendous strength. I know for a fact I age at a slowed rate although I will likely still die when I get too old, I only have an extended lifespan rather than true immortality. Furthermore drinking heals my wounds quickers thanks to my ability to swiftly metabolise food to repair my damaged tissue.”&lt;/i&gt;
 
                 Well, now that you think of it, you wonder if meeting a vampire who has none of the standard weaknesses but the strength of a woman five time her size is any better then the monster of legends told of in Ingnam. You leave to ponder on this somewhat creepy question.
             </text>
             <text name="her">
                 Now that you think of it was she always a vampire?
 
-                <i>“No...In the same way as most adventurers I used to be a human and came here by accident about 30 years ago. Truth be told Mareth was already a hell of a mess back then.”</i>
+                &lt;i&gt;“No...In the same way as most adventurers I used to be a human and came here by accident about 30 years ago. Truth be told Mareth was already a hell of a mess back then.”&lt;/i&gt;
 
                 So what happened anyway?
 
-                <i>“The demons happened, some crazed freak with horns caught me while I was sleeping and brought me to his laboratory to experiment on me. Said something along the line of creating a new variety of demonic servant for Lethice and that he did as he toyed with my body for an entire month using both corruptive material and modified transformative items. Regardless, the incubus messed up badly because not only I awoke in a bloodcrazed rage, but I pretty much drank him dry along with his other test subjects. He had three orgasms by the time I was done and I was not going to hold back after being starved from food for an entire month.”</i>
+                &lt;i&gt;“The demons happened, some crazed freak with horns caught me while I was sleeping and brought me to his laboratory to experiment on me. Said something along the line of creating a new variety of demonic servant for Lethice and that he did as he toyed with my body for an entire month using both corruptive material and modified transformative items. Regardless, the incubus messed up badly because not only I awoke in a bloodcrazed rage, but I pretty much drank him dry along with his other test subjects. He had three orgasms by the time I was done and I was not going to hold back after being starved from food for an entire month.”&lt;/i&gt;
 
                 This explains the aphrodisiacs in her bite and her fleeting magical talents if not absurd strength. Well at least she didn’t get her vampirism out of nowhere.
             </text>
@@ -680,9 +680,9 @@
                 You ask Diva if she would mind giving you some blood.
 
                 <if test="player.batScore() gt 6 or player.vampireScore() gt 6">
-                She blush with embarrassment and reply <i>“Thy know thou could've just asked to drink straight from the tap I wouldn’t had minded. Perhaps another time.”</i>
+                She blush with embarrassment and reply &lt;i&gt;“Thy know thou could've just asked to drink straight from the tap I wouldn’t had minded. Perhaps another time.”&lt;/i&gt;
                 <else/>
-                <i>“I wouldn’t mind [name] but be warned that it is highly infectious.”</i>
+                &lt;i&gt;“I wouldn’t mind [name] but be warned that it is highly infectious.”&lt;/i&gt;
                 </if>
 
                 She hands to you a vial right away.
@@ -748,7 +748,7 @@
                         Huh, wrapped like this you could probably pass them off as a long cape so long as nobody looks too closely, but you are certain they are the real deal.
                         After all that pain, flying better be worth it.
                     </if>
-                    <b>You will be able to enjoy nightly flight using your brand new vampire wings.</b>
+                    &lt;b&gt;You will be able to enjoy nightly flight using your brand new vampire wings.&lt;/b&gt;
                     <else/>
                     Large bones surge out of your wrists and elbows.
                     You can feel your bones shifting and grinding all over your body as your skeletal structure begins changing into one more fit for a flying creature, with light, hollow bones.
@@ -756,7 +756,7 @@
                     Leathery flesh begins to cover your new bony protrusions, spreading between each of them like creeping moss.
                     Eventually, the skin stops growing and you admire your new arms.
                     They are very obviously bat wings. You close them around your waist, like this they could easily be mistaken for a large cape when seen from afar.
-                    <b>You now have large bat wings.</b>
+                    &lt;b&gt;You now have large bat wings.&lt;/b&gt;
                 </if>
 
             </text>
@@ -766,36 +766,36 @@
                         Before you can dwell on the implications of that, the changes continue.\n\n
                     </if>
                     Your ears begin to prickle as they elongate to a point, being now reminiscent of those of elves, goblins, or in your case, vampires. Aside from looking cute, you find your new ears have drastically improved your hearing.
-                    <b>Sound has become an entirely new experience now that you have pointy vampire ears!</b>
+                    &lt;b&gt;Sound has become an entirely new experience now that you have pointy vampire ears!&lt;/b&gt;
                     <else/>
                     Your ears begin to prickle and burn as the skin tears and stretches, changing into wide, deep ears, perfect for catching any stray sound. Which becomes apparent when your hearing becomes far more clear than it has ever been.
-                    <b>Sound has become an entirely new experience now that you have bat ears!</b>
+                    &lt;b&gt;Sound has become an entirely new experience now that you have bat ears!&lt;/b&gt;
                 </if>
             </text>
             <text name="eyes.type">
                 Your eyes shift, causing sunlight to suddenly become annoyingly bright for you.
                 It takes several minutes for your eyes to get used to it and, once they do, you still have to keep them half closed, so as to not be blinded by the sun’s glare.
                 Upon looking at your reflection in the water, you discover your irises have taken on a blood-red shade.
-                <b>You have Vampire Eyes.</b>
+                &lt;b&gt;You have Vampire Eyes.&lt;/b&gt;
             </text>
             <text name="skinTone">
                 Your skin suddenly starts itching, causing you to look at it just in time for you to see it finish paling into a shade that wouldn’t be out of place on a corpse.
                 You feel sleepy… horribly so, but you dismiss it as being the fault of the glaring light above your head.
-                <b>You guess you could use some extra sunlight with your pale skin.</b>
+                &lt;b&gt;You guess you could use some extra sunlight with your pale skin.&lt;/b&gt;
             </text>
             <text name="rearBody.type">
                 You drop the vial, the glass shattering as it hits the ground, as an intense itching sets in around your neck.
                 Bringing your hands to your neck to scratch it, you find sparse, downy fuzz.
                 As you scratch away, it continues lengthening and growing in density until you have a collar of fur around your neck.
                 Well, this isn’t so bad, the scarf-like look is certainly nice, at the very least.
-                <b>Your neck now sports a collar of fur.</b>
+                &lt;b&gt;Your neck now sports a collar of fur.&lt;/b&gt;
             </text>
             <text name="faceType">
                 You yelp as a throbbing pain takes root in the sides of your mouth.
                 You feel your canines grow longer as your throat grow dryer.
                 You could go for some wine right now, with a bloody steak to top it off… maybe just the steak.
                 Or just the blood, really. You aren’t picky.
-                Really, it’s up to you whether just rip off some poor sod’s throat and drink straight from the tap or drink blood from a wineglass, what with <b>your new vampire fangs!</b>
+                Really, it’s up to you whether just rip off some poor sod’s throat and drink straight from the tap or drink blood from a wineglass, what with &lt;b&gt;your new vampire fangs!&lt;/b&gt;
             </text>
             <text name="noChange">Odd.  You don't feel any different.</text>
         </lib>

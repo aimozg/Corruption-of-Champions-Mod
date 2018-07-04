@@ -250,24 +250,12 @@ scenefin-else = (
 # #############################################
 # textual content
 content =
-    text | b | i | font | xcc-statement | xxc-logic
-b = element b {
+    text | t | xcc-statement | xxc-logic
+t = element t {
     ATrim?,
-    content*
+    text
 }
-i = element i {
-    ATrim?,
-    content*
-}
-font = element font {
-    attribute color { text }?,
-    ATrim?,
-    content*
-}
-#xcc-named-content = Text | String | lib | story | macro | extend-story
-xcc-statement = display | set | output | lib # | xcc-named-content | Include | menu
-#namedBlock = attribute name { text }?, content*
-#String = element string { namedBlock }
+xcc-statement = display | set | output | lib
 display = element display {
     attribute ref { text },
     empty

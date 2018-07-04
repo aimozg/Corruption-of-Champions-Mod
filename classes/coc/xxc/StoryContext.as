@@ -48,7 +48,8 @@ public class StoryContext extends ExecContext{
 				kGAMECLASS:CoC.instance,
 				Math:Math,
 				SceneLib:SceneLib,
-				Skin:Skin
+				Skin:Skin,
+				silly:EngineCore.silly
 			}
 		]);
 		this.game = game;
