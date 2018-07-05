@@ -435,7 +435,7 @@ public class ParserTags {
         "libido"        : function ():* { return CoC.instance.player.lib; },
         "sensitivity"   : function ():* { return CoC.instance.player.sens; },
         "corruption"    : function ():* { return CoC.instance.player.cor; },
-        "ki"     : function ():* { return CoC.instance.player.ki; },
+        "ki"            : function ():* { return CoC.instance.player.ki; },
         "mana"          : function ():* { return CoC.instance.player.mana; },
         "fatigue"       : function ():* { return CoC.instance.player.fatigue; },
         "wrath"         : function ():* { return CoC.instance.player.wrath; },
@@ -466,7 +466,7 @@ public class ParserTags {
         "hasballs"      : function ():* { return (CoC.instance.player.balls > 0); },
         "hascock"       : function ():* { return CoC.instance.player.hasCock(); },
         "ismale"        : function ():* { return CoC.instance.player.isMale(); },
-	    "isfemale"      : function ():* { return CoC.instance.player.isFemale(); },
+        "isfemale"      : function ():* { return CoC.instance.player.isFemale(); },
         "isherm"        : function ():* { return CoC.instance.player.isHerm(); },
         "isgenderless"  : function ():* { return CoC.instance.player.isGenderless(); },
         "cumnormal"     : function ():* { return (CoC.instance.player.cumQ() <= 150); },
@@ -482,7 +482,8 @@ public class ParserTags {
         "islactating"   : function ():* { return (CoC.instance.player.lactationQ() > 0); },
         "true"          : function ():* { return true; },
         "false"         : function ():* { return false; },
-	    "silly"         : function ():* { return EngineCore.silly();}
+        "silly"         : function ():* { return EngineCore.silly();},
+        "tails"         : function ():* { return CoC.instance.player.tailCount;}
     };
 
     internal static function skinDescriptionFn(layer:String, noAdj:Boolean, noTone:Boolean):Function {
