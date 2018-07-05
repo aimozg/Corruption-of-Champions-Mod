@@ -12,6 +12,7 @@ package classes.Items.Armors
 		
 		public function InquisitorsCorset() {
 			super("I.Corst", "I.Corst", "inquisitor's corset", "an inquisitor's corset", 16, 2000, "This sexualized and feminine red and gold ensemble carries with it the hopes of a shamed sorcerer.  Wearing it will allow cast blood magic spells.", "Light", false, false);
+			_itemPerks.push(PerkLib.BloodMage.create(0,0,0,0), PerkLib.SluttySeduction.create(10,0,0,0));
 		}
 		
 		override public function useText(host:Creature):String {
@@ -27,20 +28,6 @@ package classes.Items.Armors
 		
 		override public function get description():String {
 			return super.description + "\nSpecial: Blood Mage and Slutty Seduction (Magnitude: 10)";
-		}
-		
-		override public function equip(host:Creature):Equipable {
-			while (host.hasPerk(PerkLib.BloodMage)) host.removePerk(PerkLib.BloodMage);
-			while (host.hasPerk(PerkLib.SluttySeduction)) host.removePerk(PerkLib.SluttySeduction);
-			host.createPerk(PerkLib.BloodMage,0,0,0,0);
-			host.createPerk(PerkLib.SluttySeduction,10,0,0,0);
-			return super.equip(host);
-		}
-		
-		override public function unequip(host:Creature):Equipable {
-			while (host.hasPerk(PerkLib.BloodMage)) host.removePerk(PerkLib.BloodMage);
-			while (host.hasPerk(PerkLib.SluttySeduction)) host.removePerk(PerkLib.SluttySeduction);
-			return super.unequip(host);
 		}
 	}
 }

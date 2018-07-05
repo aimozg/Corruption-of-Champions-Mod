@@ -111,24 +111,7 @@ package classes.Items
 			if (is2hWeapon(host) && (host as Player).shield != ShieldLib.NOTHING) {
 				SceneLib.inventory.unequipShield();
 			}
-			for each(var perk:PerkClass in _itemPerks){
-				while (host.hasPerk(perk.ptype)) {
-					host.removePerk(perk.ptype);
-				}
-				host.createPerk(perk.ptype, perk.value1, perk.value2, perk.value3, perk.value4);
-			}
-			applyBuffs(host);
-			return this;
-		}
-
-		override public function unequip(host:Creature):Equipable { //This item is being removed by the player. Remove any perks, etc. - This function should only handle mechanics, not text output
-			for each (var perk:PerkClass in _itemPerks){
-				while (host.hasPerk(perk.ptype)){
-					host.removePerk(perk.ptype);
-				}
-			}
-			host.removeStatEffects(tagForBuffs);
-			return this;
+			return super.equip(host);
 		}
 	}
 }
