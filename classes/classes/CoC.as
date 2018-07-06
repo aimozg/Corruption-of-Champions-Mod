@@ -16,6 +16,8 @@ import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
 import classes.Items.*;
 import classes.Modding.GameMod;
+import classes.Modding.IMonsterPrototype;
+import classes.Modding.MonsterLib;
 import classes.Modding.MonsterPrototype;
 import classes.Parser.Parser;
 import classes.Scenes.*;
@@ -114,6 +116,7 @@ public class CoC extends MovieClip
     public var rootStory:Story = new Story("story",null,"root");
     public var compiler:StoryCompiler = new StoryCompiler("content/").attach(rootStory);
     public var mods:/*GameMod*/Array = [];
+    public var monsterLib:MonsterLib;
     public var encounterPools:/*[index:string] => GroupEncounter*/Object = {};
     public var context:StoryContext;
     public var lua:LuaEngine;
@@ -396,6 +399,7 @@ public class CoC extends MovieClip
         mainMenu.progressText = "Loaded "+nLoaded+"/"+nTotal+" content files";
     }
 	private function initMods():void {
+		monsterLib = new MonsterLib();
 		var failedMods:/*GameMod*/Array = [];
 		if (lua) {
 			mods = [];
@@ -431,11 +435,13 @@ public class CoC extends MovieClip
 		}
         return null;
     }
-    public function findModMonster(id:String):MonsterPrototype {
+    public function findModMonster(id:String):IMonsterPrototype {
 		for each (var mod:GameMod in mods) {
-            var mon:MonsterPrototype = mod.findMonsterPrototype(id);
+            var mon:IMonsterPrototype = mod.findMonsterPrototype(id);
             if (mon) return mon;
 		}
+        if (monsterLib) mon = monsterLib.find(id);
+        if (mon) return mon;
         return null;
     }
 

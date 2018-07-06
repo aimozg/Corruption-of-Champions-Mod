@@ -2,11 +2,13 @@
  * Coded by aimozg on 17.06.2018.
  */
 package classes.Modding {
+import classes.Monster;
+
 import coc.lua.LuaNamespace;
 import coc.xxc.BoundNode;
 import coc.xxc.NamedNode;
 
-public class MonsterPrototype {
+public class MonsterPrototype implements IMonsterPrototype {
 	private var _mod:GameMod;
 	private var _descriptor:XML;
 	private var _ns:LuaNamespace;
@@ -41,7 +43,7 @@ public class MonsterPrototype {
 	}
 	public function finishInit():void {
 	}
-	public function spawn(options:*=null):ModMonster {
+	public function spawn(options:*=null):Monster {
 		return new ModMonster(this,options);
 	}
 }

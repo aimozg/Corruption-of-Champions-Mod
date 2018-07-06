@@ -3,6 +3,7 @@
  */
 package classes.Modding {
 import classes.CoC;
+import classes.Monster;
 import classes.internals.Jsonable;
 import classes.internals.Utils;
 
@@ -78,7 +79,7 @@ public class GameMod implements Jsonable {
 					}
 				}
 				if (!mp.base) {
-					mp.base = game.findModMonster(mp.baseId);
+					mp.base = game.findModMonster(mp.baseId) as MonsterPrototype;
 				}
 			}
 			mp.finishInit();
@@ -101,9 +102,9 @@ public class GameMod implements Jsonable {
 		story.display(ref,locals);
 	}
 	public function reset():void {
-		state = {};
+		for (var s:String in state) delete state[s];
 		if (context && game) setupContext();
-		for (var s:String in initialState) state[s] = Eval.eval(game,initialState[s]);
+		for (s in initialState) state[s] = Eval.eval(game,initialState[s]);
 	}
 	public function scriptHas(fname:String):Boolean {
 		verifyInitialized();
@@ -161,7 +162,7 @@ public class GameMod implements Jsonable {
 		}
 		return null;
 	}
-	public function spawnMonster(id:String):ModMonster {
+	public function spawnMonster(id:String):Monster {
 		return findMonsterPrototype(id).spawn();
 	}
 }

@@ -3,6 +3,7 @@
  */
 package coc.xxc.stmts {
 import classes.CoC;
+import classes.Modding.IMonsterPrototype;
 import classes.Modding.MonsterPrototype;
 import classes.Scenes.SceneLib;
 
@@ -22,7 +23,7 @@ public class BattleStmt extends Statement {
 	
 	override public function execute(context:ExecContext):void {
 		var game:CoC                          = (context as StoryContext).game;
-		var mp:MonsterPrototype = game.findModMonster(monsterref);
+		var mp:IMonsterPrototype = game.findModMonster(monsterref);
 		if (mp == null) {
 			throw "Unable to find monster ref "+monsterref;
 		}

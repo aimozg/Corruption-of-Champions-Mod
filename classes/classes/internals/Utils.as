@@ -26,6 +26,24 @@ public class Utils extends Object
 				return func.apply(null,args.concat(args2));
 			};
 		}
+		public static function curryConstructor(cls:Class,...args1):Function {
+			return function (...args2):* {
+				var args:Array = args1.concat(args2);
+				// hey, Adobe does that too
+				switch(args.length){
+					case 0: return new cls();
+					case 1: return new cls(args[0]);
+					case 2: return new cls(args[0],args[1]);
+					case 3: return new cls(args[0],args[1],args[2]);
+					case 4: return new cls(args[0],args[1],args[2],args[3]);
+					case 5: return new cls(args[0],args[1],args[2],args[3],args[4]);
+					case 6: return new cls(args[0],args[1],args[2],args[3],args[4],args[5]);
+					case 7: return new cls(args[0],args[1],args[2],args[3],args[4],args[5],args[6]);
+					case 8: return new cls(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]);
+				}
+				return null;
+			}
+		}
 		public static function bindThis(func:Function,thiz:Object):Function {
 			return function(...args2):* {
 				return func.apply(thiz,args2);

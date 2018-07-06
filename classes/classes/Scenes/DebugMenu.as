@@ -318,7 +318,7 @@ import flash.events.Event;
 					clearOutput();
 					if ((m = e.text.match(/^@monster:(.*)$/))) {
 						outputText("You will be fighting " + m[1] + "\n");
-						var monster:ModMonster = (selectedScene as GameMod).spawnMonster(m[1]);
+						var monster:Monster = (selectedScene as GameMod).spawnMonster(m[1]);
 						startCombat(monster);
 					} else if ((m = e.text.match(/^@scene:(.*)$/))) {
 						selectedScene = (selectedScene as GameMod).story;
