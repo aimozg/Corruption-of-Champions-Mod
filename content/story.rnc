@@ -1,6 +1,8 @@
+namespace xsi = "http://www.w3.org/2001/XMLSchema-instance"
 # default namespace = "xxc-story"
 
-start = story
+start = scene
+
 # core xlogic
 content =
     text | b | i | font | if | switch | xcc-content
@@ -45,7 +47,7 @@ font = element font {
     attribute color { text }?,
     content*
 }
-xcc-named-content = Text | String | lib | story | macro | extend-story
+xcc-named-content = Text | String | lib | scene | macro | extend-story
 xcc-content = xcc-named-content
     | display | dynStats | output | Include
     | set
@@ -56,7 +58,10 @@ lib = element lib {
 	attribute name { text },
 	xcc-named-content*
 }
-story = element story { namedBlock }
+scene = element scene {
+	attribute xsi:noNamespaceSchemaLocation { text }?
+	&namedBlock
+}
 macro = element macro { namedBlock }
 set = element set {
     attribute var { text },

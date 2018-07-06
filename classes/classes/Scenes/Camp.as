@@ -19,6 +19,8 @@ import classes.lists.Gender;
 
 import coc.view.ButtonDataList;
 import coc.view.MainView;
+import coc.xxc.NamedNode;
+import coc.xxc.Story;
 
 use namespace CoC;
 
@@ -45,9 +47,14 @@ use namespace CoC;
 		}
 */
 
-		public function Camp(/*campInitialize:Function*/) {
+		public function Camp() {
 			EventParser.doCamp=doCamp;
-			//campInitialize(doCamp); //Pass the doCamp function up to CoC. This way doCamp is private but the CoC class itself can call it.
+			onGameInit(init);
+		}
+		private function init():void {
+			var lib:NamedNode = CoC.instance.rootStory.locate("camp");
+			lib.addFunctionAsStory("return",returnToCampUseOneHour);
+			lib.addFunctionAsStory("return8",returnToCampUseEightHours);
 		}
 		
 		public var cabinProgress:CabinProgress = new CabinProgress();

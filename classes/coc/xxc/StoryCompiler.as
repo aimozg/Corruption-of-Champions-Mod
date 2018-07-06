@@ -156,6 +156,8 @@ public class StoryCompiler extends Compiler {
 				return new TextStmt(s,0);
 			case "battle":
 				return compileBattle(x);
+			case "next":
+				return compileNext(x);
 			case "display":
 				return compileDisplay(x);
 			case "dynStats":
@@ -166,7 +168,7 @@ public class StoryCompiler extends Compiler {
 				return compileOutput(x);
 			case "lib":
 			case "macro":
-			case "story":
+			case "scene":
 			case "string":
 			case "text":
 				compileStory(x);
@@ -237,6 +239,9 @@ public class StoryCompiler extends Compiler {
 				}
 			}
 		}
+	}
+	protected function compileNext(x:XML):NextStmt {
+		return new NextStmt(stack[0],x.@ref);
 	}
 	protected function compileDisplay(x:XML):DisplayStmt {
 		return new DisplayStmt(stack[0],x.@ref);

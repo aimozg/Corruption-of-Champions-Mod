@@ -380,6 +380,7 @@ public class CoC extends MovieClip
         //Hide up/down arrows
         mainView.statsView.hideUpDown();
         rootStory.addLib("monsters");
+        rootStory.addLib("camp");
         execPostInit();
         this.addFrameScript( 0, this.run );
         //setTimeout(this.run,0);

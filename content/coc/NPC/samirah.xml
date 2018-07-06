@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<story name="samirah" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:noNamespaceSchemaLocation="../../story.xsd">
+<scene name="samirah" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation="../../story.rnc">
 	<lib name="strings">
 		<text name="campDescription">
 			Samirah is quietly sunbathing on a rock, her long tail wrapped around on itself.
@@ -433,4 +433,4 @@
 			</lib>
 		</lib>
 	</lib>
-</story>
+</scene>

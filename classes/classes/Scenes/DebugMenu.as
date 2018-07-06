@@ -243,7 +243,11 @@ import flash.events.Event;
 						}
 					}
 				} else if (selected is BoundNode) {
+					menu();
 					(selected as BoundNode).execute();
+					for each (var b:CoCButton in mainView.bottomButtons) {
+						if (b.visible) return;
+					}
 				} else {
 					node.execute(context);
 				}

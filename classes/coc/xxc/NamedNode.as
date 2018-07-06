@@ -2,6 +2,7 @@
  * Coded by aimozg on 12.06.2018.
  */
 package coc.xxc {
+import coc.xlogic.CallStmt;
 import coc.xlogic.Declaration;
 import coc.xlogic.ExecContext;
 
@@ -30,6 +31,11 @@ public class NamedNode extends Declaration {
 	}
 	public function addLib(name:String):Story {
 		return new Story("lib",this,name);
+	}
+	public function addFunctionAsStory(name:String,fn:Function,passContext:Boolean=false):Story {
+		var s:Story = new Story("call",this,name);
+		s.body.stmts.push(new CallStmt(fn,passContext));
+		return s;
 	}
 	public function locate(ref:String):NamedNode {
 		return locateSplit(this,ref.split("/"));

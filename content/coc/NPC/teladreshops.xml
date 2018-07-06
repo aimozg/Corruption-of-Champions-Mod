@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<story name="teladreshops" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../../story.xsd">
+<scene name="teladreshops" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../story.rnc">
     <lib name="JewelryShop">
         <text name="enter">
             <if test="firstEntry">
@@ -354,4 +354,4 @@
             </text>
         </lib>
     </lib>
-</story>
+</scene>
