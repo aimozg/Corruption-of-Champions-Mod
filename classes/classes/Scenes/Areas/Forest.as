@@ -404,7 +404,7 @@ use namespace CoC;
 		}
 		public function marbleVsImp():void {
 			clearOutput();
-			forestStory.display("string/marble");
+			forestStory.display("strings/marble");
 			//end event
 			doNext(camp.returnToCampUseOneHour);
 		}
