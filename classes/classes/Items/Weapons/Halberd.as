@@ -5,11 +5,16 @@
 package classes.Items.Weapons 
 {
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 
 	public class Halberd extends Weapon {
-		
+
 		public function Halberd() {
-			super("Halberd", "Halberd", "halberd", "a halberd", "slash", 30, 1200, "This imposing cross between a spear and an axe features a 5 foot solid steel pole with two crescent-shaped blades on each end of the pole, with a prominent spear tip.  The tool feels heavy enough to crush armor.  Req. 100 strength to unleash full attack power.", "Large");
+			super(new WeaponBuilder("Halberd", Weapon.TYPE_POLEARM, "halberd", "Large")
+					.withShortName("Halberd").withLongName("a halberd")
+					.withVerb("slash")
+					.withAttack(30).withValue(1200)
+					.withDescription("This imposing cross between a spear and an axe features a 5 foot solid steel pole with two crescent-shaped blades on each end of the pole, with a prominent spear tip.  The tool feels heavy enough to crush armor.  Req. 100 strength to unleash full attack power."));
 		}
 		
 		override public function get attack():int {

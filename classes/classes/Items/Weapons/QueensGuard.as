@@ -3,13 +3,17 @@ package classes.Items.Weapons
 	import classes.CoC;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 
 	public class QueensGuard extends Weapon
 	{
-		
-		public function QueensGuard() 
-		{
-			super("Q.Guard", "Q. Guard", "queen's guard rapier", "a queen's guard rapier", "slash", 20, 2400, " An elegant rapier made in brass and gold, with the seal of Mareth’s former nobility. The ruby gemstones running among the blade and the intricate engravings in gold identify it as belonging to the old kingdom knighthoods orders.");
+
+		public function QueensGuard() {
+			super(new WeaponBuilder("Q.Guard", Weapon.TYPE_SWORD, "queen's guard rapier")
+					.withShortName("Q. Guard").withLongName("a queen's guard rapier")
+					.withVerb("slash")
+					.withAttack(20).withValue(2400)
+					.withDescription(" An elegant rapier made in brass and gold, with the seal of Mareth’s former nobility. The ruby gemstones running among the blade and the intricate engravings in gold identify it as belonging to the old kingdom knighthoods orders."));
 		}
 		override public function get attack():int{
 			var boost:int = 0;

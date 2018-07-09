@@ -279,12 +279,8 @@ public function approachAfterKnockback1():void
 	clearOutput();
 	outputText("You close the distance between you and [monster a] [monster name] as quickly as possible.\n\n");
 	player.removeStatusEffect(StatusEffects.KnockedBack);
-	if (player.weaponRangeName == "Ivory inlaid arquebus") player.ammo = 12;
-	if (player.weaponRangeName == "blunderbuss rifle") player.ammo = 9;
-	if (player.weaponRangeName == "flintlock pistol") player.ammo = 6;
-	outputText("At the same time, you open the magazine of your ");
-	if (player.weaponRangePerk == "Pistol") outputText("pistol");
-	if (player.weaponRangePerk == "Rifle") outputText("rifle");
+	player.ammo = player.weaponRange.ammo;
+	outputText("At the same time, you open the magazine of your " + player.weaponRangePerk.toLowerCase());
 	outputText(" to reload the ammunition.");
 	outputText("  This takes up a turn.\n\n");
 	enemyAI();

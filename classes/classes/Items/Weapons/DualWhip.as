@@ -5,14 +5,18 @@
 package classes.Items.Weapons 
 {
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 	import classes.PerkLib;
 
 	public class DualWhip extends Weapon
 	{
 		
-		public function DualWhip() 
-		{
-			super("P.Whip ", "P.Whip", "pair of coiled whips", "a pair of coiled whips", "whip-crack", 5, 400, "A pair of coiled length of leather designed to lash your foes into submission.  There's a chance the bondage inclined might enjoy it!");
+		public function DualWhip() {
+			super(new WeaponBuilder("P.Whip ", Weapon.TYPE_WHIP, "pair of coiled whips")
+					.withShortName("P.Whip").withLongName("a pair of coiled whips")
+					.withVerb("whip-crack")
+					.withAttack(5).withValue(400)
+					.withDescription("A pair of coiled length of leather designed to lash your foes into submission.  There's a chance the bondage inclined might enjoy it!"));
 		}
 		
 		override public function get attack():int {

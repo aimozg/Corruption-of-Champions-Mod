@@ -16,16 +16,20 @@ import classes.lists.DamageType;
 		//WeaponType
 		internal var verb:String;
 		internal var attack:int = 0;
+		internal var defense:int = 0;
+		internal var sexiness:int = 0;
 		internal var perk:String;
 		internal var name:String;
 
 		//Updated WeaponType
-		internal var procs:Array = [];
 		internal var modifiers:Array = [];
 		internal var weaponPerks:Vector.<PerkClass> = new Vector.<PerkClass>();
 		internal var weaponType:String;
-		internal var damage:Array = [];
 		internal var buffs:Object = {};
+
+		//Ranged Weapon
+		internal var ammo:int = 0;
+		internal var ammoWord:String;
 
 		public function WeaponBuilder(id:String, type:String, name:String = null, perk:String = null) {
 			this.id = id;
@@ -34,16 +38,7 @@ import classes.lists.DamageType;
 			this.perk = perk;
 		}
 
-		public function build():Weapon {
-			return Weapon.fromBuilder(this);
-		}
-
-		public function withName(value:String):WeaponBuilder {
-			this.name = value;
-			return this;
-		}
-
-		public function withShort(value:String):WeaponBuilder {
+		public function withShortName(value:String):WeaponBuilder {
 			this.shortName = value;
 			return this;
 		}
@@ -94,24 +89,19 @@ import classes.lists.DamageType;
 			return this;
 		}
 
-		/**
-		 * Adds a flat attack value as physical damage
-		 * @param value
-		 * @return
-		 */
-		public function withAttack(value:int, dtype:DamageType = null):WeaponBuilder {
-			if(!dtype){dtype = DamageType.PHYSICAL;}
-			this.damage.push(new CombatDamage(String(value), dtype));
+		public function withAttack(value:int):WeaponBuilder {
+			attack = value;
 			return this;
 		}
 
 		/**
-		 * Adds attack value in the form of a dice roll
-		 * @param value dice role in the form of 1d4+10
+		 * Used for ranged weapons
+		 * @param count how many times the weapon may be fired before needing to reload
+		 * @param word (arrow, bullet, bolt, etc)
 		 */
-		public function withAttackRoll(value:String, dtype:DamageType = null):WeaponBuilder {
-			if(!dtype){dtype = DamageType.PHYSICAL;}
-			this.damage.push(new CombatDamage(value, dtype));
+		public function withAmmo(count:int, word:String = "bullet"):WeaponBuilder {
+			ammo = count;
+			ammoWord = word;
 			return this;
 		}
 	}

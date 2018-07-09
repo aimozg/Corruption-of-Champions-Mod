@@ -4,11 +4,16 @@
 package classes.Items.Weapons 
 {
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 
 	public class LargeAxe extends Weapon {
-		
+
 		public function LargeAxe() {
-			super("L. Axe ", "L. Axe", "large axe", "an axe large enough for a minotaur", "cleave", 18, 720, "This massive axe once belonged to a minotaur.  It'd be hard for anyone smaller than a giant to wield effectively.  The axe is double-bladed and deadly-looking.  Requires height of 6'6\".", "Large");
+			super(new WeaponBuilder("L. Axe ", Weapon.TYPE_AXE, "large axe", "Large")
+					.withShortName("L. Axe").withLongName("an axe large enough for a minotaur")
+					.withVerb("cleave")
+					.withAttack(18).withValue(720)
+					.withDescription("This massive axe once belonged to a minotaur.  It'd be hard for anyone smaller than a giant to wield effectively.  The axe is double-bladed and deadly-looking.  Requires height of 6'6\"."));
 		}
 		
 		override public function get attack():int {

@@ -4,14 +4,19 @@
  * */
 package classes.Items.Weapons
 {
-	import classes.GlobalFlags.kFLAGS;
 	import classes.CoC;
+	import classes.GlobalFlags.kFLAGS;
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 
 	public class DragonsRapier extends Weapon {
-		
+
 		public function DragonsRapier() {
-			super("DRapier", "DRapier", "dragon rapier", "Dragon's Rapier", "slash", 18, 1440, "Ancient looking rapier forged in dragon fire. Tales saying that some of the dragon fire could still linger inside of it.  Still blade is piece of an extraordinatry quality and perfect for stabbing.");
+			super(new WeaponBuilder("DRapier", Weapon.TYPE_SWORD, "dragon rapier", " ")
+					.withShortName("DRapier").withLongName("Dragon's Rapier")
+					.withVerb("slash")
+					.withAttack(18).withValue(1440)
+					.withDescription("Ancient looking rapier forged in dragon fire. Tales saying that some of the dragon fire could still linger inside of it.  Still blade is piece of an extraordinatry quality and perfect for stabbing."));
 		}
 		
 		override public function get attack():int {

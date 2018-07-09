@@ -5,13 +5,16 @@
 package classes.Items.Weapons 
 {
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 
 	public class OniTetsubo extends Weapon
 	{
-		
-		public function OniTetsubo() 
-		{
-			super("O.Tetsu", "OniTetsubo", "Oni Tetsubo", "an Oni Tetsubo", "smash", 45, 3600, "This unrealistically large two handed mace was clearly made for Oni warriors to wield. You likely will need some ridiculous strength just to lift it.", "Large");
+		public function OniTetsubo() {
+			super(new WeaponBuilder("O.Tetsu", Weapon.TYPE_BLUNT, "Oni Tetsubo", "Large")
+					.withShortName("OniTetsubo").withLongName("an Oni Tetsubo")
+					.withVerb("smash")
+					.withAttack(45).withValue(3600)
+					.withDescription("This unrealistically large two handed mace was clearly made for Oni warriors to wield. You likely will need some ridiculous strength just to lift it."));
 		}
 		
 		override public function get attack():int {

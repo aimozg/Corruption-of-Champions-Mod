@@ -4,11 +4,16 @@
 package classes.Items.Weapons
 {
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 
 	public class HugeWarhammer extends Weapon {
 		
 		public function HugeWarhammer() {
-			super("Warhamr", "Warhammer", "huge warhammer", "a huge warhammer", "smash", 15, 1200, "A huge war-hammer made almost entirely of steel that only the strongest warriors could use.  Getting hit with this might stun the victim.", "Large");
+			super(new WeaponBuilder("Warhamr", Weapon.TYPE_BLUNT, "huge warhammer", "Large")
+					.withShortName("Warhammer").withLongName("a huge warhammer")
+					.withVerb("smash")
+					.withAttack(15).withValue(1200)
+					.withDescription("A huge war-hammer made almost entirely of steel that only the strongest warriors could use.  Getting hit with this might stun the victim."));
 		}
 		
 		override public function get attack():int {
