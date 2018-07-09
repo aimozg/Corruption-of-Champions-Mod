@@ -3464,7 +3464,7 @@ public class Masturbation extends BaseContent {
 			}
 			for (var x:int = tentacle + 1; x < player.cocks.length; x++) { //Find the biggest tentacle cock you've got
 				if ((player.cocks[x].cockType == CockTypesEnum.TENTACLE  ||
-					 player.cocks[tentacle].cockType == CockTypesEnum.STAMEN) && player.cocks[x].cArea() > player.cocks[tentacle].cArea()) tentacle = x;
+					 player.cocks[tentacle].cockType == CockTypesEnum.STAMEN) && player.cocks[x].cArea > player.cocks[tentacle].cArea) tentacle = x;
 			}
 			clearOutput();
 			//[Standard text for stripping off goes here]
@@ -3534,7 +3534,7 @@ public class Masturbation extends BaseContent {
 				if (player.cocks[tentacle].cockType == CockTypesEnum.STAMEN) break;
 			}
 			for (var x:int = tentacle + 1; x < player.cocks.length; x++) { //Find the biggest tentacle cock you've got
-				if (player.cocks[tentacle].cockType == CockTypesEnum.STAMEN && player.cocks[x].cArea() > player.cocks[tentacle].cArea()) tentacle = x;
+				if (player.cocks[tentacle].cockType == CockTypesEnum.STAMEN && player.cocks[x].cArea > player.cocks[tentacle].cArea) tentacle = x;
 			}
 			clearOutput();
 			//[Standard text for stripping off goes here]
@@ -3564,16 +3564,16 @@ public class Masturbation extends BaseContent {
 				if (player.cocks[gildedCock].sock == "gilded") break;
 			}
 			for (var x:int = gildedCock + 1; x < player.cocks.length; x++) { //Find the biggest gilded cock you've got
-				if (player.cocks[x].sock == "gilded" && player.cocks[x].cArea() > player.cocks[gildedCock].cArea()) gildedCock = x;
+				if (player.cocks[x].sock == "gilded" && player.cocks[x].cArea > player.cocks[gildedCock].cArea) gildedCock = x;
 			}
 			outputText("You disrobe, shivering softly.  Biting your lip, you look down, realizing that though the day is warm the gleaming metallic sleeve on your cock is cool, almost chill.");
 			outputText("\n\nThe light catches the golden cock-sock, scattering light through the area.  You grin as you grasp it, rubbing your thumb against the smooth top of the sheath, with your fingers rubbing against the tight leather cords beneath.  Your cock swells against the metallic walls of the cocksock, and though you're clearly growing warmer, the gleaming sheath stays cool to the touch.");
 			
 			outputText("\n\nYour fingers slide easily over the smooth metallic fabric and you begin masturbating.  The gold sheath shifts up and down against your shaft as you stroke faster and faster.  The gold casing blocks the familiar feel of your hand, instead feeling like the hand of some eager stranger on your dick.");
-			if (player.cocks[gildedCock].cArea() < 6)
+			if (player.cocks[gildedCock].cArea < 6)
 				outputText("  Enveloped in the cocksock, you can barely see the tip of your tiny dick as your head peeks out on every downstroke.  The rounded edge of the metallic sleeve rubs maddeningly against the head of your cock, cool and smooth.");
 			//[medium dicks] 
-			else if (player.cocks[gildedCock].cArea() < 20)
+			else if (player.cocks[gildedCock].cArea < 20)
 				outputText("  The head of your cock abuts against the edge of the cocksock, bumping against it with every stroke.  With your thickness, the cocksock is a perfect fit, tugging on your cock with every upstroke, stretching your dick lightly as you jack yourself.");
 			//[large dicks]
 			else outputText("  Clamped around your dick, the metal casing looks more like a gigantic cock ring. The golden sheath actually allows you a better grip on your massive member, a ring of coolness around your hot meat.");

@@ -681,7 +681,7 @@ public class BeeGirlScene extends BaseContent
 			}
 			var giantCockIndex:int = -1;
 			for (var x:int = 0; x < player.cocks.length; x++) {
-				if (player.cocks[x].cockLength < 24 || player.cocks[x].cArea() < 100) continue;
+				if (player.cocks[x].cockLength < 24 || player.cocks[x].cArea < 100) continue;
 				giantCockIndex = x;
 				break;
 			}

@@ -1003,42 +1003,6 @@ public class EngineCore {
         return num;
     }
 
-    public static function cuntChangeOld(cIndex:Number, vIndex:Number, display:Boolean):void {
-        //Virginity check
-        if (CoC.instance.player.vaginas[vIndex].virgin) {
-            if (display) outputText("\nYour " + Appearance.vaginaDescript(CoC.instance.player,vIndex) + " loses its virginity!");
-            CoC.instance.player.vaginas[vIndex].virgin = false;
-        }
-        //If cock is bigger than unmodified vagina can hold - 100% stretch!
-        if (CoC.instance.player.vaginas[vIndex].capacity() <= CoC.instance.monster.cocks[cIndex].cArea()) {
-            if (CoC.instance.player.vaginas[vIndex].vaginalLooseness < 5) {
-                trace("CUNT STRETCHED: By cock larger than it's total capacity.");
-                if (display) {
-                    if (CoC.instance.player.vaginas[vIndex].vaginalLooseness == VaginaClass.LOOSENESS_GAPING_WIDE) outputText("<b>Your " + Appearance.vaginaDescript(CoC.instance.player,0) + " is stretched even further, capable of taking even the largest of demons and beasts.</b>  ");
-                    if (CoC.instance.player.vaginas[vIndex].vaginalLooseness == VaginaClass.LOOSENESS_GAPING) outputText("<b>Your " + Appearance.vaginaDescript(CoC.instance.player,0) + " painfully stretches, gaping wide-open.</b>  ");
-                    if (CoC.instance.player.vaginas[vIndex].vaginalLooseness == VaginaClass.LOOSENESS_LOOSE) outputText("<b>Your " + Appearance.vaginaDescript(CoC.instance.player,0) + " is now very loose.</b>  ");
-                    if (CoC.instance.player.vaginas[vIndex].vaginalLooseness == VaginaClass.LOOSENESS_NORMAL) outputText("<b>Your " + Appearance.vaginaDescript(CoC.instance.player,0) + " is now loose.</b>  ");
-                    if (CoC.instance.player.vaginas[vIndex].vaginalLooseness == VaginaClass.LOOSENESS_TIGHT) outputText("<b>Your " + Appearance.vaginaDescript(CoC.instance.player,0) + " loses its virgin-like tightness.</b>  ");
-                }
-                CoC.instance.player.vaginas[vIndex].vaginalLooseness++;
-            }
-        }
-        //If cock is within 75% of max, streeeeetch 33% of the time
-        if (CoC.instance.player.vaginas[vIndex].capacity() * .75 <= CoC.instance.monster.cocks[cIndex].cArea()) {
-            if (CoC.instance.player.vaginas[vIndex].vaginalLooseness < 5) {
-                trace("CUNT STRETCHED: By cock @ 75% of capacity.");
-                if (display) {
-                    if (CoC.instance.player.vaginas[vIndex].vaginalLooseness == VaginaClass.LOOSENESS_GAPING_WIDE) outputText("<b>Your " + Appearance.vaginaDescript(CoC.instance.player,0) + " is stretched even further, capable of taking even the largest of demons and beasts.</b>  ");
-                    if (CoC.instance.player.vaginas[vIndex].vaginalLooseness == VaginaClass.LOOSENESS_GAPING) outputText("<b>Your " + Appearance.vaginaDescript(CoC.instance.player,0) + " painfully stretches, gaping wide-open.</b>  ");
-                    if (CoC.instance.player.vaginas[vIndex].vaginalLooseness == VaginaClass.LOOSENESS_LOOSE) outputText("<b>Your " + Appearance.vaginaDescript(CoC.instance.player,0) + " is now very loose.</b>  ");
-                    if (CoC.instance.player.vaginas[vIndex].vaginalLooseness == VaginaClass.LOOSENESS_NORMAL) outputText("<b>Your " + Appearance.vaginaDescript(CoC.instance.player,0) + " is now loose.</b>  ");
-                    if (CoC.instance.player.vaginas[vIndex].vaginalLooseness == VaginaClass.LOOSENESS_TIGHT) outputText("<b>Your " + Appearance.vaginaDescript(CoC.instance.player,0) + " loses its virgin-like tightness.</b>  ");
-                }
-                CoC.instance.player.vaginas[vIndex].vaginalLooseness++;
-            }
-        }
-    }
-
     /**
      * Returns true if you're on SFW mode.
      */
