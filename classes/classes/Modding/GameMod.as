@@ -95,8 +95,7 @@ public class GameMod implements Jsonable {
 	}
 	private function setupContext():void {
 		context = new StoryContext(game);
-		context.pushScope({mod:this});
-		context.pushScope(state);
+		context.pushScope({mod:this, state:state});
 	}
 	public function display(ref:String,locals:Object=null):void {
 		story.display(ref,locals);

@@ -130,6 +130,8 @@ public class StoryCompiler extends Compiler {
 	override protected function compileTag(tag:String, x:XML):Statement {
 		var list:StmtList;
 		switch (tag) {
+			case "comment":
+				return null;
 			case "b":
 			case "i":
 				var attrs:String = "";

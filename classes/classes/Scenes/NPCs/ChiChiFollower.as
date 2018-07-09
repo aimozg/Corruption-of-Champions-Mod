@@ -7,6 +7,7 @@ package classes.Scenes.NPCs
 	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.CoC;
+import classes.Modding.GameMod;
 import classes.Scenes.SceneLib;
 
 use namespace CoC;
@@ -15,28 +16,17 @@ use namespace CoC;
 	{
 		public function ChiChiFollower() 
 		{}
-
+		
 public function EnterOfTheChiChi():void {
-	clearOutput();
-	outputText("You step into the arena once more, but this time your opponent is slightly different. While of small stature like other mice you’ve met in He’Xin’Dao, this mouse morph has pinkish red hair and oriental clothes. She wears a pair of spiked gloves, her fists are clenched slightly at her sides, and she clearly sports a pair of C cup breasts under her clothes. The announcer screams out the participant's names as usual, their enthusiastic introductions is something you’ve grown used to.\n\n");
-	outputText("\"<i>In the left corner, coming from another world, [name], Champion of Ingnam! And in the right corner, from a land far away to the east, the martial arts master, Chi Chi of the four winds!</i>\"\n\n");
-	if (flags[kFLAGS.CHI_CHI_FOLLOWER] > 0) {
-		outputText("Hey that's the waitress of the exotic food restaurant. Chi Chi adopts a battle stance as she catches fire, turning into a living inferno.\n\n");
-		outputText("\"<i>Get ready for this one dishes will be EXTRA spicy! You prefer inferno or Hell? Because I’m about to leave you with fifth-degree burns!!!</i>\"");
-	}
-	else outputText("Chi Chi, as it’s obviously her name, adopts a battle stance. Her fists, tail and legs suddenly light aflame! Gosh a fire mouse? Something tells you this is going to hurt.");
-	flags[kFLAGS.CHI_CHI_AFFECTION] = 0;
-	flags[kFLAGS.CHI_CHI_LVL_UP] = 1;
+	var mod:GameMod = CoC.instance.findMod("chichi");
+	if (!mod) camp.returnToCampUseOneHour();
+	mod.story.display("EnterOfTheChiChi");
 	startCombat(new ChiChi());
 }
 
 public function WonFirstFight():void {
 	clearOutput();
-	outputText("The mouse looks at you in complete disbelief, her shaking voice slowly breaking down as she falls to her knees and coughs blood on the ground.\n\n");
-	outputText("\"<i>Is this... my blood... it is... beautiful. I never thought I would see the day when I...</i>\"\n\n");
-	outputText("She smiles as she stands a final time, trying to run toward you to deliver one last punch. But midway, she falls to the ground, still smiling, with an obvious trail of blood on the corner of her mouth. Muttering two last words as her eyes lose their light.\n\n");
-	outputText("\"<i>Thank you...</i>\"\n\n");
-	outputText("The entire crowd falls silent as the mouse morph hits the sandy arena ground, a small kid starts to cry in background. The medics run to her in a hurry, but scream something about her having died from fatal self inflicted injuries. You don’t really care however and just pick up her gloves on the ground as a prize for your victory. Surprisingly no-one cheers for you this time, not even the announcer who is normally so talkative. (I sincerely advise that you reload your game without saving unless you are fine with losing access to a lot of important key content.)\n\n");
+	outputText("");
 	flags[kFLAGS.CHI_CHI_FOLLOWER] = 2;
 	inventory.takeItem(weapons.MASTGLO, cleanupAfterCombat);
 }
