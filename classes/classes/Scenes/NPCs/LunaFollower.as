@@ -642,7 +642,7 @@ import classes.Scenes.SceneLib;
 		}
 		public function sexMenuSpearPolishing():void {
 			clearOutput();
-			var x:int = player.cockThatFits(36, "length");
+			var x:int = player.longestCock();
 			outputText("You request Luna to pleasure you with her mouth.\n\n");
 			outputText("At your request she simply nods. \"<i>It would be my pleasure, " + player.mf("Master","Mistress") + ". Please, relax yourself and allow me to indulge your request.</i>\"\n\n");
 			outputText("You relax, allowing Luna to remove your [armor], freeing you from the confines of your armor. Your maid finishes placing your [armor] in a neat pile off to the side before removing the top portion of her dress, revealing her modest C cups and soft skin. Approaching you again and locking lips, her hand dancing across your torso");
