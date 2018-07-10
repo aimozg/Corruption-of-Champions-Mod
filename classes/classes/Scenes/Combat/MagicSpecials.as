@@ -523,9 +523,9 @@ package classes.Scenes.Combat {
 
 		if (!player.hasStatusEffect(StatusEffects.ChanneledAttack)){
 			outputText("You begin to fiercely masturbate,"
-					+ "[if(isMale) jerking your [cock]]. "
-					+ "[if(isFemale) fingering your [pussy]. "
-					+ "[if(isHerm) jerking your [cock] and fingering your [pussy]. "
+					+ "[if(isMale) jerking your [cock]. ]"
+					+ "[if(isFemale) fingering your [pussy]. ]"
+					+ "[if(isHerm) jerking your [cock] and fingering your [pussy]. ]"
 					+ "Static electricity starts to build in your body.\n\n"
 			);
 			player.createStatusEffect(StatusEffects.ChanneledAttack, 1, 0, 0, 0);
