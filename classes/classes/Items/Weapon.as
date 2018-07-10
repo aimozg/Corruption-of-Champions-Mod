@@ -42,7 +42,9 @@ package classes.Items
 			_subType = builder.weaponType;
 			_slot = Equipment.WEAPON;
 
-			if(!builder.verb){
+			if(builder.verb){
+				_verb = builder.verb;
+			} else {
 				switch(builder.weaponType){
 					case TYPE_AXE: _verb = "cleave"; break;
 					case TYPE_POLEARM:
