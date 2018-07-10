@@ -245,9 +245,7 @@ import flash.events.Event;
 				} else if (selected is BoundNode) {
 					menu();
 					(selected as BoundNode).execute();
-					for each (var b:CoCButton in mainView.bottomButtons) {
-						if (b.visible) return;
-					}
+					if (mainView.firstButtonByVisibility(true) >= 0) return
 				} else {
 					node.execute(context);
 				}
@@ -304,9 +302,7 @@ import flash.events.Event;
 						} else {
 							node.execute(context);
 						}
-						for each (var b:CoCButton in mainView.bottomButtons) {
-							if (b.visible) return;
-						}
+						if (mainView.firstButtonByVisibility(true) >= 0) return;
 						flushOutputTextToGUI();
 						addButton(0,"Back",linkhandler,new TextEvent(TextEvent.LINK,false,false,"-1"));
 					} else {

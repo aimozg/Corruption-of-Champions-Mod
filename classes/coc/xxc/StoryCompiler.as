@@ -253,7 +253,7 @@ public class StoryCompiler extends Compiler {
 	}
 	protected function compileMenu(x:XML):MenuStmt {
 		var menu:MenuStmt = new MenuStmt();
-		compileChildrenInto(x, menu.stmts);
+		compileChildrenInto(x, menu.body.stmts);
 		return menu;
 	}
 	protected function compileButton(x:XML):ButtonStmt {
@@ -268,7 +268,7 @@ public class StoryCompiler extends Compiler {
 //						content
 //			}?
 //		}
-		var button:ButtonStmt = new ButtonStmt(stack[0],x.@pos, x.@text, x.@ref);
+		var button:ButtonStmt = new ButtonStmt(stack[0],'@pos' in x ? x.@pos : -1, x.@text, x.@ref);
 		button.disabled = x.@disabled == 'true';
 		if ('hint' in x) {
 			var hint:XML = x.hint[0];

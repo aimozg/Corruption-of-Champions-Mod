@@ -5,15 +5,18 @@ package coc.xxc.stmts {
 import classes.EngineCore;
 
 import coc.xlogic.ExecContext;
+import coc.xlogic.Statement;
 import coc.xlogic.StmtList;
 
-public class MenuStmt extends StmtList {
+public class MenuStmt extends Statement {
+	public var body:StmtList = new StmtList();
+	
 	public function MenuStmt() {
 	}
 	
 	override public function execute(context:ExecContext):void {
 		EngineCore.menu();
-		super.execute(context);
+		body.execute(context);
 	}
 }
 }

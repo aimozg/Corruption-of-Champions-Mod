@@ -559,6 +559,14 @@ import flash.text.TextFormat;
 
 		return -1;
 	}
+	public function firstButtonByVisibility(visible:Boolean):int {
+		var i:int;
+		for (i = 0; i < this.bottomButtons.length; ++i) {
+			if (buttonIsVisible(i) == visible)
+				return i;
+		}
+		return -1;
+	}
 
 	public function clearBottomButtons():void {
 		var i:int;
