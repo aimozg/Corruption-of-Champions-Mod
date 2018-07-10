@@ -160,6 +160,12 @@ public class StoryCompiler extends Compiler {
 				return compileBattle(x);
 			case "next":
 				return compileNext(x);
+			case "menu":
+				return compileMenu(x);
+			case "button":
+				return compileButton(x);
+//			case "forward":
+//				return compileForward(x);
 			case "display":
 				return compileDisplay(x);
 			case "dynStats":
@@ -245,6 +251,36 @@ public class StoryCompiler extends Compiler {
 	protected function compileNext(x:XML):NextStmt {
 		return new NextStmt(stack[0],x.@ref);
 	}
+	protected function compileMenu(x:XML):MenuStmt {
+		var menu:MenuStmt = new MenuStmt();
+		compileChildrenInto(x, menu.stmts);
+		return menu;
+	}
+	protected function compileButton(x:XML):ButtonStmt {
+//		button = element button {
+//			attribute pos { text },
+//			attribute text { text },
+//			attribute disabled { empty }?,
+//			attribute ref { text },
+//			element hint {
+//				attribute header { text }?,
+//						ATrim?,
+//						content
+//			}?
+//		}
+		var button:ButtonStmt = new ButtonStmt(stack[0],x.@pos, x.@text, x.@ref);
+		button.disabled = x.@disabled == 'true';
+		if ('hint' in x) {
+			var hint:XML = x.hint[0];
+			button.hintHeader = hint.@header;
+			button.hintText = [];
+			compileChildrenInto(hint, button.hintText);
+		}
+		return button;
+	}
+//	protected function compileForward(x:XML):NextStmt {
+//		return new ForwardStmt(stack[0],x.@ref);
+//	}
 	protected function compileDisplay(x:XML):DisplayStmt {
 		return new DisplayStmt(stack[0],x.@ref);
 	}
