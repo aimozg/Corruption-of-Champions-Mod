@@ -1,25 +1,23 @@
 package classes.display 
 {
-	import classes.BoundControlMethod;
 	import classes.InputManager;
 
-import coc.view.Block;
+	import coc.view.Block;
+	import coc.view.MainView;
 
+	import com.bit101.components.ScrollPane;
 
-	import fl.containers.ScrollPane;
-	import flash.display.DisplayObject;
-	import flash.display.MovieClip;
+	import flash.display.Bitmap;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
-	import flash.text.TextFormat;
-	import flash.utils.Dictionary;
-	import flash.ui.Keyboard;
-	import flash.utils.describeType;
-	import classes.display.BindDisplay;
 	import flash.text.TextFieldAutoSize;
-	
+	import flash.text.TextFormat;
+	import flash.ui.Keyboard;
+	import flash.utils.Dictionary;
+	import flash.utils.describeType;
+
 	/**
 	 * Defines a new UI element, providing a scrollable container to be used for display of bound
 	 * keyboard controls.
@@ -54,12 +52,13 @@ import coc.view.Block;
 			_inputManager = inputManager;
 			move(xPos,yPos);
 			setSize(width,height);
-			
-			// Cheap hack to remove the stupid styling elements of the stock ScrollPane
-			var blank:MovieClip = new MovieClip();
-			this.setStyle("upSkin", blank);
-			
-			
+
+			var pic:Bitmap = new MainView.Background1();
+			pic.width = width;
+			pic.height = height;
+			_alpha =0;
+			_background.addChild(pic);
+
 			// Initiate a new container for content that will be placed in the scroll pane
 			_content = new Block({layoutConfig:{
 				type: Block.LAYOUT_FLOW,
@@ -68,7 +67,7 @@ import coc.view.Block;
 			}});
 			_content.name = "controlContent";
 			_content.addEventListener(Block.ON_LAYOUT,function(e:Event):void{
-				if (source) {
+				if (content) {
 					update();
 				}
 			});
@@ -102,7 +101,8 @@ import coc.view.Block;
 		
 		private function MouseScrollEvent(e:MouseEvent):void
 		{
-			this.verticalScrollPosition += -( e.delta * 8 );
+			this._vScrollbar.value += -( e.delta * 8 );
+			update();
 		}
 		
 		public function ListBindingOptions():void
@@ -116,7 +116,7 @@ import coc.view.Block;
 				UpdateContentObjects();
 			}
 			
-			this.source = _content;
+			this.content.addChild(_content);
 			update();
 		}
 		
