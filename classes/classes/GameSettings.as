@@ -91,6 +91,9 @@ public class GameSettings extends BaseContent {
 			pane.addOrUpdateToggleSettings("Text Background", [
 				["Choose", menuTextBackground, "", false]
 			]);
+			pane.addOrUpdateToggleSettings("Invert Stage Background", [
+				["Invert", mainView.invert, "", false]
+			]);
 			pane.addOrUpdateToggleSettings("Font Size", [
 				["Adjust", fontSettingsMenu, "<b>Font Size: " + (flags[kFLAGS.CUSTOM_FONT_SIZE] || 20) + "</b>", false],
 				"overridesLabel"

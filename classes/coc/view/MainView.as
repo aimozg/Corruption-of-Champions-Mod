@@ -153,7 +153,6 @@ import flash.text.TextField;
 	internal static const MONSTER_W:Number        = SCREEN_W - MONSTER_X;
 	internal static const MONSTER_H:Number        = TEXTZONE_H;
 
-	private var blackBackground:BitmapDataSprite;
 	public var textBGTranslucent:BitmapDataSprite;
 	public var textBGWhite:BitmapDataSprite;
 	public var textBGTan:BitmapDataSprite;
@@ -190,14 +189,6 @@ import flash.text.TextField;
 	public var charView:CharView;
 	public function MainView():void {
 		super();
-		addElement(blackBackground = new BitmapDataSprite({
-			bitmapClass: ButtonBackground2,
-			x          : -SCREEN_W / 2,
-			width      : SCREEN_W * 2,
-			height     : SCREEN_H * 2,
-			y          : -SCREEN_H / 2,
-			fillColor  : '#000000'
-		}), {});
 		addElement(background = new BitmapDataSprite({
 			bitmapClass: Background0,
 			width      : SCREEN_W,
@@ -701,7 +692,9 @@ import flash.text.TextField;
 	//////// misc... ////////
 
 	public function invert():void {
-		this.blackBackground.visible = !this.blackBackground.visible;
+		var black:uint = 0xFF000000;
+		var white:uint = 0xFFFFFFFF;
+		stage.color = (stage.color == black ? white : black);
 	}
 
 	public function clearOutputText():void {
