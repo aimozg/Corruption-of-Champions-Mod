@@ -6,14 +6,18 @@ package classes.Items.Weapons
 {
 	import classes.Creature;
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 	import classes.PerkLib;
 
 	public class NineTailWhip extends Weapon
 	{
-		
-		public function NineTailWhip() 
-		{
-			super("NTWhip ", "NineTailWhip", "nine tail whip", "a nine tail whip", "whipping", 18, 720, "A rope that unravelled into three small ropes, each of which is unravelled again designed to whip your foes into submission.", "Large");
+
+		public function NineTailWhip() {
+			super(new WeaponBuilder("NTWhip ", Weapon.TYPE_WHIP, "nine tail whip", "Large")
+					.withShortName("NineTailWhip").withLongName("a nine tail whip")
+					.withVerb("whipping")
+					.withAttack(18).withValue(720)
+					.withDescription("A rope that unravelled into three small ropes, each of which is unravelled again designed to whip your foes into submission."));
 		}
 		
 		override public function get attack():int {

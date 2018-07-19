@@ -15,6 +15,7 @@ package classes.Items.Jewelries
 		public function SeersHairpin() 
 		{
 			super("SeerPin", "Seer’s Hairpin", "seer’s hairpin", "a seer’s hairpin", 0, 0, 1600, "This hairpin is made from silver, the tip twisted into the shape of an eye and fitted with a crystal lens. Both an ornament and a tool, this pin will empower sorcery and ki. \n\nType: Accesory (Hairpin) \nBase value: 800","Ring");
+			_itemPerks.push(PerkLib.SeersInsight.create(0.2,0,0,0));
 		}
 		
 		override public function get description():String {
@@ -27,18 +28,5 @@ package classes.Items.Jewelries
 			desc += "\nSpecial: Seer’s Insight (+20% spell effect/magical soulspell power multiplier, 20% fatigue/ki costs reduction)";
 			return desc;
 		}
-		
-		override public function equip(host:Creature):Equipable {
-			while (host.hasPerk(PerkLib.SeersInsight)) host.removePerk(PerkLib.SeersInsight);
-			host.createPerk(PerkLib.SeersInsight,0.2,0,0,0);
-			return super.equip(host);
-		}
-		
-		override public function unequip(host:Creature):Equipable {
-			while (host.hasPerk(PerkLib.SeersInsight)) host.removePerk(PerkLib.SeersInsight);
-			return super.unequip(host);
-		}
-		
 	}
-
 }

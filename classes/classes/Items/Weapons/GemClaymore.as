@@ -1,11 +1,12 @@
 package classes.Items.Weapons {
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 	import classes.StatusEffects;
 	import classes.lists.DamageType;
 
 	public class GemClaymore extends Weapon {
-		public function GemClaymore(id:String, shortName:String, name:String, longName:String, verb:String, attack:Number, value:Number = 0, description:String = null, perk:String = "", element:DamageType = null) {
-			super(id, shortName, name, longName, verb, attack, value, description);
+		public function GemClaymore(element:DamageType, builder:WeaponBuilder) {
+			super(builder);
 			_baseElement = element;
 		}
 

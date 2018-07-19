@@ -6,13 +6,17 @@ package classes.Items.Weapons
 {
 	import classes.Creature;
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 
 	public class Excalibur extends Weapon
 	{
-		
-		public function Excalibur() 
-		{
-			super("Excalib", "Excalibur", "Excalibur", "an Excalibur", "slash", 10, 800, "A legendary sword said to have been made by Marae for her champion. This weapon radiates divine power, purifying its wielder and protecting them from impurity.", "Excalibur");
+
+		public function Excalibur() {
+			super(new WeaponBuilder("Excalib", Weapon.TYPE_SWORD, "Excalibur", "Excalibur")
+					.withShortName("Excalibur").withLongName("an Excalibur")
+					.withVerb("slash")
+					.withAttack(10).withValue(800)
+					.withDescription("A legendary sword said to have been made by Marae for her champion. This weapon radiates divine power, purifying its wielder and protecting them from impurity."));
 		}
 		
 		override public function get attack():int {

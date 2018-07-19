@@ -5,11 +5,16 @@
 package classes.Items.Weapons 
 {
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 
 	public class DualLargeAxe extends Weapon {
-		
+
 		public function DualLargeAxe() {
-			super("D.L.Axe", "D.L.Axe", "dual large axes", "a pair of axes large enough for a minotaur", "cleaves", 18, 1440, "This pair of massive axes once belonged to a minotaur.  It'd be hard for anyone smaller than a giant to wield effectively.  Those axes are double-bladed and deadly-looking.  Requires height of 6'6\".", "Dual Large");
+			super(new WeaponBuilder("D.L.Axe", Weapon.TYPE_AXE, "dual large axes", "Dual Large")
+					.withShortName("D.L.Axe").withLongName("a pair of axes large enough for a minotaur")
+					.withVerb("cleaves")
+					.withAttack(18).withValue(1440)
+					.withDescription("This pair of massive axes once belonged to a minotaur.  It'd be hard for anyone smaller than a giant to wield effectively.  Those axes are double-bladed and deadly-looking.  Requires height of 6'6\"."));
 		}
 		
 		override public function get attack():int {

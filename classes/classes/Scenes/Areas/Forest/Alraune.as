@@ -4,149 +4,117 @@
  */
 package classes.Scenes.Areas.Forest 
 {
-import classes.*;
-import classes.BodyParts.Butt;
-import classes.BodyParts.Hips;
-import classes.BodyParts.LowerBody;
-import classes.Scenes.Holidays;
-import classes.Scenes.SceneLib;
-import classes.internals.ChainedDrop;
-import classes.display.SpriteDb;
-
-	import flash.display.Scene;
+	import classes.*;
+	import classes.BodyParts.Butt;
+	import classes.BodyParts.Hips;
+	import classes.BodyParts.LowerBody;
+	import classes.Scenes.Holidays;
+	import classes.Scenes.SceneLib;
+	import classes.display.SpriteDb;
+	import classes.internals.ChainedDrop;
+	import classes.internals.Utils;
 
 	public class Alraune extends Monster
 	{
-
-		override public function handleWait():Object {
-			alrauneWait();
-			return false;
-		}
-
+		private var _climbed:Boolean = false;
 		public function trapLevel(adjustment:Number = 0):Number {
-			if(!hasStatusEffect(StatusEffects.Level)) createStatusEffect(StatusEffects.Level,6,0,0,0);
-			if(adjustment != 0) {
-				addStatusValue(StatusEffects.Level,1,adjustment);
-				if(statusEffectv1(StatusEffects.Level) < 1) changeStatusValue(StatusEffects.Level,1,1);
-				if(statusEffectv1(StatusEffects.Level) > 6) changeStatusValue(StatusEffects.Level,1,6);
+			var level:StatusEffectClass;
+			if (!hasStatusEffect(StatusEffects.Level)) {
+				level = createStatusEffect(StatusEffects.Level, 6, 0, 0, 0);
+			} else {
+				level = statusEffectByType(StatusEffects.Level);
 			}
-			return statusEffectv1(StatusEffects.Level);
+			level.value1 = Utils.boundInt(1, level.value1 + adjustment, 6);
+			return level.value1;
 		}
 		
-		public function alrauneWait():void {
+		public function alrauneClimb():void {
+			_climbed = true;
 			clearOutput();
 			game.spriteSelect(SpriteDb.s_alraune);
-			outputText("You struggle against ");
-			if (Holidays.isHalloween()) outputText("Jack-O-Raune");
-			else outputText("the alraune");
-			outputText(" vines, forcefully pulling yourself a good distance away from her.\n\n");
+			outputText("You struggle against the [monster name]'s vines, forcefully pulling yourself a good distance away from her.\n\n");
 			trapLevel(2);
 			player.fatigue += 50;
+			if(SceneLib.combat.combatIsOver()){return;}
+			doAI();
+			SceneLib.combat.combatRoundOver();
 		}
 		
 		public function alraunePollenCloud():void {
-			clearOutput();
-			if (Holidays.isHalloween()) outputText("Jack-O-Raune");
-			else outputText("The alraune");
-			outputText(" giggles as she unleashes a thick cloud of pollen in your general direction.\n\n");
-			outputText("\"<i>Just give in to me. I will make it so pleasurable for you.</i>\"\n\n");
-			outputText("There is no way you will be able to not breathe it in and you feel your desire rise as the insidious aphrodisiac does its dirty work.\n\n");
+			outputText("The [monster name] giggles as she unleashes a thick cloud of pollen in your general direction.\n\n"
+					+ "[say: Just give in to me. I will make it so pleasurable for you.]\n\n"
+					+ "There is no way you will be able to not breathe it in and you feel your desire rise as the insidious aphrodisiac does its dirty work.\n\n");
 			createStatusEffect(StatusEffects.LustAura, 0, 0, 0, 0);
 		}
 		
 		public function alrauneStrangulate():void {
-			clearOutput();
-			if (Holidays.isHalloween()) outputText("Jack-O-Raune");
-			else outputText("The alraune");
-			outputText("’s vines suddenly wrap tight around your neck and strangle you, preventing you from pronouncing any incantations. The ");
-			if (Holidays.isHalloween()) outputText("pumpkin");
-			else outputText("plant");
-			outputText(" woman gives you an annoyed glare.");
-			outputText("\"<i>I’m done with your magic. Be a good " + player.mf("boy", "girl") + " and just give in.</i>\"");
+			outputText("The [monster name]’s vines suddenly wrap tight around your neck and strangle you, preventing you from pronouncing any incantations. The " + (Holidays.isHalloween()? "pumpkin" : "plant") + " woman gives you an annoyed glare.");
+			outputText("[say: I’m done with your magic. Be a good [boy] and just give in.]");
 			player.removeStatusEffect(StatusEffects.CastedSpell);
 			player.createStatusEffect(StatusEffects.Sealed, 2, 10, 0, 0);
 		}
 		
 		public function alrauneTeaseAttack():void {
-			clearOutput();
-			if (rand(2) == 1) {
-				if (Holidays.isHalloween()) outputText("Jack-O-Raune");
-				else outputText("The alraune");
-				outputText(" parts her grass-like hair away to reveal her supple breasts, moving her other hand to her nectar drenched pussy then back to her mouth. She sensually licks her fingers clean, then blows you a kiss.\n\n");
-				outputText("\"<i>Don’t you want a taste of what my lovely body can offer? It is all yours to play with, all you need to do is give in to me.</i>\"\n\n");
-			}
-			else {
-				if (Holidays.isHalloween()) outputText("Jack-O-Raune");
-				else outputText("The alraune");
-				outputText(" grabs some of her nectar suggestively, letting it flow all over her breast, thigh and even in her hair.\n\n");
-				outputText("\"<i>Mmmmmmm I so love being covered in sticky fluids. How about you?</i>\"\n\n");
-			}
+			outputText("The [monster name] ");
+			outputText(randomChoice(
+					"parts her grass-like hair away to reveal her supple breasts, moving her other hand to her nectar drenched pussy then back to her mouth. She sensually licks her fingers clean, then blows you a kiss.\n\n"
+					+"[say: Don’t you want a taste of what my lovely body can offer? It is all yours to play with, all you need to do is give in to me.]\n\n",
+
+					"grabs some of her nectar suggestively, letting it flow all over her breast, thigh and even in her hair.\n\n"
+					+"[say: Mmmmmmm I so love being covered in sticky fluids. How about you?]\n\n"
+			));
 			outputText("Unable to take your gaze away from her lewd show, you feel yourself getting more aroused. ");
 			var lustDmg:int = rand(player.lib / 20) + rand(this.lib / 10) + 10;
 			player.dynStats("lus", lustDmg);
 			outputText("\n\n");
 		}
-		
+
 		public function alrauneHaloweenSpecial():void {
-			clearOutput();
 			outputText("The Jack-O-Raune suddenly starts laughing and throwing small pumpkins at you. They explode upon contact splashing you with what seems to be aphrodisiac.\n\n");
-			alrauneHaloweenSpecial1();
-			alrauneHaloweenSpecial1();
-			alrauneHaloweenSpecial1();
-		}
-		public function alrauneHaloweenSpecial1():void {
-			if (player.getEvasionRoll()) outputText("The pumpkin miss you by a few inch.\n");
-			else {
-				var damage:int = 5 + rand(20);
-				damage = Math.round(damage);
-				var lustDmg:int = rand(player.lib / 25) + rand(this.lib / 15) + 5;
-				lustDmg = Math.round(lustDmg);
-				outputText("You are hit by a pumpkin for " + damage + " damage! " + lustDmg + " lust damage!");
-				damage = player.takePhysDamage(damage, true);
-				player.dynStats("lus", lustDmg);
-				outputText("\n");
-			}
-		}
-		
-		override protected function performCombatAction():void
-		{
-			if (hasStatusEffect(StatusEffects.Level)) {
-				if (!hasStatusEffect(StatusEffects.Stunned) && player.hasStatusEffect(StatusEffects.CastedSpell)) alrauneStrangulate();
+			for (var i:int = 0; i < 3; i++) {
+				if (player.getEvasionRoll()) {outputText("The pumpkin miss you by a few inch.\n");}
 				else {
-					if (Holidays.isHalloween()) {
-						var choice1:Number = rand(3);
-						if (choice1 == 0) alrauneTeaseAttack();
-						if (choice1 == 1) {
-							if (!hasStatusEffect(StatusEffects.LustAura)) alraunePollenCloud();
-							else alrauneTeaseAttack();
-						}
-						if (choice1 == 2) alrauneHaloweenSpecial();
-					}
-					else {
-						var choice2:Number = rand(2);
-						if (choice2 == 0) alrauneTeaseAttack();
-						if (choice2 == 1) {
-							if (!hasStatusEffect(StatusEffects.LustAura)) alraunePollenCloud();
-							else alrauneTeaseAttack();
-						}
-					}
+					var damage:int = 5 + rand(20);
+					var lustDmg:int = rand(player.lib / 25) + rand(this.lib / 15) + 5;
+					outputText("You are hit by a pumpkin for " + damage + " damage! " + lustDmg + " lust damage!");
+					player.takePhysDamage(damage);
+					player.takeLustDamage(lustDmg);
+					outputText("\n");
 				}
-				if (!hasStatusEffect(StatusEffects.Climbed)) {
-					outputText("\n\nMeanwhile the vines keep pulling you toward the pitcher.");
-					trapLevel(-1);
-				}
-				else removeStatusEffect(StatusEffects.Climbed);
 			}
-			else super.performCombatAction();
 		}
-		
-		override public function defeated(hpVictory:Boolean):void
-		{
+
+		override protected function performCombatAction():void {
+			if (!hasStatusEffect(StatusEffects.Level)) {
+				return super.performCombatAction();
+			}
+			if (!hasStatusEffect(StatusEffects.Stunned) && player.hasStatusEffect(StatusEffects.CastedSpell)) {
+				alrauneStrangulate();
+			} else {
+				var attacks:Array = [alrauneTeaseAttack];
+				if (!hasStatusEffect(StatusEffects.LustAura)) {
+					attacks.push(alraunePollenCloud);
+				} else {
+					attacks.push(alrauneTeaseAttack);
+				}
+				if (Holidays.isHalloween()) {
+					attacks.push(alrauneHaloweenSpecial);
+				}
+				var chosen:Function = randomChoice(attacks);
+				chosen();
+			}
+			if (!_climbed) {
+				outputText("\n\nMeanwhile the vines keep pulling you toward the pitcher.");
+				trapLevel(-1);
+			}
+			_climbed = false;
+		}
+
+		override public function defeated(hpVictory:Boolean):void {
 			SceneLib.forest.alrauneScene.alrauneDeepwoodsWon();
 		}
 
-		override public function won(hpVictory:Boolean,pcCameWorms:Boolean):void
-		{
+		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void {
 			SceneLib.forest.alrauneScene.alrauneDeepwoodsLost();
 		}
 
@@ -162,7 +130,7 @@ import classes.display.SpriteDb;
 					text += "The [monster name] keeps pulling you ever closer. You are getting dangerously close to her.";
 					break;
 				default:
-					text += "The [monster name] keeps pulling you ever closer. You are almost in the pitcher, the "
+					text += "The [monster name] keeps pulling you ever closer. You are almost in the pitcher, the ";
 					text += Holidays.isHalloween()? "pumpkin" : "plant";
 					text += " woman smiling and waiting with open arms to help you in. [b: You need to get some distance or you will be grabbed and drawn inside her flower!]"
 			}

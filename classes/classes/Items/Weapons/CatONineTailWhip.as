@@ -2,20 +2,24 @@
  * ...
  * @author Ormael
  */
-package classes.Items.Weapons 
+package classes.Items.Weapons
 {
 	import classes.Creature;
 	import classes.Items.Weapon;
+	import classes.Items.WeaponBuilder;
 	import classes.PerkLib;
 
 	public class CatONineTailWhip extends Weapon
 	{
-		
-		public function CatONineTailWhip() 
-		{
-			super("CNTWhip", "CatONineTailWhip", "Bastet Whip", "a Bastet Whip", "whipping", 27, 1080, "A rope made from unknown magic beast fur that unravelled into three small ropes, each of which is unravelled again designed to whip and cut your foes into submission.", "Large");
+
+		public function CatONineTailWhip() {
+			super(new WeaponBuilder("CNTWhip", Weapon.TYPE_WHIP, "Bastet Whip", "Large")
+					.withShortName("CatONineTailWhip").withLongName("a Bastet Whip")
+					.withVerb("whipping")
+					.withAttack(27).withValue(1080)
+					.withDescription("A rope made from unknown magic beast fur that unravelled into three small ropes, each of which is unravelled again designed to whip and cut your foes into submission."));
 		}
-		
+
 		override public function get attack():int {
 			var boost:int = 0;
 			if ((game.player.str + game.player.spe) >= 270) {
@@ -33,7 +37,7 @@ package classes.Items.Weapons
             if (((game.player.str + game.player.spe) < 90) && game.player.hasPerk(PerkLib.ArcaneLash)) boost += 9;
 			return (9 + boost);
         }
-		
+
 		override public function canUse(host:Creature):Boolean {
 			if (game.player.hasPerk(PerkLib.TitanGrip)) return true;
 			outputText("You aren't skilled in handling large weapons with one hand yet to effectively use this whip. Unless you want to hurt yourself instead enemies when trying to use it...  ");

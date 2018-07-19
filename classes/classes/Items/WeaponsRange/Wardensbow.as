@@ -2,21 +2,25 @@
  * ...
  * @author Zevos
  */
-package classes.Items.WeaponsRange 
-{
-	import classes.Creature;
-	import classes.Items.Equipable;
+package classes.Items.WeaponsRange {
+	import classes.Items.WeaponBuilder;
 	import classes.Items.WeaponRange;
 	import classes.PerkLib;
 
-	public class Wardensbow extends WeaponRange
-	{
-		
-		public function Wardensbow() 
-		{
-			super("WardBow", "WardensBow", "Warden’s bow", "a Warden’s bow", "shot", 20, 2000, "Recurve bows like this serve as a compromise for a shortbow’s accuracy and ease of use, with a longbow’s devastating stopping power.  The sacred wood quietly hums Yggdrasil's song, unheard by all but it’s wielder.", "Bow", PerkLib.Accuracy1,10,0,0,0);
+	public class Wardensbow extends WeaponRange {
+
+		public function Wardensbow() {
+			super(new WeaponBuilder("WardBow", WeaponRange.TYPE_BOW, "Warden’s bow", WeaponRange.TYPE_BOW)
+					.withShortName("WardensBow").withLongName("a Warden’s bow")
+					.withVerb("shot")
+					.withAttack(20).withValue(2000)
+					.withDescription("Recurve bows like this serve as a compromise for a shortbow’s accuracy and ease of use, with a longbow’s devastating stopping power.  The sacred wood quietly hums Yggdrasil's song, unheard by all but it’s wielder.")
+					.withPerk(PerkLib.Accuracy1, 10)
+					.withPerk(PerkLib.DaoistsFocus, 0.4)
+					.withPerk(PerkLib.BodyCultivatorsFocus, 0.4)
+					.withPerk(PerkLib.WildWarden));
 		}
-		
+
 		override public function get description():String {
 			var desc:String = _description;
 			//Type
@@ -32,24 +36,5 @@ package classes.Items.WeaponsRange
 			desc += "\nSpecial: Wild-Warden (enables Resonance Volley ki power)";
 			return desc;
 		}
-		
-		override public function equip(host:Creature):Equipable {
-			while (host.hasPerk(PerkLib.DaoistsFocus)) host.removePerk(PerkLib.DaoistsFocus);
-			host.createPerk(PerkLib.DaoistsFocus,0.4,0,0,0);
-			while (host.hasPerk(PerkLib.BodyCultivatorsFocus)) host.removePerk(PerkLib.BodyCultivatorsFocus);
-			host.createPerk(PerkLib.BodyCultivatorsFocus,0.4,0,0,0);
-			while (host.hasPerk(PerkLib.WildWarden)) host.removePerk(PerkLib.WildWarden);
-			host.createPerk(PerkLib.WildWarden,0,0,0,0);
-			return super.equip(host);
-		}
-		
-		override public function unequip(host:Creature):Equipable {
-			while (host.hasPerk(PerkLib.DaoistsFocus)) host.removePerk(PerkLib.DaoistsFocus);
-			while (host.hasPerk(PerkLib.BodyCultivatorsFocus)) host.removePerk(PerkLib.BodyCultivatorsFocus);
-			while (host.hasPerk(PerkLib.WildWarden)) host.removePerk(PerkLib.WildWarden);
-			return super.unequip(host);
-		}
-		
 	}
-
 }

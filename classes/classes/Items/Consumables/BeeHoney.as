@@ -269,12 +269,12 @@ package classes.Items.Consumables
 			if (special) { //All the special honey effects occur after any normal bee transformations (if the player wasn't a full bee morph)
 				//Cock growth multiplier.
 				var mult:int = 1.0;
-				if (player.cocks[0].cArea() >= 140) mult -= 0.2;
-				if (player.cocks[0].cArea() >= 180) mult -= 0.2;
-				if (player.cocks[0].cArea() >= 220) mult -= 0.2;
-				if (player.cocks[0].cArea() >= 260) mult -= 0.2;
-				if (player.cocks[0].cArea() >= 300) mult -= 0.1;
-				if (player.cocks[0].cArea() >= 400) mult -= 0.1; //Cock stops growing at that point.
+				if (player.cocks[0].cArea >= 140) mult -= 0.2;
+				if (player.cocks[0].cArea >= 180) mult -= 0.2;
+				if (player.cocks[0].cArea >= 220) mult -= 0.2;
+				if (player.cocks[0].cArea >= 260) mult -= 0.2;
+				if (player.cocks[0].cArea >= 300) mult -= 0.1;
+				if (player.cocks[0].cArea >= 400) mult -= 0.1; //Cock stops growing at that point.
 				//Begin TF
 				if (!player.hasCock()) {
 					outputText("\n\nYou double over in pain as the effects start to concentrate into your groin.  You need to get release, but what you’ve got just isn’t cutting it.  You fall to the ground and grab at your crotch, trying desperately to get the release you need.  Finally, it happens.  With a sudden burst of intense relief and sexual satisfaction, a new human looking penis bursts from your skin and sprays your seed all over the ground in front of you.  When you’re able to recover and take a look at your new possession.  <b>You now have an eight inch long human cock that is very sensitive to stimulation.</b>");
@@ -287,17 +287,17 @@ package classes.Items.Consumables
 				else if (player.cocks.length > 1) {
 					var biggest:int = player.biggestCockIndex();
 					outputText("\n\nThe effects of the honey move towards your groin, and into your [cocks], causing them to stand at attention.  They quiver for a moment, and feel rather itchy.  Suddenly you are overwhelmed with pleasure as <b>your " + player.cockDescript(biggest) + " is absorbed into your [cock]!</b>  You grab onto the merging cock and pump it with your hands as it increases in size and you cum in pleasure.  Your [cock] seems a lot more sensitive now...");
-					player.cocks[0].cockLength		+= 5 * Math.sqrt(0.2 * player.cocks[biggest].cArea());
-					player.cocks[0].cockThickness	+= Math.sqrt(0.2 * player.cocks[biggest].cArea());
+					player.cocks[0].cockLength		+= 5 * Math.sqrt(0.2 * player.cocks[biggest].cArea);
+					player.cocks[0].cockThickness	+= Math.sqrt(0.2 * player.cocks[biggest].cArea);
 					player.removeCock(biggest, 1);
 					player.orgasm();
 					game.player.dynStats("sen", 5);
 				}
-				else if (player.cocks[0].cArea() < 100) {
+				else if (player.cocks[0].cArea < 100) {
 					outputText("\n\nYour [cock] suddenly becomes rock hard and incredibly sensitive to the touch.  You pull away your [armor], and start to masturbate furiously as it rapidly swells in size.  When the change finally finishes, you realize that your [cock] has both grown much longer and wider!  <b>");
-					if (player.cocks[0].cArea() <= 20)
+					if (player.cocks[0].cArea <= 20)
 						outputText("It now swings as low as your knees!");
-					else if (player.cocks[0].cArea() <= 50)
+					else if (player.cocks[0].cArea <= 50)
 						outputText("While erect, your massive member fills the lower half of your vision.");
 					else outputText("Your member is now simply huge, you wonder what in the world could actually take your massive size now?");
 					outputText("</b>");

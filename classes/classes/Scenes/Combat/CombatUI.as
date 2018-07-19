@@ -207,10 +207,10 @@ public class CombatUI extends BaseCombatContent {
 		
 		// Modifications - monster-special actions
 		if (monster is SandTrap) {
-			btnSpecial1.show("Climb", (monster as SandTrap).sandTrapWait, "Climb the sand to move away from the sand trap.");
+			btnSpecial1.show("Climb", (monster as SandTrap).sandTrapClimb, "Climb the sand to move away from the sand trap.");
 		} else if (monster is Alraune) {
 			if (player.fatigueLeft() < 50) btnSpecial1.disable("You're too tired to struggle.");
-			else btnSpecial1.show("Struggle", (monster as Alraune).alrauneWait, "Struggle to forcefully pull yourself a good distance away from plant woman.");
+			else btnSpecial1.show("Struggle", (monster as Alraune).alrauneClimb, "Struggle to forcefully pull yourself a good distance away from plant woman.");
 		} else if (monster is DriderIncubus) {
 			var drider:DriderIncubus = monster as DriderIncubus;
 			if (!drider.goblinFree) btnSpecial1.show("Free Goblin", drider.freeGoblin);

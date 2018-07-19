@@ -9,16 +9,10 @@ import classes.internals.*;
 
 public class SandTrap extends Monster
 	{
-
-		public override function handleWait():Object{
-			sandTrapWait();
-			return false;
-		}
-		//Wait:
-		public function sandTrapWait():void {
+		public function sandTrapClimb():void {
 			clearOutput();
 			game.spriteSelect(97);
-			if(!hasStatusEffect(StatusEffects.Climbed)) createStatusEffect(StatusEffects.Climbed,0,0,0,0);
+			createOrFindStatusEffect(StatusEffects.Climbed);
 			outputText("Instead of attacking, you turn away from the monster and doggedly attempt to climb back up the pit, digging all of your limbs into the soft powder as you climb against the sandslide.");
 			if(trapLevel() == 4) {
 				outputText("\n\nYou eye the ground above you.  The edge of the pit is too sheer, the ground too unstable... although it looks like you can fight against the currents carrying you further down, it seems impossible to gain freedom with the sand under the monster's spell.");
@@ -36,6 +30,8 @@ public class SandTrap extends Monster
 				}
 			}
 			outputText("\n\n");
+			doAI();
+			SceneLib.combat.combatRoundOver();
 		}
 
 		public function trapLevel(adjustment:Number = 0):Number {

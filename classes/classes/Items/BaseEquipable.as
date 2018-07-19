@@ -63,10 +63,23 @@ package classes.Items {
 		}
 
 		public function equip(host:Creature):Equipable {
+			for each(var perk:PerkClass in _itemPerks){
+				while (host.hasPerk(perk.ptype)) {
+					host.removePerk(perk.ptype);
+				}
+				host.createPerk(perk.ptype, perk.value1, perk.value2, perk.value3, perk.value4);
+			}
+			applyBuffs(host);
 			return this;
 		}
 
 		public function unequip(host:Creature):Equipable {
+			for each (var perk:PerkClass in _itemPerks){
+				while (host.hasPerk(perk.ptype)){
+					host.removePerk(perk.ptype);
+				}
+			}
+			host.removeStatEffects(tagForBuffs);
 			return this;
 		}
 

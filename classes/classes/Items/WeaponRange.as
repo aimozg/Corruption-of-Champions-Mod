@@ -17,27 +17,25 @@ package classes.Items
 		public static const TYPE_TOME:String = "Tome";
 
 		private var _ammoWord:String;
-		private var _ammo:int = 0;
+		private var _ammo:int;
 		
-		public function WeaponRange(id:String, shortName:String, name:String, longName:String, verb:String, attack:Number, value:Number = 0, description:String = null, perk:String = "", ptype:PerkType = null, v1:Number = 0, v2:Number = 0, v3:Number = 0, v4:Number = 0) {
-			super(id, shortName, name, longName, verb, attack, value, description, perk, ptype, v1, v2, v3, v4);
-			switch(perk){
-				case "Bow": _ammoWord = "arrow"; break;
-				case "Crossbow": _ammoWord = "bolt"; break;
-				case "Throwing": _ammoWord = "projectile"; break;
-				case "Pistol":
-				case "Rifle":
-					_ammoWord = "bullet"
+		public function WeaponRange(builder:WeaponBuilder) {
+			super(builder);
+			if(builder.ammoWord){
+				_ammoWord = builder.ammoWord;
+			} else {
+				switch(builder.weaponType){
+					case TYPE_BOW: _ammoWord = "arrow"; break;
+					case TYPE_CROSSBOW: _ammoWord = "bolt"; break;
+					case TYPE_THROWING: _ammoWord = "projectile"; break;
+					case TYPE_PISTOL:
+					case TYPE_RIFLE:
+						_ammoWord = "bullet"
+				}
 			}
-			_subType = perk;
+			_ammo = builder.ammo;
+			_subType = builder.weaponType;
 			_slot = Equipment.RANGED;
-		}
-
-		public static function fromBuilder(ammo:int, builder:WeaponBuilder):WeaponRange {
-			if(!builder.verb){builder.verb = "shot";}
-			var weapon:WeaponRange = Weapon.fromBuilder(builder) as WeaponRange;
-			weapon._ammo = ammo;
-			return weapon;
 		}
 
 		public function get ammoWord():String{

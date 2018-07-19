@@ -15,6 +15,7 @@ package classes.Items.Jewelries
 		public function MediusSignet() 
 		{
 			super("MSignit", "Medius Signet", "Medius Signet", "a Medius Signet", 0, 0, 800, "A gift from your mentor, this ring bears the seal of an extinct clan of magi.","Ring");
+			_itemPerks.push(PerkLib.Ambition.create(0.2,0.15,0,0))
 		}
 		
 		override public function get description():String {
@@ -27,18 +28,6 @@ package classes.Items.Jewelries
 			desc += "\nSpecial: Ambition (+20% spell effect multiplier, 15% power boost/cost reduction for white magic)";
 			return desc;
 		}
-		
-		override public function equip(host:Creature):Equipable {
-			while (host.hasPerk(PerkLib.Ambition)) host.removePerk(PerkLib.Ambition);
-			host.createPerk(PerkLib.Ambition,0.2,0.15,0,0);
-			return super.equip(host);
-		}
-		
-		override public function unequip(host:Creature):Equipable {
-			while (host.hasPerk(PerkLib.Ambition)) host.removePerk(PerkLib.Ambition);
-			return super.unequip(host);
-		}
-		
 	}
 
 }
