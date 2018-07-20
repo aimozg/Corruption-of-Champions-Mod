@@ -156,13 +156,13 @@ public class Block extends Sprite {
 		return super.height-ymin;
 	}
 	override public function set width(value:Number):void {
-		if (width != value) {
+		if (explicitWidth != value) {
 			explicitWidth = value;
 			resize();
 		}
 	}
 	override public function set height(value:Number):void {
-		if (height != value) {
+		if (explicitHeight != value) {
 			explicitHeight = value;
 			resize();
 		}
