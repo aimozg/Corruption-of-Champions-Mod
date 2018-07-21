@@ -1,4 +1,4 @@
-﻿package classes
+package classes
 {
 import classes.BodyParts.Antennae;
 import classes.BodyParts.Arms;
@@ -2313,6 +2313,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 				mod.reset();
 			}
 		}
+		player.updateStats();
 		player.dynStats();
 		doNext(playerMenu);
 	}
