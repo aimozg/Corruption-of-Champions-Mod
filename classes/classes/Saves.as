@@ -1,4 +1,4 @@
-package classes
+﻿package classes
 {
 import classes.BodyParts.Antennae;
 import classes.BodyParts.Arms;
@@ -18,6 +18,9 @@ import classes.Scenes.Areas.Desert.SandWitchScene;
 import classes.Scenes.NPCs.JojoScene;
 import classes.Scenes.NPCs.XXCNPC;
 import classes.Scenes.SceneLib;
+import classes.Stats.BuffableStat;
+import classes.Stats.IStat;
+import classes.internals.Jsonable;
 import classes.lists.BreastCup;
 
 import flash.events.Event;
@@ -834,6 +837,11 @@ public function saveGameObject(slot:String, isFile:Boolean):void
 		saveFile.data.nosePLong = player.nosePLong;
 		
 		//MAIN STATS
+		saveFile.data.stats = {};
+		for (var k:String in player.stats) {
+			var stat:Jsonable = player.stats[k] as Jsonable;
+			saveFile.data.stats[k] = stat.saveToObject();
+		}
 		saveFile.data.strStat = player.strStat.saveToObject();
 		saveFile.data.touStat = player.touStat.saveToObject();
 		saveFile.data.speStat = player.speStat.saveToObject();
@@ -1513,8 +1521,13 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		player.nosePLong = saveFile.data.nosePLong;
 		
 		//MAIN STATS
-		
-		if (saveFile.data.strStat) {
+		if (saveFile.data.stats) {
+			for (var k:String in saveFile.data.stats) {
+				if (player.stats[k] is Jsonable) {
+					player.stats[k].loadFromObject(saveFile.data.stats[k], false);
+				}
+			}
+		} else if (saveFile.data.strStat) {
 			player.strStat.loadFromObject(saveFile.data.strStat, false);
 			player.touStat.loadFromObject(saveFile.data.touStat, false);
 			player.speStat.loadFromObject(saveFile.data.speStat, false);
