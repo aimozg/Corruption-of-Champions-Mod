@@ -191,13 +191,9 @@ private function accessEyesMenu():void {
 	else if (player.hasStatusEffect(StatusEffects.UnlockedSpiderFourEyes) && player.eyes.type == Eyes.FOUR_SPIDER_EYES) addButtonDisabled(0, "Spider", "You already have spider four eyes.");
 	else if (player.hasStatusEffect(StatusEffects.UnlockedSpiderFourEyes) && player.eyes.type != Eyes.FOUR_SPIDER_EYES && player.ki < 100) addButtonDisabled(0, "Spider", "You not have enough Ki for this metamorphosis.");
 	else addButtonDisabled(0, "???", "You not yet unlocked this metamorphosis!");
-	if (player.hasStatusEffect(StatusEffects.UnlockedGorgonEyes) && player.eyes.type != Eyes.GORGON && player.ki >= 100) addButton(3, "Gorgon", metamorphGorgonEyes);
-	else if (player.hasStatusEffect(StatusEffects.UnlockedGorgonEyes) && player.eyes.type == Eyes.GORGON) addButtonDisabled(3, "Gorgon", "You already have gorgon eyes.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedGorgonEyes) && player.eyes.type != Eyes.GORGON && player.ki < 100) addButtonDisabled(3, "Gorgon", "You not have enough Ki for this metamorphosis.");
-	else addButtonDisabled(3, "???", "You not yet unlocked this metamorphosis!");
-	if (player.hasStatusEffect(StatusEffects.UnlockedFoxEyes) && player.eyes.type != Eyes.FOX && player.ki >= 100) addButton(6, "Fox", metamorphEyesFox);
-	else if (player.hasStatusEffect(StatusEffects.UnlockedFoxEyes) && player.eyes.type == Eyes.FOX) addButtonDisabled(6, "Fox", "You already have fox eyes.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedFoxEyes) && player.eyes.type != Eyes.FOX && player.ki < 100) addButtonDisabled(6, "Fox", "You not have enough Ki for this metamorphosis.");
+	if (player.hasStatusEffect(StatusEffects.UnlockedFoxEyes) && player.eyes.type != Eyes.SLITS && player.ki >= 100) addButton(6, "Fox", metamorphEyesFox);
+	else if (player.hasStatusEffect(StatusEffects.UnlockedFoxEyes) && player.eyes.type == Eyes.SLITS) addButtonDisabled(6, "Fox", "You already have fox eyes.");
+	else if (player.hasStatusEffect(StatusEffects.UnlockedFoxEyes) && player.eyes.type != Eyes.SLITS && player.ki < 100) addButtonDisabled(6, "Fox", "You not have enough Ki for this metamorphosis.");
 	else addButtonDisabled(6, "???", "You not yet unlocked this metamorphosis!");
 	if (player.hasStatusEffect(StatusEffects.UnlockedLizardEyes) && player.eyes.type != Eyes.REPTILIAN && player.ki >= 100) addButton(7, "Lizard", metamorphLizardEyes);
 	else if (player.hasStatusEffect(StatusEffects.UnlockedLizardEyes) && player.eyes.type == Eyes.REPTILIAN) addButtonDisabled(7, "Lizard", "You already have lizard eyes.");
@@ -553,9 +549,9 @@ private function accessPage1WingsMenu():void {
 	else if (player.hasStatusEffect(StatusEffects.UnlockedDemonLargeBatWings) && player.wings.type != Wings.BAT_LIKE_LARGE && player.ki < 200) addButtonDisabled(5, "Demon(L)", "You not have enough Ki for this metamorphosis.");
 	else if (player.hasStatusEffect(StatusEffects.UnlockedDemonLargeBatWings) && player.wings.type != Wings.BAT_LIKE_TINY) addButtonDisabled(5, "Demon(L)", "You not have proper type of wings for this metamorphosis.");
 	else addButtonDisabled(5, "???", "You not yet unlocked this metamorphosis!");
-	if (player.hasStatusEffect(StatusEffects.UnlockedHarpyWings) && player.wings.type != Wings.FEATHERED_LARGE && player.ki >= 100) addButton(6, "Harpy", metamorphHarpyWings);
-	else if (player.hasStatusEffect(StatusEffects.UnlockedHarpyWings) && player.wings.type == Wings.FEATHERED_LARGE) addButtonDisabled(6, "Harpy", "You already have harpy wings.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedHarpyWings) && player.wings.type != Wings.FEATHERED_LARGE && player.ki < 100) addButtonDisabled(6, "Harpy", "You not have enough Ki for this metamorphosis.");
+	if (player.hasStatusEffect(StatusEffects.UnlockedHarpyWings) && player.wings.type != Wings.FEATHERED && player.ki >= 100) addButton(6, "Harpy", metamorphHarpyWings);
+	else if (player.hasStatusEffect(StatusEffects.UnlockedHarpyWings) && player.wings.type == Wings.FEATHERED) addButtonDisabled(6, "Harpy", "You already have harpy wings.");
+	else if (player.hasStatusEffect(StatusEffects.UnlockedHarpyWings) && player.wings.type != Wings.FEATHERED && player.ki < 100) addButtonDisabled(6, "Harpy", "You not have enough Ki for this metamorphosis.");
 	else addButtonDisabled(6, "???", "You not yet unlocked this metamorphosis!");
 	if (player.hasStatusEffect(StatusEffects.UnlockedDraconicWingsSmall) && player.wings.type != Wings.DRACONIC_SMALL && player.ki >= 100) addButton(7, "Dragon(S)", metamorphDragonWingsSmall);
 	else if (player.hasStatusEffect(StatusEffects.UnlockedDraconicWingsSmall) && player.wings.type == Wings.DRACONIC_SMALL) addButtonDisabled(7, "Dragon(S)", "You already have small dragon wings.");
@@ -576,10 +572,6 @@ private function accessPage1WingsMenu():void {
 	else if (player.hasStatusEffect(StatusEffects.UnlockedDraconicWingsHuge) && player.wings.type != Wings.DRACONIC_HUGE && player.ki < 300) addButtonDisabled(11, "Dragon(H)", "You not have enough Ki for this metamorphosis.");
 	else if (player.hasStatusEffect(StatusEffects.UnlockedDraconicWingsHuge) && player.wings.type != Wings.DRACONIC_LARGE) addButtonDisabled(11, "Dragon(H)", "You not have proper type of wings for this metamorphosis.");
 	else addButtonDisabled(11, "???", "You not yet unlocked this metamorphosis!");
-	if (player.hasStatusEffect(StatusEffects.UnlockedPhoenixWings) && player.wings.type != Wings.FEATHERED_PHOENIX && player.ki >= 100) addButton(12, "Phoenix", metamorphPhoenixWings);
-	else if (player.hasStatusEffect(StatusEffects.UnlockedPhoenixWings) && player.wings.type == Wings.FEATHERED_PHOENIX) addButtonDisabled(12, "Phoenix", "You already have phoenix wings.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedPhoenixWings) && player.wings.type != Wings.FEATHERED_PHOENIX && player.ki < 100) addButtonDisabled(12, "Phoenix", "You not have enough Ki for this metamorphosis.");
-	else addButtonDisabled(12, "???", "You not yet unlocked this metamorphosis!");
 	addButton(14, "Back", accessPage2MetamorphMenu);
 }
 private function accessPage2WingsMenu():void {
@@ -1182,7 +1174,7 @@ private function metamorphHoofedLegs():void {
 	clearOutput();
 	player.ki -= 100;
 	if (player.lowerBody == LowerBody.HUMAN) outputText("\n\nYou stagger as your feet change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
-	if (player.lowerBody == LowerBody.DOG) outputText("\n\nYou stagger as your paws change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
+	if (player.lowerBody == LowerBody.CANINE) outputText("\n\nYou stagger as your paws change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
 	if (player.lowerBody == LowerBody.NAGA) outputText("\n\nYou collapse as your sinuous snake-tail tears in half, shifting into legs.  The pain is immense, particularly in your new feet as they curl inward and transform into hooves!");
 	if (player.lowerBody > LowerBody.NAGA) outputText("\n\nYou stagger as your [feet] change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
 	outputText("  A coat of beastial fur springs up below your waist, itching as it fills in.<b>  You now have hooves in place of your feet!</b>");
@@ -1284,13 +1276,6 @@ private function metamorphDragonEars():void {
 	player.ki -= 100;
 	outputText("\n\nA prickling sensation suddenly fills your ears; unpleasant, but hardly painful.  It grows and grows until you can't stand it any more, and reach up to scratch at them.  To your surprise, you find them melting away like overheated candles.  You panic as they fade into nothingness, leaving you momentarily deaf and dazed, stumbling around in confusion.  Then, all of a sudden, hearing returns to you.  Gratefully investigating, you find you now have a pair of reptilian ear-holes, one on either side of your head.  A sudden pain strikes your temples, and you feel bony spikes bursting through the sides of your head, three on either side, which are quickly sheathed in folds of skin to resemble fins.  With a little patience, you begin to adjust these fins just like ears to aid your hearing.  <b>You now have dragon ears!</b>");
 	player.ears.type = Ears.DRAGON;
-	doNext(accessMetamorphMenu);
-}
-private function metamorphGorgonEyes():void {
-	clearOutput();
-	player.ki -= 100;
-	outputText("\n\nYou blink and stumble, a wave of vertigo threatening to pull your [feet] from under you.  As you steady and open your eyes, all seems to be fine until at least it seems so. But when moment later, when you casualy look at your hands pondering if there is any other effect the numbing sensation starts to spread starting from your hands fingers. Worried you focus your gaze at them to notice, that they typical texture becoming grey colored much similar to that of... stone? And slowy you realize the more you look at them, the faster change. Panicked for a moment you look away and then this numbing feeling starting to slowly receed. But looking back at them causing it to return. After moment, and closing eyelids, you conclude that your eyes must have gained an useful ability.  <b>Your eyes has turned into gorgon eyes.</b>.");
-	player.eyes.type = Eyes.GORGON;
 	doNext(accessMetamorphMenu);
 }
 private function metamorphGorgonHair():void {
@@ -1399,14 +1384,6 @@ private function metamorphOrcaLegs():void {
 	player.lowerBody = LowerBody.ORCA;
 	doNext(accessMetamorphMenu);
 }
-private function metamorphPhoenixWings():void {
-	clearOutput();
-	player.ki -= 100;
-	outputText("\n\nPain lances through your back, the muscles knotting oddly and pressing up to bulge your [skin.type]. It hurts, oh gods does it hurt, but you can't get a good angle to feel at the source of your agony. A loud crack splits the air, and then your body is forcing a pair of narrow limbs through a gap in your [armor]. Blood pumps through the new appendages, easing the pain as they fill out and grow. Tentatively, you find yourself flexing muscles you didn't know you had, and <b>you're able to curve the new growths far enough around to behold your brand new, crimson wings.</b>");
-	player.wings.type = Wings.FEATHERED_PHOENIX;
-	player.wings.desc = "large crimson feathered";
-	doNext(accessMetamorphMenu);
-}
 private function metamorphPhoenixArms():void {
 	clearOutput();
 	player.ki -= 100;
@@ -1433,7 +1410,7 @@ private function metamorphSalamanderLegs():void {
 	player.ki -= 100;
 	if (player.lowerBody == LowerBody.HOOFED) outputText("\n\nYou scream in agony as you feel your hooves crack and break apart, beginning to rearrange.  Your legs change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
 	else if (player.isTaur()) outputText("\n\nYour lower body is wracked by pain!  Once it passes, you discover that you're standing on digitigrade legs with salamander-like claws.");
-	else if (player.lowerBody == LowerBody.HUMAN || player.lowerBody == LowerBody.DOG || player.lowerBody == LowerBody.DEMONIC_HIGH_HEELS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.BEE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.LIZARD) outputText("\n\nYou scream in agony as you feel the bones in your legs break and begin to rearrange. They change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
+	else if (player.lowerBody == LowerBody.HUMAN || player.lowerBody == LowerBody.CANINE || player.lowerBody == LowerBody.DEMONIC_HIGH_HEELS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.BEE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.LIZARD) outputText("\n\nYou scream in agony as you feel the bones in your legs break and begin to rearrange. They change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
 	else outputText("\n\nPain rips through your [legs], morphing and twisting them until the bones rearrange into a digitigrade configuration.  The strange legs have three-toed, clawed feet, complete with a small vestigial claw-toe on the back for added grip.");
 	outputText("  <b>You have salamander legs and claws!</b>");
 	player.lowerBody = LowerBody.SALAMANDER;
@@ -1556,7 +1533,7 @@ private function metamorphHarpyWings():void {
 	player.ki -= 100;
 	if (player.wings.type > Wings.NONE) outputText("\n\nSensation fades from your " + player.wings.desc + " wings slowly but surely, leaving them dried out husks that break off to fall on the ground. Your back closes up to conceal the loss, as smooth and unbroken as the day you entered the portal.");
 	outputText("\n\nPain lances through your back, the muscles knotting oddly and pressing up to bulge your [skin.type]. It hurts, oh gods does it hurt, but you can't get a good angle to feel at the source of your agony. A loud crack splits the air, and then your body is forcing a pair of narrow limbs through a gap in your [armor]. Blood pumps through the new appendages, easing the pain as they fill out and grow. Tentatively, you find yourself flexing muscles you didn't know you had, and <b>you're able to curve the new growths far enough around to behold your brand new, [haircolor] wings.</b>");
-	player.wings.type = Wings.FEATHERED_LARGE;
+	player.wings.type = Wings.FEATHERED;
 	player.wings.desc = "large, feathered";
 	doNext(accessMetamorphMenu);
 }
@@ -1691,7 +1668,7 @@ private function metamorphLizardLegs():void {
 	player.ki -= 100;
 	if (player.lowerBody == LowerBody.HOOFED) outputText("\n\nYou scream in agony as you feel your hooves crack and break apart, beginning to rearrange.  Your legs change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
 	else if (player.isTaur()) outputText("\n\nYour lower body is wracked by pain!  Once it passes, you discover that you're standing on digitigrade legs with lizard-like claws.");
-	else if (player.lowerBody == LowerBody.HUMAN || player.lowerBody == LowerBody.DOG || player.lowerBody == LowerBody.DEMONIC_HIGH_HEELS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.PLANT_ROOT_CLAWS || player.lowerBody == LowerBody.BEE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.LIZARD) outputText("\n\nYou scream in agony as you feel the bones in your legs break and begin to rearrange. They change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
+	else if (player.lowerBody == LowerBody.HUMAN || player.lowerBody == LowerBody.CANINE || player.lowerBody == LowerBody.DEMONIC_HIGH_HEELS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.PLANT_ROOT_CLAWS || player.lowerBody == LowerBody.BEE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.LIZARD) outputText("\n\nYou scream in agony as you feel the bones in your legs break and begin to rearrange. They change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
 	else outputText("\n\nPain rips through your [legs], morphing and twisting them until the bones rearrange into a digitigrade configuration.  The strange legs have three-toed, clawed feet, complete with a small vestigial claw-toe on the back for added grip.");
 	outputText("  <b>You have reptilian legs and claws!</b>");
 	player.lowerBody = LowerBody.LIZARD;
@@ -1867,7 +1844,7 @@ private function metamorphEyesFox():void {
 	clearOutput();
 	player.ki -= 100;
 	outputText("You blink for an instant as the light and darkness seems to shift within your vision. You head to a pool to check it up and notice your pupils shifted to look more fox-like in a fashion similar to the kitsunes.  <b>You now have fox pupils.</b>");
-	player.eyes.type = Eyes.FOX;
+	player.eyes.type = Eyes.SLITS;
 	doNext(accessMetamorphMenu);
 }
 private function metamorphFaceFox():void {
@@ -1911,7 +1888,7 @@ private function metamorphLowerBodyFox():void {
 	player.ki -= 100;
 	if (player.isTaur()) outputText("You shiver as the strength drains from your back legs.  Shaken, you sit on your haunches, forelegs braced wide to stop you from tipping over;  their hooves scrape the dirt as your lower body shrinks, dragging them backward until you can feel the upper surfaces of your hindlegs with their undersides.  A wave of nausea and vertigo overtakes you, and you close your eyes to shut out the sensations.  When they reopen, what greets them are not four legs, but only two... and those roughly in the shape of your old hindleg, except for the furry toes where your hooves used to be.  <b>You now have fox legs!</b>");
 	else if (player.isNaga()) outputText("Your scales split at the waistline and begin to peel, shedding like old snakeskin.  If that weren't curious enough, the flesh - not scales - underneath is pink and new, and the legs it covers crooked into the hocks and elongated feet of a field animal.  As the scaly coating falls and you step out of it, walking of necessity on your toes, a fine powder blows from the dry skin.  Within minutes, it crumbles completely and is taken by the ever-moving wind.  <b>Your legs are now those of a fox!</b>");
-	else if (player.lowerBody == LowerBody.HOOFED || player.lowerBody == LowerBody.DOG || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.BUNNY || player.lowerBody == LowerBody.KANGAROO) {
+	else if (player.lowerBody == LowerBody.HOOFED || player.lowerBody == LowerBody.CANINE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.BUNNY || player.lowerBody == LowerBody.KANGAROO) {
 		outputText("Your legs twitch and quiver, forcing you to your seat.  As you watch, the ends shape themselves into furry, padded toes.  <b>You now have fox feet!</b>  Rather cute ones, actually.");
 	}
 	else if (player.lowerBody == LowerBody.DRIDER) outputText("Your legs buckle under you and you fall, smashing your abdomen on the ground.  Though your control deserts and you cannot see behind you, still you feel the disgusting sensation of chitin loosening and sloughing off your body, and the dry breeze on your exposed nerves.  Reflexively, your legs cling together to protect as much of their now-sensitive surface as possible.  When you try to part them, you find you cannot.  Several minutes pass uncomforably until you can again bend your legs, and when you do, you find that all the legs of a side bend together - <b>in the shape of a fox's leg!</b>");

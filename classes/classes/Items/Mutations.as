@@ -885,7 +885,7 @@ public final class Mutations extends MutationsHelper
 			//Winter wolf fur
 			if (rand(3) == 0
 				&& changes < changeLimit
-				&& player.lowerBody == LowerBody.WOLF
+				&& player.lowerBody == LowerBody.CANINE
 				&& player.tailType == Tail.WOLF
 				&& player.ears.type == Ears.WOLF
 				&& !player.hasFur()
@@ -897,7 +897,7 @@ public final class Mutations extends MutationsHelper
 				player.skin.growCoat(Skin.FUR,{color:player.hairColor});
 				changes++;
 			}
-			if (rand(2) == 0 && changes < changeLimit && player.lowerBody == LowerBody.WOLF && player.tailType == Tail.WOLF && player.ears.type == Ears.WOLF && player.hasFullCoatOfType(Skin.FUR) && (player.hairColor != "glacial white" || player.coatColor != "glacial white")) {
+			if (rand(2) == 0 && changes < changeLimit && player.lowerBody == LowerBody.CANINE && player.tailType == Tail.WOLF && player.ears.type == Ears.WOLF && player.hasFullCoatOfType(Skin.FUR) && (player.hairColor != "glacial white" || player.coatColor != "glacial white")) {
 				outputText("<b>\n\nYour fur and hair tingles, growing in thicker than ever as coldness begins to spread from the roots, turning it glacial white.</b>");
 				player.hairColor = "glacial white";
 				player.skin.coat.color = player.hairColor;
@@ -914,14 +914,14 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Wolf paws
-			if (rand(2) == 0 && player.lowerBody != LowerBody.WOLF && player.tailType == Tail.WOLF && player.ears.type == Ears.WOLF && changes < changeLimit) {
+			if (rand(2) == 0 && player.lowerBody != LowerBody.CANINE && player.tailType == Tail.WOLF && player.ears.type == Ears.WOLF && changes < changeLimit) {
 				if (player.isBiped() && player.lowerBody == LowerBody.HUMAN) {
 					outputText("\n\nYou scream in agony as you feel the bones in your feets break and rearrange into bestial paws. Soon your legs cover up with fur from the waist down. The fur is cold to the touch and yet you feel warm and comfortable under it. <b>You now have wolf paws.</b>");
-					setLowerBody(LowerBody.WOLF);
+					setLowerBody(LowerBody.CANINE);
 					player.legCount = 2;
 					changes++;
 				}
-				if (player.lowerBody != LowerBody.HUMAN && player.lowerBody != LowerBody.WOLF) {
+				if (player.lowerBody != LowerBody.HUMAN && player.lowerBody != LowerBody.CANINE) {
 					humanizeLowerBody();
 					changes++;
 				}
@@ -1019,7 +1019,7 @@ public final class Mutations extends MutationsHelper
 				outputText("You eat the pepper, even the two orb-like growths that have grown out from the base.  It's delicious!");
 			}
 			//OVERDOSE Bad End!
-			if (type <= 0 && crit > 1 && player.hasFullCoatOfType(Skin.FUR) && player.faceType == Face.DOG && player.ears.type == Ears.DOG && player.lowerBody == LowerBody.DOG && player.tailType == Tail.DOG && rand(2) == 0 && player.hasStatusEffect(StatusEffects.DogWarning) && !player.hasPerk(PerkLib.TransformationResistance)) {
+			if (type <= 0 && crit > 1 && player.hasFullCoatOfType(Skin.FUR) && player.faceType == Face.DOG && player.ears.type == Ears.DOG && player.lowerBody == LowerBody.CANINE && player.tailType == Tail.DOG && rand(2) == 0 && player.hasStatusEffect(StatusEffects.DogWarning) && !player.hasPerk(PerkLib.TransformationResistance)) {
 				var choice:int = rand(2);
 				if (choice == 0) {
 					outputText("\n\nAs you swallow the pepper, you note that the spicy hotness on your tongue seems to be spreading. Your entire body seems to tingle and burn, making you feel far warmer than normal, feverish even. Unable to stand it any longer you tear away your clothes, hoping to cool down a little. Sadly, this does nothing to aid you with your problem. On the bright side, the sudden feeling of vertigo you've developed is more than enough to take your mind off your temperature issues. You fall forward onto your hands and knees, well not really hands and knees to be honest. More like paws and knees. That can't be good, you think for a moment, before the sensation of your bones shifting into a quadrupedal configuration robs you of your concentration. After that, it is only a short time before your form is remade completely into that of a large dog, or perhaps a wolf. The distinction would mean little to you now, even if you were capable of comprehending it. ");
@@ -1031,11 +1031,11 @@ public final class Mutations extends MutationsHelper
 				return;
 			}
 			//WARNING, overdose VERY close!
-			if (type <= 0 && player.hasFullCoatOfType(Skin.FUR) && player.faceType == Face.DOG && player.tailType == Tail.DOG && player.ears.type == Ears.DOG && player.lowerBody == LowerBody.DOG && player.hasStatusEffect(StatusEffects.DogWarning) && rand(3) == 0) {
+			if (type <= 0 && player.hasFullCoatOfType(Skin.FUR) && player.faceType == Face.DOG && player.tailType == Tail.DOG && player.ears.type == Ears.DOG && player.lowerBody == LowerBody.CANINE && player.hasStatusEffect(StatusEffects.DogWarning) && rand(3) == 0) {
 				outputText("<b>\n\nEating the pepper, you realize how dog-like you've become, and you wonder what else the peppers could change...</b>");
 			}
 			//WARNING, overdose is close!
-			if (type <= 0 && player.hasFullCoatOfType(Skin.FUR) && player.faceType == Face.DOG && player.tailType == Tail.DOG && player.ears.type == Ears.DOG && player.lowerBody == LowerBody.DOG && !player.hasStatusEffect(StatusEffects.DogWarning)) {
+			if (type <= 0 && player.hasFullCoatOfType(Skin.FUR) && player.faceType == Face.DOG && player.tailType == Tail.DOG && player.ears.type == Ears.DOG && player.lowerBody == LowerBody.CANINE && !player.hasStatusEffect(StatusEffects.DogWarning)) {
 				player.createStatusEffect(StatusEffects.DogWarning, 0, 0, 0, 0);
 				outputText("<b>\n\nEating the pepper, you realize how dog-like you've become, and you wonder what else the peppers could change...</b>");
 			}
@@ -1545,7 +1545,7 @@ public final class Mutations extends MutationsHelper
 			//Master Furry Appearance Order:
 			//Tail -> Ears -> Paws -> Arms -> Fur -> Face
 			//Dog-face requires fur & paws  Should be last morph to take place
-			if (rand(4) == 0 && changes < changeLimit && player.faceType != Face.DOG && player.hasFullCoatOfType(Skin.FUR) && player.lowerBody == LowerBody.DOG) {
+			if (rand(4) == 0 && changes < changeLimit && player.faceType != Face.DOG && player.hasFullCoatOfType(Skin.FUR) && player.lowerBody == LowerBody.CANINE) {
 				if (player.faceType == Face.HORSE) outputText("\n\nYour face is wracked with pain.  You throw back your head and scream in agony as you feel your cheekbones breaking and shifting, reforming into something else.  <b>Your horse-like features rearrange to take on many canine aspects.</b>");
 				else outputText("\n\nYour face is wracked with pain.  You throw back your head and scream in agony as you feel your cheekbones breaking and shifting, reforming into something... different.  You find a puddle to view your reflection...<b>your face is now a cross between human and canine features.</b>");
 				setFaceType(Face.DOG);
@@ -1580,7 +1580,7 @@ public final class Mutations extends MutationsHelper
 				else player.skin.growCoat(Skin.FUR,{color:player.hairColor,adj:"thick"});
 			}
 			//Become furred - requires paws and tail
-			if (rand(4) == 0 && changes < changeLimit && player.lowerBody == LowerBody.DOG && player.tailType == Tail.DOG && !player.hasFur() && !player.isGargoyle()) {
+			if (rand(4) == 0 && changes < changeLimit && player.lowerBody == LowerBody.CANINE && player.tailType == Tail.DOG && !player.hasFur() && !player.isGargoyle()) {
 				if (player.hasScales()) outputText("\n\nYour scales itch incessantly.  You scratch, feeling them flake off to reveal a coat of [skin coat.color] fur growing out from below!");
 				else outputText("\n\nYour [skin base] itches intensely.  You gaze down as more and more hairs break forth from your [skin base], quickly transforming into a soft coat of fur.");
 				if (rand(3)>0) {
@@ -1600,13 +1600,13 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Change to paws - requires tail and ears
-			if (rand(3) == 0 && player.lowerBody != LowerBody.DOG && player.tailType == Tail.DOG && player.ears.type == Ears.DOG && changes < changeLimit) {
+			if (rand(3) == 0 && player.lowerBody != LowerBody.CANINE && player.tailType == Tail.DOG && player.ears.type == Ears.DOG && changes < changeLimit) {
 				//Feet -> paws
 				if (player.lowerBody == LowerBody.HUMAN) outputText("\n\nYou scream in agony as you feel the bones in your feet break and begin to rearrange. <b>You now have paws</b>.");
 				//Hooves -> Paws
 				else if (player.lowerBody == LowerBody.HOOFED) outputText("\n\nYou feel your hooves suddenly splinter, growing into five unique digits.  Their flesh softens as your hooves reshape into furred paws.");
 				else outputText("\n\nYour lower body is wracked by pain!  Once it passes, you discover that you're standing on fur-covered paws!  <b>You now have paws</b>.");
-				setLowerBody(LowerBody.DOG);
+				setLowerBody(LowerBody.CANINE);
 				player.legCount = 2;
 				changes++;
 			}
@@ -2862,7 +2862,7 @@ public final class Mutations extends MutationsHelper
 				if (changes < changeLimit && rand(3) == 0) {
 					changes++;
 					if (player.lowerBody == LowerBody.HUMAN) outputText("\n\nYou stagger as your feet change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
-					if (player.lowerBody == LowerBody.DOG) outputText("\n\nYou stagger as your paws change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
+					if (player.lowerBody == LowerBody.CANINE) outputText("\n\nYou stagger as your paws change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
 					if (player.lowerBody == LowerBody.NAGA) outputText("\n\nYou collapse as your sinuous snake-tail tears in half, shifting into legs.  The pain is immense, particularly in your new feet as they curl inward and transform into hooves!");
 					//Catch-all
 					if (player.lowerBody > LowerBody.NAGA) outputText("\n\nYou stagger as your [feet] change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
@@ -3913,7 +3913,7 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Snake eyes
-			if (player.hasPartialCoat(Skin.SCALES) && player.eyes.type != Eyes.SNAKE && player.eyes.type != Eyes.GORGON && rand(4) == 0 && changes < changeLimit) {
+			if (player.hasPartialCoat(Skin.SCALES) && player.eyes.type != Eyes.SNAKE && rand(4) == 0 && changes < changeLimit) {
 				setEyeType(Eyes.SNAKE);
 				outputText("\n\nYou suddenly feel your vision shifting. It takes a moment for you to adapt to the weird sensory changes but once you recover you go to a puddle and notice your eyes now have a slitted pupil like that of a snake.  <b>You now have snake eyes!</b>.");
 				changes++;
@@ -3937,8 +3937,8 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Gorgon eyes
-			if (type == 0 && player.hairType == Hair.GORGON && player.eyes.type == Eyes.SNAKE && player.eyes.type != Eyes.GORGON && rand(4) == 0 && changes < changeLimit) {
-				setEyeType(Eyes.GORGON);
+			if (type == 0 && player.hairType == Hair.GORGON && player.eyes.type == Eyes.SNAKE && rand(4) == 0 && changes < changeLimit) {
+				setEyeType(Eyes.SNAKE);
 				outputText("\n\nYou blink and stumble, a wave of vertigo threatening to pull your [feet] from under you.  As you steady and open your eyes, all seems to be fine until at least it seems so. But when moment later, when you casualy look at your hands pondering if there is drinking this vial of oil maybe have some other effect the numbing sensation starts to spread starting from your hands fingers. Worried you focus your gaze at them to notice, that they typical texture becoming grey colored much similar to that of... stone? And slowy you realize the more you look at them, the faster change. Panicked for a moment you look away and then this numbing feeling starting to slowly receed. But looking back at them causing it to return. After moment, and closing eyelids, you conclude that your eyes must have gained an useful ability.  <b>Your eyes has turned into gorgon eyes.</b>.");
 				changes++;
 			}
@@ -4052,11 +4052,11 @@ public final class Mutations extends MutationsHelper
 			//Propah Wings
 			if (type == 2 && player.wings.type == Wings.NONE && changes < changeLimit && (type == 1 || player.arms.type == Arms.HARPY) && rand(4) == 0) {
 				outputText("\n\nPain lances through your back, the muscles knotting oddly and pressing up to bulge your [skin.type]. It hurts, oh gods does it hurt, but you can't get a good angle to feel at the source of your agony. A loud crack splits the air, and then your body is forcing a pair of narrow limbs through a gap in your [armor]. Blood pumps through the new appendages, easing the pain as they fill out and grow. Tentatively, you find yourself flexing muscles you didn't know you had, and <b>you're able to curve the new growths far enough around to behold your brand new, [haircolor] wings.</b>");
-				setWingType(Wings.FEATHERED_LARGE, "large, feathered");
+				setWingType(Wings.FEATHERED, "large, feathered");
 				changes++;
 			}
 			//Remove old wings
-			if (type == 2 && player.wings.type != Wings.FEATHERED_LARGE && player.wings.type > Wings.NONE && player.lowerBody != LowerBody.GARGOYLE && changes < changeLimit && rand(4) == 0) {
+			if (type == 2 && player.wings.type != Wings.FEATHERED && player.wings.type > Wings.NONE && player.lowerBody != LowerBody.GARGOYLE && changes < changeLimit && rand(4) == 0) {
 				removeWings();
 				changes++;
 			}
@@ -4073,13 +4073,13 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Feathery Hair
-			if (type == 2 && player.hairType != 1 && player.wings.type == Wings.FEATHERED_LARGE && changes < changeLimit && rand(4) == 0) {
+			if (type == 2 && player.hairType != 1 && player.wings.type == Wings.FEATHERED && changes < changeLimit && rand(4) == 0) {
 				outputText("\n\nA tingling starts in your scalp, getting worse and worse until you're itching like mad, the feathery strands of your hair tickling your fingertips while you scratch like a dog itching a flea. When you pull back your hand, you're treated to the sight of downy fluff trailing from your fingernails. A realization dawns on you - you have feathers for hair, just like a couatl!");
 				setHairType(Hair.FEATHER);
 				changes++;
 			}
 			//Scales with color changes to red, green, white, blue, or black.  Rarely: purple or silver.
-			if (!player.hasFullCoatOfType(Skin.SCALES) && ((type == 0 && player.eyes.type == Eyes.GORGON) || (type == 2 && player.hairType == 1)) && changes < changeLimit && rand(5) == 0) {
+			if (!player.hasFullCoatOfType(Skin.SCALES) && ((type == 0 && player.eyes.type == Eyes.SNAKE) || (type == 2 && player.hairType == 1)) && changes < changeLimit && rand(5) == 0) {
 				//set new skinTone
 				if (rand(10) == 0) {
 					color = randomChoice("purple", "silver");
@@ -4907,10 +4907,10 @@ public final class Mutations extends MutationsHelper
 			}
 
 			//DAT EYES
-			if (player.tailType == Tail.CAT && player.ears.type == Ears.CAT && rand(4) == 0 && changes < changeLimit && player.lowerBody == LowerBody.CAT && (player.hasFur() || (player.hasCoatOfType(Skin.SCALES) && player.dragonneScore() >= 4)) && player.faceType == Face.CAT && player.eyes.type != Eyes.CAT_SLITS) {
+			if (player.tailType == Tail.CAT && player.ears.type == Ears.CAT && rand(4) == 0 && changes < changeLimit && player.lowerBody == LowerBody.CAT && (player.hasFur() || (player.hasCoatOfType(Skin.SCALES) && player.dragonneScore() >= 4)) && player.faceType == Face.CAT && player.eyes.type != Eyes.SLITS) {
 				//Gain cat-like eyes
 				outputText("\n\nYou blink and stumble, a wave of vertigo threatening to pull your [feet] from under you.  As you steady and open your eyes, you realize something seems different.  Your vision is changed somehow.  <b>Your eyes has turned into those of cat with vertical slit</b>.");
-				setEyeType(Eyes.CAT_SLITS);
+				setEyeType(Eyes.SLITS);
 				changes++;
 			}
 			// Remove gills
@@ -5215,7 +5215,7 @@ public final class Mutations extends MutationsHelper
 				//TAURS -
 				else if (player.isTaur()) outputText("\n\nYour lower body is wracked by pain!  Once it passes, you discover that you're standing on digitigrade legs with lizard-like claws.");
 				//feet types -
-				else if (player.lowerBody == LowerBody.HUMAN || player.lowerBody == LowerBody.DOG || player.lowerBody == LowerBody.DEMONIC_HIGH_HEELS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.PLANT_ROOT_CLAWS || player.lowerBody == LowerBody.BEE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.LIZARD) outputText("\n\nYou scream in agony as you feel the bones in your legs break and begin to rearrange. They change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
+				else if (player.lowerBody == LowerBody.HUMAN || player.lowerBody == LowerBody.CANINE || player.lowerBody == LowerBody.DEMONIC_HIGH_HEELS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.PLANT_ROOT_CLAWS || player.lowerBody == LowerBody.BEE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.LIZARD) outputText("\n\nYou scream in agony as you feel the bones in your legs break and begin to rearrange. They change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
 				//Else –
 				else outputText("\n\nPain rips through your [legs], morphing and twisting them until the bones rearrange into a digitigrade configuration.  The strange legs have three-toed, clawed feet, complete with a small vestigial claw-toe on the back for added grip.");
 				outputText("  <b>You have reptilian legs and claws!</b>");
@@ -5479,7 +5479,7 @@ public final class Mutations extends MutationsHelper
 				//TAURS -
 				else if (player.isTaur()) outputText("\n\nYour lower body is wracked by pain!  Once it passes, you discover that you're standing on digitigrade legs with salamander-like claws.");
 				//feet types -
-				else if (player.lowerBody == LowerBody.HUMAN || player.lowerBody == LowerBody.DOG || player.lowerBody == LowerBody.DEMONIC_HIGH_HEELS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.BEE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.LIZARD) outputText("\n\nYou scream in agony as you feel the bones in your legs break and begin to rearrange. They change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
+				else if (player.lowerBody == LowerBody.HUMAN || player.lowerBody == LowerBody.CANINE || player.lowerBody == LowerBody.DEMONIC_HIGH_HEELS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.BEE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.LIZARD) outputText("\n\nYou scream in agony as you feel the bones in your legs break and begin to rearrange. They change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
 				//Else –
 				else outputText("\n\nPain rips through your [legs], morphing and twisting them until the bones rearrange into a digitigrade configuration.  The strange legs have three-toed, clawed feet, complete with a small vestigial claw-toe on the back for added grip.");
 				outputText("  <b>You have salamander legs and claws!</b>");
@@ -5768,7 +5768,7 @@ public final class Mutations extends MutationsHelper
 				//TAURS -
 				else if (player.isTaur()) outputText("\n\nYour lower body is wracked by pain!  Once it passes, you discover that you're standing on digitigrade legs with salamander-like claws.");
 				//feet types -
-				else if (player.lowerBody == LowerBody.HUMAN || player.lowerBody == LowerBody.DOG || player.lowerBody == LowerBody.DEMONIC_HIGH_HEELS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.BEE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.LIZARD) outputText("\n\nYou scream in agony as you feel the bones in your legs break and begin to rearrange. They change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
+				else if (player.lowerBody == LowerBody.HUMAN || player.lowerBody == LowerBody.CANINE || player.lowerBody == LowerBody.DEMONIC_HIGH_HEELS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.DEMONIC_CLAWS || player.lowerBody == LowerBody.PLANT_HIGH_HEELS || player.lowerBody == LowerBody.BEE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.LIZARD) outputText("\n\nYou scream in agony as you feel the bones in your legs break and begin to rearrange. They change to a digitigrade shape while your feet grow claws and shift to have three toes on the front and a smaller toe on the heel.");
 				//Else –
 				else outputText("\n\nPain rips through your [legs], morphing and twisting them until the bones rearrange into a digitigrade configuration.  The strange legs have three-toed, clawed feet, complete with a small vestigial claw-toe on the back for added grip.");
 				outputText("  <b>You have salamander legs and claws!</b>");
@@ -5785,11 +5785,11 @@ public final class Mutations extends MutationsHelper
 			//Wings
 			if (player.wings.type == Wings.NONE && changes < changeLimit && player.arms.type == Arms.PHOENIX && rand(4) == 0) {
 				outputText("\n\nPain lances through your back, the muscles knotting oddly and pressing up to bulge your [skin.type]. It hurts, oh gods does it hurt, but you can't get a good angle to feel at the source of your agony. A loud crack splits the air, and then your body is forcing a pair of narrow limbs through a gap in your [armor]. Blood pumps through the new appendages, easing the pain as they fill out and grow. Tentatively, you find yourself flexing muscles you didn't know you had, and <b>you're able to curve the new growths far enough around to behold your brand new, crimson wings.</b>");
-				setWingType(Wings.FEATHERED_PHOENIX, "large crimson feathered");
+				setWingType(Wings.FEATHERED, "large crimson feathered");
 				changes++;
 			}
 			//Remove old wings
-			if (player.wings.type != Wings.FEATHERED_PHOENIX && player.wings.type > Wings.NONE && player.lowerBody != LowerBody.GARGOYLE && changes < changeLimit && rand(4) == 0) {
+			if (player.wings.type != Wings.FEATHERED && player.wings.type > Wings.NONE && player.lowerBody != LowerBody.GARGOYLE && changes < changeLimit && rand(4) == 0) {
 				removeWings();
 				changes++;
 			}
@@ -6470,7 +6470,7 @@ public final class Mutations extends MutationsHelper
 				outputText("While humanoid in shape, they have two large, taloned toes on the front and a single claw protruding from the heel. The entire ensemble is coated in [haircolor] feathers from ankle to hip, reminding you of the bird-women of the mountains. <b>You now have harpy legs!</b>");
 			}
 			//-Feathery Tail
-			if (player.tailType != Tail.HARPY && player.lowerBody != LowerBody.GARGOYLE && changes < changeLimit && (type == 1 || player.wings.type == Wings.FEATHERED_LARGE) && rand(4) == 0) {
+			if (player.tailType != Tail.HARPY && player.lowerBody != LowerBody.GARGOYLE && changes < changeLimit && (type == 1 || player.wings.type == Wings.FEATHERED) && rand(4) == 0) {
 				//(tail)
 				if (player.tailType > Tail.NONE) outputText("\n\nYour tail shortens, folding into the crack of your " + buttDescript() + " before it disappears. A moment later, a fan of feathers erupts in its place, fluffing up and down instinctively every time the breeze shifts. <b>You have a feathery harpy tail!</b>");
 				//(no tail)
@@ -6481,11 +6481,11 @@ public final class Mutations extends MutationsHelper
 			//-Propah Wings
 			if (player.wings.type == Wings.NONE && changes < changeLimit && (type == 1 || player.arms.type == Arms.HARPY) && rand(4) == 0) {
 				outputText("\n\nPain lances through your back, the muscles knotting oddly and pressing up to bulge your [skin.type]. It hurts, oh gods does it hurt, but you can't get a good angle to feel at the source of your agony. A loud crack splits the air, and then your body is forcing a pair of narrow limbs through a gap in your [armor]. Blood pumps through the new appendages, easing the pain as they fill out and grow. Tentatively, you find yourself flexing muscles you didn't know you had, and <b>you're able to curve the new growths far enough around to behold your brand new, [haircolor] wings.</b>");
-				setWingType(Wings.FEATHERED_LARGE, "large, feathered");
+				setWingType(Wings.FEATHERED, "large, feathered");
 				changes++;
 			}
 			//-Remove old wings
-			if (player.wings.type != Wings.FEATHERED_LARGE && player.wings.type > Wings.NONE && player.lowerBody != LowerBody.GARGOYLE && changes < changeLimit && rand(4) == 0) {
+			if (player.wings.type != Wings.FEATHERED && player.wings.type > Wings.NONE && player.lowerBody != LowerBody.GARGOYLE && changes < changeLimit && rand(4) == 0) {
 				removeWings();
 				changes++;
 			}
@@ -8252,7 +8252,7 @@ public final class Mutations extends MutationsHelper
 				//n*ga please
 				else if (player.isNaga()) outputText("\n\nYour scales split at the waistline and begin to peel, shedding like old snakeskin.  If that weren't curious enough, the flesh - not scales - underneath is pink and new, and the legs it covers crooked into the hocks and elongated feet of a field animal.  As the scaly coating falls and you step out of it, walking of necessity on your toes, a fine powder blows from the dry skin.  Within minutes, it crumbles completely and is taken by the ever-moving wind.  <b>Your legs are now those of a fox!</b>");
 				//other digitigrade
-				else if (player.lowerBody == LowerBody.HOOFED || player.lowerBody == LowerBody.DOG || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.BUNNY || player.lowerBody == LowerBody.KANGAROO)
+				else if (player.lowerBody == LowerBody.HOOFED || player.lowerBody == LowerBody.CANINE || player.lowerBody == LowerBody.CAT || player.lowerBody == LowerBody.BUNNY || player.lowerBody == LowerBody.KANGAROO)
 					outputText("\n\nYour legs twitch and quiver, forcing you to your seat.  As you watch, the ends shape themselves into furry, padded toes.  <b>You now have fox feet!</b>  Rather cute ones, actually.");
 				//red drider bb gone
 				else if (player.lowerBody == LowerBody.DRIDER) outputText("\n\nYour legs buckle under you and you fall, smashing your abdomen on the ground.  Though your control deserts and you cannot see behind you, still you feel the disgusting sensation of chitin loosening and sloughing off your body, and the dry breeze on your exposed nerves.  Reflexively, your legs cling together to protect as much of their now-sensitive surface as possible.  When you try to part them, you find you cannot.  Several minutes pass uncomforably until you can again bend your legs, and when you do, you find that all the legs of a side bend together - <b>in the shape of a fox's leg!</b>");
@@ -8308,9 +8308,9 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Fox Eyes
-			if (player.faceType == Face.FOX && player.eyes.type != Eyes.FOX && changes < changeLimit && rand(4) == 0) {
+			if (player.faceType == Face.FOX && player.eyes.type != Eyes.SLITS && changes < changeLimit && rand(4) == 0) {
 				outputText("\n\nYou blink for an instant as the light and darkness seems to shift within your vision. You head to a pool to check it up and notice your eyes shifted to look more fox-like in a fashion similar to the kitsunes.  <b>You now have fox eyes.</b>");
-				setEyeType(Eyes.FOX);
+				setEyeType(Eyes.SLITS);
 				changes++;
 			}
 			if (player.tone > 40 && changes < changeLimit && rand(2) == 0) {
@@ -8646,9 +8646,9 @@ public final class Mutations extends MutationsHelper
 
 			});
 			//Fox Eyes
-			mutationStep(player.ears.type == Ears.FOX && player.eyes.type != Eyes.FOX, 3, function(): void {
+			mutationStep(player.ears.type == Ears.FOX && player.eyes.type != Eyes.SLITS, 3, function(): void {
 				outputText("\n\nYou blink for an instant as the light and darkness seems to shift within your vision. You head to a pool to check it up and notice your eyes shifted to look more fox-like in a fashion similar to the kitsunes.  <b>You now have fox eyes.</b>");
-				setEyeType(Eyes.FOX);
+				setEyeType(Eyes.SLITS);
 			});
 			//Kitsune arms
 			mutationStep(player.arms.type == Arms.HUMAN, 2, function(): void {
@@ -9204,10 +9204,10 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Remove odd eyes
-			if ((player.eyes.type == Eyes.FOUR_SPIDER_EYES || player.eyes.type == Eyes.CAT_SLITS) && rand(2) == 0 && changes < changeLimit) {
+			if ((player.eyes.type == Eyes.FOUR_SPIDER_EYES || player.eyes.type == Eyes.SLITS) && rand(2) == 0 && changes < changeLimit) {
 				outputText("\n\nYou blink and stumble, a wave of vertigo threatening to pull your [feet] from under you.  As you steady and open your eyes, you realize something seems different.  Your vision is changed somehow.");
 				if (player.eyes.type == Eyes.FOUR_SPIDER_EYES) outputText("  Your multiple, arachnid eyes are gone!</b>");
-				else if (player.eyes.type == Eyes.CAT_SLITS) outputText("  Your cat-like eyes are gone!</b>");
+				else if (player.eyes.type == Eyes.SLITS) outputText("  Your vertical slit eyes are gone!</b>");
 				outputText("  <b>You have normal, humanoid eyes again.</b>");
 				setEyeType(Eyes.HUMAN);
 				changes++;

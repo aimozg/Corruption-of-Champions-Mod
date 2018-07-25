@@ -98,7 +98,7 @@ public class Brigid extends Monster
 			this.level = 29;
 			this.gems = rand(37)+210;
 			this.additionalXP = 150;
-			this.wings.type = Wings.FEATHERED_LARGE;
+			this.wings.type = Wings.FEATHERED;
 			this.tailType = Tail.DEMONIC;
 			this.horns.type = Horns.DEMON;
 			this.horns.count = 2;

@@ -667,17 +667,8 @@
             <case value="Eyes.BLACK_EYES_SAND_TRAP">
                 <show part="eyes/sandtrap"/>
             </case>
-            <case value="Eyes.CAT_SLITS">
+            <case values="Eyes.SLITS,Eyes.FENRIR,Eyes.REPTILIAN,Eyes.SNAKE,Eyes.DRAGON,Eyes.ONI,Eyes.ELF">
                 <show part="eyes/cat"/>
-            </case>
-            <case value="Eyes.MANTICORE">
-                <show part="eyes/manticore"/>
-            </case>
-            <case values="Eyes.GORGON,Eyes.FENRIR,Eyes.FOX,Eyes.REPTILIAN,Eyes.SNAKE,Eyes.DRAGON,Eyes.ONI,Eyes.ELF,Eyes.VAMPIRE">
-                <show part="eyes/cat"/>
-            </case>
-            <case value="Eyes.MANTICORE">
-                <show part="eyes/manticore"/>
             </case>
             <case value="Eyes.DEVIL">
                 <show part="eyes/devil"/>
@@ -1100,7 +1091,7 @@
                     </default>
                 </switch>
             </case>
-            <case values="LowerBody.DOG,LowerBody.BUNNY,LowerBody.KANGAROO,LowerBody.WOLF,LowerBody.FOX,LowerBody.RACCOON,LowerBody.FERRET">
+            <case values="LowerBody.CANINE,LowerBody.BUNNY,LowerBody.KANGAROO,LowerBody.FOX,LowerBody.RACCOON,LowerBody.FERRET">
                 <show part="feet/fur"/>
             </case>
             <case value="LowerBody.NAGA">
@@ -1210,7 +1201,7 @@
             <case values="Wings.BEE_LIKE_SMALL,Wings.BEE_LIKE_LARGE">
                 <show part="wings/bee"/>
             </case>
-            <case values="Wings.HARPY,Wings.FEATHERED_LARGE,Wings.FEATHERED_PHOENIX,Wings.FEATHERED_ALICORN">
+            <case values="Wings.HARPY,Wings.FEATHERED">
                 <show part="wings/feather_large"/>
                 <show part="wings_bg/feather_large"/>
             </case>

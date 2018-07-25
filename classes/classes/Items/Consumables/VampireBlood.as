@@ -63,7 +63,13 @@ package classes.Items.Consumables {
                 Override: pure ? mutations.humanizeEars : null
             }, {
                 BodyPart: 'eyes.type',
-                ChangeTo: Eyes.VAMPIRE
+                ChangeTo: Eyes.SLITS,
+				Addition: {
+					Eyes: {
+						BodyPart: 'eyes.colour',
+						ChangeTo: "blood red"
+					}
+				}
             }, {
                 BodyPart: 'faceType',
                 ChangeTo: Face.VAMPIRE

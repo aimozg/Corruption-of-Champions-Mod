@@ -213,11 +213,11 @@ package classes.Items.Consumables {
 			//Wings
 			if (player.wings.type == Wings.NONE && changes < changeLimit && player.arms.type == Arms.SPHINX && rand(4) == 0) {
 				outputText("\n\nPain lances through your back, the muscles knotting oddly and pressing up to bulge your [skin.type]. It hurts, oh gods does it hurt, but you can't get a good angle to feel at the source of your agony. A loud crack splits the air, and then your body is forcing a pair of narrow limbs through a gap in your [armor]. Blood pumps through the new appendages, easing the pain as they fill out and grow. Tentatively, you find yourself flexing muscles you didn't know you had, and <b>you're able to curve the new growths far enough around to behold your brand new, [haircolor] wings.</b>");
-				mutations.setWingType(Wings.FEATHERED_SPHINX, "large crimson feathered");
+				mutations.setWingType(Wings.FEATHERED, "large crimson feathered");
 				changes++;
 			}
 			//Remove old wings
-			if (player.wings.type != Wings.FEATHERED_SPHINX && player.wings.type > Wings.NONE && player.lowerBody != LowerBody.GARGOYLE && changes < changeLimit && rand(4) == 0) {
+			if (player.wings.type != Wings.FEATHERED && player.wings.type > Wings.NONE && player.lowerBody != LowerBody.GARGOYLE && changes < changeLimit && rand(4) == 0) {
 				mutations.removeWings();
 				changes++;
 			}
@@ -227,7 +227,7 @@ package classes.Items.Consumables {
 			if (player.lowerBody != LowerBody.CAT && player.lowerBody != LowerBody.GARGOYLE && !player.isTaur()) {
 				if (changes < changeLimit && rand(3) == 0) {
 					changes++;
-					//else if (player.lowerBody == DOG) outputText("\n\nYou stagger as your paws change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
+					//else if (player.lowerBody == CANINE) outputText("\n\nYou stagger as your paws change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
 					if (player.lowerBody == LowerBody.NAGA || player.lowerBody == LowerBody.SCYLLA) {
 						if (player.lowerBody == LowerBody.NAGA) {
 							outputText("\n\nYou collapse as your sinuous snake-tail tears in half, shifting into legs.  The pain is immense, particularly in your new feet as they transform into paws!");
@@ -494,10 +494,10 @@ package classes.Items.Consumables {
 			}
 
 			//DAT EYES
-			if (player.tailType == Tail.CAT && player.ears.type == Ears.LION && rand(4) == 0 && changes < changeLimit && player.lowerBody == LowerBody.CAT && (player.hasFur() || (player.hasCoatOfType(Skin.SCALES) && player.dragonneScore() >= 4)) && player.faceType == Face.CAT && player.eyes.type != Eyes.CAT_SLITS) {
+			if (player.tailType == Tail.CAT && player.ears.type == Ears.LION && rand(4) == 0 && changes < changeLimit && player.lowerBody == LowerBody.CAT && (player.hasFur() || (player.hasCoatOfType(Skin.SCALES) && player.dragonneScore() >= 4)) && player.faceType == Face.CAT && player.eyes.type != Eyes.SLITS) {
 				//Gain cat-like eyes
 				outputText("\n\nYou blink and stumble, a wave of vertigo threatening to pull your [feet] from under you.  As you steady and open your eyes, you realize something seems different.  Your vision is changed somehow.  <b>Your eyes has turned into those of cat with vertical slit</b>.");
-				mutations.setEyeType(Eyes.CAT_SLITS);
+				mutations.setEyeType(Eyes.SLITS);
 				changes++;
 			}
 			//FAILSAFE CHANGE

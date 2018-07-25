@@ -118,7 +118,7 @@ public class PhoenixPlatoon extends Monster
 			this.horns.type = Horns.DRACONIC_X2;
 			this.horns.count = 2;
 			this.tailType = Tail.SALAMANDER;
-			this.wings.type = Wings.FEATHERED_PHOENIX;
+			this.wings.type = Wings.FEATHERED;
 			this.drop = new WeightedDrop(consumables.NOCELIQ, 1);
 			this.createPerk(PerkLib.EnemyGroupType, 0, 0, 0, 0);
 			this.createPerk(PerkLib.IceVulnerability, 0, 0, 0, 0);

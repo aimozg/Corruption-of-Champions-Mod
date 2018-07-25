@@ -981,7 +981,7 @@ package classes
 			}
 			if (racialScores[Race.DOG.name] >= 4)
 			{
-				if (isTaur() && lowerBody == LowerBody.DOG)
+				if (isTaur() && lowerBody == LowerBody.CANINE)
 					race = "dog-taur";
 				else {
 					race = "dog-morph";
@@ -991,7 +991,7 @@ package classes
 			}
 			if (racialScores[Race.WOLF.name] >= 4)
 			{
-				if (isTaur() && lowerBody == LowerBody.WOLF)
+				if (isTaur() && lowerBody == LowerBody.CANINE)
 					race = "wolf-taur";
 				else if (racialScores[Race.WOLF.name] >= 10)
 					race = "Fenrir";
@@ -1460,7 +1460,7 @@ package classes
 					race = "half avian-morph";
 			}
 			//</mod>
-			if (lowerBody == LowerBody.HOOFED && isTaur() && wings.type == Wings.FEATHERED_LARGE) {
+			if (lowerBody == LowerBody.HOOFED && isTaur() && wings.type == Wings.FEATHERED) {
 				race = "pegataur";
 			}
 			if (lowerBody == LowerBody.PONY)

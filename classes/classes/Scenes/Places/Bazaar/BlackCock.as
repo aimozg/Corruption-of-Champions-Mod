@@ -1980,9 +1980,8 @@ import classes.lists.Gender;
 						outputText("Your feet feel strange, almost as if they’ve fallen asleep. What’s wrong with them? You take a look, and you’re shocked to see that your feet have changed. In fact, they look a lot like your old human feet. The only difference is that your toes are clawed, and the bottoms of your feet padded.");
 						break;
 					case LowerBody.CAT:
-					case LowerBody.DOG:
+					case LowerBody.CANINE:
 					case LowerBody.FOX:
-					case LowerBody.WOLF:
 					case LowerBody.KANGAROO:
 					case LowerBody.BUNNY:
 					case LowerBody.RACCOON:

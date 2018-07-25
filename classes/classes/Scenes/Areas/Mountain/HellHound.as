@@ -167,7 +167,7 @@ public class HellHound extends Monster
 			this.tallness = 47;
 			this.hips.type = Hips.RATING_AVERAGE;
 			this.butt.type = Butt.RATING_AVERAGE + 1;
-			this.lowerBody = LowerBody.DOG;
+			this.lowerBody = LowerBody.CANINE;
 			this.skin.growFur({color:"black"});
 			this.hairColor = "red";
 			this.hairLength = 3;

@@ -511,7 +511,7 @@ public class ErlKingScene extends BaseContent
 			if (player.hasBreasts()) outputText("  Your chest first flattens out, then swells, as");
 			else outputText("  T");
 			outputText(" taut muscles fill in your entire frame.");
-			if (player.lowerBody == LowerBody.DOG) outputText("  Your doggie paws tingle as muscles build there, rebuilding them as stocky, athletic hound legs.");
+			if (player.lowerBody == LowerBody.CANINE) outputText("  Your doggie paws tingle as muscles build there, rebuilding them as stocky, athletic hound legs.");
 			else outputText("  Your [legs] bend and crack, making you howl in pain as they rebuild themselves as onyx-clawed canine paws.");
 			outputText("\n\n");
 

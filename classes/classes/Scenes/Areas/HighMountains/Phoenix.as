@@ -158,7 +158,7 @@ public class Phoenix extends Monster
 			this.drop = new ChainedDrop().add(useables.EBONBLO,1/20)
 					.add(weapons.SCIMITR,1/20)
 					.elseDrop(consumables.NOCELIQ);
-			this.wings.type = Wings.FEATHERED_PHOENIX;
+			this.wings.type = Wings.FEATHERED;
 			this.special1 = doubleSlash;
 			this.special2 = phoenixFireBreath;
 			this.special3 = lustBang;

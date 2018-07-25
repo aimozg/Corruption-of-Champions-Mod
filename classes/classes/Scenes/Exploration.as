@@ -341,7 +341,7 @@ public class Exploration extends BaseContent
 					outputText("You stumble as the ground shifts a bit underneath you.  Groaning in frustration, you straighten up and discover the rough feeling of sand ");
 					if (player.lowerBody == LowerBody.HUMAN) outputText("inside your footwear, between your toes");
 					if (player.lowerBody == LowerBody.HOOFED) outputText("in your hooves");
-					if (player.lowerBody == LowerBody.DOG) outputText("in your paws");
+					if (player.lowerBody == LowerBody.CANINE) outputText("in your paws");
 					if (player.lowerBody == LowerBody.NAGA) outputText("in your scales");
 					outputText(".\n\n<b>You've discovered the Desert!</b>");
 					player.exploredDesert = 1;

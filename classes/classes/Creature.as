@@ -2151,8 +2151,7 @@ import classes.Stats.BuffableStat;
 			Wings.BEE_LIKE_LARGE,
 			Wings.BAT_LIKE_LARGE,
 			Wings.BAT_LIKE_LARGE_2,
-			Wings.FEATHERED_LARGE,
-			Wings.FEATHERED_PHOENIX,
+			Wings.FEATHERED,
 			Wings.DRACONIC_LARGE,
 			Wings.DRACONIC_HUGE,
 			Wings.GIANT_DRAGONFLY,
@@ -2164,7 +2163,6 @@ import classes.Stats.BuffableStat;
 			Wings.VAMPIRE,
 			Wings.FEY_DRAGON_WINGS,
 			Wings.FEATHERED_AVIAN,
-			Wings.FEATHERED_SPHINX,
 			//WING_TYPE_IMP_LARGE,
 		];
 
@@ -2180,7 +2178,7 @@ import classes.Stats.BuffableStat;
 		public static const canPounceLeg:Array = [
 			LowerBody.CAT,
 			LowerBody.LION,
-			LowerBody.WOLF,
+			LowerBody.CANINE,
 		];
 
 		public static const canPounceArms:Array = [

@@ -343,7 +343,7 @@ package classes
 		public static const UnlockedHarpyTail:StatusEffectType           = mk("Unlocked Harpy Tail");
 		public static const UnlockedHarpyArms:StatusEffectType           = mk("Unlocked Harpy Arms");
 		public static const UnlockedHarpyHair:StatusEffectType           = mk("Unlocked Harpy Hair");
-		public static const UnlockedHarpyWings:StatusEffectType          = mk("Unlocked Harpy Wings");
+		public static const UnlockedHarpyWings:StatusEffectType          = mk("Unlocked Harpy Wings"); // TODO actually FeatheredWings
 		public static const UnlockedElfinEars:StatusEffectType           = mk("Unlocked Elfin Ears");
 		public static const UnlockedSpiderFourEyes:StatusEffectType      = mk("Unlocked Spider Four Eyes");
 		public static const UnlockedSpiderFangs:StatusEffectType         = mk("Unlocked Spider Fangs");
@@ -366,7 +366,7 @@ package classes
 		public static const UnlockedSalamanderArms:StatusEffectType 	 = mk("Unlocked Salamander Arms");
 		public static const UnlockedSalamanderFace:StatusEffectType 	 = mk("Unlocked Salamander Face");
 		public static const UnlockedPhoenixArms:StatusEffectType		 = mk("Unlocked Phoenix Arms");
-		public static const UnlockedPhoenixWings:StatusEffectType		 = mk("Unlocked Phoenix Wings");
+		public static const UnlockedPhoenixWings:StatusEffectType		 = mk("Unlocked Phoenix Wings"); // TODO replace with UnlockedHarpyWings
 		public static const UnlockedOrcaLegs:StatusEffectType			 = mk("Unlocked Orca Legs");
 		public static const UnlockedOrcaArms:StatusEffectType			 = mk("Unlocked Orca Arms");
 		public static const UnlockedOrcaTail:StatusEffectType			 = mk("Unlocked Orca Tail");
@@ -379,7 +379,7 @@ package classes
 		public static const UnlockedSnakeEyes:StatusEffectType			 = mk("Unlocked Snake Eyes");
 		public static const UnlockedSnakeEars:StatusEffectType			 = mk("Unlocked Snake Ears");
 		public static const UnlockedGorgonHair:StatusEffectType			 = mk("Unlocked Gorgon Hair");
-		public static const UnlockedGorgonEyes:StatusEffectType			 = mk("Unlocked Gorgon Eyes");
+		public static const UnlockedGorgonEyes:StatusEffectType			 = mk("Unlocked Gorgon Eyes"); // TODO replace with UnlockedSnakeEyes
 		public static const UnlockedDraconicEars:StatusEffectType		 = mk("Unlocked Draconic Ears");
 		public static const UnlockedDraconicWingsSmall:StatusEffectType	 = mk("Unlocked Draconic Wings Small");
 		public static const UnlockedDraconicWingsLarge:StatusEffectType	 = mk("Unlocked Draconic Wings Large");

@@ -232,7 +232,7 @@ package classes.Scenes.Combat {
 			bd.requireFatigue(spellCost(50));
 			bd.disableIf(player.hasStatusEffect(StatusEffects.OniRampage), "You already rampaging!");
 		}
-		if (player.eyes.type == Eyes.GORGON && player.hairType == Hair.GORGON || player.hasPerk(PerkLib.GorgonsEyes)) {
+		if (player.eyes.type == Eyes.SNAKE && player.hairType == Hair.GORGON || player.hasPerk(PerkLib.GorgonsEyes)) {
 			bd = buttons.add("Petrify", petrify).hint("Use your gaze to temporally turn your enemy into a stone. \n");
 			bd.requireFatigue(spellCost(100),true);
 			if (monster is LivingStatue) {

@@ -302,7 +302,7 @@ import classes.Items.*;
 			player.butt.type = 5;
 			player.teaseLevel = 1;
 			//Large feathered wings (Any chance in heck I could get 'angel' as the race descriptor? Just asking. I'm fine if the answer is 'no')
-			player.wings.type = Wings.FEATHERED_LARGE;
+			player.wings.type = Wings.FEATHERED;
 			player.wings.desc = "large, feathered";
 			
 			//While we're on the subject, would glowing eyes be possible? I'll take normal eyes if not.
@@ -830,7 +830,7 @@ import classes.Items.*;
 			//Tail- Canine
 			player.tailType = Tail.DOG;
 			//Lower body- Canine
-			player.lowerBody = LowerBody.DOG;
+			player.lowerBody = LowerBody.CANINE;
 			//White Fur (if possible)
 			player.hairColor = "white";
 			player.skin.growFur({});
@@ -1044,7 +1044,7 @@ import classes.Items.*;
 			player.wings.desc = "non-existant";
 			//6' 10"" german-shepherd morph, face ears hands feet tail, the whole nine yards
 			player.faceType = Face.DOG;
-			player.lowerBody = LowerBody.DOG;
+			player.lowerBody = LowerBody.CANINE;
 			player.tailType = Tail.DOG;
 			player.ears.type = Ears.DOG;
 			////"	"I'm picturing a tall, feminine German-Shepherd morph, solid white and gorgeous. She has both sets of genitals, with no balls, and a large set of breasts. She wields a large claymore and is dressed in a full chain vest and pants. 
@@ -1483,7 +1483,7 @@ import classes.Items.*;
 			player.lowerBody = LowerBody.CAT;
 			player.tailType = Tail.CAT;
 			player.createPerk(PerkLib.Incorporeality,0,0,0,0);
-			player.wings.type = Wings.FEATHERED_LARGE;
+			player.wings.type = Wings.FEATHERED;
 			player.arms.type = Arms.HARPY;
 			player.horns.type = Horns.DRACONIC_X2;
 			player.horns.count = 4;
@@ -1919,7 +1919,7 @@ import classes.Items.*;
 				player.wings.type = Wings.BAT_LIKE_LARGE;
 				player.wings.desc = "large, bat-like";}
 			else if(wings == 1){
-				player.wings.type = Wings.FEATHERED_LARGE;
+				player.wings.type = Wings.FEATHERED;
 				player.wings.desc = "large, feathered";}
 			else if(wings == 2){
 				player.wings.type = Wings.DRACONIC_LARGE;
@@ -1930,7 +1930,7 @@ import classes.Items.*;
 				
 			
 			var arms:Number = rand(100); // if have harpy wings 33% chance to have harpy hands, otherwise 5% to have spider hands
-			if(player.wings.type == Wings.FEATHERED_LARGE && rand(4) == 0)
+			if(player.wings.type == Wings.FEATHERED && rand(4) == 0)
 				player.arms.type = Arms.HARPY;
 			else if(rand(20) == 0)
 				player.arms.type = Arms.SPIDER;
