@@ -873,7 +873,7 @@
             <case value="Face.FERRET_MASK"><!--TODO -->
                 <show part="face/human"/>
             </case>
-            <case values="Face.MANTICORE,Face.SALAMANDER_FANGS,Face.DEVIL_FANGS,Face.ONI_TEETH,Face.RAIJU_FANGS,Face.VAMPIRE">
+            <case values="Face.SHARPTEETH,Face.VAMPIRE">
                 <show part="face/human_fang"/>
             </case>
             <case value="Face.ORCA">

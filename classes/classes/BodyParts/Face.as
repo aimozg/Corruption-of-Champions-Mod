@@ -29,33 +29,47 @@ public class Face extends SaveableBodyPart {
 	public static const FERRET:int           = EnumValue.add(Types,18,"FERRET",{name:'ferret muzzle'});
 	public static const PIG:int              = EnumValue.add(Types,19,"PIG",{name:'pig muzzle'});
 	public static const BOAR:int             = EnumValue.add(Types,20,"BOAR",{name:'boar muzzle'});
-	public static const RHINO:int            = EnumValue.add(Types,21,"RHINO",{name:'rhino muzzle'});
-	public static const ECHIDNA:int          = EnumValue.add(Types,22,"ECHIDNA",{name:'echidna muzzle'});
-	public static const DEER:int             = EnumValue.add(Types,23,"DEER",{name:'deer muzzle'});
-	public static const WOLF:int             = EnumValue.add(Types,24,"WOLF",{name:'wolf muzzle'});
-	public static const MANTICORE:int        = EnumValue.add(Types,25,"MANTICORE",{name:'manticore face'});
-	public static const SALAMANDER_FANGS:int = EnumValue.add(Types,26,"SALAMANDER_FANGS",{name:'salamander face'});
-	public static const YETI_FANGS:int       = EnumValue.add(Types,27,"YETI_FANGS",{name:'yeti face'});
-	public static const ORCA:int	         = EnumValue.add(Types,28,"ORCA",{name:'orca face'});
-	public static const PLANT_DRAGON:int	 = EnumValue.add(Types,29,"PLANT_DRAGON",{name:'plant dragon face'});
-	public static const DRAGON_FANGS:int	 = EnumValue.add(Types,30,"DRAGON_FANGS",{name:'human face with dragon fangs'});
-	public static const DEVIL_FANGS:int 	 = EnumValue.add(Types,31,"DEVIL_FANGS",{name:'human face with devil fangs'});
-	public static const ONI_TEETH:int   	 = EnumValue.add(Types,32,"ONI_TEETH",{name:'oni face'});
-	public static const RAIJU_FANGS:int 	 = EnumValue.add(Types,33,"RAIJU_FANGS",{name:'raiju face'});
+	public static const RHINO:int                  = EnumValue.add(Types,21,"RHINO",{name:'rhino muzzle'});
+	public static const ECHIDNA:int                = EnumValue.add(Types,22,"ECHIDNA",{name:'echidna muzzle'});
+	public static const DEER:int                   = EnumValue.add(Types,23,"DEER",{name:'deer muzzle'});
+	public static const WOLF:int                   = EnumValue.add(Types,24,"WOLF",{name:'wolf muzzle'});
+	public static const SHARPTEETH:int             = EnumValue.add(Types,25,"SHARPTEETH",{name:'human face with sharp teeth'});
+	private static const DEPRECATED_SALAMANDER_FANGS:int       = 26;
+	public static const YETI_FANGS:int             = EnumValue.add(Types,27,"YETI_FANGS",{name:'yeti face'});
+	public static const ORCA:int                   = EnumValue.add(Types,28,"ORCA",{name:'orca face'});
+	public static const PLANT_DRAGON:int           = EnumValue.add(Types,29,"PLANT_DRAGON",{name:'plant dragon face'});
+	private static const DEPRECATED_DRAGON_FANGS:int	 = 30;
+	private static const DEPRECATED_DEVIL_FANGS:int 	 = 31;
+	private static const DEPRECATED_ONI_TEETH:int   	 = 32;
+	private static const DEPRECATED_RAIJU_FANGS:int 	 = 33;
 	public static const VAMPIRE:int     	 = EnumValue.add(Types,34,"VAMPIRE",{name:'human face with vampire fangs'});
 	public static const BUCKTOOTH:int   	 = EnumValue.add(Types,35,"BUCKTOOTH",{name:'human face with jabberwocky buck teeth'});
 	public static const JABBERWOCKY:int 	 = EnumValue.add(Types,36,"JABBERWOCKY",{name:'jabberwocky face'});
 	public static const RED_PANDA:int   	 = EnumValue.add(Types,37,"RED_PANDA",{name:'red panda muzzle'});
-	public static const CAT_CANINES:int 	 = EnumValue.add(Types,38,"CAT_CANINES",{name:'human face with cat canines'});
+	private static const DEPRECATED_CAT_CANINES:int 	 = 38;
 	public static const CHESHIRE:int    	 = EnumValue.add(Types,39,"CHESHIRE",{name:'cheshire cat muzzle'});
-	public static const CHESHIRE_SMILE:int	 = EnumValue.add(Types,40,"CHESHIRE_SMILE",{name:'human face with cheshire cat smile'});
-	public static const AVIAN:int			 = EnumValue.add(Types,41,"AVIAN",{name:'avian beak'});
-	public static const WOLF_FANGS:int		 = EnumValue.add(Types,42,"WOLF_FANGS",{name:'human face with wolf fangs'});
+	public static const CHESHIRE_SMILE:int         = EnumValue.add(Types,40,"CHESHIRE_SMILE",{name:'human face with cheshire cat smile'});
+	public static const AVIAN:int                  = EnumValue.add(Types,41,"AVIAN",{name:'avian beak'});
+	private static const DEPRECATED_WOLF_FANGS:int = 42;
 	
 	public function Face(creature:Creature) {
 		super(creature,"facePart",[]);
 	}
-
+	
+	override public function set type(value:int):void {
+		switch(value){
+			case DEPRECATED_ONI_TEETH:
+			case DEPRECATED_DEVIL_FANGS:
+			case DEPRECATED_DRAGON_FANGS:
+			case DEPRECATED_SALAMANDER_FANGS:
+			case DEPRECATED_RAIJU_FANGS:
+			case DEPRECATED_CAT_CANINES:
+			case DEPRECATED_WOLF_FANGS:
+				value = SHARPTEETH;
+		}
+		super.type = value;
+	}
+	
 	override public function restore(keepColor:Boolean = true):void {
 		super.restore(keepColor);
 	}
@@ -84,8 +98,8 @@ public class Face extends SaveableBodyPart {
 	}
 	public function isHumanShaped():Boolean {
 		return isAny(HUMAN,
-				MANTICORE, BUCKTEETH, BUNNY, SHARK_TEETH,
-				SNAKE_FANGS, SPIDER_FANGS, YETI_FANGS, SALAMANDER_FANGS,
+				SHARPTEETH, BUCKTEETH, BUNNY, SHARK_TEETH,
+				SNAKE_FANGS, SPIDER_FANGS, YETI_FANGS,
 				FERRET_MASK, VAMPIRE);
 	}
 	public function nounPhrase():String {

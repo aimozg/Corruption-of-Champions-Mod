@@ -135,10 +135,6 @@ private function accessPage1FaceMenu():void {
 }
 private function accessPage2FaceMenu():void {
 	menu();
-	if (player.hasStatusEffect(StatusEffects.UnlockedSalamanderFace) && player.faceType != Face.SALAMANDER_FANGS && player.ki >= 100) addButton(11, "Salamander", metamorphSalamanderFace);
-	else if (player.hasStatusEffect(StatusEffects.UnlockedSalamanderFace) && player.faceType == Face.SALAMANDER_FANGS) addButtonDisabled(11, "Salamander", "You already have salamander fangs.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedSalamanderFace) && player.faceType != Face.SALAMANDER_FANGS && player.ki < 100) addButtonDisabled(11, "Salamander", "You not have enough Ki for this metamorphosis.");
-	else addButtonDisabled(11, "???", "You not yet unlocked this metamorphosis!");
 	if (player.hasStatusEffect(StatusEffects.UnlockedOrcaFace) && player.faceType != Face.ORCA && player.ki >= 100) addButton(13, "Orca", metamorphOrcaFace);
 	else if (player.hasStatusEffect(StatusEffects.UnlockedOrcaFace) && player.faceType == Face.ORCA) addButtonDisabled(13, "Orca", "You already have orca face.");
 	else if (player.hasStatusEffect(StatusEffects.UnlockedOrcaFace) && player.faceType != Face.ORCA && player.ki < 100) addButtonDisabled(13, "Orca", "You not have enough Ki for this metamorphosis.");
@@ -147,22 +143,10 @@ private function accessPage2FaceMenu():void {
 }
 private function accessPage3FaceMenu():void {
 	menu();
-	if (player.hasStatusEffect(StatusEffects.UnlockedDraconicFangs) && player.faceType != Face.DRAGON_FANGS && player.ki >= 100) addButton(1, "Dragon(F)", metamorphDragonFangs);
-	else if (player.hasStatusEffect(StatusEffects.UnlockedDraconicFangs) && player.faceType == Face.DRAGON_FANGS) addButtonDisabled(1, "Dragon(F)", "You already have dragon fangs.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedDraconicFangs) && player.faceType != Face.DRAGON_FANGS && player.ki < 100) addButtonDisabled(1, "Dragon(F)", "You not have enough Ki for this metamorphosis.");
-	else addButtonDisabled(1, "???", "You not yet unlocked this metamorphosis!");
-	if (player.hasStatusEffect(StatusEffects.UnlockedDevilFangs) && player.faceType != Face.DEVIL_FANGS && player.ki >= 100) addButton(2, "Devil", metamorphDevilFangs);
-	else if (player.hasStatusEffect(StatusEffects.UnlockedDevilFangs) && player.faceType == Face.DEVIL_FANGS) addButtonDisabled(2, "Devil", "You already have devil fangs.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedDevilFangs) && player.faceType != Face.DEVIL_FANGS && player.ki < 100) addButtonDisabled(2, "Devil", "You not have enough Ki for this metamorphosis.");
-	else addButtonDisabled(2, "???", "You not yet unlocked this metamorphosis!");
-	if (player.hasStatusEffect(StatusEffects.UnlockedOniFace) && player.faceType != Face.ONI_TEETH && player.ki >= 100) addButton(3, "Oni", metamorphOniFace);
-	else if (player.hasStatusEffect(StatusEffects.UnlockedOniFace) && player.faceType == Face.ONI_TEETH) addButtonDisabled(3, "Oni", "You already have oni fangs.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedOniFace) && player.faceType != Face.ONI_TEETH && player.ki < 100) addButtonDisabled(3, "Oni", "You not have enough Ki for this metamorphosis.");
+	if (player.hasStatusEffect(StatusEffects.UnlockedOniFace) && player.faceType != Face.SHARPTEETH&& player.ki >= 100) addButton(3, "Sharp teeth", metamorphOniFace);
+	else if (player.hasStatusEffect(StatusEffects.UnlockedOniFace) && player.faceType == Face.SHARPTEETH) addButtonDisabled(3, "Sharp teeth", "You already have sharp teeth.");
+	else if (player.hasStatusEffect(StatusEffects.UnlockedOniFace) && player.faceType != Face.SHARPTEETH && player.ki < 100) addButtonDisabled(3, "Sharp teeth", "You not have enough Ki for this metamorphosis.");
 	else addButtonDisabled(3, "???", "You not yet unlocked this metamorphosis!");
-	if (player.hasStatusEffect(StatusEffects.UnlockedRaijuFace) && player.faceType != Face.RAIJU_FANGS && player.ki >= 100) addButton(4, "Raiju", metamorphRaijuFace);
-	else if (player.hasStatusEffect(StatusEffects.UnlockedRaijuFace) && player.faceType == Face.RAIJU_FANGS) addButtonDisabled(4, "Raiju", "You already have raiju fangs.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedRaijuFace) && player.faceType != Face.RAIJU_FANGS && player.ki < 100) addButtonDisabled(4, "Raiju", "You not have enough Ki for this metamorphosis.");
-	else addButtonDisabled(4, "???", "You not yet unlocked this metamorphosis!");
 	addButton(14, "Back", accessPage1MetamorphMenu);
 }
 private function accessTongueMenu():void {
@@ -837,14 +821,6 @@ private function metamorphRaijuEars():void {
 	player.ears.type = Ears.WEASEL;
 	doNext(accessMetamorphMenu);
 }
-private function metamorphRaijuFace():void {
-	clearOutput();
-	player.ki -= 100;
-	if (player.faceType != Face.HUMAN) outputText("our face suddenly mold back into it’s former human shape. However y");
-	outputText("ou feel your two canines grow bigger and slightly sharper, not unlike those of a weasel or in your case a raiju. <b>You now have raiju canines.</b>");
-	player.faceType = Face.RAIJU_FANGS;
-	doNext(accessMetamorphMenu);
-}
 private function metamorphRaijuMane():void {
 	clearOutput();
 	player.ki -= 100;
@@ -888,8 +864,8 @@ private function metamorphOniFace():void {
 	player.ki -= 100;
 	outputText("\n\nY");
 	if (player.faceType != Face.HUMAN) outputText("our face suddenly mold back into it’s former human shape. However y");
-	outputText("ou feel your canines changing, growing bigger and slightly sharper. Hey you could pretend to be some kind of demon with that kind of mouth. <b>You now have oni canines.</b>");
-	player.faceType = Face.ONI_TEETH;
+	outputText("ou feel your canines changing, growing bigger and slightly sharper. Hey you could pretend to be some kind of beast with that kind of mouth. <b>You now have sharp teeth.</b>");
+	player.faceType = Face.SHARPTEETH;
 	doNext(accessMetamorphMenu);
 }
 private function metamorphOniEars():void {
@@ -1068,13 +1044,6 @@ private function metamorphDevilEyes():void {
 	player.eyes.colour = "ember";
 	doNext(accessMetamorphMenu);
 }
-private function metamorphDevilFangs():void {
-	clearOutput();
-	player.ki -= 100;
-	outputText("\n\nYou feel your canines grow slightly longer to take on a sharp appearance like those of a beast. Perhaps not as long as you thought they would end up as but clearly they make your smile all the more fiendish. <b>You now have demonic fangs!</b>");
-	player.faceType = Face.DEVIL_FANGS;
-	doNext(accessMetamorphMenu);
-}
 private function metamorphDevilArms():void {
 	clearOutput();
 	player.ki -= 100;
@@ -1216,13 +1185,6 @@ private function metamorphDragonLegs():void {
 	else outputText("\n\nYou scream in agony as you feel the bones in your feet suddenly break and restructure themselves, toes fusing together, bone swelling out of the merged masses of flesh.  When the pain is over, you realize that you still stand atop human-looking legs, but your feet have become like those of some bipedal reptilian killer, with powerful claws meant for gripping the ground. <b>You now have dragon feet.</b>");
 	player.lowerBody = LowerBody.DRAGON;
 	player.legCount = 2;
-	doNext(accessMetamorphMenu);
-}
-private function metamorphDragonFangs():void {
-	clearOutput();
-	player.ki -= 100;
-	outputText("\n\nSudden agony sweeps over your [face], your visage turning hideous as bones twist and your jawline shifts. The pain slowly vanishes, leaving you weeping into your fingers. When you pull your hands away you realize you've been left with a completely normal, human face. But then your tooth's suddenly hurt as they begin to change. Your canines getting sharper and more adapted to eating meat just like those of a dragon. <b>You now have dragon fangs.</b>");
-	player.faceType = Face.DRAGON_FANGS;
 	doNext(accessMetamorphMenu);
 }
 private function metamorphDragonFace():void {
@@ -1389,13 +1351,6 @@ private function metamorphPhoenixArms():void {
 	player.ki -= 100;
 	outputText("\n\nA crimson colored avian plumage starts to sprouts from your [skin.type], covering your forearms until <b>your arms look vaguely like wings</b>. Your hands remain unchanged thankfully. It'd be impossible to be a champion without hands! The feathery limbs might help you maneuver if you were to fly, but there's no way they'd support you alone.");
 	player.arms.type = Arms.PHOENIX;
-	doNext(accessMetamorphMenu);
-}
-private function metamorphSalamanderFace():void {
-	clearOutput();
-	player.ki -= 100;
-	outputText("\n\nYour tooth's suddenly hurt as you feel them changing. Your canines getting sharper and more adapted to eating meat.  <b>You now have fangs.</b>");
-	player.faceType = Face.SALAMANDER_FANGS;
 	doNext(accessMetamorphMenu);
 }
 private function metamorphSalamanderArms():void {

@@ -1703,19 +1703,13 @@ public class PlayerAppearance extends BaseContent {
 				outputText("  A set of retractable, needle-like fangs sit in place of your canines and are ready to dispense their venom.");
 			else if (faceType == Face.FERRET_MASK)
 				outputText("  The [skinFurScales] around your eyes is significantly darker than the rest of your face, giving you a cute little ferret mask.");
-			else if (faceType == Face.MANTICORE)
-				outputText("  You have a set of sharp cat-like teeth in your mouth.");
+			else if (faceType == Face.SHARPTEETH)
+				outputText("  You have a set of sharp animal-like teeth in your mouth.");
 			else if (faceType == Face.SNAKE_FANGS) {
 				if (odd==0) {
 					outputText("  The only oddity is your pair of dripping fangs which often hang over your lower lip.");
 				} else {
 					outputText("  In addition, a pair of fangs hang over your lower lip, dripping with venom.");
-				}
-			} else if (faceType == Face.SALAMANDER_FANGS) {
-				if (odd == 0) {
-					outputText(".  The only oddity is your salamander fangs giving you a menacing smile.");
-				} else {
-					outputText("  In addition, a pair of salamander fangs grows out of your mouth giving you a menacing smile.");
 				}
 			} else if (faceType == Face.YETI_FANGS) {
 				if (odd == 0){
@@ -1827,19 +1821,6 @@ public class PlayerAppearance extends BaseContent {
 				if (player.hasKeyItem("Fenrir Collar") >= 0) outputText("  Cold blue mist seems to periodically escape from your mouth.");
 			}
 		}
-		if (faceType == Face.WOLF_FANGS) {
-			if (!player.hasCoat()) {
-				outputText("  Your face is human in shape and structure with [skin coat]");
-				if (skin.hasMagicalTattoo()) outputText(" covered with magical tattoo");
-				else if(skin.hasBattleTattoo()) outputText(" covered with battle tattoo");
-				else if(skin.hasLightningShapedTattoo()) outputText(" covered with a few glowing lightning tattoos");
-				outputText(". Your mouth is somewhat human save for your wolf-like canines.");
-			} else if (player.hasPartialCoat(Skin.FUR)) {
-				outputText("  Your face looks human save for your wolf-like canines.  You've got [skin coat], hiding your [skin noadj] underneath your furry visage.");
-			} else {
-				outputText("  Your face looks human save for your wolf-like canines, but overlaid with glittering [skin coat].");
-			}
-		}
 		//cat-faces
 		if (faceType == Face.CAT || faceType == Face.CHESHIRE) {
 			if (!player.hasCoat()) {
@@ -1855,9 +1836,8 @@ public class PlayerAppearance extends BaseContent {
 			}
 			if (faceType == Face.CHESHIRE) outputText(" For some reason your facial expression is that of an everlasting yet somewhat unsettling grin.");
 		}
-		if (faceType == Face.CAT_CANINES || faceType == Face.CHESHIRE_SMILE) {
-			outputText("  Your face is human in shape and structure with [skin coat]. Your mouth is somewhat human save for your cat-like canines.");
-			if (faceType == Face.CHESHIRE_SMILE) outputText(" For some reason your facial expression is that of an everlasting yet somewhat unsettling grin.");
+		if (faceType == Face.CHESHIRE_SMILE) {
+			outputText("  Your face is human in shape and structure with [skin coat]. Your mouth is somewhat human save for your cat-like canines. For some reason your facial expression is that of an everlasting yet somewhat unsettling grin.");
 		}
 		//Minotaaaauuuur-face
 		if (faceType == Face.COW_MINOTAUR) {
@@ -1886,9 +1866,6 @@ public class PlayerAppearance extends BaseContent {
 		if (faceType == Face.DRAGON) {
 			outputText("  Your face is a narrow, reptilian muzzle.  It looks like a predatory lizard's, at first glance, but with an unusual array of spikes along the under-jaw.  It gives you a regal but fierce visage.  Opening your mouth reveals several rows of dagger-like sharp teeth.  The fearsome visage is decorated by [skin coat].");
 		}
-		if (faceType == Face.DRAGON_FANGS) {
-			outputText("  Your mouth is somewhat human save for your draconic fangs giving you a menacing smile.  It's decorated by [skin coat].");
-		}
 		if (faceType == Face.JABBERWOCKY) {
 			outputText("  Your face is a narrow, reptilian muzzle.  It looks like a predatory lizard's, at first glance, but with an unusual array of spikes along the under-jaw.  It gives you a regal but fierce visage.  Opening your mouth reveals two buck tooth, which are abnormally large.  Like a rabbit or rather a Jabberwocky.  The fearsome visage is decorated by [skin coat].");
 		}
@@ -1897,15 +1874,6 @@ public class PlayerAppearance extends BaseContent {
 		}
 		if (faceType == Face.PLANT_DRAGON) {
 			outputText("  Your face is a narrow, reptilian and regal, reminiscent of a dragon.  A [skin coat] decorates your visage.");
-		}
-		if (faceType == Face.DEVIL_FANGS) {
-			outputText("  Your mouth is somewhat human save for your fiendish canines.  It's decorated by [skin coat].");
-		}
-		if (faceType == Face.ONI_TEETH) {
-			outputText("  Your face is human in shape and structure with [skin coat]. Your mouth could pass for human if not for your two large ogre like canines.");
-		}
-		if (faceType == Face.RAIJU_FANGS) {
-			outputText("  Your face is human in shape and structure with [skin coat]. Your mouth could pass for human if not for your two sharp weasel canines.");
 		}
 		if (faceType == Face.ORCA) {
 			if (skin.hasPlainSkinOnly() && player.skinAdj == "glossy" && player.skinTone == "white and black")

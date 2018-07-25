@@ -166,11 +166,11 @@ package classes.Items.Consumables {
 			changes++;
 		}
 		//Face
-		if (player.ears.type == Ears.ONI && player.faceType != Face.ONI_TEETH && changes < changeLimit && rand(3) == 0) {
+		if (player.ears.type == Ears.ONI && player.faceType != Face.SHARPTEETH && changes < changeLimit && rand(3) == 0) {
 			outputText("\n\nY");
 			if (player.faceType != Face.HUMAN) outputText("our face suddenly mold back into it’s former human shape. However y");
 			outputText("ou feel your canines changing, growing bigger and slightly sharper. Hey you could pretend to be some kind of demon with that kind of mouth. <b>You now have oni canines.</b>");
-			mutations.setFaceType(Face.ONI_TEETH);
+			mutations.setFaceType(Face.SHARPTEETH);
 			changes++;
 		}
 		//Skin

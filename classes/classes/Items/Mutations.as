@@ -4876,14 +4876,14 @@ public final class Mutations extends MutationsHelper
 				player.coatColor = "lilac and white striped";
 				changes++;
 			}
-			if ((player.faceType == Face.CAT || player.faceType == Face.CAT_CANINES) && type == 2 && rand(3) == 0 && changes < changeLimit && player.faceType != Face.CHESHIRE && player.faceType != Face.CHESHIRE_SMILE) {
+			if ((player.faceType == Face.CAT || player.faceType == Face.SHARPTEETH) && type == 2 && rand(3) == 0 && changes < changeLimit && player.faceType != Face.CHESHIRE && player.faceType != Face.CHESHIRE_SMILE) {
 				outputText("\n\nYou suddenly feel like smiling. Why actually look so serious? Everything is easier if you take it with a smile and a laughter. Perhaps it's just you taking on that mentality or it's that weird wonderfruit you took but now you feel you could smile forever showing that wide grin of yours. <b>You now have a cheshire smile.</b>");
 				if (player.faceType == Face.CAT) setFaceType(Face.CHESHIRE);
-				if (player.faceType == Face.CAT_CANINES) setFaceType(Face.CHESHIRE_SMILE);
+				if (player.faceType == Face.SHARPTEETH) setFaceType(Face.CHESHIRE_SMILE);
 				changes++;
 			}
 			//CAT-FACE!  FULL ON FURRY!  RAGE AWAY NEKOZ
-			if (player.tailType == Tail.CAT && rand(4) == 0 && changes < changeLimit && player.lowerBody == LowerBody.CAT && player.arms.type == Arms.CAT && (player.faceType != Face.CAT || player.faceType != Face.CAT_CANINES || player.faceType != Face.CHESHIRE || player.faceType != Face.CHESHIRE_SMILE)) {
+			if (player.tailType == Tail.CAT && rand(4) == 0 && changes < changeLimit && player.lowerBody == LowerBody.CAT && player.arms.type == Arms.CAT && (player.faceType != Face.CAT || player.faceType != Face.SHARPTEETH || player.faceType != Face.CHESHIRE || player.faceType != Face.CHESHIRE_SMILE)) {
 				if (rand(2) == 0 && player.faceType != Face.CAT) {
 					choice = rand(3);
 					if (choice == 0) outputText("\n\nYour face is wracked with pain. You throw back your head and scream in agony as you feel your cheekbones breaking and shifting, reforming into something... different. You find a puddle to view your reflection and discover <b>your face is now a cross between human and feline features.</b>");
@@ -4895,7 +4895,7 @@ public final class Mutations extends MutationsHelper
 					outputText("\n\n");
 					if (player.faceType != Face.HUMAN) outputText("Your face suddenly mold back into its former human shape. However you feel your canine changing elongating into sharp dagger-like teeth capable of causing severe injuries. ");
 					outputText("You feel your canines changing, elongating into sharp dagger-like teeth capable of causing severe injuries. Funnily, your face remained relatively human even after the change. You purr at the change it gives you a cute look. <b>Your mouth is now filled with Cat-like canines.</b>");
-					setFaceType(Face.CAT_CANINES);
+					setFaceType(Face.SHARPTEETH);
 				}
 				changes++;
 			}
@@ -5505,17 +5505,17 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Fanged face
-			if (player.faceType == Face.HUMAN && player.faceType != Face.SALAMANDER_FANGS && changes < changeLimit && rand(3) == 0) {
+			if (player.faceType == Face.HUMAN && player.faceType != Face.SHARPTEETH && changes < changeLimit && rand(3) == 0) {
 				outputText("\n\nYour tooth's suddenly hurt as you feel them changing. Your canines getting sharper and more adapted to eating meat.  <b>You now have fangs.</b>");
-				setFaceType(Face.SALAMANDER_FANGS);
+				setFaceType(Face.SHARPTEETH);
 				changes++;
 			}
-			if (player.faceType != Face.HUMAN && player.faceType != Face.SALAMANDER_FANGS && changes < changeLimit && rand(4) == 0) {
+			if (player.faceType != Face.HUMAN && player.faceType != Face.SHARPTEETH && changes < changeLimit && rand(4) == 0) {
 				humanizeFace();
 				changes++;
 			}
 			//Human ears
-			if (player.faceType == Face.SALAMANDER_FANGS && player.ears.type != Ears.HUMAN && changes < changeLimit && rand(4) == 0) {
+			if (player.faceType == Face.SHARPTEETH && player.ears.type != Ears.HUMAN && changes < changeLimit && rand(4) == 0) {
 				humanizeEars();
 				changes++;
 			}
@@ -7829,14 +7829,14 @@ public final class Mutations extends MutationsHelper
 				setRearBody(RearBody.RAIJU_MANE);
 				changes++;
 			}
-			if (player.rearBody.type == RearBody.RAIJU_MANE && player.faceType != Face.RAIJU_FANGS && changes < changeLimit && rand(3) == 0) {
+			if (player.rearBody.type == RearBody.RAIJU_MANE && player.faceType != Face.SHARPTEETH && changes < changeLimit && rand(3) == 0) {
 				outputText("\n\nY");
 				if (player.faceType != Face.HUMAN) outputText("our face suddenly mold back into it’s former human shape. However y");
 				outputText("ou feel your two canines grow bigger and slightly sharper, not unlike those of a weasel or in your case a raiju. <b>You now have raiju canines.</b>");
-				setFaceType(Face.RAIJU_FANGS);
+				setFaceType(Face.SHARPTEETH);
 				changes++;
 			}
-			if (player.faceType == Face.RAIJU_FANGS && player.ears.type != Ears.WEASEL && changes < changeLimit && rand(3) == 0) {
+			if (player.faceType == Face.SHARPTEETH && player.ears.type != Ears.WEASEL && changes < changeLimit && rand(3) == 0) {
 				if (player.ears.type == Ears.HUMAN) {
 					outputText("\n\nYour ears twitch as jolt of lightning flows through them, replacing all sound with crackling pops. You moan as the lightning arcs up to the top of your head before fanning out to the side. Hearing suddenly returns as you run your hands across your <b>new weasel ears!</b>");
 					setEarType(Ears.WEASEL);
@@ -11411,13 +11411,13 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Fangs
-			if (rand(3) == 0 && changes < changeLimit && player.faceType != Face.DEVIL_FANGS && player.ears.type == Ears.GOAT) {
+			if (rand(3) == 0 && changes < changeLimit && player.faceType != Face.SHARPTEETH && player.ears.type == Ears.GOAT) {
 				outputText("\n\nYou feel your canines grow slightly longer to take on a sharp appearance like those of a beast. Perhaps not as long as you thought they would end up as but clearly they make your smile all the more fiendish. <b>You now have demonic fangs!</b>");
-				setFaceType(Face.DEVIL_FANGS);
+				setFaceType(Face.SHARPTEETH);
 				changes++;
 			}
 			//Eyes
-			if (rand(3) == 0 && changes < changeLimit && player.eyes.type != Eyes.DEVIL && player.faceType == Face.DEVIL_FANGS) {
+			if (rand(3) == 0 && changes < changeLimit && player.eyes.type != Eyes.DEVIL && player.faceType == Face.SHARPTEETH) {
 				outputText("\n\nYour eyes feels like they are burning. You try to soothe them, but to no avail. You endure the agony for a few minutes before it finally fades. You look at yourself in the nearest reflective surface and notice your eyes have taken on a demonic appearance: the sclera is black and the pupils ember. Furthermore they seem to glow with a faint inner light. <b>You now have fiendish eyes!</b>");
 				setEyeTypeAndColor(Eyes.DEVIL,"ember");
 				changes++;
@@ -11483,9 +11483,9 @@ public final class Mutations extends MutationsHelper
 			}
 			if (player.hasPerk(PerkLib.TransformationImmunity)) changeLimit = 0;
 			//-Jabberwocky face/bucktooth
-			if ((player.faceType == Face.DRAGON || player.faceType == Face.DRAGON_FANGS) && changes < changeLimit) {
+			if ((player.faceType == Face.DRAGON || player.faceType == Face.SHARPTEETH) && changes < changeLimit) {
 				outputText("\n\nWhile you are busy laughing at the ridicule of this situation your bucktooth begin to pulse in accordance with your laughter growing almost to rabbit like size. You now have ");
-				if (player.faceType == Face.DRAGON_FANGS) {
+				if (player.faceType == Face.SHARPTEETH) {
 					outputText("<b>Jabberwocky buck tooths!</b>");
 					setFaceType(Face.BUCKTOOTH);
 				}

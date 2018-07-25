@@ -594,7 +594,7 @@ public class Race {
 			.simpleScores({
 				'face'     : [
 					Face.CAT, +1,
-					Face.CAT_CANINES, +1,
+					Face.SHARPTEETH, +1,
 					Face.CHESHIRE, -7,
 					Face.CHESHIRE_SMILE, -7
 				],
@@ -888,7 +888,7 @@ public class Race {
 				'arms' : [Arms.DEVIL, +1],
 				'horns': [Horns.GOAT, +1],
 				'ears' : [Ears.GOAT, +1],
-				'face' : [Face.DEVIL_FANGS, +1],
+				'face' : [Face.SHARPTEETH, +1],
 				'eyes' : [Eyes.DEVIL, +1]
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
@@ -928,7 +928,7 @@ public class Race {
 				'tongue'   : [Tongue.DRACONIC, +1],
 				'face'     : [
 					Face.DRAGON, +1,
-					Face.DRAGON_FANGS, +1,
+					Face.SHARPTEETH, +1,
 					Face.JABBERWOCKY, -10,
 					Face.BUCKTOOTH, -10
 				],
@@ -1145,7 +1145,7 @@ public class Race {
 				'horns'     : [Horns.GARGOYLE, +1],
 				'eyes'      : [Eyes.GEMSTONES, +1],
 				'ears'      : [Ears.ELFIN, +1],
-				'face'      : [Face.DEVIL_FANGS, +1],
+				'face'      : [Face.SHARPTEETH, +1],
 				'tongue'    : [Tongue.DEMONIC, +1],
 				'hair.color': [
 					"light grey", +1,
@@ -1360,7 +1360,7 @@ public class Race {
 					Face.JABBERWOCKY, +1,
 					Face.BUCKTOOTH, +1,
 					Face.DRAGON, -10,
-					Face.DRAGON_FANGS, -10
+					Face.SHARPTEETH, -10
 				],
 				'eyes'     : [Eyes.DRAGON, +1],
 				'ears'     : [Ears.DRAGON, +1],
@@ -1637,7 +1637,7 @@ public class Race {
 
 	public static var MANTICORE:Race = new Race("manticore")
 			.simpleScores({
-				'face'  : [Face.MANTICORE, +1],
+				'face'  : [Face.SHARPTEETH, +1],
 				'eyes'  : [Eyes.SLITS, +1],
 				'ears'  : [Ears.LION, +1],
 				'rear'  : [RearBody.LION_MANE, +1],
@@ -1811,7 +1811,7 @@ public class Race {
 			.simpleScores({
 				'face'  : [
 					Face.CAT, +1,
-					Face.CAT_CANINES, +1
+					Face.SHARPTEETH, +1
 				],
 				'eyes'  : [Eyes.SLITS, +1],
 				'ears'  : [Ears.CAT, +1],
@@ -1837,7 +1837,7 @@ public class Race {
 	public static var ONI:Race                       = new Race("oni")
 			.simpleScores({
 				'ears'             : [Ears.ONI, +1],
-				'face'             : [Face.ONI_TEETH, +1],
+				'face'             : [Face.SHARPTEETH, +1],
 				'horns'            : [Horns.ONI, +1],
 				'arms'             : [Arms.ONI, +1],
 				'legs'             : [LowerBody.ONI, +1],
@@ -2050,7 +2050,7 @@ public class Race {
 			.simpleScores({
 				'ears'             : [Ears.WEASEL, +1],
 				'eyes'             : [Eyes.RAIJU, +1],
-				'face'             : [Face.RAIJU_FANGS, +1],
+				'face'             : [Face.SHARPTEETH, +1],
 				'arms'             : [Arms.RAIJU, +1],
 				'legs'             : [LowerBody.RAIJU, +1],
 				'tail'             : [Tail.RAIJU, +1],
@@ -2143,13 +2143,13 @@ public class Race {
 				'arms': [Arms.SALAMANDER, +1],
 				'legs': [LowerBody.SALAMANDER, +1],
 				'tail': [Tail.SALAMANDER, +1],
-				'face': [Face.SALAMANDER_FANGS, +1]
+				'face': [Face.SHARPTEETH, +1]
 			}).complexScore(+1, {
 				'skin.coat'    : Skin.SCALES,
 				'skin.coverage': Skin.COVERAGE_LOW
 			}).complexScore(+1, {
 				'ears': Ears.HUMAN,
-				'face': Face.SALAMANDER_FANGS
+				'face': Face.SHARPTEETH
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.lizardCocks() > 0)
@@ -2357,7 +2357,7 @@ public class Race {
 					Tail.LION, +1
 				],
 				'legs'  : [LowerBody.CAT, +1],
-				'face'  : [Face.CAT_CANINES, +1],
+				'face'  : [Face.SHARPTEETH, +1],
 				'wings' : [Wings.FEATHERED, +2]
 			}).complexScore(+2, {
 				'legs.count': 4,
@@ -2382,7 +2382,7 @@ public class Race {
 			}).complexScore(+1, {
 				'legs.count': 4,
 				'legs'      : LowerBody.CAT,
-				'face'      : Face.CAT_CANINES
+				'face'      : Face.SHARPTEETH
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
@@ -2542,7 +2542,7 @@ public class Race {
 
 	public static var WEREWOLF:Race = new Race("werewolf")
 			.simpleScores({
-				'face'  : [Face.WOLF_FANGS, +1],
+				'face'  : [Face.SHARPTEETH, +1],
 				'eyes'  : [
 					Eyes.FERAL, +1,
 					Eyes.FENRIR, -7

@@ -141,9 +141,9 @@ public function dragonTFeffects(drakesHeart:Boolean = false):void {
         changes++;
 	}
 	//Gain Dragon Fangs
-	if (changes < changeLimit && rand(3) == 0 && player.tongue.type == Tongue.DRACONIC && player.lowerBody != LowerBody.GARGOYLE && player.faceType != Face.DRAGON_FANGS) {
+	if (changes < changeLimit && rand(3) == 0 && player.tongue.type == Tongue.DRACONIC && player.lowerBody != LowerBody.GARGOYLE && player.faceType != Face.SHARPTEETH) {
 		outputText("\n\nSudden agony sweeps over your [face], your visage turning hideous as bones twist and your jawline shifts. The pain slowly vanishes, leaving you weeping into your fingers. When you pull your hands away you realize you've been left with a completely normal, human face. But then your tooth's suddenly hurt as they begin to change. Your canines getting sharper and more adapted to eating meat just like those of a dragon. <b>You now have dragon fangs.</b>");
-        CoC.instance.mutations.setFaceType(Face.DRAGON_FANGS);
+        CoC.instance.mutations.setFaceType(Face.SHARPTEETH);
         changes++;
 	}
 	//Gain Dragon Scales
