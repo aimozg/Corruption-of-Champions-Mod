@@ -1386,7 +1386,7 @@ import classes.Stats.BuffableStat;
 			if (breastRows.length == 0) {
 				return -1;
 			}
-			return breastRows.concat().sortOn("breastRating", Array.NUMERIC | Array.DESCENDING)[0];
+			return breastRows.concat().sortOn("breastRating", Array.NUMERIC | Array.DESCENDING)[0].breastRating;
 		}
 
 		public function cockArea(i_cockIndex:uint):Number {
