@@ -8,6 +8,7 @@ import classes.Scenes.SceneLib;
 import classes.Stats.Buff;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
+import classes.Stats.IStatHolder;
 import classes.Stats.PrimaryStat;
 import classes.Stats.RawStat;
 import classes.Stats.StatUtils;
@@ -682,32 +683,43 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 		addButton(0,"Back",playerMenu);
 	}
 	
+	private function debugStat(fullname:String,stat:IStat):void {
+		var sh:IStatHolder = stat as IStatHolder;
+		if (sh) {
+			for each(var key:String in sh.allStatNames()) {
+				debugStat(fullname+"."+key,sh.findStat(key));
+			}
+		}
+		outputText('<b>'+fullname+' = '+floor(stat.value,5)+'</b> ');
+		var pstat:PrimaryStat = stat as PrimaryStat;
+		var bstat:BuffableStat = stat as BuffableStat;
+		var rstat:RawStat = stat as RawStat;
+		if (pstat) {
+			outputText(' = '+fullname+'.core×'+fullname+'.mult + '+fullname+'.bonus');
+		} else if (bstat) {
+			var buffs:/*Buff*/Array = bstat.listBuffs();
+			if (buffs.length==0) {
+				outputText(" = base");
+			} else {
+				outputText('(base = '+bstat.base+')');
+			}
+			for each(var buff:Buff in buffs) {
+				var value:Number = buff.value;
+				outputText('\n\t'+buff.tag + ': ' + (value >= 0 ? '+' : '') + floor(value,5));
+				if (buff.save) outputText(', saved');
+				if (!buff.show) outputText(', hidden');
+			}
+		} else if (rstat) {
+			outputText('(raw)');
+		} else {
+			outputText('(/!\\ unknown type '+stat['prototype']['constructor']+')');
+		}
+		outputText('\n');
+	}
 	public function debugStats():void {
 		clearOutput();
-		var statnames:/*String*/Array = Utils.keys(player.stats).sort();
-		for each(var statname:String in statnames) {
-			var stat:IStat = player.stats[statname];
-			outputText('<b>'+statname+' = '+stat.value+'</b> ');
-			var pstat:PrimaryStat = stat as PrimaryStat;
-			var bstat:BuffableStat = stat as BuffableStat;
-			var rstat:RawStat = stat as RawStat;
-			if (pstat) {
-				outputText(' = '+pstat.core.name+'×'+pstat.mult.name+' + '+pstat.bonus.name);
-			} else if (bstat) {
-				outputText('(base '+bstat.base+')');
-				var buffs:/*Buff*/Array = bstat.listBuffs();
-				for each(var buff:Buff in buffs) {
-					var value:Number = buff.value;
-					outputText('\n\t'+buff.tag + ': ' + (value >= 0 ? '+' : '') + value);
-					if (buff.save) outputText(', save+');
-					if (!buff.show) outputText(', show-');
-				}
-			} else if (rstat) {
-				outputText('(raw)');
-			} else {
-				outputText('/!\\ Unknown stat class '+stat['prototype']['constructor']);
-			}
-			outputText('\n');
+		for each(var stat:String in player.allStatNames()) {
+			debugStat(stat, player.findStat(stat));
 		}
 		menu();
 		addButton(0,"Back",displayStats);

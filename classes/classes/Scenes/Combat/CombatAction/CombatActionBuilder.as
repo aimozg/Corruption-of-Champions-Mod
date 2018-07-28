@@ -223,7 +223,7 @@ package classes.Scenes.Combat.CombatAction {
 					function (host:Creature, target:Creature):Boolean {
 						var failed:Boolean;
 						if (statReduce != "") {
-							baseChance -= host.stats[statReduce].value * reducePercent;
+							baseChance -= host.findStat(statReduce).value * reducePercent;
 						}
 						if (!Utils.randomChance(Math.max(baseChance, min))) {
 							return false;

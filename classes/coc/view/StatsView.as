@@ -214,7 +214,7 @@ public class StatsView extends Block {
 				var bar:StatBar = event.target as StatBar;
 				if (!bar) return;
 				var statname:String  = bar.dataset.statname;
-				var stat:PrimaryStat = player.stats[statname];
+				var stat:PrimaryStat = player.findPrimaryStat(statname);
 				if (!stat) return;
 				var text:String            = '';
 				text += '<b>Base value:</b> ' + Utils.floor(stat.core.value, 1) + '\n';
@@ -346,7 +346,8 @@ public class StatsView extends Block {
 		var maxes:Object      = player.getAllMaxStats();
 		nameText.htmlText     = "<b>Name: " + player.short + "</b>";
 		for each(var e:StatBar in allStats) {
-			var stat:PrimaryStat = player.stats[e.dataset.statname] as PrimaryStat;
+			if (!e.dataset.statname) continue;
+			var stat:PrimaryStat = player.findPrimaryStat(e.dataset.statname);
 			if (!stat) continue;
 			e.maxValue = stat.max;
 			e.value = stat.value;

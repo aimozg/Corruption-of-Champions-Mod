@@ -3,12 +3,17 @@
  */
 package classes.Stats {
 import classes.internals.Jsonable;
+import classes.internals.Utils;
 
-public class PrimaryStat implements IStat,Jsonable {
-	private var _name:String;
-	private var _core:RawStat;
-	private var _mult:BuffableStat;
-	private var _bonus:BuffableStat;
+public class PrimaryStat implements IStat,IStatHolder,Jsonable {
+	private var _core:RawStat = new RawStat({value:1,min:1,max:100});
+	private var _mult:BuffableStat = new BuffableStat({base:1.0,min:0});
+	private var _bonus:BuffableStat = new BuffableStat({});
+	private var _substats:Object = {
+		"core": _core,
+		"mult": _mult,
+		"bonus": _bonus
+	};
 	
 	public function reset(core:Number):void {
 		_core.value = core;
@@ -36,16 +41,18 @@ public class PrimaryStat implements IStat,Jsonable {
 	public function get mult100():int {
 		return Math.floor(_mult.value*100);
 	}
-	public function PrimaryStat(name:String,saveInto:*) {
-		this._name = name;
-		this._core = new RawStat(name+"Core",{value:1,min:1,max:100},saveInto);
-		this._mult = new BuffableStat(name + "Mult",{base:1.0,min:0},saveInto);
-		this._bonus = new BuffableStat(name + "Bonus",{},saveInto);
-		if (saveInto) saveInto[name] = this;
+	public function PrimaryStat() {
 	}
 	
-	public function get name():String {
-		return _name;
+	public function findStat(fullname:String):IStat {
+		if (fullname.indexOf('.') == -1) return _substats[fullname];
+		return StatUtils.findStatByPath(this, fullname);
+	}
+	public function allStats():Array {
+		return Utils.values(_substats);
+	}
+	public function allStatNames():Array {
+		return Utils.keys(_substats);
 	}
 	public function get value():Number {
 		return Math.max(min, core.value * mult.value + bonus.value);
@@ -59,13 +66,17 @@ public class PrimaryStat implements IStat,Jsonable {
 	
 	public function saveToObject():Object {
 		return {
-			core:core.value,
+			core:core.saveToObject(),
 			mult:mult.saveToObject(),
 			bonus:bonus.saveToObject()
 		};
 	}
 	public function loadFromObject(o:Object, ignoreErrors:Boolean):void {
-		core.value = o.core;
+		if (typeof o.core == 'number') {
+			core.value = o.core;
+		} else {
+			core.loadFromObject(o.core, ignoreErrors)
+		}
 		mult.loadFromObject(o.mult,ignoreErrors);
 		bonus.loadFromObject(o.bonus,ignoreErrors);
 	}

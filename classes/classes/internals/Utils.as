@@ -101,7 +101,8 @@ public class Utils extends Object
 			if (decimals == 0) return ''+Math.floor(value);
 			var base:Number = ipow(10,decimals);
 			value = Math.floor(value*base)/base;
-			return ''+value.toFixed(decimals);
+			return ''+value.toFixed(decimals).replace(/\.?0+$/,'');
+			// no risk stripping 0s from 123000 because that's the case of decimals=0
 		}
 		public static function boundInt(min:int, x:int, max:int):int {
 			return x < min ? min : x > max ? max : x;
@@ -116,6 +117,14 @@ public class Utils extends Object
 		public static function keys(o:Object):/*String*/Array {
 			var r:/*String*/Array = [];
 			for (var k:String in o) r.push(k);
+			return r;
+		}
+		/**
+		 * Mimics JS Object.values
+		 */
+		public static function values(o:Object):Array {
+			var r:Array = [];
+			for each(var k:* in o) r.push(k);
 			return r;
 		}
 		/**

@@ -212,7 +212,7 @@ public class ModMonster extends Monster {
 				case 'wis':
 				case 'lib':
 					x = xml.text();
-					var stat:PrimaryStat = this.stats[xml.localName()] as PrimaryStat;
+					var stat:PrimaryStat = this.findPrimaryStat(xml.localName());
 					stat.core.max = Math.max(100,x*2);
 					stat.core.value = x;
 					break;

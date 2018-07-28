@@ -30,8 +30,11 @@ package classes
 	import classes.Scenes.Places.TelAdre.UmasShop;
 import classes.Stats.BuffTags;
 import classes.Stats.BuffableStat;
-	import classes.Stats.PrimaryStat;
-	import classes.StatusEffects.Combat.CombatInteBuff;
+import classes.Stats.IStat;
+import classes.Stats.IStatHolder;
+import classes.Stats.PrimaryStat;
+import classes.Stats.StatUtils;
+import classes.StatusEffects.Combat.CombatInteBuff;
 	import classes.StatusEffects.Combat.CombatSpeBuff;
 	import classes.StatusEffects.Combat.CombatStrBuff;
 	import classes.StatusEffects.Combat.CombatTouBuff;
@@ -42,7 +45,7 @@ import classes.Stats.BuffableStat;
 
 	import flash.errors.IllegalOperationError;
 
-	public class Creature extends Utils
+	public class Creature extends Utils implements IStatHolder
 	{
 
 
@@ -122,15 +125,66 @@ import classes.Stats.BuffableStat;
 		   [   S T A T S   ]
 		
 		 */
-		public var stats:Object = {};// [index:string]:IStat
+		protected var _stats:Object = {
+			"str": new PrimaryStat(),
+			"tou": new PrimaryStat(),
+			"spe": new PrimaryStat(),
+			"int": new PrimaryStat(),
+			"wis": new PrimaryStat(),
+			"lib": new PrimaryStat(),
+			
+			"spellPower":new BuffableStat({base:1.0,min:0.0})
+		};
 		
+		public function findStat(fullname:String):IStat {
+			if (fullname.indexOf('.') >= 0) {
+				return StatUtils.findStatByPath(this, fullname);
+			}
+			return _stats[fullname];
+		}
+		public function statValue(fullname:String):Number {
+			var stat:IStat = findStat(fullname);
+			return stat ? stat.value : NaN;
+		}
+		public function findPrimaryStat(name:String):PrimaryStat {
+			return findStat(name) as PrimaryStat;
+		}
+		public function findBuffableStat(fullname:String):BuffableStat {
+			var istat:IStat = findStat(fullname);
+			if (istat is BuffableStat) {
+				return istat as BuffableStat;
+			} else if (istat is PrimaryStat) {
+				return (istat as PrimaryStat).bonus;
+			} else {
+				return null;
+			}
+		}
+		public function allStats():/*IStat*/Array {
+			return Utils.values(_stats);
+		}
+		public function allStatNames():/*String*/Array {
+			return Utils.keys(_stats);
+		}
+		public function allStatsAndSubstats():/*IStat*/Array {
+			var result:/*IStat*/Array = [];
+			var queue:/*Object*/Array = [this];
+			while (queue.length > 0) {
+				var e:IStatHolder = queue.pop() as IStatHolder;
+				if (e == null) continue;
+				var stats:/*IStat*/Array = e.allStats();
+				result = result.concat(stats);
+				queue = queue.concat(stats);
+			}
+			return result;
+		}
+
 		//Primary stats
-		public var strStat:PrimaryStat = new PrimaryStat("str",stats);
-		public var touStat:PrimaryStat = new PrimaryStat("tou",stats);
-		public var speStat:PrimaryStat = new PrimaryStat("spe",stats);
-		public var intStat:PrimaryStat = new PrimaryStat("int",stats);
-		public var wisStat:PrimaryStat = new PrimaryStat("wis",stats);
-		public var libStat:PrimaryStat = new PrimaryStat("lib",stats);
+		public var strStat:PrimaryStat = _stats.str;
+		public var touStat:PrimaryStat = _stats.tou;
+		public var speStat:PrimaryStat = _stats.spe;
+		public var intStat:PrimaryStat = _stats.int;
+		public var wisStat:PrimaryStat = _stats.wis;
+		public var libStat:PrimaryStat = _stats.lib;
 		public function get str():Number {
 			return strStat.value;
 		}
@@ -167,7 +221,7 @@ import classes.Stats.BuffableStat;
 		public var additionalXP:Number = 0;
 		
 		// Other buffable stats
-		public var spellPowerStat:BuffableStat = new BuffableStat("spellPower",{base:1.0,min:0.0},stats);
+		public var spellPowerStat:BuffableStat = _stats.spellPower;
 		public function get spellPower():Number { return spellPowerStat.value }
 		
 		public function get hp100():Number { return 100*HP/maxHP(); }
@@ -397,10 +451,10 @@ import classes.Stats.BuffableStat;
 				} else {
 					speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.tagForBuffs);
 				}
-				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) perk.buffHost('speMult', +0.20*mult);
-				else if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) perk.buffHost('speMult', +0.15*mult);
-				else if (skinType == Skin.SCALES) perk.buffHost('speMult', +0.10*mult);
-				else if (hasPerk(PerkLib.ThickSkin)) perk.buffHost('speMult', +0.05*mult);
+				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) perk.buffHost('spe.mult', +0.20*mult);
+				else if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) perk.buffHost('spe.mult', +0.15*mult);
+				else if (skinType == Skin.SCALES) perk.buffHost('spe.mult', +0.10*mult);
+				else if (hasPerk(PerkLib.ThickSkin)) perk.buffHost('spe.mult', +0.05*mult);
 			} else {
 				speStat.mult.removeBuff(PerkLib.MantislikeAgility.tagForBuffs);
 				speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.tagForBuffs);
@@ -447,8 +501,12 @@ import classes.Stats.BuffableStat;
 				cor:cor-prevCor
 			};
 		}
+		/**
+		 * Apply "drain" debuff to stat.
+		 * @param damage Positive means reduce stat, negative - recover from drain.
+		 */
 		public function drainStat(statname:String, damage:Number):Number {
-			var stat:BuffableStat = stats[statname + 'Bonus'];
+			var stat:BuffableStat = findBuffableStat(statname);
 			if (!stat) {
 				// TODO report error
 				return NaN;
@@ -456,27 +514,18 @@ import classes.Stats.BuffableStat;
 			if (damage == 0) return 0;
 			var delta:Number = -damage;
 			var current:Number = stat.valueOfBuff(BuffTags.DRAIN);
-			if (delta > 0 && delta+current > 0) delta = -current;
-			stat.addOrIncreaseBuff(BuffTags.DRAIN, delta,{text:'Drain'});
+			if (delta > 0 && delta+current > 0) {
+				stat.removeBuff(BuffTags.DRAIN);
+			} else {
+				stat.addOrIncreaseBuff(BuffTags.DRAIN, delta, {text: 'Drain'});
+			}
 			return damage;
 		}
 		public function removeStatEffects(tag:String):void {
-			for (var statname:String in stats) {
-				var stat:BuffableStat = stats[statname] as BuffableStat;
-				if (!stat) continue;
-				stat.removeBuff(tag);
-			}
-		}
-		/**
-		 * If perk is present, add/replace stat buff. If not, remove stat buff
- 		 */
-		public function setPerkStatEffect(ptype:PerkType,statname:String,value:Number):void {
-			var stat:BuffableStat = (stats[statname] as BuffableStat) || (stats[statname] as PrimaryStat).bonus;
-			var perk:PerkClass    = getPerk(ptype);
-			if (perk) {
-				stat.addOrReplaceBuff(ptype.id,value,{save:false,text:ptype.name});
-			} else {
-				stat.removeBuff(ptype.tagForBuffs);
+			for each (var istat:IStat in allStatsAndSubstats()) {
+				if (istat is BuffableStat) {
+					(istat as BuffableStat).removeBuff(tag);
+				}
 			}
 		}
 		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {

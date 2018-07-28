@@ -11,14 +11,26 @@ public class StatUtils {
 	public function StatUtils() {
 	}
 	
-	public static function buffByName(host:Creature, stat:String, amount:Number, tag:String, options:*):void {
-		var s:IStat = host.stats[stat];
-		if (s is PrimaryStat) {
-			(s as PrimaryStat).bonus.addOrIncreaseBuff(tag, amount, options);
-		} else if (s is BuffableStat) {
-			(s as BuffableStat).addOrIncreaseBuff(tag, amount, options);
-		} else {
+	/**
+	 * Warning: can cause infinite recursion if called from owner.findStat() unchecked
+	 */
+	public static function findStatByPath(owner:IStatHolder, path:String):IStat {
+		var parts:Array = path.split(/\./);
+		var s:IStat;
+		for (var i:int = 0; i<parts.length; i++) {
+			if (!owner) break;
+			s = owner.findStat(parts[i]);
+			owner = s as IStatHolder;
+		}
+		return s;
+	}
+	
+	public static function addBuff(host:Creature, stat:String, amount:Number, tag:String, options:*):void {
+		var s:BuffableStat = host.findBuffableStat(stat);
+		if (!s) {
 			trace("/!\\ buffByName(" + stat + ", " + amount + ") in " + tag);
+		} else {
+			s.addOrIncreaseBuff(tag, amount, options);
 		}
 	}
 	
@@ -35,7 +47,7 @@ public class StatUtils {
 				trace("/!\\ applyBuffObject: " + tag + "/" + statname);
 				value = +buff;
 			}
-			StatUtils.buffByName(host, statname, value, tag, options);
+			StatUtils.addBuff(host, statname, value, tag, options);
 		}
 	}
 	
@@ -70,20 +82,20 @@ public class StatUtils {
 		['int','Intellect'],
 		['wis','Wisdom'],
 		['lib','Libido'],
-		['strBonus','Strength'],
-		['touBonus','Toughness'],
-		['speBonus','Speed'],
-		['intBonus','Intellect'],
-		['wisBonus','Wisdom'],
-		['libBonus','Libido'],
+		['str.bonus','Strength'],
+		['tou.bonus','Toughness'],
+		['spe.bonus','Speed'],
+		['int.bonus','Intellect'],
+		['wis.bonus','Wisdom'],
+		['lib.bonus','Libido'],
 	]);
 	public static const PercentageStats:Object = Utils.createMapFromPairs([
-			['strMult','Strength'],
-			['touMult','Toughness'],
-			['speMult','Speed'],
-			['intMult','Intellect'],
-			['wisMult','Wisdom'],
-			['libMult','Libido'],
+			['str.mult','Strength'],
+			['tou.mult','Toughness'],
+			['spe.mult','Speed'],
+			['int.mult','Intellect'],
+			['wis.mult','Wisdom'],
+			['lib.mult','Libido'],
 			['spellPower','Spellpower']
 	]);
 }

@@ -838,16 +838,12 @@ public function saveGameObject(slot:String, isFile:Boolean):void
 		
 		//MAIN STATS
 		saveFile.data.stats = {};
-		for (var k:String in player.stats) {
-			var stat:Jsonable = player.stats[k] as Jsonable;
-			saveFile.data.stats[k] = stat.saveToObject();
+		for each(var k:String in player.allStatNames()) {
+			var stat:Jsonable = player.findStat(k) as Jsonable;
+			if (stat) {
+				saveFile.data.stats[k] = (stat as Jsonable).saveToObject();
+			}
 		}
-		saveFile.data.strStat = player.strStat.saveToObject();
-		saveFile.data.touStat = player.touStat.saveToObject();
-		saveFile.data.speStat = player.speStat.saveToObject();
-		saveFile.data.intStat = player.intStat.saveToObject();
-		saveFile.data.wisStat = player.wisStat.saveToObject();
-		saveFile.data.libStat = player.libStat.saveToObject();
 		saveFile.data.str = player.str;
 		saveFile.data.tou = player.tou;
 		saveFile.data.spe = player.spe;
@@ -1523,8 +1519,14 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		//MAIN STATS
 		if (saveFile.data.stats) {
 			for (var k:String in saveFile.data.stats) {
-				if (player.stats[k] is Jsonable) {
-					player.stats[k].loadFromObject(saveFile.data.stats[k], false);
+				var data:* = saveFile.data.stats[k];
+				var m:Array = k.match(/^(str|tou|spe|int|wis|lib)(Mult|Bonus)$/);
+				if (m) {
+					k = m[1] + '.'+m[2].toLowerCase();
+				}
+				var stat:IStat = player.findStat(k);
+				if (stat && stat is Jsonable) {
+					(stat as Jsonable).loadFromObject(data, false);
 				}
 			}
 		} else if (saveFile.data.strStat) {

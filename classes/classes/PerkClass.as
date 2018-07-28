@@ -70,7 +70,7 @@ public class PerkClass
 		 * Attach a (de)buff to this status effect, will be removed with it
 		 */
 		public function buffHost(stat:String,amount:Number):void {
-			StatUtils.buffByName(host,stat,amount, ptype.tagForBuffs,{save:false,text:ptype.name});
+			StatUtils.addBuff(host,stat,amount, ptype.tagForBuffs,{save:false,text:ptype.name});
 		}
 		public function remove(/*fireEvent:Boolean = true*/):void {
 			if (_host == null) return;

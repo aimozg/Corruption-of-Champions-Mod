@@ -194,7 +194,7 @@ public class PerkLib
 			short: "Your nimble body allows you to move more swiftly and with greater nimbleness than before.",
 			long : "You choose the 'Cat-like Nimbleness (Evolved)' perk. Continuous usage of cat-like flexibility caused it to undergone change.",
 			buffs: {
-				speMult: +0.10
+				'spe.mult': +0.10
 			}
 		});
 		public static const ChimericalBodyAdvancedStage:PerkType    = jmk({
@@ -203,9 +203,9 @@ public class PerkLib
 			short: "You feel naturaly adept at using every new appendage you gain as if they were yours from birth.",
 			long : "You choose the 'Chimerical Body: Advanced Stage' perk. Constant mutations rised your body adaptiveness to new level.",
 			buffs: {
-				strMult: +0.10,
-				touMult: +0.10,
-				speMult: +0.10
+				'str.mult': +0.10,
+				'tou.mult': +0.10,
+				'spe.mult': +0.10
 			}
 		});
 		public static const ChimericalBodyBasicStage:PerkType       = jmk({
@@ -214,10 +214,10 @@ public class PerkLib
 			short: "Your metabolic adaptation reached level possesed by most simplest and weakest chimeras.",
 			long : "You choose the 'Chimerical Body: Basic Stage' perk. Your body reach adaptation stage for most base type of chimera.",
 			buffs: {
-				strMult: +0.05,
-				speMult: +0.05,
-				intMult: +0.05,
-				wisMult: +0.05
+				'str.mult': +0.05,
+				'spe.mult': +0.05,
+				'int.mult': +0.05,
+				'wis.mult': +0.05
 			}
 		});
 		public static const ChimericalBodyInitialStage:PerkType     = jmk({
@@ -226,8 +226,8 @@ public class PerkLib
 			short: "Constant mutations resulted in your body developing the most basic resistance to increased stress put on your metabolism by that.",
 			long : "You choose the 'Chimerical Body: Initial Stage' perk. Constant mutations causing your body to forcefully adapt to increased metabolism needs.",
 			buffs: {
-				touMult: +0.05,
-				libMult: +0.05
+				'tou.mult': +0.05,
+				'lib.mult': +0.05
 			}
 		});
 		public static const ChimericalBodyPerfectStage:PerkType     = jmk({
@@ -236,9 +236,9 @@ public class PerkLib
 			short: ".",
 			long : "You choose the 'Chimerical Body: Perfect Stage' perk.  Coś coś!",
 			buffs: {
-				intMult: +0.05,
-				wisMult: +0.05,
-				libMult: +0.05
+				'int.mult': +0.05,
+				'wis.mult': +0.05,
+				'lib.mult': +0.05
 			}
 		});
 		public static const ChimericalBodySemiPerfectStage:PerkType = jmk({
@@ -253,12 +253,12 @@ public class PerkLib
 			short: ".",
 			long : "You choose the 'Chimerical Body: Ultimate Stage' perk.  Coś coś!",
 			buffs: {
-				strMult: +0.10,
-				touMult: +0.10,
-				speMult: +0.10,
-				intMult: +0.10,
-				wisMult: +0.10,
-				libMult: +0.10
+				'str.mult': +0.10,
+				'tou.mult': +0.10,
+				'spe.mult': +0.10,
+				'int.mult': +0.10,
+				'wis.mult': +0.10,
+				'lib.mult': +0.10
 			}
 		});
 		public static const ChimericalBodyStage:PerkType            = jmk({
@@ -321,7 +321,7 @@ public class PerkLib
 			short: "Draconic Lungs giving you slight increased speed and allows to use breath attack more often.",
 			long : "You choose the 'Draconic Lungs' perk. Your lungs due to repeadly usage of dragon breath attacks turned into draconic lungs.",
 			buffs: {
-				speMult: +0.05
+				'spe.mult': +0.05
 			}
 		});
 		public static const DraconicLungsEvolved:PerkType           = jmk({
@@ -330,8 +330,8 @@ public class PerkLib
 			short: "Draconic Lungs (Evolved) giving you slight increased speed/toughness and increased threefold power of the dragon breath attacks.",
 			long : "You choose the 'Draconic Lungs (Evolved)' perk. Continuous exposition to draconic changes caused your lungs evolution into more complete form.",
 			buffs: {
-				touMult: +0.05,
-				speMult: +0.05
+				'tou.mult': +0.05,
+				'spe.mult': +0.05
 			}
 		});
 		public static const ElementalArrows:PerkType                = jmk({
@@ -358,11 +358,11 @@ public class PerkLib
 			short: "Your intelligence and wisdom is greatly enhanced at the cost of physical body fragility.",
 			long : "You choose 'Elemental Conjurer Dedication' perk, dedicating yourself to pursue path of elemental conjuring at the cost of physical fragility.",
 			buffs: {
-				strMult: -0.30,
-				touMult: -0.30,
-				speMult: -0.30,
-				intMult: +0.40,
-				wisMult: +0.60
+				'str.mult': -0.30,
+				'tou.mult': -0.30,
+				'spe.mult': -0.30,
+				'int.mult': +0.40,
+				'wis.mult': +0.60
 			}
 		});
 		public static const ElementalConjurerResolve:PerkType       = jmk({
@@ -371,11 +371,11 @@ public class PerkLib
 			short: "Your mental attributes are greatly enhanced at the cost of weakening physical ones.",
 			long : "You choose 'Elemental Conjurer Resolve' perk, showing your resolve to purse mental perfection at the cost of physical weakening.",
 			buffs: {
-				strMult: -0.15,
-				touMult: -0.15,
-				speMult: -0.15,
-				intMult: +0.20,
-				wisMult: +0.30
+				'str.mult': -0.15,
+				'tou.mult': -0.15,
+				'spe.mult': -0.15,
+				'int.mult': +0.20,
+				'wis.mult': +0.30
 			}
 		});
 		public static const ElementalConjurerSacrifice:PerkType     = jmk({
@@ -384,11 +384,11 @@ public class PerkLib
 			short: "Your mental attributes are enhanced beyond limits at the cost of similar weakening physical ones.",
 			long : "You choose 'Elemental Conjurer Sacrifice' perk, showing your will to sacrifice everything in reaching beyond mental perfection.",
 			buffs: {
-				strMult: -0.45,
-				touMult: -0.45,
-				speMult: -0.45,
-				intMult: +0.60,
-				wisMult: +0.90
+				'str.mult': -0.45,
+				'tou.mult': -0.45,
+				'spe.mult': -0.45,
+				'int.mult': +0.60,
+				'wis.mult': +0.90
 			}
 		});
 		public static const ElementalContractRank1:PerkType         = jmk({
@@ -572,7 +572,7 @@ public class PerkLib
 			short: "You've mastered all various uses of tease.",
 			long : "You choose 'Job: Courtesan' perk, training yourself to became Courtesan.",
 			buffs: {
-				libMult: +0.10
+				'lib.mult': +0.10
 			}
 		});
 		public static const JobDefender:PerkType                    = jmk({
@@ -581,7 +581,7 @@ public class PerkLib
 			short: "You've trained in withstanding even the heaviest attacks head on.",
 			long : "You choose 'Job: Defender' perk, training yourself to became Defender.",
 			buffs: {
-				touMult: +0.15
+				'tou.mult': +0.15
 			}
 		});
 		public static const JobDervish:PerkType                     = jmk({
@@ -590,7 +590,7 @@ public class PerkLib
 			short: "You've trained in multi meele attacks combat and using of medium sized dual weapons.",
 			long : "You choose 'Job: Dervish' perk, training yourself to became Dervish.",
 			buffs: {
-				speMult: +0.10
+				'spe.mult': +0.10
 			}
 		});
 		public static const JobElementalConjurer:PerkType           = jmk({
@@ -599,7 +599,7 @@ public class PerkLib
 			short: "You've trained in summoning various types of elementals.",
 			long : "You choose 'Job: Elemental Conjurer' perk, training yourself to call elementals.",
 			buffs: {
-				wisMult: +0.05
+				'wis.mult': +0.05
 			}
 		});
 		public static const JobEnchanter:PerkType                   = jmk({
@@ -608,7 +608,7 @@ public class PerkLib
 			short: "You've trained in casting empowered buffs.",
 			long : "You choose 'Job: Enchanter' perk, training yourself to became Enchanter.",
 			buffs: {
-				intMult: +0.15
+				'int.mult': +0.15
 			}
 		});
 		public static const JobEromancer:PerkType                   = jmk({
@@ -617,8 +617,8 @@ public class PerkLib
 			short: "You've mastered the power of erotic magics.",
 			long : "You choose 'Job: Eromancer' perk, training yourself to became Eromancer.",
 			buffs: {
-				intMult: +0.05,
-				libMult: +0.05
+				'int.mult': +0.05,
+				'lib.mult': +0.05
 			}
 		});
 		public static const JobGuardian:PerkType                    = jmk({
@@ -627,7 +627,7 @@ public class PerkLib
 			short: "You've trained in defensive combat.",
 			long : "You choose 'Job: Guardian' perk, training yourself to became Guardian.",
 			buffs: {
-				touMult: +0.05
+				'tou.mult': +0.05
 			}
 		});
 		public static const JobHunter:PerkType                      = jmk({
@@ -636,8 +636,8 @@ public class PerkLib
 			short: "You've trained in hunter combat.",
 			long : "You choose 'Job: Hunter' perk, training yourself to became Hunter.",
 			buffs: {
-				speMult: +0.10,
-				intMult: +0.05
+				'spe.mult': +0.10,
+				'int.mult': +0.05
 			}
 		});
 		public static const JobKnight:PerkType                      = jmk({
@@ -646,7 +646,7 @@ public class PerkLib
 			short: "You've trained in combat using shields and heaviest armors.",
 			long : "You choose 'Job: Knight' perk, training yourself to became Knight.",
 			buffs: {
-				touMult: +0.10
+				'tou.mult': +0.10
 			}
 		});
 		public static const JobRanger:PerkType                      = jmk({
@@ -655,7 +655,7 @@ public class PerkLib
 			short: "You've trained in ranged combat.",
 			long : "You choose 'Job: Ranger' perk, training yourself to became Ranger.",
 			buffs: {
-				speMult: +0.05
+				'spe.mult': +0.05
 			}
 		});
 		public static const JobSeducer:PerkType                     = jmk({
@@ -664,7 +664,7 @@ public class PerkLib
 			short: "You've trained the art of seduction.",
 			long : "You choose 'Job: Seducer' perk, training yourself to became Seducer.",
 			buffs: {
-				libMult: +0.05
+				'lib.mult': +0.05
 			}
 		});
 		public static const JobSorcerer:PerkType                    = jmk({
@@ -673,7 +673,7 @@ public class PerkLib
 			short: "You've trained in magic combat.",
 			long : "You choose 'Job: Sorcerer' perk, training yourself to became Sorcerer.",
 			buffs: {
-				intMult: +0.05
+				'int.mult': +0.05
 			}
 		});
 		public static const JobWarrior:PerkType                     = jmk({
@@ -682,7 +682,7 @@ public class PerkLib
 			short: "You've trained in melee combat.",
 			long : "You choose 'Job: Warrior' perk, training yourself to became Warrior.",
 			buffs: {
-				strMult: +0.05
+				'str.mult': +0.05
 			}
 		});
 		public static const Juggernaut:PerkType                     = jmk({
@@ -697,7 +697,7 @@ public class PerkLib
 			short: "Kitsune Thyroid Gland lower cooldowns for Illusion and Terror by three turns, increase speed of the recovery after using magic and slightly boost PC speed.",
 			long : "You choose the 'Kitsune Thyroid Gland' perk. Some time after you become kitsune part of your body changed allowing to boost your kitsune powers.",
 			buffs: {
-				speMult: +0.05
+				'spe.mult': +0.05
 			}
 		});
 		public static const KitsuneThyroidGlandEvolved:PerkType     = jmk({
@@ -706,8 +706,8 @@ public class PerkLib
 			short: "Kitsune Thyroid Gland (Evolved) increase speed of the recovery after using magic, boost PC speed and wisdom. And make fox fire specials 50% stronger when having 9 tails (both fire and lust damage).",
 			long : "You choose the 'Kitsune Thyroid Gland (Evolved)' perk. Continued using of kitsune powers caused your thyroid gland to evolve.",
 			buffs: {
-				speMult: +0.05,
-				wisMult: +0.05
+				'spe.mult': +0.05,
+				'wis.mult': +0.05
 			}
 		});
 		public static const LightningStrikes:PerkType               = mk("Lightning Strikes", "Lightning Strikes",
@@ -809,8 +809,8 @@ public class PerkLib
 			short: "You've trained in prestige art of combining magic and arrows.",
 			long : "You choose 'Prestige Job: Arcane Archer' perk, training yourself to became Arcane Archer.",
 			buffs: {
-				speMult: +0.40,
-				intMult: +0.40
+				'spe.mult': +0.40,
+				'int.mult': +0.40
 			}
 		});
 		public static const PrestigeJobBerserker:PerkType           = jmk({
@@ -819,8 +819,8 @@ public class PerkLib
 			short: "You've trained in prestige art of perfect mastery over all forms of berserking.",
 			long : "You choose 'Prestige Job: Berserker' perk, training yourself to became Berserker.",
 			buffs: {
-				strMult: +0.60,
-				touMult: +0.20
+				'str.mult': +0.60,
+				'tou.mult': +0.20
 			}
 		});
 		public static const PrestigeJobSentinel:PerkType            = jmk({
@@ -829,8 +829,8 @@ public class PerkLib
 			short: "You've trained in prestige art that brings 'tanking' to a whole new level.",
 			long : "You choose 'Prestige Job: Sentinel' perk, training yourself to became Sentinel.",
 			buffs: {
-				strMult: +0.20,
-				touMult: +0.60
+				'str.mult': +0.20,
+				'tou.mult': +0.60
 			}
 		});
 		public static const PrestigeJobKiArtMaster:PerkType         = jmk({
@@ -839,8 +839,8 @@ public class PerkLib
 			short: "You've trained in prestige art of combine Ki with physical attacks to various deadly effect.",
 			long : "You choose 'Prestige Job: Ki Art Master' perk, training yourself to became Ki Art Master.",
 			buffs: {
-				strMult: +0.40,
-				wisMult: +0.40
+				'str.mult': +0.40,
+				'wis.mult': +0.40
 			}
 		});
 		public static const PrimalFury:PerkType                     = jmk({
@@ -887,8 +887,8 @@ public class PerkLib
 			short: "Your Salamander adrenal glands giving you slight boost to your natural stamina and libido.",
 			long : "You choose the 'Salamander Adrenal Glands' perk, due to repeadly exposure to effects of lustzerk your adrenal glands mutated.",
 			buffs: {
-				touMult: +0.05,
-				libMult: +0.05
+				'tou.mult': +0.05,
+				'lib.mult': +0.05
 			}
 		});
 		public static const SalamanderAdrenalGlandsEvolved:PerkType = jmk({
@@ -897,10 +897,10 @@ public class PerkLib
 			short: "Your Salamander adrenal glands giving you slight boost to your natural strength, stamina, speed and libido and extend lustzerker and berserker duration by 2 turns.",
 			long : "You choose the 'Salamander Adrenal Glands (Evolved)' perk, repeadly use of lustzerk caused your adrenal glands mutate even more.",
 			buffs: {
-				strMult: +0.05,
-				touMult: +0.05,
-				speMult: +0.05,
-				libMult: +0.05
+				'str.mult': +0.05,
+				'tou.mult': +0.05,
+				'spe.mult': +0.05,
+				'lib.mult': +0.05
 			}
 		});
 		public static const ScyllaInkGlands:PerkType                = jmk({
@@ -909,7 +909,7 @@ public class PerkLib
 			short: "Your Scylla Ink Glands increase rate at which your body produce ink and slight boost to your natural strength.",
 			long : "You choose the 'Scylla Ink Glands' perk, due to repeadly use of ink attack leading to denveloping ink glands!",
 			buffs: {
-				strMult: +0.10
+				'str.mult': +0.10
 			}
 		});
 		public static const SecondWind:PerkType                     = jmk({
@@ -1099,7 +1099,7 @@ public class PerkLib
 				   "]",
 			long : "You choose the 'Weapon Mastery' perk, getting one and half of the effectiveness of large weapons.",
 			buffs: {
-				strMult: +0.05
+				'str.mult': +0.05
 			}
 		});
 		public static const WellAdjusted:PerkType                   = jmk({
@@ -1128,7 +1128,7 @@ public class PerkLib
 			short: "You've trained in unarmed, Ki based combat.",
 			long : "You choose 'Advanced Job: Monk' perk, training yourself to became a Monk.",
 			buffs: {
-				wisMult: +0.15
+				'wis.mult': +0.15
 			}
 		});
 		public static const AdvancedJobSage:PerkType    = jmk({
@@ -1271,7 +1271,7 @@ public class PerkLib
 			name : "Chi Reflow - Defense",
 			short: "Passive damage resistance, but caps speed",
 			buffs: {
-				speMult: -0.40
+				'spe.mult': -0.40
 			}
 		});
 		public static const ChiReflowLust:PerkType    = jmk({
@@ -1289,7 +1289,7 @@ public class PerkLib
 			name : "Chi Reflow - Speed",
 			short: "Speed reductions are halved but caps strength",
 			buffs: {
-				strMult: -0.40
+				'str.mult': -0.40
 			}
 		});
 		
@@ -1518,7 +1518,7 @@ public class PerkLib
 			name : "Bimbo Brains",
 			short: "Now that you've drank bimbo liquer, you'll never, like, have the attention span and intelligence you once did!  But it's okay, 'cause you get to be so horny an' stuff!",
 			buffs: {
-				intMult: -0.60
+				'int.mult': -0.60
 			}
 		});
 		public static const BroBody:PerkType                   = jmk({
@@ -1531,7 +1531,7 @@ public class PerkLib
 			name : "Bro Brains",
 			short: "Makes thou... thin... fuck, that shit's for nerds.",
 			buffs: {
-				intMult: -0.60
+				'int.mult': -0.60
 			}
 		});
 		public static const BunnyEggs:PerkType                 = jmk({
@@ -1637,8 +1637,8 @@ public class PerkLib
 			name : "Futa Form",
 			short: "Ensures that your body fits the Futa look (Tits DD+, Dick 8\"+, & Pussy).  Also keeps your lusts burning bright and improves the tease skill.",
 			buffs: {
-				intMult: -0.60,
-				libMult: +0.50
+				'int.mult': -0.60,
+				'lib.mult': +0.50
 			}
 		});
 		public static const GeneticMemory:PerkType             = jmk({
@@ -1826,8 +1826,8 @@ public class PerkLib
 			name : "Corrupted Gargoyle",
 			short: "You need constant intakes of sexual fluids to stay alive.",
 			buffs: {
-				wisMult: -0.10,
-				libMult: +0.80
+				'wis.mult': -0.10,
+				'lib.mult': +0.80
 			}
 		});
 		public static const GargoylePure:PerkType           = jmk({
@@ -1835,8 +1835,8 @@ public class PerkLib
 			name : "Gargoyle",
 			short: "Need to gain sustenance from Ki to stay alive.",
 			buffs: {
-				wisMult: +0.80,
-				libMult: -0.10
+				'wis.mult': +0.80,
+				'lib.mult': -0.10
 			}
 		});
 		public static const Hellfire:PerkType               = jmk({
@@ -1920,7 +1920,7 @@ public class PerkLib
 			short: "Minimum libido increased by <eval>value1</eval>, minimum corruption increased by <eval>value2</eval>, cum production (if applicable) increased by <eval>value3</eval>mL, and milk production (if applicable) increased by <eval>value4</eval>mL.",
 			long : "The drugs from the factory significantly increase your minimum libido, minimum corruption, and fluid production.",
 			buffs: {
-				libMult: '+value1'
+				'lib.mult': '+value1'
 			}
 		});
 		public static const PureAndLoving:PerkType          = jmk({

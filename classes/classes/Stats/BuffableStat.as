@@ -21,7 +21,6 @@ public class BuffableStat implements IStat, Jsonable {
 	public static const AGGREGATE_MIN:int  = EnumValue.add(AggregateTypes, 2, 'AGGREGATE_MIN', {short: 'min'});
 	public static const AGGREGATE_PROD:int = EnumValue.add(AggregateTypes, 3, 'AGGREGATE_PROD', {short: 'prod'});
 	
-	private var _name:String;
 	private var _base:Number;
 	private var _aggregate:int;
 	private var _min:Number;
@@ -29,9 +28,6 @@ public class BuffableStat implements IStat, Jsonable {
 	private var _value:Number;
 	private var _buffs:/*Buff*/Array = [];
 	
-	public function get name():String {
-		return _name;
-	}
 	public function get base():Number {
 		return _base;
 	}
@@ -57,12 +53,8 @@ public class BuffableStat implements IStat, Jsonable {
 	 *     min: default -Infinity;
 	 *     max: default +Infinity;
 	 * }
-	 * @param saveInto If present, saveInto[this.name] = this
 	 */
-	public function BuffableStat(name:String,
-								 options:*  = null,
-								 saveInto:* = null) {
-		this._name = name;
+	public function BuffableStat(options:*) {
 		options    = Utils.extend({
 			aggregate: AGGREGATE_SUM,
 			base     : 0.0,
@@ -78,7 +70,6 @@ public class BuffableStat implements IStat, Jsonable {
 		this._min       = options['min'];
 		this._max       = options['max'];
 		this._value     = this._base;
-		if (saveInto) saveInto[name] = this;
 		
 		if (!(this._aggregate in AggregateTypes)) throw new Error("Invalid aggregate type");
 		// TODO validate other arguments

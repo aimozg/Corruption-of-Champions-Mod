@@ -2321,14 +2321,18 @@ public function sleepRecovery(display:Boolean = false):void {
 	HPChange(timeQ * hpRecovery * multiplier, display);
 	//fatigue
 	fatigue(-(timeQ * fatRecovery * multiplier));
-	for each(var istat:IStat in player.stats) {
-		var stat:PrimaryStat = istat as PrimaryStat;
+	for each(var istat:IStat in player.allStatsAndSubstats()) {
+		var stat:BuffableStat = istat as BuffableStat;
 		if (!stat) continue;
-		var drain:Number = stat.bonus.valueOfBuff(BuffTags.DRAIN);
+		var drain:Number = stat.valueOfBuff(BuffTags.DRAIN);
 		if (drain < 0) {
 			// Recover 10% of stat drained, at least 1
-			var delta:Number = Math.max(1, -drain/10);
-			player.drainStat(stat.name, -delta);
+			drain = drain - Math.max(1, drain/10);
+			if (drain < 0) {
+				stat.addOrReplaceBuff(BuffTags.DRAIN, drain);
+			} else {
+				stat.removeBuff(BuffTags.DRAIN)
+			}
 		}
 	}
 }
