@@ -427,7 +427,7 @@ public function deleteScreen():void
 	
 	for (var i:int = 0; i < saveFileNames.length; i += 1)
 	{
-		var test:Object = SharedObject.getLocal(saveFileNames[i], "/");
+		var test:Object = SharedObject.getLocal(sharedDir+saveFileNames[i], "/");
 		outputText(loadSaveDisplay(test, String(i + 1)));
 		if (test.data.exists)
 		{
