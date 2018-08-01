@@ -33,6 +33,7 @@ import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.IStatHolder;
 import classes.Stats.PrimaryStat;
+import classes.Stats.StatStore;
 import classes.Stats.StatUtils;
 import classes.StatusEffects.Combat.CombatInteBuff;
 	import classes.StatusEffects.Combat.CombatSpeBuff;
@@ -45,7 +46,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 
 	import flash.errors.IllegalOperationError;
 
-	public class Creature extends Utils implements IStatHolder
+	public class Creature extends Utils
 	{
 
 
@@ -125,7 +126,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		   [   S T A T S   ]
 		
 		 */
-		protected var _stats:Object = {
+		protected var _stats:StatStore = new StatStore({
 			"str": new PrimaryStat(),
 			"tou": new PrimaryStat(),
 			"spe": new PrimaryStat(),
@@ -134,13 +135,13 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			"lib": new PrimaryStat(),
 			
 			"spellPower":new BuffableStat({base:1.0,min:0.0})
-		};
+		});
+		public function get statStore():StatStore {
+			return _stats;
+		}
 		
 		public function findStat(fullname:String):IStat {
-			if (fullname.indexOf('.') >= 0) {
-				return StatUtils.findStatByPath(this, fullname);
-			}
-			return _stats[fullname];
+			return _stats.findStat(fullname);
 		}
 		public function statValue(fullname:String):Number {
 			var stat:IStat = findStat(fullname);
@@ -150,41 +151,25 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			return findStat(name) as PrimaryStat;
 		}
 		public function findBuffableStat(fullname:String):BuffableStat {
-			var istat:IStat = findStat(fullname);
-			if (istat is BuffableStat) {
-				return istat as BuffableStat;
-			} else if (istat is PrimaryStat) {
-				return (istat as PrimaryStat).bonus;
-			} else {
-				return null;
-			}
+			return _stats.findBuffableStat(fullname);
 		}
 		public function allStats():/*IStat*/Array {
-			return Utils.values(_stats);
+			return _stats.allStats();
 		}
 		public function allStatNames():/*String*/Array {
-			return Utils.keys(_stats);
+			return _stats.allStatNames();
 		}
 		public function allStatsAndSubstats():/*IStat*/Array {
-			var result:/*IStat*/Array = [];
-			var queue:/*Object*/Array = [this];
-			while (queue.length > 0) {
-				var e:IStatHolder = queue.pop() as IStatHolder;
-				if (e == null) continue;
-				var stats:/*IStat*/Array = e.allStats();
-				result = result.concat(stats);
-				queue = queue.concat(stats);
-			}
-			return result;
+			return _stats.allStatsAndSubstats();
 		}
 
 		//Primary stats
-		public var strStat:PrimaryStat = _stats.str;
-		public var touStat:PrimaryStat = _stats.tou;
-		public var speStat:PrimaryStat = _stats.spe;
-		public var intStat:PrimaryStat = _stats.int;
-		public var wisStat:PrimaryStat = _stats.wis;
-		public var libStat:PrimaryStat = _stats.lib;
+		public var strStat:PrimaryStat = _stats.findStat('str') as PrimaryStat;
+		public var touStat:PrimaryStat = _stats.findStat('tou') as PrimaryStat;
+		public var speStat:PrimaryStat = _stats.findStat('spe') as PrimaryStat;
+		public var intStat:PrimaryStat = _stats.findStat('int') as PrimaryStat;
+		public var wisStat:PrimaryStat = _stats.findStat('wis') as PrimaryStat;
+		public var libStat:PrimaryStat = _stats.findStat('lib') as PrimaryStat;
 		public function get str():Number {
 			return strStat.value;
 		}
@@ -221,7 +206,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		public var additionalXP:Number = 0;
 		
 		// Other buffable stats
-		public var spellPowerStat:BuffableStat = _stats.spellPower;
+		public var spellPowerStat:BuffableStat = _stats.findStat('spellPower') as BuffableStat;
 		public function get spellPower():Number { return spellPowerStat.value }
 		
 		public function get hp100():Number { return 100*HP/maxHP(); }

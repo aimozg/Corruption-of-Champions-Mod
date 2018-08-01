@@ -25,32 +25,6 @@ public class StatUtils {
 		return s;
 	}
 	
-	public static function addBuff(host:Creature, stat:String, amount:Number, tag:String, options:*):void {
-		var s:BuffableStat = host.findBuffableStat(stat);
-		if (!s) {
-			trace("/!\\ buffByName(" + stat + ", " + amount + ") in " + tag);
-		} else {
-			s.addOrIncreaseBuff(tag, amount, options);
-		}
-	}
-	
-	public static function applyBuffObject(host:Creature, buffs:Object, tag:String, options:*, evalContext:*):void {
-		
-		for (var statname:String in buffs) {
-			var buff:* = buffs[statname];
-			var value:Number;
-			if (buff is Number) {
-				value = buff;
-			} else if (buff is String) {
-				value = Eval.eval(evalContext, buff);
-			} else {
-				trace("/!\\ applyBuffObject: " + tag + "/" + statname);
-				value = +buff;
-			}
-			StatUtils.addBuff(host, statname, value, tag, options);
-		}
-	}
-	
 	public static function explainBuff(stat:String,value:Number):String {
 		var signum:String  = (value < 0 ? '' : '+');
 		var x:String       = signum + value;

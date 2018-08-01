@@ -112,7 +112,7 @@ package classes.Items {
 		}
 
 		protected function applyBuffs(host:Creature):void {
-			StatUtils.applyBuffObject(host, _buffs, tagForBuffs, {save: false, text: name}, this);
+			host.statStore.applyBuffObject( _buffs, tagForBuffs, {save: false, text: name}, this);
 		}
 
 		public function saveLoaded(host:Creature):void {
