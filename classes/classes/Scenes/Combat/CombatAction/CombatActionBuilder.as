@@ -169,7 +169,7 @@ package classes.Scenes.Combat.CombatAction {
 		public function rageEnabled():CombatActionBuilder {
 			_cbAction._rageEnabled = true;
 			_cbAction._critChanceMods.push(function (host:Creature, target:Creature):Number {return host.statusEffectv1(StatusEffects.Rage)});
-			_cbAction._customActions.push(CombatAction.rageUpdate);
+			_cbAction._customActions.push(ACombatAction.rageUpdate);
 			return this;
 		}
 

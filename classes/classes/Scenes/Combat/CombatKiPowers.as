@@ -10,7 +10,8 @@ package classes.Scenes.Combat {
 	import classes.PerkLib;
 	import classes.Scenes.API.FnHelpers;
 	import classes.Scenes.Combat.CombatAction.CombatAction;
-	import classes.Scenes.SceneLib;
+import classes.Scenes.Combat.CombatAction.ACombatAction;
+import classes.Scenes.SceneLib;
 	import classes.StatusEffectClass;
 	import classes.StatusEffectClass;
 import classes.StatusEffects;
@@ -24,8 +25,8 @@ import classes.StatusEffects;
 	// S. SPECIALS
 	//------------
 	internal function buildMenu(buttons:ButtonDataList):void {
-		var actions:Array = player.availableActions.filter(function(item:CombatAction, index:int, array:Array):Boolean{return item.actionType == CombatAction.KiAction;});
-		for each(var action:CombatAction in actions){
+		var actions:Array = player.availableActions.filter(function(item:ACombatAction, index:int, array:Array):Boolean{return item.actionType == ACombatAction.KiAction;});
+		for each(var action:ACombatAction in actions){
 			buttons.list.push(action.button(player,monster));
 		}
 		var base:int = kiPowerCost();

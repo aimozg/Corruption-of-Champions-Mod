@@ -30,7 +30,8 @@ import classes.Scenes.Areas.HighMountains.Basilisk;
 import classes.Scenes.Areas.HighMountains.Harpy;
 import classes.Scenes.Areas.Mountain.Minotaur;
 	import classes.Scenes.Combat.CombatAction.CombatAction;
-	import classes.Scenes.Dungeons.D3.*;
+import classes.Scenes.Combat.CombatAction.ACombatAction;
+import classes.Scenes.Dungeons.D3.*;
 import classes.Scenes.Dungeons.HelDungeon.HarpyMob;
 import classes.Scenes.Dungeons.HelDungeon.HarpyQueen;
 import classes.Scenes.NPCs.*;
@@ -370,7 +371,7 @@ public function combatMenu(newRound:Boolean = true):void { //If returning from a
 	if (newRound) {
 		flags[kFLAGS.IN_COMBAT_PLAYER_ELEMENTAL_ATTACKED] = 0;
 		//todo move this?
-		for each (var action:CombatAction in player.availableActions){
+		for each (var action:ACombatAction in player.availableActions){
 			action.onCombatRound();
 		}
 	}

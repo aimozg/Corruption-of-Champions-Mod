@@ -27,7 +27,8 @@ package classes
 	import classes.Items.JewelryLib;
 	import classes.Items.WeaponLib;
 	import classes.Scenes.Camp.CampMakeWinions;
-	import classes.Scenes.Places.TelAdre.UmasShop;
+import classes.Scenes.Combat.CombatAction.ACombatAction;
+import classes.Scenes.Places.TelAdre.UmasShop;
 import classes.Stats.BuffTags;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
@@ -1372,17 +1373,17 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			trace("/!\\ ERROR: addCombatBuff('"+stat+"', "+buff+")");
 		}
 
-		public var availableActions:Array = [];
-		public function addAction(action:Object):void {
+		public var availableActions:/*ACombatAction*/Array = [];
+		public function addAction(action:ACombatAction):void {
 			if(availableActions.indexOf(action) < 0){
 				availableActions.push(action);
 			}
 		}
 
-		public function removeAction(action:Object):void {
+		public function removeAction(action:ACombatAction):void {
 			var i:int = availableActions.indexOf(action);
 			if(i >=0){
-				availableActions.removeAt(i);
+				availableActions.splice(i,1);
 			}
 		}
 
