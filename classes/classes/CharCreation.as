@@ -1433,9 +1433,9 @@
 			addButton(14, "Back", chooseGameModes);
 		}	
 
-		private function chooseModeXianxia():void {
+		private function chooseModeEndlessJourney():void {
 			clearOutput();
-			outputText("You have chosen Xianxia MC Mode. This is the mode to fell like a true XIANXIA MC. \n\n<b>Difficulty is locked to <i>XIANXIA</i>.</b>");
+			outputText("You have chosen Endless Journey Mode. \n\n<b>Difficulty is locked to <i>ENDLESS</i>.</b>");
 			flags[kFLAGS.HARDCORE_MODE] = 1;
 			flags[kFLAGS.HUNGER_ENABLED] = 1;
 			flags[kFLAGS.GAME_DIFFICULTY] = 4;
@@ -1462,14 +1462,14 @@
 			outputText("<b>Realistic mode:</b> You get hungry from time to time and cum production is capped. In addition, it's a bad idea to have oversized parts. \n");
 			outputText("<b>Hardcore mode:</b> In addition to Realistic mode, the game forces save and if you get a Bad End, your save file is deleted. For the veteran CoC players only.\n");
 			outputText("<b>Brutal Hardcore mode:</b> The hardest game mode ever. Like hardcore mode, but the difficulty is locked to extreme! How long can you survive?\n");
-			outputText("<b>Xianxia MC mode:</b> The game mode for everyone that want feel like an every Xianxia MC. Hunger waiting behind a corner and enemies are always stronger than you! How long will take to you to reach top dog position?\n");
+			outputText("[b: Endless Journey mode: WARNING:] This game mode is extremely difficult. You are considerably underpowered, hunger is constant, and enemies [b: WILL] rape you. Prepare to lose. A lot.\n");
 			menu();
 			addButton(0, "Normal", chooseModeNormal);
 			addButton(1, "Survival", chooseModeSurvival);
 			addButton(2, "Realistic", chooseModeRealistic);
 			addButton(3, "Hardcore", chooseModeHardcore);
 			addButton(5, "Brutal HC", chooseModeBrutalHardcore);
-			addButton(6, "Xianxia MC", chooseModeXianxia);
+			addButton(6, "Endless", chooseModeEndlessJourney);
 		}
 
 		private function startTheGame():void {

@@ -114,7 +114,7 @@ public function loadSaveDisplay(saveFile:Object, slotName:String):String
 				if (saveFile.data.flags[kFLAGS.GAME_DIFFICULTY] == 3)
 					holding += "<font color=\"#FF0000\">EXTREME</font>";
 				if (saveFile.data.flags[kFLAGS.GAME_DIFFICULTY] >= 4)
-					holding += "<font color=\"#FF0000\">XIANXIA</font>";
+					holding += "<font color=\"#FF0000\">ENDLESS</font>";
 			}
 			else {
 				if (saveFile.data.flags[kFLAGS.EASY_MODE_ENABLE_FLAG] != undefined) { //Workaround to display Easy if difficulty is set to easy.
