@@ -4,6 +4,7 @@ import classes.*;
 import classes.BodyParts.Butt;
 import classes.BodyParts.Hips;
 import classes.BodyParts.Tail;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Scenes.SceneLib;
 import classes.internals.*;
 
@@ -44,8 +45,18 @@ public class SandTrap extends Monster
 			}
 			return statusEffectv1(StatusEffects.Level);
 		}
-
-
+		
+		
+		override protected function doReact(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+			if (phase == ActionRoll.Phases.PERFORM
+				&& type == ActionRoll.Types.MELEE
+				&& !actor.hasStatusEffect(StatusEffects.FirstAttack)
+				&& !actor.isWieldingRangedWeapon()) {
+				outputText("It's all or nothing!  With a bellowing cry you charge down the treacherous slope and smite the sandtrap as hard as you can!  ");
+				trapLevel(-4);
+			}
+		}
+		
 		//sandtrap pheromone attack:
 		private function sandTrapPheremones():void {
 			game.spriteSelect(97);

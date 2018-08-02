@@ -26,7 +26,8 @@ import classes.Scenes.Areas.Forest.Alraune;
 import classes.Scenes.Areas.Ocean.UnderwaterSharkGirl;
 import classes.Scenes.Areas.Ocean.UnderwaterTigersharkGirl;
 	import classes.Scenes.Combat.Combat;
-	import classes.Scenes.Dungeons.DenOfDesire.HeroslayerOmnibus;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
+import classes.Scenes.Dungeons.DenOfDesire.HeroslayerOmnibus;
 import classes.Scenes.Dungeons.Factory.OmnibusOverseer;
 import classes.Scenes.Dungeons.Factory.SecretarialSuccubus;
 import classes.Scenes.NPCs.ChiChi;
@@ -889,6 +890,13 @@ import flash.utils.getQualifiedClassName;
 				attacks--;
 			}
 			removeStatusEffect(StatusEffects.Attacks);
+		}
+		
+		public function processRoll(roll:ActionRoll):void {
+			if (this == roll.target) doReact(roll,roll.actor,roll.phase,roll.type);
+		}
+		protected function doReact(roll:ActionRoll,actor:Creature, phase:String,type:String):void {
+		
 		}
 
 		/**

@@ -3642,7 +3642,11 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		{
 			return weaponRangeName == "nothing" || weaponRangeName == "Inquisitor’s Tome" || weaponRangeName == "Sage’s Sketchbook";
 		}
-
+		public function isWieldingRangedWeapon():Boolean {
+			return weaponName.indexOf("staff") != -1 && hasPerk(PerkLib.StaffChanneling);
+		}
+		
+		
 		public function spellCost(mod:Number, type:int = 0, heal:Boolean = false):Number{
 			var white:Boolean = type ===  1;
 			var black:Boolean = type === -1;

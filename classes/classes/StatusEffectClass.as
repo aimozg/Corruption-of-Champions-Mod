@@ -1,6 +1,7 @@
 ﻿package classes
 {
 import classes.CoC;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
@@ -63,6 +64,26 @@ public class StatusEffectClass extends Utils
 	 */
 	public function onCombatEnd():void {
 		// do nothing
+	}
+	
+	public function processRoll(roll:ActionRoll):void {
+		if (host == roll.target) {
+			doReact(roll, roll.actor, roll.phase, roll.type);
+		} else if (host == roll.actor) {
+			doAlter(roll, roll.target, roll.phase, roll.type);
+		}
+	}
+	/**
+	 * React to `roll` when target holds this CombatStatusEffect
+	 */
+	protected function doReact(roll:ActionRoll,actor:Creature, phase:String,type:String):void {
+	
+	}
+	/**
+	 * React to `roll` when actor holds this CombatStatusEffect
+	 */
+	protected function doAlter(roll:ActionRoll,target:Creature, phase:String,type:String):void {
+	
 	}
 	/**
 	 * Called during combat in combatStatusesUpdate() for player, then for monster

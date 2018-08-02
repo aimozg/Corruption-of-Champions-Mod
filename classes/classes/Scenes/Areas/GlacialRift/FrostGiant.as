@@ -4,6 +4,7 @@ import classes.*;
 import classes.BodyParts.Butt;
 import classes.BodyParts.Hips;
 import classes.GlobalFlags.kFLAGS;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Scenes.SceneLib;
 import classes.internals.WeightedDrop;
 
@@ -183,6 +184,15 @@ public class FrostGiant extends Monster
 			if (damage < 200) damage = 200;
 			player.takePhysDamage(damage, true);
 			outputText("\n\n");
+		}
+		
+		override protected function doReact(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+			if (phase == ActionRoll.Phases.PERFORM && type == ActionRoll.Types.MELEE) {
+				if (actor.hasStatusEffect(StatusEffects.GiantBoulder)) {
+					giantBoulderHit(0);
+					roll.cancel();
+				}
+			}
 		}
 		public function giantBoulderMiss():void {
 			clearOutput();

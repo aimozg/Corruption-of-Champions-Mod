@@ -8,7 +8,8 @@ package classes.Scenes.Areas.Forest
 	import classes.BodyParts.Butt;
 	import classes.BodyParts.Hips;
 	import classes.BodyParts.LowerBody;
-	import classes.Scenes.Holidays;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
+import classes.Scenes.Holidays;
 	import classes.Scenes.SceneLib;
 	import classes.display.SpriteDb;
 	import classes.internals.ChainedDrop;
@@ -28,6 +29,15 @@ package classes.Scenes.Areas.Forest
 			return level.value1;
 		}
 		
+		override protected function doReact(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+			if (phase == ActionRoll.Phases.PERFORM
+				&& type == ActionRoll.Types.MELEE
+				&& !actor.hasStatusEffect(StatusEffects.FirstAttack)
+				&& !actor.isWieldingRangedWeapon()) {
+				outputText("It’s all or nothing!  If this leafy woman is so keen on pulling you in, you will let her do just that!  You use her own strength against her, using it to increase your momentum as you leap towards her and smash into her with your weapon!  ");
+				trapLevel(-6);
+			}
+		}
 		public function alrauneClimb():void {
 			_climbed = true;
 			clearOutput();

@@ -2,23 +2,21 @@
  * Coded by aimozg on 30.05.2017.
  */
 package classes.Scenes.Combat {
-	import classes.Creature;
-	import classes.EngineCore;
-	import classes.GlobalFlags.kFLAGS;
-	import classes.Items.ShieldLib;
-	import classes.Items.WeaponLib;
-	import classes.PerkLib;
-	import classes.Scenes.API.FnHelpers;
-	import classes.Scenes.Combat.CombatAction.CombatAction;
+import classes.Creature;
+import classes.EngineCore;
+import classes.GlobalFlags.kFLAGS;
+import classes.Items.ShieldLib;
+import classes.Items.WeaponLib;
+import classes.PerkLib;
+import classes.Scenes.API.FnHelpers;
 import classes.Scenes.Combat.CombatAction.ACombatAction;
 import classes.Scenes.SceneLib;
-	import classes.StatusEffectClass;
-	import classes.StatusEffectClass;
+import classes.StatusEffectClass;
 import classes.StatusEffects;
 
-	import coc.view.ButtonDataList;
+import coc.view.ButtonDataList;
 
-	public class CombatKiPowers extends BaseCombatContent {
+public class CombatKiPowers extends BaseCombatContent {
 	public function CombatKiPowers() {
 	}
 	//------------
@@ -111,7 +109,7 @@ import classes.StatusEffects;
 				damage = Math.max(10, host.str + (host.scalingBonusStrength() / 2));
 				damage *= weaponMod(host);
 				damage *= host.kiPowerMod(true);
-				if (host.hasPerk(PerkLib.HoldWithBothHands) && host.weaponName != WeaponLib.FISTS.name && host.shieldName == ShieldLib.NOTHING.name && !SceneLib.combat.isWieldingRangedWeapon()) damage *= 1.2;
+				if (host.hasPerk(PerkLib.HoldWithBothHands) && host.weaponName != WeaponLib.FISTS.name && host.shieldName == ShieldLib.NOTHING.name && !host.isWieldingRangedWeapon()) damage *= 1.2;
 				if (host.hasPerk(PerkLib.ThunderousStrikes) && host.str >= 80) damage *= 1.2;
 				if (host.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
 				if (host.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;

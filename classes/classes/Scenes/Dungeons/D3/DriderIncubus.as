@@ -3,8 +3,10 @@ package classes.Scenes.Dungeons.D3
 import classes.BodyParts.Butt;
 import classes.BodyParts.Hips;
 import classes.CockTypesEnum;
+import classes.Creature;
 import classes.PerkLib;
 import classes.Scenes.Areas.Swamp.AbstractSpiderMorph;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Scenes.SceneLib;
 import classes.StatusEffectClass;
 import classes.StatusEffects;
@@ -106,6 +108,13 @@ if (this.lust < .65 * this.maxLust() && this.HP < .33 * this.maxHP()) {
 				goblinAI();
 			}
 			
+		}
+		
+		override protected function doReact(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+			if (phase == ActionRoll.Phases.PREPARE && type == ActionRoll.Types.MELEE) {
+				roll.cancel();
+				taintedMindAttackAttempt();
+			}
 		}
 		
 		private function performPhysicalAttack():void

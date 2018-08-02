@@ -2,13 +2,11 @@ package classes.Scenes.Combat {
 import classes.BaseContent;
 import classes.BodyParts.Ears;
 import classes.BodyParts.Face;
-import classes.BodyParts.LowerBody;
-import classes.BodyParts.Skin;
 import classes.BodyParts.Tail;
 import classes.CoC;
 import classes.CoC_Settings;
-	import classes.Creature;
-	import classes.EngineCore;
+import classes.Creature;
+import classes.EngineCore;
 import classes.GlobalFlags.kACHIEVEMENTS;
 import classes.GlobalFlags.kFLAGS;
 import classes.ItemType;
@@ -18,28 +16,17 @@ import classes.Items.Weapon;
 import classes.Items.WeaponLib;
 import classes.Monster;
 import classes.PerkLib;
-import classes.Scenes.Areas.Beach.Gorgon;
-import classes.Scenes.Areas.Desert.Naga;
 import classes.Scenes.Areas.Desert.SandTrap;
 import classes.Scenes.Areas.Forest.Alraune;
-import classes.Scenes.Areas.Forest.BeeGirl;
-import classes.Scenes.Areas.Forest.Kitsune;
 import classes.Scenes.Areas.GlacialRift.FrostGiant;
-import classes.Scenes.Areas.GlacialRift.WinterWolf;
-import classes.Scenes.Areas.HighMountains.Basilisk;
-import classes.Scenes.Areas.HighMountains.Harpy;
-import classes.Scenes.Areas.Mountain.Minotaur;
-	import classes.Scenes.Combat.CombatAction.CombatAction;
 import classes.Scenes.Combat.CombatAction.ACombatAction;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Scenes.Dungeons.D3.*;
-import classes.Scenes.Dungeons.HelDungeon.HarpyMob;
-import classes.Scenes.Dungeons.HelDungeon.HarpyQueen;
 import classes.Scenes.NPCs.*;
 import classes.Scenes.Places.TelAdre.UmasShop;
 import classes.Scenes.SceneLib;
 import classes.StatusEffectClass;
 import classes.StatusEffects;
-import classes.StatusEffects.VampireThirstEffect;
 
 import coc.view.ButtonData;
 import coc.view.ButtonDataList;
@@ -1428,48 +1415,57 @@ public function fatigueRecovery():void {
 	if (player.hasPerk(PerkLib.KitsuneThyroidGlandEvolved)) fatiguecombatrecovery += 1;
 	fatigue(-(1 + fatiguecombatrecovery));
 }
-
+	
+	/**
+	 * Everything reacts to the roll
+	 */
+	private function processRoll(roll:ActionRoll):void {
+		monster.processRoll(roll);
+		if (roll.canceled) return;
+		for each (var statusEffect:StatusEffectClass in player.statusEffects) {
+			statusEffect.processRoll(roll);
+			if (roll.canceled) return;
+		}
+		for each (statusEffect in monster.statusEffects) {
+			statusEffect.processRoll(roll);
+			if (roll.canceled) return;
+		}
+	}
+	
 //ATTACK
 public function attack():void {
-	if (monster is DriderIncubus) {
-		(monster as DriderIncubus).taintedMindAttackAttempt();
-		return;
-	}
 	clearOutput();
+
+	var roll:ActionRoll = new ActionRoll(player, monster, ActionRoll.Types.MELEE);
+	processRoll(roll);
+	if (roll.canceled) return;
+	
+	roll.advance();
 	lastAttack = PHYSICAL;
-	if(player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv2(StatusEffects.Sealed) == 0 && !isWieldingRangedWeapon()) {
-		outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  The kitsune's seals have made normal melee attack impossible!  Maybe you could try something else?\n\n");
+	processRoll(roll);
+	if (roll.canceled) {
 		enemyAI();
 		return;
 	}
+
 	if(player.hasStatusEffect(StatusEffects.Sealed2) && player.statusEffectv2(StatusEffects.Sealed2) == 0) {
 		outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  Recent enemy attack have made normal melee attack impossible!  Maybe you could try something else?\n\n");
 		enemyAI();
 		return;
 	}
-	if(flags[kFLAGS.PC_FETISH] >= 3 && !SceneLib.urtaQuest.isUrta() && !isWieldingRangedWeapon()) {
+	if(flags[kFLAGS.PC_FETISH] >= 3 && !SceneLib.urtaQuest.isUrta() && !player.isWieldingRangedWeapon()) {
 		outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  Ceraph's piercings have made normal melee attack impossible!  Maybe you could try something else?\n\n");
 		enemyAI();
 		return;
 	}
 	//Amily!
-	if(monster.hasStatusEffect(StatusEffects.Concentration) && !isWieldingRangedWeapon()) {
+	if(monster.hasStatusEffect(StatusEffects.Concentration) && !player.isWieldingRangedWeapon()) {
 		clearOutput();
 		outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.\n\n");
 		enemyAI();
 		return;
 	}
-	if(monster.hasStatusEffect(StatusEffects.Level) && !player.hasStatusEffect(StatusEffects.FirstAttack) && !isWieldingRangedWeapon()) {
-		if (monster is SandTrap) {
-			outputText("It's all or nothing!  With a bellowing cry you charge down the treacherous slope and smite the sandtrap as hard as you can!  ");
-			(monster as SandTrap).trapLevel(-4);
-		}
-		if (monster is Alraune) {
-			outputText("It’s all or nothing!  If this leafy woman is so keen on pulling you in, you will let her do just that!  You use her own strength against her, using it to increase your momentum as you leap towards her and smash into her with your weapon!  ");
-			(monster as Alraune).trapLevel(-6);
-		}
-	}
-	else if(SceneLib.urtaQuest.isUrta()) {
+	if(SceneLib.urtaQuest.isUrta()) {
 		if(player.hasStatusEffect(StatusEffects.FirstAttack)) {
 			player.removeStatusEffect(StatusEffects.FirstAttack);
 		}
@@ -1481,28 +1477,6 @@ public function attack():void {
 	//Blind
 	if(player.hasStatusEffect(StatusEffects.Blind)) {
 		outputText("You attempt to attack, but as blinded as you are right now, you doubt you'll have much luck!  ");
-	}
-	if (monster is Basilisk && !player.hasPerk(PerkLib.BasiliskResistance) && !isWieldingRangedWeapon()) {
-		if (monster.hasStatusEffect(StatusEffects.Blind) || monster.hasStatusEffect(StatusEffects.InkBlind))
-			outputText("Blind basilisk can't use his eyes, so you can actually aim your strikes!  ");
-		//basilisk counter attack (block attack, significant speed loss): 
-		else if(player.inte/5 + rand(20) < 25) {
-			outputText("Holding the basilisk in your peripheral vision, you charge forward to strike it.  Before the moment of impact, the reptile shifts its posture, dodging and flowing backward skillfully with your movements, trying to make eye contact with you. You find yourself staring directly into the basilisk's face!  Quickly you snap your eyes shut and recoil backwards, swinging madly at the lizard to force it back, but the damage has been done; you can see the terrible grey eyes behind your closed lids, and you feel a great weight settle on your bones as it becomes harder to move.");
-			player.addCombatBuff('spe', -20);
-			player.removeStatusEffect(StatusEffects.FirstAttack);
-			combatRoundOver();
-			flags[kFLAGS.BASILISK_RESISTANCE_TRACKER] += 2;
-			return;
-		}
-		//Counter attack fails: (random chance if PC int > 50 spd > 60; PC takes small physical damage but no block or spd penalty)
-		else {
-			outputText("Holding the basilisk in your peripheral vision, you charge forward to strike it.  Before the moment of impact, the reptile shifts its posture, dodging and flowing backward skillfully with your movements, trying to make eye contact with you. You twist unexpectedly, bringing your [weapon] up at an oblique angle; the basilisk doesn't anticipate this attack!  ");
-		}
-	}
-	if (monster is FrostGiant && player.hasStatusEffect(StatusEffects.GiantBoulder)) {
-		(monster as FrostGiant).giantBoulderHit(0);
-		enemyAI();
-		return;
 	}
 	//Worms are special
 	if(monster.short == "worms") {
@@ -1585,7 +1559,7 @@ public function meleeDamageAcc():void {
 	//------------
 	//Determine damage
 	//BASIC DAMAGE STUFF
-	if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !isWieldingRangedWeapon()) damage *= 1.2;
+	if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !player.isWieldingRangedWeapon()) damage *= 1.2;
 	if (damage < 10) damage = 10;
 	damage *= weaponMod(player);
 	//Bonus sand trap damage!
@@ -1677,7 +1651,7 @@ public function meleeDamageAcc():void {
 	damage = Math.round(damage);
 	
 	//ANEMONE SHIT
-	if (monster is Anemone && !isWieldingRangedWeapon() && randomChance(20)) {
+	if (monster is Anemone && !player.isWieldingRangedWeapon() && randomChance(20)) {
 		outputText("Seeing your [weapon] raised, the anemone looks down at the water, angles her eyes up at you, and puts out a trembling lip.  ");
 		if (player.cor >= 75) {
 			outputText("Though you lose a bit of steam to the display, the drive for dominance still motivates you to follow through on your swing.");
@@ -1755,7 +1729,7 @@ public function meleeDamageAcc():void {
 		}
 
 		//Lust raised by anemone contact!
-		if((monster.short == "sea anemone" || monster.short == "anemone") && !isWieldingRangedWeapon()) {
+		if((monster.short == "sea anemone" || monster.short == "anemone") && !player.isWieldingRangedWeapon()) {
 			outputText("\nThough you managed to hit the "+monster.short+", several of the tentacles surrounding her body sent home jolts of venom when your swing brushed past them.");
 			//(gain lust, temp lose str/spd)
 			(monster as Anemone).applyVenom((1 + rand(2)));
@@ -1973,9 +1947,6 @@ public function combatBlock(doFatigue:Boolean = false):Boolean {
 		return true;
 	}
 	else return false;
-}
-public function isWieldingRangedWeapon():Boolean {
-	return player.weaponName.indexOf("staff") != -1 && player.hasPerk(PerkLib.StaffChanneling);
 }
 
 //DEAL DAMAGE

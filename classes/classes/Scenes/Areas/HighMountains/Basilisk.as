@@ -7,6 +7,7 @@ import classes.BodyParts.LowerBody;
 import classes.BodyParts.Skin;
 import classes.BodyParts.Tail;
 import classes.GlobalFlags.*;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Scenes.SceneLib;
 import classes.StatusEffects.Combat.BasiliskSlowDebuff;
 import classes.internals.ChainedDrop;
@@ -49,9 +50,28 @@ import classes.internals.ChainedDrop;
 				outputText("You concentrate, focus your mind and resist the basilisk's psychic compulsion.");
 			}
 		}
-
-
-
+		
+		
+		override protected function doReact(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+			if (phase == ActionRoll.Phases.PREPARE && type == ActionRoll.Types.PERFORM) {
+				if (!actor.hasPerk(PerkLib.BasiliskResistance) && !actor.isWieldingRangedWeapon()) {
+					if (hasStatusEffect(StatusEffects.Blind) || hasStatusEffect(StatusEffects.InkBlind)) {
+						outputText("Blind basilisk can't use his eyes, so you can actually aim your strikes!  ");
+					} else if(actor.inte/5 + rand(20) < 25) {
+						//basilisk counter attack (block attack, significant speed loss):
+						outputText("Holding the basilisk in your peripheral vision, you charge forward to strike it.  Before the moment of impact, the reptile shifts its posture, dodging and flowing backward skillfully with your movements, trying to make eye contact with you. You find yourself staring directly into the basilisk's face!  Quickly you snap your eyes shut and recoil backwards, swinging madly at the lizard to force it back, but the damage has been done; you can see the terrible grey eyes behind your closed lids, and you feel a great weight settle on your bones as it becomes harder to move.");
+						actor.addCombatBuff('spe', -20);
+						actor.removeStatusEffect(StatusEffects.FirstAttack);
+						flags[kFLAGS.BASILISK_RESISTANCE_TRACKER] += 2;
+						roll.cancel();
+					} else {
+						//Counter attack fails: (random chance if PC int > 50 spd > 60; PC takes small physical damage but no block or spd penalty)
+						outputText("Holding the basilisk in your peripheral vision, you charge forward to strike it.  Before the moment of impact, the reptile shifts its posture, dodging and flowing backward skillfully with your movements, trying to make eye contact with you. You twist unexpectedly, bringing your [weapon] up at an oblique angle; the basilisk doesn't anticipate this attack!  ");
+					}
+				}
+			}
+		}
+		
 		//Special 3: basilisk tail swipe (Small physical damage):
 		private function basiliskTailSwipe():void {
 			outputText("The basilisk suddenly whips its tail at you, swiping your [feet] from under you!  You quickly stagger upright, being sure to hold the creature's feet in your vision.  ");

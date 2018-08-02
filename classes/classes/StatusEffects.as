@@ -528,7 +528,7 @@ package classes
 		public static const ResonanceVolley:StatusEffectType           = mkCombat("Resonance Volley");
 		public static const Sandstorm:StatusEffectType                 = mkCombat("sandstorm");
 		public static const ScyllaBind:StatusEffectType                = mkCombat("Scylla Bind");
-		public static const Sealed:StatusEffectType                    = mkCombat("Sealed");
+		public static const Sealed:StatusEffectType                    = SealedEffect.TYPE;
 		public static const Sealed2:StatusEffectType                   = mkCombat("Sealed2");
 		public static const SecondWindRegen:StatusEffectType           = mkCombat("Second Wind Regen");
 		public static const SharkBiteBleed:StatusEffectType            = mkCombat("Shark Bite Bleed");
