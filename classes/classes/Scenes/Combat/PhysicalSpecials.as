@@ -317,7 +317,7 @@ package classes.Scenes.Combat {
 
 	public function powerfistspoweeeeer():Number {
 		var powerfistspowervalue:Number = player.str + (scalingBonusStrength() * 0.25);
-		if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !isWieldingRangedWeapon()) powerfistspowervalue *= 1.2;
+		if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !player.isWieldingRangedWeapon()) powerfistspowervalue *= 1.2;
 		if (powerfistspowervalue < 10) powerfistspowervalue = 10;
 		powerfistspowervalue *= (1 + (player.weaponAttack * 0.03));
 
@@ -358,7 +358,7 @@ package classes.Scenes.Combat {
 		else if (player.weaponAttack >= 101 && player.weaponAttack < 201) damage *= (2 + ((player.weaponAttack - 100) * 0.015));
 		else damage *= (3.5 + ((player.weaponAttack - 200) * 0.01));
 		//other bonuses
-		if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !isWieldingRangedWeapon()) damage *= 1.2;
+		if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !player.isWieldingRangedWeapon()) damage *= 1.2;
 		if (player.hasPerk(PerkLib.ThunderousStrikes) && player.str >= 80) damage *= 1.2;
 		if (player.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
 		if (player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
@@ -423,7 +423,7 @@ package classes.Scenes.Combat {
 		else if (player.weaponAttack >= 101 && player.weaponAttack < 201) damage *= (2 + ((player.weaponAttack - 100) * 0.015));
 		else damage *= (3.5 + ((player.weaponAttack - 200) * 0.01));
 		//other bonuses
-		if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !isWieldingRangedWeapon()) damage *= 1.2;
+		if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !player.isWieldingRangedWeapon()) damage *= 1.2;
 		if (player.hasPerk(PerkLib.ThunderousStrikes) && player.str >= 80) damage *= 1.2;
 		if (player.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
 		if (player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
