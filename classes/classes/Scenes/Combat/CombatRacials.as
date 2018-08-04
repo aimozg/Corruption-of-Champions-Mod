@@ -128,16 +128,16 @@ package classes.Scenes.Combat {
 				//partial skins bonuses
 				switch (player.coatType()) {
 					case Skin.FUR:
-						damage += (1 + player.newGamePlusMod());
+						damage += 1;
 						break;
 					case Skin.SCALES:
-						damage += (2 * (1 + player.newGamePlusMod()));
+						damage += 2;
 						break;
 					case Skin.CHITIN:
-						damage += (3 * (1 + player.newGamePlusMod()));
+						damage += 3;
 						break;
 					case Skin.BARK:
-						damage += (4 * (1 + player.newGamePlusMod()));
+						damage += 4;
 						break;
 				}
 				chance += 2;
@@ -272,16 +272,16 @@ package classes.Scenes.Combat {
 			//partial skins bonuses
 			switch (player.coatType()) {
 				case Skin.FUR:
-					damage += (1 + player.newGamePlusMod());
+					damage += 1;
 					break;
 				case Skin.SCALES:
-					damage += (2 * (1 + player.newGamePlusMod()));
+					damage += 2;
 					break;
 				case Skin.CHITIN:
-					damage += (3 * (1 + player.newGamePlusMod()));
+					damage += 3;
 					break;
 				case Skin.BARK:
-					damage += (4 * (1 + player.newGamePlusMod()));
+					damage += 4;
 					break;
 			}
 			chance += 2;
@@ -354,7 +354,7 @@ package classes.Scenes.Combat {
 					outputText("almost instantly spit it out. Ewwww what manner of disgusting blood is this? Saps?");
 				}
 				outputText(" Your opponent makes use of your confusion to free itself.");
-				HPChange((-100 * (1 + player.newGamePlusMod())),false);
+				HPChange(-100,false);
 				monster.removeStatusEffect(StatusEffects.EmbraceVampire);
 				enemyAI();
 				return;

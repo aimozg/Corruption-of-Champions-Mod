@@ -1970,7 +1970,7 @@ public function RacialScores():void {
 	outputText("\nCHIMERA: " + player.chimeraScore());
 	outputText("\nGRAND CHIMERA: " + player.grandchimeraScore());
 	if (player.internalChimeraScore() >= 1) {
-		outputText("\n<font color=\"#0000a0\">INTERNAL CHIMERICAL DISPOSITION: " + player.internalChimeraScore() + " (+" + (5 * player.internalChimeraScore() * (1 + player.newGamePlusMod())) + " max Str / Tou / Spe / Int / Wis / Lib)</font>");
+		outputText("\n<font color=\"#0000a0\">INTERNAL CHIMERICAL DISPOSITION: " + player.internalChimeraScore() + " (+" + (5 * player.internalChimeraScore()) + " max Str / Tou / Spe / Int / Wis / Lib)</font>");
 	}
 	else if (player.internalChimeraScore() < 1) outputText("\nINTERNAL CHIMERICAL DISPOSITION: 0</font>");
 	outputText("\n\n");

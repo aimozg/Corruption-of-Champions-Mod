@@ -73,7 +73,7 @@ public class WormMass extends Monster
 		
 		override public function maxHP():Number
 		{
-			return 40 + (player.newGamePlusMod() * 20);
+			return 40;
 		}
 
 		public function WormMass()

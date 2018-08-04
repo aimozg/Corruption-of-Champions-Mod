@@ -776,9 +776,9 @@ package classes.Scenes.Combat {
 		damage += player.str + (scalingBonusStrength() * 0.5) + player.tou + (scalingBonusToughness() * 0.5);
 		//addictive bonuses
 		if (player.hasPerk(PerkLib.IronFists)) damage += 10;
-		if (player.hasPerk(PerkLib.AdvancedJobMonk)) damage += (10 * (1 + player.newGamePlusMod()));
-		if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += (30 + (15 * player.newGamePlusMod()));
-		if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += (30 + (15 * player.newGamePlusMod()));
+		if (player.hasPerk(PerkLib.AdvancedJobMonk)) damage += 10;
+		if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += 30;
+		if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += 30;
 		//multiplicative bonuses
 		if (player.hasPerk(PerkLib.HoldWithBothHands)) damage *= 1.2;
 		if (player.hasPerk(PerkLib.ThunderousStrikes) && player.str >= 80) damage *= 1.2;
@@ -818,9 +818,9 @@ package classes.Scenes.Combat {
 		var damage:Number = player.str + (scalingBonusStrength() * 0.25) + player.tou + (scalingBonusToughness() * 0.25);
 		//addictive bonuses
 		if (player.hasPerk(PerkLib.IronFists)) damage += 10;
-		if (player.hasPerk(PerkLib.AdvancedJobMonk)) damage += (10 * (1 + player.newGamePlusMod()));
-		if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += (30 + (15 * player.newGamePlusMod()));
-		if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += (30 + (15 * player.newGamePlusMod()));
+		if (player.hasPerk(PerkLib.AdvancedJobMonk)) damage += 10;
+		if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += 30;
+		if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += 30;
 		//multiplicative bonuses
 		if (player.hasPerk(PerkLib.HoldWithBothHands)) damage *= 1.2;
 		if (player.hasPerk(PerkLib.ThunderousStrikes) && player.str >= 80) damage *= 1.2;
@@ -1165,9 +1165,9 @@ package classes.Scenes.Combat {
 					damage += scalingBonusSpeed() * 0.5;
 					//addictive bonuses
 					if (player.hasPerk(PerkLib.IronFists)) damage += 10;
-					if (player.hasPerk(PerkLib.AdvancedJobMonk)) damage += (10 * (1 + player.newGamePlusMod()));
-					if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += (30 + (15 * player.newGamePlusMod()));
-					if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += (30 + (15 * player.newGamePlusMod()));
+					if (player.hasPerk(PerkLib.AdvancedJobMonk)) damage += 10;
+					if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += 30;
+					if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += 30;
 					//multiplicative bonuses
 					if (player.hasPerk(PerkLib.HoldWithBothHands)) damage *= 1.2;
 					if (player.hasPerk(PerkLib.ThunderousStrikes) && player.str >= 80) damage *= 1.2;

@@ -16,7 +16,6 @@ public class Goblin extends Monster
 			if (short == "goblin shaman") multiplier += 0.4;
 			if (short == "goblin warrior") multiplier += 0.5;
 			if (short == "goblin elder") multiplier += 1;
-			multiplier += player.newGamePlusMod() * 0.5;
 			if(short == "Tamani") temp2 = rand(5);
 			if(short == "Tamani's daughters") temp2 = rand(5);
 			var color:String = "";

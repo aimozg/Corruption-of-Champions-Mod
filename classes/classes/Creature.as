@@ -3275,25 +3275,19 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		}
 
 		public function damageToughnessModifier(displayMode:Boolean = false):Number {
-			var temp:Number = 0;
-			temp += tou / 20;
-			if (temp > (20 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]))) temp = 20 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			var temp:Number = Math.min(20, tou/20);
 			//displayMode is for stats screen.
 			if (displayMode) return temp;
 			else return rand(temp);
 		}
 		public function damageIntelligenceModifier(displayMode:Boolean = false):Number {
-			var temp:Number = 0;
-			temp += inte / 20;
-			if (temp > (10 + (2.5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]))) temp = 10 + (2.5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			var temp:Number = Math.min(10, inte/20);
 			//displayMode is for stats screen.
 			if (displayMode) return temp;
 			else return rand(temp);
 		}
 		public function damageWisdomModifier(displayMode:Boolean = false):Number {
-			var temp:Number = 0;
-			temp += wis / 20;
-			if (temp > (10 + (2.5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]))) temp = 10 + (2.5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			var temp:Number = Math.min(10, wis/20);
 			//displayMode is for stats screen.
 			if (displayMode) return temp;
 			else return rand(temp);
@@ -3323,7 +3317,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			//Take damage you masochist!
 			if (hasPerk(PerkLib.Masochist) && lib >= 60) {
 				mult -= 0.2;
-				if (short == game.player.short && !displayMode) game.player.dynStats("lus", (2 * (1 + game.player.newGamePlusMod())));
+				if (short == game.player.short && !displayMode) game.player.dynStats("lus", 2);
 			}
 			if (hasPerk(PerkLib.FenrirSpikedCollar)) {
 				mult -= 0.15;
@@ -3373,7 +3367,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 				mult -= damageWisdomModifier();
 				if (mult < 70) mult = 70;
 			}
-			if (hasPerk(PerkLib.NakedTruth)) mult -= 0.45 + (5 * game.player.newGamePlusMod());
+			if (hasPerk(PerkLib.NakedTruth)) mult -= 0.45;
 			//--PERKS--
 			if (hasPerk(PerkLib.NakedTruth) && spe >= 75 && lib >= 60 && (armorName == "arcane bangles" || armorName == "practically indecent steel armor" || armorName == "revealing chainmail bikini" || armorName == "slutty swimwear" || armorName == "barely-decent bondage straps" || armorName == "nothing")) {
 				mult -= 0.1;

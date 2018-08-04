@@ -551,16 +551,16 @@ package classes.Scenes.Combat {
 
 			switch (player.coatType()) {
 				case Skin.FUR:
-					lustDmgF += (1 + player.newGamePlusMod());
+					lustDmgF += 1;
 					break;
 				case Skin.SCALES:
-					lustDmgF += (2 * (1 + player.newGamePlusMod()));
+					lustDmgF += 2;
 					break;
 				case Skin.CHITIN:
-					lustDmgF += (3 * (1 + player.newGamePlusMod()));
+					lustDmgF += 3;
 					break;
 				case Skin.BARK:
-					lustDmgF += (4 * (1 + player.newGamePlusMod()));
+					lustDmgF += 4;
 					break;
 			}
 

@@ -1492,15 +1492,14 @@ import classes.lists.BreastCup;
 			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.HistoryFortune) || player.hasPerk(PerkLib.HistoryHealer) || player.hasPerk(PerkLib.HistoryReligious) || player.hasPerk(PerkLib.HistorySlacker) || player.hasPerk(PerkLib.HistorySlut)) player.perkPoints += 1;
 			clearOutput();
 			statScreenRefresh();
-			outputText("Would you like to play through the " + (1 * (1 + player.newGamePlusMod())) + "-day");
-			if (player.newGamePlusMod() > 0) outputText("s");
+			outputText("Would you like to play through the " + (1 + flags[kFLAGS.NEW_GAME_PLUS_LEVEL]) + "-day");
 			outputText(" prologue in Ingnam or just skip?");
 			player.HP = player.maxHP();
 			doYesNo(goToIngnam, arrival);
 		}
 
 		public function goToIngnam():void {
-			model.time.days = -(1 * (1 + player.newGamePlusMod()));
+			model.time.days = -(1 + flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 			model.time.hours = 8;
 			flags[kFLAGS.IN_INGNAM] = 1;
 			SceneLib.ingnam.menuIngnam();

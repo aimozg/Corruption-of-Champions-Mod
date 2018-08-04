@@ -154,7 +154,6 @@ package classes
 		override public function get armorDef():Number {
 			Begin("Player","armorDef");
 			var racialBonus:int = this.racialBonuses()[Race.BonusName_defense];
-			var newGamePlusMod:int = this.newGamePlusMod()+1;
 			var armorDef:Number = armor.defense;
 			armorDef += upperGarment.defense;
 			armorDef += lowerGarment.defense;
@@ -170,35 +169,35 @@ package classes
 			}
 			//Skin armor perk
 			if (hasPerk(PerkLib.ThickSkin)) {
-				armorDef += (2 * newGamePlusMod);
+				armorDef += 2;
 			}
 			//Stacks on top of Thick Skin perk.
 			var p:Boolean = skin.isCoverLowMid();
-			if (skin.hasFur()) armorDef += (p?1:2)*newGamePlusMod;
-			if (skin.hasChitin()) armorDef += (p?2:4)*newGamePlusMod;
-			if (skin.hasScales()) armorDef += (p?3:6)*newGamePlusMod; //bee-morph (), mantis-morph (), scorpion-morph (wpisane), spider-morph (wpisane)
-			if (skin.hasBark() || skin.hasDragonScales()) armorDef += (p?4:8)*newGamePlusMod;
-			if (skin.hasBaseOnly(Skin.STONE)) armorDef += (10 * newGamePlusMod);
+			if (skin.hasFur()) armorDef += (p?1:2);
+			if (skin.hasChitin()) armorDef += (p?2:4);
+			if (skin.hasScales()) armorDef += (p?3:6); //bee-morph (), mantis-morph (), scorpion-morph (wpisane), spider-morph (wpisane)
+			if (skin.hasBark() || skin.hasDragonScales()) armorDef += (p?4:8);
+			if (skin.hasBaseOnly(Skin.STONE)) armorDef += 10;
 			//'Thick' dermis descriptor adds 1!
-			if (skinAdj == "smooth") armorDef += (1 * newGamePlusMod);
+			if (skinAdj == "smooth") armorDef += 1;
 			//Racial score bonuses
-			armorDef += racialBonus * newGamePlusMod;
+			armorDef += racialBonus;
 			//Bonus defense
-			if (arms.type == Arms.YETI) armorDef += (1 * newGamePlusMod);
-			if (arms.type == Arms.SPIDER || arms.type == Arms.MANTIS || arms.type == Arms.BEE || arms.type == Arms.SALAMANDER) armorDef += (2 * newGamePlusMod);
-			if (arms.type == Arms.GARGOYLE) armorDef += (8 * newGamePlusMod);
-			if (arms.type == Arms.GARGOYLE_2) armorDef += (5 * newGamePlusMod);
-			if (tailType == Tail.SPIDER_ADBOMEN || tailType == Tail.MANTIS_ABDOMEN || tailType == Tail.BEE_ABDOMEN) armorDef += (2 * newGamePlusMod);
-			if (tailType == Tail.GARGOYLE) armorDef += (8 * newGamePlusMod);
-			if (tailType == Tail.GARGOYLE_2) armorDef += (5 * newGamePlusMod);
-			if (wings.type == Wings.GARGOYLE_LIKE_LARGE) armorDef += (8 * newGamePlusMod);
-			if (lowerBody == LowerBody.YETI) armorDef += (1 * newGamePlusMod);
-			if (lowerBody == LowerBody.CHITINOUS_SPIDER_LEGS || lowerBody == LowerBody.BEE || lowerBody == LowerBody.MANTIS || lowerBody == LowerBody.SALAMANDER) armorDef += (2 * newGamePlusMod);
-			if (lowerBody == LowerBody.DRAGON) armorDef += (3 * newGamePlusMod);
-			if (lowerBody == LowerBody.DRIDER) armorDef += (4 * newGamePlusMod);
-			if (lowerBody == LowerBody.GARGOYLE) armorDef += (8 * newGamePlusMod);
-			if (lowerBody == LowerBody.GARGOYLE_2) armorDef += (5 * newGamePlusMod);
-			if (hasPerk(PerkLib.Lycanthropy)) armorDef += 10 * newGamePlusMod;
+			if (arms.type == Arms.YETI) armorDef += 1;
+			if (arms.type == Arms.SPIDER || arms.type == Arms.MANTIS || arms.type == Arms.BEE || arms.type == Arms.SALAMANDER) armorDef += 2;
+			if (arms.type == Arms.GARGOYLE) armorDef += 8;
+			if (arms.type == Arms.GARGOYLE_2) armorDef += 5;
+			if (tailType == Tail.SPIDER_ADBOMEN || tailType == Tail.MANTIS_ABDOMEN || tailType == Tail.BEE_ABDOMEN) armorDef += 2;
+			if (tailType == Tail.GARGOYLE) armorDef += 8;
+			if (tailType == Tail.GARGOYLE_2) armorDef += 5;
+			if (wings.type == Wings.GARGOYLE_LIKE_LARGE) armorDef += 8;
+			if (lowerBody == LowerBody.YETI) armorDef += 1;
+			if (lowerBody == LowerBody.CHITINOUS_SPIDER_LEGS || lowerBody == LowerBody.BEE || lowerBody == LowerBody.MANTIS || lowerBody == LowerBody.SALAMANDER) armorDef += 2;
+			if (lowerBody == LowerBody.DRAGON) armorDef += 3;
+			if (lowerBody == LowerBody.DRIDER) armorDef += 4;
+			if (lowerBody == LowerBody.GARGOYLE) armorDef += 8;
+			if (lowerBody == LowerBody.GARGOYLE_2) armorDef += 5;
+			if (hasPerk(PerkLib.Lycanthropy)) armorDef += 10;
 			//Agility boosts armor ratings!
 			var speedBonus:int = 0;
 			if (hasPerk(PerkLib.Agility)) {
@@ -221,7 +220,7 @@ package classes
 			if (hasPerk(PerkLib.ChiReflowDefense)) armorDef *= UmasShop.NEEDLEWORK_DEFENSE_DEFENSE_MULTI;
 			if (hasPerk(PerkLib.ChiReflowAttack)) armorDef *= UmasShop.NEEDLEWORK_ATTACK_DEFENSE_MULTI;
 			//Other bonuses
-			if (hasPerk(PerkLib.ToughHide) && haveNaturalArmor()) armorDef += (2 * newGamePlusMod);
+			if (hasPerk(PerkLib.ToughHide) && haveNaturalArmor()) armorDef += 2;
 			armorDef = Math.round(armorDef);
 			//Berzerking removes armor
 			if (hasStatusEffect(StatusEffects.Berzerking) && !hasPerk(PerkLib.ColdFury)) {
@@ -318,7 +317,6 @@ package classes
 			return weapon.verb;
 		}
 		override public function get weaponAttack():Number {
-			var newGamePlusMod:int = this.newGamePlusMod()+1;
 			var attack:Number = weapon.attack;
 			if (hasPerk(PerkLib.HiddenMomentum) && weaponPerk == "Large" && str >= 75 && spe >= 50) {
 				attack += (((str + spe) - 100) * 0.1);
@@ -334,24 +332,24 @@ package classes
 					attack += 10;
 				}
 				if (hasPerk(PerkLib.MightyFist)) {
-					attack += (5 * newGamePlusMod);
+					attack += 5;
 				}
 				if (SceneLib.combat.unarmedAttack() > 0) {
 					attack += SceneLib.combat.unarmedAttack();
 				}
 			}
 			if (arms.type == Arms.MANTIS && weaponName == "fists") {
-				attack += (15 * newGamePlusMod);
+				attack += 15;
 			}
 			if ((arms.type == Arms.YETI || arms.type == Arms.CAT) && weaponName == "fists") {
-				attack += (5 * newGamePlusMod);
+				attack += 5;
 			}
 			//Konstantine buff
 			if (hasStatusEffect(StatusEffects.KonstantinWeaponSharpening) && weaponName != "fists") {
 				attack *= 1 + (statusEffectv2(StatusEffects.KonstantinWeaponSharpening) / 100);
 			}
-			if (hasStatusEffect(StatusEffects.Berzerking)) attack += (15 + (15 * newGamePlusMod));
-			if (hasStatusEffect(StatusEffects.Lustzerking)) attack += (15 + (15 * newGamePlusMod));
+			if (hasStatusEffect(StatusEffects.Berzerking)) attack += 15;
+			if (hasStatusEffect(StatusEffects.Lustzerking)) attack += 15;
 			if (hasStatusEffect(StatusEffects.ChargeWeapon)) {
 				if (( weaponName != "fists") && weaponPerk != "Large" && weaponPerk != "Dual Large") attack += Math.round(statusEffectv1(StatusEffects.ChargeWeapon));
 				if (weaponPerk == "Large" || weaponPerk == "Dual Large") attack += Math.round(statusEffectv1(StatusEffects.ChargeWeapon));
@@ -1722,10 +1720,6 @@ package classes
 			return flags[kFLAGS.MEANINGLESS_CORRUPTION] > 0 ? 100 : 0;
 		}
 		
-		public function newGamePlusMod():int {
-			return boundInt(0, flags[kFLAGS.NEW_GAME_PLUS_LEVEL], 5);
-		}
-		
 		public function buttChangeDisplay():void
 		{	//Allows the test for stretching and the text output to be separated
 			switch (ass.analLooseness) {
@@ -2164,20 +2158,20 @@ package classes
 		public override function getAllMaxStats():Object {
 			Begin("Player","getAllMaxStats");
 			var maxSen:int = 100;
-			var newGamePlusMod:int = this.newGamePlusMod()+1;
+			
 			
 			Begin("Player","getAllMaxStats.racial");
 			//Alter max stats depending on race (+15 za pkt)
 			var racials:* = racialBonuses();
-			maxSen += racials[Race.BonusName_maxsen] * newGamePlusMod;
+			maxSen += racials[Race.BonusName_maxsen];
 			if (internalChimeraScore() >= 1) {
-				maxSen += (5 * internalChimeraScore() * newGamePlusMod);
+				maxSen += 5 * internalChimeraScore();
 			}
 			if (maxSen < 25) maxSen = 25;
 			End("Player","getAllMaxStats.racial");
 			Begin("Player","getAllMaxStats.perks2");
 			if (hasPerk(PerkLib.GargoylePure)) {
-				maxSen -= (10 * newGamePlusMod);
+				maxSen -= 10;
 			}
 			End("Player","getAllMaxStats.perks2");
 			End("Player","getAllMaxStats");
@@ -2748,14 +2742,14 @@ package classes
 		protected override function maxHP_base():Number {
 			Begin("Player","maxHP_base");
 			var max:Number = super.maxHP_base();
-			max += racialBonuses()[Race.BonusName_maxhp]*(1 + flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			max += racialBonuses()[Race.BonusName_maxhp];
 			End("Player","maxHP_base");
 			return max;
 		}
 		protected override function maxLust_base():Number {
 			Begin("Player","maxLust_base");
 			var max:Number = super.maxLust_base();
-			max += racialBonuses()[Race.BonusName_maxlust]*(1 + flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			max += racialBonuses()[Race.BonusName_maxlust];
 			End("Player","maxLust_base");
 			return max;
 		}
@@ -2801,9 +2795,6 @@ package classes
 				if (hasPerk(PerkLib.ChiReflowLust) && dlib > 0) dlib *= UmasShop.NEEDLEWORK_LUST_LIBSENSE_MULTI;
 				if (hasPerk(PerkLib.ChiReflowLust) && dsens > 0) dsens *= UmasShop.NEEDLEWORK_LUST_LIBSENSE_MULTI;
 				
-				//Apply lust changes in NG+.
-				dlust *= 1 + (newGamePlusMod() * 0.2);
-				
 				//lust resistance
 				if (dlust > 0 && scale) dlust *= EngineCore.lustPercent() / 100;
 				if (dlib > 0 && hasPerk(PerkLib.PurityBlessing)) dlib *= 0.75;
@@ -2841,8 +2832,7 @@ package classes
 		public override function maxFatigue():Number
 		{
 			var max:Number = 150;
-			var ngMult:int = 1 + newGamePlusMod();
-			max += racialBonuses()[Race.BonusName_maxfatigue]*ngMult;
+			max += racialBonuses()[Race.BonusName_maxfatigue];
 			if (hasPerk(PerkLib.JobHunter)) max += 50;
 			if (hasPerk(PerkLib.JobRanger)) max += 5;
 			if (hasPerk(PerkLib.PrestigeJobArcaneArcher)) max += 600;
@@ -2939,8 +2929,7 @@ package classes
 
 		public override function maxKi(): Number {
 			var max: Number = 50;
-			var ngMult: int = 1 + game.player.newGamePlusMod();
-			max += racialBonuses()[Race.BonusName_maxki] * ngMult;
+			max += racialBonuses()[Race.BonusName_maxki];
 			if (flags[kFLAGS.SOULFORCE_GAINED_FROM_CULTIVATING] > 0) {
 				max += flags[kFLAGS.SOULFORCE_GAINED_FROM_CULTIVATING];
 			}//+310

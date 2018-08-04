@@ -46,7 +46,6 @@ public class DriderIncubus extends AbstractSpiderMorph
 		}
 
 		private static const VENOM_SPEED_DRAIN_FLAT:int = 30;
-		private static const VENOM_SPEED_DRAIN_MULT:int = 10;
 		
 		override public function defeated(hpVictory:Boolean):void
 		{
@@ -219,7 +218,7 @@ this.HP -= (this.maxHP() * 0.08);
 			{
 				var sec:StatusEffectClass = player.createOrFindStatusEffect(StatusEffects.DriderIncubusVenom);
 				sec.value1 += 5;
-				amount = VENOM_SPEED_DRAIN_FLAT + VENOM_SPEED_DRAIN_MULT*player.newGamePlusMod();
+				amount = VENOM_SPEED_DRAIN_FLAT;
 				sec.buffHost('str',-amount);
 				player.addStatusValue(StatusEffects.DriderIncubusVenom, 2, amount);
 					
@@ -258,7 +257,7 @@ this.HP -= (this.maxHP() * 0.08);
 						sec = player.createStatusEffect(StatusEffects.DriderIncubusVenom, 5, 0, 0, 0);
 					}
 					
-					amount = VENOM_SPEED_DRAIN_FLAT + VENOM_SPEED_DRAIN_MULT*player.newGamePlusMod();
+					amount = VENOM_SPEED_DRAIN_FLAT;
 					sec.buffHost('str',-amount);
 					player.addStatusValue(StatusEffects.DriderIncubusVenom, 2, amount);
 				}				

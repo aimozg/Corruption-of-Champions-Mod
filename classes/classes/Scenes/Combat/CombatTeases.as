@@ -128,16 +128,16 @@ package classes.Scenes.Combat {
 		//partial skins bonuses
 		switch (player.coatType()) {
 			case Skin.FUR:
-				damage += (1 + player.newGamePlusMod());
+				damage += 1;
 				break;
 			case Skin.SCALES:
-				damage += (2 * (1 + player.newGamePlusMod()));
+				damage += 2;
 				break;
 			case Skin.CHITIN:
-				damage += (3 * (1 + player.newGamePlusMod()));
+				damage += 3;
 				break;
 			case Skin.BARK:
-				damage += (4 * (1 + player.newGamePlusMod()));
+				damage += 4;
 				break;
 		}
 		//slutty simplicity bonus

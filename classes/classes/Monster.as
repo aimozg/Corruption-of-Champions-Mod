@@ -147,12 +147,8 @@ import flash.utils.getQualifiedClassName;
 		public function set lowerGarmentName(value:String):void { _lowerGarmentName = value; }
 		public function set lowerGarmentPerk(value:String):void { _lowerGarmentPerk = value; }
 		public function set lowerGarmentValue(value:Number):void { _lowerGarmentValue = value; }
-
-
-
-        public function newGamePlusMod():int {
-            return player.newGamePlusMod();
-        }
+		
+		
 		protected final function outputText(text:String,clear:Boolean=false):void{
 			if (clear) EngineCore.clearOutputTextOnly();
 			EngineCore.outputText(text);
@@ -222,7 +218,7 @@ import flash.utils.getQualifiedClassName;
 		protected var bonusAscWis:Number = 0;
 		protected var bonusAscLib:Number = 0;
 		protected var bonusAscSen:Number = 0;
-		protected var bonusAscMaxHP:Number = 0;
+		
 		private var _long:String = "<b>You have encountered an unitialized  Please report this as a bug</b>.";
 		public function get long():String
 		{
@@ -316,10 +312,8 @@ import flash.utils.getQualifiedClassName;
 			if (this.tou >= 851) temp += (this.tou*36);
 			if (this.tou >= 901) temp += (this.tou*38);
 			if (this.tou >= 951) temp += (this.tou*40);
-			//Apply NG+, NG++, NG+++, etc.
-			temp += this.bonusAscMaxHP * newGamePlusMod();
 			//Apply perks
-			if (hasPerk(PerkLib.Tank)) temp += ((this.tou*3) * (1 + newGamePlusMod()));
+			if (hasPerk(PerkLib.Tank)) temp += this.tou*3;
 			if (hasPerk(PerkLib.JobGuardian)) temp += 30;
 			return temp;
 		}
@@ -353,8 +347,6 @@ import flash.utils.getQualifiedClassName;
 			//Apply perks
 			if (hasPerk(PerkLib.JobCourtesan)) temp += 20;
 			if (hasPerk(PerkLib.JobSeducer)) temp += 10;
-			//Apply NG+, NG++, NG+++, etc.
-			temp += this.bonusLust * newGamePlusMod();
 			temp += this.level * 2;
 			if (this.level >= 24) temp += (this.level - 23) * 3;
 			if (this.level >= 42) temp += (this.level - 42) * 5;
@@ -386,7 +378,7 @@ import flash.utils.getQualifiedClassName;
 		{
 			//Base wrath
 			var temp:Number = 250 + this.bonusWrath;
-			if (hasPerk(PerkLib.PrimalFury)) temp += (10 * (1 + newGamePlusMod()));
+			if (hasPerk(PerkLib.PrimalFury)) temp += 10;
 			if (hasPerk(PerkLib.FeralArmor)) temp += 20;
 			if (hasPerk(PerkLib.JobDervish)) temp += 20;
 			if (hasPerk(PerkLib.JobWarrior)) temp += 10;
@@ -1752,7 +1744,7 @@ import flash.utils.getQualifiedClassName;
 			     || hasPerk(PerkLib.MonsterRegeneration) || hasStatusEffect(StatusEffects.MonsterRegen) || hasStatusEffect(StatusEffects.MonsterRegen2)) && (this.HP < maxHP()) && (this.HP > 0)) {
 				var healingPercent:Number = 0;
 				var temp2:Number = 0;
-				if (hasPerk(PerkLib.Regeneration)) healingPercent += (0.5 * (1 + newGamePlusMod()));
+				if (hasPerk(PerkLib.Regeneration)) healingPercent += 0.5;
 				if (hasPerk(PerkLib.LizanRegeneration)) healingPercent += 1.5;
 				if (hasPerk(PerkLib.LizanMarrow)) healingPercent += 0.5;
 				if (hasPerk(PerkLib.LizanMarrowEvolved)) healingPercent += 0.5;
@@ -1920,10 +1912,8 @@ import flash.utils.getQualifiedClassName;
 			return 8; //This allows different monsters to delay the player by different amounts of time after a combat loss. Normal loss causes an eight hour blackout
 		}
 		public function prepareForCombat():void {
-			var mod:int = newGamePlusMod();
 			var bonusStatsAmp:Number = 0.2;
 			if (level > 25) bonusStatsAmp += 0.1*((int)(level-1)/25);
-			bonusStatsAmp *= mod;
 			var bonusAscStr:int = Math.round(bonusStatsAmp * str);
 			var bonusAscTou:int = Math.round(bonusStatsAmp * tou);
 			var bonusAscSpe:int = Math.round(bonusStatsAmp * spe);
@@ -1938,17 +1928,11 @@ import flash.utils.getQualifiedClassName;
 			this.wisStat.core.value += bonusAscWis;
 			this.libStat.core.value += bonusAscLib;
 			this.sens += bonusAscSen;
-			bonusAscMaxHP += bonusAscStr + bonusAscTou + bonusAscSpe + bonusAscInt + bonusAscWis + bonusAscLib + bonusAscSen;
-			if (level > 10) {
-				bonusAscMaxHP *= (int)(level / 10 + 1);
-			}
-			weaponAttack += (1 + (int)(weaponAttack / 5)) * mod;
+			weaponAttack += 1 + (int)(weaponAttack / 5);
 			if (weaponRangeAttack > 0) {
-				weaponRangeAttack += (1 + (int)(weaponRangeAttack / 5)) * mod;
+				weaponRangeAttack += 1 + (int)(weaponRangeAttack / 5);
 			}
-			armorDef += ((int)(1 + armorDef / 10)) * mod;
-
-			lustVuln *= 1 - (Math.min(mod, 4)/10);
+			armorDef += (int)(1 + armorDef / 10);
 
 			HP = maxHP();
 			mana = maxMana();

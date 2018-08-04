@@ -220,8 +220,6 @@ public function cleanupAfterCombatImpl(nextFunc:Function = null):void {
 			}
 			var gemsLost:int = rand(10) + 1 + Math.round(monster.level / 2);
 			if (inDungeon) gemsLost += 20 + monster.level * 2;
-			//Increases gems lost in NG+.
-			gemsLost *= 1 + (player.newGamePlusMod() * 0.5);
 			//Round gems.
 			gemsLost = Math.round(gemsLost);
 			//Keep gems from going below zero.
@@ -439,14 +437,14 @@ public function stopChanneledSpecial():void {
 
 public function unarmedAttack():Number {
 	var unarmed:Number = 0;
-	if (player.hasPerk(PerkLib.AdvancedJobMonk) && player.wis >= 60) unarmed += 10 * (1 + player.newGamePlusMod());
-	if (player.hasPerk(PerkLib.PrestigeJobKiArtMaster) && player.wis >= 200) unarmed += 10 * (1 + player.newGamePlusMod());
+	if (player.hasPerk(PerkLib.AdvancedJobMonk) && player.wis >= 60) unarmed += 10;
+	if (player.hasPerk(PerkLib.PrestigeJobKiArtMaster) && player.wis >= 200) unarmed += 10;
 	if (player.hasStatusEffect(StatusEffects.MetalSkin)) {
-		if (player.statusEffectv2(StatusEffects.SummonedElementalsMetal) >= 6) unarmed += 4 * player.statusEffectv2(StatusEffects.SummonedElementalsMetal) * (1 + player.newGamePlusMod());
-		else unarmed += 2 * player.statusEffectv2(StatusEffects.SummonedElementalsMetal) * (1 + player.newGamePlusMod());
+		if (player.statusEffectv2(StatusEffects.SummonedElementalsMetal) >= 6) unarmed += 4 * player.statusEffectv2(StatusEffects.SummonedElementalsMetal);
+		else unarmed += 2 * player.statusEffectv2(StatusEffects.SummonedElementalsMetal);
 	}
 	if (player.hasStatusEffect(StatusEffects.CrinosShape)) unarmed *= 1.1;
-	if (player.hasPerk(PerkLib.Lycanthropy)) unarmed += 8 * (1 + player.newGamePlusMod());
+	if (player.hasPerk(PerkLib.Lycanthropy)) unarmed += 8;
 //	if (player.jewelryName == "fox hairpin") unarmed += .2;
 	unarmed = Math.round(unarmed);
 	return unarmed;
@@ -499,9 +497,9 @@ public function elementalattacks(elementType:int, summonedElementals:int):void {
 	if (elementalDamage < 10) elementalDamage = 10;
 	
 	var elementalamplification:Number = 1;
-	if (player.hasPerk(PerkLib.ElementalConjurerResolve)) elementalamplification += 0.1 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL];
-	if (player.hasPerk(PerkLib.ElementalConjurerDedication)) elementalamplification += 0.2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL];
-	if (player.hasPerk(PerkLib.ElementalConjurerSacrifice)) elementalamplification += 0.3 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL];
+	if (player.hasPerk(PerkLib.ElementalConjurerResolve)) elementalamplification += 0.1;
+	if (player.hasPerk(PerkLib.ElementalConjurerDedication)) elementalamplification += 0.2;
+	if (player.hasPerk(PerkLib.ElementalConjurerSacrifice)) elementalamplification += 0.3;
 	if (player.weapon == weapons.SCECOMM) elementalamplification += 0.5;
 	elementalDamage *= elementalamplification;
 	//Determine if critical hit!
@@ -2928,11 +2926,6 @@ public function wrathRegeneration(combat:Boolean = true):void {
 
 public function maximumRegeneration():Number {
 	var maxRegen:Number = 2;
-	if (player.newGamePlusMod() >= 1) maxRegen += 1;
-	if (player.newGamePlusMod() >= 2) maxRegen += 1;
-	if (player.newGamePlusMod() >= 3) maxRegen += 1;
-	if (player.newGamePlusMod() >= 4) maxRegen += 1;
-	if (player.newGamePlusMod() >= 5) maxRegen += 1;
 	if (player.hasPerk(PerkLib.LizanRegeneration)) maxRegen += 1.5;
 	if (player.hasPerk(PerkLib.LizanMarrow)) maxRegen += 0.5;
 	if (player.hasPerk(PerkLib.LizanMarrowEvolved)) maxRegen += 0.5;

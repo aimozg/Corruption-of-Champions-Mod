@@ -20,7 +20,6 @@ public class IgnisArenaSeer extends Monster
 			outputText("You try and huddle down and take shelter from the infernal storm, but the fire is everywhere. Then, as suddenly as the flame came, they are gone.\n\n");
 			this.createStatusEffect(StatusEffects.IgnisCastedNuke, 0, 0, 0, 0);
 			var damage:Number = 5000;
-			damage += 2000 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL];
 			if (player.hasStatusEffect(StatusEffects.Blizzard)) {
 				player.removeStatusEffect(StatusEffects.Blizzard);
 				damage *= 0.5;

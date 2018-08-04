@@ -266,11 +266,6 @@ public function startUrtaQuest():void {
 	player.gems = 183;
 	player.level = 26;
 	player.teaseLevel = 5;
-	player.strStat.core.value += (player.newGamePlusMod() * 30);
-	player.touStat.core.value += (player.newGamePlusMod() * 33);
-	player.speStat.core.value += (player.newGamePlusMod() * 36);
-	player.intStat.core.value += (player.newGamePlusMod() * 18);
-	player.libStat.core.value += (player.newGamePlusMod() * 27);
 
 	//PERKS
 	player.createPerk(PerkLib.Agility,0,0,0,0);
@@ -1599,11 +1594,11 @@ private function gnollAlphaBitchIntro():void {
 	outputText("\n\n<b>It's a fight!</b>");
     CoC.instance.player.clearStatuses(false);
     startCombat(new GnollSpearThrower());
-	monster.strStat.core.value += 20 + (4 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.touStat.core.value += 25 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.speStat.core.value += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.intStat.core.value += 10 + (2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-	monster.libStat.core.value += 5 + (1 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+	monster.strStat.core.value += 20;
+	monster.touStat.core.value += 25;
+	monster.speStat.core.value += 10;
+	monster.intStat.core.value += 10;
+	monster.libStat.core.value += 5;
 	monster.bonusHP = 750;
 	monster.level += 11;
 	monster.short = "alpha gnoll";

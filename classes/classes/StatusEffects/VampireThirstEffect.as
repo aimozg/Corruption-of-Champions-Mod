@@ -29,7 +29,7 @@ public class VampireThirstEffect extends StatusEffectClass {
         return value1*singleStackBoost;
     }
     public function get singleStackBoost():Number {
-        return 2 + game.player.newGamePlusMod();
+        return 2;
     }
 }
 }

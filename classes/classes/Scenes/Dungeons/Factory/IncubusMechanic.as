@@ -207,11 +207,11 @@ public class IncubusMechanic extends Monster {
 				this.gems += rand(30) + 60;
 				this.additionalXP += 250;
 				this.level += 24;
-				this.bonusHP += 600 + (60 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-				this.strStat.core.value += 50 + (10 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-				this.touStat.core.value += 50 + (10 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-				this.speStat.core.value += 35 + (7 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
-				this.intStat.core.value += 30 + (6 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+				this.bonusHP += 600;
+				this.strStat.core.value += 50;
+				this.touStat.core.value += 50;
+				this.speStat.core.value += 35;
+				this.intStat.core.value += 30;
 				this.weaponAttack += 10;
 				this.HP = maxHP();
 			}

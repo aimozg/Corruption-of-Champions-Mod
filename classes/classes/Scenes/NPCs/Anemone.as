@@ -11,7 +11,6 @@ import classes.internals.WeightedDrop;
 public class Anemone extends Monster
 	{
 		private static const STAT_DOWN_FLAT:int = 4;
-		private static const STAT_DOWN_MULT:int = 4;
 
 		private var venomMod:int = 1;
 		override public function eAttack():void
@@ -22,7 +21,7 @@ public class Anemone extends Monster
 
 		override public function eOneAttack():int
 		{
-			applyVenom(rand(STAT_DOWN_FLAT + STAT_DOWN_MULT*player.newGamePlusMod() + player.sens / 20) + 1);
+			applyVenom(rand(STAT_DOWN_FLAT + player.sens / 20) + 1);
 			return 1;
 		}
 

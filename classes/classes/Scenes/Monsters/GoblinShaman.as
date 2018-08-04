@@ -107,9 +107,7 @@ public class GoblinShaman extends Goblin
 		}
 		
 		private function spellMultiplier():Number {
-			var mult:Number = 1;
-			mult += player.newGamePlusMod() * 0.5;
-			return mult;
+			return 1;
 		}
 		
 		override protected function performCombatAction():void {

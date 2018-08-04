@@ -142,9 +142,7 @@ public class GoblinElder extends Goblin
 		}
 		
 		private function spellMultiplier():Number {
-			var mult:Number = 1;
-			mult += 0.5 * player.newGamePlusMod();
-			return mult;
+			return 1;
 		}
 		
 		override protected function performCombatAction():void {
