@@ -2906,7 +2906,7 @@ package classes
 		}
 
 		public override function maxKi(): Number {
-			var max: Number = super.maxKi()+50;
+			var max: Number = super.maxKi();
 			if (flags[kFLAGS.SOULFORCE_GAINED_FROM_CULTIVATING] > 0) {
 				max += flags[kFLAGS.SOULFORCE_GAINED_FROM_CULTIVATING];
 			}//+310

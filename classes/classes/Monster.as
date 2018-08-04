@@ -358,7 +358,7 @@ import flash.utils.getQualifiedClassName;
 		public override function maxFatigue():Number
 		{
 			//Base fatigue
-			var temp:Number = 100 + this.level * 5;
+			var temp:Number = super.maxFatigue() + this.level * 5;
 			//Apply perks
 			if (hasPerk(PerkLib.JobHunter)) temp += 50;
 			if (hasPerk(PerkLib.JobRanger)) temp += 5;
@@ -369,7 +369,7 @@ import flash.utils.getQualifiedClassName;
 		public override function maxKi():Number
 		{
 			//Base ki
-			var temp:Number = 50 + this.bonusKi;
+			var temp:Number = super.maxKi() + this.bonusKi;
 			if (hasPerk(PerkLib.EnemyTrueDemon)) temp = 0;
 			return temp;
 		}

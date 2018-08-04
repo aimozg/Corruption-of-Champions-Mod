@@ -141,7 +141,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			"lustMax": new BuffableStat({base:100}),
 			"hpMax": new BuffableStat(),
 			"staminaMax": new BuffableStat({base:100}),
-			"kiMax": new BuffableStat({base:0}),
+			"kiMax": new BuffableStat({base:50}),
 			"defense": new BuffableStat(),
 			
 			"spellPower":new BuffableStat({base:1.0,min:0.0})
