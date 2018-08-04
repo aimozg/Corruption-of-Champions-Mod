@@ -135,6 +135,15 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			"wis": new PrimaryStat(),
 			"lib": new PrimaryStat(),
 			
+			"sensMin": new BuffableStat({base:10}),
+			"sensMax": new BuffableStat(),
+			"lustMin": new BuffableStat(),
+			"lustMax": new BuffableStat({base:100}),
+			"hpMax": new BuffableStat(),
+			"staminaMax": new BuffableStat({base:100}),
+			"kiMax": new BuffableStat({base:0}),
+			"defense": new BuffableStat(),
+			
 			"spellPower":new BuffableStat({base:1.0,min:0.0})
 		});
 		public function get statStore():StatStore {
@@ -246,8 +255,16 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		public var additionalXP:Number = 0;
 		
 		// Other buffable stats
-		public var spellPowerStat:BuffableStat = _stats.findStat('spellPower') as BuffableStat;
+		public const spellPowerStat:BuffableStat = _stats.findStat('spellPower') as BuffableStat;
 		public function get spellPower():Number { return spellPowerStat.value }
+		public const sensMinStat:BuffableStat    = _stats.findStat('sensMin') as BuffableStat;
+		public const sensMaxStat:BuffableStat     = _stats.findStat('sensMax') as BuffableStat;
+		public const lustMinStat:BuffableStat    = _stats.findStat('lustMin') as BuffableStat;
+		public const lustMaxStat:BuffableStat    = _stats.findStat('lustMax') as BuffableStat;
+		public const hpMaxStat:BuffableStat      = _stats.findStat('hpMax') as BuffableStat;
+		public const staminaMaxStat:BuffableStat = _stats.findStat('staminaMax') as BuffableStat;
+		public const kiMaxStat:BuffableStat = _stats.findStat('kiMax') as BuffableStat;
+		public const defenseStat:BuffableStat    = _stats.findStat('defense') as BuffableStat;
 		
 		public function get hp100():Number { return 100*HP/maxHP(); }
 		public function get wrath100():Number { return 100*wrath/maxWrath(); }
@@ -256,14 +273,17 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		public function get lust100():Number { return 100*lust/maxLust(); }
 		
 		public function minLust():Number {
-			return 0;
+			return lustMinStat.value;
 		}
 		public function minSens():Number {
-			return 10;
+			return sensMinStat.value;
+		}
+		public function maxSens():Number {
+			return sensMaxStat.value;
 		}
 
 		protected function maxHP_base():Number {
-			var max:Number = 0;
+			var max:Number = hpMaxStat.value;
 			max += int(tou * 2 + 50);
 			var under100: int = Math.floor(Math.min(tou, 100) / 20);
 			var over100: int = Math.floor(Math.max(tou - 100, 0) / 50);
@@ -283,7 +303,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			return max;
 		}
 		protected function maxLust_base():Number {
-			var max:Number = 100;
+			var max:Number = lustMaxStat.value;
 			if (hasPerk(PerkLib.ElementalBondUrges)) {
 				for each (var status:StatusEffectType in CampMakeWinions.summon_statuses){
 					if(hasStatusEffect(status)){
@@ -312,13 +332,13 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			return Math.min(24499,max);
 		}
 		public function maxFatigue():Number {
-			return 100;
+			return staminaMaxStat.value;
 		}
 		public function maxWrath():Number {
 			return 250;
 		}
 		public function maxKi():Number {
-			return 0;
+			return kiMaxStat.value;
 		}
 		public function maxMana():Number {
 			return 100;
@@ -345,7 +365,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 				inte:intMax,
 				wis:wisMax,
 				lib:libMax,
-				sens:100,
+				sens:maxSens(),
 				cor:100
 			};
 		}
@@ -357,7 +377,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 				inte:intMin,
 				wis:wisMin,
 				lib:libMin,
-				sens:10,
+				sens:minSens(),
 				cor:0
 			};
 		}
@@ -367,7 +387,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		public function updateStats():void {
 			Begin("Creature","updateStats");
 			var racialScores:* = this.racialScores();
-			var racials:* = racialBonuses();
+			var racials:* = Race.AllBonusesFor(this,racialScores);
 			
 			Begin("Creature","updateStats.perks");
 			//Alter max speed if you have oversized parts. (Realistic mode)
@@ -407,12 +427,19 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			
 			Begin("Creature","updateStats.racial");
 			statStore.replaceBuffObject({
-				'strMult': racials[Race.BonusName_str] / 100,
-				'touMult': racials[Race.BonusName_tou] / 100,
-				'speMult': racials[Race.BonusName_spe] / 100,
-				'intMult': racials[Race.BonusName_int] / 100,
-				'wisMult': racials[Race.BonusName_wis] / 100,
-				'libMult': racials[Race.BonusName_lib] / 100
+				'str.mult': racials[Race.BonusName_str] / 100,
+				'tou.mult': racials[Race.BonusName_tou] / 100,
+				'spe.mult': racials[Race.BonusName_spe] / 100,
+				'int.mult': racials[Race.BonusName_int] / 100,
+				'wis.mult': racials[Race.BonusName_wis] / 100,
+				'lib.mult': racials[Race.BonusName_lib] / 100,
+				'sensMin': racials[Race.BonusName_minsen],
+				'sensMax': racials[Race.BonusName_maxsen],
+				'lustMax': racials[Race.BonusName_maxlust],
+				'hpMax': racials[Race.BonusName_maxhp],
+				'staminaMax': racials[Race.BonusName_maxfatigue],
+				'kiMax': racials[Race.BonusName_maxki],
+				'defense': racials[Race.BonusName_defense]
 			}, BuffTags.RACE, {save: false, text: 'Racial'});
 			if (isNaga()) {
 				statStore.replaceBuffObject({

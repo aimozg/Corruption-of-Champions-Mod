@@ -153,8 +153,8 @@ package classes
 		}
 		override public function get armorDef():Number {
 			Begin("Player","armorDef");
-			var racialBonus:int = this.racialBonuses()[Race.BonusName_defense];
 			var armorDef:Number = armor.defense;
+			armorDef += defenseStat.value;
 			armorDef += upperGarment.defense;
 			armorDef += lowerGarment.defense;
 			//Blacksmith history!
@@ -181,7 +181,6 @@ package classes
 			//'Thick' dermis descriptor adds 1!
 			if (skinAdj == "smooth") armorDef += 1;
 			//Racial score bonuses
-			armorDef += racialBonus;
 			//Bonus defense
 			if (arms.type == Arms.YETI) armorDef += 1;
 			if (arms.type == Arms.SPIDER || arms.type == Arms.MANTIS || arms.type == Arms.BEE || arms.type == Arms.SALAMANDER) armorDef += 2;
@@ -2051,19 +2050,15 @@ package classes
 
 		public override function getAllMinStats():Object {
 			Begin("Player","getAllMinStats");
-			var minSen:int = 10;
+			var minSen:int = sensMinStat.value;
 			var minCor:int = 0;
-			var racialScores:* = this.racialScores();
-			var racial:* = this.racialBonuses();
 			if (this.hasPerk(PerkLib.GargoylePure)) {
-				minSen = 5;
+				minSen -= 5;
 			}
 			if (this.hasPerk(PerkLib.GargoyleCorrupted)) {
 				minSen += 15;
 			}
 
-			//Minimum Sensitivity
-			minSen += racial[Race.BonusName_minsen];
 			End("Player","getAllMinStats");
 			return {
 				str:strStat.min,
@@ -2162,8 +2157,7 @@ package classes
 			
 			Begin("Player","getAllMaxStats.racial");
 			//Alter max stats depending on race (+15 za pkt)
-			var racials:* = racialBonuses();
-			maxSen += racials[Race.BonusName_maxsen];
+			maxSen += maxSens();
 			if (internalChimeraScore() >= 1) {
 				maxSen += 5 * internalChimeraScore();
 			}
@@ -2739,21 +2733,6 @@ package classes
 			}
 		}
 		
-		protected override function maxHP_base():Number {
-			Begin("Player","maxHP_base");
-			var max:Number = super.maxHP_base();
-			max += racialBonuses()[Race.BonusName_maxhp];
-			End("Player","maxHP_base");
-			return max;
-		}
-		protected override function maxLust_base():Number {
-			Begin("Player","maxLust_base");
-			var max:Number = super.maxLust_base();
-			max += racialBonuses()[Race.BonusName_maxlust];
-			End("Player","maxLust_base");
-			return max;
-		}
-		
 		override public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number,dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {
 			//Easy mode cuts lust gains!
 			if (flags[kFLAGS.EASY_MODE_ENABLE_FLAG] == 1 && dlust > 0 && scale) dlust /= 2;
@@ -2831,8 +2810,7 @@ package classes
 
 		public override function maxFatigue():Number
 		{
-			var max:Number = 150;
-			max += racialBonuses()[Race.BonusName_maxfatigue];
+			var max:Number = super.maxFatigue()+50;
 			if (hasPerk(PerkLib.JobHunter)) max += 50;
 			if (hasPerk(PerkLib.JobRanger)) max += 5;
 			if (hasPerk(PerkLib.PrestigeJobArcaneArcher)) max += 600;
@@ -2928,8 +2906,7 @@ package classes
 		}
 
 		public override function maxKi(): Number {
-			var max: Number = 50;
-			max += racialBonuses()[Race.BonusName_maxki];
+			var max: Number = super.maxKi()+50;
 			if (flags[kFLAGS.SOULFORCE_GAINED_FROM_CULTIVATING] > 0) {
 				max += flags[kFLAGS.SOULFORCE_GAINED_FROM_CULTIVATING];
 			}//+310

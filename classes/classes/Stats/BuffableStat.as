@@ -54,7 +54,7 @@ public class BuffableStat implements IStat, Jsonable {
 	 *     max: default +Infinity;
 	 * }
 	 */
-	public function BuffableStat(options:*) {
+	public function BuffableStat(options:*=null) {
 		options    = Utils.extend({
 			aggregate: AGGREGATE_SUM,
 			base     : 0.0,
