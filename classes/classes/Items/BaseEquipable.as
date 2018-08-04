@@ -79,7 +79,7 @@ package classes.Items {
 					host.removePerk(perk.ptype);
 				}
 			}
-			host.removeStatEffects(tagForBuffs);
+			host.removeBuffs(tagForBuffs);
 			return this;
 		}
 
@@ -112,7 +112,7 @@ package classes.Items {
 		}
 
 		protected function applyBuffs(host:Creature):void {
-			host.statStore.applyBuffObject( _buffs, tagForBuffs, {save: false, text: name}, this);
+			host.statStore.addBuffObject( _buffs, tagForBuffs, {save: false, text: name}, this);
 		}
 
 		public function saveLoaded(host:Creature):void {

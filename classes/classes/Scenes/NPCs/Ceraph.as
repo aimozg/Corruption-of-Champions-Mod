@@ -135,8 +135,10 @@ public class Ceraph extends Monster
 				//(+10 str/toughness, 1 level, and 10 xp reward.)
 				XP += 20;
 				level += 2;
-				strStat.bonus.addOrIncreaseBuff('Mini-cum',15);
-				touStat.bonus.addOrIncreaseBuff('Mini-cum',15);
+				statStore.addBuffObject({
+					'str':+15,
+					'tou':+15
+				},'Mini-cum');
 				HP += 100;
 				lust = (maxLust() * 0.33);
 				player.dynStats("lus", 30);

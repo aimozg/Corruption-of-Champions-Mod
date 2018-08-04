@@ -152,6 +152,7 @@ package classes
 			return "gear";
 		}
 		override public function get armorDef():Number {
+			Begin("Player","armorDef");
 			var racialBonus:int = this.racialBonuses()[Race.BonusName_defense];
 			var newGamePlusMod:int = this.newGamePlusMod()+1;
 			var armorDef:Number = armor.defense;
@@ -243,6 +244,7 @@ package classes
 				armorDef += 1;
 			}
 			armorDef = Math.round(armorDef);
+			End("Player","armorDef");
 			return armorDef;
 		}
 		public function get armorBaseDef():Number {
@@ -2054,6 +2056,7 @@ package classes
 		}
 
 		public override function getAllMinStats():Object {
+			Begin("Player","getAllMinStats");
 			var minSen:int = 10;
 			var minCor:int = 0;
 			var racialScores:* = this.racialScores();
@@ -2067,7 +2070,7 @@ package classes
 
 			//Minimum Sensitivity
 			minSen += racial[Race.BonusName_minsen];
-
+			End("Player","getAllMinStats");
 			return {
 				str:strStat.min,
 				tou:touStat.min,
@@ -2743,13 +2746,17 @@ package classes
 		}
 		
 		protected override function maxHP_base():Number {
+			Begin("Player","maxHP_base");
 			var max:Number = super.maxHP_base();
 			max += racialBonuses()[Race.BonusName_maxhp]*(1 + flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			End("Player","maxHP_base");
 			return max;
 		}
 		protected override function maxLust_base():Number {
+			Begin("Player","maxLust_base");
 			var max:Number = super.maxLust_base();
 			max += racialBonuses()[Race.BonusName_maxlust]*(1 + flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			End("Player","maxLust_base");
 			return max;
 		}
 		

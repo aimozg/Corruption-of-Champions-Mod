@@ -13,8 +13,8 @@ public class AnemoneVenomDebuff extends CombatBuff {
 		buffHost('spe',-amt);
 		//Str bottommed out, convert to lust
 		//Spe bottommed out, convert to lust
-		if (host.str <= host.strStat.min) lustdmg += amt;
-		if (host.spe <= host.speStat.min) lustdmg += amt;
+		if (host.str <= host.strMin) lustdmg += amt;
+		if (host.spe <= host.speMin) lustdmg += amt;
 		host.takeLustDamage(lustdmg, true);
 	}
 }

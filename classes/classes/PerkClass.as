@@ -80,13 +80,13 @@ public class PerkClass
 		public function removedFromHostList(fireEvent:Boolean):void {
 			if (fireEvent) {
 				onRemove();
-				_host.removeStatEffects(ptype.tagForBuffs);
+				_host.removeBuffs(ptype.tagForBuffs);
 			}
 			_host = null;
 		}
 		public function addedToHostList(host:Creature,fireEvent:Boolean):void {
 			_host = host;
-			host.statStore.applyBuffObject(
+			host.statStore.addBuffObject(
 					ptype.buffs,
 					ptype.tagForBuffs,
 					{save:false,text:ptype.name},

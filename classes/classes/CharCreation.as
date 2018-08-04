@@ -23,7 +23,8 @@
 	import classes.Scenes.NPCs.JojoScene;
 	import classes.Scenes.NPCs.XXCNPC;
 	import classes.Scenes.SceneLib;
-	import classes.lists.BreastCup;
+import classes.Stats.PrimaryStat;
+import classes.lists.BreastCup;
 	import classes.lists.Gender;
 
 	import coc.view.ButtonDataList;
@@ -153,12 +154,9 @@
             }
 
 			model.player = player;
-			player.strStat.reset(15);
-			player.touStat.reset(15);
-			player.speStat.reset(15);
-			player.intStat.reset(15);
-			player.wisStat.reset(15);
-			player.libStat.reset(15);
+			for each (var ps:PrimaryStat in player.primaryStats()) {
+				ps.reset(15);
+			}
 			player.sens = 15;
 			player.cor = 15;
 			player.ki = 50;

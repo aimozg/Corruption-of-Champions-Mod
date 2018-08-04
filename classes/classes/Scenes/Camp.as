@@ -2321,9 +2321,7 @@ public function sleepRecovery(display:Boolean = false):void {
 	HPChange(timeQ * hpRecovery * multiplier, display);
 	//fatigue
 	fatigue(-(timeQ * fatRecovery * multiplier));
-	for each(var istat:IStat in player.allStatsAndSubstats()) {
-		var stat:BuffableStat = istat as BuffableStat;
-		if (!stat) continue;
+	player.statStore.forEachStat(function(stat:BuffableStat):void{
 		var drain:Number = stat.valueOfBuff(BuffTags.DRAIN);
 		if (drain < 0) {
 			// Recover 10% of stat drained, at least 1
@@ -2334,7 +2332,7 @@ public function sleepRecovery(display:Boolean = false):void {
 				stat.removeBuff(BuffTags.DRAIN)
 			}
 		}
-	}
+	},BuffableStat);
 }
 
 //Bad End if your balls are too big. Only happens in Realistic Mode.
@@ -2970,12 +2968,9 @@ public function setLevelButton(allowAutoLevelTransition:Boolean):Boolean {
 		}
 		mainView.showMenuButton( MainView.MENU_LEVEL );
 		mainView.statsView.showLevelUp();
-		if (player.strStat.core.value >= player.strStat.core.max &&
-			player.touStat.core.value >= player.touStat.core.max &&
-			player.intStat.core.value >= player.intStat.core.max &&
-			player.speStat.core.value >= player.speStat.core.max &&
-			player.wisStat.core.value >= player.wisStat.core.max &&
-			player.libStat.core.value >= player.libStat.core.max &&
+		if (player.primaryStats().every(function(e:PrimaryStat,...args):Boolean{
+				return e.core.value >= e.core.max;
+			}) &&
 			(player.perkPoints <= 0 || PerkTree.availablePerks(CoC.instance.player).length <= 0) && (player.XP < player.requiredXP() || player.level >= CoC.instance.levelCap)) {
 			mainView.statsView.hideLevelUp();
 		}

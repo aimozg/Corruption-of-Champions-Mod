@@ -110,7 +110,7 @@ public class StatusEffectClass extends Utils
 	public function removedFromHostList(fireEvent:Boolean):void {
 		if (fireEvent) {
 			onRemove();
-			_host.removeStatEffects(stype.tagForBuffs);
+			_host.removeBuffs(stype.tagForBuffs);
 		}
 		_host = null;
 	}

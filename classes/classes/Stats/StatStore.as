@@ -39,30 +39,52 @@ public class StatStore implements IStatHolder {
 		}
 	}
 	
-	public function allStatsAndSubstats():/*IStat*/Array {
-		var result:/*IStat*/Array = [];
+	/**
+	 * @param iter (IStat)=>any
+	 */
+	public function forEachStat(iter:Function,filter:Class=null):void {
 		var queue:/*Object*/Array = [this];
 		while (queue.length > 0) {
 			var e:IStatHolder = queue.pop() as IStatHolder;
 			if (e == null) continue;
 			var stats:/*IStat*/Array = e.allStats();
-			result = result.concat(stats);
+			for each (var stat:IStat in stats) {
+				if (!filter || stat is filter) {
+					iter(stat);
+				}
+			}
 			queue = queue.concat(stats);
 		}
+	}
+	public function allStatsAndSubstats():/*IStat*/Array {
+		var result:/*IStat*/Array = [];
+		forEachStat(function(stat:IStat):void{
+			result.push(stat);
+		});
 		return result;
 	}
 	
 	public function addBuff(stat:String, amount:Number, tag:String, options:*):void {
 		var s:BuffableStat = findBuffableStat(stat);
 		if (!s) {
-			trace("/!\\ buffByName(" + stat + ", " + amount + ") in " + tag);
+			trace("/!\\ addBuff(" + stat + ", " + amount + ") in " + tag);
 		} else {
 			s.addOrIncreaseBuff(tag, amount, options);
 		}
 	}
+	public function removeBuffs(tag:String):void {
+		forEachStat(function(stat:BuffableStat):void{
+			stat.removeBuff(tag);
+		},BuffableStat);
+	}
 	
-	public function applyBuffObject(buffs:Object, tag:String, options:*, evalContext:*):void {
-		
+	public function replaceBuffObject(buffs:Object, tag:String, options:*=null, evalContext:*=null):void {
+		applyBuffObject(buffs, tag, options, evalContext, true);
+	}
+	public function addBuffObject(buffs:Object, tag:String, options:*=null, evalContext:*=null):void {
+		applyBuffObject(buffs, tag, options, evalContext, false);
+	}
+	private function applyBuffObject(buffs:Object, tag:String, options:*, evalContext:*, replaceMode:Boolean=false):void {
 		for (var statname:String in buffs) {
 			var buff:* = buffs[statname];
 			var value:Number;
@@ -75,6 +97,14 @@ public class StatStore implements IStatHolder {
 				value = +buff;
 			}
 			addBuff(statname, value, tag, options);
+			var s:BuffableStat = findBuffableStat(statname);
+			if (!s) {
+				trace("/!\\ addBuff(" + statname + ", " + value + ") in " + tag);
+			} else if (replaceMode){
+				s.addOrReplaceBuff(tag, value, options);
+			} else {
+				s.addOrIncreaseBuff(tag, value, options);
+			}
 		}
 	}
 }

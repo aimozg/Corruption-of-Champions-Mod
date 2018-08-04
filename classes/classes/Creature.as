@@ -165,29 +165,68 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		}
 
 		//Primary stats
-		public var strStat:PrimaryStat = _stats.findStat('str') as PrimaryStat;
-		public var touStat:PrimaryStat = _stats.findStat('tou') as PrimaryStat;
-		public var speStat:PrimaryStat = _stats.findStat('spe') as PrimaryStat;
-		public var intStat:PrimaryStat = _stats.findStat('int') as PrimaryStat;
-		public var wisStat:PrimaryStat = _stats.findStat('wis') as PrimaryStat;
-		public var libStat:PrimaryStat = _stats.findStat('lib') as PrimaryStat;
+		public const strStat:PrimaryStat = _stats.findStat('str') as PrimaryStat;
+		public const touStat:PrimaryStat = _stats.findStat('tou') as PrimaryStat;
+		public const speStat:PrimaryStat = _stats.findStat('spe') as PrimaryStat;
+		public const intStat:PrimaryStat = _stats.findStat('int') as PrimaryStat;
+		public const wisStat:PrimaryStat = _stats.findStat('wis') as PrimaryStat;
+		public const libStat:PrimaryStat = _stats.findStat('lib') as PrimaryStat;
+		public function primaryStats():/*PrimaryStat*/Array {
+			return _stats.allStats().filter(function(e:IStat,...args):Boolean{return e is PrimaryStat});
+		}
 		public function get str():Number {
 			return strStat.value;
+		}
+		public function get strMin():Number {
+			return strStat.min;
+		}
+		public function get strMax():Number {
+			return strStat.max;
 		}
 		public function get tou():Number {
 			return touStat.value;
 		}
+		public function get touMin():Number {
+			return touStat.min;
+		}
+		public function get touMax():Number {
+			return touStat.max;
+		}
 		public function get spe():Number {
 			return speStat.value;
+		}
+		public function get speMin():Number {
+			return speStat.min;
+		}
+		public function get speMax():Number {
+			return speStat.max;
 		}
 		public function get inte():Number {
 			return intStat.value;
 		}
+		public function get intMin():Number {
+			return intStat.min;
+		}
+		public function get intMax():Number {
+			return intStat.max;
+		}
 		public function get wis():Number {
 			return wisStat.value;
 		}
+		public function get wisMin():Number {
+			return wisStat.min;
+		}
+		public function get wisMax():Number {
+			return wisStat.max;
+		}
 		public function get lib():Number {
 			return libStat.value;
+		}
+		public function get libMin():Number {
+			return libStat.min;
+		}
+		public function get libMax():Number {
+			return libStat.max;
 		}
 		public var sens:Number = 0;
 		public var cor:Number = 0;
@@ -300,24 +339,24 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		 */
 		public function getAllMaxStats():Object {
 			return {
-				str:strStat.max,
-				tou:touStat.max,
-				spe:speStat.max,
-				inte:intStat.max,
-				wis:wisStat.max,
-				lib:libStat.max,
+				str:strMax,
+				tou:touMax,
+				spe:speMax,
+				inte:intMax,
+				wis:wisMax,
+				lib:libMax,
 				sens:100,
 				cor:100
 			};
 		}
 		public function getAllMinStats():Object {
 			return {
-				str:strStat.min,
-				tou:touStat.min,
-				spe:speStat.min,
-				inte:intStat.min,
-				wis:wisStat.min,
-				lib:libStat.min,
+				str:strMin,
+				tou:touMin,
+				spe:speMin,
+				inte:intMin,
+				wis:wisMin,
+				lib:libMin,
 				sens:10,
 				cor:0
 			};
@@ -367,61 +406,73 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			End("Creature","updateStats.perks");
 			
 			Begin("Creature","updateStats.racial");
-			strStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_str] / 100, {save:false,text:'Racial'});
-			touStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_tou] / 100, {save:false,text:'Racial'});
-			speStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_spe] / 100, {save:false,text:'Racial'});
-			intStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_int] / 100, {save:false,text:'Racial'});
-			wisStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_wis] / 100, {save:false,text:'Racial'});
-			libStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_lib] / 100, {save:false,text:'Racial'});
+			statStore.replaceBuffObject({
+				'strMult': racials[Race.BonusName_str] / 100,
+				'touMult': racials[Race.BonusName_tou] / 100,
+				'speMult': racials[Race.BonusName_spe] / 100,
+				'intMult': racials[Race.BonusName_int] / 100,
+				'wisMult': racials[Race.BonusName_wis] / 100,
+				'libMult': racials[Race.BonusName_lib] / 100
+			}, BuffTags.RACE, {save: false, text: 'Racial'});
 			if (isNaga()) {
-				strStat.mult.addOrReplaceBuff(BuffTags.NAGA,0.15,{save:false, text:'Naga'});
-				speStat.mult.addOrReplaceBuff(BuffTags.NAGA,0.15,{save:false, text:'Naga'});
+				statStore.replaceBuffObject({
+					'strMult': +0.15,
+					'speMult': +0.15
+				}, BuffTags.NAGA, {save: false, text: 'Naga'});
 			} else {
-				strStat.mult.removeBuff(BuffTags.NAGA);
-				speStat.mult.removeBuff(BuffTags.NAGA);
+				removeBuffs(BuffTags.NAGA);
 			}
 			if (isTaur()) {
-				speStat.mult.addOrReplaceBuff(BuffTags.TAUR,0.20,{save:false, text:'Taur'});
+				statStore.replaceBuffObject({
+					'speMult': +0.20
+				}, BuffTags.TAUR, {save:false, text:'Taur'});
 			} else {
-				speStat.mult.removeBuff(BuffTags.TAUR);
+				removeBuffs(BuffTags.TAUR);
 			}
 			if (isDrider()) {
-				touStat.mult.addOrReplaceBuff(BuffTags.DRIDER,0.15,{save:false, text:'Drider'});
-				speStat.mult.addOrReplaceBuff(BuffTags.DRIDER,0.15,{save:false, text:'Drider'});
+				statStore.replaceBuffObject({
+					'touMult': +0.15,
+					'speMult': +0.15
+				}, BuffTags.DRIDER, {save:false, text:'Drider'});
 			} else {
-				touStat.mult.removeBuff(BuffTags.DRIDER);
-				speStat.mult.removeBuff(BuffTags.DRIDER);
+				removeBuffs(BuffTags.DRIDER);
 			}
 			if (isScylla()) {
-				strStat.mult.addOrReplaceBuff(BuffTags.SCYLLA,0.30,{save:false, text:'Scylla'});
+				statStore.replaceBuffObject({
+					'strMult': +0.30
+				}, BuffTags.SCYLLA, {save:false, text:'Scylla'});
 			} else {
-				strStat.mult.removeBuff(BuffTags.SCYLLA);
+				removeBuffs(BuffTags.SCYLLA);
 			}
 			if (racialScores[Race.GARGOYLE.name] >= 21) {
 				if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 1) {
-					strStat.mult.addOrReplaceBuff(BuffTags.GARGOYLE,0.20,{save:false, text:'Gargoyle'});
-					intStat.mult.removeBuff(BuffTags.GARGOYLE);
+					statStore.replaceBuffObject({
+						'strMult': +0.20,
+						'intMult': +0.00
+					}, BuffTags.GARGOYLE, {save:false, text:'Gargoyle'});
 				} else if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 2) {
-					strStat.mult.removeBuff(BuffTags.GARGOYLE);
-					intStat.mult.addOrReplaceBuff(BuffTags.GARGOYLE,0.20,{save:false, text:'Gargoyle'});
+					statStore.replaceBuffObject({
+						'strMult': +0.00,
+						'intMult': +0.20
+					}, BuffTags.GARGOYLE, {save:false, text:'Gargoyle'});
 				} else {
-					strStat.mult.removeBuff(BuffTags.GARGOYLE);
-					intStat.mult.removeBuff(BuffTags.GARGOYLE);
+					removeBuffs(BuffTags.GARGOYLE);
 				}
 			} else {
-				strStat.mult.removeBuff(BuffTags.GARGOYLE);
-				intStat.mult.removeBuff(BuffTags.GARGOYLE);
+				removeBuffs(BuffTags.GARGOYLE);
 			}
 			var ics:Number = internalChimeraScore();
 			if (ics >= 1) {
-				strStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
-				touStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
-				speStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
-				intStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
-				wisStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
-				libStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
+				statStore.replaceBuffObject({
+					'strMult':+0.05 * ics,
+					'touMult':+0.05 * ics,
+					'speMult':+0.05 * ics,
+					'intMult':+0.05 * ics,
+					'wisMult':+0.05 * ics,
+					'libMult':+0.05 * ics
+				}, BuffTags.CHIMERA, {save:false, text:'Chimera'});
 			} else {
-				removeStatEffects(BuffTags.CHIMERA);
+				removeBuffs(BuffTags.CHIMERA);
 			}
 			End("Creature","updateStats.racial");
 			
@@ -433,17 +484,17 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 				if (perk2) {
 					mult = 2.0;
 					perk = perk2;
-					speStat.mult.removeBuff(PerkLib.MantislikeAgility.tagForBuffs);
+					removeBuffs(PerkLib.MantislikeAgility.tagForBuffs);
 				} else {
-					speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.tagForBuffs);
+					removeBuffs(PerkLib.MantislikeAgilityEvolved.tagForBuffs);
 				}
 				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) perk.buffHost('spe.mult', +0.20*mult);
 				else if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) perk.buffHost('spe.mult', +0.15*mult);
 				else if (skinType == Skin.SCALES) perk.buffHost('spe.mult', +0.10*mult);
 				else if (hasPerk(PerkLib.ThickSkin)) perk.buffHost('spe.mult', +0.05*mult);
 			} else {
-				speStat.mult.removeBuff(PerkLib.MantislikeAgility.tagForBuffs);
-				speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.tagForBuffs);
+				removeBuffs(PerkLib.MantislikeAgility.tagForBuffs);
+				removeBuffs(PerkLib.MantislikeAgilityEvolved.tagForBuffs);
 			}
 			End("Creature","updateStats.perks2");
 			
@@ -507,12 +558,8 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			}
 			return damage;
 		}
-		public function removeStatEffects(tag:String):void {
-			for each (var istat:IStat in allStatsAndSubstats()) {
-				if (istat is BuffableStat) {
-					(istat as BuffableStat).removeBuff(tag);
-				}
-			}
+		public function removeBuffs(tag:String):void {
+			statStore.removeBuffs(tag);
 		}
 		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {
 			var maxes:Object;
