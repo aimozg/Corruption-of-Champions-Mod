@@ -1,4 +1,5 @@
 package classes.Scenes.Combat {
+
 import classes.BaseContent;
 import classes.BodyParts.Ears;
 import classes.BodyParts.Face;
@@ -179,71 +180,71 @@ public class Combat extends BaseContent {
 			player.setPerkValue(PerkLib.SpellcastingAffinity,1,50);
 		}
 	}
+
 //combat is over. Clear shit out and go to main
-public function cleanupAfterCombatImpl(nextFunc:Function = null):void {
-	if (nextFunc == null) nextFunc = camp.returnToCampUseOneHour;
-	if (inCombat) {
+	public function cleanupAfterCombatImpl(nextFunc: Function = null): void {
+		if (nextFunc == null) nextFunc = camp.returnToCampUseOneHour;
+		if (!inCombat) {
+			doNext(nextFunc);
+			return;
+		}
 		clearStatuses(false);
 
 		//reset the stored image for next monster
 		imageText = "";
 
 		//Player won
-		if(monster.HP < 1 || monster.lust > monster.maxLust()) {
+		if (monster.HP < 1 || monster.lust >= monster.maxLust()) {
 			awardPlayer(nextFunc);
+			return;
 		}
-		//Player lost
-		else {
-			if(monster.statusEffectv1(StatusEffects.Sparring) == 2) {
-				clearOutput();
-				outputText("The cow-girl has defeated you in a practice fight!");
-				outputText("\n\nYou have to lean on Isabella's shoulder while the two of your hike back to camp.  She clearly won.");
-				inCombat = false;
-				player.HP = 1;
-				statScreenRefresh();
-				doNext(nextFunc);
-				return;
-			}
-			//Next button is handled within the minerva loss function
-			if(monster.hasStatusEffect(StatusEffects.PeachLootLoss)) {
-				inCombat = false;
-				player.HP = 1;
-				statScreenRefresh();
-				return;
-			}
-			if(monster.short == "Ember") {
-				inCombat = false;
-				player.HP = 1;
-				statScreenRefresh();
-				doNext(nextFunc);
-				return;
-			}
-			var gemsLost:int = rand(10) + 1 + Math.round(monster.level / 2);
-			if (inDungeon) gemsLost += 20 + monster.level * 2;
-			//Round gems.
-			gemsLost = Math.round(gemsLost);
-			//Keep gems from going below zero.
-			if (gemsLost > player.gems) gemsLost = player.gems;
-			var timePasses:int = monster.handleCombatLossText(inDungeon, gemsLost); //Allows monsters to customize the loss text and the amount of time lost
-			player.gems -= gemsLost;
-			inCombat = false;
-			//BUNUS XPZ
-			if(flags[kFLAGS.COMBAT_BONUS_XP_VALUE] > 0) {
-				player.XP += flags[kFLAGS.COMBAT_BONUS_XP_VALUE];
-				outputText("  Somehow you managed to gain " + flags[kFLAGS.COMBAT_BONUS_XP_VALUE] + " XP from the situation.");
-				flags[kFLAGS.COMBAT_BONUS_XP_VALUE] = 0;
-			}
-			//Bonus lewts
-			if (flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] != "") {
-				outputText("  Somehow you came away from the encounter with " + ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]).longName + ".\n\n");
-				inventory.takeItem(ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]), createCallBackFunction(camp.returnToCamp, timePasses));
-			}
-			else doNext(createCallBackFunction(camp.returnToCamp, timePasses));
+		if (monster.statusEffectv1(StatusEffects.Sparring) == 2) {
+			clearOutput();
+			outputText("The cow-girl has defeated you in a practice fight!");
+			outputText("\n\nYou have to lean on Isabella's shoulder while the two of your hike back to camp.  She clearly won.");
+			inCombat  = false;
+			player.HP = 1;
+			statScreenRefresh();
+			doNext(nextFunc);
+			return;
+		}
+		//Next button is handled within the minerva loss function
+		if (monster.hasStatusEffect(StatusEffects.PeachLootLoss)) {
+			inCombat  = false;
+			player.HP = 1;
+			statScreenRefresh();
+			return;
+		}
+		if (monster.short == "Ember") {
+			inCombat  = false;
+			player.HP = 1;
+			statScreenRefresh();
+			doNext(nextFunc);
+			return;
+		}
+		var gemsLost: int = rand(10) + 1 + Math.round(monster.level / 2);
+		if (inDungeon) gemsLost += 20 + monster.level * 2;
+		//Round gems.
+		gemsLost = Math.round(gemsLost);
+		//Keep gems from going below zero.
+		if (gemsLost > player.gems) gemsLost = player.gems;
+		var timePasses: int = monster.handleCombatLossText(inDungeon, gemsLost); //Allows monsters to customize the loss text and the amount of time lost
+		player.gems -= gemsLost;
+		inCombat = false;
+		//BUNUS XPZ
+		if (flags[kFLAGS.COMBAT_BONUS_XP_VALUE] > 0) {
+			player.XP += flags[kFLAGS.COMBAT_BONUS_XP_VALUE];
+			outputText("  Somehow you managed to gain " + flags[kFLAGS.COMBAT_BONUS_XP_VALUE] + " XP from the situation.");
+			flags[kFLAGS.COMBAT_BONUS_XP_VALUE] = 0;
+		}
+		//Bonus lewts
+		if (flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] == "") {
+			doNext(createCallBackFunction(camp.returnToCamp, timePasses));
+		} else {
+			outputText("  Somehow you came away from the encounter with " + ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]).longName + ".\n\n");
+			inventory.takeItem(ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]), createCallBackFunction(camp.returnToCamp, timePasses));
 		}
 	}
-	//Not actually in combat
-	else doNext(nextFunc);
-}
 
 public function checkAchievementDamage(damage:Number):void
 {
