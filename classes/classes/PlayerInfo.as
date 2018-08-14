@@ -737,10 +737,9 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
             player.XP -= player.requiredXP();
 			player.level++;
 	        outputText("<b>You are now level " + num2Text(player.level) + "!</b>");
-	        if(player.level % 2 == 0){
-		        outputText("\n\nYou have gained five attribute points!");
-		        player.statPoints += 5;
-	        } else {
+	        outputText("\n\nYou have gained five attribute points!");
+			player.statPoints += 5;
+			if(player.level % 2 == 0){
 		        outputText("\n\nYou have gained one perk point!");
 		        player.perkPoints++;
 	        }

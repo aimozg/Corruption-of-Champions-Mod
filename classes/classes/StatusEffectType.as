@@ -3,6 +3,8 @@
  */
 package classes
 {
+import classes.Scenes.Combat.CombatAction.ActionRoll;
+
 import flash.utils.Dictionary;
 
 public class StatusEffectType
@@ -33,6 +35,44 @@ public class StatusEffectType
 	
 	public function get tagForBuffs():String {
 		return 'status/'+id;
+	}
+	private var _rollReactions:/*Array*/Array = []; // [phase, type, function(roll, actor, target, effect):void][]
+	private var _rollAlterations:/*Array*/Array = []; // [phase, type, function(roll, actor, target, effect):void][]
+	
+	public function processRoll(effect:StatusEffectClass,roll:ActionRoll):void {
+		if (effect.host == roll.target && _rollReactions.length > 0) {
+			for each (var a:Array in _rollReactions) {
+				if (a[0] != null && roll.phase != a[0]) continue;
+				if (a[1] != null && roll.type != a[1]) continue;
+				a[2](roll, roll.actor, roll.target, effect);
+			}
+		}
+		if (effect.host == roll.actor && _rollAlterations.length > 0) {
+			for each (a in _rollAlterations) {
+				if (a[0] != null && roll.phase != a[0]) continue;
+				if (a[1] != null && roll.type != a[1]) continue;
+				a[2](roll, roll.actor, roll.target, effect);
+			}
+		}
+	}
+	public function get isRollProcessor():Boolean {
+		return _rollReactions.length > 0 || _rollAlterations.length > 0;
+	}
+	
+	private function withRollProcess(target:Array,phase:String,type:String,callback:Function):void {
+		if (phase == "*") phase = null;
+		if (phase != null && !ActionRoll.isValidPhase(phase)) throw "Invalid ActionRoll phase '"+phase+"' in StatusEffect '"+_id+"'";
+		if (type == "*") type = null;
+		if (type != null && !ActionRoll.isValidType(type)) throw "Invalid ActionRoll type '"+type+"' in StatusEffect '"+_id+"'";
+		target.push([phase,type,callback]);
+	}
+	public function withRollReaction(phase:String,type:String,callback:Function):StatusEffectType {
+		withRollProcess(_rollReactions,phase,type,callback);
+		return this;
+	}
+	public function withRollAlteration(phase:String,type:String,callback:Function):StatusEffectType {
+		withRollProcess(_rollAlterations,phase,type,callback);
+		return this;
 	}
 	
 	/**

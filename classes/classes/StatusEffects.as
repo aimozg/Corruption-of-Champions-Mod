@@ -2,7 +2,8 @@ package classes
 {
 
 	import classes.Scenes.Combat.Combat;
-	import classes.Scenes.Combat.CombatAction.CombatAction;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
+import classes.Scenes.Combat.CombatAction.CombatAction;
 	import classes.Scenes.Combat.CombatAction.CombatActionBuilder;
 	import classes.Scenes.Combat.CombatAction.ACombatAction;
 	import classes.Scenes.Combat.CombatKiPowers;
@@ -528,7 +529,17 @@ package classes
 		public static const ResonanceVolley:StatusEffectType           = mkCombat("Resonance Volley");
 		public static const Sandstorm:StatusEffectType                 = mkCombat("sandstorm");
 		public static const ScyllaBind:StatusEffectType                = mkCombat("Scylla Bind");
-		public static const Sealed:StatusEffectType                    = SealedEffect.TYPE;
+		public static const Sealed:StatusEffectType = mkCombat("Sealed")
+				.withRollAlteration(ActionRoll.Phases.PERFORM, ActionRoll.Types.MELEE,
+						function (roll:ActionRoll, actor:Creature, target:Creature, effect:StatusEffectClass):void {
+							if (effect.value2 == 0 && !actor.isWieldingRangedWeapon()) {
+								if (effect.host == CoC.instance.player) {
+									EngineCore.outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  The kitsune's seals have made normal melee attack impossible!  Maybe you could try something else?\n\n");
+								}
+								roll.cancel();
+							}
+						}
+				);
 		public static const Sealed2:StatusEffectType                   = mkCombat("Sealed2");
 		public static const SecondWindRegen:StatusEffectType           = mkCombat("Second Wind Regen");
 		public static const SharkBiteBleed:StatusEffectType            = mkCombat("Shark Bite Bleed");

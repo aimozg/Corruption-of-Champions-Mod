@@ -22,6 +22,9 @@ public class ActionRoll {
 		CONNECT: 'connect',
 		DONE: 'done'
 	};
+	public static function isValidPhase(phase:String):Boolean {
+		return Utils.values(Phases).indexOf(phase) >= 0;
+	}
 	private static const NextPhase:* = Utils.createMapFromPairs([
 			[Phases.PREPARE, Phases.PERFORM],
 			[Phases.PERFORM, Phases.CONNECT],
@@ -33,6 +36,9 @@ public class ActionRoll {
 		RANGED: 'ranged',
 		MAGIC: 'magic'
 	};
+	public static function isValidType(type:String):Boolean {
+		return Utils.values(Types).indexOf(type) >= 0;
+	}
 	
 	private var _actor:Creature;
 	private var _target:Creature;
