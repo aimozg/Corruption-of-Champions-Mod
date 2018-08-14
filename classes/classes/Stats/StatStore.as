@@ -26,7 +26,7 @@ public class StatStore implements IStatHolder {
 		return Utils.values(_stats);
 	}
 	public function allStatNames():Array {
-		return Utils.values(_stats);
+		return Utils.keys(_stats);
 	}
 	public function findBuffableStat(fullname:String):BuffableStat {
 		var istat:IStat = findStat(fullname);

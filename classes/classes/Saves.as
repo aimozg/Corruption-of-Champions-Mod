@@ -1516,26 +1516,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		player.nosePLong = saveFile.data.nosePLong;
 		
 		//MAIN STATS
-		if (saveFile.data.stats) {
-			for (var k:String in saveFile.data.stats) {
-				var data:* = saveFile.data.stats[k];
-				var m:Array = k.match(/^(str|tou|spe|int|wis|lib)(Mult|Bonus)$/);
-				if (m) {
-					k = m[1] + '.'+m[2].toLowerCase();
-				}
-				var stat:IStat = player.findStat(k);
-				if (stat && stat is Jsonable) {
-					(stat as Jsonable).loadFromObject(data, false);
-				}
-			}
-		} else if (saveFile.data.strStat) {
-			player.strStat.loadFromObject(saveFile.data.strStat, false);
-			player.touStat.loadFromObject(saveFile.data.touStat, false);
-			player.speStat.loadFromObject(saveFile.data.speStat, false);
-			player.intStat.loadFromObject(saveFile.data.intStat, false);
-			player.wisStat.loadFromObject(saveFile.data.wisStat, false);
-			player.libStat.loadFromObject(saveFile.data.libStat, false);
-		} else {
+		if (!saveFile.data.strStat && !saveFile.data.stats) {
 			// TODO @aimozg/stats & @Oxdeception properly import stats...
 			// Total possible stats (15 per stat + 5 points per level)
 			var sptot:int    = saveFile.data.level * 5 + 15 * 6;
@@ -1547,6 +1528,25 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 			player.intStat.reset(int(saveFile.data.inte * ratio));
 			player.wisStat.reset(int(saveFile.data.wis * ratio));
 			player.libStat.reset(int(saveFile.data.lib * ratio));
+		}
+		if (saveFile.data.strStat) player.strStat.loadFromObject(saveFile.data.strStat, false);
+		if (saveFile.data.touStat) player.touStat.loadFromObject(saveFile.data.touStat, false);
+		if (saveFile.data.speStat) player.speStat.loadFromObject(saveFile.data.speStat, false);
+		if (saveFile.data.intStat) player.intStat.loadFromObject(saveFile.data.intStat, false);
+		if (saveFile.data.wisStat) player.wisStat.loadFromObject(saveFile.data.wisStat, false);
+		if (saveFile.data.libStat) player.libStat.loadFromObject(saveFile.data.libStat, false);
+		if (saveFile.data.stats) {
+			for (var k:String in saveFile.data.stats) {
+				var statdata:* = saveFile.data.stats[k];
+				var m:Array = k.match(/^(str|tou|spe|int|wis|lib)(Mult|Bonus)$/);
+				if (m) {
+					k = m[1] + '.'+m[2].toLowerCase();
+				}
+				var stat:IStat = player.findStat(k);
+				if (stat && stat is Jsonable) {
+					(stat as Jsonable).loadFromObject(statdata, false);
+				}
+			}
 		}
 		player.sens = saveFile.data.sens;
 		player.cor = saveFile.data.cor;

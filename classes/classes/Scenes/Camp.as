@@ -2325,7 +2325,7 @@ public function sleepRecovery(display:Boolean = false):void {
 		var drain:Number = stat.valueOfBuff(BuffTags.DRAIN);
 		if (drain < 0) {
 			// Recover 10% of stat drained, at least 1
-			drain = drain - Math.max(1, drain/10);
+			drain = drain - Math.min(-1, drain/10);
 			if (drain < 0) {
 				stat.addOrReplaceBuff(BuffTags.DRAIN, drain);
 			} else {
