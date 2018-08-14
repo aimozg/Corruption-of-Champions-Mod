@@ -53,7 +53,7 @@ public class Mountain extends BaseContent
 							return flags[kFLAGS.ETNA_FOLLOWER] < 1
 								   && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2;
 						},
-						chance: 0.5,
+						chance: 0.2,
 						call  : SceneLib.etnaScene.repeatYandereEnc
 					}, {
 						name: "salon",
@@ -168,7 +168,7 @@ public class Mountain extends BaseContent
 						when: function ():Boolean {
 							return flags[kFLAGS.ELECTRA_FOLLOWER] < 1;
 						},
-						chance:0.5,
+						chance:0.2,
 						call: function ():void {
 							if (flags[kFLAGS.ELECTRA_AFFECTION] < 2) SceneLib.electraScene.firstEnc();
 							else SceneLib.electraScene.repeatMountainEnc();

@@ -267,6 +267,7 @@ use namespace CoC;
 					return flags[kFLAGS.ETNA_FOLLOWER] < 1
 						   && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2;
 				},
+				chance: 0.2,
 				call  : SceneLib.etnaScene.repeatYandereEnc
 			}, {
 				name  : "electra",
@@ -274,7 +275,7 @@ use namespace CoC;
 					return flags[kFLAGS.ELECTRA_FOLLOWER] < 1
 						   && flags[kFLAGS.ELECTRA_AFFECTION] >= 2;
 				},
-				chance: 0.5,
+				chance: 0.2,
 				call  : SceneLib.electraScene.repeatDeepwoodsEnc
 			}, {
 				name: "kitsune",
