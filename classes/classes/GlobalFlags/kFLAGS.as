@@ -287,8 +287,8 @@ public static const UNKNOWN_FLAG_NUMBER_00278:int                               
 public static const UNKNOWN_FLAG_NUMBER_00279:int                                   =  279; // LOTTIE FIGURE (HIGHER = SLIMMER)
 public static const UNKNOWN_FLAG_NUMBER_00280:int                                   =  280; // LOTTIE CONFIDENCE (HIGHER = AWESOMER)
 public static const UNKNOWN_FLAG_NUMBER_00281:int                                   =  281; // TIMES ENCOUNTERED LOTTIE
-public static const UNKNOWN_FLAG_NUMBER_00282:int                                   =  282; // Sophie Bimbo Follower?
-public static const UNKNOWN_FLAG_NUMBER_00283:int                                   =  283; // Sophie Disabled Forever
+public static const SOPHIE_BIMBO:int                                                =  282; // Sophie Bimbo Follower?
+public static const SOPHIE_DISABLED_FOREVER:int                                     =  283; // Sophie Disabled Forever
 public static const TIMES_SOPHIE_HAS_DRUNK_OVI_ELIXIR:int                           =  284; // Has Ovi Event Procced?
 public static const UNKNOWN_FLAG_NUMBER_00285:int                                   =  285; // Luststick Resistance builder - decrements by 1 every day, incremented by 1 for every 2 hours of luststick
 public static const UNKNOWN_FLAG_NUMBER_00286:int                                   =  286; // Have Ceraph's belly-button piercing
@@ -331,7 +331,7 @@ public static const UNKNOWN_FLAG_NUMBER_00322:int                               
 public static const UNKNOWN_FLAG_NUMBER_00323:int                                   =  323; // LOTTIE: HAS SHE USED REDUCTO?
 public static const UNKNOWN_FLAG_NUMBER_00324:int                                   =  324; // LOTTIE: HAM SAMMICH
 public static const UNKNOWN_FLAG_NUMBER_00325:int                                   =  325; // Times met minotaur mob
-public static const UNKNOWN_FLAG_NUMBER_00326:int                                   =  326; // Number of grown up minotaur offspring - TRIBE SIZE
+public static const ADULT_MINOTAUR_OFFSPRINGS:int                                   =  326; // Number of grown up minotaur offspring - TRIBE SIZE
 public static const UNKNOWN_FLAG_NUMBER_00327:int                                   =  327; // Number of minotaur sons pending growing up
 public static const UNKNOWN_FLAG_NUMBER_00328:int                                   =  328; // Grow up countdown
 public static const UNKNOWN_FLAG_NUMBER_00329:int                                   =  329; // No longer used. Previously: Minos wasting a turn? (1 = yes)

@@ -212,8 +212,8 @@ public class PlayerInfo extends BaseContent {
         if (SceneLib.urtaPregs.urtaKids() > 0)
             childStats += "<b>Children With Urta:</b> " + SceneLib.urtaPregs.urtaKids() + "\n";
         //Mino sons
-		if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] > 0)
-			childStats += "<b>Number of Adult Minotaur Offspring:</b> " + flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] + "\n";
+		if (flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] > 0)
+			childStats += "<b>Number of Adult Minotaur Offspring:</b> " + flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] + "\n";
 
 		//Alraune daughters
 		if (flags[kFLAGS.ALRAUNE_SEEDS] > 0)

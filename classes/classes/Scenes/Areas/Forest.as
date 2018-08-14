@@ -89,13 +89,12 @@ use namespace CoC;
 						//General Golems, Goblin and Imp Encounters
 						name: "common",
 						call: SceneLib.exploration.genericGolGobImpEncounters
-					}, 
-					 {
+					}, {
 						//spriggan
 						name: "spriggan",
 						call: SceneLib.forest.dryadScene.encounterdryad,
 						chance: 0.2 
-					},	{
+					}, {
 						//Helia monogamy fucks
 						name  : "helcommon",
 						call  : SceneLib.helScene.helSexualAmbush,
@@ -261,15 +260,8 @@ use namespace CoC;
 				call  : SceneLib.helScene.helSexualAmbush,
 				chance: 0.2,
 				when  : SceneLib.helScene.helSexualAmbushCondition
-			}, {
-				name  : "etna",
-				when  : function():Boolean {
-					return flags[kFLAGS.ETNA_FOLLOWER] < 1
-						   && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2;
-				},
-				chance: 0.2,
-				call  : SceneLib.etnaScene.repeatYandereEnc
-			}, {
+			}, SceneLib.etnaScene.yandereEncounter,
+			{
 				name  : "electra",
 				when  : function():Boolean {
 					return flags[kFLAGS.ELECTRA_FOLLOWER] < 1

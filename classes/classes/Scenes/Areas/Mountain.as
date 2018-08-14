@@ -47,15 +47,8 @@ public class Mountain extends BaseContent
 						call  : SceneLib.helScene.helSexualAmbush,
 						chance: 0.2,
 						when  : SceneLib.helScene.helSexualAmbushCondition
-					}, {
-						name  : "etna",
-						when  : function():Boolean {
-							return flags[kFLAGS.ETNA_FOLLOWER] < 1
-								   && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2;
-						},
-						chance: 0.2,
-						call  : SceneLib.etnaScene.repeatYandereEnc
-					}, {
+					}, SceneLib.etnaScene.yandereEncounter,
+					{
 						name: "salon",
 						when: fn.not(salon.isDiscovered),
 						call: salon.hairDresser

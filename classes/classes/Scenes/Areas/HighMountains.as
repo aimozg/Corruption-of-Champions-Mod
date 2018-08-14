@@ -6,10 +6,14 @@ package classes.Scenes.Areas
 import classes.*;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
+import classes.Scenes.API.Encounters;
+import classes.Scenes.API.FnHelpers;
+import classes.Scenes.API.GroupEncounter;
 import classes.Scenes.Areas.HighMountains.*;
 import classes.Scenes.Holidays;
 import classes.Scenes.Monsters.DarkElfScene;
 import classes.Scenes.SceneLib;
+import classes.display.SpriteDb;
 
 use namespace CoC;
 
@@ -26,6 +30,7 @@ use namespace CoC;
 		
 		public function HighMountains()
 		{
+			onGameInit(init);
 		}
 		public function isDiscovered():Boolean {
 			return flags[kFLAGS.DISCOVERED_HIGH_MOUNTAIN] > 0;
@@ -36,143 +41,134 @@ use namespace CoC;
 			flags[kFLAGS.DISCOVERED_HIGH_MOUNTAIN]++;
 			doNext(camp.returnToCampUseOneHour);
 		}
+		private var _encounter:GroupEncounter;
+		public function get encounter():GroupEncounter {
+			return _encounter;
+		}
+		private function init():void {
+			const game:CoC     = CoC.instance;
+			const fn:FnHelpers = Encounters.fn;
+			_encounter         = game.getEncounterPool("forest").add({
+						//Helia monogamy fucks
+						name  : "helcommon",
+						call  : SceneLib.helScene.helSexualAmbush,
+						chance: 0.2,
+						when  : SceneLib.helScene.helSexualAmbushCondition
+					}, {
+						name: "d3",
+						when: function ():Boolean {
+							return flags[kFLAGS.D3_DISCOVERED] == 0 && player.hasKeyItem("Zetaz's Map") >= 0;
+						},
+						call: SceneLib.d3.discoverD3
+					}, {
+						name: "snowangel",
+						when: function ():Boolean {
+							return player.gender > 0
+								   && isHolidays()
+								   && flags[kFLAGS.GATS_ANGEL_DISABLED] == 0
+								   && flags[kFLAGS.GATS_ANGEL_GOOD_ENDED] == 0
+								   && (flags[kFLAGS.GATS_ANGEL_QUEST_BEGAN] == 0
+									   || player.hasKeyItem("North Star Key") >= 0);
+						},
+						call: Holidays.gatsSpectacularRouter
+					}, {
+						name: "minerva",
+						when: function ():Boolean {
+							return flags[kFLAGS.MET_MINERVA] < 4;
+						},
+						call: minervaScene.encounterMinerva
+					}, {
+						name: "minomob",
+						when: function ():Boolean {
+							return flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] >= 3 && player.hasVagina();
+						},
+						call: minotaurMobScene.meetMinotaurSons,
+						mods: [SceneLib.exploration.furriteMod]
+					}, SceneLib.etnaScene.yandereEncounter,
+					{
+						name  : "harpychicken",
+						when  : function ():Boolean {
+							return player.hasItem(consumables.OVIELIX)
+								   || flags[kFLAGS.TIMES_MET_CHICKEN_HARPY] <= 0
+						},
+						chance: function ():Number { return player.itemCount(consumables.OVIELIX); },
+						call  : chickenHarpy
+					}, {
+						name: "phoenix",
+						when: function():Boolean{
+							return flags[kFLAGS.HEL_PHOENIXES_DEFEATED] > 0;
+						},
+						call: phoenixScene.encounterPhoenix1
+					}, {
+						name: "minotaur",
+						when: function ():Boolean {
+							return flags[kFLAGS.MINOTAUR_CUM_ADDICTION_STATE] > 0;
+						},
+						call: minoRouter,
+						mods: [SceneLib.exploration.furriteMod]
+					}, {
+						name: "harpy",
+						call: harpyEncounter
+					}, {
+						name: "basilisk",
+						call: basiliskScene.basiliskGreeting
+					}, {
+						name: "sophie",
+						when: function ():Boolean {
+							return flags[kFLAGS.SOPHIE_BIMBO] <= 0
+								   && flags[kFLAGS.SOPHIE_DISABLED_FOREVER] <= 0
+								   && !SceneLib.sophieFollowerScene.sophieFollower();
+						},
+						call: SceneLib.sophieScene.sophieRouter
+					}, {
+						name: "izumi",
+						call: izumiScenes.encounter
+					}, {
+						name:"hike",
+						chance:0.2,
+						call:hike
+					}, {
+						name: "temple",
+						call: templeofdivine.firstvisitintro,
+						when: function ():Boolean {
+							return flags[kFLAGS.FOUND_TEMPLE_OF_THE_DIVINE] < 1
+						}
+					}, {
+						name: "cave",
+						when: function(): Boolean {
+							return player.hasKeyItem("Gryphon Statuette") < 0
+								   && player.hasKeyItem("Peacock Statuette") < 0;
+						},
+						call: caveScene
+					}
+			);
+		}
 		//Explore High Mountain
 		public function exploreHighMountain():void
 		{
 			flags[kFLAGS.DISCOVERED_HIGH_MOUNTAIN]++;
-			doNext(playerMenu);
-			
-			if (SceneLib.d3.discoverD3() == true)
-			{
-				return;
+			encounter.execEncounter();
+		}
+		
+		public function harpyEncounter():void {
+			clearOutput();
+			outputText(images.showImage("encounter-harpy"));
+			outputText("A harpy wings out of the sky and attacks!");
+			if (flags[kFLAGS.CODEX_ENTRY_HARPIES] <= 0) {
+				flags[kFLAGS.CODEX_ENTRY_HARPIES] = 1;
+				outputText("\n\n<b>New codex entry unlocked: Harpies!</b>")
 			}
-			
-			var chooser:Number = rand(5);
-			//Boosts mino and hellhound rates!
-			if (player.hasPerk(PerkLib.PiercedFurrite) && rand(3) == 0) {
-				chooser = 1;
-			}
-			//Helia monogamy fucks
-			if (flags[kFLAGS.PC_PROMISED_HEL_MONOGAMY_FUCKS] == 1 && flags[kFLAGS.HEL_RAPED_TODAY] == 0 && rand(10) == 0 && player.gender > 0 && !SceneLib.helScene.followerHel()) {
-				SceneLib.helScene.helSexualAmbush();
-				return;
-			}
-			//Gats xmas adventure!
-			if (rand(5) == 0 && player.gender > 0 && isHolidays() && flags[kFLAGS.GATS_ANGEL_DISABLED] == 0 && flags[kFLAGS.GATS_ANGEL_GOOD_ENDED] == 0 && (flags[kFLAGS.GATS_ANGEL_QUEST_BEGAN] == 0 || player.hasKeyItem("North Star Key") >= 0)) {
-				Holidays.gatsSpectacularRouter();
-				return;
-			}
-			//Minerva
-			if (flags[kFLAGS.DISCOVERED_HIGH_MOUNTAIN] % 8 == 0) {
-				if (flags[kFLAGS.MET_MINERVA] < 4)
-				{
-					minervaScene.encounterMinerva();
-					return;
-				}
-			}
-			//Etna
-			if (flags[kFLAGS.ETNA_FOLLOWER] < 1 && rand(3) == 0) {
-				if (flags[kFLAGS.ETNA_AFFECTION] < 5) SceneLib.etnaScene.firstEnc();
-				else SceneLib.etnaScene.repeatEnc();
-				return;
-			}
-			//Temple of the Divine
-			if (flags[kFLAGS.FOUND_TEMPLE_OF_THE_DIVINE] < 1 && rand(4) == 0) {
-				templeofdivine.firstvisitintro();
-				return;
-			}
-			//25% minotaur sons!
-			if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] >= 3 && rand(4) == 0 && player.hasVagina()) {
-				spriteSelect(44);
-				minotaurMobScene.meetMinotaurSons();
-				return;
-			}
-			//Harpy odds!
-			if (player.hasItem(consumables.OVIELIX) || flags[kFLAGS.TIMES_MET_CHICKEN_HARPY] <= 0) {
-				if (player.hasItem(consumables.OVIELIX, 2)) {
-					if (rand(4) == 0) {
-						chickenHarpy();
-						return;
-					}
-				}
-				else {
-					if (rand(10) == 0) {
-						chickenHarpy();
-						return;
-					}
-				}
-			}
-			if (flags[kFLAGS.HEL_PHOENIXES_DEFEATED] > 0 && rand(4) == 0) {
-				phoenixScene.encounterPhoenix1();
-				return;
-			}
-			if ((player.hasKeyItem("Gryphon Statuette") < 0 || player.hasKeyItem("Peacock Statuette") < 0) && rand(4) == 0) {
-				caveScene();
-				return;
-			}
-			//10% chance to mino encounter rate if addicted
-			if (flags[kFLAGS.MINOTAUR_CUM_ADDICTION_STATE] > 0 && rand(10) == 0) {
-				spriteSelect(44);
-				//Cum addictus interruptus!  LOL HARRY POTTERFAG
-				//Withdrawl auto-fuck!
-				if (flags[kFLAGS.MINOTAUR_CUM_ADDICTION_STATE] == 3) {
-                    SceneLib.mountain.minotaurScene.minoAddictionFuck();
-                    return;
-				}
-                SceneLib.mountain.minotaurScene.getRapedByMinotaur(true);
-                spriteSelect(44);
-				return;
-			}
-			trace("Chooser goin for" + chooser);
-			
-			//Generic harpy
-			if (chooser == 0) {
-				clearOutput();
-				outputText("A harpy wings out of the sky and attacks!");
-				if (flags[kFLAGS.CODEX_ENTRY_HARPIES] <= 0) {
-					flags[kFLAGS.CODEX_ENTRY_HARPIES] = 1;
-					outputText("\n\n<b>New codex entry unlocked: Harpies!</b>")
-				}
-				startCombat(new Harpy());
-				spriteSelect(26);
-				return;
-			}
-			//Basilisk!
-			if (chooser == 1) {
-				basiliskScene.basiliskGreeting();
-				return;
-			}
-			//Sophie
-			if (chooser == 2) {
-				if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00282] > 0 || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00283] > 0 || SceneLib.sophieFollowerScene.sophieFollower()) {
-					clearOutput();
-					outputText("A harpy wings out of the sky and attacks!");
-					startCombat(new Harpy());
-					spriteSelect(26);
-				}
-				else {
-					if (flags[kFLAGS.MET_SOPHIE_COUNTER] == 0) SceneLib.sophieScene.meetSophie();
-					else SceneLib.sophieScene.meetSophieRepeat();
-				}
-			}
-			if (chooser == 3) 
-			{
-				this.izumiScenes.encounter();
-			}
-			//Dark Elf Scout
-			if (chooser == 4) {
-				if (rand(2) == 0) darkelfScene.introDarkELfSlaver();
-				else {
-					clearOutput();
-					outputText("A harpy wings out of the sky and attacks!");
-					if (flags[kFLAGS.CODEX_ENTRY_HARPIES] <= 0) {
-						flags[kFLAGS.CODEX_ENTRY_HARPIES] = 1;
-						outputText("\n\n<b>New codex entry unlocked: Harpies!</b>")
-					}
-					startCombat(new Harpy());
-					spriteSelect(26);
-				}
-				return;
+			startCombat(new Harpy());
+			spriteSelect(SpriteDb.s_harpy);
+		}
+		public function minoRouter():void {
+			spriteSelect(SpriteDb.s_minotaur);
+			//Cum addictus interruptus!  LOL HARRY POTTERFAG
+			if (flags[kFLAGS.MINOTAUR_CUM_ADDICTION_STATE] == 3) //Withdrawl auto-fuck!
+				SceneLib.mountain.minotaurScene.minoAddictionFuck();
+			else {
+				SceneLib.mountain.minotaurScene.getRapedByMinotaur(true);
+				spriteSelect(SpriteDb.s_minotaur);
 			}
 		}
 		
@@ -290,6 +286,20 @@ use namespace CoC;
 			outputText("Picking the alabaster statuette, you immediately feel how its energy rushes through your avian body, invigorating it with an unknown force. Carefully putting it on your bag, you see how the other one is stored away by the hidden mechanism.\n\n");
 			outputText("With nothing useful left to you here, you resume your walk and return to your camp with the peacock idol on your bag.\n\n");
 			player.createKeyItem("Peacock Statuette", 0, 0, 0, 0);
+			doNext(camp.returnToCampUseOneHour);
+		}
+		
+		private function hike():void {
+			clearOutput();
+			outputText(images.showImage("area-highmountains"));
+			if (player.cor < 90) {
+				outputText("Your hike in the highmountains, while fruitless, reveals pleasant vistas and provides you with good exercise and relaxation.");
+				dynStats("tou", .25, "spe", .5, "lus", player.lib / 10 - 15);
+			}
+			else {
+				outputText("During your hike into the highmountains, your depraved mind keeps replaying your most obcenely warped sexual encounters, always imagining new perverse ways of causing pleasure.\n\nIt is a miracle no predator picked up on the strong sexual scent you are emitting.");
+				dynStats("tou", .25, "spe", .5, "lib", .25, "lus", player.lib / 10);
+			}
 			doNext(camp.returnToCampUseOneHour);
 		}
 	}

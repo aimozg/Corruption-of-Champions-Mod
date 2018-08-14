@@ -139,15 +139,8 @@ use namespace CoC;
 						chance: 0.25,
 						when  : fn.ifLevelMin(2),
 						call  : oasis.oasisEncounter
-					}, {
-						name: "Etna",
-						chance: 0.2,
-						when: function ():Boolean
-						{
-							return (flags[kFLAGS.ETNA_FOLLOWER] < 1 && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2);
-						},
-						call: SceneLib.etnaScene.repeatYandereEnc
-					}, {
+					}, SceneLib.etnaScene.yandereEncounter,
+					{
 						//Helia monogamy fucks
 						name  : "helcommon",
 						call  : SceneLib.helScene.helSexualAmbush,
