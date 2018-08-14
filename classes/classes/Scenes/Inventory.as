@@ -3,6 +3,7 @@
  */
 package classes.Scenes
 {
+
 	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
 	import classes.Items.Armor;
@@ -24,12 +25,22 @@ package classes.Scenes
 	import classes.Items.WeaponRangeLib;
 	import classes.Scenes.Camp.UniqueCampScenes;
 	import classes.Scenes.NPCs.HolliPureScene;
+	import classes.display.BindDisplay;
+
+	import coc.view.BitmapDataSprite;
+	import coc.view.Block;
+	import coc.view.CoCButton;
+	import coc.view.MainView;
+
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
 
 	use namespace CoC;
 
+	//TODO @Oxdeception cleanup
 	public class Inventory extends BaseContent {
 		private static const inventorySlotName:Array = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth"];
-		
+
 		private var itemStorage:Array;
 		private var pearlStorage:Array;
 		private var gearStorage:Array;
@@ -44,6 +55,7 @@ package classes.Scenes
 			pearlStorage = [];
 			gearStorage = [];
 			saveSystem.linkToInventory(itemStorageDirectGet, pearlStorageDirectGet, gearStorageDirectGet);
+
 		}
 		
 		public function showStash():Boolean {
@@ -59,92 +71,178 @@ package classes.Scenes
 //		public function currentCallNext():Function { return callNext; }
 		
 		public function itemGoNext():void { if (callNext != null) doNext(callNext); }
-		
+
+		private var invenPane:Block;
+		private var scrollPane:CustomScrollPane;
+		private function close(next:Function):void {
+			scrollPane.visible = false;
+			invenPane.visible = false;
+			mainView.removeElement(scrollPane);
+			mainView.mainText.visible = true;
+			mainView.scrollBar.visible = true;
+			mainView.scrollBar.update();
+			next();
+		}
+		private function setupScrollPane():void {
+			scrollPane = new CustomScrollPane();
+			var mt:TextField = mainView.mainText;
+			scrollPane.x = mt.x;
+			scrollPane.y = mt.y;
+			scrollPane.width = mt.width + mainView.scrollBar.width;
+			scrollPane.height = mt.height;
+			scrollPane.visible = true;
+		}
+		private function setupInvenPane():void {
+			invenPane = new Block();
+			invenPane.layoutConfig = {
+				type: Block.LAYOUT_FLOW,
+				direction: "column"
+			};
+			invenPane.visible = true;
+		}
+		private function hideMainText():void {
+			hideUpDown();
+			clearOutput();
+			menu();
+			mainView.mainText.visible = false;
+			mainView.scrollBar.visible = false;
+			mainView.resetTextFormat();
+		}
+		private function setup():void {
+			hideMenus();
+			clearOutput();
+			spriteSelect(-1);
+			menu();
+			hideMainText();
+			setupScrollPane();
+			setupInvenPane();
+			scrollPane.addChild(invenPane);
+			mainView.addElementAt(scrollPane, mainView.getElementIndex(mainView.mainText)+1);
+		}
 		public function inventoryMenu():void {
-			var x:int;
-			var foundItem:Boolean = false;
-            if (CoC.instance.inCombat) {
-                callNext = inventoryCombatHandler; //Player will return to combat after item use
+			setup();
+			var mt:TextField = mainView.mainText;
+			function outputText(text:String = ""):void {
+				textField.htmlText += text;
+				scrollPane.update();
 			}
-			else {
+
+			if (CoC.instance.inCombat) {
+				callNext = inventoryCombatHandler; //Player will return to combat after item use
+			} else {
 				spriteSelect(-1);
 				callNext = inventoryMenu; //In camp or in a dungeon player will return to inventory menu after item use
 			}
-			hideMenus();
-			hideUpDown();
-			clearOutput();
-			EngineCore.displayHeader("Inventory");
-			outputText("<b><u>Equipment:</u></b>\n");
-			outputText("<b>Weapon (Melee):</b> " + player.weapon.name + " (Attack: " + player.weaponAttack + ")\n");
-			outputText("<b>Weapon (Range):</b> " + player.weaponRange.name + " (Attack: " + player.weaponRangeAttack + ")\n");
-			outputText("<b>Shield:</b> " + player.shield.name + " (Block Rating: " + player.shieldBlock + ")\n");
-			outputText("<b>Armour:</b> " + player.armor.name + " (Defense: " + player.armorDef + ")\n");
-			outputText("<b>Upper underwear:</b> " + player.upperGarment.name + "\n");
-			outputText("<b>Lower underwear:</b> " + player.lowerGarment.name + "\n");
-			outputText("<b>Accessory:</b> " + player.jewelryName + "\n");
+
+			invenPane.addTextField({
+					defaultTextFormat: mt.defaultTextFormat,
+					htmlText : "<font size=\"36\" face=\"Georgia\"><u>Inventory</u></font>\n" +
+						"<b><u>Equipment:</u></b>\n"
+			});
+
+			const label:int = 0;
+			const item:int  = 1;
+			const func:int  = 2;
+			const base:int  = 3;
+
+			var equip:Array = [
+				["<b>Weapon (Melee):</b> Attack: " + player.weaponAttack,      player.weapon,       unequipWeapon,             WeaponLib.FISTS],
+				["<b>Weapon (Range):</b> Attack: " + player.weaponRangeAttack, player.weaponRange,  unequipWeaponRange, WeaponRangeLib.NOTHING],
+				["<b>Shield:</b> Defense: " + player.shieldBlock,              player.shield,       unequipShield,           ShieldLib.NOTHING],
+				["<b>Armour:</b> Defense: " + player.armorDef,                 player.armor,        unequipArmor,             ArmorLib.NOTHING],
+				["<b>Upper underwear:</b> ",                                   player.upperGarment, unequipUpperwear,  UndergarmentLib.NOTHING],
+				["<b>Lower underwear:</b> ",                                   player.lowerGarment, unequipLowerwear,  UndergarmentLib.NOTHING],
+				["<b>Accessory:</b> ",                                         player.jewelry,      unequipJewel,           JewelryLib.NOTHING],
+			];
+
+			for each (var arr:Array in equip){
+				var eSlot:BindDisplay = new BindDisplay(mt.width, 40, 1);
+				eSlot.label.htmlText       = arr[label];
+				if(arr[item] != arr[base]){
+					eSlot.buttons[0].show(arr[item].shortName, curry(close, arr[func]), arr[item].description)
+						.disableIf(CoC.instance.inCombat);
+				} else {
+					eSlot.buttons[0].showDisabled("Nothing");
+				}
+				mainView.hookButton(eSlot.buttons[0]);
+				invenPane.addElement(eSlot);
+			}
+
+			var textField:TextField = new TextField();
+			textField.defaultTextFormat = mt.defaultTextFormat;
+			textField.width             = mt.width;
+			textField.multiline         = true;
+			textField.wordWrap          = true;
+			textField.autoSize          = TextFieldAutoSize.LEFT;
+
+
+			var foundItem:Boolean = false;
+			var x:int;
 			if (player.hasKeyItem("Bag of Cosmos") >= 0) outputText("\nAt your belt hangs bag of cosmos.\n");
 			if (player.hasKeyItem("Sky Poison Pearl") >= 0) outputText("\nThere is a circular green imprint at the palm of your left hand.\n");
 			if (player.keyItems.length > 0) outputText("<b><u>\nKey Items:</u></b>\n");
 			for (x = 0; x < player.keyItems.length; x++) outputText(player.keyItems[x].keyName + "\n");
-			menu();
 			for (x = 0; x < 10; x++) {
 				if (player.itemSlots[x].unlocked && player.itemSlots[x].quantity > 0) {
-					addButton(x, (player.itemSlots[x].itype.shortName + " x" + player.itemSlots[x].quantity), useItemInInventory, x);
+					addButton(x, (player.itemSlots[x].itype.shortName + " x" + player.itemSlots[x].quantity), curry(close, curry(useItemInInventory, x)));
 					foundItem = true;
 				}
 			}
 
-			if (!CoC.instance.inCombat && inDungeon == false && inRoomedDungeon == false && flags[kFLAGS.IN_INGNAM] == 0) {
-                var miscNieve:Boolean = Holidays.nieveHoliday() && flags[kFLAGS.NIEVE_STAGE] > 0 && flags[kFLAGS.NIEVE_STAGE] < 5;
-                var miscHolli:Boolean         = flags[kFLAGS.FUCK_FLOWER_KILLED] == 0 && (flags[kFLAGS.FUCK_FLOWER_LEVEL] >= 1 && flags[kFLAGS.FUCK_FLOWER_LEVEL] < 4 || flags[kFLAGS.FLOWER_LEVEL] >= 1 && flags[kFLAGS.FLOWER_LEVEL] < 4);
-				if (miscNieve
-					|| miscHolli
-					|| player.hasKeyItem("Dragon Egg") >= 0
-					|| player.hasKeyItem("Gryphon Statuette") >= 0
-					|| player.hasKeyItem("Peacock Statuette") >= 0
-					|| flags[kFLAGS.ANEMONE_KID] > 0
-					|| flags[kFLAGS.ALRAUNE_SEEDS] > 0) {
-					if (miscNieve) {
-						if (flags[kFLAGS.NIEVE_STAGE] == 1)
-							outputText("\nThere's some odd snow here that you could do something with...\n");
-                        else outputText("\nYou have a snow" + Holidays.nieveMF("man", "woman") + " here that seems like it could use a little something...\n");
-                    }
-					if (player.hasKeyItem("Dragon Egg") >= 0) {
-                        SceneLib.emberScene.emberCampDesc();
-					}
-					if (flags[kFLAGS.ANEMONE_KID] > 0) {
-						SceneLib.anemoneScene.anemoneBarrelDescription();
-					}
-					if (flags[kFLAGS.ALRAUNE_SEEDS] > 0) {
-						outputText("\nYou have " + flags[kFLAGS.ALRAUNE_SEEDS] + " alraune seeds planted in your garden.");
-						if (flags[kFLAGS.ALRAUNE_GROWING] > 14) outputText(" Some have already grown to adulthood.");
-						outputText("\n");
-					}
-					addButton(13, "Misc.", miscitemsMenu);
+			if (CoC.instance.inCombat) {
+				if (player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv1(StatusEffects.Sealed) == 3) {
+					outputText("\nYou reach for your items, but you just can't get your pouches open.  <b>Your ability to use items was sealed, and now you've wasted a chance to attack!</b>\n\n");
+					SceneLib.combat.enemyAIImpl();
+					return;
 				}
-			}
-            if (!CoC.instance.inCombat) {
-                addButton(10, "Unequip", manageEquipment);
+				addButton(14, "Back", curry(close, curry(SceneLib.combat.combatMenu, false))); //Player returns to the combat menu on cancel
+			} else {
+				if (inDungeon == false && inRoomedDungeon == false && flags[kFLAGS.IN_INGNAM] == 0) {
+					var miscNieve:Boolean = Holidays.nieveHoliday() && flags[kFLAGS.NIEVE_STAGE] > 0 && flags[kFLAGS.NIEVE_STAGE] < 5;
+					var miscHolli:Boolean = flags[kFLAGS.FUCK_FLOWER_KILLED] == 0 && (flags[kFLAGS.FUCK_FLOWER_LEVEL] >= 1 && flags[kFLAGS.FUCK_FLOWER_LEVEL] < 4 || flags[kFLAGS.FLOWER_LEVEL] >= 1 && flags[kFLAGS.FLOWER_LEVEL] < 4);
+					if (miscNieve
+						|| miscHolli
+						|| player.hasKeyItem("Dragon Egg") >= 0
+						|| player.hasKeyItem("Gryphon Statuette") >= 0
+						|| player.hasKeyItem("Peacock Statuette") >= 0
+						|| flags[kFLAGS.ANEMONE_KID] > 0
+						|| flags[kFLAGS.ALRAUNE_SEEDS] > 0) {
+						if (miscNieve) {
+							if (flags[kFLAGS.NIEVE_STAGE] == 1)
+								outputText("\nThere's some odd snow here that you could do something with...\n");
+							else outputText("\nYou have a snow" + Holidays.nieveMF("man", "woman") + " here that seems like it could use a little something...\n");
+						}
+						if (player.hasKeyItem("Dragon Egg") >= 0) {
+							SceneLib.emberScene.emberCampDesc();
+						}
+						if (flags[kFLAGS.ANEMONE_KID] > 0) {
+							SceneLib.anemoneScene.anemoneBarrelDescription();
+						}
+						if (flags[kFLAGS.ALRAUNE_SEEDS] > 0) {
+							outputText("\nYou have " + flags[kFLAGS.ALRAUNE_SEEDS] + " alraune seeds planted in your garden.");
+							if (flags[kFLAGS.ALRAUNE_GROWING] > 14) outputText(" Some have already grown to adulthood.");
+							outputText("\n");
+						}
+						addButton(13, "Misc.", curry(close, miscitemsMenu));
+					}
+				}
+
 				if (player.hasKeyItem("Bag of Cosmos") >= 0) {
-					addButton(11, "Bag of Cosmos", BagOfCosmosMenu);
+					addButton(11, "Bag of Cosmos", curry(close, BagOfCosmosMenu));
 				}
 				if (player.hasKeyItem("Sky Poison Pearl") >= 0) {
-					addButton(12, "Sky P. Pearl", SkyPoisonPearlMenu);
+					addButton(12, "Sky P. Pearl", curry(close, SkyPoisonPearlMenu));
 				}
+				addButton(14, "Back", curry(close, playerMenu));
 			}
 			if (foundItem) {
-                if (CoC.instance.inCombat && player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv1(StatusEffects.Sealed) == 3) {
-                    outputText("\nYou reach for your items, but you just can't get your pouches open.  <b>Your ability to use items was sealed, and now you've wasted a chance to attack!</b>\n\n");
-                    SceneLib.combat.enemyAIImpl();
-                    return;
-				}
 				outputText("\nWhich item will you use? (To discard unwanted items, hold Shift then click the item.)");
 			}
 			outputText("\n<b>Capacity:</b> " + getOccupiedSlots() + " / " + getMaxSlots());
-            if (CoC.instance.inCombat)
-                addButton(14, "Back", SceneLib.combat.combatMenu, false); //Player returns to the combat menu on cancel
-			else addButton(14, "Back", playerMenu);
-//Gone			menuLoc = 1;
+
+			invenPane.addElement(textField);
+			invenPane.doLayout();
+			scrollPane.update();
 		}
 		
 		public function miscitemsMenu():void {
@@ -246,80 +344,6 @@ package classes.Scenes
 			}
 
 			addButton(14, "Back", inventoryMenu);
-		}
-		
-		public function stash():void {
-			var toTake:Function = curry(pickItemToTake,stash,gearStorage);
-			var toPlace:Function = curry(pickItemToPlace,stash,gearStorage);
-			/*Hacked in cheat to enable shit
-			flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00254] = 1;
-			flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00255] = 1;*/
-			//REMOVE THE ABOVE BEFORE RELASE ()
-			hideMenus();
-			clearOutput();
-			spriteSelect(-1);
-			menu();
-			
-			if (player.hasKeyItem("Camp - Chest") >= 0 || player.hasKeyItem("Camp - Murky Chest") >= 0 || player.hasKeyItem("Camp - Ornate Chest") >= 0) {
-				var chestArray:Array = [];
-				if (player.hasKeyItem("Camp - Chest") >= 0) chestArray.push("a large wood and iron chest");
-				if (player.hasKeyItem("Camp - Murky Chest") >= 0) chestArray.push("a medium damp chest");
-				if (player.hasKeyItem("Camp - Ornate Chest") >= 0) chestArray.push("a medium gilded chest");
-				outputText("You have " + formatStringArray(chestArray) + " to help store excess items located ");
-				if (camp.homeDesc() == "cabin") outputText("inside your cabin");
-				else outputText("near the portal entrance");
-				outputText(".\n\n");
-				addButton(0, "Chest Store", curry(pickItemToPlace, stash, itemStorage, campStorage, "storage containers"));
-				if (hasItemsInStorage()) addButton(1, "Chest Take", curry(pickItemToTake,stash, itemStorage, campStorage, "storage"));
-			}
-			//Jewelry box
-			if(player.hasKeyItem("Equipment Storage - Jewelry Box") >= 0) {
-				outputText("Your jewelry box is located ");
-				if (flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED])
-				{
-					if (flags[kFLAGS.CAMP_CABIN_FURNITURE_DRESSER]) outputText("on your dresser inside your cabin.");
-					else
-					{
-						if (flags[kFLAGS.CAMP_CABIN_FURNITURE_NIGHTSTAND]) outputText("on your nightstand inside your cabin.");
-						else  outputText("under your bed inside your cabin.");
-					}
-				}
-				else outputText("next to your bedroll.");	
-				addButton(2, "J.Box Put", toPlace,jewelryBox,"jewelry box");
-				if (storageDescription(jewelryBox)) addButton(3, "J.Box Take", toTake, jewelryBox, "box");
-				outputText("\n\n");
-			}
-			//Dresser
-			if (flags[kFLAGS.CAMP_CABIN_FURNITURE_DRESSER] > 0) {
-				outputText("You have a dresser inside your cabin to store nine different types of undergarments.");
-				addButton(5, "Dresser Put", toPlace, dresserBox, "dresser");
-				if (storageDescription(dresserBox)) addButton(6, "Dresser Take", toTake, dresserBox, "dresser");
-				outputText("\n\n");
-			}
-			if (flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] < 2) {
-			//Weapon Rack
-			if (player.hasKeyItem("Equipment Rack - Weapons") >= 0) {
-				outputText("There's a weapon rack set up here, set up to hold up to nine various weapons.");
-				addButton(7, "W.Rack Put", toPlace, weaponRack, "rack");
-				if (storageDescription(weaponRack)) addButton(8, "W.Rack Take", toTake, weaponRack, "rack");
-				outputText("\n\n");
-			}
-			//Armor Rack
-			if(player.hasKeyItem("Equipment Rack - Armor") >= 0) {
-				outputText("Your camp has an armor rack set up to hold your various sets of gear.  It appears to be able to hold nine different types of armor.");
-				addButton(10, "A.Rack Put", toPlace, armourRack, "armor rack");
-				if (storageDescription(armourRack)) addButton(11, "A.Rack Take", toTake, armourRack, "rack");
-				outputText("\n\n");
-			}
-			//Shield Rack
-			if(player.hasKeyItem("Equipment Rack - Shields") >= 0) {
-				outputText("There's a shield rack set up here, set up to hold up to nine various shields.");
-				addButton(12, "S.Rack Put", toPlace, shieldRack, "shield rack");
-				if (storageDescription(shieldRack)) addButton(13, "S.Rack Take", toTake, shieldRack, "rack");
-				outputText("\n\n");
-			}
-			}
-			addButton(14, "Back", playerMenu);
 		}
 		
 		public function warehouse():void {
@@ -651,19 +675,7 @@ package classes.Scenes
 			}
 			itemGoNext();
 		}
-		
-		//My unequip function is still superior, albeit rewritten.
-		//private function unequipWeapon():void {
-		//	clearOutput();
-		//	takeItem(player.setWeapon(WeaponLib.FISTS), inventoryMenu);
-		//}
 
-/* Never called
-		public function hasItemsInRacks(itype:ItemType, armor:Boolean):Boolean {
-			if (armor) return itemTypeInStorage(gearStorage, 9, 18, itype);
-			return itemTypeInStorage(gearStorage, 0, 9, itype);
-		}
-*/
 		private const weaponRack:Object = {start: 0, end: 9, acceptable:weaponAcceptable};
 		private const armourRack:Object = {start: 9, end: 18, acceptable:armorAcceptable};
 		private const jewelryBox:Object = {start: 18, end: 27, acceptable:jewelryAcceptable};
@@ -727,41 +739,6 @@ package classes.Scenes
 			}
 		}
 		
-		public function manageEquipment():void {
-			clearOutput();
-			outputText("Which would you like to unequip?\n\n");
-			menu();
-			if (player.weapon != WeaponLib.FISTS)
-			{
-				addButton(0, "Weapon (M)", unequipWeapon).hint(player.weapon.description, capitalizeFirstLetter(player.weapon.name));
-			}
-			if (player.weaponRange != WeaponRangeLib.NOTHING)
-			{
-				addButton(1, "Weapon (R)", unequipWeaponRange).hint(player.weaponRange.description, capitalizeFirstLetter(player.weaponRange.name));
-			}
-			if (player.shield != ShieldLib.NOTHING)
-			{
-				addButton(2, "Shield", unequipShield).hint(player.shield.description, capitalizeFirstLetter(player.shield.name));
-			}
-			if (player.jewelry != JewelryLib.NOTHING)
-			{
-				addButton(3, "Accessory", unequipJewel).hint(player.jewelry.description, capitalizeFirstLetter(player.jewelry.name));
-			}
-			if (player.armor != ArmorLib.NOTHING)
-			{
-				addButton(5, "Armour", unequipArmor).hint(player.armor.description, capitalizeFirstLetter(player.armor.name));
-			}
-			if (player.upperGarment != UndergarmentLib.NOTHING)
-			{
-				addButton(6, "Upperwear", unequipUpperwear).hint(player.upperGarment.description, capitalizeFirstLetter(player.upperGarment.name));
-			}
-			if (player.lowerGarment != UndergarmentLib.NOTHING)
-			{
-				addButton(7, "Lowerwear", unequipLowerwear).hint(player.lowerGarment.description, capitalizeFirstLetter(player.lowerGarment.name));
-			}
-			addButton(14, "Back", inventoryMenu);
-			
-		}
 		//Unequip!
 		private function unequipWeapon():void {
 			takeItem(player.setWeapon(WeaponLib.FISTS), inventoryMenu);
@@ -770,11 +747,12 @@ package classes.Scenes
 			takeItem(player.setWeaponRange(WeaponRangeLib.NOTHING), inventoryMenu);
 		}
 		public function unequipArmor():void {
-			if (player.armorName != "goo armor") takeItem(player.setArmor(ArmorLib.NOTHING), inventoryMenu); 
-			else { //Valeria belongs in the camp, not in your inventory!
-				outputText(player.armor.removeText(player));
-				player.setArmor(ArmorLib.NOTHING);
-				doNext(manageEquipment);
+			outputText(player.armor.removeText(player));
+			var a:Armor = player.setArmor(ArmorLib.NOTHING);
+			if(a){
+				takeItem(a, inventoryMenu);
+			} else {
+				doNext(inventoryMenu)
 			}
 		}
 		public function unequipUpperwear():void {
@@ -817,18 +795,155 @@ package classes.Scenes
 
 		//Acceptable type of items
 		private function allAcceptable(itype:ItemType):Boolean { return true; }
-		
 		private function consumableAcceptable(itype:ItemType):Boolean { return itype is Consumable; }
-		
 		private function armorAcceptable(itype:ItemType):Boolean { return itype is Armor; }
-		
 		private function weaponAcceptable(itype:ItemType):Boolean { return itype is (Weapon || WeaponRange); }
-
 		private function shieldAcceptable(itype:ItemType):Boolean { return itype is Shield; }
-		
 		private function jewelryAcceptable(itype:ItemType):Boolean { return itype is Jewelry; }
-		
 		private function undergarmentAcceptable(itype:ItemType):Boolean { return itype is Undergarment; }
+
+		private function describe(storage:Object):String {
+			var text:String = "";
+			switch (storage) {
+				case "Chest" :
+					var chestArray:Array = [];
+					if (player.hasKeyItem("Camp - Chest") >= 0) chestArray.push("a large wood and iron chest");
+					if (player.hasKeyItem("Camp - Murky Chest") >= 0) chestArray.push("a medium damp chest");
+					if (player.hasKeyItem("Camp - Ornate Chest") >= 0) chestArray.push("a medium gilded chest");
+					text += ("<b>Chest</b>\nYou have " + formatStringArray(chestArray) + " to help store excess items located ");
+					if (camp.homeDesc() == "cabin") text += ("inside your cabin.");
+					else text += ("near the portal entrance.");
+					return text;
+				case jewelryBox :
+					text += ("<b>Jewelry Box</b>\nYour jewelry box is located ");
+					if (flags[kFLAGS.CAMP_BUILT_CABIN] > 0 && flags[kFLAGS.CAMP_CABIN_FURNITURE_BED]) {
+						if (flags[kFLAGS.CAMP_CABIN_FURNITURE_DRESSER]) text += ("on your dresser inside your cabin.");
+						else {
+							if (flags[kFLAGS.CAMP_CABIN_FURNITURE_NIGHTSTAND]) text += ("on your nightstand inside your cabin.");
+							else text += ("under your bed inside your cabin.");
+						}
+					}
+					else text += ("next to your bedroll.");
+					return text;
+				case dresserBox :
+					return "<b>Dresser</b>\nYou have a dresser inside your cabin to store nine different types of undergarments.";
+				case weaponRack :
+					return "<b>Weapon Rack</b>\nThere's a weapon rack set up here, set up to hold up to nine various weapons.";
+				case armourRack :
+					return "<b>Armour Rack</b>\nYour camp has an armor rack set up to hold your various sets of gear.  It appears to be able to hold nine different types of armor.";
+				case shieldRack :
+					return "<b>Shield Rack</b>\nThere's a shield rack set up here, set up to hold up to nine various shields.";
+			}
+			return text;
+		}
+
+		public function stash():void {
+			callNext = stash;
+			setup();
+			var arr:Array = [
+				[weaponRack, describe(weaponRack), player.hasKeyItem("Equipment Rack - Weapons") >= 0],
+				[armourRack, describe(armourRack), player.hasKeyItem("Equipment Rack - Armor") >= 0],
+				[jewelryBox, describe(jewelryBox), player.hasKeyItem("Equipment Storage - Jewelry Box") >= 0],
+				[dresserBox, describe(dresserBox), flags[kFLAGS.CAMP_CABIN_FURNITURE_DRESSER] > 0],
+				[shieldRack, describe(shieldRack), player.hasKeyItem("Equipment Rack - Shields") >= 0],
+			];
+			if(player.hasKeyItem("Camp - Chest") >= 0 || player.hasKeyItem("Camp - Murky Chest") >= 0 || player.hasKeyItem("Camp - Ornate Chest") >= 0){
+				showStorage(stash, itemStorage, campStorage, describe("Chest"));
+			}
+			for each(var s:Array in arr){
+				if(s[2]){
+					showStorage(stash, gearStorage, s[0], s[1])
+				}
+			}
+			for (var x:int = 0; x < 10; x++) {
+				if (player.itemSlots[x].unlocked && player.itemSlots[x].quantity > 0) {
+					addButton(x, (player.itemSlots[x].itype.shortName + " x" + player.itemSlots[x].quantity), curry(close,curry(stashItem,x,arr)));
+				}
+			}
+			addButton(13, "Bang", curry(close,bang));
+			addButton(14, "Back", curry(close,playerMenu));
+
+			function bang():void {
+				outputText("You decide to bang the new stash system. It is gorgeous, after all.\n\nHowever, since the author has no idea how to write a scene for it, you decide to hold off until later.");
+				doNext(stash);
+			}
+		}
+		private function stashItem(position:int, storage:Array):void {
+			var item:ItemType = player.itemSlots[position].itype;
+			var available:Array = storage.filter(function(element:*, index:int, arr:Array):Boolean {
+				return element[2] && (!element[0].acceptable || element[0].acceptable(item));
+			});
+			for each (var stor:Array in available){
+				if(placeIn(gearStorage, stor[0].start, stor[0].end, position, stash, true)){
+					return;
+				}
+			}
+			if(player.hasKeyItem("Camp - Chest") >= 0 || player.hasKeyItem("Camp - Murky Chest") >= 0 || player.hasKeyItem("Camp - Ornate Chest") >= 0){
+				if(!placeIn(itemStorage, campStorage.start, campStorage.end, position, stash, true)){
+					close(function():void{
+						outputText("You don't have any space to stash that item.");
+						doNext(stash);
+					});
+				}
+			}
+		}
+		private function showStorage(back:Function, storage:Array, range:Object, text:String):void{
+			var base:Block = new Block({
+				layoutConfig : {
+					type: Block.LAYOUT_FLOW
+				},
+				width: mainView.mainText.width
+			});
+			var tf:TextField = new TextField();
+			tf.width = mainView.mainText.width * (2/5);
+			tf.defaultTextFormat = mainView.mainText.defaultTextFormat;
+			tf.multiline = true;
+			tf.wordWrap = true;
+			tf.htmlText = text;
+
+			var block:Block = new Block({
+				layoutConfig : {
+					type: Block.LAYOUT_GRID,
+					cols: 3,
+					setWidth: true
+				},
+				width: mainView.mainText.width * (3/5)
+			});
+			for (var x:int = range.start; x < range.end; x++) {
+				var button:CoCButton;
+				if(storage[x].quantity == 0){
+					button = new CoCButton({
+						labelText: "Empty",
+						bitmapClass: MainView.ButtonBackground0,
+						enabled:false
+					});
+				} else {
+					button = new CoCButton({
+						labelText: storage[x].itype.shortName + " x" + storage[x].quantity,
+						bitmapClass: MainView.ButtonBackground0,
+						callback: curry(close, curry(pickFrom, storage, x)),
+						toolTipHeader: capitalizeFirstLetter(storage[x].itype.longName),
+						toolTipText: storage[x].itype.description
+					});
+				}
+				mainView.hookButton(button);
+				block.addElement(button);
+			}
+			block.doLayout();
+			tf.height = block.height;
+			tf.autoSize = TextFieldAutoSize.LEFT;
+			base.addElement(tf);
+			base.addElement(block);
+			base.doLayout();
+			invenPane.addElement(new BitmapDataSprite({
+				width: mainView.mainText.width - 2,
+				height:2,
+				fillColor:'#000000'
+			}));
+			invenPane.addElement(base);
+			invenPane.doLayout();
+			scrollPane.update();
+		}
 		
 		//Place in storage functions
 		private function pickItemToPlace(back:Function,storage:Array,range:Object,text:String):void{
@@ -854,7 +969,14 @@ package classes.Scenes
 			addButton(14, "Back", back);
 		}
 		
-		private function placeIn(storage:Array, startSlot:int, endSlot:int, slotNum:int,next:Function):void {
+		private function placeIn(storage:Array, startSlot:int, endSlot:int, slotNum:int,next:Function, silent:Boolean = false):Boolean {
+			function exit():void {
+				if(silent){
+					next();
+				} else {
+					doNext(next);
+				}
+			}
 			clearOutput();
 			var x:int;
 			var temp:int;
@@ -870,8 +992,8 @@ package classes.Scenes
 					storage[x].quantity += temp;
 					qty -= temp;
 					if (qty == 0){
-						doNext(next);
-						return;
+						exit();
+						return true;
 					}
 				}
 			}
@@ -880,13 +1002,34 @@ package classes.Scenes
 					storage[x].setItemAndQty(itype, qty);
 					outputText("You place " + qty + "x " + itype.shortName + " into storage slot " + num2Text(x + 1 - startSlot) + ".\n");
 					qty = 0;
-					doNext(next);
-					return;
+					exit();
+					return true;
 				}
 			}
 			outputText("There is no room for " + (orig == qty ? "" : "the remaining ") + qty + "x " + itype.shortName + ".  You leave " + (qty > 1 ? "them" : "it") + " in your inventory.\n");
 			player.itemSlots[slotNum].setItemAndQty(itype, qty);
-			doNext(next);
+			exit();
+			return false;
 		}
+	}
+}
+
+import classes.internals.Utils;
+
+import com.bit101.components.ScrollPane;
+
+import flash.display.DisplayObjectContainer;
+import flash.events.MouseEvent;
+//TODO @Oxdeception pull this out into its own class, fix some scroll issues
+class CustomScrollPane extends ScrollPane {
+	public function CustomScrollPane(parent:DisplayObjectContainer =null, xpos:Number =0, ypos:Number =0){
+		super(parent, xpos, ypos);
+		_background.alpha = 0;
+		addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler)
+	}
+	private function mouseWheelHandler(e:MouseEvent):void {
+		if(content.height < this.height){return;}
+		content.y = Utils.boundFloat(this.height - content.height, content.y + (10 * e.delta), 0);
+		_vScrollbar.value = -content.y;
 	}
 }
