@@ -48,7 +48,7 @@ use namespace CoC;
 		private function init():void {
 			const game:CoC     = CoC.instance;
 			const fn:FnHelpers = Encounters.fn;
-			_encounter         = game.getEncounterPool("forest").add({
+			_encounter         = game.getEncounterPool("highMountains").add({
 						//Helia monogamy fucks
 						name  : "helcommon",
 						call  : SceneLib.helScene.helSexualAmbush,
