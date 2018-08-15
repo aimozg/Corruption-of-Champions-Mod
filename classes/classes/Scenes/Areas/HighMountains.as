@@ -133,6 +133,10 @@ use namespace CoC;
 						when: function ():Boolean {
 							return flags[kFLAGS.FOUND_TEMPLE_OF_THE_DIVINE] < 1
 						}
+					}, {
+						name: "darkelf",
+						chance:0.5,
+						call: darkelfScene.introDarkELfSlaver()
 					}
 			);
 		}
