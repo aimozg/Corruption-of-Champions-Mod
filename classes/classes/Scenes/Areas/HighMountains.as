@@ -136,7 +136,7 @@ use namespace CoC;
 					}, {
 						name: "darkelf",
 						chance:0.5,
-						call: darkelfScene.introDarkELfSlaver()
+						call: darkelfScene.introDarkELfSlaver
 					}
 			);
 		}

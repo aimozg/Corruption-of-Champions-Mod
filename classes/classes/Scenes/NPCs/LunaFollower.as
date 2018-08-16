@@ -367,7 +367,7 @@ import classes.Scenes.SceneLib;
 				addButton(0, "Yes", sexMenuMain);
 				addButton(1, "No", nurseLunaEnd);
 			}
-			else doNext(camp.returnToCampUseFourHours);
+			else doNext(camp.returnToCampUseOneHour);
 		}
 		public function nurseLunaEnd():void {
 			outputText("You decide to leave her hanging. If she wants you to fuck her, she will have to do better than that. She’s a little frustrated by your lack of an erotic response, but does not comment on it.");
