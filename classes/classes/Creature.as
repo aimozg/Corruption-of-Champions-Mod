@@ -34,6 +34,7 @@ import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.IStatHolder;
 import classes.Stats.PrimaryStat;
+import classes.Stats.StatNames;
 import classes.Stats.StatStore;
 import classes.Stats.StatUtils;
 import classes.StatusEffects.Combat.CombatInteBuff;
@@ -128,24 +129,24 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		
 		 */
 		protected var _stats:StatStore = new StatStore({
-			"str": new PrimaryStat(),
-			"tou": new PrimaryStat(),
-			"spe": new PrimaryStat(),
-			"int": new PrimaryStat(),
-			"wis": new PrimaryStat(),
-			"lib": new PrimaryStat(),
+			(StatNames.STR): new PrimaryStat(),
+			(StatNames.TOU): new PrimaryStat(),
+			(StatNames.SPE): new PrimaryStat(),
+			(StatNames.INT): new PrimaryStat(),
+			(StatNames.WIS): new PrimaryStat(),
+			(StatNames.LIB): new PrimaryStat(),
 			
-			"sensMin": new BuffableStat({base:10}),
-			"sensMax": new BuffableStat(),
-			"lustMin": new BuffableStat(),
-			"lustMax": new BuffableStat({base:100}),
-			"hpMax": new BuffableStat({base:50}),
-			"staminaMax": new BuffableStat({base:100}),
-			"kiMax": new BuffableStat({base:50}),
+			(StatNames.SENS_MIN): new BuffableStat({base:10}),
+			(StatNames.SENS_MAX): new BuffableStat(),
+			(StatNames.LUST_MIN): new BuffableStat(),
+			(StatNames.LUST_MAX): new BuffableStat({base:100}),
+			(StatNames.HP_MAX): new BuffableStat({base:50}),
+			(StatNames.STAMINA_MAX): new BuffableStat({base:100}),
+			(StatNames.KI_MAX): new BuffableStat({base:50}),
 			
-			"defense": new BuffableStat(),
-			"spellPower":new BuffableStat({base:1.0,min:0.0}),
-			"hpPerTou":new BuffableStat({base:2, min:0.1})
+			(StatNames.DEFENSE): new BuffableStat(),
+			(StatNames.SPELLPOWER):new BuffableStat({base:1.0,min:0.0}),
+			(StatNames.HP_PER_TOU):new BuffableStat({base:2, min:0.1})
 		});
 		public function get statStore():StatStore {
 			return _stats;
@@ -175,12 +176,12 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		}
 
 		//Primary stats
-		public const strStat:PrimaryStat = _stats.findStat('str') as PrimaryStat;
-		public const touStat:PrimaryStat = _stats.findStat('tou') as PrimaryStat;
-		public const speStat:PrimaryStat = _stats.findStat('spe') as PrimaryStat;
-		public const intStat:PrimaryStat = _stats.findStat('int') as PrimaryStat;
-		public const wisStat:PrimaryStat = _stats.findStat('wis') as PrimaryStat;
-		public const libStat:PrimaryStat = _stats.findStat('lib') as PrimaryStat;
+		public const strStat:PrimaryStat = _stats.findStat(StatNames.STR) as PrimaryStat;
+		public const touStat:PrimaryStat = _stats.findStat(StatNames.TOU) as PrimaryStat;
+		public const speStat:PrimaryStat = _stats.findStat(StatNames.SPE) as PrimaryStat;
+		public const intStat:PrimaryStat = _stats.findStat(StatNames.INT) as PrimaryStat;
+		public const wisStat:PrimaryStat = _stats.findStat(StatNames.WIS) as PrimaryStat;
+		public const libStat:PrimaryStat = _stats.findStat(StatNames.LIB) as PrimaryStat;
 		public function primaryStats():/*PrimaryStat*/Array {
 			return _stats.allStats().filter(function(e:IStat,...args):Boolean{return e is PrimaryStat});
 		}
@@ -256,17 +257,17 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		public var additionalXP:Number = 0;
 		
 		// Other buffable stats
-		public const spellPowerStat:BuffableStat = _stats.findStat('spellPower') as BuffableStat;
+		public const spellPowerStat:BuffableStat = _stats.findStat(StatNames.SPELLPOWER) as BuffableStat;
 		public function get spellPower():Number { return spellPowerStat.value }
-		public const sensMinStat:BuffableStat    = _stats.findStat('sensMin') as BuffableStat;
-		public const sensMaxStat:BuffableStat     = _stats.findStat('sensMax') as BuffableStat;
-		public const lustMinStat:BuffableStat    = _stats.findStat('lustMin') as BuffableStat;
-		public const lustMaxStat:BuffableStat    = _stats.findStat('lustMax') as BuffableStat;
-		public const hpMaxStat:BuffableStat      = _stats.findStat('hpMax') as BuffableStat;
-		public const hpPerTouStat:BuffableStat      = _stats.findStat('hpPerTouStat') as BuffableStat;
-		public const staminaMaxStat:BuffableStat = _stats.findStat('staminaMax') as BuffableStat;
-		public const kiMaxStat:BuffableStat = _stats.findStat('kiMax') as BuffableStat;
-		public const defenseStat:BuffableStat    = _stats.findStat('defense') as BuffableStat;
+		public const sensMinStat:BuffableStat    = _stats.findStat(StatNames.SENS_MIN) as BuffableStat;
+		public const sensMaxStat:BuffableStat     = _stats.findStat(StatNames.SENS_MAX) as BuffableStat;
+		public const lustMinStat:BuffableStat    = _stats.findStat(StatNames.LUST_MIN) as BuffableStat;
+		public const lustMaxStat:BuffableStat    = _stats.findStat(StatNames.LUST_MAX) as BuffableStat;
+		public const hpMaxStat:BuffableStat      = _stats.findStat(StatNames.HP_MAX) as BuffableStat;
+		public const hpPerTouStat:BuffableStat      = _stats.findStat(StatNames.HP_PER_TOU) as BuffableStat;
+		public const staminaMaxStat:BuffableStat = _stats.findStat(StatNames.STAMINA_MAX) as BuffableStat;
+		public const kiMaxStat:BuffableStat = _stats.findStat(StatNames.KI_MAX) as BuffableStat;
+		public const defenseStat:BuffableStat    = _stats.findStat(StatNames.DEFENSE) as BuffableStat;
 		
 		public function get hp100():Number { return 100*HP/maxHP(); }
 		public function get wrath100():Number { return 100*wrath/maxWrath(); }

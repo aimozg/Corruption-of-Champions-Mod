@@ -50,38 +50,38 @@ public class StatUtils {
 		}
 	}
 	public static const PlainNumberStats:Object = Utils.createMapFromPairs([
-		['str','Strength'],
-		['tou','Toughness'],
-		['spe','Speed'],
-		['int','Intellect'],
-		['wis','Wisdom'],
-		['lib','Libido'],
-		['str.bonus','Strength'],
-		['tou.bonus','Toughness'],
-		['spe.bonus','Speed'],
-		['int.bonus','Intellect'],
-		['wis.bonus','Wisdom'],
-		['lib.bonus','Libido'],
+		[StatNames.STR, 'Strength'],
+		[StatNames.TOU, 'Toughness'],
+		[StatNames.SPE, 'Speed'],
+		[StatNames.INT, 'Intellect'],
+		[StatNames.WIS, 'Wisdom'],
+		[StatNames.LIB, 'Libido'],
+		[StatNames.STR_BONUS, 'Strength'],
+		[StatNames.TOU_BONUS, 'Toughness'],
+		[StatNames.SPE_BONUS, 'Speed'],
+		[StatNames.INT_BONUS, 'Intellect'],
+		[StatNames.WIS_BONUS, 'Wisdom'],
+		[StatNames.LIB_BONUS, 'Libido'],
 		
-		['sensMin','Min Sensitivity'],
-		['sensMax','Max Sensitivity'],
-		['lustMin','Min Lust'],
-		['lustMax','Max Lust'],
-		['hpMax','Max HP'],
-		['staminaMax','Max Stamina'],
-		['kiMax','Max Ki'],
+		[StatNames.SENS_MIN, 'Min Sensitivity'],
+		[StatNames.SENS_MAX, 'Max Sensitivity'],
+		[StatNames.LUST_MIN, 'Min Lust'],
+		[StatNames.LUST_MAX, 'Max Lust'],
+		[StatNames.HP_MAX, 'Max HP'],
+		[StatNames.STAMINA_MAX, 'Max Stamina'],
+		[StatNames.KI_MAX, 'Max Ki'],
 		
-		['defense','Defense'],
-		['hpPerTou','HP per Toughness'],
+		[StatNames.DEFENSE, 'Defense'],
+		[StatNames.HP_PER_TOU, 'HP per Toughness'],
 	]);
 	public static const PercentageStats:Object = Utils.createMapFromPairs([
-			['str.mult','Strength'],
-			['tou.mult','Toughness'],
-			['spe.mult','Speed'],
-			['int.mult','Intellect'],
-			['wis.mult','Wisdom'],
-			['lib.mult','Libido'],
-			['spellPower','Spellpower']
+		[StatNames.STR_MULT, 'Strength'],
+		[StatNames.TOU_MULT, 'Toughness'],
+		[StatNames.SPE_MULT, 'Speed'],
+		[StatNames.INT_MULT, 'Intellect'],
+		[StatNames.WIS_MULT, 'Wisdom'],
+		[StatNames.LIB_MULT, 'Libido'],
+		[StatNames.SPELLPOWER, 'Spellpower']
 	]);
 }
 }
