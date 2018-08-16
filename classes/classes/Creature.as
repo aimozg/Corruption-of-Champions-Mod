@@ -139,12 +139,13 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			"sensMax": new BuffableStat(),
 			"lustMin": new BuffableStat(),
 			"lustMax": new BuffableStat({base:100}),
-			"hpMax": new BuffableStat(),
+			"hpMax": new BuffableStat({base:50}),
 			"staminaMax": new BuffableStat({base:100}),
 			"kiMax": new BuffableStat({base:50}),
-			"defense": new BuffableStat(),
 			
-			"spellPower":new BuffableStat({base:1.0,min:0.0})
+			"defense": new BuffableStat(),
+			"spellPower":new BuffableStat({base:1.0,min:0.0}),
+			"hpPerTou":new BuffableStat({base:2, min:0.1})
 		});
 		public function get statStore():StatStore {
 			return _stats;
@@ -262,6 +263,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		public const lustMinStat:BuffableStat    = _stats.findStat('lustMin') as BuffableStat;
 		public const lustMaxStat:BuffableStat    = _stats.findStat('lustMax') as BuffableStat;
 		public const hpMaxStat:BuffableStat      = _stats.findStat('hpMax') as BuffableStat;
+		public const hpPerTouStat:BuffableStat      = _stats.findStat('hpPerTouStat') as BuffableStat;
 		public const staminaMaxStat:BuffableStat = _stats.findStat('staminaMax') as BuffableStat;
 		public const kiMaxStat:BuffableStat = _stats.findStat('kiMax') as BuffableStat;
 		public const defenseStat:BuffableStat    = _stats.findStat('defense') as BuffableStat;
@@ -284,11 +286,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 
 		protected function maxHP_base():Number {
 			var max:Number = hpMaxStat.value;
-			max += int(tou * 2 + 50);
-			var under100: int = Math.floor(Math.min(tou, 100) / 20);
-			var over100: int = Math.floor(Math.max(tou - 100, 0) / 50);
-			max += tou * (over100 + under100);
-			if (hasPerk(PerkLib.Tank)) max += Math.round(tou*3);
+			max += int(tou * (hpPerTouStat.value + level/10));
 			if (hasPerk(PerkLib.ElementalBondFlesh)) {
 				for each (var status:StatusEffectType in CampMakeWinions.summon_statuses){
 					if(hasStatusEffect(status)){
@@ -296,11 +294,8 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 					}
 				}
 			}
-			if (hasPerk(PerkLib.JobGuardian)) max += 30;
-			if (hasPerk(PerkLib.ChiReflowDefense)) max += UmasShop.NEEDLEWORK_DEFENSE_EXTRA_HP;
-			max += level * 15;
 			if (jewelryEffectId == JewelryLib.MODIFIER_HP) max += jewelryEffectMagnitude;
-			return max;
+			return Math.round(max);
 		}
 		protected function maxLust_base():Number {
 			var max:Number = lustMaxStat.value;
@@ -311,14 +306,10 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 					}
 				}
 			}
-			if (hasPerk(PerkLib.BroBody) || hasPerk(PerkLib.BimboBody) || hasPerk(PerkLib.FutaForm)) max += 20;
-			if (hasPerk(PerkLib.OmnibusGift)) max += 15;
-			if (hasPerk(PerkLib.JobCourtesan)) max += 20;
-			if (hasPerk(PerkLib.JobSeducer)) max += 10;
 			return max;
 		}
 		protected function maxHP_mult():Number {
-			return 1 + (countCockSocks("green") * 0.02);
+			return 1;
 		}
 		protected function maxLust_mult():Number {
 			return 1;

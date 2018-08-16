@@ -572,7 +572,8 @@ public class PerkLib
 			short: "You've mastered all various uses of tease.",
 			long : "You choose 'Job: Courtesan' perk, training yourself to became Courtesan.",
 			buffs: {
-				'lib.mult': +0.10
+				'lib.mult': +0.10,
+				'lustMax': +20
 			}
 		});
 		public static const JobDefender:PerkType                    = jmk({
@@ -627,7 +628,8 @@ public class PerkLib
 			short: "You've trained in defensive combat.",
 			long : "You choose 'Job: Guardian' perk, training yourself to became Guardian.",
 			buffs: {
-				'tou.mult': +0.05
+				'tou.mult': +0.05,
+				'hpMax': +30
 			}
 		});
 		public static const JobHunter:PerkType                      = jmk({
@@ -664,7 +666,8 @@ public class PerkLib
 			short: "You've trained the art of seduction.",
 			long : "You choose 'Job: Seducer' perk, training yourself to became Seducer.",
 			buffs: {
-				'lib.mult': +0.05
+				'lib.mult': +0.05,
+				'lustMax': +10
 			}
 		});
 		public static const JobSorcerer:PerkType                    = jmk({
@@ -1015,7 +1018,10 @@ public class PerkLib
 			id   : "Tank",
 			name : "Tank",
 			short: "+3 extra HP per point of toughness.",
-			long : "You choose the 'Tank' perk, granting +3 extra maximum HP for each point of toughness."
+			long : "You choose the 'Tank' perk, granting +3 extra maximum HP for each point of toughness.",
+			buffs: {
+				'hpPerTou': +3
+			}
 		});
 		public static const ThirstForBlood:PerkType                 = jmk({
 			id   : "Thirst for blood",
@@ -1271,7 +1277,8 @@ public class PerkLib
 			name : "Chi Reflow - Defense",
 			short: "Passive damage resistance, but caps speed",
 			buffs: {
-				'spe.mult': -0.40
+				'spe.mult': -0.40,
+				'hpMax': +50
 			}
 		});
 		public static const ChiReflowLust:PerkType    = jmk({
@@ -1511,7 +1518,10 @@ public class PerkLib
 		public static const BimboBody:PerkType                 = jmk({
 			id   : "Bimbo Body",
 			name : "Bimbo Body",
-			short: "Gives the body of a bimbo.  Tits will never stay below a 'DD' cup, libido is raised, lust resistance is raised, and upgrades tease."
+			short: "Gives the body of a bimbo.  Tits will never stay below a 'DD' cup, libido is raised, lust resistance is raised, and upgrades tease.",
+			buff: {
+				'lustMax': +20
+			}
 		});
 		public static const BimboBrains:PerkType               = jmk({
 			id   : "Bimbo Brains",
@@ -1524,7 +1534,10 @@ public class PerkLib
 		public static const BroBody:PerkType                   = jmk({
 			id   : "Bro Body",
 			name : "Bro Body",
-			short: "Grants an ubermasculine body that's sure to impress."
+			short: "Grants an ubermasculine body that's sure to impress.",
+			buff: {
+				'lustMax': +20
+			}
 		});
 		public static const BroBrains:PerkType                 = jmk({
 			id   : "Bro Brains",
@@ -1638,7 +1651,8 @@ public class PerkLib
 			short: "Ensures that your body fits the Futa look (Tits DD+, Dick 8\"+, & Pussy).  Also keeps your lusts burning bright and improves the tease skill.",
 			buffs: {
 				'int.mult': -0.60,
-				'lib.mult': +0.50
+				'lib.mult': +0.50,
+				'lustMax': +20
 			}
 		});
 		public static const GeneticMemory:PerkType             = jmk({
@@ -1902,7 +1916,10 @@ public class PerkLib
 		public static const OmnibusGift:PerkType            = jmk({
 			id   : "Omnibus' Gift",
 			name : "Omnibus' Gift",
-			short: "Increases minimum lust but provides some lust resistance."
+			short: "Increases minimum lust but provides some lust resistance.",
+			buff: {
+				'lustMax': +15
+			}
 		});
 		public static const OneTrackMind:PerkType           = jmk({
 			id   : "One Track Mind",

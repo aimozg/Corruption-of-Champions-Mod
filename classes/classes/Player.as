@@ -2807,7 +2807,10 @@ package classes
 			EngineCore.showUpDown();
 			EngineCore.statScreenRefresh();
 		}
-
+		
+		override protected function maxHP_mult():Number {
+			return super.maxHP_mult() + (countCockSocks("green") * 0.02);
+		}
 		public override function maxFatigue():Number
 		{
 			var max:Number = super.maxFatigue()+50;

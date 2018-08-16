@@ -62,6 +62,17 @@ public class StatUtils {
 		['int.bonus','Intellect'],
 		['wis.bonus','Wisdom'],
 		['lib.bonus','Libido'],
+		
+		['sensMin','Min Sensitivity'],
+		['sensMax','Max Sensitivity'],
+		['lustMin','Min Lust'],
+		['lustMax','Max Lust'],
+		['hpMax','Max HP'],
+		['staminaMax','Max Stamina'],
+		['kiMax','Max Ki'],
+		
+		['defense','Defense'],
+		['hpPerTou','HP per Toughness'],
 	]);
 	public static const PercentageStats:Object = Utils.createMapFromPairs([
 			['str.mult','Strength'],

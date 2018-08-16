@@ -1031,15 +1031,15 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 		player.perkPoints--;
 		//Apply perk here.
 		outputText("<b>" + perk.name + "</b> gained!");
+		var hp100before:Number = player.hp100;
 		player.createPerk(perk, perk.defaultValue1, perk.defaultValue2, perk.defaultValue3, perk.defaultValue4);
 		if (perk == PerkLib.StrongBack){
 			player.itemSlot4.unlocked = true;
 			player.itemSlot5.unlocked = true;
 		}
-		if (perk == PerkLib.Tank) {
-			HPChange(player.tou, false);
-			statScreenRefresh();
-		}
+		player.updateStats();
+		player.HP = player.maxHP()*hp100before/100;
+		statScreenRefresh();
 		if (player.perkPoints > 0) {
 			doNext(perkBuyMenu);
 		} else {

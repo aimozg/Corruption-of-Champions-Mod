@@ -21,11 +21,11 @@ public class BuffableStat implements IStat, Jsonable {
 	public static const AGGREGATE_MIN:int  = EnumValue.add(AggregateTypes, 2, 'AGGREGATE_MIN', {short: 'min'});
 	public static const AGGREGATE_PROD:int = EnumValue.add(AggregateTypes, 3, 'AGGREGATE_PROD', {short: 'prod'});
 	
-	private var _base:Number;
-	private var _aggregate:int;
-	private var _min:Number;
-	private var _max:Number;
-	private var _value:Number;
+	private var _base:Number = 0.0;
+	private var _aggregate:int = AGGREGATE_SUM;
+	private var _min:Number = -Infinity;
+	private var _max:Number = +Infinity;
+	private var _value:Number = 0.0;
 	private var _buffs:/*Buff*/Array = [];
 	
 	public function get base():Number {
@@ -39,6 +39,22 @@ public class BuffableStat implements IStat, Jsonable {
 	}
 	public function get max():Number {
 		return _max;
+	}
+	public function redefine(options:Object):void {
+		options    = Utils.extend({
+			aggregate: this._aggregate,
+			base     : this._base,
+			min      : this._min,
+			max      : this._max
+		}, options);
+		if (options.aggregate is String) {
+			options.aggregate = EnumValue.findByProperty(AggregateTypes, 'short', options.aggregate).value;
+		}
+		if (options.aggregate == AGGREGATE_PROD && options.base == 0.0) options.base = 1.0;
+		this._aggregate = options.aggregate;
+		this._base      = options['base'];
+		this._min       = options['min'];
+		this._max       = options['max'];
 	}
 	public function get value():Number {
 		if (_value < _min) return _min;
@@ -55,21 +71,8 @@ public class BuffableStat implements IStat, Jsonable {
 	 * }
 	 */
 	public function BuffableStat(options:*=null) {
-		options    = Utils.extend({
-			aggregate: AGGREGATE_SUM,
-			base     : 0.0,
-			min      : -Infinity,
-			max      : +Infinity
-		}, options);
-		if (options.aggregate is String) {
-			options.aggregate = EnumValue.findByProperty(AggregateTypes, 'short', options.aggregate).value;
-		}
-		if (options.aggregate == AGGREGATE_PROD && options.base == 0.0) options.base = 1.0;
-		this._aggregate = options.aggregate;
-		this._base      = options['base'];
-		this._min       = options['min'];
-		this._max       = options['max'];
-		this._value     = this._base;
+		redefine(options);
+		recalculate();
 		
 		if (!(this._aggregate in AggregateTypes)) throw new Error("Invalid aggregate type");
 		// TODO validate other arguments

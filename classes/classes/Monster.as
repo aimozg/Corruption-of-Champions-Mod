@@ -287,35 +287,7 @@ import flash.utils.getQualifiedClassName;
 		public function set drop(value:RandomDrop):void { _drop = value; }
 
 		protected override function maxHP_base():Number {
-			//Base HP
-			var temp:Number = 100 + this.level * 15 + this.bonusHP;
-			temp += (this.tou);
-			if (this.tou >= 21) temp += (this.tou*2);
-			if (this.tou >= 41) temp += (this.tou*3);
-			if (this.tou >= 61) temp += (this.tou*4);
-			if (this.tou >= 81) temp += (this.tou*5);
-			if (this.tou >= 101) temp += (this.tou*6);
-			if (this.tou >= 151) temp += (this.tou*8);
-			if (this.tou >= 201) temp += (this.tou*10);
-			if (this.tou >= 251) temp += (this.tou*12);
-			if (this.tou >= 301) temp += (this.tou*14);
-			if (this.tou >= 351) temp += (this.tou*16);
-			if (this.tou >= 401) temp += (this.tou*18);
-			if (this.tou >= 451) temp += (this.tou*20);
-			if (this.tou >= 501) temp += (this.tou*22);
-			if (this.tou >= 551) temp += (this.tou*24);
-			if (this.tou >= 601) temp += (this.tou*26);
-			if (this.tou >= 651) temp += (this.tou*28);
-			if (this.tou >= 701) temp += (this.tou*30);
-			if (this.tou >= 751) temp += (this.tou*32);
-			if (this.tou >= 801) temp += (this.tou*34);
-			if (this.tou >= 851) temp += (this.tou*36);
-			if (this.tou >= 901) temp += (this.tou*38);
-			if (this.tou >= 951) temp += (this.tou*40);
-			//Apply perks
-			if (hasPerk(PerkLib.Tank)) temp += this.tou*3;
-			if (hasPerk(PerkLib.JobGuardian)) temp += 30;
-			return temp;
+			return super.maxHP_base() + bonusHP;
 		}
 		protected override function maxHP_mult():Number {
 			var temp:Number = 1.0;
@@ -550,6 +522,7 @@ import flash.utils.getQualifiedClassName;
 
 		public function Monster()
 		{
+			hpMaxStat.redefine({base: 0.0});
 			// trace("Generic Monster Constructor!");
 
 			//// INSTRUCTIONS
@@ -1912,27 +1885,6 @@ import flash.utils.getQualifiedClassName;
 			return 8; //This allows different monsters to delay the player by different amounts of time after a combat loss. Normal loss causes an eight hour blackout
 		}
 		public function prepareForCombat():void {
-			var bonusStatsAmp:Number = 0.2;
-			if (level > 25) bonusStatsAmp += 0.1*((int)(level-1)/25);
-			var bonusAscStr:int = Math.round(bonusStatsAmp * str);
-			var bonusAscTou:int = Math.round(bonusStatsAmp * tou);
-			var bonusAscSpe:int = Math.round(bonusStatsAmp * spe);
-			var bonusAscInt:int = Math.round(bonusStatsAmp * inte);
-			var bonusAscWis:int = Math.round(bonusStatsAmp * wis);
-			var bonusAscLib:int = Math.round(bonusStatsAmp * lib);
-			var bonusAscSen:int = Math.round(bonusStatsAmp * sens);
-			this.strStat.core.value += bonusAscStr;
-			this.touStat.core.value += bonusAscTou;
-			this.speStat.core.value += bonusAscSpe;
-			this.intStat.core.value += bonusAscInt;
-			this.wisStat.core.value += bonusAscWis;
-			this.libStat.core.value += bonusAscLib;
-			this.sens += bonusAscSen;
-			weaponAttack += 1 + (int)(weaponAttack / 5);
-			if (weaponRangeAttack > 0) {
-				weaponRangeAttack += 1 + (int)(weaponRangeAttack / 5);
-			}
-			armorDef += (int)(1 + armorDef / 10);
 
 			HP = maxHP();
 			mana = maxMana();
