@@ -48,13 +48,8 @@ use namespace CoC;
 		private function init():void {
 			const game:CoC     = CoC.instance;
 			const fn:FnHelpers = Encounters.fn;
-			_encounter         = game.getEncounterPool("highMountains").add({
-						//Helia monogamy fucks
-						name  : "helcommon",
-						call  : SceneLib.helScene.helSexualAmbush,
-						chance: 0.2,
-						when  : SceneLib.helScene.helSexualAmbushCondition
-					}, {
+			_encounter         = game.getEncounterPool("highMountains").add(
+					SceneLib.helScene.helSexualAmbushEncounter, {
 						name: "d3",
 						when: function ():Boolean {
 							return flags[kFLAGS.D3_DISCOVERED] == 0 && player.hasKeyItem("Zetaz's Map") >= 0;

@@ -9,6 +9,7 @@ package classes.Scenes.Areas
 import classes.*;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
+import classes.Scenes.API.GroupEncounter;
 import classes.Scenes.Areas.Beach.*;
 import classes.Scenes.NPCs.CeaniScene;
 import classes.Scenes.SceneLib;
@@ -26,98 +27,85 @@ import classes.Scenes.SceneLib;
 
 		public function Beach() 
 		{
+			onGameInit(init);
 		}
-		
+		private var _encounter:GroupEncounter = null;
+		public function get encounter():GroupEncounter {
+			return _encounter;
+		}
+		private function init():void {
+			const game:CoC = CoC.instance;
+			_encounter = game.getEncounterPool("beach").add(
+					SceneLib.helScene.helSexualAmbushEncounter,
+					SceneLib.etnaScene.yandereEncounter, {
+						name: "boat",
+						when: function():Boolean {
+							return flags[kFLAGS.DISCOVERED_BEACH] >= 10 && flags[kFLAGS.DISCOVERED_OCEAN] <= 0;
+						},
+						call: discoverSeaBoat
+					}, {
+						name: "ceani1",
+						when: function():Boolean {
+							return flags[kFLAGS.CEANI_FOLLOWER] < 1 && flags[kFLAGS.CEANI_DAILY_TRAINING] < 1 && flags[kFLAGS.CEANI_ARCHERY_TRAINING] < 4 && player.gems >= 50;
+						},
+						call: ceaniEncounter1
+					}, {
+						name: "ceani2",
+						when: function():Boolean {
+							return (model.time.hours >= 6 && model.time.hours <= 11) && flags[kFLAGS.CEANI_FOLLOWER] < 1 && flags[kFLAGS.CEANI_ARCHERY_TRAINING] == 4;
+						},
+						call: ceaniScene.beachInteractionsAfterArcheryTraining
+					}, {
+						name: "demons",
+						call: demonsPack.demonspackEncounter
+					}, {
+						name: "pinchou",
+						call: pinchouEncounter
+					}, {
+						name: "orcasun",
+						call: orcaSunscreen
+					}, {
+						name: "walk",
+						call: walk
+					}
+			)
+		}
 		public function exploreBeach():void {
 			flags[kFLAGS.DISCOVERED_BEACH]++;
-			
-			//Helia monogamy fucks
-			if (flags[kFLAGS.PC_PROMISED_HEL_MONOGAMY_FUCKS] == 1 && flags[kFLAGS.HEL_RAPED_TODAY] == 0 && rand(10) == 0 && player.gender > 0 && !SceneLib.helScene.followerHel()) {
-				SceneLib.helScene.helSexualAmbush();
-				return;
-			}
-			//Etna
-			if (flags[kFLAGS.ETNA_FOLLOWER] < 1 && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2 && rand(5) == 0) {
-				SceneLib.etnaScene.repeatYandereEnc();
-				return;
-			}
-			
-			var choice:Array = [];
-			var select:int;
-			
-			//Build choice list!
-			choice[choice.length] = 0;	//Stronger than oasis demons pack
-			if (rand(2) == 0) choice[choice.length] = 1;	//Pichou shop
-			if (rand(2) == 0) choice[choice.length] = 2;	//Orca TF
-			if (rand(4) == 0) choice[choice.length] = 3;	//Find nothing! The rand will be removed from this once the Beach is populated with more encounters.
-			
-			//Finding Sea Boat
-			if ((flags[kFLAGS.DISCOVERED_BEACH] >= 10) && flags[kFLAGS.DISCOVERED_OCEAN] <= 0 && rand(3) == 0) {
-				discoverSeaBoat();
-				return;
-			}
-			
-			//Cai'Lin
-		//	if (flags[kFLAGS.CAILIN_FOLLOWER] == 1 && rand(5) == 0) {
-		//		outputText("Suprise! Another new enocunter ;) Get ready to brambleeeeeeeee!!!!\n\n", true);
-		//		startCombat(new CaiLin());
-		//		return;
-		//	}
-			
-			//Ceani
-			if (flags[kFLAGS.CEANI_FOLLOWER] < 1 && flags[kFLAGS.CEANI_DAILY_TRAINING] < 1 && flags[kFLAGS.CEANI_ARCHERY_TRAINING] < 4 && player.gems >= 50 && rand(3) == 0) {
-				if (flags[kFLAGS.CEANI_AFFECTION] >= 2 && flags[kFLAGS.CEANI_ARCHERY_TRAINING] < 4) {
-					ceaniScene.basicarcherytraining();
-					return;
+			encounter.execEncounter();
+		}
+		public function walk():void {
+			clearOutput();
+			outputText("You walk through the sunny beach for an hour, finding nothing.\n\n");
+			if (rand(2) == 0) {
+				//50/50 strength/toughness
+				if (rand(2) == 0 && player.str < 100) {
+					outputText("The effort of struggling with the sand has made you stronger.");
+					dynStats("str", .5);
 				}
-				else {
-					ceaniScene.firstmeetingCeani();
-					return;
+				//Toughness
+				else if (player.tou < 100) {
+					outputText("The effort of struggling with the sand has made you tougher.");
+					dynStats("tou", .5);
 				}
 			}
-			if ((model.time.hours >= 6 && model.time.hours <= 11) && flags[kFLAGS.CEANI_FOLLOWER] < 1 && flags[kFLAGS.CEANI_ARCHERY_TRAINING] == 4) {
-				ceaniScene.beachInteractionsAfterArcheryTraining();
-				return;
+			doNext(camp.returnToCampUseOneHour);
+		}
+		public function orcaSunscreen():void {
+			clearOutput();
+			outputText("As you walk on the beach you find a weird black bottle with a white line and a cap. You pick it up and read the tag. It claims to be 'Orca sunscreen'. ");
+			inventory.takeItem(consumables.ORCASUN, camp.returnToCampUseOneHour);
+		}
+		public function ceaniEncounter1():void {
+			if (flags[kFLAGS.CEANI_AFFECTION] >= 2 && flags[kFLAGS.CEANI_ARCHERY_TRAINING] < 4) {
+				ceaniScene.basicarcherytraining();
+			} else {
+				ceaniScene.firstmeetingCeani();
 			}
-			
-			select = choice[rand(choice.length)];
-			switch(select) {
-				case 0:
-					demonsPack.demonspackEncounter();
-					break;
-			//	case 1:
-			//		if (flags[kFLAGS.CAILIN_FOLLOWER] <= 0) {
-			//			flags[kFLAGS.CAILIN_FOLLOWER] = 1;
-			//			flags[kFLAGS.CAILIN_LVL_UP] = 0;
-			//		}
-			//		gorgonScene.gorgonEncounter();
-			//		break;
-				case 1:
-					if (flags[kFLAGS.PINCHOU_SHOP] >= 1) pinchoushop.encounteringPinchouRepeat();
-					else pinchoushop.encounteringPinchouFirst();
-					break;
-				case 2:
-					clearOutput();
-					outputText("As you walk on the beach you find a weird black bottle with a white line and a cap. You pick it up and read the tag. It claims to be 'Orca sunscreen'. ");
-					inventory.takeItem(consumables.ORCASUN, camp.returnToCampUseOneHour);
-					break;
-				default:
-					clearOutput();
-					outputText("You walk through the sunny beach for an hour, finding nothing.\n\n");
-					if (rand(2) == 0) {
-						//50/50 strength/toughness
-						if (rand(2) == 0 && player.str < 100) {
-							outputText("The effort of struggling with the sand has made you stronger.");
-							dynStats("str", .5);
-						}
-						//Toughness
-						else if (player.tou < 100) {
-							outputText("The effort of struggling with the sand has made you tougher.");
-							dynStats("tou", .5);
-						}
-					}
-					doNext(camp.returnToCampUseOneHour);
-			}
+		}
+		public function pinchouEncounter():void {
+			if (flags[kFLAGS.PINCHOU_SHOP] >= 1) pinchoushop.encounteringPinchouRepeat();
+			else pinchoushop.encounteringPinchouFirst();
 		}
 		
 		public function discoverSeaBoat():void {

@@ -38,7 +38,7 @@ use namespace CoC;
 				return;
 			}
 			//Helia monogamy fucks
-			if (flags[kFLAGS.PC_PROMISED_HEL_MONOGAMY_FUCKS] == 1 && flags[kFLAGS.HEL_RAPED_TODAY] == 0 && rand(10) == 0 && player.gender > 0 && !SceneLib.helFollower.followerHel()) {
+			if (rand(10) == 0 && SceneLib.helScene.helSexualAmbushCondition()) {
 				SceneLib.helScene.helSexualAmbush();
 				return;
 			}

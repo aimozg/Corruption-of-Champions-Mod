@@ -140,13 +140,7 @@ use namespace CoC;
 						when  : fn.ifLevelMin(2),
 						call  : oasis.oasisEncounter
 					}, SceneLib.etnaScene.yandereEncounter,
-					{
-						//Helia monogamy fucks
-						name  : "helcommon",
-						call  : SceneLib.helScene.helSexualAmbush,
-						chance: 0.2,
-						when  : SceneLib.helScene.helSexualAmbushCondition
-					}, {
+					SceneLib.helScene.helSexualAmbushEncounter, {
 						name: "walk",
 						call: function ():void {
 							story.locate("walk").execute();

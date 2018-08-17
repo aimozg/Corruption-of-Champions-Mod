@@ -94,13 +94,7 @@ use namespace CoC;
 						name: "spriggan",
 						call: SceneLib.forest.dryadScene.encounterdryad,
 						chance: 0.2 
-					}, {
-						//Helia monogamy fucks
-						name  : "helcommon",
-						call  : SceneLib.helScene.helSexualAmbush,
-						chance: 0.2,
-						when  : SceneLib.helScene.helSexualAmbushCondition
-					}, {
+					}, SceneLib.helScene.helSexualAmbushEncounter, {
 						name  : "deepwoods",
 						call  : discoverDeepwoods,
 						when  : function ():Boolean {
@@ -254,14 +248,8 @@ use namespace CoC;
 					return flags[kFLAGS.KITSUNE_SHRINE_UNLOCKED] < 1;
 				},
 				call: kitsuneScene.kitsuneShrine
-			}, {
-				//Helia monogamy fucks
-				name  : "helcommon",
-				call  : SceneLib.helScene.helSexualAmbush,
-				chance: 0.2,
-				when  : SceneLib.helScene.helSexualAmbushCondition
-			}, SceneLib.etnaScene.yandereEncounter,
-			{
+			}, SceneLib.helScene.helSexualAmbushEncounter,
+			SceneLib.etnaScene.yandereEncounter, {
 				name  : "electra",
 				when  : function():Boolean {
 					return flags[kFLAGS.ELECTRA_FOLLOWER] < 1

@@ -46,14 +46,7 @@ use namespace CoC;
 				//General Golems, Goblin and Imp Encounters
 				name: "common",
 				call: SceneLib.exploration.genericGolGobImpEncounters
-			}, {
-				//Helia monogamy fucks
-				name  : "helcommon",
-				call  : SceneLib.helScene.helSexualAmbush,
-				chance: 0.2,
-				when  : SceneLib.helScene.helSexualAmbushCondition
-			}, SceneLib.etnaScene.yandereEncounter,
-			{
+			}, SceneLib.helScene.helSexualAmbushEncounter, {
 				name: "electra",
 				when: function():Boolean {
 					return flags[kFLAGS.ELECTRA_FOLLOWER] < 1 && flags[kFLAGS.ELECTRA_AFFECTION] >= 2;

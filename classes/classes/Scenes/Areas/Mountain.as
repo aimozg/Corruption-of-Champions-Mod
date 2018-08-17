@@ -41,14 +41,7 @@ public class Mountain extends BaseContent
 						//General Golems, Goblin and Imp Encounters
 						name: "common",
 						call: SceneLib.exploration.genericGolGobImpEncounters
-					}, {
-						//Helia monogamy fucks
-						name  : "helcommon",
-						call  : SceneLib.helScene.helSexualAmbush,
-						chance: 0.2,
-						when  : SceneLib.helScene.helSexualAmbushCondition
-					}, SceneLib.etnaScene.yandereEncounter,
-					{
+					}, SceneLib.helScene.helSexualAmbushEncounter, {
 						name: "salon",
 						when: fn.not(salon.isDiscovered),
 						call: salon.hairDresser
