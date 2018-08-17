@@ -49,9 +49,8 @@ use namespace CoC;
 
 		public function Camp() {
 			EventParser.doCamp=doCamp;
-			onGameInit(init);
 		}
-		private function init():void {
+		protected override function init():void {
 			var lib:NamedNode = CoC.instance.rootStory.locate("camp");
 			lib.addFunctionAsStory("return",returnToCampUseOneHour);
 			lib.addFunctionAsStory("return8",returnToCampUseEightHours);

@@ -32,7 +32,11 @@ import coc.xxc.StoryContext;
 	{
         public function BaseContent()
 		{
-			
+			CoC.onGameInit(init);
+		}
+		
+		protected function init():void {
+		
 		}
 
 		protected function cheatTime(time:Number, needNext:Boolean = false):void
@@ -905,9 +909,6 @@ import coc.xxc.StoryContext;
 				
 		protected function darkTheme():Boolean {
 			return CoC.instance.mainViewManager.isDarkTheme();
-		}
-		protected static function onGameInit(f:Function):void {
-			CoC.onGameInit(f);
 		}
 		protected function get context():StoryContext {
 			return CoC.instance.context;

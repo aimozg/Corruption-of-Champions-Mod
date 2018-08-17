@@ -30,10 +30,9 @@ public class Mountain extends BaseContent
 		
 		public function Mountain()
 		{
-			onGameInit(init);
 		}
 		private var explorationEncounter:GroupEncounter = null;
-		private function init():void {
+		protected override function init():void {
 			const game:CoC     = CoC.instance;
 			const fn:FnHelpers = Encounters.fn;
 			explorationEncounter =

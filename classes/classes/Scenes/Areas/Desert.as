@@ -26,7 +26,6 @@ use namespace CoC;
 		public var wanderer:Wanderer = new Wanderer();
 		public function Desert()
 		{
-			onGameInit(init);
 		}
 		private var story:BoundNode;
 		
@@ -34,9 +33,9 @@ use namespace CoC;
 		public function get desertEncounter():GroupEncounter {
 			return _desertEncounter;
 		}
-		private function init():void {
-            const game:CoC = CoC.instance;
-            const fn:FnHelpers = Encounters.fn;
+		protected override function init():void {
+			const game:CoC = CoC.instance;
+			const fn:FnHelpers = Encounters.fn;
 			_desertEncounter = game.getEncounterPool("desert").add(
 					//game.commonEncounters,
 					{

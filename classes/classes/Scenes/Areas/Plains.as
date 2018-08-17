@@ -25,7 +25,6 @@ use namespace CoC;
 
 		public function Plains()
 		{
-			onGameInit(init);
 		}
 		public function isDiscovered():Boolean {
 			return flags[kFLAGS.TIMES_EXPLORED_PLAINS] > 0;
@@ -38,8 +37,8 @@ use namespace CoC;
 		}
 
 		private var explorationEncounter:GroupEncounter = null;
-
-		private function init():void {
+		
+		protected override function init():void {
 			const game:CoC     = CoC.instance;
 			const fn:FnHelpers = Encounters.fn;
 			explorationEncounter = game.getEncounterPool("plains").add(/*SceneLib.commonEncounters,*/ {

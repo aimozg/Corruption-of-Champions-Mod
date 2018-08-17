@@ -38,7 +38,6 @@ use namespace CoC;
 		public var dryadScene:DryadScene = new DryadScene();
 
 		public function Forest() {
-			onGameInit(init);
 		}
 		
 		public function isDiscovered():Boolean {
@@ -82,7 +81,7 @@ use namespace CoC;
 		}
 		private var forestStory:BoundNode;
 		private var deepwoodsStory:BoundNode;
-		private function init():void {
+		protected override function init():void {
 			const game:CoC = CoC.instance;
             const fn:FnHelpers = Encounters.fn;
 			_forestEncounter = game.getEncounterPool("forest").add({

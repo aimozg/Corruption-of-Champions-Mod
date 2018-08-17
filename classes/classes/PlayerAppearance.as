@@ -23,10 +23,9 @@ public class PlayerAppearance extends BaseContent {
 
 
 	public function PlayerAppearance() {
-		onGameInit(init);
 	}
 	private var story:BoundNode;
-	private function init():void {
+	protected override function init():void {
         story = new Story("story", CoC.instance.rootStory, "appearance").bind(CoC.instance.context);
     }
 	public function appearance():void {

@@ -27,13 +27,12 @@ import classes.Scenes.SceneLib;
 
 		public function Beach() 
 		{
-			onGameInit(init);
 		}
 		private var _encounter:GroupEncounter = null;
 		public function get encounter():GroupEncounter {
 			return _encounter;
 		}
-		private function init():void {
+		protected override function init():void {
 			const game:CoC = CoC.instance;
 			_encounter = game.getEncounterPool("beach").add(
 					SceneLib.helScene.helSexualAmbushEncounter,

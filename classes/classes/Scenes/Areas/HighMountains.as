@@ -30,7 +30,6 @@ use namespace CoC;
 		
 		public function HighMountains()
 		{
-			onGameInit(init);
 		}
 		public function isDiscovered():Boolean {
 			return flags[kFLAGS.DISCOVERED_HIGH_MOUNTAIN] > 0;
@@ -45,7 +44,7 @@ use namespace CoC;
 		public function get encounter():GroupEncounter {
 			return _encounter;
 		}
-		private function init():void {
+		protected override function init():void {
 			const game:CoC     = CoC.instance;
 			const fn:FnHelpers = Encounters.fn;
 			_encounter         = game.getEncounterPool("highMountains").add(
