@@ -4,7 +4,7 @@
 package classes.Items {
 	import classes.Items.Weapons.*;
 	import classes.PerkLib;
-import classes.Stats.StatNames;
+import classes.lists.StatNames;
 import classes.lists.DamageType;
 
 	public final class WeaponLib {

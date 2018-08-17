@@ -29,12 +29,12 @@ package classes
 	import classes.Scenes.Camp.CampMakeWinions;
 import classes.Scenes.Combat.CombatAction.ACombatAction;
 import classes.Scenes.Places.TelAdre.UmasShop;
-import classes.Stats.BuffTags;
+import classes.lists.BuffTags;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.IStatHolder;
 import classes.Stats.PrimaryStat;
-import classes.Stats.StatNames;
+import classes.lists.StatNames;
 import classes.Stats.StatStore;
 import classes.Stats.StatUtils;
 import classes.StatusEffects.Combat.CombatInteBuff;

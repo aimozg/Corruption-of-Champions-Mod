@@ -1,7 +1,7 @@
 /**
  * Coded by aimozg on 16.08.2018.
  */
-package classes.Stats {
+package classes.lists {
 public class StatNames {
 	public function StatNames() {
 	}

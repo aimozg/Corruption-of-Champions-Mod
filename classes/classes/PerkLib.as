@@ -6,7 +6,7 @@ package classes
 import classes.BodyParts.Face;
 import classes.BodyParts.Tail;
 import classes.Perks.*;
-import classes.Stats.StatNames;
+import classes.lists.StatNames;
 
 public class PerkLib
 	{

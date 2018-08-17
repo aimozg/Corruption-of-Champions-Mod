@@ -4,6 +4,7 @@
 package classes.Stats {
 import classes.Creature;
 import classes.internals.Utils;
+import classes.lists.StatNames;
 
 import coc.script.Eval;
 
