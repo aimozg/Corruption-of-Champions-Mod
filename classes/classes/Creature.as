@@ -129,24 +129,24 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		
 		 */
 		protected var _stats:StatStore = new StatStore({
-			(StatNames.STR): new PrimaryStat(),
-			(StatNames.TOU): new PrimaryStat(),
-			(StatNames.SPE): new PrimaryStat(),
-			(StatNames.INT): new PrimaryStat(),
-			(StatNames.WIS): new PrimaryStat(),
-			(StatNames.LIB): new PrimaryStat(),
+			([StatNames.STR]): new PrimaryStat(),
+			([StatNames.TOU]): new PrimaryStat(),
+			([StatNames.SPE]): new PrimaryStat(),
+			([StatNames.INT]): new PrimaryStat(),
+			([StatNames.WIS]): new PrimaryStat(),
+			([StatNames.LIB]): new PrimaryStat(),
 			
-			(StatNames.SENS_MIN): new BuffableStat({base:10}),
-			(StatNames.SENS_MAX): new BuffableStat(),
-			(StatNames.LUST_MIN): new BuffableStat(),
-			(StatNames.LUST_MAX): new BuffableStat({base:100}),
-			(StatNames.HP_MAX): new BuffableStat({base:50}),
-			(StatNames.STAMINA_MAX): new BuffableStat({base:100}),
-			(StatNames.KI_MAX): new BuffableStat({base:50}),
+			([StatNames.SENS_MIN]): new BuffableStat({base:10}),
+			([StatNames.SENS_MAX]): new BuffableStat(),
+			([StatNames.LUST_MIN]): new BuffableStat(),
+			([StatNames.LUST_MAX]): new BuffableStat({base:100}),
+			([StatNames.HP_MAX]): new BuffableStat({base:50}),
+			([StatNames.STAMINA_MAX]): new BuffableStat({base:100}),
+			([StatNames.KI_MAX]): new BuffableStat({base:50}),
 			
-			(StatNames.DEFENSE): new BuffableStat(),
-			(StatNames.SPELLPOWER):new BuffableStat({base:1.0,min:0.0}),
-			(StatNames.HP_PER_TOU):new BuffableStat({base:2, min:0.1})
+			([StatNames.DEFENSE]): new BuffableStat(),
+			([StatNames.SPELLPOWER]):new BuffableStat({base:1.0,min:0.0}),
+			([StatNames.HP_PER_TOU]):new BuffableStat({base:2, min:0.1})
 		});
 		public function get statStore():StatStore {
 			return _stats;
