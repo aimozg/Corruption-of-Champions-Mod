@@ -1,13 +1,19 @@
 package classes {
+
 import classes.GlobalFlags.*;
-	import classes.display.SettingPane;
+import classes.display.SettingPane;
 
-	import coc.view.MainView;
-import coc.view.StatsView;
+import coc.view.MainView;
 
+import flash.display.Bitmap;
+import flash.display.Loader;
+import flash.display.LoaderInfo;
 import flash.display.StageQuality;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
+import flash.events.Event;
+import flash.net.FileFilter;
+import flash.net.FileReference;
+import flash.text.TextField;
+import flash.text.TextFormat;
 
 /**
  * ...
@@ -196,6 +202,31 @@ public class GameSettings extends BaseContent {
 		}
 	}
 
+	private var fr:FileReference = new FileReference();
+	private function loadBG():void {
+		var fileFilter:FileFilter = new FileFilter("Images", "*.png;*.jpg;");
+		fr.addEventListener(Event.SELECT, onSelectFile);
+		fr.browse([fileFilter]);
+	}
+
+	private function onSelectFile(event:Event):void {
+		fr.addEventListener(Event.COMPLETE, onFileLoaded);
+		fr.load()
+	}
+
+	private function onFileLoaded(event:Event):void {
+		var fl:Loader = new Loader();
+		fl.contentLoaderInfo.addEventListener(Event.COMPLETE, onBytesLoaded);
+		fl.loadBytes(event.target.data);
+	}
+
+	private function onBytesLoaded(event:Event):void {
+		var bm:Bitmap = Bitmap(LoaderInfo(event.target).content);
+		mainView.background.bitmap = bm;
+		MainView.Backgrounds[7] = bm;
+		setMainBackground(7);
+	}
+
 	private function displaySettingPane(pane:SettingPane):void {
 		hideSettingPane();
 		lastDisplayedPane = pane;
@@ -338,6 +369,7 @@ public class GameSettings extends BaseContent {
 		addButton(3, "Marble", setMainBackground, 3);
 		addButton(4, "Obsidian", setMainBackground, 4);
 		addButton(5, "Black", setMainBackground, 5);
+		addButton(10, "Custom", loadBG);
 
 		addButton(14, "Back", displaySettingPane, lastDisplayedPane);
 	}
@@ -382,10 +414,8 @@ public class GameSettings extends BaseContent {
 	}
 
 		public function setMainBackground(type:int):void {
-			flags[kFLAGS.BACKGROUND_STYLE]           = type;
-			mainView.background.bitmapClass          = MainView.Backgrounds[flags[kFLAGS.BACKGROUND_STYLE]];
-			mainView.statsView.setBackground(StatsView.SidebarBackgrounds[flags[kFLAGS.BACKGROUND_STYLE]]);
-			mainView.monsterStatsView.setBackground(StatsView.SidebarBackgrounds[flags[kFLAGS.BACKGROUND_STYLE]]);
+			flags[kFLAGS.BACKGROUND_STYLE] = type;
+			mainViewManager.setTheme();
 			menuMainBackground();
 		}
 
