@@ -30,6 +30,7 @@ package classes.Scenes
 	import coc.view.BitmapDataSprite;
 	import coc.view.Block;
 	import coc.view.CoCButton;
+	import coc.view.CoCScrollPane;
 	import coc.view.MainView;
 
 	import flash.text.TextField;
@@ -73,7 +74,7 @@ package classes.Scenes
 		public function itemGoNext():void { if (callNext != null) doNext(callNext); }
 
 		private var invenPane:Block;
-		private var scrollPane:CustomScrollPane;
+		private var scrollPane:CoCScrollPane;
 		private function close(next:Function):void {
 			scrollPane.visible = false;
 			invenPane.visible = false;
@@ -84,7 +85,7 @@ package classes.Scenes
 			next();
 		}
 		private function setupScrollPane():void {
-			scrollPane = new CustomScrollPane();
+			scrollPane = new CoCScrollPane();
 			var mt:TextField = mainView.mainText;
 			scrollPane.x = mt.x;
 			scrollPane.y = mt.y;
@@ -1011,25 +1012,5 @@ package classes.Scenes
 			exit();
 			return false;
 		}
-	}
-}
-
-import classes.internals.Utils;
-
-import com.bit101.components.ScrollPane;
-
-import flash.display.DisplayObjectContainer;
-import flash.events.MouseEvent;
-//TODO @Oxdeception pull this out into its own class, fix some scroll issues
-class CustomScrollPane extends ScrollPane {
-	public function CustomScrollPane(parent:DisplayObjectContainer =null, xpos:Number =0, ypos:Number =0){
-		super(parent, xpos, ypos);
-		_background.alpha = 0;
-		addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler)
-	}
-	private function mouseWheelHandler(e:MouseEvent):void {
-		if(content.height < this.height){return;}
-		content.y = Utils.boundFloat(this.height - content.height, content.y + (10 * e.delta), 0);
-		_vScrollbar.value = -content.y;
 	}
 }
