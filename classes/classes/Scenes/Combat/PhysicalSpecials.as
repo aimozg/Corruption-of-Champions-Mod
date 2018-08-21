@@ -257,11 +257,9 @@ package classes.Scenes.Combat {
 		
 		//Tornado Strike
 		if (player.vouivreScore() >= 11) {
-			bd = buttons.add("Tornado Strike", TornadoStrike).hint("Use wind to forcefully lift a foe in the air and deal damage.  \n\nWould go into cooldown after use for: 8 rounds");
-			bd.requireFatigue(physicalCost(60));
-			if (player.hasStatusEffect(StatusEffects.CooldownTornadoStrike)) {
-				bd.disable("<b>You need more time before you can perform Tornado Strike again.</b>\n\n");
-			}
+			buttons.add("Tornado Strike", TornadoStrike).hint("Use wind to forcefully lift a foe in the air and deal damage.  \n\nWould go into cooldown after use for: 8 rounds")
+				.requireFatigue(physicalCost(60))
+				.disableIf(player.hasStatusEffect(StatusEffects.CooldownTornadoStrike),"<b>You need more time before you can perform Tornado Strike again.</b>\n\n");
 		}
 	}
 	
@@ -285,19 +283,11 @@ package classes.Scenes.Combat {
 		}
 		outputText("You lift your [weapon] with all of your strenght and smash it on your foe head. ");
 		var damage:Number = powerfistspoweeeeer() * attacks;
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
+		var critChance:int = 0;
 		if (player.hasPerk(PerkLib.WeaponMastery) && player.weaponPerk == "Large" && player.str >= 100) critChance += 10;
-		if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
-			if (player.hasPerk(PerkLib.Impale) &&  player.spe >= 100 && (player.weaponName == "deadly spear" || player.weaponName == "deadly lance" || player.weaponName == "deadly trident")) damage *= 2.5;
-			else damage *= 1.75;
+		var crit:Boolean = critRoll({rage:true}, critChance);
+		if (crit) {
+			damage *= 1.75;
 		}
 		damage = Math.round(damage);
 		damage = doDamage(damage, true, true);
@@ -343,9 +333,9 @@ package classes.Scenes.Combat {
 		}
 		outputText("You ready your [weapon] and prepare to spin it around trying to hit as many [monster a][monster name] as possible.  ");
 		if ((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
-			if (monster.spe - player.spe < 8) outputText(monster.capitalA + monster.short + " narrowly avoids your attack!");
-			if (monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText(monster.capitalA + monster.short + " dodges your attack with superior quickness!");
-			if (monster.spe - player.spe >= 20) outputText(monster.capitalA + monster.short + " deftly avoids your slow attack.");
+			if (monster.spe - player.spe < 8) outputText("[Monster A][monster name] narrowly avoids your attack!");
+			if (monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText("[Monster A][monster name] dodges your attack with superior quickness!");
+			if (monster.spe - player.spe >= 20) outputText("[Monster A][monster name] deftly avoids your slow attack.");
 			enemyAI();
 			return;
 		}
@@ -369,16 +359,8 @@ package classes.Scenes.Combat {
 		if (player.hasStatusEffect(StatusEffects.OniRampage)) damage *= 3;
 		if (player.hasStatusEffect(StatusEffects.Overlimit)) damage *= 2;
 		//crit
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll({rage:true});
+		if (crit) {
 			damage *= 1.75;
 		}
 		//add bonus for using aoe special
@@ -408,13 +390,7 @@ package classes.Scenes.Combat {
 		}
 		fatigue(50, USEFATG_PHYSICAL);
 		outputText("You ready your [weapon] and prepare to spin it around trying to whip as many [monster a][monster name] as possible.  ");
-		if ((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
-			if (monster.spe - player.spe < 8) outputText(monster.capitalA + monster.short + " narrowly avoids your attack!");
-			if (monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText(monster.capitalA + monster.short + " dodges your attack with superior quickness!");
-			if (monster.spe - player.spe >= 20) outputText(monster.capitalA + monster.short + " deftly avoids your slow attack.");
-			enemyAI();
-			return;
-		}
+		if (dodgeRoll()) {return enemyAI();}
 		var damage:Number = 0;
 		damage += player.str;
 		if (damage < 10) damage = 10;
@@ -434,16 +410,8 @@ package classes.Scenes.Combat {
 		if (player.hasStatusEffect(StatusEffects.OniRampage)) damage *= 3;
 		if (player.hasStatusEffect(StatusEffects.Overlimit)) damage *= 2;
 		//crit
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll({rage:true});
+		if (crit) {
 			damage *= 1.75;
 		}
 		//add bonus for using aoe special
@@ -471,13 +439,7 @@ package classes.Scenes.Combat {
 			return;
 		}
 		outputText("You ready your claws and prepare to spin it around trying to hit as many [monster a][monster name] as possible.  ");
-		if ((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
-			if (monster.spe - player.spe < 8) outputText(monster.capitalA + monster.short + " narrowly avoids your attack!");
-			if (monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText(monster.capitalA + monster.short + " dodges your attack with superior quickness!");
-			if (monster.spe - player.spe >= 20) outputText(monster.capitalA + monster.short + " deftly avoids your slow attack.");
-			enemyAI();
-			return;
-		}
+		if (dodgeRoll()) {return enemyAI();}
 		fatigue(50, USEFATG_PHYSICAL);
 		var damage:Number = 0;
 		damage += (scalingBonusStrength() * 0.3) + ((player.str + unarmedAttack()) * 1.5);
@@ -494,16 +456,8 @@ package classes.Scenes.Combat {
 		if (player.hasStatusEffect(StatusEffects.OniRampage)) damage *= 3;
 		if (player.hasStatusEffect(StatusEffects.Overlimit)) damage *= 2;
 		//crit
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll({rage:true});
+		if (crit) {
 			damage *= 1.75;
 		}
 		//add bonus for using aoe special
@@ -786,17 +740,8 @@ package classes.Scenes.Combat {
 		if (player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
 		if (player.hasPerk(PerkLib.Heroism) && (monster.hasPerk(PerkLib.EnemyBossType) || monster.hasPerk(PerkLib.EnemyGigantType))) damage *= 2;
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasPerk(PerkLib.Blademaster)) critChance += 5;
-		if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll({bladeMaster:true, rage:true});
+		if (crit) {
 			damage *= 1.75;
 		}
 		damage = Math.round(damage);
@@ -828,17 +773,8 @@ package classes.Scenes.Combat {
 		if (player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
 		if (player.hasPerk(PerkLib.Heroism) && (monster.hasPerk(PerkLib.EnemyBossType) || monster.hasPerk(PerkLib.EnemyGigantType))) damage *= 2;
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasPerk(PerkLib.Blademaster)) critChance += 5;
-		if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll({bladeMaster:true, rage:true});
+		if (crit) {
 			damage *= 1.75;
 		}
 		damage = Math.round(damage);
@@ -862,7 +798,7 @@ package classes.Scenes.Combat {
 		clearOutput();
 		fatigue(30, USEFATG_PHYSICAL);
 		player.createStatusEffect(StatusEffects.CooldownWingBuffet,5,0,0,0);
-		var damage:Number = (player.str/5) + (player.tou/5)
+		var damage:Number = (player.str/5) + (player.tou/5);
 		//multiplicative bonuses
 		if (player.hasPerk(PerkLib.HoldWithBothHands)) damage *= 1.2;
 		if (player.hasPerk(PerkLib.ThunderousStrikes) && player.str >= 80) damage *= 1.2;
@@ -870,17 +806,8 @@ package classes.Scenes.Combat {
 		if (player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
 		if (player.hasPerk(PerkLib.Heroism) && (monster.hasPerk(PerkLib.EnemyBossType) || monster.hasPerk(PerkLib.EnemyGigantType))) damage *= 2;
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasPerk(PerkLib.Blademaster)) critChance += 5;
-		if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll({bladeMaster:true, rage:true});
+		if (crit) {
 			damage *= 1.75;
 		}
 		damage = Math.round(damage);
@@ -908,15 +835,8 @@ package classes.Scenes.Combat {
 		//other bonuses
 		if (player.hasPerk(PerkLib.Heroism) && (monster.hasPerk(PerkLib.EnemyBossType) || monster.hasPerk(PerkLib.EnemyGigantType))) damage *= 2;
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll();
+		if (crit) {
 			damage *= 1.75;
 		}
 		damage = Math.round(damage);
@@ -960,8 +880,8 @@ package classes.Scenes.Combat {
 		}
 		//Over-webbed
 		if(monster.spe < 1) {
-			if(!monster.plural) outputText(monster.capitalA + monster.short + " is completely covered in webbing, but you hose " + monster.mf("him","her") + " down again anyway.");
-			else outputText(monster.capitalA + monster.short + " are completely covered in webbing, but you hose them down again anyway.");
+			if(!monster.plural) outputText("[Monster A][monster name] is completely covered in webbing, but you hose " + monster.mf("him","her") + " down again anyway.");
+			else outputText("[Monster A][monster name] are completely covered in webbing, but you hose them down again anyway.");
 		}
 		//LAND A HIT!
 		else {
@@ -1154,69 +1074,65 @@ package classes.Scenes.Combat {
 		}
 		fatigue(10, USEFATG_PHYSICAL);
 		if (handleConcentration()) {return;}
-		//WRAP IT UPPP
-		if (40 + rand(player.spe) > monster.spe) {
-					var damage:Number = 0;
-					//str bonuses
-					damage += player.str;
-					damage += scalingBonusStrength() * 0.5;
-					//tou bonuses
-					damage += player.spe;
-					damage += scalingBonusSpeed() * 0.5;
-					//addictive bonuses
-					if (player.hasPerk(PerkLib.IronFists)) damage += 10;
-					if (player.hasPerk(PerkLib.AdvancedJobMonk)) damage += (10 * (1 + player.newGamePlusMod()));
-					if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += (30 + (15 * player.newGamePlusMod()));
-					if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += (30 + (15 * player.newGamePlusMod()));
-					//multiplicative bonuses
-					if (player.hasPerk(PerkLib.HoldWithBothHands)) damage *= 1.2;
-					if (player.hasPerk(PerkLib.ThunderousStrikes) && player.str >= 80) damage *= 1.2;
-					if (player.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
-					if (player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
-					if (player.hasPerk(PerkLib.Heroism) && (monster.hasPerk(PerkLib.EnemyBossType) || monster.hasPerk(PerkLib.EnemyGigantType))) damage *= 2;
-					//Determine if critical hit!
-					var crit:Boolean = false;
-					var critChance:int = 5;
-					if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-						if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-						if (player.inte > 100) critChance += 10;
-					}
-					if (player.hasPerk(PerkLib.Blademaster)) critChance += 5;
-					if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
-					if (monster.isImmuneToCrits()) critChance = 0;
-					if (rand(100) < critChance) {
-						crit = true;
-						damage *= 1.75;
-					}
-					damage = Math.round(damage);
-					damage = doDamage(damage);
-					outputText("You growl menacingly, and fold your wings, as you dive into [monster a][monster name] clawing at its/her/his body and leaving deep bleeding wounds dealing <b><font color=\"#800000\">" + damage + "</font></b> damage!. You’re now grappling with your target ready to tear it to shreds.");
-					if (crit == true) {
-					outputText(" <b>*Critical Hit!*</b>");
-					if (player.hasStatusEffect(StatusEffects.Rage)) player.removeStatusEffect(StatusEffects.Rage);
-					}
-					if (crit == false && player.hasPerk(PerkLib.Rage) && (player.hasStatusEffect(StatusEffects.Berzerking) || player.hasStatusEffect(StatusEffects.Lustzerking))) {
-						if (player.hasStatusEffect(StatusEffects.Rage) && player.statusEffectv1(StatusEffects.Rage) > 5 && player.statusEffectv1(StatusEffects.Rage) < 50) player.addStatusValue(StatusEffects.Rage, 1, 10);
-						else player.createStatusEffect(StatusEffects.Rage, 10, 0, 0, 0);
-					}
-					checkAchievementDamage(damage);
-					outputText("\n\n");
-					combat.heroBaneProc(damage);
+		if (40 + rand(player.spe) <= monster.spe) {
+			//Failure (-10 HPs) -
+			outputText("As you attempt to grapple your target it slips out of your reach delivering a glancing blow to your limbs. Unable to grab your opponent flap your wing and resume flight.");
+			player.takePhysDamage(5, true);
+			if (player.HP <= 0) {
+				doNext(endHpLoss);
+				return;
+			}
+		} else {
+			var damage:Number = 0;
+			//str bonuses
+			damage += player.str;
+			damage += scalingBonusStrength() * 0.5;
+			//tou bonuses
+			damage += player.spe;
+			damage += scalingBonusSpeed() * 0.5;
+			//addictive bonuses
+			if (player.hasPerk(PerkLib.IronFists)) damage += 10;
+			if (player.hasPerk(PerkLib.AdvancedJobMonk)) damage += (10 * (1 + player.newGamePlusMod()));
+			if (player.hasStatusEffect(StatusEffects.Berzerking)) damage += (30 + (15 * player.newGamePlusMod()));
+			if (player.hasStatusEffect(StatusEffects.Lustzerking)) damage += (30 + (15 * player.newGamePlusMod()));
+			//multiplicative bonuses
+			if (player.hasPerk(PerkLib.HoldWithBothHands)) damage *= 1.2;
+			if (player.hasPerk(PerkLib.ThunderousStrikes) && player.str >= 80) damage *= 1.2;
+			if (player.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
+			if (player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
+			if (player.hasPerk(PerkLib.Heroism) && (monster.hasPerk(PerkLib.EnemyBossType) || monster.hasPerk(PerkLib.EnemyGigantType))) damage *= 2;
+			//Determine if critical hit!
+			var crit:Boolean   = false;
+			var critChance:int = 5;
+			if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
+				if (player.inte <= 100) critChance += (player.inte - 50) / 5;
+				if (player.inte > 100) critChance += 10;
+			}
+			if (player.hasPerk(PerkLib.Blademaster)) critChance += 5;
+			if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
+			if (monster.isImmuneToCrits()) critChance = 0;
+			if (rand(100) < critChance) {
+				crit = true;
+				damage *= 1.75;
+			}
+			damage = Math.round(damage);
+			damage = doDamage(damage);
+			outputText("You growl menacingly, and fold your wings, as you dive into [monster a][monster name] clawing at its/her/his body and leaving deep bleeding wounds dealing <b><font color=\"#800000\">" + damage + "</font></b> damage!. You’re now grappling with your target ready to tear it to shreds.");
+			if (crit == true) {
+				outputText(" <b>*Critical Hit!*</b>");
+				player.removeStatusEffect(StatusEffects.Rage);
+			} else if (player.hasPerk(PerkLib.Rage) && (player.hasStatusEffect(StatusEffects.Berzerking) || player.hasStatusEffect(StatusEffects.Lustzerking))){
+				var rage:StatusEffectClass = player.createOrFindStatusEffect(StatusEffects.Rage);
+				rage.value1 = Math.min(50, rage.value1 + 10);
+			}
+			checkAchievementDamage(damage);
+			outputText("\n\n");
+			combat.heroBaneProc(damage);
 			monster.createStatusEffect(StatusEffects.Pounce, 4 + rand(2), 0, 0, 0);
 			player.removeStatusEffect(StatusEffects.Flying);
 			if (player.hasStatusEffect(StatusEffects.FlyingNoStun)) {
 				player.removeStatusEffect(StatusEffects.FlyingNoStun);
 				player.removePerk(PerkLib.Resolute);
-			}
-		}
-		//Failure
-		else {
-			//Failure (-10 HPs) -
-			outputText("As you attempt to grapple your target it slips out of your reach delivering a glancing blow to your limbs. Unable to grab your opponent flap your wing and resume flight.");
-			player.takePhysDamage(5, true);
-			if(player.HP <= 0) {
-				doNext(endHpLoss);
-				return;
 			}
 		}
 		outputText("\n\n");
@@ -1234,20 +1150,19 @@ package classes.Scenes.Combat {
 			return;
 		}
 		//Works similar to bee stinger, must be regenerated over time. Shares the same poison-meter
-		if(rand(player.spe/2 + 40) + 20 > monster.spe/1.5 || monster.hasStatusEffect(StatusEffects.Constricted)) {
+		if (!(rand(player.spe / 2 + 40) + 20 > monster.spe / 1.5 || monster.hasStatusEffect(StatusEffects.Constricted))) {
+			outputText("You lunge headfirst, fangs bared. Your attempt fails horrendously, as [monster a][monster name] manages to counter your lunge, knocking your head away with enough force to make your ears ring.");
+		} else {
 			//(if monster = demons)
-			if(monster.short == "demons") outputText("You look at the crowd for a moment, wondering which of their number you should bite. Your glance lands upon the leader of the group, easily spotted due to his snakeskin cloak. You quickly dart through the demon crowd as it closes in around you and lunge towards the broad form of the leader. You catch the demon off guard and sink your needle-like fangs deep into his flesh. You quickly release your venom and retreat before he, or the rest of the group manage to react.");
+			if (monster.short == "demons") outputText("You look at the crowd for a moment, wondering which of their number you should bite. Your glance lands upon the leader of the group, easily spotted due to his snakeskin cloak. You quickly dart through the demon crowd as it closes in around you and lunge towards the broad form of the leader. You catch the demon off guard and sink your needle-like fangs deep into his flesh. You quickly release your venom and retreat before he, or the rest of the group manage to react.");
 			//(Otherwise)
 			else outputText("You lunge at the foe headfirst, fangs bared. You manage to catch [monster a][monster name] off guard, your needle-like fangs penetrating deep into " + monster.pronoun3 + " body. You quickly release your venom, and retreat before " + monster.pronoun1 + " manages to react.");
 			//The following is how the enemy reacts over time to poison. It is displayed after the description paragraph,instead of lust
 			var nagaVenom:StatusEffectClass = monster.createOrFindStatusEffect(StatusEffects.NagaVenom);
-			nagaVenom.buffHost('str',-2);
-			nagaVenom.buffHost('spe',-2);
+			nagaVenom.buffHost('str', -2);
+			nagaVenom.buffHost('spe', -2);
 			nagaVenom.value1 += 2;
 			nagaVenom.value2 += 2;
-		}
-		else {
-			outputText("You lunge headfirst, fangs bared. Your attempt fails horrendously, as [monster a][monster name] manages to counter your lunge, knocking your head away with enough force to make your ears ring.");
 		}
 		outputText("\n\n");
 		player.tailVenom -= 25;
@@ -1277,7 +1192,7 @@ package classes.Scenes.Combat {
 			if(monster.lustVuln == 0) outputText("  Your aphrodisiac toxin has no effect!");
 			else {
 				if(monster.plural) outputText("  The one you bit flushes hotly, though the entire group seems to become more aroused in sympathy to their now-lusty compatriot.");
-				else outputText("  " + monster.mf("He","She") + " flushes hotly and " + monster.mf("touches his suddenly-stiff member, moaning lewdly for a moment.","touches a suddenly stiff nipple, moaning lewdly.  You can smell her arousal in the air."));
+				else outputText("  [Monster He] flushes hotly and " + monster.mf("touches his suddenly-stiff member, moaning lewdly for a moment.","touches a suddenly stiff nipple, moaning lewdly.  You can smell her arousal in the air."));
 				var lustDmg:int = 30 * monster.lustVuln;
 				monster.teased(lustDmg);
 				if (monster.lustVuln > 0) {
@@ -1336,42 +1251,28 @@ package classes.Scenes.Combat {
 	public function mantisMultiSlash():void {
 		SceneLib.combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
-		if (monster.plural) {
-			if (player.fatigue + physicalCost(60) > player.maxFatigue()) {
-				outputText("You are too tired to slash " + monster.a + " " + monster.short + ".");
-				addButton(0, "Next", combatMenu, false);
-				return;
-			}
-		}
-		else {
-			if (player.fatigue + physicalCost(24) > player.maxFatigue()) {
-				outputText("You are too tired to slash " + monster.a + " " + monster.short + ".");
-				addButton(0, "Next", combatMenu, false);
-				return;
-			}
-		}
-		if (monster.plural) {
-			fatigue(60, USEFATG_PHYSICAL);
-		}
-		else fatigue(24, USEFATG_PHYSICAL);
-		if (handleConcentration()) {return;}
-		outputText("You ready your wrists mounted scythes and prepare to sweep them towards [monster a][monster name].\n\n");
-		if ((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
-			if (monster.spe - player.spe < 8) outputText(monster.capitalA + monster.short + " narrowly avoids your attacks!\n\n");
-			if (monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText(monster.capitalA + monster.short + " dodges your attacks with superior quickness!\n\n");
-			if (monster.spe - player.spe >= 20) outputText(monster.capitalA + monster.short + " deftly avoids your slow attacks.\n\n");
-			enemyAI();
+		var cost:int = monster.plural ? 60 : 24;
+		if (player.fatigue + physicalCost(cost) > player.maxFatigue()) {
+			outputText("You are too tired to slash [monster a] [monster name].");
+			addButton(0, "Next", combatMenu, false);
 			return;
 		}
-		if (monster.plural) {
-			if (player.hasPerk(PerkLib.MantislikeAgility)) {
-				if (player.hasPerk(PerkLib.MantislikeAgilityEvolved) && player.hasPerk(PerkLib.TrachealSystemEvolved)) flags[kFLAGS.MULTIPLE_ATTACK_STYLE] = 10;
-				else flags[kFLAGS.MULTIPLE_ATTACK_STYLE] = 6;
+		fatigue(cost, USEFATG_PHYSICAL);
+
+		if (handleConcentration()) {return;}
+		outputText("You ready your wrists mounted scythes and prepare to sweep them towards [monster a][monster name].\n\n");
+		if (dodgeRoll()) {return enemyAI();}
+		if (!monster.plural) {
+			flags[kFLAGS.MULTIPLE_ATTACK_STYLE] = 1;
+		} else {
+			if (!player.hasPerk(PerkLib.MantislikeAgility)) {
+				flags[kFLAGS.MULTIPLE_ATTACK_STYLE] = 3;
+			} else if (player.hasPerk(PerkLib.MantislikeAgilityEvolved) && player.hasPerk(PerkLib.TrachealSystemEvolved)) {
+				flags[kFLAGS.MULTIPLE_ATTACK_STYLE] = 10;
+			} else {
+				flags[kFLAGS.MULTIPLE_ATTACK_STYLE] = 6;
 			}
-			else flags[kFLAGS.MULTIPLE_ATTACK_STYLE] = 3;
-			
 		}
-		else flags[kFLAGS.MULTIPLE_ATTACK_STYLE] = 1;
 		mantisMultipleAttacks();
 	}
 	public function mantisMultipleAttacks():void {
@@ -1393,16 +1294,8 @@ package classes.Scenes.Combat {
 		if (player.hasStatusEffect(StatusEffects.OniRampage)) damage *= 3;
 		if (player.hasStatusEffect(StatusEffects.Overlimit)) damage *= 2;
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll({rage:true});
+		if (crit) {
 			damage *= 1.75;
 		}
 		//final touches
@@ -1445,33 +1338,28 @@ package classes.Scenes.Combat {
 			return;
 		}
 		fatigue(25, USEFATG_PHYSICAL);
-		var damage:Number = 0;
 		if (handleConcentration()) {return;}
+
+		var damage:Number = 0;
+		var chance:Number = 0;
 		//Bigger horns = better success chance.
-		//Small horns - 60% hit
-		if(player.horns.count >= 6 && player.horns.count < 12) {
-			var chance:Number = 60;
-		}
-		//bigger horns - 75% hit
-		if(player.horns.count >= 12 && player.horns.count < 20) {
-			chance = 75;
-		}
-		//huge horns - 90% hit
 		if(player.horns.count >= 20) {
-			chance = 80;
+			chance = 80; //huge horns - 90% hit
+		} else if(player.horns.count >= 12) {
+			chance = 75; //bigger horns - 75% hit
+		} else if(player.horns.count >= 6) {
+			chance = 60; //Small horns - 60% hit
 		}
 		//Vala dodgy bitch!
 		if(monster.short == "Vala") {
 			chance = 20;
 		}
-		//Account for monster speed - up to -50%.
-		if (monster.spe <= 100) chance -= monster.spe / 2;
-		else chance -= 50;
-		//Account for player speed - up to +50%
-		if (player.spe <= 100) chance += player.spe / 2;
-		else chance += 50;
+
+		chance -= Math.min(50, monster.spe / 2); //Account for monster speed - up to -50%.
+		chance += Math.min(50, player.spe  / 2); //Account for player speed - up to +50%
+
 		//Hit & calculation
-		if(chance >= rand(100)) {
+		if (randomChance(chance)) {
 			var horns:Number = player.horns.count;
 			if (player.horns.count > 40) player.horns.count = 40;
 			//Determine damage - str modified by enemy toughness!
@@ -1563,29 +1451,23 @@ package classes.Scenes.Combat {
 			return;
 		}
 		fatigue(15, USEFATG_PHYSICAL);
-		var damage:Number = 0;
 		if (handleConcentration()) {return;}
+		var damage:Number = 0;
+		var chance:Number = 0;
 		//Bigger horns = better success chance.
-		//Small horns - 60% hit
-		if(player.horns.count >= 6 && player.horns.count < 12) {
-			var chance:Number = 60;
-		}
-		//bigger horns - 75% hit
-		if(player.horns.count >= 12 && player.horns.count < 20) {
-			chance = 75;
-		}
-		//huge horns - 90% hit
 		if(player.horns.count >= 20) {
-			chance = 80;
+			chance = 80; //huge horns - 90% hit
+		} else if(player.horns.count >= 12) {
+			chance = 75; //bigger horns - 75% hit
+		} else if(player.horns.count >= 6) {
+			chance = 60; //Small horns - 60% hit
 		}
 		//Vala dodgy bitch!
 		if(monster.short == "Vala") {
 			chance = 20;
 		}
-		//Account for monster speed - up to -50%.
-		chance -= monster.spe/2;
-		//Account for player speed - up to +50%
-		chance += player.spe/2;
+		chance -= Math.min(50, monster.spe / 2); //Account for monster speed - up to -50%.
+		chance += Math.min(50, player.spe  / 2); //Account for player speed - up to +50%
 		//Hit & calculation
 		if(chance >= rand(100)) {
 			var horns:Number = player.horns.count;
@@ -1646,13 +1528,8 @@ package classes.Scenes.Combat {
 		}
 		//Determine if dodged!
 		if (handleConcentration()) {return;}
-		if(monster.spe - player.spe > 0 && int(Math.random()*(((monster.spe-player.spe)/4)+80)) > 80) {
-			if(monster.spe - player.spe < 8) outputText(monster.capitalA + monster.short + " narrowly avoids your stinger!\n\n");
-			if(monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText(monster.capitalA + monster.short + " dodges your stinger with superior quickness!\n\n");
-			if(monster.spe - player.spe >= 20) outputText(monster.capitalA + monster.short + " deftly avoids your slow attempts to sting " + monster.pronoun2 + ".\n\n");
-			enemyAI();
-			return;
-		}
+		if (dodgeRoll("stinger")) {return enemyAI();}
+
 		//determine if avoided with armor.
 		if(monster.armorDef - player.level >= 10 && rand(4) > 0) {
 			outputText("Despite your best efforts, your sting attack can't penetrate " +  monster.a + monster.short + "'s defenses.\n\n");
@@ -1676,11 +1553,7 @@ package classes.Scenes.Combat {
 		if (player.tailType == 20) {
 			monster.drainStat('spe',10);
 		}
-		if(monster.hasStatusEffect(StatusEffects.NagaVenom))
-		{
-			monster.addStatusValue(StatusEffects.NagaVenom,3,5);
-		}
-		else monster.createStatusEffect(StatusEffects.NagaVenom, 0, 0, 5, 0);
+		monster.createOrFindStatusEffect(StatusEffects.NagaVenom).value3 += 5;
 		outputText("\n\n");
 		//Use tail mp
 		player.tailVenom -= 25;
@@ -1702,13 +1575,8 @@ package classes.Scenes.Combat {
 		}
 		//Determine if dodged!
 		if (handleConcentration()) {return;}
-		if(monster.spe - player.spe > 0 && int(Math.random()*(((monster.spe-player.spe)/4)+80)) > 80) {
-			if(monster.spe - player.spe < 8) outputText(monster.capitalA + monster.short + " narrowly avoids your spike!\n\n");
-			if(monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText(monster.capitalA + monster.short + " dodges your spike with superior quickness!\n\n");
-			if(monster.spe - player.spe >= 20) outputText(monster.capitalA + monster.short + " deftly avoids your slow attempts to hit with a spike " + monster.pronoun2 + ".\n\n");
-			enemyAI();
-			return;
-		}
+		if (dodgeRoll("spike")) {return enemyAI();}
+
 		//determine if avoided with armor.
 		if(monster.armorDef - player.level >= 10 && rand(4) > 0) {
 			outputText("Despite your best efforts, your spike attack can't penetrate " +  monster.a + monster.short + "'s defenses.\n\n");
@@ -1759,50 +1627,31 @@ package classes.Scenes.Combat {
 	public function kissAttack():void {
 		SceneLib.combat.lastAttack = Combat.LUSTSPELL;
 		clearOutput();
-		var attack:Number = rand(6);
-		switch(attack) {
-			case 1:
-				//Attack text 1:
-				outputText("You hop up to [monster a][monster name] and attempt to plant a kiss on " + monster.pronoun3 + ".");
-				break;
-				//Attack text 2:
-			case 2:
-				outputText("You saunter up and dart forward, puckering your golden lips into a perfect kiss.");
-				break;
-				//Attack text 3:
-			case 3:
-				outputText("Swaying sensually, you wiggle up to [monster a][monster name] and attempt to plant a nice wet kiss on " + monster.pronoun2 + ".");
-				break;
-				//Attack text 4:
-			case 4:
-				outputText("Lunging forward, you fly through the air at [monster a][monster name] with your lips puckered and ready to smear drugs all over " + monster.pronoun2 + ".");
-				break;
-				//Attack text 5:
-			case 5:
-				outputText("You lean over, your lips swollen with lust, wet with your wanting slobber as you close in on [monster a][monster name].");
-				break;
-				//Attack text 6:
-			default:
-				outputText("Pursing your drug-laced lips, you close on [monster a][monster name] and try to plant a nice, wet kiss on " + monster.pronoun2 + ".");
-				break;
-		}
+		outputText(randomChoice(
+			"You hop up to [monster a][monster name] and attempt to plant a kiss on [monster himher].",
+			"You saunter up and dart forward, puckering your golden lips into a perfect kiss.",
+			"Swaying sensually, you wiggle up to [monster a][monster name] and attempt to plant a nice wet kiss on [monster himher].",
+			"Lunging forward, you fly through the air at [monster a][monster name] with your lips puckered and ready to smear drugs all over [monster himher].",
+			"You lean over, your lips swollen with lust, wet with your wanting slobber as you close in on [monster a][monster name].",
+			"Pursing your drug-laced lips, you close on [monster a][monster name] and try to plant a nice, wet kiss on [monster himher]."
+		));
+
 		//Dodged!
 		if(monster.spe - player.spe > 0 && rand(((monster.spe - player.spe)/4)+80) > 80) {
-			attack = rand(3);
-			switch(attack) {
+			switch(rand(3)) {
 					//Dodge 1:
 				case 1:
-					if(monster.plural) outputText("  [monster A][monster name] sees it coming and moves out of the way in the nick of time!\n\n");
+					outputText("  [monster A][monster name] sees it coming and moves out of the way in the nick of time!\n\n");
 					break;
 					//Dodge 2:
 				case 2:
 					if(monster.plural) outputText("  Unfortunately, you're too slow, and [monster a][monster name] slips out of the way before you can lay a wet one on one of them.\n\n");
-					else outputText("  Unfortunately, you're too slow, and [monster a][monster name] slips out of the way before you can lay a wet one on " + monster.pronoun2 + ".\n\n");
+					else outputText("  Unfortunately, you're too slow, and [monster a][monster name] slips out of the way before you can lay a wet one on [monster himher].\n\n");
 					break;
 					//Dodge 3:
 				default:
 					if(monster.plural) outputText("  Sadly, [monster a][monster name] moves aside, denying you the chance to give one of them a smooch.\n\n");
-					else outputText("  Sadly, [monster a][monster name] moves aside, denying you the chance to give " + monster.pronoun2 + " a smooch.\n\n");
+					else outputText("  Sadly, [monster a][monster name] moves aside, denying you the chance to give [monster himher] a smooch.\n\n");
 					break;
 			}
 			enemyAI();
@@ -1811,29 +1660,28 @@ package classes.Scenes.Combat {
 		//Success but no effect:
 		if(monster.lustVuln <= 0 || !monster.hasCock()) {
 			if(monster.plural) outputText("  Mouth presses against mouth, and you allow your tongue to stick out to taste the saliva of one of their number, making sure to give them a big dose.  Pulling back, you look at [monster a][monster name] and immediately regret wasting the time on the kiss.  It had no effect!\n\n");
-			else outputText("  Mouth presses against mouth, and you allow your tongue to stick to taste " + monster.pronoun3 + "'s saliva as you make sure to give them a big dose.  Pulling back, you look at [monster a][monster name] and immediately regret wasting the time on the kiss.  It had no effect!\n\n");
+			else outputText("  Mouth presses against mouth, and you allow your tongue to stick to taste [monster hisher]'s saliva as you make sure to give them a big dose.  Pulling back, you look at [monster a][monster name] and immediately regret wasting the time on the kiss.  It had no effect!\n\n");
 			enemyAI();
 			return;
 		}
-		attack = rand(4);
 		var damage:Number = 0;
-		switch(attack) {
+		switch(rand(4)) {
 				//Success 1:
 			case 1:
 				if(monster.plural) outputText("  Success!  A spit-soaked kiss lands right on one of their mouths.  The victim quickly melts into your embrace, allowing you to give them a nice, heavy dose of sloppy oral aphrodisiacs.");
-				else outputText("  Success!  A spit-soaked kiss lands right on [monster a][monster name]'s mouth.  " + monster.mf("He","She") + " quickly melts into your embrace, allowing you to give them a nice, heavy dose of sloppy oral aphrodisiacs.");
+				else outputText("  Success!  A spit-soaked kiss lands right on [monster a][monster name]'s mouth.  [Monster He] quickly melts into your embrace, allowing you to give them a nice, heavy dose of sloppy oral aphrodisiacs.");
 				damage = 15;
 				break;
 				//Success 2:
 			case 2:
 				if(monster.plural) outputText("  Gold-gilt lips press into one of their mouths, the victim's lips melding with yours.  You take your time with your suddenly cooperative captive and make sure to cover every bit of their mouth with your lipstick before you let them go.");
-				else outputText("  Gold-gilt lips press into [monster a][monster name], " + monster.pronoun3 + " mouth melding with yours.  You take your time with your suddenly cooperative captive and make sure to cover every inch of " + monster.pronoun3 + " with your lipstick before you let " + monster.pronoun2 + " go.");
+				else outputText("  Gold-gilt lips press into [monster a][monster name], [monster hisher] mouth melding with yours.  You take your time with your suddenly cooperative captive and make sure to cover every inch of [monster hisher] with your lipstick before you let [monster himher] go.");
 				damage = 20;
 				break;
 				//CRITICAL SUCCESS (3)
 			case 3:
-				if(monster.plural) outputText("  You slip past [monster a][monster name]'s guard and press your lips against one of them.  " + monster.mf("He","She") + " melts against you, " + monster.mf("his","her") + " tongue sliding into your mouth as " + monster.mf("he","she") + " quickly succumbs to the fiery, cock-swelling kiss.  It goes on for quite some time.  Once you're sure you've given a full dose to " + monster.mf("his","her") + " mouth, you break back and observe your handwork.  One of [monster a][monster name] is still standing there, licking " + monster.mf("his","her") + " his lips while " + monster.mf("his","her") + " dick is standing out, iron hard.  You feel a little daring and give the swollen meat another moist peck, glossing the tip in gold.  There's no way " + monster.mf("he","she") + " will go soft now.  Though you didn't drug the rest, they're probably a little 'heated up' from the show.");
-				else outputText("  You slip past [monster a][monster name]'s guard and press your lips against " + monster.pronoun3 + ".  " + monster.mf("He","She") + " melts against you, " + monster.pronoun3 + " tongue sliding into your mouth as " + monster.pronoun1 + " quickly succumbs to the fiery, cock-swelling kiss.  It goes on for quite some time.  Once you're sure you've given a full dose to " + monster.pronoun3 + " mouth, you break back and observe your handwork.  [monster A][monster name] is still standing there, licking " + monster.pronoun3 + " lips while " + monster.pronoun3 + " dick is standing out, iron hard.  You feel a little daring and give the swollen meat another moist peck, glossing the tip in gold.  There's no way " + monster.pronoun1 + " will go soft now.");
+				if(monster.plural) outputText("  You slip past [monster a][monster name]'s guard and press your lips against one of them.  [Monster He] melts against you, [monster hisher] tongue sliding into your mouth as [monster he] quickly succumbs to the fiery, cock-swelling kiss.  It goes on for quite some time.  Once you're sure you've given a full dose to [monster hisher] mouth, you break back and observe your handwork.  One of [monster a][monster name] is still standing there, licking [monster hisher] his lips while [monster hisher] dick is standing out, iron hard.  You feel a little daring and give the swollen meat another moist peck, glossing the tip in gold.  There's no way [monster he] will go soft now.  Though you didn't drug the rest, they're probably a little 'heated up' from the show.");
+				else outputText("  You slip past [monster a][monster name]'s guard and press your lips against [monster hisher].  [Monster He] melts against you, [monster hisher] tongue sliding into your mouth as [monster he] quickly succumbs to the fiery, cock-swelling kiss.  It goes on for quite some time.  Once you're sure you've given a full dose to [monster hisher] mouth, you break back and observe your handwork.  [monster A][monster name] is still standing there, licking [monster hisher] lips while [monster hisher] dick is standing out, iron hard.  You feel a little daring and give the swollen meat another moist peck, glossing the tip in gold.  There's no way [monster he] will go soft now.");
 				damage = 30;
 				break;
 				//Success 4:
@@ -1842,10 +1690,7 @@ package classes.Scenes.Combat {
 				damage = 12;
 				break;
 		}
-		//Add status if not already drugged
-		if(!monster.hasStatusEffect(StatusEffects.LustStick)) monster.createStatusEffect(StatusEffects.LustStick,0,0,0,0);
-		//Else add bonus to round damage
-		else monster.addStatusValue(StatusEffects.LustStick,2,Math.round(damage / 10));
+		monster.createOrFindStatusEffect(StatusEffects.Luststick).value2 += Math.round(damage / 10);
 		//Deal damage
 		monster.teased(monster.lustVuln * damage);
 		outputText("\n\n");
@@ -1882,23 +1727,11 @@ package classes.Scenes.Combat {
 		clearOutput();
 		outputText(". Snarling with hunger, you lunge at your opponent, set to bite right into them!  ");
 		if(player.hasStatusEffect(StatusEffects.Blind)) outputText("In hindsight, trying to bite someone while blind was probably a bad idea... ");
-		var damage:Number = 0;
 		//Determine if dodged!
-		if((player.hasStatusEffect(StatusEffects.Blind) && rand(3) != 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
-			if(monster.spe - player.spe < 8) outputText(monster.capitalA + monster.short + " narrowly avoids your attack!");
-			if(monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText(monster.capitalA + monster.short + " dodges your attack with superior quickness!");
-			if(monster.spe - player.spe >= 20) outputText(monster.capitalA + monster.short + " deftly avoids your slow attack.");
-			outputText("\n\n");
-			enemyAI();
-			return;
-		}
+		if (dodgeRoll()) {return enemyAI();}
 		//Determine damage - str modified by enemy toughness!
-		damage = int((player.str + player.spe) * 3 * (monster.damagePercent() / 100));
-		if (!monster.hasStatusEffect(StatusEffects.SharkBiteBleed)) monster.createStatusEffect(StatusEffects.SharkBiteBleed,15,0,0,0);
-		else {
-			monster.removeStatusEffect(StatusEffects.SharkBiteBleed);
-			monster.createStatusEffect(StatusEffects.SharkBiteBleed,15,0,0,0);
-		}
+		var damage:Number = int((player.str + player.spe) * 3 * (monster.damagePercent() / 100));
+		monster.createOrFindStatusEffect(StatusEffects.SharkBiteBleed).value1 = 15;
 		//Deal damage and update based on perks
 		if(damage > 0) {
 			if (player.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
@@ -2000,7 +1833,7 @@ package classes.Scenes.Combat {
 			//Akbal dodges special education
 			if(monster.short == "Akbal") outputText("Akbal moves like lightning, weaving in and out of your furious attack with the speed and grace befitting his jaguar body.\n");
 			else {
-				outputText(monster.capitalA + monster.short + " manage");
+				outputText("[Monster A][monster name] manage");
 				if(!monster.plural) outputText("s");
 				outputText(" to dodge your kick!");
 				outputText("\n\n");
@@ -2064,13 +1897,7 @@ package classes.Scenes.Combat {
 	public function shieldBash():void {
 		clearOutput();
 		outputText("You ready your [shield] and prepare to slam it towards [monster a][monster name].  ");
-		if ((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
-			if (monster.spe - player.spe < 8) outputText(monster.capitalA + monster.short + " narrowly avoids your attack!");
-			if (monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText(monster.capitalA + monster.short + " dodges your attack with superior quickness!");
-			if (monster.spe - player.spe >= 20) outputText(monster.capitalA + monster.short + " deftly avoids your slow attack.");
-			enemyAI();
-			return;
-		}
+		if (dodgeRoll()) {return enemyAI();}
 		var damage:int = 10 + (player.str / 1.5) + rand(player.str / 2) + (player.shieldBlock * 2);
 		if (player.hasPerk(PerkLib.ShieldSlam)) damage *= 1.2;
 		if (player.hasPerk(PerkLib.SteelImpact)) damage += ((player.tou - 50) * 0.3);
@@ -2118,16 +1945,8 @@ package classes.Scenes.Combat {
 		//add bonus for attacking animal-morph or beast enemy
 		if (monster.hasPerk(PerkLib.EnemyBeastOrAnimalMorphType)) damage *= 15;
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasPerk(PerkLib.VitalShot) && player.inte >= 50) critChance += 10;
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll({vitalShot:true});
+		if (crit) {
 			damage *= 1.75;
 		}
 		if (player.hasPerk(PerkLib.HistoryScout)) damage *= 1.1;
@@ -2171,16 +1990,8 @@ package classes.Scenes.Combat {
 		//add bonus for using aoe special
 		damage *= 12;
 		//Determine if critical hit!
-		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasPerk(PerkLib.VitalShot) && player.inte >= 50) critChance += 10;
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
-			crit = true;
+		var crit:Boolean = critRoll({vitalShot:true});
+		if (crit) {
 			damage *= 1.75;
 		}
 		if (player.hasPerk(PerkLib.HistoryScout)) damage *= 1.1;
@@ -2222,6 +2033,48 @@ package classes.Scenes.Combat {
 			}
 			return false;
 		}
+
+	private function critRoll(options:* = {}, bonus:int = 0):Boolean {
+		if (monster.isImmuneToCrits()) return false;
+		var critChance:int = 5 + bonus;
+		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
+			if (player.inte <= 100) {
+				critChance += (player.inte - 50) / 5;
+			} else {
+				critChance += 10;
+			}
+		}
+		if (player.inte > 50) {
+			if (player.hasPerk(PerkLib.Tactician)) {
+				critChance += 10
+			}
+			if (options.vitalShot && player.hasPerk(PerkLib.VitalShot)) {
+				critChance += 10;
+			}
+		}
+		if (options.rage) {
+			critChance += player.statusEffectv1(StatusEffects.Rage);
+		}
+		if (options.bladeMaster && player.hasPerk(PerkLib.Blademaster)) {
+			critChance += 5
+		}
+		return rand(100) < critChance;
+	}
+
+	private function dodgeRoll(attackText:String = "attack"):Boolean {
+		var diff:int = monster.spe - player.spe;
+		var blind:Boolean = player.hasStatusEffect(StatusEffects.Blind) && trueOnceInN(2);
+		var roll:Boolean = int(Math.random() * ((diff / 4) + 80)) > 80;
+		if (!(blind || roll)) {return false;}
+		if(diff >= 20){
+			outputText("[Monster A][monster name] deftly avoids your slow " + attackText + ".");
+		} else if (diff >= 8){
+			outputText("[Monster A][monster name] dodges your " + attackText + " with superior quickness!");
+		} else {
+			outputText("[Monster A][monster name] narrowly avoids your " + attackText + "!");
+		}
+		return true;
+	}
 
 	public function PhysicalSpecials() {
 	}
