@@ -35,8 +35,10 @@ public class GameSettings extends BaseContent {
 
 	public function configurePanes():void {
 		//Gameplay Settings
+		const mainView:MainView = mainView;
+		const mainText:TextField = mainView.mainText;
 		for (var i:int = 0; i < PANES_CONFIG.length; i++) {
-			var pane:SettingPane = new SettingPane(CoC.instance.mainView.mainText.x, CoC.instance.mainView.mainText.y, CoC.instance.mainView.mainText.width + 16, CoC.instance.mainView.mainText.height);
+			var pane:SettingPane = new SettingPane(mainText.x, mainText.y, mainText.width + mainView.scrollBar.width - 10, mainText.height);
 			pane.name = PANES_CONFIG[i][0];
 			var hl:TextField = pane.addHelpLabel();
 			hl.htmlText = formatHeader(PANES_CONFIG[i][1]) + PANES_CONFIG[i][2] + "\n\n";

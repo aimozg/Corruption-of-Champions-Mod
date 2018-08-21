@@ -1,25 +1,21 @@
 package classes.display 
 {
-	import classes.display.BindDisplay;
+
 	import coc.view.Block;
-	import coc.view.CoCButton;
-	import coc.view.MainView;
-	import com.bit101.components.ScrollPane;
-	import flash.display.DisplayObject;
-	import flash.display.MovieClip;
+	import coc.view.CoCScrollPane;
+
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-	import flash.display.Bitmap;
 
-	/**
+/**
 	 * Provides a scrollable container for game settings.
 	 * @author Kitteh6660
 	 */
-	public class SettingPane extends ScrollPane
+	public class SettingPane extends CoCScrollPane
 	{	
 		private var _stage:Stage;
 		
@@ -39,15 +35,8 @@ package classes.display
 		 */
 		public function SettingPane(xPos:int, yPos:int, width:int, height:int)
 		{
-			move(xPos,yPos);
+			super(null, xPos, yPos);
 			setSize(width,height);
-			// Cheap hack to remove the stupid styling elements of the stock ScrollPane
-			var pic:Bitmap = new MainView.Background1();
-			pic.width = width;
-			pic.height = height;
-			_alpha =0;
-			_background.addChild(pic);
-			// Initiate a new container for content that will be placed in the scroll pane
 			_content = new Block({layoutConfig:{
 				type: Block.LAYOUT_FLOW,
 				direction: 'column',
