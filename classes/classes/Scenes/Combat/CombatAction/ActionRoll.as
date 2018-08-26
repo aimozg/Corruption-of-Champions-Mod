@@ -76,5 +76,9 @@ public class ActionRoll {
 	public function advance():void {
 		_phase = NextPhase[_phase] || Phases.DONE;
 	}
+	public function advanceTo(phase:String):void {
+		advance();
+		if (phase != _phase) throw "Expected phase "+phase+", advanced to "+_phase;
+	}
 }
 }

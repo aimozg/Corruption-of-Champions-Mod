@@ -109,7 +109,7 @@ if (this.lust < .65 * this.maxLust() && this.HP < .33 * this.maxHP()) {
 			
 		}
 		
-		override protected function doReact(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+		override protected function intercept(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
 			if (phase == ActionRoll.Phases.PREPARE && type == ActionRoll.Types.MELEE) {
 				roll.cancel();
 				taintedMindAttackAttempt();

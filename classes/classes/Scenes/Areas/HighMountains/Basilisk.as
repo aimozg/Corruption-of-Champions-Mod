@@ -52,7 +52,7 @@ import classes.internals.ChainedDrop;
 		}
 		
 		
-		override protected function doReact(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+		override protected function intercept(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
 			if (phase == ActionRoll.Phases.PREPARE && type == ActionRoll.Types.PERFORM) {
 				if (!actor.hasPerk(PerkLib.BasiliskResistance) && !actor.isWieldingRangedWeapon()) {
 					if (hasStatusEffect(StatusEffects.Blind) || hasStatusEffect(StatusEffects.InkBlind)) {

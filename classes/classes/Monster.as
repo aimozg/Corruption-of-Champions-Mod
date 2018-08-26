@@ -858,9 +858,9 @@ import flash.utils.getQualifiedClassName;
 		}
 		
 		public function processRoll(roll:ActionRoll):void {
-			if (this == roll.target) doReact(roll,roll.actor,roll.phase,roll.type);
+			if (this == roll.target) intercept(roll,roll.actor,roll.phase,roll.type);
 		}
-		protected function doReact(roll:ActionRoll,actor:Creature, phase:String,type:String):void {
+		protected function intercept(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
 		
 		}
 

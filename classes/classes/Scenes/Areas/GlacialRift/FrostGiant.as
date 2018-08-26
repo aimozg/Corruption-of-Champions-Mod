@@ -186,7 +186,7 @@ public class FrostGiant extends Monster
 			outputText("\n\n");
 		}
 		
-		override protected function doReact(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+		override protected function intercept(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
 			if (phase == ActionRoll.Phases.PERFORM && type == ActionRoll.Types.MELEE) {
 				if (actor.hasStatusEffect(StatusEffects.GiantBoulder)) {
 					giantBoulderHit(0);

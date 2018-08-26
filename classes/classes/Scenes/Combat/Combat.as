@@ -1436,10 +1436,11 @@ public function attack():void {
 	clearOutput();
 
 	var roll:ActionRoll = new ActionRoll(player, monster, ActionRoll.Types.MELEE);
+	// PHASE: PREPARE
 	processRoll(roll);
 	if (roll.canceled) return;
-	
-	roll.advance();
+	// PHASE: PERFORM
+	roll.advanceTo(ActionRoll.Phases.PERFORM);
 	lastAttack = PHYSICAL;
 	processRoll(roll);
 	if (roll.canceled) {
@@ -1447,20 +1448,8 @@ public function attack():void {
 		return;
 	}
 
-	if(player.hasStatusEffect(StatusEffects.Sealed2) && player.statusEffectv2(StatusEffects.Sealed2) == 0) {
-		outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  Recent enemy attack have made normal melee attack impossible!  Maybe you could try something else?\n\n");
-		enemyAI();
-		return;
-	}
 	if(flags[kFLAGS.PC_FETISH] >= 3 && !SceneLib.urtaQuest.isUrta() && !player.isWieldingRangedWeapon()) {
 		outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  Ceraph's piercings have made normal melee attack impossible!  Maybe you could try something else?\n\n");
-		enemyAI();
-		return;
-	}
-	//Amily!
-	if(monster.hasStatusEffect(StatusEffects.Concentration) && !player.isWieldingRangedWeapon()) {
-		clearOutput();
-		outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.\n\n");
 		enemyAI();
 		return;
 	}
@@ -1472,10 +1461,6 @@ public function attack():void {
 			player.createStatusEffect(StatusEffects.FirstAttack,0,0,0,0);
 			outputText("Utilizing your skills as a bareknuckle brawler, you make two attacks!\n");
 		}
-	}
-	//Blind
-	if(player.hasStatusEffect(StatusEffects.Blind)) {
-		outputText("You attempt to attack, but as blinded as you are right now, you doubt you'll have much luck!  ");
 	}
 	//Worms are special
 	if(monster.short == "worms") {
@@ -1503,7 +1488,8 @@ public function attack():void {
 	}
 	
 	//Determine if dodged!
-	if ((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
+	if (monster.spe - player.spe > 0 &&
+		int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80) {
 		//Akbal dodges special education
 		if(monster.short == "Akbal") outputText("Akbal moves like lightning, weaving in and out of your furious strikes with the speed and grace befitting his jaguar body.\n");
 		else if(monster.short == "plain girl") outputText("You wait patiently for your opponent to drop her guard. She ducks in and throws a right cross, which you roll away from before smacking your [weapon] against her side. Astonishingly, the attack appears to phase right through her, not affecting her in the slightest. You glance down to your [weapon] as if betrayed.\n");
@@ -1540,6 +1526,7 @@ public function attack():void {
 		enemyAI();
 		return;
 	}
+	// PHASE: CONNECT
 	meleeDamageAcc();
 }
 	private static function weaponMod(host:Creature):Number {

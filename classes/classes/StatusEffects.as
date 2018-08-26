@@ -231,7 +231,16 @@ import classes.Scenes.Combat.CombatAction.CombatAction;
 		public static const BowDisabled:StatusEffectType        = mk("Bow Disabled");
 		public static const Charged:StatusEffectType            = mk("Charged");
 		public static const Climbed:StatusEffectType            = mk("Climbed");
-		public static const Concentration:StatusEffectType      = mk("Concentration");
+		public static const Concentration:StatusEffectType      = mk("Concentration")
+				.withRollInterceptor(ActionRoll.Phases.PERFORM, ActionRoll.Types.MELEE,
+						function (roll: ActionRoll, actor: Creature, target: Creature, effect: StatusEffectClass):void {
+							if (actor == CoC.instance.player && !actor.isWieldingRangedWeapon()) {
+								EngineCore.outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.\n\n");
+							}
+							roll.cancel();
+						}
+				);
+		;
 		public static const Constricted:StatusEffectType        = mk("Constricted");
 		public static const ConstrictedScylla:StatusEffectType  = mk("Constricted Scylla");
 		public static const CoonWhip:StatusEffectType           = mk("Coon Whip");
@@ -454,7 +463,17 @@ import classes.Scenes.Combat.CombatAction.CombatAction;
 		public static const BeatOfWar:StatusEffectType                 = mkCombat("Beat of War");
 		public static const Berzerking:StatusEffectType                = mkCombat("Berzerking");
 		public static const BladeDance:StatusEffectType                = mkCombat("Blade Dance");
-		public static const Blind:StatusEffectType                     = mkCombat("Blind");
+		public static const Blind:StatusEffectType                     = mkCombat("Blind")
+				.withRollAlteration(ActionRoll.Phases.PERFORM, ActionRoll.Types.MELEE,
+						function (roll:ActionRoll, actor:Creature, target:Creature, effect:StatusEffectClass):void {
+							if (actor == CoC.instance.player) {
+								EngineCore.outputText("You attempt to attack, but as blinded as you are right now, you doubt you'll have much luck!  ");
+							}
+							if (Utils.randomChance(50)) {
+								roll.cancel();
+							}
+						}
+				);
 		public static const Blink:StatusEffectType                     = mkCombat("Blink");
 		public static const Blizzard:StatusEffectType                  = mkCombat("Blizzard");
 		public static const Bloodlust:StatusEffectType                 = mkCombat("Bloodlust");
@@ -540,7 +559,17 @@ import classes.Scenes.Combat.CombatAction.CombatAction;
 							}
 						}
 				);
-		public static const Sealed2:StatusEffectType                   = mkCombat("Sealed2");
+		public static const Sealed2:StatusEffectType = mkCombat("Sealed2")
+				.withRollAlteration(ActionRoll.Phases.PERFORM, ActionRoll.Types.MELEE,
+						function (roll: ActionRoll, actor: Creature, target: Creature, effect: StatusEffectClass):void {
+							if (effect.value2 == 0) {
+								if (effect.host == CoC.instance.player) {
+									EngineCore.outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  Recent enemy attack have made normal melee attack impossible!  Maybe you could try something else?\n\n");
+								}
+							}
+							roll.cancel();
+						}
+				);
 		public static const SecondWindRegen:StatusEffectType           = mkCombat("Second Wind Regen");
 		public static const SharkBiteBleed:StatusEffectType            = mkCombat("Shark Bite Bleed");
 		public static const SheilaOil:StatusEffectType                 = mkCombat("Sheila Oil");

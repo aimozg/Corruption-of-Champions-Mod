@@ -4,6 +4,7 @@ import classes.*;
 import classes.BodyParts.Butt;
 import classes.BodyParts.Hips;
 import classes.BodyParts.Tail;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Scenes.SceneLib;
 import classes.internals.WeightedDrop;
 
