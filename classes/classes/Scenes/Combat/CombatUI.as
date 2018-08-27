@@ -4,6 +4,7 @@
 package classes.Scenes.Combat {
 import classes.BodyParts.Face;
 import classes.BodyParts.Wings;
+import classes.CoC_Settings;
 import classes.GlobalFlags.kFLAGS;
 import classes.PerkLib;
 import classes.Scenes.Areas.Desert.SandTrap;
@@ -63,7 +64,7 @@ public class CombatUI extends BaseCombatContent {
 		if (flags[kFLAGS.ELEMENTAL_CONJUER_SUMMONS] == 2) {
 			btnMelee.show("E.Attack", combat.baseelementalattacks, "Command your elemental to attack the enemy.  Damage it will deal is affcted by your wisdom and intelligence.");
 		} else {
-			btnMelee.show("Attack", combat.attack, "Attempt to attack the enemy with your "+player.weaponName+".  Damage done is determined by your strength and weapon.");
+			btnMelee.show("Attack", combat.attack, "Attempt to attack the enemy with your "+player.weaponName+".  Damage done is determined by your strength and weapon."+(CoC_Settings.debugBuild?"\n\n(ToHit: "+(100*Combat.basicHitChance(player, monster)).toFixed()+"%)":""));
 			if (!player.isFlying() && monster.isFlying() && player.weapon != weapons.FRTAXE) {
 				btnMelee.disable("No way you could reach enemy in air with melee attacks.");
 			} else if (player.isFlying()) {

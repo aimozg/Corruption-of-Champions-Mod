@@ -910,6 +910,9 @@ import flash.utils.getQualifiedClassName;
 				outputText("<b>(<font color=\"#800000\">" + damage + "</font>)</b>");
 			}
 			else outputText("<b>(<font color=\"#000080\">" + damage + "</font>)</b>");
+			if (CoC_Settings.debugBuild) {
+				outputText(" (ToHit: "+(Combat.basicHitChance(this, player)*100).toFixed()+"%)");
+			}
 		}
 
 		/**
@@ -937,6 +940,9 @@ import flash.utils.getQualifiedClassName;
 				if (plural) outputText("'");
 				else outputText("'s");
 				outputText(" slow " + weaponVerb + ".\n");
+			}
+			if (CoC_Settings.debugBuild) {
+				outputText(" (ToHit: "+(Combat.basicHitChance(this, player)*100).toFixed()+"%)");
 			}
 		}
 

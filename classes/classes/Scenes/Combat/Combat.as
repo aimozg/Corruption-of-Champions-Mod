@@ -1431,6 +1431,28 @@ public function fatigueRecovery():void {
 		}
 	}
 	
+	public static function basicHitChance(attacker:Creature, defender:Creature):Number {
+		/*
+		 * ToHit formula rationale:
+		 * 1) Is based on level ratio (level difference scaled to level value)
+		 * 2) At same level - some fixed value (2/3 in our case)
+		 * 3) Affected by speed
+		 * 4) --> 0 when attacker's level << defender's
+		 * 5) --> 1 when attacker's level >> defender's
+		 *             2 * atkLV
+		 * ToHit = ----------------- , where:
+		 *         2 * atkLV + defLV
+		 *                             atkLV = Attacker.Level * (100 + Attacker.Speed) %
+		 *                             defLV = Defender.LEVEL * (100 + Defender.Speed) %
+		 */
+		var atkLV:Number = attacker.level * (1 + attacker.spe/100);
+		var defLV:Number = defender.level * (1 + defender.spe/100);
+		var toHit:Number = (2*atkLV)
+						   /
+						   (2*atkLV + defLV);
+		return boundFloat(0.1, toHit, 0.95);
+	}
+	
 //ATTACK
 public function attack():void {
 	clearOutput();
@@ -1488,7 +1510,8 @@ public function attack():void {
 	}
 	
 	//Determine if dodged!
-	if (monster.spe - player.spe > 0 &&
+	if (!randomChance(basicHitChance(player, monster) * 100) ||
+		monster.spe - player.spe > 0 &&
 		int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80) {
 		//Akbal dodges special education
 		if(monster.short == "Akbal") outputText("Akbal moves like lightning, weaving in and out of your furious strikes with the speed and grace befitting his jaguar body.\n");
