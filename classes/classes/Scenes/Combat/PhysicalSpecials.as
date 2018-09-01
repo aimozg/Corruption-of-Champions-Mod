@@ -2034,8 +2034,9 @@ package classes.Scenes.Combat {
 			return false;
 		}
 
-	private function critRoll(options:* = {}, bonus:int = 0):Boolean {
+	private function critRoll(options:* = null, bonus:int = 0):Boolean {
 		if (monster.isImmuneToCrits()) return false;
+		if (options == null) {options = {};}
 		var critChance:int = 5 + bonus;
 		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
 			if (player.inte <= 100) {
