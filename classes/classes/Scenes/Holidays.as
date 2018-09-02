@@ -15,6 +15,8 @@ import classes.Items.ConsumableLib;
 import classes.PerkLib;
 import classes.Player;
 import classes.PregnancyStore;
+import classes.Scenes.API.Encounter;
+import classes.Scenes.API.Encounters;
 import classes.Scenes.NPCs.JojoScene;
 import classes.StatusEffects;
 import classes.VaginaClass;
@@ -626,17 +628,22 @@ public class Holidays {
         return date.date == 1 && date.month == 3;
     }
 
-    public static function poniesYN():Boolean {
+    public static const poniesEncounter:Encounter = Encounters.build({
+        name: "ponies",
+        when: function():Boolean {
+            return player.lowerBody == LowerBody.HOOFED && player.isTaur() && isAprilFools() && flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00118] == 0
+        },
+        chance: Encounters.ALWAYS,
+        call: poniesYN
+    });
+    
+    public static function poniesYN():void {
         // Encounter Chance 1 out of 40 and only if you're a centaur
-        if (player.lowerBody == LowerBody.HOOFED && player.isTaur() && date.date == 1 && date.month == 3 && flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00118] == 0) {
-            EngineCore.clearOutput();
-            EngineCore.outputText("While walking around the lake, you hear the sound of feminine voices laughing and talking, accompanied by the distinctive clip-clop of hooves. Stepping lightly through the overgrowth you stumble across a group of small brightly colored ponies. The strange part about them isn't so much their size, but rather the shape of their bodies.  They almost look cartoonish in nature, a few even sport fluttery, feathery looking wings.\n\n");
-            //(option: Approach? Leave them Be?)
-            EngineCore.simpleChoices("Approach", approachPonies, "", null, "", null, "", null, "Leave", leavePonies);
-            flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00118]++;
-            return true;
-        }
-        return false;
+        EngineCore.clearOutput();
+        EngineCore.outputText("While walking around the lake, you hear the sound of feminine voices laughing and talking, accompanied by the distinctive clip-clop of hooves. Stepping lightly through the overgrowth you stumble across a group of small brightly colored ponies. The strange part about them isn't so much their size, but rather the shape of their bodies.  They almost look cartoonish in nature, a few even sport fluttery, feathery looking wings.\n\n");
+        //(option: Approach? Leave them Be?)
+        EngineCore.simpleChoices("Approach", approachPonies, "", null, "", null, "", null, "Leave", leavePonies);
+        flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00118]++;
 
         //----------Next Page-----------
         function leavePonies():void {
