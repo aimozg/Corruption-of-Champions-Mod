@@ -101,7 +101,12 @@ public class StatusEffectClass extends Utils
 	}
 	public function addedToHostList(host:Creature,fireEvent:Boolean):void {
 		_host = host;
-		if (fireEvent) onAttach();
+		if (fireEvent) {
+			if (stype.buffs != null) {
+				host.statStore.addBuffObject(stype.buffs,stype.tagForBuffs,this);
+			}
+			onAttach();
+		}
 	}
 	public function attach(host:Creature/*,fireEvent:Boolean = true*/):void {
 		if (_host == host) return;

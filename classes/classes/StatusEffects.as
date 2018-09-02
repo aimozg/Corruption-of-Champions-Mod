@@ -12,8 +12,9 @@ import classes.Scenes.Combat.CombatAction.CombatAction;
 	import classes.StatusEffects.KnowledgeStatusEffect;
 	import classes.StatusEffects.VampireThirstEffect;
 	import classes.internals.Utils;
+import classes.lists.StatNames;
 
-	/**
+/**
 	 * IMPORTANT NOTE:
 	 * You can rename the constants BUT NOT the string ids (they are stored in saves).
 	 */
@@ -503,7 +504,10 @@ import classes.Scenes.Combat.CombatAction.CombatAction;
 		public static const FirstStrike:StatusEffectType               = mkCombat("FirstStrike");
 		public static const Flying:StatusEffectType                    = mkCombat("Flying");
 		public static const FlyingNoStun:StatusEffectType              = mkCombat("FlyingNoStun");
-		public static const FreezingBreathStun:StatusEffectType        = mkCombat("FreezingBreathStun");
+		public static const FreezingBreathStun:StatusEffectType        = mkCombat("FreezingBreathStun")
+				.withBuffs({
+					([StatNames.SPE_MULT]): 0
+			});
 		public static const Frostbite:StatusEffectType                 = mkCombat("Frostbite");
 		public static const Frozen:StatusEffectType	                   = mkCombat("Frozen");
 		public static const GiantBoulder:StatusEffectType              = mkCombat("Giant Boulder");
@@ -576,8 +580,14 @@ import classes.Scenes.Combat.CombatAction.CombatAction;
 		public static const Shielding:StatusEffectType                 = mkCombat("Sheilding");
 		public static const StoneLust:StatusEffectType                 = mkCombat("Stone Lust");
 		public static const StoneSkin:StatusEffectType                 = mkCombat("Stone Skin");
-		public static const Stunned:StatusEffectType                   = mkCombat("Stunned");
-		public static const StunnedTornado:StatusEffectType            = mkCombat("Stunned (Tornado)");
+		public static const Stunned:StatusEffectType                   = mkCombat("Stunned")
+				.withBuffs({
+					([StatNames.SPE_MULT]): 0
+				});
+		public static const StunnedTornado:StatusEffectType            = mkCombat("Stunned (Tornado)")
+				.withBuffs({
+					([StatNames.SPE_MULT]): 0
+				});
 		public static const TailWhip:StatusEffectType                  = mkCombat("Tail Whip");
 		public static const TemporaryHeat:StatusEffectType             = mkCombat("Temporary Heat");
 		public static const TentacleBind:StatusEffectType              = mkCombat("TentacleBind");

@@ -11,6 +11,7 @@ public class StatusEffectType
 {
 	private static var STATUSAFFECT_LIBRARY:Dictionary = new Dictionary();
 	private var arity:int;
+	private var _buffs:Object;
 	
 	public static function lookupStatusEffect(id:String):StatusEffectType{
 		return STATUSAFFECT_LIBRARY[id];
@@ -35,6 +36,9 @@ public class StatusEffectType
 	
 	public function get tagForBuffs():String {
 		return 'status/'+id;
+	}
+	public function get buffs():Object {
+		return _buffs;
 	}
 	private var _rollInterceptors:/*Array*/Array = []; // [phase, type, function(roll, actor, target, effect):void][]
 	private var _rollAlterations:/*Array*/Array = []; // [phase, type, function(roll, actor, target, effect):void][]
@@ -88,6 +92,10 @@ public class StatusEffectType
 	 */
 	public function withRollAlteration(phase:String,type:String,callback:Function):StatusEffectType {
 		withRollProcess(_rollAlterations,phase,type,callback);
+		return this;
+	}
+	public function withBuffs(buffs:Object):StatusEffectType {
+		this._buffs = buffs;
 		return this;
 	}
 	

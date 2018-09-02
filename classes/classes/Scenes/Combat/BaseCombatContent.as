@@ -4,7 +4,7 @@
 package classes.Scenes.Combat {
 import classes.BaseContent;
 
-public class BaseCombatContent extends BaseContent {
+public class BaseCombatContent extends CombatMechanics {
 	public function BaseCombatContent() {
 	}
 	// ====================

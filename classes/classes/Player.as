@@ -23,6 +23,7 @@ package classes
 	import classes.Items.WeaponLib;
 	import classes.Items.WeaponRange;
 import classes.Scenes.Combat.Combat;
+import classes.Scenes.Combat.CombatMechanics;
 import classes.Scenes.Places.TelAdre.UmasShop;
 	import classes.Scenes.Pregnancy;
 	import classes.Scenes.SceneLib;
@@ -740,7 +741,7 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 		 */
 		public function speedDodge(monster:Monster):int{
 			var diff:Number = spe - monster.spe;
-			if (randomChance(100*Combat.basicHitChance(monster, this))) return 0;
+			if (randomChance(100*CombatMechanics.basicHitChance(monster, this))) return 0;
 			if (diff<8) return 1;
 			else if (diff<20) return 2;
 			else return 3;

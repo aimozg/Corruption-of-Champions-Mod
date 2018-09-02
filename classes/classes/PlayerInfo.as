@@ -3,6 +3,7 @@ package classes {
 import classes.BodyParts.Face;
 import classes.BodyParts.Tail;
 import classes.GlobalFlags.*;
+import classes.Scenes.Combat.CombatMechanics;
 import classes.Scenes.NPCs.IsabellaScene;
 import classes.Scenes.SceneLib;
 import classes.Stats.Buff;
@@ -36,6 +37,8 @@ public class PlayerInfo extends BaseContent {
 		// Begin Combat Stats
 		var combatStats:String = "";
 
+		combatStats += "<b>Attack Rating:</b> " + player.attackRating + "\n";
+		combatStats += "<b>Defense Rating:</b> " + player.defenseRating + "\n";
 		combatStats += "<b>Resistance (Physical Damage):</b> " + (100 - Math.round(player.damagePercent(true))) + "-" + (100 - Math.round(player.damagePercent(true) - player.damageToughnessModifier(true))) + "% (Higher is better.)\n";
 
 		combatStats += "<b>Resistance (Magic Damage):</b> " + (100 - Math.round(player.damageMagicalPercent(true))) + "-" + (100 - Math.round(player.damageMagicalPercent(true) - player.damageIntelligenceModifier(true) - player.damageWisdomModifier(true))) + "% (Higher is better.)\n";

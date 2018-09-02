@@ -27,6 +27,7 @@ import classes.Scenes.Areas.Ocean.UnderwaterSharkGirl;
 import classes.Scenes.Areas.Ocean.UnderwaterTigersharkGirl;
 	import classes.Scenes.Combat.Combat;
 import classes.Scenes.Combat.CombatAction.ActionRoll;
+import classes.Scenes.Combat.CombatMechanics;
 import classes.Scenes.Dungeons.DenOfDesire.HeroslayerOmnibus;
 import classes.Scenes.Dungeons.Factory.OmnibusOverseer;
 import classes.Scenes.Dungeons.Factory.SecretarialSuccubus;
@@ -911,7 +912,7 @@ import flash.utils.getQualifiedClassName;
 			}
 			else outputText("<b>(<font color=\"#000080\">" + damage + "</font>)</b>");
 			if (CoC_Settings.debugBuild) {
-				outputText(" (ToHit: "+(Combat.basicHitChance(this, player)*100).toFixed()+"%)");
+				outputText(CombatMechanics.debugHitInfo(this,player));
 			}
 		}
 
@@ -942,7 +943,7 @@ import flash.utils.getQualifiedClassName;
 				outputText(" slow " + weaponVerb + ".\n");
 			}
 			if (CoC_Settings.debugBuild) {
-				outputText(" (ToHit: "+(Combat.basicHitChance(this, player)*100).toFixed()+"%)");
+				outputText(CombatMechanics.debugHitInfo(this,player));
 			}
 		}
 

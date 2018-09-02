@@ -33,7 +33,7 @@ import coc.view.ButtonData;
 import coc.view.ButtonDataList;
 import coc.view.MainView;
 
-public class Combat extends BaseContent {
+public class Combat extends CombatMechanics {
 	public const pspecials:PhysicalSpecials  = new PhysicalSpecials();
 	public const mspecials:MagicSpecials     = new MagicSpecials();
 	public const magic:CombatMagic           = new CombatMagic();
@@ -1431,27 +1431,6 @@ public function fatigueRecovery():void {
 		}
 	}
 	
-	public static function basicHitChance(attacker:Creature, defender:Creature):Number {
-		/*
-		 * ToHit formula rationale:
-		 * 1) Is based on level ratio (level difference scaled to level value)
-		 * 2) At same level - some fixed value (2/3 in our case)
-		 * 3) Affected by speed
-		 * 4) --> 0 when attacker's level << defender's
-		 * 5) --> 1 when attacker's level >> defender's
-		 *             2 * atkLV
-		 * ToHit = ----------------- , where:
-		 *         2 * atkLV + defLV
-		 *                             atkLV = Attacker.Level * (100 + Attacker.Speed) %
-		 *                             defLV = Defender.LEVEL * (100 + Defender.Speed) %
-		 */
-		var atkLV:Number = attacker.level * (1 + attacker.spe/100);
-		var defLV:Number = defender.level * (1 + defender.spe/100);
-		var toHit:Number = (2*atkLV)
-						   /
-						   (2*atkLV + defLV);
-		return boundFloat(0.1, toHit, 0.95);
-	}
 	
 //ATTACK
 public function attack():void {
