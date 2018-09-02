@@ -1,13 +1,14 @@
 //The code that is responsible for managing MainView.
 package classes {
+
 import classes.GlobalFlags.kFLAGS;
-import classes.CoC;
 
 import coc.view.BitmapDataSprite;
 import coc.view.BoundClip;
 import coc.view.MainView;
 import coc.view.StatsView;
 
+import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
@@ -18,7 +19,6 @@ import flash.text.TextField;
 import flash.ui.Keyboard;
 import flash.utils.Timer;
 import flash.utils.getQualifiedClassName;
-
 
 public class MainViewManager extends BaseContent {
 	//Interface flags
@@ -46,17 +46,23 @@ public class MainViewManager extends BaseContent {
 	}
 
 	public function setTheme():void {
-		var i:int = 0; //Will be used for array.
-
 		//Set background
-		mainView.background.bitmapClass = MainView.Backgrounds[flags[kFLAGS.BACKGROUND_STYLE]];
-		var sidebarBg:Class         = StatsView.SidebarBackgrounds[flags[kFLAGS.BACKGROUND_STYLE]];
-		mainView.statsView.setBackground(sidebarBg);
-		mainView.monsterStatsView.setBackground(sidebarBg);
+		var style:* = flags[kFLAGS.BACKGROUND_STYLE];
+		var BM:*    = MainView.Backgrounds[style];
+		if (BM is Class) {
+			mainView.background.bitmap = new BM();
+		} else if (BM is Bitmap) {
+			mainView.background.bitmap = BM;
+		}
+		var sidebarBg:Class = StatsView.SidebarBackgrounds[style];
+		if (sidebarBg) {
+			mainView.statsView.setBackground(sidebarBg);
+			mainView.monsterStatsView.setBackground(sidebarBg);
+		}
 		//Set font
-		var font:String      = (flags[kFLAGS.USE_OLD_FONT] > 0) ? StatsView.ValueFontOld : StatsView.ValueFont;
-		var textColor:*      = textColorArray[flags[kFLAGS.BACKGROUND_STYLE]];
-		var barAlpha:* = barAlphaArray[flags[kFLAGS.BACKGROUND_STYLE]];
+		var font:String = (flags[kFLAGS.USE_OLD_FONT] > 0) ? StatsView.ValueFontOld : StatsView.ValueFont;
+		var textColor:* = textColorArray[style];
+		var barAlpha:*  = barAlphaArray[style];
 		mainView.statsView.setTheme(font, textColor, barAlpha);
 		mainView.monsterStatsView.setTheme(font, textColor, barAlpha);
 	}

@@ -117,7 +117,7 @@ public function loadSaveDisplay(saveFile:Object, slotName:String):String
 				if (saveFile.data.flags[kFLAGS.GAME_DIFFICULTY] == 3)
 					holding += "<font color=\"#FF0000\">EXTREME</font>";
 				if (saveFile.data.flags[kFLAGS.GAME_DIFFICULTY] >= 4)
-					holding += "<font color=\"#FF0000\">XIANXIA</font>";
+					holding += "<font color=\"#FF0000\">ENDLESS</font>";
 			}
 			else {
 				if (saveFile.data.flags[kFLAGS.EASY_MODE_ENABLE_FLAG] != undefined) { //Workaround to display Easy if difficulty is set to easy.
@@ -430,7 +430,7 @@ public function deleteScreen():void
 	
 	for (var i:int = 0; i < saveFileNames.length; i += 1)
 	{
-		var test:Object = SharedObject.getLocal(saveFileNames[i], "/");
+		var test:Object = SharedObject.getLocal(sharedDir+saveFileNames[i], "/");
 		outputText(loadSaveDisplay(test, String(i + 1)));
 		if (test.data.exists)
 		{
