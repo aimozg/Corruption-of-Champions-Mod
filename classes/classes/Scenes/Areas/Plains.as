@@ -45,14 +45,8 @@ use namespace CoC;
 				//General Golems, Goblin and Imp Encounters
 				name: "common",
 				call: SceneLib.exploration.genericGolGobImpEncounters
-			}, SceneLib.helScene.helSexualAmbushEncounter, {
-				name: "electra",
-				when: function():Boolean {
-					return flags[kFLAGS.ELECTRA_FOLLOWER] < 1 && flags[kFLAGS.ELECTRA_AFFECTION] >= 2;
-				},
-				chance: 0.2,
-				call: SceneLib.electraScene.repeatPlainsEnc
-			}, {
+			}, SceneLib.helScene.helSexualAmbushEncounter,
+			SceneLib.electraScene.plainsEncounter, {
 				name: "sidonie",
 				when: function ():Boolean {
 					return flags[kFLAGS.SIDONIE_FOLLOWER] < 1

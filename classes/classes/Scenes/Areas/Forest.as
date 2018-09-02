@@ -248,15 +248,8 @@ use namespace CoC;
 				},
 				call: kitsuneScene.kitsuneShrine
 			}, SceneLib.helScene.helSexualAmbushEncounter,
-			SceneLib.etnaScene.yandereEncounter, {
-				name  : "electra",
-				when  : function():Boolean {
-					return flags[kFLAGS.ELECTRA_FOLLOWER] < 1
-						   && flags[kFLAGS.ELECTRA_AFFECTION] >= 2;
-				},
-				chance: 0.2,
-				call  : SceneLib.electraScene.repeatDeepwoodsEnc
-			}, {
+			SceneLib.etnaScene.yandereEncounter,
+			SceneLib.electraScene.deepwoodsEncounter, {
 				name: "kitsune",
 				call: kitsuneScene.enterTheTrickster
 			},/*{ // [INTERMOD:8chan]

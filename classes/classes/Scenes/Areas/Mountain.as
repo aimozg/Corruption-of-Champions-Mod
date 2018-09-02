@@ -54,9 +54,9 @@ public class Mountain extends BaseContent
 						name: "highmountains",
 						when: function ():Boolean {
 							return !SceneLib.highMountains.isDiscovered()
-								   && (player.level >= 15)
 						},
-						call: SceneLib.highMountains.discover
+						call: SceneLib.highMountains.discover,
+						mods:[fn.ifLevelMin(12)]
 					},{
 						name: "snowangel",
 						when: function():Boolean {
@@ -128,7 +128,7 @@ public class Mountain extends BaseContent
 									/*&& game.fetishManager.compare(FetishManager.FETISH_EXHIBITION)*/;
 						},
 						call:ceraphFn,
-						mods:[fn.ifLevelMin(2)]
+						mods:[fn.ifLevelMin(6)]
 					},{
 						name:"hhound_master",
 						chance:2,
@@ -148,23 +148,14 @@ public class Mountain extends BaseContent
 								   && check1 && check2 && check3 && (check4a || check4b);
 						},
 						call:hellHoundScene.HellHoundMasterEncounter
-					}, {
-						name: "electra",
-						when: function ():Boolean {
-							return flags[kFLAGS.ELECTRA_FOLLOWER] < 1;
-						},
-						chance:0.2,
-						call: function ():void {
-							if (flags[kFLAGS.ELECTRA_AFFECTION] < 2) SceneLib.electraScene.firstEnc();
-							else SceneLib.electraScene.repeatMountainEnc();
-						}
-					/*}, {
+					}, SceneLib.electraScene.mountainsEncounter, {
+					/*
 						name: "diva",
 						when: function():Boolean {
 							return flags[kFLAGS.FACTORY_SHUTDOWN] > 0 && DivaScene.instance.status >= 0;
 						},
-						call: DivaScene.encounter*/
-					},{
+						call: DivaScene.encounter
+					,{ */
 						name:"darkelf",
 						call:darkelfScene.introDarkELfScout
 					},{

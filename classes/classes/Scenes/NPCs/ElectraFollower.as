@@ -6,8 +6,11 @@ package classes.Scenes.NPCs
 {
 	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	
-	public class ElectraFollower extends NPCAwareContent
+import classes.Scenes.API.Encounter;
+import classes.Scenes.API.Encounters;
+import classes.Scenes.API.FnHelpers;
+
+public class ElectraFollower extends NPCAwareContent
 	{
 		
 		public function ElectraFollower() 
@@ -37,6 +40,33 @@ public function firstEnc():void
 	startCombat(new Electra());
 	doNext(playerMenu);
 }
+	public const mountainsEncounter: Encounter = Encounters.build({
+		name: "electra",
+		when: function ():Boolean {
+			return FnHelpers.isLevelMin(18) && flags[kFLAGS.ELECTRA_FOLLOWER] < 1;
+		},
+		chance: 0.2,
+		call: function ():void {
+			if (flags[kFLAGS.ELECTRA_AFFECTION] < 2) firstEnc();
+			else repeatMountainEnc();
+		}
+	});
+	public const plainsEncounter: Encounter = Encounters.build({
+		name: "electra",
+		when: function ():Boolean {
+			return FnHelpers.isLevelMin(18) && flags[kFLAGS.ELECTRA_FOLLOWER] < 1 && flags[kFLAGS.ELECTRA_AFFECTION] >= 2;
+		},
+		chance: 0.2,
+		call: repeatPlainsEnc
+	});
+	public const deepwoodsEncounter: Encounter = Encounters.build({
+		name: "electra",
+		when: function ():Boolean {
+			return FnHelpers.isLevelMin(18) && flags[kFLAGS.ELECTRA_FOLLOWER] < 1 && flags[kFLAGS.ELECTRA_AFFECTION] >= 2;
+		},
+		chance: 0.2,
+		call: repeatDeepwoodsEnc
+	});
 public function repeatMountainEnc():void
 {
 	clearOutput();
