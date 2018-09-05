@@ -19,6 +19,7 @@ import classes.Scenes.NPCs.JojoScene;
 import classes.Scenes.NPCs.XXCNPC;
 import classes.Scenes.SceneLib;
 import classes.lists.BreastCup;
+import classes.lists.Gender;
 
 import flash.events.Event;
 import flash.events.IOErrorEvent;
@@ -93,14 +94,13 @@ public function loadSaveDisplay(saveFile:Object, slotName:String):String
 		holding += saveFile.data.short;
 		holding += "</b> - <i>" + saveFile.data.notes + "</i>\r";
 		holding += "Days - " + saveFile.data.days + " | Gender - ";
-		if (saveFile.data.gender == 0)
-			holding += "U";
-		if (saveFile.data.gender == 1)
-			holding += "M";
-		if (saveFile.data.gender == 2)
-			holding += "F";
-		if (saveFile.data.gender == 3)
-			holding += "H";
+		switch (saveFile.data.gender) {
+			case Gender.GENDER_NONE: holding += "U"; break;
+			case Gender.GENDER_MALE: holding += "M"; break;
+			case Gender.GENDER_FEMALE: holding += "F"; break;
+			case Gender.GENDER_HERM: holding += "H"; break;
+			default: holding += "¯\\_(ツ)_/¯";
+		}
 		if (saveFile.data.flags != undefined) {
 			holding += " | Difficulty - ";
 			if (saveFile.data.flags[kFLAGS.GAME_DIFFICULTY] != undefined) { //Handles undefined
@@ -1703,19 +1703,17 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 
 	//todo @Oxdeception storage loading into Inventory/self
 	function loadStorage(saveArr:Array, gameArr:Array, sizeLimit:int, undefAction:Function):void {
-		if (saveArr == undefined){
+		if (saveArr == null){
 			if (undefAction != null){
 				undefAction();
 			}
 			return;
 		}
-		for(i = 0; i < gameArr.length < sizeLimit; i++){
+		for(i = 0; i  < sizeLimit; i++){
 			var iSlot:ItemSlotClass = new ItemSlotClass();
-			try {
+			if (saveArr[i] != undefined) {
 				iSlot.setItemAndQty(ItemType.lookupItem(saveArr[i].id || saveArr[i].shortName), saveArr[i].quantity);
 				iSlot.unlocked = saveArr[i].unlocked;
-			} catch (e:Error) {
-				trace(e);
 			}
 			gameArr.push(iSlot);
 		}
