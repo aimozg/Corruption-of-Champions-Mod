@@ -39,7 +39,6 @@ package classes
 		public static const BottledMilk:StatusEffectType                    = mk("Bottled Milk");
 		public static const BreastsMilked:StatusEffectType                  = mk("Breasts Milked");
 		public static const BSwordBroken:StatusEffectType                   = mk("BSwordBroken");
-		public static const BuiltMilker:StatusEffectType                    = mk("BUILT: Milker");
 		public static const BurpChanged:StatusEffectType                    = mk("Burp Changed");
 		public static const ButtStretched:StatusEffectType                  = mk("ButtStretched");
 		public static const CampAnemoneTrigger:StatusEffectType             = mk("Camp Anemone Trigger");
@@ -70,7 +69,6 @@ package classes
 		public static const Eggchest:StatusEffectType                       = mk("eggchest");
 		public static const Eggs:StatusEffectType                           = mk("eggs");
 		public static const EmberFuckCooldown:StatusEffectType              = mk("ember fuck cooldown");
-		public static const EmberMilk:StatusEffectType                      = mk("Ember's Milk");
 		public static const EmberNapping:StatusEffectType                   = mk("Ember Napping");
 		public static const EverRapedJojo:StatusEffectType                  = mk("Ever Raped Jojo");
 		public static const Exgartuan:StatusEffectType                      = mk("Exgartuan");
@@ -133,7 +131,6 @@ package classes
 		public static const MarblesMilk:StatusEffectType                    = mk("Marbles Milk");
 		public static const MarbleSpecials:StatusEffectType                 = mk("MarbleSpecials");
 		public static const MarbleWithdrawl:StatusEffectType                = mk("MarbleWithdrawl");
-		public static const Meditated:StatusEffectType                      = mk("Meditated"); // DEPRECATED
 		public static const MeanToNaga:StatusEffectType                     = mk("MeanToNaga");
 		public static const MeetWanderer:StatusEffectType                   = mk("meet wanderer");
 		public static const MetRathazul:StatusEffectType                    = mk("metRathazul");
@@ -152,7 +149,6 @@ package classes
 		public static const PostAnemoneBeatdown:StatusEffectType            = mk("Post Anemone Beatdown");
 		public static const PureCampJojo:StatusEffectType                   = mk("PureCampJojo");
 		public static const RaijuLightningStatus:StatusEffectType           = mk("Raiju lightning status");
-		public static const RathazulArmor:StatusEffectType                  = mk("RathazulArmor");
 		public static const RepeatSuccubi:StatusEffectType                  = mk("repeatSuccubi");
 		public static const Rut:StatusEffectType                            = mk("rut");
 		public static const SharkGirl:StatusEffectType                      = mk("Shark-Girl");
@@ -163,7 +159,6 @@ package classes
 		public static const SlimeCravingFeed:StatusEffectType               = mk("Slime Craving Feed");
 		public static const SlimeCravingOutput:StatusEffectType             = mk("Slime Craving Output");
 		public static const SoulGemCrafting:StatusEffectType                = mk("SoulGemCrafting");
-		public static const SuccubiFirst:StatusEffectType                   = mk("SuccubiFirst");
 		public static const SuccubiNight:StatusEffectType                   = mk("succubiNight");
 		public static const SummonedElementals:StatusEffectType             = mk("Summoned Elementals");
 		public static const SummonedElementalsAir:StatusEffectType          = mk("Summoned Elementals Air");
@@ -176,33 +171,14 @@ package classes
 		public static const SummonedElementalsWood:StatusEffectType		    = mk("Summoned Elementals Wood");
 		public static const SummonedElementalsMetal:StatusEffectType	    = mk("Summoned Elementals Metal");
 		public static const SummonedElementalsEther:StatusEffectType       	= mk("Summoned Elementals Ether");
-		public static const TakenGroPlus:StatusEffectType                   = mk("TakenGro+");
-		public static const TakenLactaid:StatusEffectType                   = mk("TakenLactaid");
-		public static const Tamani:StatusEffectType                         = mk("Tamani");//Used only for compatibility with old save files, otherwise no longer in use
-		public static const TamaniFemaleEncounter:StatusEffectType          = mk("Tamani Female Encounter");//Used only for compatibility with old save files, otherwise no longer in use
 		public static const TelAdre:StatusEffectType                        = mk("Tel'Adre");
 		public static const TempleOfTheDivineTracker:StatusEffectType       = mk("Temple of the Divine Tracker");
 		public static const TentacleBadEndCounter:StatusEffectType          = mk("TentacleBadEndCounter");
 		public static const TentacleJojo:StatusEffectType                   = mk("Tentacle Jojo");
-		public static const TensionReleased:StatusEffectType                = mk("TensionReleased");
-		public static const TribulationCountdown:StatusEffectType           = mk("TribulationCountdown");
 		public static const TF2:StatusEffectType                            = mk("TF2");
 		public static const TookBlessedSword:StatusEffectType               = mk("Took Blessed Sword");
 		public static const VampireThirst:StatusEffectType                  = VampireThirstEffect.TYPE;
 		
-		//Old status plots. DEPRECATED, DO NOT USE. Currently cannot be removed without breaking existing saves.
-		public static const DungeonShutDown:StatusEffectType         = mk("DungeonShutDown");
-		public static const FactoryOmnibusDefeated:StatusEffectType  = mk("FactoryOmnibusDefeated");
-		public static const FactoryOverload:StatusEffectType         = mk("FactoryOverload");
-		public static const FactoryIncubusDefeated:StatusEffectType  = mk("FactoryIncubusDefeated");
-		public static const IncubusBribed:StatusEffectType           = mk("IncubusBribed");
-		public static const FactorySuccubusDefeated:StatusEffectType = mk("FactorySuccubusDefeated");
-		public static const MaraeComplete:StatusEffectType           = mk("Marae Complete");
-		public static const MaraesLethicite:StatusEffectType         = mk("Marae's Lethicite");
-		public static const MaraesQuestStart:StatusEffectType        = mk("Marae's Quest Start");
-		public static const MetCorruptMarae:StatusEffectType         = mk("Met Corrupt Marae");
-		public static const MetMarae:StatusEffectType                = mk("Met Marae");
-
 		public static const UmasMassage:StatusEffectType         = mk("Uma's Massage"); //v1 = bonus index; v2 = bonus value; v3 = remaining time
 		public static const Uniball:StatusEffectType             = mk("Uniball");
 		public static const UsedNaturalSelfStim:StatusEffectType = mk("used natural self-stim");
@@ -222,7 +198,6 @@ package classes
 		public static const AbilityChanneled:StatusEffectType   = mk("Ability Channeled");
 		public static const AbilityCooldown1:StatusEffectType   = mk("Ability Cooldown 1");
 		public static const AbilityCooldown2:StatusEffectType   = mk("Ability Cooldown 2");
-		public static const AbilityCooldown3:StatusEffectType   = mk("Ability Cooldown 3");
 		public static const Attacks:StatusEffectType            = mk("attacks");
 		public static const BimboBrawl:StatusEffectType         = mk("bimboBrawl");
 		public static const BowCooldown:StatusEffectType        = mk("Bow Cooldown");
@@ -242,11 +217,8 @@ package classes
 		public static const Earthshield:StatusEffectType        = mk("Earthshield");
 		public static const EmbraceVampire:StatusEffectType     = mk("Embrace (Vampire)");
 		public static const Fear:StatusEffectType               = mk("Fear");
-		public static const FearCounter:StatusEffectType        = mk("FearCounter");
-		public static const GenericRunDisabled:StatusEffectType = mk("Generic Run Disabled");
 		public static const Gigafire:StatusEffectType           = mk("Gigafire");
 		public static const GooEngulf:StatusEffectType          = mk("Goo Engulf");
-		public static const GottaOpenGift:StatusEffectType      = mk("Gotta Open Gift");
 		public static const HolliBurning:StatusEffectType       = mk("Holli Burning");
 		public static const Illusion:StatusEffectType           = mk("Illusion");
 		public static const ImpSkip:StatusEffectType            = mk("ImpSkip");
@@ -279,7 +251,6 @@ package classes
 		public static const RaijuUltReady:StatusEffectType      = mk("Raiju Ult Ready");
 		public static const Round:StatusEffectType              = mk("Round");
 		public static const round:StatusEffectType              = mk("round");
-		public static const RunDisabled:StatusEffectType        = mk("Run Disabled");
 		public static const Shell:StatusEffectType              = mk("Shell");
 		public static const SirenSong:StatusEffectType          = mk("Siren Song");
 		public static const Spar:StatusEffectType               = mk("spar");
@@ -475,11 +446,8 @@ package classes
 		public static const DwarfRage:StatusEffectType                 = mkCombat("Dwarf Rage");
 		public static const EarthStance:StatusEffectType	           = mkCombat("Earth Stance");
 		public static const EverywhereAndNowhere:StatusEffectType      = mkCombat("Everywhere and nowhere");
-		public static const EzekielCurse:StatusEffectType              = mkCombat("Ezekiel Curse");
 		public static const FirePunchBurnDoT:StatusEffectType          = mkCombat("Fire Punch Burn DoT");
 		public static const FirstAttack:StatusEffectType               = mkCombat("FirstAttack");
-		public static const FirstAttackMantis:StatusEffectType         = mkCombat("FirstAttackMantis");
-		public static const FirstStrike:StatusEffectType               = mkCombat("FirstStrike");
 		public static const Flying:StatusEffectType                    = mkCombat("Flying");
 		public static const FlyingNoStun:StatusEffectType              = mkCombat("FlyingNoStun");
 		public static const FreezingBreathStun:StatusEffectType        = mkCombat("FreezingBreathStun");
@@ -545,7 +513,6 @@ package classes
 		public static const TranceTransformation:StatusEffectType      = mkCombat("Trance Transformation");
 		public static const TwuWuv:StatusEffectType                    = mkCombat("Twu Wuv");
 		public static const UBERWEB:StatusEffectType                   = mkCombat("UBERWEB");
-		public static const UnderwaterCombatBoost:StatusEffectType     = mkCombat("UnderwaterCombatBoost");
 		public static const UnderwaterOutOfAir:StatusEffectType        = mkCombat("UnderwaterOutOfAir");
 		public static const VioletPupilTransformation:StatusEffectType = mkCombat("Violet Pupil Transformation");
 		public static const Web:StatusEffectType                       = WebDebuff.TYPE;
@@ -604,7 +571,6 @@ package classes
 		public static const MinotaurKingsTouch:StatusEffectType    = mkCombat("Minotaur Kings Touch");
 		public static const LethicesRapeTentacles:StatusEffectType = mkCombat("Lethices Rape Tentacles");
 		public static const OnFire:StatusEffectType                = mkCombat("On Fire");
-		public static const LethicesShell:StatusEffectType         = mkCombat("Lethices Magic Shell");
 		public static const WhipSilence:StatusEffectType           = mkCombat("Whip Silence");
 		public static const PigbysHands:StatusEffectType           = mkCombat("Pigbys Hands");
 
