@@ -1782,26 +1782,11 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 
 public function unFuckSave():void
 {
-	//Fixing shit!
-
-	// Fix duplicate elven bounty perks
-	if (player.hasPerk(PerkLib.ElvenBounty)) {
-		//CLear duplicates
-		while(player.perkDuplicated(PerkLib.ElvenBounty)) player.removePerk(PerkLib.ElvenBounty);
-		//Fix fudged preggers value
-		if (player.perkv1(PerkLib.ElvenBounty) == 15) {
-			player.setPerkValue(PerkLib.ElvenBounty,1,0);
-			player.addPerkValue(PerkLib.ElvenBounty,2,15);
-		}
-	}
-	while (player.perkDuplicated(PerkLib.NinetailsKitsuneOfBalance)) player.removePerk(PerkLib.NinetailsKitsuneOfBalance);
-	while (player.perkDuplicated(PerkLib.KitsuneThyroidGland)) player.removePerk(PerkLib.KitsuneThyroidGland);
-
 	if (player.hasStatusEffect(StatusEffects.KnockedBack))
 	{
 		player.removeStatusEffect(StatusEffects.KnockedBack);
 	}
-	
+
 	if (player.hasStatusEffect(StatusEffects.Tentagrappled))
 	{
 		player.removeStatusEffect(StatusEffects.Tentagrappled);

@@ -1018,13 +1018,29 @@ import classes.Stats.BuffableStat;
 
 		//Functions
 
-		//Create a perk
+		/**
+		 * Creates a perk on this creature. If the perk already exists, will overwrite existing values with provided ones.
+		 * @param ptype
+		 * @param value1
+		 * @param value2
+		 * @param value3
+		 * @param value4
+		 * @return The perk that was created for this creature
+		 */
 		public function createPerk(ptype:PerkType, value1:Number, value2:Number, value3:Number, value4:Number):PerkClass
 		{
-			var newPerk:PerkClass = ptype.create(value1,value2,value3,value4);
-			perks.push(newPerk);
-			perks.sortOn("perkName");
-			newPerk.addedToHostList(this,true);
+			newPerk = getPerk(ptype);
+			if(newPerk == null) {
+				var newPerk:PerkClass = ptype.create(value1,value2,value3,value4);
+				perks.push(newPerk);
+				perks.sortOn("perkName");
+				newPerk.addedToHostList(this,true);
+			} else {
+				newPerk.value1 = value1;
+				newPerk.value2 = value2;
+				newPerk.value3 = value3;
+				newPerk.value4 = value4;
+			}
 			return newPerk;
 		}
 		public function addPerk(perk:PerkClass):void {
