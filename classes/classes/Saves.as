@@ -1,5 +1,6 @@
 package classes
 {
+
 import classes.BodyParts.Antennae;
 import classes.BodyParts.Arms;
 import classes.BodyParts.Ears;
@@ -12,8 +13,8 @@ import classes.BodyParts.Tongue;
 import classes.GlobalFlags.kACHIEVEMENTS;
 import classes.GlobalFlags.kFLAGS;
 import classes.Items.*;
-	import classes.Scenes.Areas.Desert.SandWitchScene;
-	import classes.Scenes.Dungeons.DungeonAbstractContent;
+import classes.Scenes.Areas.Desert.SandWitchScene;
+import classes.Scenes.Dungeons.DungeonAbstractContent;
 import classes.Scenes.NPCs.JojoScene;
 import classes.Scenes.NPCs.XXCNPC;
 import classes.Scenes.SceneLib;
@@ -1449,860 +1450,334 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 	DungeonAbstractContent.inRoomedDungeon = false;
 	DungeonAbstractContent.inRoomedDungeonResume = null;
 
-	//Autosave stuff
-	if(player){
-        player.slotName = slot;
-	}
 	trace("Loading save!");
 
-	var saveFile:* = saveData;
+	var saveFile:*  = saveData;
 	var data:Object = saveFile.data;
-	if (saveFile.data.exists)
-	{
 
-		//KILL ALL COCKS;
-		player = new Player();
-		game.flags = new DefaultDict();
-		model.player = player;
-		
-		//trace("Type of saveFile.data = ", getClass(saveFile.data));
-		
-		inventory.clearStorage();
-		inventory.clearPearlStorage();
-		inventory.clearGearStorage();
-		player.short = saveFile.data.short;
-		player.a = saveFile.data.a;
-		notes = saveFile.data.notes;
-		
-		//flags
-		for (var i:int = 0; i < flags.length; i++)
-		{
-			if (saveFile.data.flags[i] != undefined)
-				flags[i] = saveFile.data.flags[i];
-		}
-		if (saveFile.data.versionID != undefined) {
-			game.versionID = saveFile.data.versionID;
-			trace("Found internal versionID:", game.versionID);
-		}
-		unFuckSaveDataBeforeLoading(saveFile.data);
-		//PIERCINGS
-		
-		//trace("LOADING PIERCINGS");
-		player.nipplesPierced = saveFile.data.nipplesPierced;
-		player.nipplesPShort = saveFile.data.nipplesPShort;
-		player.nipplesPLong = saveFile.data.nipplesPLong;
-		player.lipPierced = saveFile.data.lipPierced;
-		player.lipPShort = saveFile.data.lipPShort;
-		player.lipPLong = saveFile.data.lipPLong;
-		player.tonguePierced = saveFile.data.tonguePierced;
-		player.tonguePShort = saveFile.data.tonguePShort;
-		player.tonguePLong = saveFile.data.tonguePLong;
-		player.eyebrowPierced = saveFile.data.eyebrowPierced;
-		player.eyebrowPShort = saveFile.data.eyebrowPShort;
-		player.eyebrowPLong = saveFile.data.eyebrowPLong;
-		player.earsPierced = saveFile.data.earsPierced;
-		player.earsPShort = saveFile.data.earsPShort;
-		player.earsPLong = saveFile.data.earsPLong;
-		player.nosePierced = saveFile.data.nosePierced;
-		player.nosePShort = saveFile.data.nosePShort;
-		player.nosePLong = saveFile.data.nosePLong;
-		
-		//MAIN STATS
-		
-		if (saveFile.data.strStat) {
-			player.strStat.loadFromObject(saveFile.data.strStat, false);
-			player.touStat.loadFromObject(saveFile.data.touStat, false);
-			player.speStat.loadFromObject(saveFile.data.speStat, false);
-			player.intStat.loadFromObject(saveFile.data.intStat, false);
-			player.wisStat.loadFromObject(saveFile.data.wisStat, false);
-			player.libStat.loadFromObject(saveFile.data.libStat, false);
-		} else {
-			// TODO @aimozg/stats & @Oxdeception properly import stats...
-			// Total possible stats (15 per stat + 5 points per level)
-			var sptot:int    = saveFile.data.level * 5 + 15 * 6;
-			var sstot:Number = saveFile.data.str + saveFile.data.tou + saveFile.data.spe + saveFile.data.inte + saveFile.data.wis + saveFile.data.lib;
-			var ratio:Number = sptot / sstot;
-			player.strStat.reset(int(saveFile.data.str * ratio));
-			player.touStat.reset(int(saveFile.data.tou * ratio));
-			player.speStat.reset(int(saveFile.data.spe * ratio));
-			player.intStat.reset(int(saveFile.data.inte * ratio));
-			player.wisStat.reset(int(saveFile.data.wis * ratio));
-			player.libStat.reset(int(saveFile.data.lib * ratio));
-		}
-		player.sens = saveFile.data.sens;
-		player.cor = saveFile.data.cor;
-		player.fatigue = saveFile.data.fatigue;
-		player.mana = saveFile.data.mana;
-		player.ki = saveFile.data.ki;
-		player.wrath = saveFile.data.wrath;
+	if (!saveFile.data.exists) { return; }
 
-		//CLOTHING/ARMOR
-		var found:Boolean = false;
-		if (saveFile.data.weaponId){
-			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.weaponId) as Weapon) || WeaponLib.FISTS);
-		} else {
-			player.setWeapon(WeaponLib.FISTS);
-			//player.weapon = WeaponLib.FISTS;
-			for each (var itype:ItemType in ItemType.getItemLibrary()) {
-				if (itype is Weapon && (itype as Weapon).name == saveFile.data.weaponName){
-					player.dierctSetEquipment(itype as Weapon || WeaponLib.FISTS);
-					found = true;
-					break;
-				}
-			}
-		}
-		if (saveFile.data.weaponRangeId){
-			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.weaponRangeId) as WeaponRange) || WeaponRangeLib.NOTHING);
-		} else {
-			player.setWeaponRange(WeaponRangeLib.NOTHING);
-			for each (itype in ItemType.getItemLibrary()) {
-				if (itype is WeaponRange && (itype as WeaponRange).name == saveFile.data.weaponRangeName){
-					player.dierctSetEquipment(itype as WeaponRange || WeaponRangeLib.NOTHING);
-					found = true;
-					break;
-				}
-			}
-		}
-		if (saveFile.data.shieldId){
-			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.shieldId) as Shield) || ShieldLib.NOTHING);
-		} else {
-			player.setShield(ShieldLib.NOTHING);
-			for each (itype in ItemType.getItemLibrary()) {
-				if (itype is Shield && (itype as Shield).name == saveFile.data.shieldName){
-					player.dierctSetEquipment(itype as Shield || ShieldLib.NOTHING);
-					found = true;
-					break;
-				}
-			}
-		}
-		if (saveFile.data.jewelryId){
-			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.jewelryId) as Jewelry) || JewelryLib.NOTHING);
-		} else {
-			player.setJewelry(JewelryLib.NOTHING);
-			for each (itype in ItemType.getItemLibrary()) {
-				if (itype is Jewelry && (itype as Jewelry).name == saveFile.data.jewelryName){
-					player.dierctSetEquipment(itype as Jewelry || JewelryLib.NOTHING);
-					found = true;
-					break;
-				}
-			}
-		}
-		if (saveFile.data.upperGarmentId){
-			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.upperGarmentId) as Undergarment) || UndergarmentLib.NOTHING);
-		} else {
-			player.setUndergarment(UndergarmentLib.NOTHING);
-			for each (itype in ItemType.getItemLibrary()) {
-				if (itype is Undergarment && (itype as Undergarment).name == saveFile.data.upperGarmentName){
-					player.dierctSetEquipment(itype as Undergarment || UndergarmentLib.NOTHING);
-					found = true;
-					break;
-				}
-			}
-		}
-		if (saveFile.data.lowerGarmentId){
-			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.lowerGarmentId) as Undergarment) || UndergarmentLib.NOTHING);
-		} else {
-			player.setUndergarment(UndergarmentLib.NOTHING);
-			for each (itype in ItemType.getItemLibrary()) {
-				if (itype is Undergarment && (itype as Undergarment).name == saveFile.data.lowerGarmentName){
-					player.dierctSetEquipment(itype as Undergarment || UndergarmentLib.NOTHING);
-					found = true;
-					break;
-				}
-			}
-		}
-		if (saveFile.data.armorId){
-			player.dierctSetEquipment((ItemType.lookupItem(saveFile.data.armorId) as Armor) || ArmorLib.COMFORTABLE_UNDERCLOTHES);
-			if (player.armor.name != saveFile.data.armorName) player.modArmorName = saveFile.data.armorName;
-		} else {
-			found = false;
-			player.setArmor(ArmorLib.COMFORTABLE_UNDERCLOTHES);
-			//player.armor = ArmorLib.COMFORTABLE_UNDERCLOTHES;
-			for each (itype in ItemType.getItemLibrary()) {
-				if (itype is Armor && (itype as Armor).name == saveFile.data.armorName){
-					player.dierctSetEquipment(itype as Armor || ArmorLib.COMFORTABLE_UNDERCLOTHES);
-					found = true;
-					break;
-				}
-			}
-			if (!found){
-				for each (itype in ItemType.getItemLibrary()){
-					if (itype is Armor){
-						var a:Armor = itype as Armor;
-						if (a.value == saveFile.data.armorValue &&
-								a.defense == saveFile.data.armorDef &&
-								a.perk == saveFile.data.armorPerk){
-							player.setArmor(a);
-							//player.armor = a;
-							player.modArmorName = saveFile.data.armorName;
-							found = true;
-							break;
-						}
-					}
-				}
-			}
-		}
+	player       = new Player();
+	game.flags   = new DefaultDict();
+	model.player = player;
 
-		//Combat STATS
-		player.HP = saveFile.data.HP;
-		player.lust = saveFile.data.lust;
-		if (saveFile.data.teaseXP == undefined)
-			player.teaseXP = 0;
-		else
-			player.teaseXP = saveFile.data.teaseXP;
-		if (saveFile.data.teaseLevel == undefined)
-			player.teaseLevel = 0;
-		else
-			player.teaseLevel = saveFile.data.teaseLevel;
-		if (saveFile.data.hunger == undefined)
-			player.hunger = 50;
-		else
-			player.hunger = saveFile.data.hunger;
-
-		//LEVEL STATS
-		player.XP = saveFile.data.XP;
-		player.level = saveFile.data.level;
-		player.gems = saveFile.data.gems || 0;
-		if (saveFile.data.perkPoints == undefined)
-			player.perkPoints = 0;
-		else
-			player.perkPoints = saveFile.data.perkPoints;
-		
-		if (saveFile.data.statPoints == undefined)
-			player.statPoints = 0;
-		else
-			player.statPoints = saveFile.data.statPoints;
-
-		if (saveFile.data.ascensionPerkPoints == undefined)
-			player.ascensionPerkPoints = 0;
-		else
-			player.ascensionPerkPoints = saveFile.data.ascensionPerkPoints;
-		
-		//Appearance
-		if (saveFile.data.startingRace != undefined)
-			player.startingRace = saveFile.data.startingRace;
-		if (saveFile.data.femininity == undefined)
-			player.femininity = 50;
-		else
-			player.femininity = saveFile.data.femininity;
-		//EYES
-		if (saveFile.data.eyeType == undefined)
-			player.eyes.type = Eyes.HUMAN;
-		else
-			player.eyes.type = saveFile.data.eyeType;
-		if (saveFile.data.eyeColor == undefined)
-			player.eyes.colour = "brown";
-		else
-			player.eyes.colour = saveFile.data.eyeColor;
-		//BEARS
-		if (saveFile.data.beardLength == undefined)
-			player.beardLength = 0;
-		else
-			player.beardLength = saveFile.data.beardLength;
-		if (saveFile.data.beardStyle == undefined)
-			player.beardStyle = 0;
-		else
-			player.beardStyle = saveFile.data.beardStyle;
-		//BODY STYLE
-		if (saveFile.data.tone == undefined)
-			player.tone = 50;
-		else
-			player.tone = saveFile.data.tone;
-		if (saveFile.data.thickness == undefined)
-			player.thickness = 50;
-		else
-			player.thickness = saveFile.data.thickness;
-		
-		player.tallness = saveFile.data.tallness;
-		player.hairColor = saveFile.data.hairColor;
-		if (saveFile.data.hairType == undefined)
-			player.hairType = 0;
-		else
-			player.hairType = saveFile.data.hairType;
-		if (saveFile.data.gillType != undefined)
-			player.gills.type = saveFile.data.gillType;
-		else if (saveFile.data.gills == undefined)
-			player.gills.type = Gills.NONE;
-		else
-			player.gills.type = saveFile.data.gills ? Gills.ANEMONE : Gills.NONE;
-		if (saveFile.data.armType == undefined)
-			player.arms.type = Arms.HUMAN;
-		else
-			player.arms.type = saveFile.data.armType;
-		player.hairLength = saveFile.data.hairLength;
-		player.lowerBodyPart.loadFromSaveData(data);
-		player.skin.loadFromSaveData(data);
-		player.clawsPart.loadFromSaveData(data);
-		player.facePart.loadFromSaveData(data);
-		player.tail.loadFromSaveData(data);
-		if (saveFile.data.tongueType == undefined)
-			player.tongue.type = Tongue.HUMAN;
-		else
-			player.tongue.type = saveFile.data.tongueType;
-		if (saveFile.data.earType == undefined)
-			player.ears.type = Ears.HUMAN;
-		else
-			player.ears.type = saveFile.data.earType;
-		if (saveFile.data.antennae == undefined)
-			player.antennae.type = Antennae.NONE;
-		else
-			player.antennae.type = saveFile.data.antennae;
-		player.horns.count = saveFile.data.horns;
-		if (saveFile.data.hornType == undefined)
-			player.horns.type = Horns.NONE;
-		else
-			player.horns.type = saveFile.data.hornType;
-
-		// <mod name="Dragon patch" author="Stadler76">
-		if (saveFile.data.rearBodyType != undefined)
-			saveFile.data.rearBody = saveFile.data.rearBodyType;
-		player.rearBody.type = (saveFile.data.rearBody == undefined) ? RearBody.NONE : saveFile.data.rearBody;
-
-		player.wings.desc = saveFile.data.wingDesc;
-		player.wings.type = saveFile.data.wingType;
-		player.hips.type = saveFile.data.hipRating;
-		player.butt.type = saveFile.data.buttRating;
-
-		//Sexual Stuff
-		player.balls = saveFile.data.balls;
-		player.cumMultiplier = saveFile.data.cumMultiplier;
-		player.ballSize = saveFile.data.ballSize;
-		player.hoursSinceCum = saveFile.data.hoursSinceCum;
-		player.fertility = saveFile.data.fertility;
-		
-		//Preggo stuff
-		player.knockUpForce(saveFile.data.pregnancyType, saveFile.data.pregnancyIncubation);
-		player.buttKnockUpForce(saveFile.data.buttPregnancyType, saveFile.data.buttPregnancyIncubation);
-		
-		var hasViridianCockSock:Boolean = false;
-
-		//ARRAYS HERE!
-		//Set Cock array
-		for (i = 0; i < saveFile.data.cocks.length; i++)
-		{
-			player.createCock();
-		}
-		//Populate Cock Array
-		for (i = 0; i < saveFile.data.cocks.length; i++)
-		{
-			player.cocks[i].cockThickness = saveFile.data.cocks[i].cockThickness;
-			player.cocks[i].cockLength = saveFile.data.cocks[i].cockLength;
-			player.cocks[i].cockType = CockTypesEnum.ParseConstantByIndex(saveFile.data.cocks[i].cockType);
-			player.cocks[i].knotMultiplier = saveFile.data.cocks[i].knotMultiplier;
-			if (saveFile.data.cocks[i].sock == undefined)
-				player.cocks[i].sock = "";
-			else
-			{
-				player.cocks[i].sock = saveFile.data.cocks[i].sock;
-				if (player.cocks[i].sock == "viridian") hasViridianCockSock = true;
-			}
-			if (saveFile.data.cocks[i].pierced == undefined)
-			{
-				player.cocks[i].pierced = 0;
-				player.cocks[i].pShortDesc = "";
-				player.cocks[i].pLongDesc = "";
-			}
-			else
-			{
-				player.cocks[i].pierced = saveFile.data.cocks[i].pierced;
-				player.cocks[i].pShortDesc = saveFile.data.cocks[i].pShortDesc;
-				player.cocks[i].pLongDesc = saveFile.data.cocks[i].pLongDesc;
-				
-				if (player.cocks[i].pShortDesc == "null" || player.cocks[i].pLongDesc == "null")
-				{
-					player.cocks[i].pierced = 0;
-					player.cocks[i].pShortDesc = "";
-					player.cocks[i].pLongDesc = "";
-				}
-			}
-				//trace("LoadOne Cock i(" + i + ")");
-		}
-		//Set Vaginal Array
-		for (i = 0; i < saveFile.data.vaginas.length; i++)
-		{
-			player.createVagina();
-		}
-		//Populate Vaginal Array
-		for (i = 0; i < saveFile.data.vaginas.length; i++)
-		{
-			player.vaginas[i].vaginalWetness = saveFile.data.vaginas[i].vaginalWetness;
-			player.vaginas[i].vaginalLooseness = saveFile.data.vaginas[i].vaginalLooseness;
-			player.vaginas[i].fullness = saveFile.data.vaginas[i].fullness;
-			player.vaginas[i].virgin = saveFile.data.vaginas[i].virgin;
-			if (saveFile.data.vaginas[i].type == undefined) player.vaginas[i].type = 0;
-			else player.vaginas[i].type = saveFile.data.vaginas[i].type;
-			if (saveFile.data.vaginas[i].labiaPierced == undefined) {
-				player.vaginas[i].labiaPierced = 0;
-				player.vaginas[i].labiaPShort = "";
-				player.vaginas[i].labiaPLong = "";
-				player.vaginas[i].clitPierced = 0;
-				player.vaginas[i].clitPShort = "";
-				player.vaginas[i].clitPLong = "";
-				player.vaginas[i].clitLength = VaginaClass.DEFAULT_CLIT_LENGTH;
-				player.vaginas[i].recoveryProgress = 0;
-			}
-			else
-			{
-				player.vaginas[i].labiaPierced = saveFile.data.vaginas[i].labiaPierced;
-				player.vaginas[i].labiaPShort = saveFile.data.vaginas[i].labiaPShort;
-				player.vaginas[i].labiaPLong = saveFile.data.vaginas[i].labiaPLong;
-				player.vaginas[i].clitPierced = saveFile.data.vaginas[i].clitPierced;
-				player.vaginas[i].clitPShort = saveFile.data.vaginas[i].clitPShort;
-				player.vaginas[i].clitPLong = saveFile.data.vaginas[i].clitPLong;
-				player.vaginas[i].clitLength = saveFile.data.vaginas[i].clitLength;
-				player.vaginas[i].recoveryProgress = saveFile.data.vaginas[i].recoveryProgress;
-
-
-				// backwards compatibility
-				//TODO is there a better way to do this?
-				if(saveFile.data.vaginas[i].clitLength == undefined) {
-					player.vaginas[i].clitLength = VaginaClass.DEFAULT_CLIT_LENGTH;
-					trace("Clit length was not loaded, setting to default.");
-				}
-
-				if(saveFile.data.vaginas[i].recoveryProgress == undefined) {
-					player.vaginas[i].recoveryProgress = 0;
-					trace("Stretch counter was not loaded, setting to 0.");
-				}
-			}
-				//trace("LoadOne Vagina i(" + i + ")");
-		}
-		//NIPPLES
-		if (saveFile.data.nippleLength == undefined)
-			player.nippleLength = .25;
-		else
-			player.nippleLength = saveFile.data.nippleLength;
-		//Set Breast Array
-		for (i = 0; i < saveFile.data.breastRows.length; i++)
-		{
-			player.createBreastRow();
-				//trace("LoadOne BreastROw i(" + i + ")");
-		}
-		//Populate Breast Array
-		for (i = 0; i < saveFile.data.breastRows.length; i++)
-		{
-			player.breastRows[i].breasts = saveFile.data.breastRows[i].breasts;
-			player.breastRows[i].nipplesPerBreast = saveFile.data.breastRows[i].nipplesPerBreast;
-			//Fix nipplesless breasts bug
-			if (player.breastRows[i].nipplesPerBreast == 0)
-				player.breastRows[i].nipplesPerBreast = 1;
-			player.breastRows[i].breastRating = saveFile.data.breastRows[i].breastRating;
-			player.breastRows[i].lactationMultiplier = saveFile.data.breastRows[i].lactationMultiplier;
-			if (player.breastRows[i].lactationMultiplier < 0)
-				player.breastRows[i].lactationMultiplier = 0;
-			player.breastRows[i].milkFullness = saveFile.data.breastRows[i].milkFullness;
-			player.breastRows[i].fuckable = saveFile.data.breastRows[i].fuckable;
-			player.breastRows[i].fullness = saveFile.data.breastRows[i].fullness;
-			if (player.breastRows[i].breastRating < 0)
-				player.breastRows[i].breastRating = 0;
-		}
-		
-		// Force the creation of the default breast row onto the player if it's no longer present
-		if (player.breastRows.length == 0) player.createBreastRow();
-		
-		var hasHistoryPerk:Boolean = false;
-		var hasLustyRegenPerk:Boolean = false;
-		var addedSensualLover:Boolean = false;
-		
-		//Populate Perk Array
-		for (i = 0; i < saveFile.data.perks.length; i++)
-		{
-			var id:String = saveFile.data.perks[i].id || saveFile.data.perks[i].perkName;
-			var value1:Number = saveFile.data.perks[i].value1;
-			var value2:Number = saveFile.data.perks[i].value2;
-			var value3:Number = saveFile.data.perks[i].value3;
-			var value4:Number = saveFile.data.perks[i].value4;
-			
-			// Fix saves where the Whore perk might have been malformed.
-			if (id == "History: Whote") id = "History: Whore";
-			
-			// Fix saves where the Lusty Regeneration perk might have been malformed.
-			if (id == "Lusty Regeneration")
-			{
-				hasLustyRegenPerk = true;
-			}
-			else if (id == "LustyRegeneration")
-			{
-				id = "Lusty Regeneration";
-				hasLustyRegenPerk = true;
-			}
-			
-			// Some shit checking to track if the incoming data has an available History perk
-			if (id.indexOf("History:") != -1)
-			{
-				hasHistoryPerk = true;
-			}
-			
-			var ptype:PerkType = PerkType.lookupPerk(id);
-			
-			if (ptype == null) 
-			{
-				trace("ERROR: Unknown perk id="+id);
-				
-				//(saveFile.data.perks as Array).splice(i,1);
-				// NEVER EVER EVER MODIFY DATA IN THE SAVE FILE LIKE THIS. EVER. FOR ANY REASON.
-			}
-			else
-			{
-				trace("Creating perk : " + ptype);
-				player.createPerk(ptype,value1,value2,value3,value4);
-			
-				if (isNaN(player.perk(player.numPerks - 1).value1)) 
-				{
-					if (player.perk(player.numPerks - 1).perkName == "Wizard's Focus") 
-					{
-						player.perk(player.numPerks - 1).value1 = .3;
-					}
-					else
-					{
-						player.perk(player.numPerks).value1 = 0;
-					}
-					
-					trace("NaN byaaaatch: " + player.perk(player.numPerks - 1).value1);
-				}
-			
-				if (player.perk(player.numPerks - 1).perkName == "Wizard's Focus") 
-				{
-					if (player.perk(player.numPerks - 1).value1 == 0 || player.perk(player.numPerks - 1).value1 < 0.1) 
-					{
-						trace("Wizard's Focus boosted up to par (.5)");
-						player.perk(player.numPerks - 1).value1 = .5;
-					}
-				}
-			}
-		}
-		
-		// Fixup missing History: Whore perk IF AND ONLY IF the flag used to track the prior selection of a history perk has been set
-		if (hasHistoryPerk == false && flags[kFLAGS.HISTORY_PERK_SELECTED] != 0)
-		{
-			player.createPerk(PerkLib.HistoryWhore, 0, 0, 0, 0);
-		}
-		
-		// Fixup missing Lusty Regeneration perk, if the player has an equipped viridian cock sock and does NOT have the Lusty Regeneration perk
-		if (hasViridianCockSock == true && hasLustyRegenPerk == false)
-		{
-			player.createPerk(PerkLib.LustyRegeneration, 0, 0, 0, 0);
-		}
-		
-		if (flags[kFLAGS.TATTOO_SAVEFIX_APPLIED] == 0)
-		{
-			// Fix some tatto texts that could be broken
-			if (flags[kFLAGS.VAPULA_TATTOO_LOWERBACK] is String && (flags[kFLAGS.VAPULA_TATTOO_LOWERBACK] as String).indexOf("lower back.lower back") != -1)
-			{
-				flags[kFLAGS.VAPULA_TATTOO_LOWERBACK] = (flags[kFLAGS.VAPULA_TATTOO_LOWERBACK] as String).split(".")[0] + ".";
-			}
-			
-			
-			var refunds:int = 0;
-			
-			if (flags[kFLAGS.JOJO_TATTOO_LOWERBACK] is String)
-			{
-				refunds++;
-				flags[kFLAGS.JOJO_TATTOO_LOWERBACK] = 0;
-			}
-			
-			if (flags[kFLAGS.JOJO_TATTOO_BUTT] is String)
-			{
-				refunds++;
-				flags[kFLAGS.JOJO_TATTOO_BUTT] = 0;
-			}
-			
-			if (flags[kFLAGS.JOJO_TATTOO_COLLARBONE] is String)
-			{
-				refunds++;
-				flags[kFLAGS.JOJO_TATTOO_COLLARBONE] = 0;
-			}
-			
-			if (flags[kFLAGS.JOJO_TATTOO_SHOULDERS] is String)
-			{
-				refunds++;
-				flags[kFLAGS.JOJO_TATTOO_SHOULDERS] = 0;
-			}
-			
-			player.gems += 50 * refunds;
-			flags[kFLAGS.TATTOO_SAVEFIX_APPLIED] = 1;
-		}
-		
-		if (flags[kFLAGS.FOLLOWER_AT_FARM_MARBLE] == 1)
-		{
-			flags[kFLAGS.FOLLOWER_AT_FARM_MARBLE] = 0;
-			trace("Force-reverting Marble At Farm flag to 0.");
-		}
-		
-		//Set Status Array
-		for (i = 0; i < saveFile.data.statusAffects.length; i++)
-		{
-			if (saveFile.data.statusAffects[i].statusAffectName == "Lactation EnNumbere") continue; // ugh...
-			var stype:StatusEffectType = StatusEffectType.lookupStatusEffect(saveFile.data.statusAffects[i].statusAffectName);
-			if (stype == null){
-				CoC_Settings.error("Cannot find status effect '"+saveFile.data.statusAffects[i].statusAffectName+"'");
-				continue;
-			}
-			player.createStatusEffect(stype,
-					saveFile.data.statusAffects[i].value1,
-					saveFile.data.statusAffects[i].value2,
-					saveFile.data.statusAffects[i].value3,
-					saveFile.data.statusAffects[i].value4);
-		}
-		//Make sure keyitems exist!
-		if (saveFile.data.keyItems != undefined)
-		{
-			//Set keyItems Array
-			for (i = 0; i < saveFile.data.keyItems.length; i++)
-			{
-				player.createKeyItem("TEMP", 0, 0, 0, 0);
-			}
-			//Populate keyItems Array
-			for (i = 0; i < saveFile.data.keyItems.length; i++)
-			{
-				player.keyItems[i].keyName = saveFile.data.keyItems[i].keyName;
-				player.keyItems[i].value1 = saveFile.data.keyItems[i].value1;
-				player.keyItems[i].value2 = saveFile.data.keyItems[i].value2;
-				player.keyItems[i].value3 = saveFile.data.keyItems[i].value3;
-				player.keyItems[i].value4 = saveFile.data.keyItems[i].value4;
-					//trace("KeyItem " + player.keyItems[i].keyName + " loaded.");
-			}
-		}
-		//Set storage slot array
-		if (saveFile.data.itemStorage == undefined)
-		{
-			//trace("OLD SAVES DO NOT CONTAIN ITEM STORAGE ARRAY");
-		}
-		else
-		{
-			//Populate storage slot array
-			for (i = 0; i < saveFile.data.itemStorage.length; i++)
-			{
-				//trace("Populating a storage slot save with data");
-				inventory.createStorage();
-				var storage:ItemSlotClass = itemStorageGet()[i];
-				var savedIS:* = saveFile.data.itemStorage[i];
-				if (savedIS.shortName)
-				{
-					if (savedIS.shortName.indexOf("Gro+") != -1)
-						savedIS.id = "GroPlus";
-					else if (savedIS.shortName.indexOf("Sp Honey") != -1)
-						savedIS.id = "SpHoney";
-				}
-				if (savedIS.quantity>0)
-					storage.setItemAndQty(ItemType.lookupItem(savedIS.id || savedIS.shortName), savedIS.quantity);
-				else
-					storage.emptySlot();
-				storage.unlocked = savedIS.unlocked;
-			}
-		}
-
-		//Set pearl slot array
-		if (saveFile.data.pearlStorage == undefined)
-		{
-			//trace("OLD SAVES DO NOT CONTAIN ITEM STORAGE ARRAY - Creating new!");
-			inventory.initializePearlStorage();
-		}
-		else
-		{
-			for (i = 0; i < saveFile.data.pearlStorage.length && pearlStorageGet().length < 98; i++)
-			{
-				pearlStorageGet().push(new ItemSlotClass());
-					//trace("Initialize a slot for one of the item storage locations to load.");
-			}
-			//Populate storage slot array
-			for (i = 0; i < saveFile.data.pearlStorage.length && i < pearlStorageGet().length; i++)
-			{
-				//trace("Populating a storage slot save with data");
-				storage = pearlStorageGet()[i];
-				if ((saveFile.data.pearlStorage[i].shortName == undefined && saveFile.data.pearlStorage[i].id == undefined)
-                        || saveFile.data.pearlStorage[i].quantity == undefined
-						|| saveFile.data.pearlStorage[i].quantity == 0)
-					storage.emptySlot();
-				else
-					storage.setItemAndQty(ItemType.lookupItem(saveFile.data.pearlStorage[i].id || saveFile.data.pearlStorage[i].shortName),saveFile.data.pearlStorage[i].quantity);
-				storage.unlocked = saveFile.data.pearlStorage[i].unlocked;
-			}
-		}
-
-		//Set gear slot array
-		if (saveFile.data.gearStorage == undefined)
-		{
-			//trace("OLD SAVES DO NOT CONTAIN ITEM STORAGE ARRAY - Creating new!");
-			inventory.initializeGearStorage();
-		}
-		else
-		{
-			for (i = 0; i < saveFile.data.gearStorage.length && gearStorageGet().length < 90; i++)
-			{
-				gearStorageGet().push(new ItemSlotClass());
-					//trace("Initialize a slot for one of the item storage locations to load.");
-			}
-			//Populate storage slot array
-			for (i = 0; i < saveFile.data.gearStorage.length && i < gearStorageGet().length; i++)
-			{
-				//trace("Populating a storage slot save with data");
-				storage = gearStorageGet()[i];
-				if ((saveFile.data.gearStorage[i].shortName == undefined && saveFile.data.gearStorage[i].id == undefined)
-                        || saveFile.data.gearStorage[i].quantity == undefined
-						|| saveFile.data.gearStorage[i].quantity == 0)
-					storage.emptySlot();
-				else
-					storage.setItemAndQty(ItemType.lookupItem(saveFile.data.gearStorage[i].id || saveFile.data.gearStorage[i].shortName),saveFile.data.gearStorage[i].quantity);
-				storage.unlocked = saveFile.data.gearStorage[i].unlocked;
-			}
-		}
-
-		//Set ki
-		if (saveFile.data.ki == undefined) player.ki = 25;
-		//Set wisdom
-		if (saveFile.data.wis == undefined) player.wisStat.reset(15);
-		//Set wrath
-		if (saveFile.data.wrath == undefined) player.wrath = 0;
-		//Set mana
-		if (saveFile.data.mana == undefined) player.mana = 50;
-
-		//player.cocks = saveFile.data.cocks;
-		player.ass.analLooseness = saveFile.data.ass.analLooseness;
-		player.ass.analWetness = saveFile.data.ass.analWetness;
-		player.ass.fullness = saveFile.data.ass.fullness;
-		
-		//Shit
-		gameStateSet(saveFile.data.gameState);
-		player.exploredLake = saveFile.data.exploredLake;
-		player.exploredMountain = saveFile.data.exploredMountain;
-		player.exploredForest = saveFile.data.exploredForest;
-		player.exploredDesert = saveFile.data.exploredDesert;
-		player.explored = saveFile.data.explored;
-		
-		//Days
-		//Time and Items
-		model.time.minutes = saveFile.data.minutes;
-		model.time.hours = saveFile.data.hours;
-		model.time.days = saveFile.data.days;
-		if (saveFile.data.autoSave == undefined)
-			player.autoSave = false;
-		else
-			player.autoSave = saveFile.data.autoSave;
-		
-		//PLOTZ
-		JojoScene.monk = saveFile.data.monk;
-		SandWitchScene.rapedBefore      = saveFile.data.sand;
-
-		if (saveFile.data.beeProgress != undefined && saveFile.data.beeProgress == 1) SceneLib.forest.beeGirlScene.setTalked(); //Bee Progress update is now in a flag
-			//The flag will be zero for any older save that still uses beeProgress and newer saves always store a zero in beeProgress, so we only need to update the flag on a value of one.
-			
-		SceneLib.isabellaScene.isabellaOffspringData = [];
-		if (saveFile.data.isabellaOffspringData == undefined) {
-			//NOPE
-		}
-		else {
-			for (i = 0; i < saveFile.data.isabellaOffspringData.length; i += 2) {
-				SceneLib.isabellaScene.isabellaOffspringData.push(saveFile.data.isabellaOffspringData[i], saveFile.data.isabellaOffspringData[i+1])
-			}
-		}
-			
-		//ITEMZ. Item1
-		if (saveFile.data.itemSlot1.shortName)
-		{
-			if (saveFile.data.itemSlot1.shortName.indexOf("Gro+") != -1)
-				saveFile.data.itemSlot1.id = "GroPlus";
-			else if (saveFile.data.itemSlot1.shortName.indexOf("Sp Honey") != -1)
-				saveFile.data.itemSlot1.id = "SpHoney";
-		}
-		if (saveFile.data.itemSlot2.shortName)
-		{
-			if (saveFile.data.itemSlot2.shortName.indexOf("Gro+") != -1)
-				saveFile.data.itemSlot2.id = "GroPlus";
-			else if (saveFile.data.itemSlot2.shortName.indexOf("Sp Honey") != -1)
-				saveFile.data.itemSlot2.id = "SpHoney";
-		}
-		if (saveFile.data.itemSlot3.shortName)
-		{
-			if (saveFile.data.itemSlot3.shortName.indexOf("Gro+") != -1)
-				saveFile.data.itemSlot3.id = "GroPlus";
-			else if (saveFile.data.itemSlot3.shortName.indexOf("Sp Honey") != -1)
-				saveFile.data.itemSlot3.id = "SpHoney";
-		}
-		if (saveFile.data.itemSlot4.shortName)
-		{
-			if (saveFile.data.itemSlot4.shortName.indexOf("Gro+") != -1)
-				saveFile.data.itemSlot4.id = "GroPlus";
-			else if (saveFile.data.itemSlot4.shortName.indexOf("Sp Honey") != -1)
-				saveFile.data.itemSlot4.id = "SpHoney";
-		}
-		if (saveFile.data.itemSlot5.shortName)
-		{
-			if (saveFile.data.itemSlot5.shortName.indexOf("Gro+") != -1)
-				saveFile.data.itemSlot5.id = "GroPlus";
-			else if (saveFile.data.itemSlot5.shortName.indexOf("Sp Honey") != -1)
-				saveFile.data.itemSlot5.id = "SpHoney";
-		}
-		
-		player.itemSlot1.unlocked = true;
-		player.itemSlot1.setItemAndQty(ItemType.lookupItem(
-				saveFile.data.itemSlot1.id || saveFile.data.itemSlot1.shortName),
-				saveFile.data.itemSlot1.quantity);
-		player.itemSlot2.unlocked = true;
-		player.itemSlot2.setItemAndQty(ItemType.lookupItem(
-				saveFile.data.itemSlot2.id || saveFile.data.itemSlot2.shortName),
-				saveFile.data.itemSlot2.quantity);
-		player.itemSlot3.unlocked = true;
-		player.itemSlot3.setItemAndQty(ItemType.lookupItem(
-				saveFile.data.itemSlot3.id || saveFile.data.itemSlot3.shortName),
-				saveFile.data.itemSlot3.quantity);
-		player.itemSlot4.unlocked = saveFile.data.itemSlot4.unlocked;
-		player.itemSlot4.setItemAndQty(ItemType.lookupItem(
-				saveFile.data.itemSlot4.id || saveFile.data.itemSlot4.shortName),
-				saveFile.data.itemSlot4.quantity);
-		player.itemSlot5.unlocked = saveFile.data.itemSlot5.unlocked;
-		player.itemSlot5.setItemAndQty(ItemType.lookupItem(
-				saveFile.data.itemSlot5.id || saveFile.data.itemSlot5.shortName),
-				saveFile.data.itemSlot5.quantity);
-		//Extra slots from the mod.
-		if (saveFile.data.itemSlot6 != undefined && saveFile.data.itemSlot7 != undefined && saveFile.data.itemSlot8 != undefined && saveFile.data.itemSlot9 != undefined && saveFile.data.itemSlot10 != undefined) {
-		player.itemSlot6.unlocked = saveFile.data.itemSlot6.unlocked;
-		player.itemSlot6.setItemAndQty(ItemType.lookupItem(
-				saveFile.data.itemSlot6.id || saveFile.data.itemSlot6.shortName),
-				saveFile.data.itemSlot6.quantity);
-		player.itemSlot7.unlocked = saveFile.data.itemSlot7.unlocked;
-		player.itemSlot7.setItemAndQty(ItemType.lookupItem(
-				saveFile.data.itemSlot7.id || saveFile.data.itemSlot7.shortName),
-				saveFile.data.itemSlot7.quantity);
-		player.itemSlot8.unlocked = saveFile.data.itemSlot8.unlocked;
-		player.itemSlot8.setItemAndQty(ItemType.lookupItem(
-				saveFile.data.itemSlot8.id || saveFile.data.itemSlot8.shortName),
-				saveFile.data.itemSlot8.quantity);
-		player.itemSlot9.unlocked = saveFile.data.itemSlot9.unlocked;
-		player.itemSlot9.setItemAndQty(ItemType.lookupItem(
-				saveFile.data.itemSlot9.id || saveFile.data.itemSlot9.shortName),
-				saveFile.data.itemSlot9.quantity);
-		player.itemSlot10.unlocked = saveFile.data.itemSlot10.unlocked;
-		player.itemSlot10.setItemAndQty(ItemType.lookupItem(
-				saveFile.data.itemSlot10.id || saveFile.data.itemSlot10.shortName),
-				saveFile.data.itemSlot10.quantity);
-		}
-
-		player.saveLoaded();
-		loadAllAwareClasses(CoC.instance); //Informs each saveAwareClass that it must load its values from the flags array
-        unFuckSave();
-		
-		// Control Bindings
-		if (saveFile.data.controls != undefined)
-		{
-			game.inputManager.LoadBindsFromObj(saveFile.data.controls);
-		}
-		
-		XXCNPC.unloadSavedNPCs();
-		if(saveFile.data.settings == undefined){saveFile.data.settings = [];}
-		if ('showHotkeys' in saveFile.data.settings) game.inputManager.showHotkeys = saveFile.data.settings.showHotkeys;
-		if(saveFile.data.world == undefined){saveFile.data.world = [];}
-		if(saveFile.data.world.x == undefined){saveFile.data.world.x = [];}
-		for each(var savedNPC:* in saveFile.data.world.x){
-			if(savedNPC.myClass != undefined){
-                var ref:Class = getDefinitionByName(savedNPC.myClass) as Class;
-                ref["instance"].load(saveFile.data.world.x);
-			}
-		}
-		player.updateStats();
-		player.dynStats();
-		doNext(playerMenu);
+	player.slotName = slot;
+	player.short = data.short;
+	player.a     = data.a;
+	notes        = data.notes;
+	for (var i:int = 0; i < flags.length; i++) {
+		if (data.flags[i] != undefined)
+			flags[i] = data.flags[i];
 	}
+	if (data.versionID != undefined) {
+		game.versionID = data.versionID;
+		trace("Found internal versionID:", game.versionID);
+	}
+
+	unFuckSaveDataBeforeLoading(data);
+
+	player.nipplesPierced = data.nipplesPierced;
+	player.nipplesPShort  = data.nipplesPShort;
+	player.nipplesPLong   = data.nipplesPLong;
+	player.lipPierced     = data.lipPierced;
+	player.lipPShort      = data.lipPShort;
+	player.lipPLong       = data.lipPLong;
+	player.tonguePierced  = data.tonguePierced;
+	player.tonguePShort   = data.tonguePShort;
+	player.tonguePLong    = data.tonguePLong;
+	player.eyebrowPierced = data.eyebrowPierced;
+	player.eyebrowPShort  = data.eyebrowPShort;
+	player.eyebrowPLong   = data.eyebrowPLong;
+	player.earsPierced    = data.earsPierced;
+	player.earsPShort     = data.earsPShort;
+	player.earsPLong      = data.earsPLong;
+	player.nosePierced    = data.nosePierced;
+	player.nosePShort     = data.nosePShort;
+	player.nosePLong      = data.nosePLong;
+
+	if (data.strStat) {
+		player.strStat.loadFromObject(data.strStat, false);
+		player.touStat.loadFromObject(data.touStat, false);
+		player.speStat.loadFromObject(data.speStat, false);
+		player.intStat.loadFromObject(data.intStat, false);
+		player.wisStat.loadFromObject(data.wisStat, false);
+		player.libStat.loadFromObject(data.libStat, false);
+	} else {
+		// TODO @aimozg/stats & @Oxdeception properly import stats...
+		// Total possible stats (15 per stat + 5 points per level)
+		var sptot:int    = data.level * 5 + 15 * 6;
+		var sstot:Number = data.str + data.tou + data.spe + data.inte + data.wis + data.lib;
+		var ratio:Number = sptot / sstot;
+		player.strStat.reset(int(data.str * ratio));
+		player.touStat.reset(int(data.tou * ratio));
+		player.speStat.reset(int(data.spe * ratio));
+		player.intStat.reset(int(data.inte * ratio));
+		player.wisStat.reset(int(data.wis * ratio));
+		player.libStat.reset(int(data.lib * ratio));
+		if (saveFile.data.wis == undefined) {
+			player.wisStat.reset(15);
+		}
+	}
+	player.sens    = data.sens;
+	player.cor     = data.cor;
+	player.fatigue = data.fatigue;
+	player.mana    = data.mana || 50;
+	player.ki      = data.ki || 25;
+	player.wrath   = data.wrath || 0;
+
+
+	player.dierctSetEquipment((ItemType.lookupItem(data.weaponId)       as Weapon)       || WeaponLib.FISTS);
+	player.dierctSetEquipment((ItemType.lookupItem(data.weaponRangeId)  as WeaponRange)  || WeaponRangeLib.NOTHING);
+	player.dierctSetEquipment((ItemType.lookupItem(data.shieldId)       as Shield)       || ShieldLib.NOTHING);
+	player.dierctSetEquipment((ItemType.lookupItem(data.jewelryId)      as Jewelry)      || JewelryLib.NOTHING);
+	player.dierctSetEquipment((ItemType.lookupItem(data.upperGarmentId) as Undergarment) || UndergarmentLib.NOTHING);
+	player.dierctSetEquipment((ItemType.lookupItem(data.lowerGarmentId) as Undergarment) || UndergarmentLib.NOTHING);
+	player.dierctSetEquipment((ItemType.lookupItem(data.armorId)        as Armor)        || ArmorLib.COMFORTABLE_UNDERCLOTHES);
+	if (player.armor.name != data.armorName) player.modArmorName = data.armorName;
+
+	player.HP                  = data.HP;
+	player.lust                = data.lust;
+	player.teaseXP             = data.teaseXP || 0;
+	player.teaseLevel          = data.teaseLevel || 0;
+	player.hunger              = data.hunger || 50;
+	player.XP                  = data.XP;
+	player.level               = data.level;
+	player.gems                = data.gems || 0;
+	player.perkPoints          = data.perkPoints || 0;
+	player.statPoints          = data.statPoints || 0;
+	player.ascensionPerkPoints = data.ascensionPerkPoints || 0;
+	player.startingRace        = data.startingRace || "human";
+	player.femininity          = data.femininity || 50;
+	player.eyes.type           = data.eyeType || Eyes.HUMAN;
+	player.eyes.colour         = data.eyeColor || "brown";
+	player.beardLength         = data.beardLength || 0;
+	player.beardStyle          = data.beardStyle || 0;
+	player.tone                = data.tone || 50;
+	player.thickness           = data.thickness || 50;
+	player.tallness            = data.tallness;
+	player.hairColor           = data.hairColor;
+	player.hairType            = data.hairType || 0;
+	player.gills.type          = data.gillType || Gills.NONE;
+	player.arms.type           = data.armType || Arms.HUMAN;
+	player.hairLength          = data.hairLength;
+	player.tongue.type         = data.tongueType || Tongue.HUMAN;
+	player.ears.type           = data.earType || Ears.HUMAN;
+	player.antennae.type       = data.antennae || Antennae.NONE;
+	player.horns.count         = data.horns;
+	player.horns.type          = data.hornType || Horns.NONE;
+	player.rearBody.type       = (data.rearBody == undefined) ? RearBody.NONE : data.rearBody;
+	player.wings.desc          = data.wingDesc;
+	player.wings.type          = data.wingType;
+	player.hips.type           = data.hipRating;
+	player.butt.type           = data.buttRating;
+	player.balls               = data.balls;
+	player.cumMultiplier       = data.cumMultiplier;
+	player.ballSize            = data.ballSize;
+	player.hoursSinceCum       = data.hoursSinceCum;
+	player.fertility           = data.fertility;
+	player.lowerBodyPart.loadFromSaveData(data);
+	player.skin.loadFromSaveData(data);
+	player.clawsPart.loadFromSaveData(data);
+	player.facePart.loadFromSaveData(data);
+	player.tail.loadFromSaveData(data);
+
+	player.knockUpForce(data.pregnancyType, data.pregnancyIncubation);
+	player.buttKnockUpForce(data.buttPregnancyType, data.buttPregnancyIncubation);
+
+	player.ass.analLooseness = data.ass.analLooseness;
+	player.ass.analWetness   = data.ass.analWetness;
+	player.ass.fullness      = data.ass.fullness;
+
+	var hasViridianCockSock:Boolean = false;
+	for (i = 0; i < data.cocks.length; i++) {
+		var saveCock:* = data.cocks[i];
+		if (!player.createCock(saveCock.cockLength, saveCock.cockThickness, CockTypesEnum.ParseConstantByIndex(saveCock.cockType))) {
+			trace("Load Error: Too many cocks?");
+			break;
+		}
+		var newCock:Cock       = player.cocks[i];
+		newCock.knotMultiplier = saveCock.knotMultiplier;
+		newCock.sock           = saveCock.sock || "";
+		if (newCock.sock == "viridian") hasViridianCockSock = true;
+		if (saveCock.pierced != undefined && saveCock.pierced != "null" && saveCock.pShortDesc != "null" && saveCock.pLongDesc != "null") {
+			newCock.pierced    = saveCock.pierced;
+			newCock.pShortDesc = saveCock.pShortDesc;
+			newCock.pLongDesc  = saveCock.pLongDesc;
+		}
+	}
+
+	for (i = 0; i < data.vaginas.length; i++) {
+		player.createVagina();
+		var pVagina:VaginaClass  = player.vaginas[i];
+		var sVagina:*            = data.vaginas[i];
+		pVagina.vaginalWetness   = sVagina.vaginalWetness;
+		pVagina.vaginalLooseness = sVagina.vaginalLooseness;
+		pVagina.fullness         = sVagina.fullness;
+		pVagina.virgin           = sVagina.virgin;
+		pVagina.type             = sVagina.type || 0;
+		if (sVagina.labiaPierced != undefined) {
+			pVagina.labiaPierced     = sVagina.labiaPierced;
+			pVagina.labiaPShort      = sVagina.labiaPShort;
+			pVagina.labiaPLong       = sVagina.labiaPLong;
+			pVagina.clitPierced      = sVagina.clitPierced;
+			pVagina.clitPShort       = sVagina.clitPShort;
+			pVagina.clitPLong        = sVagina.clitPLong;
+			pVagina.clitLength       = sVagina.clitLength || VaginaClass.DEFAULT_CLIT_LENGTH;
+			pVagina.recoveryProgress = sVagina.recoveryProgress || 0;
+		}
+	}
+
+	player.nippleLength = data.nippleLength || .25;
+	for (i = 0; i < data.breastRows.length; i++) {
+		if (!player.createBreastRow()) {
+			trace("Load Errow: Too many BreastRows");
+			break;
+		}
+		var bRow:BreastRowClass  = player.breastRows[i];
+		var saveRow:*            = data.breastRows[i];
+		bRow.breasts             = saveRow.breasts;
+		//Fix nipplesless breasts bug
+		bRow.nipplesPerBreast    = Math.max(saveRow.nipplesPerBreast, 1);
+		bRow.breastRating        = Math.max(saveRow.breastRating, 0);
+		bRow.lactationMultiplier = Math.max(saveRow.lactationMultiplier, 0);
+		bRow.milkFullness        = saveRow.milkFullness;
+		bRow.fuckable            = saveRow.fuckable;
+		bRow.fullness            = saveRow.fullness;
+	}
+	if (player.breastRows.length == 0) player.createBreastRow();
+
+	var hasHistoryPerk:Boolean = false;
+	for each (var pkData:* in data.perks){
+		var id:String = pkData.id || pkData.perkName;
+		if (id.indexOf("History:") != -1){
+			hasHistoryPerk = true;
+		}
+		var ptype:PerkType = PerkType.lookupPerk(id);
+		if (ptype == null) {
+			trace("ERROR: Unknown perk id=" + id);
+			continue;
+			//(saveFile.data.perks as Array).splice(i,1);
+			// NEVER EVER EVER MODIFY DATA IN THE SAVE FILE LIKE THIS. EVER. FOR ANY REASON.
+		}
+		trace("Creating perk : " + ptype);
+		var pk:PerkClass = player.createPerk(ptype, pkData.value1, pkData.value2, pkData.value3, pkData.value4);
+		if (isNaN(pk.value1)) {
+			if (pk.perkName == "Wizard's Focus") {
+				pk.value1 = .3;
+			} else {
+				pk.value1 = 0;
+			}
+			trace("NaN byaaaatch: " + pk.value1);
+		}
+	}
+
+	if (hasHistoryPerk == false && flags[kFLAGS.HISTORY_PERK_SELECTED] != 0) {
+		player.createPerk(PerkLib.HistoryWhore, 0, 0, 0, 0);
+	}
+	if (hasViridianCockSock == true && !player.hasPerk(PerkLib.LustyRegeneration)) {
+		player.createPerk(PerkLib.LustyRegeneration, 0, 0, 0, 0);
+	}
+	if (flags[kFLAGS.FOLLOWER_AT_FARM_MARBLE] == 1) {
+		flags[kFLAGS.FOLLOWER_AT_FARM_MARBLE] = 0;
+		trace("Force-reverting Marble At Farm flag to 0.");
+	}
+	for (i = 0; i < data.statusAffects.length; i++) {
+		if (data.statusAffects[i].statusAffectName == "Lactation EnNumbere") continue; // ugh...
+		var stype:StatusEffectType = StatusEffectType.lookupStatusEffect(data.statusAffects[i].statusAffectName);
+		if (stype == null) {
+			CoC_Settings.error("Cannot find status effect '" + data.statusAffects[i].statusAffectName + "'");
+			continue;
+		}
+		player.createStatusEffect(stype,
+			data.statusAffects[i].value1,
+			data.statusAffects[i].value2,
+			data.statusAffects[i].value3,
+			data.statusAffects[i].value4);
+	}
+	if (data.keyItems != undefined) {
+		//Set keyItems Array
+		for each (var kItem:* in data.keyItems) {
+			player.createKeyItem(kItem.keyName, kItem.value1, kItem.value2, kItem.value3, kItem.value4);
+		}
+	}
+
+	//todo @Oxdeception storage loading into Inventory/self
+	function loadStorage(saveArr:Array, gameArr:Array, sizeLimit:int, undefAction:Function):void {
+		if (saveArr == undefined){
+			if (undefAction != null){
+				undefAction();
+			}
+			return;
+		}
+		for(i = 0; i < gameArr.length < sizeLimit; i++){
+			var iSlot:ItemSlotClass = new ItemSlotClass();
+			try {
+				iSlot.setItemAndQty(ItemType.lookupItem(saveArr[i].id || saveArr[i].shortName), saveArr[i].quantity);
+				iSlot.unlocked = saveArr[i].unlocked;
+			} catch (e:Error) {
+				trace(e);
+			}
+			gameArr.push(iSlot);
+		}
+	}
+	loadStorage(data.itemStorage,  itemStorageGet(),  16, null);
+	loadStorage(data.pearlStorage, pearlStorageGet(), 98, inventory.initializePearlStorage);
+	loadStorage(data.gearStorage,  gearStorageGet(),  90, inventory.initializeGearStorage);
+
+	for (i = 0; i < player.itemSlots.length; i++){
+		var iSlot:ItemSlotClass = player.itemSlots[i];
+		var sSlot:* = data["itemSlot" + (i + 1)];
+		if(sSlot == undefined){break;}
+		iSlot.unlocked = sSlot.unlocked;
+		iSlot.setItemAndQty(ItemType.lookupItem(sSlot.id), sSlot.quantity);
+	}
+
+	gameStateSet(data.gameState);
+	player.exploredLake        = data.exploredLake;
+	player.exploredMountain    = data.exploredMountain;
+	player.exploredForest      = data.exploredForest;
+	player.exploredDesert      = data.exploredDesert;
+	player.explored            = data.explored;
+	model.time.minutes         = data.minutes;
+	model.time.hours           = data.hours;
+	model.time.days            = data.days;
+	player.autoSave            = data.autoSave || false;
+
+	JojoScene.monk             = data.monk;
+	SandWitchScene.rapedBefore = data.sand;
+	if (data.beeProgress != undefined && data.beeProgress == 1) SceneLib.forest.beeGirlScene.setTalked();
+	SceneLib.isabellaScene.isabellaOffspringData = [];
+	if (data.isabellaOffspringData != undefined) {
+		for (i = 0; i < data.isabellaOffspringData.length; i += 2) {
+			SceneLib.isabellaScene.isabellaOffspringData.push(data.isabellaOffspringData[i], data.isabellaOffspringData[i + 1])
+		}
+	}
+
+	player.saveLoaded();
+	loadAllAwareClasses(CoC.instance);
+	unFuckSave();
+
+	if (saveFile.data.controls != undefined) {
+		game.inputManager.LoadBindsFromObj(saveFile.data.controls);
+	}
+	if (saveFile.data.settings == undefined) {saveFile.data.settings = [];}
+	if ('showHotkeys' in saveFile.data.settings) game.inputManager.showHotkeys = saveFile.data.settings.showHotkeys;
+
+
+	XXCNPC.unloadSavedNPCs();
+	if (saveFile.data.world == undefined) {saveFile.data.world = [];}
+	if (saveFile.data.world.x == undefined) {saveFile.data.world.x = [];}
+	for each(var savedNPC:* in saveFile.data.world.x) {
+		if (savedNPC.myClass != undefined) {
+			var ref:Class = getDefinitionByName(savedNPC.myClass) as Class;
+			ref["instance"].load(saveFile.data.world.x);
+		}
+	}
+
+
+	player.updateStats();
+	player.dynStats();
+	doNext(playerMenu);
 }
 
 public function unFuckSave():void

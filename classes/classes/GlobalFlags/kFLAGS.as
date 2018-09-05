@@ -1174,7 +1174,7 @@ public static const FOUND_CATHEDRAL:int                                         
 public static const PLACES_PAGE:int                                                 = 1166;
 public static const FUCK_YOU_GOT_MINE_RAPHAEL:int                                   = 1167;
 public static const MARBLE_MILKED_BEFORE:int                                        = 1168;
-public static const TATTOO_SAVEFIX_APPLIED:int                                      = 1169;
+public static const TATTOO_SAVEFIX_APPLIED:int                                      = 1169; // No longer used. Used to prevent re-refunding cost of tattoos, which were reset as they may have been malformed. No longer an issue
 public static const BIRTHS_PHOUKA:int                                               = 1170; // For the status page, possible future content
 public static const BIRTHS_FAERIE:int                                               = 1171; // For the status page, possible future content
 public static const PHOUKA_ENCOUNTER_STATUS:int                                     = 1172; // 0 for never encountered, 1 for encountered at least once, other values can be used later if you're doing something for one
