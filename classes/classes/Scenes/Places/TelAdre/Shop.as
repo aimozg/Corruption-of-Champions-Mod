@@ -1,7 +1,10 @@
 package classes.Scenes.Places.TelAdre {
+
 import classes.CoC;
 import classes.ItemType;
 
+import coc.view.ButtonDataList;
+import coc.view.CoCButton;
 import coc.xxc.BoundStory;
 
 public class Shop extends TelAdreAbstractContent {
@@ -98,5 +101,24 @@ public class Shop extends TelAdreAbstractContent {
         }
         return false;
     }
+
+	/**
+	 * Creates buttons for an array of items with a callback to confirmbuy
+	 * Any other buttons that should be displayed for this menu should be displayed before is function is called
+	 * You do not need to create back, next, or previous page buttons manually
+	 * @param back the function to call when the back button is pressed
+	 * @param itemArr an array of ItemType which this menu sells
+	 *
+	 */
+	protected function itemBuyMenu(back:Function, itemArr:/*ItemType*/Array):void {
+		var menu:ButtonDataList = new ButtonDataList();
+		for each(var button:CoCButton in mainView.bottomButtons) {
+			if (button.visible) {menu.add(button.labelText, button.callback, button.toolTipText, button.toolTipHeader)}
+		}
+		for each(var item:ItemType in itemArr) {
+			menu.add(item.shortName, curry(confirmBuy, item))
+		}
+		menu.submenu(back, 0, false);
+	}
 }
 }
