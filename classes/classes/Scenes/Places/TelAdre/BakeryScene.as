@@ -357,19 +357,16 @@ private function talkBakeryMenu():void {
 }
 
 public function nomnomnom(name:String,price:Number):void {
-	flags[kFLAGS.TEMP_STORAGE_PASTRY_NAME] = name;
-	flags[kFLAGS.TEMP_STORAGE_PASTRY_PRICE] = price;
 	clearOutput();
-	if(player.gems < flags[kFLAGS.TEMP_STORAGE_PASTRY_PRICE]) {
+	menu();
+	if(player.gems < price) {
 		outputText("You don't have enough gems to order that!");
-		//doNext(bakeryuuuuuu);
-		menu();
 		addButton(0,"Next",checkBakeryMenu);
 		return;
 	}
-	player.gems -= flags[kFLAGS.TEMP_STORAGE_PASTRY_PRICE];
+	player.gems -= price;
 	statScreenRefresh();
-	if(flags[kFLAGS.TEMP_STORAGE_PASTRY_NAME] == "eclair") {
+	if(name == "eclair") {
 		outputText("You hand over 10 gems and ask for the 'special eclair'.  The centaur working the counter smirks ");
 		if(player.tallness <= 52) outputText("down ");
 		else if(player.tallness >= 84) outputText("up ");
@@ -381,63 +378,64 @@ public function nomnomnom(name:String,price:Number):void {
 		dynStats("lus", (20+player.lib/10));
 		player.minoCumAddiction(10);
 		player.refillHunger(20);
+	} else {
+		outputText("You hand over " + num2Text(price) + " gems and get your " + name + ".  A moment later you're at a table, licking the sugary residue from your fingertips and wondering just how they make the food so damned good.");
+
+		var hunger:Boolean = (player.hunger > 25 || flags[kFLAGS.HUNGER_ENABLED] <= 0);
+		switch (name) {
+			case "doughnuts":
+				outputText(player.modTone(0, 2));
+				outputText(player.modThickness(100, 1));
+				if (rand(3) == 0 && player.butt.type < 15 && hunger) {
+					outputText("\n\nWhen you stand back up your " + buttDescript() + " jiggles a little bit more than you'd expect.");
+					player.butt.type++;
+				}
+				if (rand(3) == 0 && player.hips.type < 15 && hunger) {
+					outputText("\n\nAfter finishing, you find your gait has changed.  Did your hips widen?");
+					player.hips.type++;
+				}
+				player.refillHunger(25);
+				break;
+			case "cookies":
+				outputText(player.modTone(0, 1));
+				outputText(player.modThickness(100, 2));
+				if (rand(3) == 0 && player.hips.type < 20 && hunger) {
+					outputText("\n\nAfter finishing, you find your gait has changed.  Did your hips widen?");
+					player.hips.type++;
+				}
+				player.refillHunger(20);
+				break;
+			case "brownies":
+				outputText(player.modThickness(100, 4));
+				if (rand(2) == 0 && player.hips.type < 30 && hunger) {
+					outputText("\n\nAfter finishing, you find your gait has changed.  Your " + hipDescript() + " definitely got wider.");
+					player.hips.type += 2;
+				}
+				player.refillHunger(20);
+				break;
+			case "cupcakes":
+				outputText(player.modTone(0, 4));
+				if (rand(2) == 0 && player.butt.type < 30 && hunger) {
+					outputText("\n\nWhen you stand back up your " + buttDescript() + " jiggles with a good bit of extra weight.");
+					player.butt.type += 2;
+				}
+				player.refillHunger(20);
+				break;
+			case "pound cake":
+				outputText(player.modTone(0, 2));
+				outputText(player.modThickness(100, 2));
+				if (rand(3) == 0 && player.butt.type < 25 && hunger) {
+					outputText("\n\nWhen you stand back up your " + buttDescript() + " jiggles a little bit more than you'd expect.");
+					player.butt.type++;
+				}
+				if (rand(3) == 0 && player.hips.type < 25 && hunger) {
+					outputText("\n\nAfter finishing, you find your gait has changed.  Did your " + hipDescript() + " widen?");
+					player.hips.type++;
+				}
+				player.refillHunger(50);
+				break;
+		}
 	}
-	else {
-		outputText("You hand over " + num2Text(flags[kFLAGS.TEMP_STORAGE_PASTRY_PRICE]) + " gems and get your " + flags[kFLAGS.TEMP_STORAGE_PASTRY_NAME] + ".  A moment later you're at a table, licking the sugary residue from your fingertips and wondering just how they make the food so damned good.");
-		if(flags[kFLAGS.TEMP_STORAGE_PASTRY_NAME] == "doughnuts") {
-			outputText(player.modTone(0,2));
-			outputText(player.modThickness(100,1));
-			if(rand(3) == 0 && player.butt.type < 15 && (player.hunger > 25 || flags[kFLAGS.HUNGER_ENABLED] <= 0)) {
-				outputText("\n\nWhen you stand back up your " + buttDescript() + " jiggles a little bit more than you'd expect.");
-				player.butt.type++;
-			}
-			if(rand(3) == 0 && player.hips.type < 15 && (player.hunger > 25 || flags[kFLAGS.HUNGER_ENABLED] <= 0)) {
-				outputText("\n\nAfter finishing, you find your gait has changed.  Did your hips widen?");
-				player.hips.type++;
-			}
-			player.refillHunger(25);
-		}
-		else if(flags[kFLAGS.TEMP_STORAGE_PASTRY_NAME] == "cookies") {
-			outputText(player.modTone(0,1));
-			outputText(player.modThickness(100,2));
-			if(rand(3) == 0 && player.hips.type < 20 && (player.hunger > 25 || flags[kFLAGS.HUNGER_ENABLED] <= 0)) {
-				outputText("\n\nAfter finishing, you find your gait has changed.  Did your hips widen?");
-				player.hips.type++;
-			}
-			player.refillHunger(20);
-		}
-		else if(flags[kFLAGS.TEMP_STORAGE_PASTRY_NAME] == "brownies") {
-			outputText(player.modThickness(100,4));
-			if(rand(2) == 0 && player.hips.type < 30 && (player.hunger > 25 || flags[kFLAGS.HUNGER_ENABLED] <= 0)) {
-				outputText("\n\nAfter finishing, you find your gait has changed.  Your " + hipDescript() + " definitely got wider.");
-				player.hips.type += 2;
-			}
-			player.refillHunger(20);
-		}
-		else if(flags[kFLAGS.TEMP_STORAGE_PASTRY_NAME] == "cupcakes") {
-			outputText(player.modTone(0,4));
-			if(rand(2) == 0 && player.butt.type < 30 && (player.hunger > 25 || flags[kFLAGS.HUNGER_ENABLED] <= 0)) {
-				outputText("\n\nWhen you stand back up your " + buttDescript() + " jiggles with a good bit of extra weight.");
-				player.butt.type += 2;
-			}
-			player.refillHunger(20);
-		}
-		else if(flags[kFLAGS.TEMP_STORAGE_PASTRY_NAME] == "pound cake") {
-			outputText(player.modTone(0,2));
-			outputText(player.modThickness(100,2));
-			if(rand(3) == 0 && player.butt.type < 25 && (player.hunger > 25 || flags[kFLAGS.HUNGER_ENABLED] <= 0)) {
-				outputText("\n\nWhen you stand back up your " + buttDescript() + " jiggles a little bit more than you'd expect.");
-				player.butt.type++;
-			}
-			if(rand(3) == 0 && player.hips.type < 25 && (player.hunger > 25 || flags[kFLAGS.HUNGER_ENABLED] <= 0)) {
-				outputText("\n\nAfter finishing, you find your gait has changed.  Did your " + hipDescript() + " widen?");
-				player.hips.type++;
-			}
-			player.refillHunger(50);
-		}
-	}
-	//doNext(bakeryuuuuuu);
-	menu();
 	addButton(0,"Next",checkBakeryMenu);
 }
 /*[doughnuts] – some thickness, lots of – tone. (+hips and butt!)

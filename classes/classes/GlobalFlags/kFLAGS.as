@@ -195,8 +195,6 @@ public static const TIMES_USED_SEX_MACHINE_AS_HERM:int                          
 public static const NEW_GAME_PLUS_BONUS_STORED_XP:int                               =  187; //  New Game Plus - Stored XP
 public static const NEW_GAME_PLUS_BONUS_STORED_ITEMS:int                            =  188; //  New Game Plus - Stored Gems
 
-public static const TEMP_STORAGE_PASTRY_NAME:int                                    =  198; //  Holding pattern for pastry name
-public static const TEMP_STORAGE_PASTRY_PRICE:int                                   =  199; //  Holding pattern for price
 public static const MINOTAUR_CUM_ECLAIR_UNLOCKED:int                                =  200; //  Unlocked mino cum eclair
 public static const TIMES_VISITED_BAKERY:int                                        =  201; //  Times visited bakery
 public static const TIMES_FUCKED_HECKEL_BLOWJOB:int                                 =  202; //  Times Heckel BJ
