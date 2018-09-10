@@ -29,6 +29,10 @@ public class DesertCave extends DungeonAbstractContent
 		private static const DUNGEON_WITCH_THRONE_ROOM:int			= 38;
 		
 		public function DesertCave() {}
+
+		private var _riddle1:Function;
+		private var _riddle2:Function;
+		private var _riddle3:Function;
 		
 		// SANURA_DISABLED:int = 833;
 		// MET_SANURA:int = 834;
@@ -1536,9 +1540,9 @@ if (CoC.instance.inCombat) cleanupAfterCombat();
 		//Accept the Riddle Challenge
 		public function riddleGameGo():void {
 			clearOutput();
-			flags[kFLAGS.RIDDLE_ONE] = 0;
-			flags[kFLAGS.RIDDLE_TWO] = 0;
-			flags[kFLAGS.RIDDLE_THREE] = 0;
+			_riddle1 = null;
+			_riddle2 = null;
+			_riddle3 = null;
 			outputText("\"<i>Oh!  You'll play my game?  Marvelous!  Well then, let's begin...</i>\"");
 			//[NEXT]
 			menu();
@@ -1546,30 +1550,25 @@ if (CoC.instance.inCombat) cleanupAfterCombat();
 		}
 
 		public function riddlePicker():void {
-			var choices:Array = [];
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleOne && flags[kFLAGS.RIDDLE_TWO] != riddleOne) choices[choices.length] = riddleOne;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleTwo && flags[kFLAGS.RIDDLE_TWO] != riddleTwo) choices[choices.length] = riddleTwo;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleThree && flags[kFLAGS.RIDDLE_TWO] != riddleThree) choices[choices.length] = riddleThree;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleFour && flags[kFLAGS.RIDDLE_TWO] != riddleFour) choices[choices.length] = riddleFour;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleFive && flags[kFLAGS.RIDDLE_TWO] != riddleFive) choices[choices.length] = riddleFive;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleSix && flags[kFLAGS.RIDDLE_TWO] != riddleTwo) choices[choices.length] = riddleSix;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleSeven && flags[kFLAGS.RIDDLE_TWO] != riddleSeven) choices[choices.length] = riddleSeven;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleEight && flags[kFLAGS.RIDDLE_TWO] != riddleEight) choices[choices.length] = riddleEight;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleNine && flags[kFLAGS.RIDDLE_TWO] != riddleNine) choices[choices.length] = riddleNine;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleTen && flags[kFLAGS.RIDDLE_TWO] != riddleTen) choices[choices.length] = riddleTen;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleEleven && flags[kFLAGS.RIDDLE_TWO] != riddleEleven) choices[choices.length] = riddleEleven;
-			if(flags[kFLAGS.RIDDLE_ONE] != riddleTwelve && flags[kFLAGS.RIDDLE_TWO] != riddleTwelve) choices[choices.length] = riddleTwelve;
-			if(flags[kFLAGS.RIDDLE_ONE] == 0) {
-				flags[kFLAGS.RIDDLE_ONE] = choices[rand(choices.length)];
-				flags[kFLAGS.RIDDLE_ONE]();
+			var riddles:Array = [
+				riddleOne, riddleTwo, riddleThree, riddleFour,
+				riddleFive, riddleSix, riddleSeven, riddleEight,
+				riddleNine, riddleTen, riddleEleven, riddleTwelve
+			];
+			var choices:Array = riddles.filter(function(item:*, index:int, array:Array):Boolean {
+				return item != _riddle1 && item != _riddle2
+			});
+			if(_riddle1 == null) {
+				_riddle1 = randomChoice(choices);
+				_riddle1();
 			}
-			else if(flags[kFLAGS.RIDDLE_TWO] == 0) {
-				flags[kFLAGS.RIDDLE_TWO] = choices[rand(choices.length)];
-				flags[kFLAGS.RIDDLE_TWO]();
+			else if(_riddle2 == null) {
+				_riddle2 = randomChoice(choices);
+				_riddle2();
 			}
 			else {
-				flags[kFLAGS.RIDDLE_THREE] = choices[rand(choices.length)];
-				flags[kFLAGS.RIDDLE_THREE]();
+				_riddle3 = randomChoice(choices);
+				_riddle3();
 			}
 		}
 
@@ -1592,9 +1591,9 @@ if (CoC.instance.inCombat) cleanupAfterCombat();
 			clearOutput();
 			outputText("The sphinx narrows her eyes at you, crossing her arms over her chest.  \"<i>You don't say?  Come on, step it up, [name].  Sorry, but that's wrong.  Let's try again.</i>\"");
 			menu();
-			if(flags[kFLAGS.RIDDLE_ONE] == riddleOne) flags[kFLAGS.RIDDLE_ONE] = 0;
-			else if(flags[kFLAGS.RIDDLE_TWO] == riddleOne) flags[kFLAGS.RIDDLE_TWO] = 0;
-			else if(flags[kFLAGS.RIDDLE_THREE] == riddleOne) flags[kFLAGS.RIDDLE_THREE] = 0;
+			if(_riddle1 == riddleOne) _riddle1 = null;
+			else if(_riddle2 == riddleOne) _riddle2 = null;
+			else if(_riddle3 == riddleOne) _riddle3 = null;
 			addButton(0,"Next",riddlePicker);
 		}
 
@@ -1750,7 +1749,7 @@ if (CoC.instance.inCombat) cleanupAfterCombat();
 		//ANSWER A RIDDLE RIGHT (Like a Boss)
 		public function answerCorrect():void {
 			clearOutput();
-			if(flags[kFLAGS.RIDDLE_THREE] == 0) {
+			if(_riddle3 == null) {
 				outputText("The sphinx-girl sighs, \"<i>That's... correct.  Not bad, I suppose.  Well, we're not done yet... I've still got some tricks up my sleeves.  Er, so to speak.</i>\"");
 				menu();
 				addButton(0,"Next",riddlePicker);
