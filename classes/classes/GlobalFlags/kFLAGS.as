@@ -436,7 +436,7 @@ public static const YVONNE_FUCK_COUNTER:int                                     
 public static const TIMES_CERAPH_PORTAL_FUCKED:int                                  =  438; // 
 public static const IZMA_NO_COCK:int                                                =  439; // 
 public static const ASKED_IZMA_ABOUT_WANG_REMOVAL:int                               =  440; // 
-public static const SALON_PAID:int                                                  =  441; // 
+
 public static const URTA_FAMILY_TALK_ATTEMPTS:int                                   =  442; // 
 public static const URTA_OPEN_ABOUT_EDRYN:int                                       =  443; // 
 public static const PC_DISLIKES_URTA_AND_EDRYN_TOGETHER:int                         =  444; // 

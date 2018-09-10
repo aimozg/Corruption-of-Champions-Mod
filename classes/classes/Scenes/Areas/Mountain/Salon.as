@@ -9,11 +9,11 @@ public class Salon extends BaseContent implements TimeAwareInterface {
 		{
 			EventParser.timeAwareClassAdd(this);
 		}
-
+		private var _salonPaid:Boolean = false;
 		//Implementation of TimeAwareInterface
 		public function timeChange():Boolean
 		{
-			flags[kFLAGS.SALON_PAID] = 0;
+			_salonPaid = false;
 			if (model.time.hours > 23) {
 				if (flags[kFLAGS.LYNNETTE_CARRYING_COUNT] == 0 || flags[kFLAGS.LYNNETTE_PREGNANCY_CYCLE] != 4)
 				{
@@ -85,7 +85,7 @@ private function salonPaymentMenu():void {
 			if (player.gems < 60)
 			{
 				outputText("You can't afford any minotaur cum right now!");
-				if (flags[kFLAGS.SALON_PAID] == 0)
+				if (!_salonPaid)
 					doNext(salonGreeting);
 				else
 					salonPurchaseMenu();
@@ -100,7 +100,7 @@ private function salonPaymentMenu():void {
 		}
 		
 public function salonPurchaseMenu():void {
-	flags[kFLAGS.SALON_PAID] = 1;
+	_salonPaid = true;
 	spriteSelect(38);
 	var mudFacialEnabled:Boolean = false;
 	var sandFacialEnabled:Boolean = false;
