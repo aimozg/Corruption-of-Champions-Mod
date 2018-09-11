@@ -30,6 +30,7 @@ package classes
 import classes.Scenes.Combat.CombatAction.ACombatAction;
 import classes.Scenes.Combat.CombatMechanics;
 import classes.Scenes.Places.TelAdre.UmasShop;
+import classes.Stats.Buff;
 import classes.lists.BuffTags;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
@@ -149,10 +150,13 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			([StatNames.SPELLPOWER])    :new BuffableStat({base:1.0,min:0.0}),
 			([StatNames.HP_PER_TOU])    :new BuffableStat({base:2, min:0.1}),
 			([StatNames.ATTACK_RATING]) :new BuffableStat({
-				base: function():Number { return 95 + (spe + 3 * level)/2; }
+				base: curry(CombatMechanics.attackRatingBase, this)
 			}),
 			([StatNames.DEFENSE_RATING]):new BuffableStat({
-				base: function():Number { return 15 + (spe + 3 * level)/2; }
+				base: curry(CombatMechanics.defenseRatingBase, this)
+				// this doesn't work because it doesn't properly capture Creature.this
+				// 		base: function():Number { return 15 + (spe + 3 * level)/2; }
+				// so argument should be non-inline function
 			})
 		});
 		public function get statStore():StatStore {
@@ -588,8 +592,35 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			}
 			return damage;
 		}
+		/**
+		 * Return current inverse value (positive=reduced stat) of "drain" debuff for stat
+		 */
+		public function drainOfStat(statname: String):Number {
+			return -findBuffableStat(statname).valueOfBuff(BuffTags.DRAIN);
+		}
 		public function removeBuffs(tag:String):void {
 			statStore.removeBuffs(tag);
+		}
+		public function addItemTaggedTempBuff(
+				item:ItemType,
+				statname:String,
+				value:Number,
+				tick:int=36,
+				rate:int=Buff.RATE_HOURS
+		):void{
+			addTempBuff(statname,value,item.tagForBuffs,item.shortName,tick,rate);
+		}
+		public function addTempBuff(
+				statname:String,
+				value:Number,
+				tag:String,
+				text:String,
+				tick:int,
+				rate:int=Buff.RATE_HOURS
+		):void {
+			var stat:BuffableStat = statStore.findBuffableStat(statname);
+			stat.addOrReplaceBuff(tag, value, {rate: rate, tick: tick, text: text, show: !!text})
+			updateStats();
 		}
 		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {
 			var maxes:Object;

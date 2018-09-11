@@ -74,6 +74,8 @@ public class StatUtils {
 		
 		[StatNames.DEFENSE, 'Defense'],
 		[StatNames.HP_PER_TOU, 'HP per Toughness'],
+		[StatNames.ATTACK_RATING, 'Attack Rating'],
+		[StatNames.DEFENSE_RATING, 'Defense Rating'],
 	]);
 	public static const PercentageStats:Object = Utils.createMapFromPairs([
 		[StatNames.STR_MULT, 'Strength'],

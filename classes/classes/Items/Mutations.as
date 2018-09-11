@@ -20,6 +20,7 @@ import classes.GlobalFlags.kFLAGS;
 import classes.Items.Consumables.EmberTF;
 import classes.Scenes.Areas.Forest.KitsuneScene;
 import classes.Scenes.SceneLib;
+import classes.lists.BuffTags;
 
 public final class Mutations extends MutationsHelper
 	{
@@ -41,7 +42,11 @@ public final class Mutations extends MutationsHelper
 			player.slimeFeed();
 			clearOutput();
 			outputText("You open the can and “bottom up”, hoping it wasn’t just a scam to buy an overpriced beer. “Whoa, that’s one hell of a manly beverage!” The alcohol in the beer is so strong you actually feel like you could lift bigger things now. No...wait, you actually do as your muscle seems to surge with new raw power.");
-			dynStats("str", 1 + rand(2));
+			if (player.drainOfStat("str")>0) {
+				player.drainStat("str", -(5+rand(5)));
+			} else {
+				player.addItemTaggedTempBuff(consumables.MANUP_B, "str", 10 + rand(5));
+			}
 			if (rand(3) == 0) outputText(player.modTone(95, 3));
 			player.refillHunger(10);
 		}
@@ -52,7 +57,11 @@ public final class Mutations extends MutationsHelper
 			player.slimeFeed();
 			clearOutput();
 			outputText("The elixir tastes foul at first, but you guess it’s how it is with all medicine. As the merchant warned you, you begin to feel your muscles coiling like a spring, ready to allow you to make a swift dash. Your co-ordination definitively improved too, as well as your vision, as you can follow your movement despite the acceleration.");
-			dynStats("spe", 1 + rand(2));
+			if (player.drainOfStat("spe")>0) {
+				player.drainStat("spe", -(5+rand(5)));
+			} else {
+				player.addItemTaggedTempBuff(consumables.AGILI_E, "spe", 10 + rand(5));
+			}
 			if (rand(3) == 0) outputText(player.modTone(95, 3));
 			player.refillHunger(5);
 		}
@@ -62,14 +71,10 @@ public final class Mutations extends MutationsHelper
 			clearOutput();
 			outputText("You use the incense and sit to meditate as the perfume of flowers and fruits fill the area. You see visions of things you could do and things you could’ve done good and bad, and when you open your eyes you realise you found new insight on your goals.");
 			if (rand(3) == 0) outputText(player.modTone(15, 1));
-			if (player.wis < 50) {
-				dynStats('wis',1+rand(4));
-			}
-			else if (player.wis < 100) {
-				dynStats('wis',1+rand(3));
-			}
-			else {
-				dynStats('wis',1+rand(2));
+			if (player.drainOfStat("wis")>0) {
+				player.drainStat("wis", -(5+rand(5)));
+			} else {
+				player.addItemTaggedTempBuff(consumables.INCOINS, "wis", 10 + rand(5));
 			}
 		}
 /*
@@ -93,9 +98,11 @@ public final class Mutations extends MutationsHelper
 			clearOutput();
 			outputText("You prepare the tea and drink it. It would seem that Ayane didn’t lie to you as a pink haze settle in your mind leaving you not only aroused but highly inspired. Images of sensual caresses and passionate lovemaking come and go in your head, making you blush yet smile in anticipation. You can’t wait to try what you learned.");
 			if (rand(3) == 0) outputText(player.modTone(15, 1));
-			if (player.lib < 50) dynStats("lib", 1 + rand(4));
-			else if (player.lib < 100) dynStats("lib", 1 + rand(3));
-			else dynStats("lib", 1 + rand(2));
+			if (player.drainOfStat("lib")>0) {
+				player.drainStat("lib", -(5+rand(5)));
+			} else {
+				player.addItemTaggedTempBuff(consumables.VIXEN_T, "lib", 10 + rand(5));
+			}
 			player.refillHunger(10);
 		}
 

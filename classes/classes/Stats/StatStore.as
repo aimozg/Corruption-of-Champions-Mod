@@ -38,6 +38,20 @@ public class StatStore implements IStatHolder {
 			return null;
 		}
 	}
+	/**
+	 * Advance time-tracking buffs by `ticks` units, unit type is defined by `rate`
+	 * Buffs with their countdown expired are removed
+	 */
+	public function advanceTime(rate:int, ticks:int):void {
+		forEachStat(function(stat:BuffableStat):void{
+			stat.advanceTime(rate, ticks)
+		},BuffableStat);
+	}
+	public function removeCombatRoundTrackingBuffs():void {
+		forEachStat(function(stat:BuffableStat):void{
+			stat.removeCombatRoundTrackingBuffs()
+		},BuffableStat);
+	}
 	
 	/**
 	 * @param iter (IStat)=>any

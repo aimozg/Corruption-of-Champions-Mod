@@ -81,6 +81,10 @@ import flash.utils.Dictionary;
 		{
 			return _id;
 		}
+		
+		public function get tagForBuffs():String {
+			return 'item/' + id;
+		}
 
 		public function ItemType(_id:String,_shortName:String=null,_longName:String=null,_value:Number=0,_description:String=null)
 		{

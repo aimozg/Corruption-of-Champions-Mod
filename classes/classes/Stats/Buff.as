@@ -11,7 +11,14 @@ public class Buff implements Jsonable {
 	public var save:Boolean;
 	public var text:String;
 	public var show:Boolean;
+	public var rate:int;
+	public var tick:int;
 	private var _stat:BuffableStat;
+	
+	public static const RATE_PERMANENT:int = 0;
+	public static const RATE_ROUNDS:int    = 1;
+	public static const RATE_HOURS:int     = 2;
+	public static const RATE_DAYS:int      = 3;
 	
 	public function get stat():BuffableStat {
 		return _stat;
@@ -23,19 +30,23 @@ public class Buff implements Jsonable {
 		this.save     = save;
 		this.show     = show;
 		this.text     = (text === null) ? Utils.capitalizeFirstLetter(tag) : text;
+		this.rate     = RATE_PERMANENT;
+		this.tick     = 0;
 	}
 	public function withOptions(options:Object):Buff {
 		this.options = options;
 		return this;
 	}
 	public function get options():Object {
-		return {save:save,show:show,text:text};
+		return {save:save,show:show,text:text,rate:rate,tick:tick};
 	}
 	public function set options(value:Object):void {
 		if (!value) return;
 		if ('save' in value) this.save = value.save;
 		if ('text' in value) this.text = value.text;
 		if ('show' in value) this.show = value.show;
+		if ('rate' in value) this.rate = value.rate;
+		if ('tick' in value) this.tick = value.tick;
 	}
 	public function saveToObject():Object {
 		return [rawValue,_tag,options];

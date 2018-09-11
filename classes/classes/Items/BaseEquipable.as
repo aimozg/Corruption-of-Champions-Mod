@@ -107,10 +107,6 @@ package classes.Items {
 			return _sexiness;
 		}
 
-		public function get tagForBuffs():String {
-			return 'item/' + id;
-		}
-
 		protected function applyBuffs(host:Creature):void {
 			host.statStore.addBuffObject( _buffs, tagForBuffs, {save: false, text: name}, this);
 		}

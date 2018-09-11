@@ -185,6 +185,37 @@ public class BuffableStat implements IStat, Jsonable {
 		this._buffs = [];
 		this._value = aggregateBase();
 	}
+	/**
+	 * Advance time-tracking buffs by `ticks` units, unit type is defined by `rate`
+	 * Buffs with their countdown expired are removed
+	 */
+	public function advanceTime(rate:int, ticks:int):void {
+		if (rate == Buff.RATE_PERMANENT) throw "Invalid time unit "+rate;
+		if (ticks < 0) throw "Invalid ticks count "+ticks;
+		if (ticks == 0) return;
+		var changed:Boolean = false;
+		for (var i:int = _buffs.length-1; i>=0; i--) {
+			var buff:Buff = _buffs[i];
+			if (buff.rate == rate) {
+				buff.tick-=ticks;
+				if (buff.tick < 0) {
+					_buffs.splice(i,1);
+					changed = true;
+				}
+			}
+		}
+		if (changed) recalculate();
+	}
+	public function removeCombatRoundTrackingBuffs():void {
+		var changed:Boolean = false;
+		for (var i:int = _buffs.length-1; i>=0; i--) {
+			if (_buffs[i].rate == Buff.RATE_ROUNDS) {
+				_buffs.splice(i,1);
+				changed = true;
+			}
+		}
+		if (changed) recalculate();
+	}
 	
 	public function saveToObject():Object {
 		var jbuffs:Array = [];

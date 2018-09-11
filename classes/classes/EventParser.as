@@ -10,6 +10,7 @@ import classes.Items.ArmorLib;
 import classes.Items.WeaponLib;
 import classes.Scenes.Dungeons.DungeonAbstractContent;
 import classes.Scenes.SceneLib;
+import classes.Stats.Buff;
 import classes.internals.Utils;
 
 import coc.view.MainView;
@@ -153,6 +154,7 @@ public class EventParser {
         while (CoC.instance.timeQ > 0) {
             CoC.instance.timeQ--;
             CoC.instance.model.time.hours++;
+            player.statStore.advanceTime(Buff.RATE_HOURS, 1);
             SceneLib.combat.regeneration(false);
             if (player.hasPerk(PerkLib.JobSorcerer)) SceneLib.combat.manaRegeneration(false);
             SceneLib.combat.wrathRegeneration(false);
@@ -167,6 +169,7 @@ public class EventParser {
             if (CoC.instance.model.time.hours > 23) {
                 CoC.instance.model.time.hours = 0;
                 CoC.instance.model.time.days++;
+                player.statStore.advanceTime(Buff.RATE_DAYS, 1);
             } else if (CoC.instance.model.time.hours == 21) {
                 if (CoC.instance.flags[kFLAGS.LETHICE_DEFEATED] <= 0) EngineCore.outputText("\nThe sky darkens as a starless night falls.  The blood-red moon slowly rises up over the horizon.\n");
                 else EngineCore.outputText("\nThe sky darkens as a starry night falls.  The blood-red moon slowly rises up over the horizon.\n");

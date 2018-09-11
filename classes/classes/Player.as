@@ -2198,6 +2198,7 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 
 		public function clearStatuses(visibility:Boolean):void
 		{
+			statStore.removeCombatRoundTrackingBuffs();
 			if(CoC.instance.monster.hasStatusEffect(StatusEffects.Sandstorm)) CoC.instance.monster.removeStatusEffect(StatusEffects.Sandstorm);
 			if(hasStatusEffect(StatusEffects.Flying)) {
 				removeStatusEffect(StatusEffects.Flying);
@@ -2737,27 +2738,6 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 		override public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number,dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {
 			//Easy mode cuts lust gains!
 			if (flags[kFLAGS.EASY_MODE_ENABLE_FLAG] == 1 && dlust > 0 && scale) dlust /= 2;
-			
-			//Set original values to begin tracking for up/down values if
-			//they aren't set yet.
-			//These are reset when up/down arrows are hidden with
-			//hideUpDown();
-			//Just check str because they are either all 0 or real values
-			if(game.oldStats.oldStr == 0) {
-				game.oldStats.oldStr = str;
-				game.oldStats.oldTou = tou;
-				game.oldStats.oldSpe = spe;
-				game.oldStats.oldInte = inte;
-				game.oldStats.oldWis = wis;
-				game.oldStats.oldLib = lib;
-				game.oldStats.oldSens = sens;
-				game.oldStats.oldCor = cor;
-				game.oldStats.oldHP = HP;
-				game.oldStats.oldLust = lust;
-				game.oldStats.oldFatigue = fatigue;
-				game.oldStats.oldKi = ki;
-				game.oldStats.oldHunger = hunger;
-			}
 			if (scale) {
 				//MOD CHANGES FOR PERKS
 				//Bimbos learn slower
@@ -2801,14 +2781,36 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 				if (hasPerk(PerkLib.Sensitive)) dsens += dsens * perkv1(PerkLib.Sensitive);
 				
 			}
-			//Change original stats
 			super.modStats(dstr,dtou,dspe,dinte,dwis,dlib,dsens,dlust,dcor,false);
+		}
+		override public function updateStats():void {
+			//Set original values to begin tracking for up/down values if
+			//they aren't set yet.
+			//These are reset when up/down arrows are hidden with
+			//hideUpDown();
+			//Just check str because they are either all 0 or real values
+			if(game.oldStats.oldStr == 0) {
+				game.oldStats.oldStr = str;
+				game.oldStats.oldTou = tou;
+				game.oldStats.oldSpe = spe;
+				game.oldStats.oldInte = inte;
+				game.oldStats.oldWis = wis;
+				game.oldStats.oldLib = lib;
+				game.oldStats.oldSens = sens;
+				game.oldStats.oldCor = cor;
+				game.oldStats.oldHP = HP;
+				game.oldStats.oldLust = lust;
+				game.oldStats.oldFatigue = fatigue;
+				game.oldStats.oldKi = ki;
+				game.oldStats.oldHunger = hunger;
+			}
+			//Change original stats
+			super.updateStats();
 			//Refresh the stat pane with updated values
 			//mainView.statsView.showUpDown();
 			EngineCore.showUpDown();
 			EngineCore.statScreenRefresh();
 		}
-		
 		override protected function maxHP_mult():Number {
 			return super.maxHP_mult() + (countCockSocks("green") * 0.02);
 		}
