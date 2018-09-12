@@ -21,8 +21,9 @@ package classes.Scenes.NPCs
 import classes.PerkClass;
 import classes.Scenes.SceneLib;
 	import classes.Items.MutationsHelper;
-	
-	public class LunaFollower extends NPCAwareContent
+import classes.lists.StatNames;
+
+public class LunaFollower extends NPCAwareContent
 	{
 		public var mutations:MutationsHelper = new MutationsHelper();
 		
@@ -273,9 +274,10 @@ import classes.Scenes.SceneLib;
 			if (flags[kFLAGS.LUNA_MOON_CYCLE] == 1 || flags[kFLAGS.LUNA_MOON_CYCLE] == 7) bonusStats += 30;
 			if (flags[kFLAGS.LUNA_MOON_CYCLE] == 8) bonusStats += 40;
 			var perk:PerkClass = player.createPerk(PerkLib.Lycanthropy,bonusStats,0,0,0);
-			perk.buffHost('str', bonusStats);
-			perk.buffHost('tou', bonusStats);
-			player.dynStats("spe", bonusStats, "cor", 20);
+			perk.buffHost(StatNames.STR_MULT, bonusStats/100);
+			perk.buffHost(StatNames.TOU_MULT, bonusStats/100);
+			perk.buffHost(StatNames.SPE_MULT, bonusStats/100);
+			player.dynStats("cor", 20);
 			statScreenRefresh();
 			outputText("Barely satiated your eyes now focus back on Luna, lust overwhelming your cursed body. You must have her... NOW!\n\n");
 			doNext(sexMenuDominateHer);
@@ -553,9 +555,10 @@ import classes.Scenes.SceneLib;
 				}
 			}
 			var perk:PerkClass = player.createPerk(PerkLib.Lycanthropy,40,0,0,0);
-			perk.buffHost('str', 40);
-			perk.buffHost('tou', 40);
-			player.dynStats("spe", 40, "cor", 20);
+			perk.buffHost(StatNames.STR_MULT, 0.4);
+			perk.buffHost(StatNames.TOU_MULT, 0.4);
+			perk.buffHost(StatNames.SPE_MULT, 0.4);
+			player.dynStats("cor", 20);
 			statScreenRefresh();
 			outputText("Barely satiated your eyes now focus back on Luna, lust overwhelming your cursed body. You must have her... NOW!\n\n");
 			monster.createPerk(PerkLib.NoGemsLost, 0, 0, 0, 0);
