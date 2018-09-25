@@ -290,13 +290,16 @@ public class Mountain extends BaseContent
 		}
 		private function hike():void {
 			clearOutput();
+			buffOrRecover("tou",2.5,"mountain/hike","Mountain hike");
+			buffOrRecover("spe",5,"mountain/hike","Mountain hike");
 			if (player.cor < 90) {
 				outputText("Your hike in the mountains, while fruitless, reveals pleasant vistas and provides you with good exercise and relaxation.");
-				dynStats("tou", .25, "spe", .5, "lus", player.lib / 10 - 15);
+				dynStats("lus", player.lib / 10 - 15);
 			}
 			else {
 				outputText("During your hike into the mountains, your depraved mind keeps replaying your most obcenely warped sexual encounters, always imagining new perverse ways of causing pleasure.\n\nIt is a miracle no predator picked up on the strong sexual scent you are emitting.");
-				dynStats("tou", .25, "spe", .5, "lib", .25, "lus", player.lib / 10);
+				buffOrRecover("дши",2.5,"mountain/hike","Mountain hike");
+				dynStats("lus", player.lib / 10);
 			}
 			doNext(camp.returnToCampUseOneHour);
 		}

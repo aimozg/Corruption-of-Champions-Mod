@@ -619,7 +619,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 				rate:int=Buff.RATE_HOURS
 		):void {
 			var stat:BuffableStat = statStore.findBuffableStat(statname);
-			stat.addOrReplaceBuff(tag, value, {rate: rate, tick: tick, text: text, show: !!text})
+			stat.addOrReplaceBuff(tag, value, {rate: rate, tick: tick, text: text, show: !!text});
 			updateStats();
 		}
 		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {

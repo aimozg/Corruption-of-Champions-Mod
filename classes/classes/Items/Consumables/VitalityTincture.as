@@ -1,6 +1,7 @@
 package classes.Items.Consumables
 {
-	import classes.Creature;
+import classes.BaseContent;
+import classes.Creature;
 	import classes.EngineCore;
 	import classes.Items.Consumable;
 
@@ -22,11 +23,7 @@ package classes.Items.Consumables
 			clearOutput();
 			player.slimeFeed();
 			outputText("You down the contents of the bottle. The liquid is thick and tastes remarkably like cherries. Within moments, you feel much more healthy.");
-			if (player.drainOfStat("tou")>0) {
-				player.drainStat("tou", -(5+rand(5)));
-			} else {
-				player.addItemTaggedTempBuff(this, "tou", 10 + rand(5));
-			}
+			BaseContent.buffOrRecover("tou",5+rand(5),tagForBuffs,shortName);
 			if (EngineCore.HPChange(50, false)) outputText("  Any aches, pains and bruises you have suffered no longer hurt and you feel much better.");
 			player.refillHunger(10);
 			

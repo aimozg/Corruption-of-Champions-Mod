@@ -10,6 +10,7 @@ import classes.Scenes.Holidays;
 import classes.Scenes.Inventory;
 import classes.Scenes.Places.Ingnam;
 import classes.Scenes.SceneLib;
+import classes.Stats.Buff;
 import classes.internals.Utils;
 
 import coc.model.GameModel;
@@ -653,6 +654,34 @@ import coc.xxc.StoryContext;
 		{
 			// Bullshit to unroll the incoming array
 			player.dynStats.apply(player, args);
+		}
+		/**
+		 * If stat `statname` is drained, recover it by `value` points and return **false**.
+		 * If it is not drained, add temporary buff (default **36 hours**) and return **true**.
+		 *
+		 * If already buffed with the `tag`, reset its value and duration.
+		 * @param value Amount to recover/increase
+		 * @param tag Tag to identify the buff
+		 * @param text Displayable name; `null` if hidden buff
+		 * @param tick Duration amount (default **36**)
+		 * @param rate Duration time unit (default `Buff.RATE_HOUR`)
+		 * @return
+		 */
+		public static function buffOrRecover(
+				statname:String,
+				value:Number,
+				tag:String,
+				text:String,
+				tick:int=36,
+				rate:int=Buff.RATE_HOURS
+		):Boolean {
+			if (CoC.instance.player.drainOfStat(statname)>0) {
+				CoC.instance.player.drainStat(statname, -value);
+				return false;
+			} else {
+				CoC.instance.player.addTempBuff(statname,value,tag,text,tick,rate);
+				return true;
+			}
 		}
 
 		protected function silly():Boolean

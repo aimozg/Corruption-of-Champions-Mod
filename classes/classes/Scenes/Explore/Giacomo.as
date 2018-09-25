@@ -28,6 +28,7 @@ import classes.*;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
 import classes.Scenes.SceneLib;
+import classes.Stats.Buff;
 
 public class Giacomo extends BaseContent implements TimeAwareInterface {
 
@@ -745,7 +746,7 @@ public class Giacomo extends BaseContent implements TimeAwareInterface {
 				outputText("The fierce milking continues for several minutes until you reflexively buck your hips as your inner organs fill with the white, milky life-water the demoness demands in order to slake her thirst.  Quick to take notice of your muscular reaction, the succubus snickers.\n\n");
 				outputText("\"<i>Ready to burst, are you?</i>\" the Succubus playfully challenges.  \"<i>Well, then.  No reason for you to hold back.</i>\"");
 			}
-			dynStats("tou", .3, "lib", .5, "sen", .5, "lus", 5, "cor", 1);
+			dynStats("sen", .5, "lus", 5, "cor", 1);
 			doNext(ceruleanSuccubusEncounterPart3);
 		}
 			
@@ -766,7 +767,6 @@ public class Giacomo extends BaseContent implements TimeAwareInterface {
 			}
 			fatigue(20);
 			player.orgasm();
-			dynStats("lib", .5);
 			doNext(ceruleanSuccubusEncounterPart4);
 		}
 		
@@ -783,10 +783,25 @@ public class Giacomo extends BaseContent implements TimeAwareInterface {
 					outputText("you see she's definitely shorter than you, only about seven feet tall.  ");
 				outputText("She braces you against a tree and picks up the empty potion bottle.  Grabbing the tit you ignored during the unholy tryst, she pokes her nipple into the bottle and squeezes for about a minute.  Satisfied, she corks the bottle and hands it to you.  She begins licking her nectar off your face.  \"<i>You have pleased me, little man,</i>\" she coos.  \"<i>It is a rare thing indeed for one of my meals to pleasure me so.  If you ever desire for me again, all you need is to drink my milk.  I will appear forthwith to let you suckle me and I will suckle you! We will feed each other and grow stronger for the effort!</i>\"  ");
 				outputText("She gives a giggle and disappears before your eyes.  At that moment the fatigue from the massive fucking you received catches up with you and you pass out in a slump.");
-				dynStats("str", .5,"lus", 4);
+				dynStats("lus", 4);
 			}
+			applyCeruleanPositiveBuff();
 			inventory.takeItem(consumables.CERUL_P, playerMenu);
 		}
+	private function applyCeruleanPositiveBuff():void {
+		player.statStore.replaceBuffObject({
+			"str": 1 + rand(10),
+			"tou": 1 + rand(10),
+			"spe": 1 + rand(10),
+			"int": 1 + rand(10),
+			"wis": 1 + rand(10),
+			"lib": 1 + rand(10)
+		}, consumables.CERUL_P.tagForBuffs, {
+			tick: 18,
+			rate: Buff.RATE_HOURS,
+			text: consumables.CERUL_P.shortName
+		});
+	}
 				
 		private function nightSuccubiRepeat():void {
 			spriteSelect(8);
@@ -880,7 +895,6 @@ public class Giacomo extends BaseContent implements TimeAwareInterface {
 					else outputText("She embraces you, moaning inhumanly, and reflexively digs her claws into your back. Searing with lust, the pain means little to you as you only feel the sensation of your body forcing your fluids out of your body and into hers. You slam your pelvis into hers");
 					outputText(", as if to force yourself to cum harder than you already are capable of, prompting an equally pleasurable reaction from her.\n\n");
 					outputText("For the first time since you have had your 'visits', the succubus appears winded. Without another word, her muscles release your manhood, which she quickly licks clean of your intermingled juices.  She tongues your face in lustful approval and flies away. You quickly fall asleep, utterly spent.  ");
-					dynStats("lib", -1);
 				}
 			}
 			else if(player.gender == 3) {
@@ -925,7 +939,8 @@ public class Giacomo extends BaseContent implements TimeAwareInterface {
 			}
 			outputText("\n");
 			player.orgasm();
-			dynStats("str", rand(2),"tou", rand(2), "spe", rand(2), "int", rand(2), "cor", 1);
+			applyCeruleanPositiveBuff();
+			dynStats("cor", 1);
 			inventory.takeItem(consumables.CERUL_P, playerMenu);
 		}
 	}

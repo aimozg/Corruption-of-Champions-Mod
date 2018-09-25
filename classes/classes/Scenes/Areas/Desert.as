@@ -216,12 +216,12 @@ use namespace CoC;
 				//50/50 strength/toughness
 				if (rand(2) == 0 && player.str < 50) {
 					outputText("The effort of struggling with the uncertain footing has made you stronger.");
-					dynStats("str", .5);
+					buffOrRecover("str",1+rand(5),"desert/walk","Desert walk");
 				}
 				//Toughness
 				else if (player.tou < 50) {
 					outputText("The effort of struggling with the uncertain footing has made you tougher.");
-					dynStats("tou", .5);
+					buffOrRecover("tou",1+rand(5),"desert/walk","Desert walk");
 				}
 			}
 			doNext(camp.returnToCampUseOneHour);

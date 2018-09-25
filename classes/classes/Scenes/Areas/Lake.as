@@ -209,23 +209,23 @@ use namespace CoC;
 		}
 		public function walk():void {
 			clearOutput();
-			if (player.spe < 50) {
+			if (randomChance(50)) {
 				outputText("Your quick walk along the lakeshore feels good.");
 				outputText("  You bet you could cover the same distance even faster next time.\n");
-				dynStats("spe", .75);
+				buffOrRecover("spe",5,"lake/walk","Lake walk");
 			} else {
-				var displayed: Boolean = false;
 				outputText("Your stroll around the lake increasingly bores you, leaving your mind to wander.  ");
-				if (player.cor > 30 || player.lust > 60 || player.lib > 40) outputText("Your imaginings increasingly seem to turn ");
-				else dynStats("int", 1);
-				if ((player.cor > 30 && player.cor < 60) || (player.lust > 60 && player.lust < 90) || (player.lib > 40 && player.lib < 75)) {
-					outputText("to thoughts of sex.");
-					dynStats("lus", (5 + player.lib / 10));
-					displayed = true;
-				}
-				if (((player.cor >= 60) || (player.lust >= 90) || (player.lib >= 75)) && !displayed) {
-					outputText("into daydreams of raunchy perverted sex, flooding your groin with warmth.");
-					dynStats("lus", (player.cor / 10 + player.lib / 10));
+				if (player.cor > 30 || player.lust > 60 || player.lib > 40) {
+					outputText("Your imaginings increasingly seem to turn ");
+					if (player.cor < 60 && player.lust < 90 && player.lib < 75) {
+						outputText("to thoughts of sex.");
+						dynStats("lus", (5 + player.lib / 10));
+					} else  {
+						outputText("into daydreams of raunchy perverted sex, flooding your groin with warmth.");
+						dynStats("lus", (player.cor / 10 + player.lib / 10));
+					}
+				} else {
+					buffOrRecover("int",5,"lake/walk","Lake walk");
 				}
 			}
 			doNext(camp.returnToCampUseOneHour);

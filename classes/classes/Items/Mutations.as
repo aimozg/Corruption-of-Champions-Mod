@@ -42,11 +42,7 @@ public final class Mutations extends MutationsHelper
 			player.slimeFeed();
 			clearOutput();
 			outputText("You open the can and “bottom up”, hoping it wasn’t just a scam to buy an overpriced beer. “Whoa, that’s one hell of a manly beverage!” The alcohol in the beer is so strong you actually feel like you could lift bigger things now. No...wait, you actually do as your muscle seems to surge with new raw power.");
-			if (player.drainOfStat("str")>0) {
-				player.drainStat("str", -(5+rand(5)));
-			} else {
-				player.addItemTaggedTempBuff(consumables.MANUP_B, "str", 10 + rand(5));
-			}
+			buffOrRecover("str", 5+rand(5), consumables.MANUP_B.tagForBuffs, consumables.MANUP_B.shortName);
 			if (rand(3) == 0) outputText(player.modTone(95, 3));
 			player.refillHunger(10);
 		}
@@ -57,11 +53,7 @@ public final class Mutations extends MutationsHelper
 			player.slimeFeed();
 			clearOutput();
 			outputText("The elixir tastes foul at first, but you guess it’s how it is with all medicine. As the merchant warned you, you begin to feel your muscles coiling like a spring, ready to allow you to make a swift dash. Your co-ordination definitively improved too, as well as your vision, as you can follow your movement despite the acceleration.");
-			if (player.drainOfStat("spe")>0) {
-				player.drainStat("spe", -(5+rand(5)));
-			} else {
-				player.addItemTaggedTempBuff(consumables.AGILI_E, "spe", 10 + rand(5));
-			}
+			buffOrRecover("spe", 5+rand(5), consumables.AGILI_E.tagForBuffs, consumables.AGILI_E.shortName);
 			if (rand(3) == 0) outputText(player.modTone(95, 3));
 			player.refillHunger(5);
 		}
@@ -71,11 +63,7 @@ public final class Mutations extends MutationsHelper
 			clearOutput();
 			outputText("You use the incense and sit to meditate as the perfume of flowers and fruits fill the area. You see visions of things you could do and things you could’ve done good and bad, and when you open your eyes you realise you found new insight on your goals.");
 			if (rand(3) == 0) outputText(player.modTone(15, 1));
-			if (player.drainOfStat("wis")>0) {
-				player.drainStat("wis", -(5+rand(5)));
-			} else {
-				player.addItemTaggedTempBuff(consumables.INCOINS, "wis", 10 + rand(5));
-			}
+			buffOrRecover("wis", 5+rand(5), consumables.INCOINS.tagForBuffs, consumables.INCOINS.shortName);
 		}
 /*
 //Dao Dew
@@ -98,18 +86,15 @@ public final class Mutations extends MutationsHelper
 			clearOutput();
 			outputText("You prepare the tea and drink it. It would seem that Ayane didn’t lie to you as a pink haze settle in your mind leaving you not only aroused but highly inspired. Images of sensual caresses and passionate lovemaking come and go in your head, making you blush yet smile in anticipation. You can’t wait to try what you learned.");
 			if (rand(3) == 0) outputText(player.modTone(15, 1));
-			if (player.drainOfStat("lib")>0) {
-				player.drainStat("lib", -(5+rand(5)));
-			} else {
-				player.addItemTaggedTempBuff(consumables.VIXEN_T, "lib", 10 + rand(5));
-			}
+			buffOrRecover("lib", 5+rand(5), consumables.VIXEN_T.tagForBuffs, consumables.VIXEN_T.shortName);
 			player.refillHunger(10);
 		}
 
 		/* ITEMZZZZZ FUNCTIONS GO HERE */
 		public function incubiDraft(tainted:Boolean,player:Player):void
 		{
-
+			var buffInt:Number = 0;
+			var buffLib:Number = 0;
 			player.slimeFeed();
 			var temp2:Number = 0;
 			var temp3:Number = 0;
@@ -124,19 +109,19 @@ public final class Mutations extends MutationsHelper
 			if (!player.hasPerk(PerkLib.TransformationImmunity)) {
 			//Lowlevel changes
 			if (rando < 50) {
+				buffInt = rand(5);
+				buffLib = rand(10);
 				if (player.cocks.length == 1) {
 					if (player.cocks[0].cockType != CockTypesEnum.DEMON) outputText("\n\nYour [cock] becomes shockingly hard.  It turns a shiny inhuman purple and spasms, dribbling hot demon-like cum as it begins to grow.");
 					else outputText("\n\nYour [cock] becomes shockingly hard.  It dribbles hot demon-like cum as it begins to grow.");
 					var selectedCock:int;
 					if (rand(4) == 0) selectedCock = player.increaseCock(0, 3);
 					else selectedCock = player.increaseCock(0, 1);
-					dynStats("int", 1, "lib", 2, "sen", 1, "lust", 5 + selectedCock * 3, "cor", tainted ? 1 : 0);
+					dynStats("sen", 1, "lust", 5 + selectedCock * 3, "cor", tainted ? 1 : 0);
 					if (selectedCock < .5) outputText("  It stops almost as soon as it starts, growing only a tiny bit longer.");
 					if (selectedCock >= .5 && selectedCock < 1) outputText("  It grows slowly, stopping after roughly half an inch of growth.");
 					if (selectedCock >= 1 && selectedCock <= 2) outputText("  The sensation is incredible as more than an inch of lengthened dick-flesh grows in.");
 					if (selectedCock > 2) outputText("  You smile and idly stroke your lengthening [cock] as a few more inches sprout.");
-					if (tainted) dynStats("int", 1, "lib", 2, "sen", 1, "lus", 5 + selectedCock * 3, "cor", 1);
-					else dynStats("int", 1, "lib", 2, "sen", 1, "lus", 5 + selectedCock * 3);
 					if (player.cocks[0].cockType != CockTypesEnum.DEMON) outputText("  With the transformation complete, your [cock] returns to its normal coloration.");
 					else outputText("  With the transformation complete, your [cock] throbs in an almost happy way as it goes flaccid once more.");
 				}
@@ -152,8 +137,8 @@ public final class Mutations extends MutationsHelper
 					}
 					if (int(Math.random() * 4) == 0) temp3 = player.increaseCock(temp2, 3);
 					else temp3 = player.increaseCock(temp2, 1);
-					if (tainted) dynStats("int", 1, "lib", 2, "sen", 1, "lus", 5 + selectedCock * 3, "cor", 1);
-					else dynStats("int", 1, "lib", 2, "sen", 1, "lus", 5 + selectedCock * 3);
+					if (tainted) dynStats("sen", 1, "lus", 5 + selectedCock * 3, "cor", 1);
+					else dynStats("sen", 1, "lus", 5 + selectedCock * 3);
 					//Grammar police for 2 cocks
 					if (player.cockTotal() == 2) outputText("\n\nBoth of your [cocks] become shockingly hard, swollen and twitching as they turn a shiny inhuman purple in color.  They spasm, dripping thick ropes of hot demon-like pre-cum along their lengths as your shortest " + player.cockDescript(temp2) + " begins to grow.");
 					//For more than 2
@@ -172,8 +157,8 @@ public final class Mutations extends MutationsHelper
 					player.cocks[0].cockThickness = 1;
 					outputText("\n\nYou shudder as a pressure builds in your crotch, peaking painfully as a large bulge begins to push out from your body.  ");
 					outputText("The skin seems to fold back as a fully formed demon-cock bursts forth from your loins, drizzling hot cum everywhere as it orgasms.  Eventually the orgasm ends as your [cock] fades to a more normal " + player.skinTone + " tone.");
-					if (tainted) dynStats("lib", 3, "sen", 5, "lus", 10, "cor", 5);
-					else dynStats("lib", 3, "sen", 5, "lus", 10);
+					if (tainted) dynStats("sen", 5, "lus", 10, "cor", 5);
+					else dynStats("sen", 5, "lus", 10);
 				}
 				//TIT CHANGE 25% chance of shrinkage
 				if (rand(4) == 0)
@@ -186,6 +171,7 @@ public final class Mutations extends MutationsHelper
 			}
 			//Mid-level changes
 			if (rando >= 50 && rando < 93) {
+				buffLib = 5+rand(10);
 				if (player.cocks.length > 1) {
 					outputText("\n\nYour cocks fill to full-size... and begin growing obscenely.  ");
 					selectedCock = player.cocks.length;
@@ -209,8 +195,8 @@ public final class Mutations extends MutationsHelper
 						if (player.cocks.length == 1) outputText("\n\nYour cock seems to swell up, feeling heavier. You look down and watch it growing fatter as it thickens.");
 						if (player.cocks.length > 1) outputText("\n\nYour cocks seem to swell up, feeling heavier. You look down and watch them growing fatter as they thicken.");
 					}
-					if (tainted) dynStats("lib", 3, "sen", 5, "lus", 10, "cor", 3);
-					else dynStats("lib", 3, "sen", 5, "lus", 10);
+					if (tainted) dynStats("sen", 5, "lus", 10, "cor", 3);
+					else dynStats("sen", 5, "lus", 10);
 				}
 				if (player.cocks.length == 1) {
 					outputText("\n\nYour cock fills to its normal size and begins growing... ");
@@ -230,8 +216,8 @@ public final class Mutations extends MutationsHelper
 						if (player.cocks.length == 1) outputText("  Your cock seems to swell up, feeling heavier. You look down and watch it growing fatter as it thickens.");
 						if (player.cocks.length > 1) outputText("  Your cocks seem to swell up, feeling heavier. You look down and watch them growing fatter as they thicken.");
 					}
-					if (tainted) dynStats("lib", 3, "sen", 5, "lus", 10, "cor", 3);
-					else dynStats("lib", 3, "sen", 5, "lus", 10);
+					if (tainted) dynStats("sen", 5, "lus", 10, "cor", 3);
+					else dynStats("sen", 5, "lus", 10);
 				}
 				if (player.cocks.length == 0) {
 					player.createCock();
@@ -239,8 +225,8 @@ public final class Mutations extends MutationsHelper
 					player.cocks[0].cockThickness = 1;
 					outputText("\n\nYou shudder as a pressure builds in your crotch, peaking painfully as a large bulge begins to push out from your body.  ");
 					outputText("The skin seems to fold back as a fully formed demon-cock bursts forth from your loins, drizzling hot cum everywhere as it orgasms.  Eventually the orgasm ends as your [cock] fades to a more normal " + player.skinTone + " tone.");
-					if (tainted) dynStats("lib", 3, "sen", 5, "lus", 10, "cor", 3);
-					else dynStats("lib", 3, "sen", 5, "lus", 10);
+					if (tainted) dynStats("sen", 5, "lus", 10, "cor", 3);
+					else dynStats("sen", 5, "lus", 10);
 				}
 				//Shrink breasts a more
 				//TIT CHANGE 50% chance of shrinkage
@@ -254,12 +240,13 @@ public final class Mutations extends MutationsHelper
 			}
 			//High level change
 			if (rando >= 93) {
+				buffLib = 10+rand(10);
 				if (player.cockTotal() < 10) {
 					if (int(Math.random() * 10) < int(player.cor / 25)) {
 						outputText("\n\n");
 						growDemonCock(rand(2) + 2);
-						if (tainted) dynStats("lib", 3, "sen", 5, "lus", 10, "cor", 5);
-						else dynStats("lib", 3, "sen", 5, "lus", 10);
+						if (tainted) dynStats("sen", 5, "lus", 10, "cor", 5);
+						else dynStats("sen", 5, "lus", 10);
 					}
 					else {
 						growDemonCock(1);
@@ -277,6 +264,8 @@ public final class Mutations extends MutationsHelper
 			if (rand(4) == 0 && tainted) outputText(player.modFem(5, 2));
 			if (rand(4) == 0 && tainted) outputText(player.modThickness(30, 2));
 			player.refillHunger(10);
+			if (buffInt) player.addItemTaggedTempBuff(consumables.INCUBID, "int", buffInt);
+			if (buffLib) player.addItemTaggedTempBuff(consumables.INCUBID, "lib", buffLib);
 		}
 
 		public function growDemonCock(growCocks:Number):void
@@ -416,8 +405,8 @@ public final class Mutations extends MutationsHelper
 					else outputText("  You feel a strange sexual pleasure, but your " + multiCockDescript() + " remain unaffected.");
 				}
 			}
-			if (tainted) dynStats("spe", 1, "lus", 3, "cor", 1);
-			else dynStats("spe", 1, "lus", 3);
+			player.addItemTaggedTempBuff(consumables.SUCMILK, "spe", rand(5));
+			dynStats("lus", 3, "cor", tainted?1:0);
 			if (player.hasPerk(PerkLib.TransformationImmunity)) changeLimit = 0;
 			//Breast growth (maybe cock reduction!)
 			if (rando <= 75) {
@@ -580,7 +569,6 @@ public final class Mutations extends MutationsHelper
 					}
 					outputText("\n\nA tingling sensation runs across your skin in waves, growing stronger as <b>your skin's tone slowly shifts, darkening to become " + player.skinTone + " in color.</b>");
 					if (tainted) dynStats("cor", 1);
-					else dynStats("cor", 0);
 				}
 			}
 			//Demonic changes - higher chance with higher corruption.
@@ -2980,22 +2968,24 @@ public final class Mutations extends MutationsHelper
 		{
 			clearOutput();
 			outputText("You open the small black book, and discover it to be an instructional book on the use of black magic.  Most of it is filled with generic information about black magic - how it is drawn from emotions (typically lust), and how it has the power to affect bodies and emotions.  It also warns against using it on oneself, as it is difficult to draw on your emotions while meddling with your own body.  In no time at all you've read the whole thing, but it disappears into thin air before you can put it away.");
+			var intBuff:Number;
 			if (player.inte < 30) {
 				outputText("\n\nYou feel greatly enlightened by your time spent reading.");
-				dynStats("int", 4);
+				intBuff = 15+rand(5);
 			}
 			else if (player.inte < 60) {
 				outputText("\n\nSpending some time reading was probably good for you, and you definitely feel smarter for it.");
-				dynStats("int", 2);
+				intBuff = 10+rand(5);
 			}
 			else if (player.inte < 90) {
 				outputText("\n\nAfter reading the small tome your already quick mind feels invigorated.");
-				dynStats("int", 1);
+				intBuff = 5+rand(5);
 			}
 			else {
 				outputText("\n\nThe contents of the book did little for your already considerable intellect.");
-				dynStats("int", .6);
+				intBuff = 1+rand(5);
 			}
+			player.addItemTaggedTempBuff(consumables.B__BOOK,"int",intBuff);
 			//Smart enough for arouse and doesnt have it
 			if (player.inte >= 20 && !player.hasStatusEffect(StatusEffects.KnowsArouse)) {
 				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Arouse.</b>");
@@ -3094,22 +3084,24 @@ public final class Mutations extends MutationsHelper
 		{
 			clearOutput();
 			outputText("You open the white tome, and discover it to be an instructional book on the use of white magic.  Most of it is filled with generic information about white magic - how it is drawn for mental focus, is difficult to use when tired or aroused, and can be used to create and control energy.  In no time at all you've read the whole thing, but it disappears into thin air before you can put it away.");
+			var intBuff:Number;
 			if (player.inte < 30) {
 				outputText("\n\nYou feel greatly enlightened by your time spent reading.");
-				dynStats("int", 4);
+				intBuff = 15+rand(5);
 			}
 			else if (player.inte < 60) {
 				outputText("\n\nSpending some time reading was probably good for you, and you definitely feel smarter for it.");
-				dynStats("int", 2);
+				intBuff = 10+rand(5);
 			}
 			else if (player.inte < 90) {
 				outputText("\n\nAfter reading the small tome your already quick mind feels invigorated.");
-				dynStats("int", 1);
+				intBuff = 5+rand(5);
 			}
 			else {
 				outputText("\n\nThe contents of the book did little for your already considerable intellect.");
-				dynStats("int", .6);
+				intBuff = 1+rand(5);
 			}
+			player.addItemTaggedTempBuff(consumables.B__BOOK,"int",intBuff);
 			//Smart enough for charge weapon and doesnt have it
 			if (player.inte >= 20 && !player.hasStatusEffect(StatusEffects.KnowsCharge)) {
 				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Charge Weapon.</b>");
@@ -8481,7 +8473,9 @@ public final class Mutations extends MutationsHelper
 			mutationStep(player.inte < 100, mystic ? 2 : 4, function ():void {
 				outputText("\n\nYou close your eyes, smirking to yourself mischievously as you suddenly think of several new tricks to try on your opponents; you feel quite a bit more cunning.  The mental image of them helpless before your cleverness makes you shudder a bit, and you lick your lips and stroke yourself as you feel your skin tingling from an involuntary arousal.");
 				//Raise INT, Lib, Sens. and +10 LUST
-				dynStats("int", 2, "lib", 1, "sen", 2, "lus", 10);
+				player.addItemTaggedTempBuff(consumables.FOXJEWL, "int", 1+rand(10));
+				player.addItemTaggedTempBuff(consumables.FOXJEWL, "lib", 1+rand(5));
+				dynStats("sen", 2, "lus", 10);
 			});
 			//[decrease Strength toward 15]
 			mutationStep(player.str > 15, mystic ? 2 : 3, function ():void {
@@ -8618,7 +8612,8 @@ public final class Mutations extends MutationsHelper
 					outputText("Your bushy tails begin to glow with an eerie, ghostly light, and with a crackle of electrical energy, split into seven tails.  <b>You are now a seven-tails!  But something is wrong...  The cosmic power radiating from your body feels...  tainted somehow.  The corruption pouring off your body feels...  good.</b>");
 					outputText("\n\n(Perk Gained: Corrupted Kitsune - Grants Corrupted Fox Fire and Terror special attacks.)");
 					player.createPerk(PerkLib.CorruptedKitsune, 0, 0, 0, 0);
-					dynStats("lib", 1, "lus", 5, "cor", 5);
+					player.addItemTaggedTempBuff(consumables.FOXJEWL, "lib", 10+rand(50), 120);
+					dynStats("lus", 5, "cor", 5);
 				}
 				else outputText("\n\nA tingling pressure builds on your backside, and your bushy tails begin to glow with an eerie, ghostly light.  With a crackle of electrical energy, one of your tails splits in two, giving you " + num2Text(player.tailCount + 1) + "!  <b>You now have a cluster of " + num2Text(player.tailCount + 1) + " fox-tails.</b>");
 				player.tailCount = 7;
@@ -8642,7 +8637,8 @@ public final class Mutations extends MutationsHelper
 					outputText("\n\nYou have the inexplicable urge to set fire to the world, just to watch it burn.  With your newfound power, it's a goal that is well within reach.");
 					outputText("\n\n(Perk Gained: Corrupted Nine-tails - Grants boosts to your racial special attacks.)");
 					player.createPerk(PerkLib.CorruptedNinetails, 0, 0, 0, 0);
-					dynStats("lib", 2, "lus", 10, "cor", 10);
+					player.addItemTaggedTempBuff(consumables.FOXJEWL, "lib", 10+rand(100),240);
+					dynStats("lus", 10, "cor", 10);
 				}
 				else outputText("\n\nA tingling pressure builds on your backside, and your bushy tails begin to glow with an eerie, ghostly light.  With a crackle of electrical energy, one of your tails splits in two, giving you " + num2Text(player.tailCount + 1) + "!  <b>You now have a cluster of " + num2Text(player.tailCount + 1) + " fox-tails.</b>");
 				player.tailCount = 9;
