@@ -246,5 +246,6 @@ public class CoCLoader {
 		}
 	}
 	bundleResources(CoCLoader);
+	TEXT_BUNDLE['content/modlist.xml'] = <extend-story name="/"/>;
 }
 }
