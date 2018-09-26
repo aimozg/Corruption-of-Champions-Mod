@@ -2265,11 +2265,11 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		player.itemSlot3.setItemAndQty(ItemType.lookupItem(
 				saveFile.data.itemSlot3.id || saveFile.data.itemSlot3.shortName),
 				saveFile.data.itemSlot3.quantity);
-		player.itemSlot4.unlocked = saveFile.data.itemSlot4.unlocked;
+		player.itemSlot4.unlocked = true;
 		player.itemSlot4.setItemAndQty(ItemType.lookupItem(
 				saveFile.data.itemSlot4.id || saveFile.data.itemSlot4.shortName),
 				saveFile.data.itemSlot4.quantity);
-		player.itemSlot5.unlocked = saveFile.data.itemSlot5.unlocked;
+		player.itemSlot5.unlocked = true;
 		player.itemSlot5.setItemAndQty(ItemType.lookupItem(
 				saveFile.data.itemSlot5.id || saveFile.data.itemSlot5.shortName),
 				saveFile.data.itemSlot5.quantity);

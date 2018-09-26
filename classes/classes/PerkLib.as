@@ -1002,12 +1002,6 @@ public class PerkLib
 			short: "Basic attack with wizard's staff is replaced with ranged magic bolt.",
 			long : "You choose the 'Staff Channeling' perk. Basic attack with wizard's staff is replaced with ranged magic bolt."
 		});
-		public static const StrongBack:PerkType                     = jmk({
-			id   : "Strong Back",
-			name : "Strong Back",
-			short: "Enables fourth and fifth item slots.",
-			long : "You choose the 'Strong Back' perk, enabling a fourth and fifth item slot."
-		});
 		public static const Tactician:PerkType                      = mk("Tactician", "Tactician",
 				"[if(player.inte>=50)" +
 				"Increases critical hit chance by up to 10% (Intelligence-based)." +
@@ -2014,7 +2008,6 @@ public class PerkLib
 			//------------
             // STRENGTH
             //------------
-            StrongBack.requireStr(25);
             //Tier 1 Strength Perks
             ThunderousStrikes.requireLevel(6)
                     .requireStr(80)

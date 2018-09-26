@@ -392,8 +392,6 @@ import classes.Items.*;
 			//Perks: Feeder, Strong Back, Strong Back 2
 			player.createStatusEffect(StatusEffects.Feeder,0,0,0,0);
 			player.createPerk(PerkLib.Feeder, 0, 0, 0, 0);
-	
-			player.createPerk(PerkLib.StrongBack, 0, 0, 0, 0);
 
 			//Equipment: 
 			//Weapon: Warhammer
@@ -412,9 +410,7 @@ import classes.Items.*;
 			player.itemSlot1.setItemAndQty(consumables.LACTAID,5);
 			player.itemSlot2.setItemAndQty(consumables.GROPLUS,5);
 			player.itemSlot3.setItemAndQty(consumables.BIMBOLQ,1);
-			player.itemSlot4.unlocked = true;
 			player.itemSlot4.setItemAndQty(armors.BIMBOSK,1);
-			player.itemSlot5.unlocked = true;
 			outputText("You've got large breasts prone to lactation.  You aren't sure WHY you got chosen as a champion, but with your considerable strength, you're sure you'll do a good job protecting Ingnam.");
 		}
 		
@@ -1533,7 +1529,6 @@ import classes.Items.*;
 			player.createPerk(PerkLib.Fast, 0.25, 0, 0, 0);
 			player.createPerk(PerkLib.Smart, 0.25, 0, 0, 0);
 			player.createPerk(PerkLib.HistoryScholar, 0, 0, 0, 0);
-			player.createPerk(PerkLib.StrongBack,0,0,0,0);
 			player.itemSlot4.unlocked = true;
 			player.itemSlot5.unlocked = true;
 			player.createPerk(PerkLib.HistorySlacker,0,0,0,0);
@@ -1670,7 +1665,6 @@ import classes.Items.*;
 				if (player.teaseLevel < 3) player.teaseLevel = 3; }			
 			
 			// almost compulsive hoarder, start with backpack, chests and racks... never enough storage space
-			if (!player.hasPerk(PerkLib.StrongBack)) { player.createPerk(PerkLib.StrongBack, 0, 0, 0, 0); player.itemSlot4.unlocked = true; player.itemSlot5.unlocked = true; }
 			var i:int = 0;
 			if (player.hasKeyItem("Backpack") < 0) player.createKeyItem("Backpack", 5, 0, 0, 0);			
 			if (player.hasKeyItem("Camp - Chest") < 0) { player.createKeyItem("Camp - Chest", 0, 0, 0, 0); for (i = 0; i < 6; i++) inventory.createStorage(); }			

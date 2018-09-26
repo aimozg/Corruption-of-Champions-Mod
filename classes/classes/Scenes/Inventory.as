@@ -184,9 +184,13 @@ package classes.Scenes
 			if (player.keyItems.length > 0) outputText("<b><u>\nKey Items:</u></b>\n");
 			for (x = 0; x < player.keyItems.length; x++) outputText(player.keyItems[x].keyName + "\n");
 			for (x = 0; x < 10; x++) {
-				if (player.itemSlots[x].unlocked && player.itemSlots[x].quantity > 0) {
-					addButton(x, (player.itemSlots[x].itype.shortName + " x" + player.itemSlots[x].quantity), curry(close, curry(useItemInInventory, x)));
-					foundItem = true;
+				if (player.itemSlots[x].unlocked) {
+					if (player.itemSlots[x].quantity > 0) {
+						addButton(x, (player.itemSlots[x].itype.shortName + " x" + player.itemSlots[x].quantity), curry(close, curry(useItemInInventory, x)));
+						foundItem = true;
+					} else {
+						addButtonDisabled(x, "Nothing");
+					}
 				}
 			}
 
@@ -496,8 +500,7 @@ package classes.Scenes
 		}
 		
 		public function getMaxSlots():int {
-			var slots:int = 3;
-			if (player.hasPerk(PerkLib.StrongBack)) slots += 2;
+			var slots:int = 5;
 			slots += player.keyItemv1("Backpack");
 			//Constrain slots to between 3 and 10.
 			if (slots < 3) slots = 3;

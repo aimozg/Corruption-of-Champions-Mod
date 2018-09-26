@@ -222,9 +222,9 @@ import classes.lists.BreastCup;
 				player.itemSlot2.emptySlot();
 				player.itemSlot3.unlocked = true;
 				player.itemSlot3.emptySlot();
-				player.itemSlot4.unlocked = false;
+				player.itemSlot4.unlocked = true;
 				player.itemSlot4.emptySlot();
-				player.itemSlot5.unlocked = false;
+				player.itemSlot5.unlocked = true;
 				player.itemSlot5.emptySlot();
 			}
             //PIERCINGS
@@ -1592,9 +1592,9 @@ import classes.lists.BreastCup;
 			player.itemSlot2.emptySlot();
 			player.itemSlot3.unlocked = true;
 			player.itemSlot3.emptySlot();
-			player.itemSlot4.unlocked = false;
+			player.itemSlot4.unlocked = true;
 			player.itemSlot4.emptySlot();
-			player.itemSlot5.unlocked = false;
+			player.itemSlot5.unlocked = true;
 			player.itemSlot5.emptySlot();
 			doNext(removeLevelPerks);
 		}

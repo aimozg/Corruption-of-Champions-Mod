@@ -1036,10 +1036,6 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 		outputText("<b>" + perk.name + "</b> gained!");
 		var hp100before:Number = player.hp100;
 		player.createPerk(perk, perk.defaultValue1, perk.defaultValue2, perk.defaultValue3, perk.defaultValue4);
-		if (perk == PerkLib.StrongBack){
-			player.itemSlot4.unlocked = true;
-			player.itemSlot5.unlocked = true;
-		}
 		player.updateStats();
 		player.HP = player.maxHP()*hp100before/100;
 		statScreenRefresh();
