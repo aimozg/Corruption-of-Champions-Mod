@@ -345,6 +345,7 @@ public function canUseMagic():Boolean {
 	if (player.hasStatusEffect(StatusEffects.ThroatPunch)) return false;
 	if (player.hasStatusEffect(StatusEffects.WebSilence)) return false;
 	if (player.hasStatusEffect(StatusEffects.GooArmorSilence)) return false;
+	//noinspection RedundantIfStatementJS
 	if (player.hasStatusEffect(StatusEffects.WhipSilence)) return false;
 	return true;
 }
@@ -620,11 +621,6 @@ public function elementalattacks(elementType:int, summonedElementals:int):void {
 			afterPlayerAction();
 		}
 	}
-
-public function meleeAccuracy():Number {
-	var accmod:Number = 200;
-	return accmod;
-}
 
 public function arrowsAccuracy():Number {
 	var accmod:Number = 80;
@@ -1537,15 +1533,14 @@ public function attack():void {
 	}
 
 public function meleeDamageAcc(roll:ActionRoll):void {
-	var damage:Number = player.str + (player.scalingBonusStrength() * 0.25);
 	//------------
 	// DAMAGE
 	//------------
 	//Determine damage
 	//BASIC DAMAGE STUFF
+	var damage:Number = basicMeleeDamage(player, Math.random());
 	if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !player.isWieldingRangedWeapon()) damage *= 1.2;
 	if (damage < 10) damage = 10;
-	damage *= weaponMod(player);
 	//Bonus sand trap damage!
 	if (monster.hasStatusEffect(StatusEffects.Level) && (monster is SandTrap || monster is Alraune)) damage = Math.round(damage * 1.75);
 	//All special weapon effects like...fire/ice

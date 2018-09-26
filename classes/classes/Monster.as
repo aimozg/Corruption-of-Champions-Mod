@@ -382,15 +382,8 @@ import flash.utils.getQualifiedClassName;
 		 * @return damage not reduced by player stats
 		 */
 		public function eBaseDamage():Number {
-			var damage:Number = 0;
-			damage += str + (scalingBonusStrength() * 0.25);
-			if (str < 10) damage = 10;
-			//weapon bonus
-			if (weaponAttack < 51) damage *= (1 + (weaponAttack * 0.03));
-			else if (weaponAttack >= 51 && weaponAttack < 101) damage *= (2.5 + ((weaponAttack - 50) * 0.025));
-			else if (weaponAttack >= 101 && weaponAttack < 151) damage *= (3.75 + ((weaponAttack - 100) * 0.02));
-			else if (weaponAttack >= 151 && weaponAttack < 201) damage *= (4.75 + ((weaponAttack - 150) * 0.015));
-			else damage *= (5.5 + ((weaponAttack - 200) * 0.01));
+			var damage:Number = CombatMechanics.meleeDamageFormula(str, weaponAttack, Math.random());
+			if (damage < 10) damage = 10;
 			if (hasStatusEffect(StatusEffects.PunishingKick)) damage *= 0.5;
 			//monster exclusive perks bonus
 			if (hasPerk(PerkLib.EnemyBossType)) damage *= 2;
