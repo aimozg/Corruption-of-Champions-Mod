@@ -80,25 +80,25 @@ import classes.VaginaClass;
 			
 			if (HP < 1)
 			{
-				doNext(SceneLib.combat.endHpVictory);
+				doNext(combat.endHpVictory);
 				return;
 			}
 			
 			if (lust > maxLust())
 			{
-				doNext(SceneLib.combat.endLustVictory);
+				doNext(combat.endLustVictory);
 				return;
 			}
 			
 			if (player.HP < 1)
 			{
-				doNext(SceneLib.combat.endHpLoss);
+				doNext(combat.endHpLoss);
 				return;
 			}
 			
 			if (player.lust >= player.maxLust())
 			{
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 				return;
 			}
 			

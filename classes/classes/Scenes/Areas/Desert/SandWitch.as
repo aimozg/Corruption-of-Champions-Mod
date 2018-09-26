@@ -21,7 +21,7 @@ public class SandWitch extends Monster
 			if (player.lust >= 33 && flags[kFLAGS.SFW_MODE] <= 0){
 				SceneLib.desert.sandWitchScene.beatSandwitch();
 			} else {
-				SceneLib.combat.finishCombat();
+				combat.finishCombat();
 			}
 		}
 
@@ -29,7 +29,7 @@ public class SandWitch extends Monster
 		{
 			if (pcCameWorms){
 				outputText("\n\nThe witch blanches and backs away, leaving you to your fate.");
-				SceneLib.combat.cleanupAfterCombatImpl();
+				combat.cleanupAfterCombatImpl();
 			} else {
 				SceneLib.desert.sandWitchScene.sandwitchRape();
 			}

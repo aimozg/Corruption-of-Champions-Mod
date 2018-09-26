@@ -85,7 +85,7 @@ import classes.Scenes.SceneLib;
 		{
 			if(riposteWait) {
 				riposte();
-			} else if(!flags[kFLAGS.IN_COMBAT_USE_PLAYER_WAITED_FLAG]==1 && SceneLib.combat.lastAttack == Combat.HPSPELL){
+			} else if(!flags[kFLAGS.IN_COMBAT_USE_PLAYER_WAITED_FLAG]==1 && combat.lastAttack == Combat.HPSPELL){
 				spellbreaker();
 			} else {
 				super.performCombatAction();

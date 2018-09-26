@@ -482,8 +482,8 @@ public function minoPheromones():void {
 	}
 	//YOU LOSE!
 	if (player.lust >= player.maxLust())
-        doNext(SceneLib.combat.endLustLoss);
-    else doNext(SceneLib.combat.combatMenu);
+        doNext(combat.endLustLoss);
+    else doNext(combat.combatMenu);
 }
 public function getRapedByMinotaur(autoRape:Boolean = false):void {
 	spriteSelect(44);
@@ -843,7 +843,7 @@ public function minoAddictionFuck():void {
 	//(Max lust, load minotaur dicks & balls into monster stats and throw to rape-scenes.)
 	dynStats("lus", 3000);
 	monster = new Minotaur();
-	doNext(SceneLib.combat.endLustLoss);
+	doNext(combat.endLustLoss);
 }
 
 

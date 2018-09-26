@@ -156,7 +156,7 @@ import flash.utils.getQualifiedClassName;
 		}
 		protected final function cleanupAfterCombat():void
 		{
-			SceneLib.combat.cleanupAfterCombatImpl();
+			combat.cleanupAfterCombatImpl();
 		}
 		protected static function showStatDown(a:String):void{
 			CoC.instance.mainView.statsView.showStatDown(a);
@@ -168,13 +168,13 @@ import flash.utils.getQualifiedClassName;
 			EngineCore.doNext(eventNo);
 		}
 		protected final function combatMiss():Boolean {
-			return SceneLib.combat.combatMiss();
+			return combat.combatMiss();
 		}
 		protected final function combatParry():Boolean {
-			return SceneLib.combat.combatParry();
+			return combat.combatParry();
 		}
 		protected final function combatBlock(doFatigue:Boolean = false):Boolean {
-			return SceneLib.combat.combatBlock(doFatigue);
+			return combat.combatBlock(doFatigue);
 		}
 		protected function get consumables():ConsumableLib{
 			return game.consumables;
@@ -1166,7 +1166,7 @@ import flash.utils.getQualifiedClassName;
 		 */
 		public function defeated(hpVictory:Boolean):void
 		{
-			SceneLib.combat.finishCombat();
+			combat.finishCombat();
 		}
 
 		/**
@@ -1205,7 +1205,7 @@ import flash.utils.getQualifiedClassName;
 		public var onPcRunAttempt:Function = null;
 
 		public function genericPcRunDisabled():void {
-			SceneLib.combat.runFail("You can't escape from this fight!");
+			combat.runFail("You can't escape from this fight!");
 		}
 		/**
 		 * Final method to handle hooks before calling overriden method
@@ -1528,7 +1528,7 @@ import flash.utils.getQualifiedClassName;
 				else {
 					var store:Number = maxHP() * (4 + rand(7)) / 100;
 					if (game.player.hasPerk(PerkLib.ThirstForBlood)) store *= 1.5;
-					store = SceneLib.combat.doDamage(store);
+					store = combat.doDamage(store);
 					if (plural) outputText(capitalA + short + " bleed profusely from the jagged wounds your weapon left behind. <b>(<font color=\"#800000\">" + store + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " bleeds profusely from the jagged wounds your weapon left behind. <b>(<font color=\"#800000\">" + store + "</font>)</b>\n\n");
 				}
@@ -1544,7 +1544,7 @@ import flash.utils.getQualifiedClassName;
 				//Deal damage if still wounded.
 				else {
 					var store3:Number = (player.str + player.spe) * 2;
-					store3 = SceneLib.combat.doDamage(store3);
+					store3 = combat.doDamage(store3);
 					if(plural) outputText(capitalA + short + " bleed profusely from the jagged wounds your bite left behind. <b>(<font color=\"#800000\">" + store3 + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " bleeds profusely from the jagged wounds your bite left behind. <b>(<font color=\"#800000\">" + store3 + "</font>)</b>\n\n");
 				}
@@ -1563,7 +1563,7 @@ import flash.utils.getQualifiedClassName;
 				//Deal damage if still wounded.
 				else {
 					var store5:Number = (player.str + player.spe) * 2;
-					store5 = SceneLib.combat.doDamage(store5);
+					store5 = combat.doDamage(store5);
 					if (plural) {
 						outputText(capitalA + short + " bleed profusely from the jagged ");
 						if (player.horns.type == Horns.COW_MINOTAUR) outputText("wounds your horns");
@@ -1680,7 +1680,7 @@ import flash.utils.getQualifiedClassName;
 				//Deal damage if still wounded.
 				else {
 					var store2:Number = int(50+(player.inte/10));
-					store2 = SceneLib.combat.doDamage(store2);
+					store2 = combat.doDamage(store2);
 					if(plural) outputText(capitalA + short + " burn from lingering immolination after-effect. <b>(<font color=\"#800000\">" + store2 + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " burns from lingering immolination after-effect. <b>(<font color=\"#800000\">" + store2 + "</font>)</b>\n\n");
 				}
@@ -1697,7 +1697,7 @@ import flash.utils.getQualifiedClassName;
 				//Deal damage if still wounded.
 				else {
 					var store4:Number = (player.str + player.spe) * 2.5;
-					store4 = SceneLib.combat.doDamage(store4);
+					store4 = combat.doDamage(store4);
 					if(plural) outputText(capitalA + short + " burn from lingering Burn after-effect. <b>(<font color=\"#800000\">" + store4 + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " burns from lingering Burn after-effect. <b>(<font color=\"#800000\">" + store4 + "</font>)</b>\n\n");
 				}
@@ -1714,7 +1714,7 @@ import flash.utils.getQualifiedClassName;
 				//Deal damage if still wounded.
 				else {
 					var store6:Number = (player.spe + player.inte) * player.kiPowerMod() * 0.5;
-					store6 = SceneLib.combat.doDamage(store6);
+					store6 = combat.doDamage(store6);
 					if(plural) outputText(capitalA + short + " burn from lingering Fire Punch after-effect. <b>(<font color=\"#800000\">" + store6 + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " burns from lingering Fire Punch after-effect. <b>(<font color=\"#800000\">" + store6 + "</font>)</b>\n\n");
 				}
@@ -1780,7 +1780,7 @@ import flash.utils.getQualifiedClassName;
 				nagaVenom.buffHost('str',-nagaVenom.value1);
 				nagaVenom.buffHost('spe',-nagaVenom.value1);
 				if (nagaVenom.value3 >= 1) lust += nagaVenom.value3;
-				if (SceneLib.combat.combatIsOver()) {
+				if (combat.combatIsOver()) {
 					return;
 				}
 			}
@@ -1817,7 +1817,6 @@ import flash.utils.getQualifiedClassName;
 		}
 
 		public function endRoundChecks():Function {
-			var combat:Combat = SceneLib.combat;
 			if(HP < 1) {return curry(doNext, combat.endHpVictory);}
 			if(lust >= maxLust()) {return curry(doNext, combat.endLustVictory);}
 			return null;

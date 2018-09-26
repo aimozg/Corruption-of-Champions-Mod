@@ -205,13 +205,13 @@ public class Lethice extends Monster
 			}
 			outputText(" spray forth a torrent of white flame, burning the shadowy constructs away in the light of your pure, focused fire. In the span of seconds, Lethice’s spell is gone.");
 
-			EngineCore.doNext(SceneLib.combat.combatMenu);
+			EngineCore.doNext(combat.combatMenu);
 			game.player.mana -= 30;
 			outputText("\n\n");
 			flags[kFLAGS.SPELLS_CAST]++;
-			SceneLib.combat.spellPerkUnlock();
+			combat.spellPerkUnlock();
 			EngineCore.statScreenRefresh();
-            SceneLib.combat.enemyAIImpl();
+            combat.afterPlayerAction();
         }
 
 		private function demonfire():void
@@ -283,14 +283,14 @@ public class Lethice extends Monster
 		{
 			clearOutput();
 			outputText("You pull with all your might against the grasping tentacles to no avail; their grip is simply too strong!");
-            SceneLib.combat.enemyAIImpl();
+            combat.afterPlayerAction();
         }
 		
 		public function grappleWait():void
 		{
 			clearOutput();
 			outputText("You can't bring yourself to fight back against Lethice's tentaclespawn. The sensuous, coiling grasp around your limbs, their questing, pliant tips digging around inside your [armor]... you relax in their grip for a little while longer, too enticed by their movement to struggle right now.");
-            SceneLib.combat.enemyAIImpl();
+            combat.afterPlayerAction();
         }
 		
 		private function phase1Ends(hpVictory:Boolean):void
@@ -303,12 +303,12 @@ public class Lethice extends Monster
 					outputText("Even held aloft by her sprawling dragon wings, Lethice can’t hide from your righteous wrath.");
 					outputText(" Taking wing yourself, you slam into the demoness, striking a final blow that sends her toppling to the ground. She shrieks and spirals, crashing into the hard stone floor just before her throne.");
 				}
-				else if (SceneLib.combat.lastAttack == Combat.ARROW)
+				else if (combat.lastAttack == Combat.ARROW)
 				{
 					outputText("Even held aloft by her sprawling dragon wings, Lethice can’t hide from your righteous wrath.");
 					outputText(" You draw your bowstring and let loose one last arrow, sending the missile hurtling through the air - and right into Lethice’s wing! The Demon Queen lets out an ear-piercing shriek of pain and, with her wing flopping weakly beside her, goes tumbling to the earth! She’s down!");
 				}
-				else if (SceneLib.combat.lastAttack == Combat.HPSPELL)
+				else if (combat.lastAttack == Combat.HPSPELL)
 				{
 					outputText("Unable to resist your arcane assault, Lethice lets loose a howl of frustration and swoops back to the earth, mounting her throne once again.");
 				}
@@ -584,7 +584,7 @@ public class Lethice extends Monster
 		{
 			clearOutput();
 			outputText("Drawing on your magic, you use the opportunity to mend your wounds. No foe dares challenge you during the brief lull in battle, enabling you to maintain perfect concentration. With your flesh freshly knit and ready for battle, you look to Lethice.");
-			var temp:Number = int((player.inte / (2 + rand(3)) * SceneLib.combat.spellMod()) * (player.maxHP() / 150));
+			var temp:Number = int((player.inte / (2 + rand(3)) * combat.spellMod()) * (player.maxHP() / 150));
 			if(player.armorName == "skimpy nurse's outfit") temp *= 1.2;
 			EngineCore.HPChange(temp,false);
 
@@ -622,7 +622,7 @@ public class Lethice extends Monster
 			EngineCore.menu();
 			
 			if (doLethNext) EngineCore.addButton(0, "Next", p2Next);
-			else SceneLib.combat.combatRoundOver();
+			else combat.afterMonsterAction();
 		}
 
 		private function phase3():void
@@ -634,7 +634,7 @@ public class Lethice extends Monster
 			
 			// If you hit her with a lusty-damaging attack, she will become immune to lust damage for one turn. Might also have other special resistances too. Will detail in text in the “Reactions” section.
 			
-			if (SceneLib.combat.lastAttack != Combat.LUSTSPELL) _defMode = 1;
+			if (combat.lastAttack != Combat.LUSTSPELL) _defMode = 1;
 			else _defMode = 2;
 
 			if (_defMode == 1)

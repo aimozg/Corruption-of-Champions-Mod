@@ -23,9 +23,8 @@ package classes.Scenes.Combat {
 		}
 		else {
 			tease();
-			if (combatIsOver()) return;
 		}
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	// Just text should force the function to purely emit the test text to the output display, and not have any other side effects
@@ -58,7 +57,7 @@ package classes.Scenes.Combat {
 		combat.fatigueRecovery();
 		if (monster.lustVuln == 0) {
 			outputText("You do your best to tease [monster a][monster name] with your body but it has no effect!  Your foe clearly does not experience lust in the same way as you.\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		var damage:Number;

@@ -7,8 +7,10 @@ package classes.Items {
 	import classes.Creature;
 	import classes.EngineCore;
 	import classes.ItemType;
+import classes.Scenes.Combat.Combat;
+import classes.Scenes.SceneLib;
 
-	/**
+/**
 	 * Represent item that can be used but does not necessarily disappears on use. Direct subclasses should overrride
 	 * "useItem" method.
 	 */
@@ -16,6 +18,9 @@ package classes.Items {
 
 		public static function get game():CoC {
 			return CoC.instance;
+		}
+		public function get combat():Combat {
+			return SceneLib.combat;
 		}
 
 		public static function clearOutput():void {

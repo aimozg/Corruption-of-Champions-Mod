@@ -228,10 +228,10 @@ public class Holli extends Monster
 		}
 
 		private function onPCRun():void {
-			if (SceneLib.combat.runCheckEscaped()) {
-				SceneLib.combat.runSucceedDefault()
-			} else if(SceneLib.combat.runCheckRunner()) {
-				SceneLib.combat.runSucceedDefault(true)
+			if (combat.runCheckEscaped()) {
+				combat.runSucceedDefault()
+			} else if(combat.runCheckRunner()) {
+				combat.runSucceedDefault(true)
 			} else {
 				escapeFailWithHolli();
 			}

@@ -94,7 +94,7 @@ package classes.Scenes.Places.TelAdre
 				} else {
 					outputText("The roar of the crowd is drowned out by the blood rushing down to your loins, you drop to your knees unable to continue fighting as your enemy rallies the crowd.");
 				}
-				SceneLib.combat.inCombat = false;
+				combat.inCombat = false;
 				player.clearStatuses(false);
 				player.HP = player.maxHP();
 				player.lust = player.minLust();
@@ -119,7 +119,7 @@ package classes.Scenes.Places.TelAdre
 			function onPCRunAttempt():void {
 				clearOutput();
 				outputText("You’re unable to continue fighting, your spirit is broken for now and the sound of the crowd’s boos flood your ears as you lower your weapon and turn back towards the gate.");
-				SceneLib.combat.inCombat = false;
+				combat.inCombat = false;
 				player.clearStatuses(false);
 				doNext(soularena);
 			}

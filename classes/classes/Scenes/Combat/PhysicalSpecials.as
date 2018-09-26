@@ -302,7 +302,7 @@ package classes.Scenes.Combat {
 		}
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function powerfistspoweeeeer():Number {
@@ -324,7 +324,7 @@ package classes.Scenes.Combat {
 	}
 
 	public function whirlwind():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if (player.fatigue + physicalCost(50) > player.maxFatigue()) {
 			outputText("You are too tired to attack " + monster.a + " " + monster.short + ".");
@@ -336,7 +336,7 @@ package classes.Scenes.Combat {
 			if (monster.spe - player.spe < 8) outputText("[Monster A][monster name] narrowly avoids your attack!");
 			if (monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText("[Monster A][monster name] dodges your attack with superior quickness!");
 			if (monster.spe - player.spe >= 20) outputText("[Monster A][monster name] deftly avoids your slow attack.");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		fatigue(50, USEFATG_PHYSICAL);
@@ -376,12 +376,12 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function whipping():void {
-		if (player.weapon == weapons.L_WHIP) SceneLib.combat.lastAttack = Combat.PHYSICAL;
-		else SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		if (player.weapon == weapons.L_WHIP) combat.lastAttack = Combat.PHYSICAL;
+		else combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if (player.fatigue + physicalCost(50) > player.maxFatigue()) {
 			outputText("You are too tired to attack " + monster.a + " " + monster.short + ".");
@@ -390,7 +390,7 @@ package classes.Scenes.Combat {
 		}
 		fatigue(50, USEFATG_PHYSICAL);
 		outputText("You ready your [weapon] and prepare to spin it around trying to whip as many [monster a][monster name] as possible.  ");
-		if (dodgeRoll()) {return enemyAI();}
+		if (dodgeRoll()) {return afterPlayerAction();}
 		var damage:Number = 0;
 		damage += player.str;
 		if (damage < 10) damage = 10;
@@ -427,11 +427,11 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function whirlwindClaws():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if (player.fatigue + physicalCost(50) > player.maxFatigue()) {
 			outputText("You are too tired to attack " + monster.a + " " + monster.short + ".");
@@ -439,7 +439,7 @@ package classes.Scenes.Combat {
 			return;
 		}
 		outputText("You ready your claws and prepare to spin it around trying to hit as many [monster a][monster name] as possible.  ");
-		if (dodgeRoll()) {return enemyAI();}
+		if (dodgeRoll()) {return afterPlayerAction();}
 		fatigue(50, USEFATG_PHYSICAL);
 		var damage:Number = 0;
 		damage += (scalingBonusStrength() * 0.3) + ((player.str + unarmedAttack()) * 1.5);
@@ -473,11 +473,11 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function anemoneSting():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		//-sting with hair (combines both bee-sting effects, but weaker than either one separately):
 		//Fail!
@@ -520,7 +520,7 @@ package classes.Scenes.Combat {
 		//New lines and moving on!
 		outputText("\n\n");
 		doNext(combatMenu);
-		if(!combatIsOver()) enemyAI();
+		afterPlayerAction();
 	}
 
 
@@ -528,7 +528,7 @@ package classes.Scenes.Combat {
 //tiny damage and lower monster armor by ~75% for one turn
 //hit
 	public function tailWhipAttack():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		//miss
 		if((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
@@ -548,11 +548,11 @@ package classes.Scenes.Combat {
 			if(player.tailType == Tail.RACCOON) monster.addStatusValue(StatusEffects.CoonWhip,2,2);
 		}
 		outputText("\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function tailSlapAttack():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(40, USEFATG_PHYSICAL);
 		outputText("With a simple thought you set your tail ablaze.");
@@ -578,11 +578,11 @@ package classes.Scenes.Combat {
 		}
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function tailSmackAttack():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(40, USEFATG_PHYSICAL);
 		player.createStatusEffect(StatusEffects.CooldownTailSmack,5,0,0,0);
@@ -602,11 +602,11 @@ package classes.Scenes.Combat {
 			else outputText("back in pain but hold steady despite the impact.");
 		}
 		outputText("\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function inkSpray():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(30, USEFATG_PHYSICAL);
 		if (player.hasPerk(PerkLib.ScyllaInkGlands)) {
@@ -626,8 +626,7 @@ package classes.Scenes.Combat {
 		}
 		outputText("\n\n");
 		statScreenRefresh();
-		if(monster.lust >= monster.maxLust()) doNext(endLustVictory);
-		else enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function milkBlask():void {
@@ -648,7 +647,7 @@ package classes.Scenes.Combat {
 		if (!monster.hasPerk(PerkLib.Resolute)) monster.createStatusEffect(StatusEffects.Stunned, 1, 0, 0, 0);
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function cumCannon():void {
@@ -669,7 +668,7 @@ package classes.Scenes.Combat {
 		if (!monster.hasPerk(PerkLib.Resolute)) monster.createStatusEffect(StatusEffects.Stunned, 1, 0, 0, 0);
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function takeFlight():void {
@@ -681,21 +680,21 @@ package classes.Scenes.Combat {
 			player.createPerk(PerkLib.Resolute, 0, 0, 0, 0);
 		}
 		monster.createStatusEffect(StatusEffects.MonsterAttacksDisabled, 0, 0, 0, 0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function AlraunePollen():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		var pollen:Number = monster.lustVuln * (2 + rand(4));
 		monster.lust += pollen;
 		outputText("You send a cloud of your pollen outward into the air, smiling lustfully at your opponent. Sneezing slightly as they inhale the potent pollen, they begin showing clear signs of arousal. Just how long can they resist coming to pollinate you now? Not for long, you hope. (" + pollen + ")\n\n");
 		player.createStatusEffect(StatusEffects.AlraunePollen,0,0,0,0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function AlrauneEntangle():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		outputText("You coil your vines around [monster a][monster name]'s body, slowing them down and hindering ");
 		if(!monster.plural) outputText("its");
@@ -707,22 +706,22 @@ package classes.Scenes.Combat {
 		monster.drainStat('str',EntangleStrNerf);
 		monster.drainStat('spe',EntangleSpeNerf);
 		player.createStatusEffect(StatusEffects.AlrauneEntangle,EntangleStrNerf,EntangleSpeNerf,0,0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function AlrauneStrangulate():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 //This is now automatic - newRound arg defaults to true:	menuLoc = 0;
 		fatigue(60, USEFATG_PHYSICAL);
 		var damage:int = player.tou + (scalingBonusToughness() * 0.5);
 		damage = doDamage(damage);
 		outputText("You tighten your vines around your opponent's neck to strangle it. [monster A][monster name] struggles against your natural noose, getting obvious marks on its neck and " + damage + " damage for their trouble.\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function StoneClawAttack():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(60, USEFATG_PHYSICAL);
 		player.createStatusEffect(StatusEffects.CooldownStoneClaw,3,0,0,0);
@@ -752,11 +751,11 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function TailSlamAttack():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(30, USEFATG_PHYSICAL);
 		player.createStatusEffect(StatusEffects.CooldownTailSlam,5,0,0,0);
@@ -790,11 +789,11 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function WingBuffetAttack():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(30, USEFATG_PHYSICAL);
 		player.createStatusEffect(StatusEffects.CooldownWingBuffet,5,0,0,0);
@@ -819,11 +818,11 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function TornadoStrike():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 //This is now automatic - newRound arg defaults to true:	menuLoc = 0;
 		fatigue(60, USEFATG_PHYSICAL);
@@ -850,11 +849,11 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function PCWebAttack():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		//Keep logic sane if this attack brings victory
 		player.tailVenom -= 30;
@@ -862,7 +861,7 @@ package classes.Scenes.Combat {
 		if (handleConcentration()) {return;}
 		if (monster.short == "lizan rogue") {
 			outputText("As your webbing flies at him the lizan flips back, slashing at the adhesive strands with the claws on his hands and feet with practiced ease.  It appears he's used to countering this tactic.");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Blind
@@ -875,7 +874,7 @@ package classes.Scenes.Combat {
 			outputText("You miss [monster a][monster name] completely - ");
 			if(monster.plural) outputText("they");
 			else outputText(monster.mf("he","she") + " moved out of the way!\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Over-webbed
@@ -891,10 +890,10 @@ package classes.Scenes.Combat {
 		}
 		awardAchievement("How Do I Shot Web?", kACHIEVEMENTS.COMBAT_SHOT_WEB);
 		outputText("\n\n");
-		if(!combatIsOver()) enemyAI();
+		afterPlayerAction();
 	}
 	public function scyllaGrapple():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if(player.fatigue + physicalCost(10) > player.maxFatigue()) {
 			clearOutput();
@@ -929,17 +928,13 @@ package classes.Scenes.Combat {
 			//Failure (-10 HPs) -
 			outputText("As you attempt to grapple your target it slips out of your reach delivering a glancing blow to your limbs. ");
 			player.takePhysDamage(5, true);
-			if(player.HP <= 0) {
-				doNext(endHpLoss);
-				return;
-			}
 		}
 		outputText("\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function gooEngulf():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if(player.fatigue + physicalCost(10) > player.maxFatigue()) {
 			clearOutput();
@@ -970,17 +965,13 @@ package classes.Scenes.Combat {
 			//Failure (-10 HPs) -
 			outputText("[monster A][monster name] dodge at the last second stepping out of your slimy embrace and using the opening to strike you.");
 			player.takePhysDamage(5, true);
-			if(player.HP <= 0) {
-				doNext(endHpLoss);
-				return;
-			}
 		}
 		outputText("\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function vampireEmbrace():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if(player.fatigue + physicalCost(10) > player.maxFatigue()) {
 			clearOutput();
@@ -1010,10 +1001,10 @@ package classes.Scenes.Combat {
 		}
 		else outputText("You leap and box in [monster a][monster name] with your wings, embracing " + monster.pronoun1 + " as you prepare to feast.");
 		outputText("\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 	public function catPounce():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if(player.fatigue + physicalCost(10) > player.maxFatigue()) {
 			clearOutput();
@@ -1043,18 +1034,14 @@ package classes.Scenes.Combat {
 			//Failure (-10 HPs) -
 			outputText("As you attempt to grapple your target it slips out of your reach delivering a glancing blow to your limbs. ");
 			player.takePhysDamage(5, true);
-			if(player.HP <= 0) {
-				doNext(endHpLoss);
-				return;
-			}
 		}
 		outputText("\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 
 	public function skyPounce():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if(player.fatigue + physicalCost(10) > player.maxFatigue()) {
 			clearOutput();
@@ -1078,10 +1065,6 @@ package classes.Scenes.Combat {
 			//Failure (-10 HPs) -
 			outputText("As you attempt to grapple your target it slips out of your reach delivering a glancing blow to your limbs. Unable to grab your opponent flap your wing and resume flight.");
 			player.takePhysDamage(5, true);
-			if (player.HP <= 0) {
-				doNext(endHpLoss);
-				return;
-			}
 		} else {
 			var damage:Number = 0;
 			//str bonuses
@@ -1136,17 +1119,17 @@ package classes.Scenes.Combat {
 			}
 		}
 		outputText("\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function nagaBiteAttack():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if (handleConcentration()) {return;}
 		if (monster is LivingStatue)
 		{
 			outputText("Your fangs can't even penetrate the giant's flesh.");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Works similar to bee stinger, must be regenerated over time. Shares the same poison-meter
@@ -1167,16 +1150,16 @@ package classes.Scenes.Combat {
 		outputText("\n\n");
 		player.tailVenom -= 25;
 		flags[kFLAGS.VENOM_TIMES_USED] += 1;
-		if (!combatIsOver()) enemyAI();
+		afterPlayerAction();
 	}
 	public function spiderBiteAttack():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if (handleConcentration()) {return;}
 		if (monster is LivingStatue)
 		{
 			outputText("Your fangs can't even penetrate the giant's flesh.");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Works similar to bee stinger, must be regenerated over time. Shares the same poison-meter
@@ -1207,10 +1190,10 @@ package classes.Scenes.Combat {
 		outputText("\n\n");
 		player.tailVenom -= 25;
 		flags[kFLAGS.VENOM_TIMES_USED] += 1;
-		if (!combatIsOver()) enemyAI();
+		afterPlayerAction();
 	}
 	public function fenrirFrostbite():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		//FATIIIIGUE
 		if(player.fatigue + physicalCost(10) > player.maxFatigue()) {
@@ -1227,7 +1210,7 @@ package classes.Scenes.Combat {
 		if (monster is LivingStatue)
 		{
 			outputText("Your fangs can't even penetrate the giant's flesh.");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Works similar to bee stinger, must be regenerated over time. Shares the same poison-meter
@@ -1245,11 +1228,11 @@ package classes.Scenes.Combat {
 			outputText("You lunge headfirst, maw open for a bite. Your attempt fails horrendously, as [monster a][monster name] manages to counter your lunge, knocking your head away with enough force to make your ears ring.");
 		}
 		outputText("\n\n");
-		if (!combatIsOver()) enemyAI();
+		afterPlayerAction();
 	}
 //Mantis Omni Slash (AoE attack)
 	public function mantisMultiSlash():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		var cost:int = monster.plural ? 60 : 24;
 		if (player.fatigue + physicalCost(cost) > player.maxFatigue()) {
@@ -1261,7 +1244,7 @@ package classes.Scenes.Combat {
 
 		if (handleConcentration()) {return;}
 		outputText("You ready your wrists mounted scythes and prepare to sweep them towards [monster a][monster name].\n\n");
-		if (dodgeRoll()) {return enemyAI();}
+		if (dodgeRoll()) {return afterPlayerAction();}
 		if (!monster.plural) {
 			flags[kFLAGS.MULTIPLE_ATTACK_STYLE] = 1;
 		} else {
@@ -1313,11 +1296,11 @@ package classes.Scenes.Combat {
 			return;
 		}
 		outputText("\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 //Gore Attack - uses 15 fatigue!
 	public function goreAttack():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 //This is now automatic - newRound arg defaults to true:	menuLoc = 0;
 		if (monster.short == "worms") {
@@ -1328,7 +1311,7 @@ package classes.Scenes.Combat {
 			if (player.horns.type == Horns.COW_MINOTAUR) outputText("horns ");
 			else outputText("horns, ");
 			outputText("to stab only at air.\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		if(player.fatigue + physicalCost(25) > player.maxFatigue()) {
@@ -1435,11 +1418,7 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		combat.heroBaneProc(damage);
 		//Victory ORRRRR enemy turn.
-		if(monster.HP > 0 && monster.lust < monster.maxLust()) enemyAI();
-		else {
-			if(monster.HP <= 0) doNext(endHpVictory);
-			if(monster.lust >= monster.maxLust()) doNext(endLustVictory);
-		}
+		afterPlayerAction();
 	}
 //Upheaval Attack
 	public function upheavalAttack():void {
@@ -1447,7 +1426,7 @@ package classes.Scenes.Combat {
 //This is now automatic - newRound arg defaults to true:	menuLoc = 0;
 		if (monster.short == "worms") {
 			outputText("Taking advantage of your new natural weapon, you quickly charge at the freak of nature. Sensing impending danger, the creature willingly drops its cohesion, causing the mass of worms to fall to the ground with a sick, wet 'thud', leaving your horns to stab only at air.\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		fatigue(15, USEFATG_PHYSICAL);
@@ -1509,31 +1488,27 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		combat.heroBaneProc(damage);
 		//Victory ORRRRR enemy turn.
-		if(monster.HP > 0 && monster.lust < monster.maxLust()) enemyAI();
-		else {
-			if(monster.HP <= 0) doNext(endHpVictory);
-			if(monster.lust >= monster.maxLust()) doNext(endLustVictory);
-		}
+		afterPlayerAction();
 	}
 //Player sting attack
 	public function playerStinger():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		//Keep logic sane if this attack brings victory
 		//Worms are immune!
 		if (monster.short == "worms") {
 			outputText("Taking advantage of your new natural weapons, you quickly thrust your stinger at the freak of nature. Sensing impending danger, the creature willingly drops its cohesion, causing the mass of worms to fall to the ground with a sick, wet 'thud', leaving you to stab only at air.\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Determine if dodged!
 		if (handleConcentration()) {return;}
-		if (dodgeRoll("stinger")) {return enemyAI();}
+		if (dodgeRoll("stinger")) {return afterPlayerAction();}
 
 		//determine if avoided with armor.
 		if(monster.armorDef - player.level >= 10 && rand(4) > 0) {
 			outputText("Despite your best efforts, your sting attack can't penetrate " +  monster.a + monster.short + "'s defenses.\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Sting successful!
@@ -1559,28 +1534,27 @@ package classes.Scenes.Combat {
 		player.tailVenom -= 25;
 		flags[kFLAGS.VENOM_TIMES_USED] += 1;
 		//Kick back to main if no damage occured!
-		if(combatIsOver()){return;}
-		enemyAI();
+		afterPlayerAction();
 	}
 //Player tail spike attack
 	public function playerTailSpike():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		
 		//Worms are immune!
 		if (monster.short == "worms") {
 			outputText("Taking advantage of your new natural weapons, you quickly shooting an envenomed spike at the freak of nature. Sensing impending danger, the creature willingly drops its cohesion, causing the mass of worms to fall to the ground with a sick, wet 'thud', leaving your spike impale the ground behind.\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Determine if dodged!
 		if (handleConcentration()) {return;}
-		if (dodgeRoll("spike")) {return enemyAI();}
+		if (dodgeRoll("spike")) {return afterPlayerAction();}
 
 		//determine if avoided with armor.
 		if(monster.armorDef - player.level >= 10 && rand(4) > 0) {
 			outputText("Despite your best efforts, your spike attack can't penetrate " +  monster.a + monster.short + "'s defenses.\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Sting successful!
@@ -1619,13 +1593,12 @@ package classes.Scenes.Combat {
 			if (player.hasPerk(PerkLib.ManticoreMetabolism)) player.createStatusEffect(StatusEffects.FirstAttack,0,0,0,0);
 			playerTailSpike();
 		}
-		if (combatIsOver()){return;}
-		enemyAI()
+		afterPlayerAction()
 	}
 
 
 	public function kissAttack():void {
-		SceneLib.combat.lastAttack = Combat.LUSTSPELL;
+		combat.lastAttack = Combat.LUSTSPELL;
 		clearOutput();
 		outputText(randomChoice(
 			"You hop up to [monster a][monster name] and attempt to plant a kiss on [monster himher].",
@@ -1654,14 +1627,14 @@ package classes.Scenes.Combat {
 					else outputText("  Sadly, [monster a][monster name] moves aside, denying you the chance to give [monster himher] a smooch.\n\n");
 					break;
 			}
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Success but no effect:
 		if(monster.lustVuln <= 0 || !monster.hasCock()) {
 			if(monster.plural) outputText("  Mouth presses against mouth, and you allow your tongue to stick out to taste the saliva of one of their number, making sure to give them a big dose.  Pulling back, you look at [monster a][monster name] and immediately regret wasting the time on the kiss.  It had no effect!\n\n");
 			else outputText("  Mouth presses against mouth, and you allow your tongue to stick to taste [monster hisher]'s saliva as you make sure to give them a big dose.  Pulling back, you look at [monster a][monster name] and immediately regret wasting the time on the kiss.  It had no effect!\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		var damage:Number = 0;
@@ -1695,12 +1668,12 @@ package classes.Scenes.Combat {
 		monster.teased(monster.lustVuln * damage);
 		outputText("\n\n");
 		//Sets up for end of combat, and if not, goes to AI.
-		if(!combatIsOver()) enemyAI();
+		afterPlayerAction();
 	}
 //Mouf Attack
 // (Similar to the bow attack, high damage but it raises your fatigue).
 	public function bite():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		if(player.fatigue + physicalCost(25) > player.maxFatigue()) {
 			clearOutput();
 			if (player.faceType == Face.SHARK_TEETH) outputText("You're too fatigued to use your shark-like jaws!");
@@ -1728,7 +1701,7 @@ package classes.Scenes.Combat {
 		outputText(". Snarling with hunger, you lunge at your opponent, set to bite right into them!  ");
 		if(player.hasStatusEffect(StatusEffects.Blind)) outputText("In hindsight, trying to bite someone while blind was probably a bad idea... ");
 		//Determine if dodged!
-		if (dodgeRoll()) {return enemyAI();}
+		if (dodgeRoll()) {return afterPlayerAction();}
 		//Determine damage - str modified by enemy toughness!
 		var damage:Number = int((player.str + player.spe) * 3 * (monster.damagePercent() / 100));
 		monster.createOrFindStatusEffect(StatusEffects.SharkBiteBleed).value1 = 15;
@@ -1766,12 +1739,11 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		combat.heroBaneProc(damage);
 		//Kick back to main if no damage occured!
-		if (combatIsOver()){return;}
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function kick():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if(player.fatigue + physicalCost(20) > player.maxFatigue()) {
 			clearOutput();
@@ -1799,7 +1771,7 @@ package classes.Scenes.Combat {
 
 		if(flags[kFLAGS.PC_FETISH] >= 3) {
 			outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  Ceraph's piercings have made normal attack impossible!  Maybe you could try something else?\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		if (handleConcentration()) {return;}
@@ -1816,16 +1788,12 @@ package classes.Scenes.Combat {
 				if(dam == 0) dam = 1;
 				outputText("You strike at the amalgamation, crushing countless worms into goo, dealing " + dam + " damage.\n\n");
 				monster.HP -= dam;
-				if(monster.HP <= 0) {
-					doNext(endHpVictory);
-					return;
-				}
 			}
 			//Fail
 			else {
 				outputText("You attempt to crush the worms with your reprisal, only to have the collective move its individual members, creating a void at the point of impact, leaving you to attack only empty air.\n\n");
 			}
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Determine if dodged!
@@ -1838,7 +1806,7 @@ package classes.Scenes.Combat {
 				outputText(" to dodge your kick!");
 				outputText("\n\n");
 			}
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Determine damage
@@ -1891,13 +1859,13 @@ package classes.Scenes.Combat {
 		outputText("\n\n");
 		checkAchievementDamage(damage);
 		combat.heroBaneProc(damage);
-		if (!combatIsOver())enemyAI();
+		afterPlayerAction();
 	}
 
 	public function shieldBash():void {
 		clearOutput();
 		outputText("You ready your [shield] and prepare to slam it towards [monster a][monster name].  ");
-		if (dodgeRoll()) {return enemyAI();}
+		if (dodgeRoll()) {return afterPlayerAction();}
 		var damage:int = 10 + (player.str / 1.5) + rand(player.str / 2) + (player.shieldBlock * 2);
 		if (player.hasPerk(PerkLib.ShieldSlam)) damage *= 1.2;
 		if (player.hasPerk(PerkLib.SteelImpact)) damage += ((player.tou - 50) * 0.3);
@@ -1918,10 +1886,10 @@ package classes.Scenes.Combat {
 		fatigue(20, USEFATG_PHYSICAL);
 		outputText("\n\n");
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 	public function archerSidewinder():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if (player.fatigue + bowCost(300) > player.maxFatigue()) {
 			outputText("You are too tired to attack " + monster.a + " " + monster.short + ".");
@@ -1966,11 +1934,11 @@ package classes.Scenes.Combat {
 		bowPerkUnlock();
 		checkAchievementDamage(damage);
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function archerBarrage():void {
-		SceneLib.combat.lastAttack = Combat.PHYSICAL;
+		combat.lastAttack = Combat.PHYSICAL;
 		clearOutput();
 		if (player.fatigue + bowCost(300) > player.maxFatigue()) {
 			outputText("You are too tired to attack " + monster.a + " " + monster.short + ".");
@@ -2011,7 +1979,7 @@ package classes.Scenes.Combat {
 		bowPerkUnlock();
 		checkAchievementDamage(damage);
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 		
 		private function rageUpdate(crit:Boolean):void {
@@ -2028,7 +1996,7 @@ package classes.Scenes.Combat {
 			if(monster.hasStatusEffect(StatusEffects.Concentration)) {
 				clearOutput();
 				outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.\n\n");
-				enemyAI();
+				afterPlayerAction();
 				return true;
 			}
 			return false;

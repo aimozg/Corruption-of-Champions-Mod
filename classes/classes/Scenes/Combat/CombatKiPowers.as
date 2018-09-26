@@ -78,11 +78,11 @@ public class CombatKiPowers extends BaseCombatContent {
 	}
 
 	private static function endAction(target:Creature, damage:Number):void {
-		SceneLib.combat.checkAchievementDamage(damage);
+		combat.checkAchievementDamage(damage);
 		EngineCore.outputText("\n\n");
-		SceneLib.combat.heroBaneProc(damage);
-		if (target.HP < 1) EngineCore.doNext(SceneLib.combat.endHpVictory);
-		else SceneLib.combat.enemyAIImpl();
+		combat.heroBaneProc(damage);
+		if (target.HP < 1) EngineCore.doNext(combat.endHpVictory);
+		else combat.afterPlayerAction();
 	}
 
 	private static function weaponMod(host:Creature):Number {
@@ -102,7 +102,7 @@ public class CombatKiPowers extends BaseCombatContent {
 		switch(damType){
 			case MAGICAL:
 				damage = Math.max(10, host.scalingBonusIntelligence());
-				damage *= SceneLib.combat.spellMod();
+				damage *= combat.spellMod();
 				damage *= host.kiPowerMod(false);
 				break;
 			case PHYSICAL:
@@ -117,7 +117,7 @@ public class CombatKiPowers extends BaseCombatContent {
 				if (host.hasStatusEffect(StatusEffects.Overlimit)) damage *= 2;
 				break;
 			case UNARMED:
-				damage = SceneLib.combat.unarmedAttack();
+				damage = combat.unarmedAttack();
 				damage += host.str + host.scalingBonusStrength();
 				damage += host.wis + host.scalingBonusWisdom();
 				break;
@@ -133,7 +133,7 @@ public class CombatKiPowers extends BaseCombatContent {
 		damage += host.wis;
 		damage += host.scalingBonusWisdom() * 1.8;
 		if (damage < 10) damage = 10;
-		damage *= SceneLib.combat.spellMod();
+		damage *= combat.spellMod();
 		//kiPower mod effect
 		damage *= host.kiPowerMod();
 		return damage;
@@ -143,28 +143,28 @@ public class CombatKiPowers extends BaseCombatContent {
 		clearOutput();
 		outputText("You let out a primal roar of pain and fury, as you push your body beyond its normal capacity, a blood red aura cloaking your form.\n\n");
 		player.createStatusEffect(StatusEffects.Overlimit, 0, 0, 0, 0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function deactivaterOverlimit():void {
 		clearOutput();
 		outputText("You let your rage cool down, feeling relieved as the stress in your body diminish along with your power.\n\n");
 		player.removeStatusEffect(StatusEffects.Overlimit);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function VioletPupilTransformation():void {
 		clearOutput();
 		outputText("Deciding you need additional regeneration during current fight you spend moment to concentrate and activate Violet Pupil Transformation.  Your eyes starting to glow with a violet hua and you can feel refreshing feeling spreading all over your body.\n");
 		player.createStatusEffect(StatusEffects.VioletPupilTransformation,0,0,0,0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function DeactivateVioletPupilTransformation():void {
 		clearOutput();
 		outputText("Deciding you not need for now to constantly using Violet Pupil Transformation you concentrate and deactivating it.");
 		player.removeStatusEffect(StatusEffects.VioletPupilTransformation);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	private static const TranceABC:Object = FnHelpers.FN.buildLogScaleABC(10,100,1000,10,100);
@@ -192,14 +192,14 @@ public class CombatKiPowers extends BaseCombatContent {
 		sec.buffHost('str',TranceBoost);
 		sec.buffHost('tou',TranceBoost);
 		statScreenRefresh();
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function DeactivateTranceTransformation():void {
 		clearOutput();
 		outputText("You disrupt the flow of power within you, softly falling to the ground as the crystal sheathing your [skin] dissipates into nothingness.");
 		player.removeStatusEffect(StatusEffects.TranceTransformation);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function BeatOfWar():void {

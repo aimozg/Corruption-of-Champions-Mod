@@ -291,7 +291,7 @@ package classes.Scenes.Combat.CombatAction {
 			//fixme @oxdeception move below into combat?
 			//todo @Oxdeception spell specifics
 			if (!(host is Player)) {
-				SceneLib.combat.combatRoundOver()
+				SceneLib.combat.afterMonsterAction();
 			} else {
 				var dam:Number = 0;
 				for each(var d:* in damage) {
@@ -299,7 +299,7 @@ package classes.Scenes.Combat.CombatAction {
 				}
 				SceneLib.combat.checkAchievementDamage(dam);
 				SceneLib.combat.heroBaneProc(dam);
-				SceneLib.combat.enemyAIImpl();
+				SceneLib.combat.afterPlayerAction();
 			}
 		}
 

@@ -86,7 +86,7 @@ public class Akbal extends Monster
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
 			SceneLib.forest.akbalScene.akbalWon(hpVictory,pcCameWorms);
-			SceneLib.combat.cleanupAfterCombatImpl();
+			combat.cleanupAfterCombatImpl();
 		}
 		
 		public function akbalLustAttack():void

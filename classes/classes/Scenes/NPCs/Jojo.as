@@ -46,7 +46,7 @@ import classes.Scenes.SceneLib;
 			}
 			
 			if (lust >= 100) {
-				doNext(SceneLib.combat.endLustVictory);
+				doNext(combat.endLustVictory);
 				return;
 			}
 			else if (lust >= 85)

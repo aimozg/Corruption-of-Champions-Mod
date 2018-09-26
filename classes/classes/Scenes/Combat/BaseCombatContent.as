@@ -23,21 +23,11 @@ public class BaseCombatContent extends CombatMechanics {
 	protected function combatIsOver():Boolean {
 		return combat.combatIsOver();
 	}
-	protected function combatRoundOver():void
-	{
-		combat.combatRoundOver();
+	protected function afterPlayerAction():void {
+		combat.afterPlayerAction();
 	}
-	protected function endHpVictory():void {
-		combat.endHpVictory();
-	}
-	protected function endLustVictory():void {
-		combat.endLustVictory();
-	}
-	protected function endHpLoss():void {
-		combat.endHpLoss();
-	}
-	protected function endLustLoss():void {
-		combat.endLustLoss();
+	protected function afterMonsterAction():void {
+		combat.afterMonsterAction();
 	}
 	// ==================
 	// APPLY EFFECTS

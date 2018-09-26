@@ -193,10 +193,10 @@ package classes.Scenes
 			if (CoC.instance.inCombat) {
 				if (player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv1(StatusEffects.Sealed) == 3) {
 					outputText("\nYou reach for your items, but you just can't get your pouches open.  <b>Your ability to use items was sealed, and now you've wasted a chance to attack!</b>\n\n");
-					SceneLib.combat.enemyAIImpl();
+					combat.afterPlayerAction();
 					return;
 				}
-				addButton(14, "Back", curry(close, curry(SceneLib.combat.combatMenu, false))); //Player returns to the combat menu on cancel
+				addButton(14, "Back", curry(close, curry(combat.combatMenu, false))); //Player returns to the combat menu on cancel
 			} else {
 				if (inDungeon == false && inRoomedDungeon == false && flags[kFLAGS.IN_INGNAM] == 0) {
 					var miscNieve:Boolean = Holidays.nieveHoliday() && flags[kFLAGS.NIEVE_STAGE] > 0 && flags[kFLAGS.NIEVE_STAGE] < 5;
@@ -450,7 +450,7 @@ package classes.Scenes
 				}
 			}
             if (CoC.instance.inCombat) {
-                enemyAI();
+				combat.afterPlayerAction();
 				return;
 			}
 			if (showNext)
@@ -599,10 +599,8 @@ package classes.Scenes
 		}
 		
 		private function inventoryCombatHandler():void {
-			//Check if the battle is over. If not then go to the enemy's action.
-			if (combat.combatIsOver()) return;
 			outputText("\n\n");
-			enemyAI();
+			combat.afterPlayerAction();
 		}
 		private function deleteItemPrompt(item:BaseUseable, slotNum:int):void {
 			clearOutput();

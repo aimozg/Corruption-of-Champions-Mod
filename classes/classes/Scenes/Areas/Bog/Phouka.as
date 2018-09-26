@@ -157,7 +157,7 @@ public class Phouka extends Monster
 				if (player.hasVagina())
 					outputText("lass and spread yer legs for me.”</i>\n\n");
 				else outputText("lad and spread yer asscheeks for me.”</i>\n\n");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			}
 			else {
 				if (player.hasVagina()) { //Phouka prefer vaginal if they can get it

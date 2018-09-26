@@ -108,7 +108,7 @@ public class Ceraph extends Monster
 				}
 			}
 			outputText("\n\n");
-			SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
 		}
 
 //(Wait)
@@ -122,7 +122,7 @@ public class Ceraph extends Monster
 			}
 			player.dynStats("lus", player.lib / 20 + 5 + rand(5));
 			outputText("\n\n");
-			SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
 		}
 
 //[Double-Attack]
@@ -281,7 +281,7 @@ public class Ceraph extends Monster
 		{
 			if(pcCameWorms){
 				outputText("\n\nYour foe doesn't seem disgusted enough to leave...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.ceraphScene.loseFUCKME();
 			}

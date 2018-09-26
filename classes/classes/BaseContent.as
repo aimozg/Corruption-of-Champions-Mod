@@ -172,18 +172,13 @@ import coc.xxc.StoryContext;
 			EngineCore.statScreenRefresh();
 		}
 
-		protected function get combat():Combat {
+		protected static function get combat():Combat {
 			return SceneLib.combat;
 		}
 
 		protected function cleanupAfterCombat(nextFunc:Function = null):void
 		{
 			SceneLib.combat.cleanupAfterCombatImpl(nextFunc);
-		}
-
-		protected function enemyAI():void
-		{
-			SceneLib.combat.enemyAIImpl();
 		}
 
 		protected function clearStatuses(visibility: Boolean):void

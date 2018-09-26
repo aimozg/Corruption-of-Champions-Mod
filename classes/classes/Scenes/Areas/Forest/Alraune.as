@@ -45,9 +45,7 @@ import classes.Scenes.Holidays;
 			outputText("You struggle against the [monster name]'s vines, forcefully pulling yourself a good distance away from her.\n\n");
 			trapLevel(2);
 			player.fatigue += 50;
-			if(SceneLib.combat.combatIsOver()){return;}
-			doAI();
-			SceneLib.combat.combatRoundOver();
+			combat.afterPlayerAction();
 		}
 		
 		public function alraunePollenCloud():void {

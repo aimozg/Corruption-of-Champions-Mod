@@ -44,11 +44,7 @@ package classes.Scenes.Areas.Forest
 				outputText("You take a deep breath of the pollen!\n ");
 				outputText("Your mind becomes a haze as a hot wave of arousal washes over you.");
 				player.takeLustDamage(lustDmg, true);
-			//	if (player.lust >= player.maxLust())
-			//		doNext(game.combat.endLustLoss);
-			//	else doNext(game.playerMenu);
 			}
-			//combatRoundOver();
 		}
 		
 		

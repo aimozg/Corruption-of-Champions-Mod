@@ -335,8 +335,8 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 				if (hasPerk(PerkLib.MightyFist)) {
 					attack += 5;
 				}
-				if (SceneLib.combat.unarmedAttack() > 0) {
-					attack += SceneLib.combat.unarmedAttack();
+				if (combat.unarmedAttack() > 0) {
+					attack += combat.unarmedAttack();
 				}
 			}
 			if (arms.type == Arms.MANTIS && weaponName == "fists") {

@@ -293,7 +293,7 @@ public class CombatUI extends BaseCombatContent {
 			clearOutput();
 			if (player.statusEffectv2(StatusEffects.Sealed) == 6) outputText("You try to ready a special ability, but wind up stumbling dizzily instead.  <b>Your ability to use magical special attacks was sealed, and now you've wasted a chance to attack!</b>\n\n");
 			if (player.statusEffectv2(StatusEffects.Sealed) == 10) outputText("You try to use a magical ability but you are currently silenced by the alraune vines!\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		magspButtons.submenu(mainMenu);
@@ -302,7 +302,7 @@ public class CombatUI extends BaseCombatContent {
 		if (inCombat && player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv2(StatusEffects.Sealed) == 5) {
 			clearOutput();
 			outputText("You try to ready a special attack, but wind up stumbling dizzily instead.  <b>Your ability to use physical special attacks was sealed, and now you've wasted a chance to attack!</b>\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		if (player.hasStatusEffect(StatusEffects.TaintedMind)) {
@@ -316,7 +316,7 @@ public class CombatUI extends BaseCombatContent {
 			clearOutput();
 			if (player.statusEffectv2(StatusEffects.Sealed) == 2) outputText("You reach for your magic, but you just can't manage the focus necessary.  <b>Your ability to use magic was sealed, and now you've wasted a chance to attack!</b>\n\n");
 			if (player.statusEffectv2(StatusEffects.Sealed) == 10) outputText("You try to use magic but you are currently silenced by the alraune vines!\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		spellButtons.submenu(mainMenu);

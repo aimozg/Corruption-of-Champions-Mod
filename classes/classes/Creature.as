@@ -27,9 +27,11 @@ package classes
 	import classes.Items.JewelryLib;
 	import classes.Items.WeaponLib;
 	import classes.Scenes.Camp.CampMakeWinions;
+import classes.Scenes.Combat.Combat;
 import classes.Scenes.Combat.CombatAction.ACombatAction;
 import classes.Scenes.Combat.CombatMechanics;
 import classes.Scenes.Places.TelAdre.UmasShop;
+import classes.Scenes.SceneLib;
 import classes.Stats.Buff;
 import classes.lists.BuffTags;
 import classes.Stats.BuffableStat;
@@ -56,6 +58,9 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 
         public function get game():CoC {
 			return CoC.instance;
+		}
+		public function get combat():Combat {
+			return SceneLib.combat;
 		}
 		public function get flags():DefaultDict {
 			return game.flags;

@@ -85,8 +85,8 @@ public class FetishCultist extends Monster
 			}
 			player.dynStats("lus", (player.lib/10 + player.cor/20)+4);
 			if (player.lust >= player.maxLust())
-				doNext(SceneLib.combat.endLustLoss);
-			else doNext(SceneLib.combat.combatMenu);
+				doNext(combat.endLustLoss);
+			else doNext(combat.combatMenu);
 		}
 		private function cultistLustTransfer():void {
 			if(lust <= 30 || rand(2) == 0) {
@@ -111,8 +111,8 @@ public class FetishCultist extends Monster
 				if(lust < 0) lust = 10;
 			}
 			if (player.lust >= player.maxLust())
-				doNext(SceneLib.combat.endLustLoss);
-			else doNext(SceneLib.combat.combatMenu);
+				doNext(combat.endLustLoss);
+			else doNext(combat.combatMenu);
 		}
 		
 
@@ -127,14 +127,14 @@ public class FetishCultist extends Monster
 			}
 			if(player.lust >= 33 && player.gender > 0 && flags[kFLAGS.SFW_MODE] <= 0) {
 				outputText("  You realize she'd make a perfect receptacle for your lusts.  Do you have your way with her?");
-				EngineCore.simpleChoices("Sex", SceneLib.lake.fetishCultistScene.playerRapesCultist, "", null, "", null, "B. Feed", temp2, "Leave", SceneLib.combat.cleanupAfterCombatImpl);
+				EngineCore.simpleChoices("Sex", SceneLib.lake.fetishCultistScene.playerRapesCultist, "", null, "", null, "B. Feed", temp2, "Leave", combat.cleanupAfterCombatImpl);
 			}
 			else {
 				if(temp2!=null && flags[kFLAGS.SFW_MODE] <= 0) {
 					outputText("  She looks like she might take some of your milk if you offered it to her.  What do you do?");
-					EngineCore.simpleChoices("B. Feed", temp2, "", null, "", null, "", null, "Leave", SceneLib.combat.cleanupAfterCombatImpl);
+					EngineCore.simpleChoices("B. Feed", temp2, "", null, "", null, "", null, "Leave", combat.cleanupAfterCombatImpl);
 				}
-				else SceneLib.combat.cleanupAfterCombatImpl();
+				else combat.cleanupAfterCombatImpl();
 			}
 		}
 

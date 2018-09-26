@@ -1089,7 +1089,7 @@ public function jojoFollowerMeditate(doClear:Boolean = true):void {
 			if (player.lust > 33 && player.gender > 0) {
 				clearOutput();
 				outputText("You smile in satisfaction as Jojo" + (hpVictory ? " collapses, unable to continue fighting" :" collapses and begins masturbating feverishly") + ".  Sadly you realize your own needs have not been met.  Of course, you could always rape the poor thing...\n\nDo you rape him?");
-                doYesNo(postCombatRape, SceneLib.combat.cleanupAfterCombatImpl);
+                doYesNo(postCombatRape, combat.cleanupAfterCombatImpl);
             }
 			else {
 				combat.finishCombat();
@@ -1132,7 +1132,7 @@ public function jojoFollowerMeditate(doClear:Boolean = true):void {
 					jojosFifthRape();
 			}
 			doNext(camp.returnToCampUseOneHour);
-            if (postCombat) SceneLib.combat.cleanupAfterCombatImpl();
+            if (postCombat) combat.cleanupAfterCombatImpl();
         }
 		
 		private function jojosFirstRape():void {

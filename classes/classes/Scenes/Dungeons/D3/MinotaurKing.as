@@ -86,14 +86,14 @@ public class MinotaurKing extends Monster
 			if (_orgasms == 0 && !hpVictory)
 			{
 				lustDump();
-				SceneLib.combat.combatRoundOver();
+				combat.afterMonsterAction();
 				return;
 			}
 			
 			if (hpVictory)
 			{
 				hpRestore();
-				SceneLib.combat.combatRoundOver();
+				combat.afterMonsterAction();
 				return;
 			}
 			

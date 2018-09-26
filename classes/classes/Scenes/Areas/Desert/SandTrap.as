@@ -32,7 +32,7 @@ public class SandTrap extends Monster
 			}
 			outputText("\n\n");
 			doAI();
-			SceneLib.combat.combatRoundOver();
+			combat.afterMonsterAction();
 		}
 
 		public function trapLevel(adjustment:Number = 0):Number {
@@ -113,7 +113,7 @@ public class SandTrap extends Monster
 		{
 			if (pcCameWorms) {
 				outputText("\n\nThe sand trap seems bemused by the insects your body houses...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.desert.sandTrapScene.sandtrapmentLoss(true);
 			}
@@ -189,11 +189,11 @@ public class SandTrap extends Monster
 
 		private function onPCRun():void{
 			if(player.canFly()){
-				SceneLib.combat.runSucceed("You flex the muscles in your back and, shaking clear of the sand, burst into the air!  Wasting no time you fly free of the sandtrap and its treacherous pit.  \"One day your wings will fall off, little ant,\" the snarling voice of the thwarted androgyne carries up to you as you make your escape.  \"And I will be waiting for you when they do!\"");
+				combat.runSucceed("You flex the muscles in your back and, shaking clear of the sand, burst into the air!  Wasting no time you fly free of the sandtrap and its treacherous pit.  \"One day your wings will fall off, little ant,\" the snarling voice of the thwarted androgyne carries up to you as you make your escape.  \"And I will be waiting for you when they do!\"");
 			} else if(statusEffectv1(StatusEffects.Level) < 4){
-				SceneLib.combat.runFail("You're too deeply mired to escape!  You'll have to <b>climb</b> some first!");
+				combat.runFail("You're too deeply mired to escape!  You'll have to <b>climb</b> some first!");
 			}
-			SceneLib.combat.runAway(false);
+			combat.runAway(false);
 		}
 	}
 }

@@ -36,7 +36,7 @@ public class IncubusMechanic extends Monster {
 				if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] >= 2 && flags[kFLAGS.FACTORY_INCUBUS_BRIBED] == 0) outputText("\n\n<b>You swear you can hear a clicking sound coming from the west.</b>");
 				EngineCore.addButton(0, "Anally", SceneLib.dungeons.factory.doRideIncubusAnally).hint("Ride him anally.");
 				EngineCore.addButton(1, "Orally", SceneLib.dungeons.factory.doOralIncubus).hint("Service the incubus orally.");
-				EngineCore.addButton(4, "Leave", SceneLib.combat.cleanupAfterCombatImpl);
+				EngineCore.addButton(4, "Leave", combat.cleanupAfterCombatImpl);
 			}
 			else {
 				player.dynStats("lus", 1);
@@ -52,7 +52,7 @@ public class IncubusMechanic extends Monster {
 				EngineCore.addButton(0, "Rape", SceneLib.dungeons.factory.doRapeIncubus).hint(player.hasCock() ? "Fuck his butt." : "Ride him vaginally.");
 				EngineCore.addButton(1, "Service Him", SceneLib.dungeons.factory.doOralIncubus).hint("Service the incubus orally.");
 				EngineCore.addButton(2, "Anal", SceneLib.dungeons.factory.doRideIncubusAnally).hint("Ride him anally.");
-				EngineCore.addButton(4, "Nothing", SceneLib.combat.cleanupAfterCombatImpl);
+				EngineCore.addButton(4, "Nothing", combat.cleanupAfterCombatImpl);
 			}
 		}
 		
@@ -77,7 +77,7 @@ public class IncubusMechanic extends Monster {
 		{
 			if(pcCameWorms){
 				outputText("\n\nYour foe doesn't seem to care...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.dungeons.factory.doLossIncubus();
 			}

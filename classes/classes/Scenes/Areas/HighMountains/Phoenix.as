@@ -112,7 +112,7 @@ public class Phoenix extends Monster
 		{
 			if (pcCameWorms) {
 				outputText("\n\nYour foe doesn't seem disgusted enough to leave...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.highMountains.phoenixScene.loseToPhoenix();
 			}

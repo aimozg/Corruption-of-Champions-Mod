@@ -42,7 +42,7 @@ public class Anemone extends Monster
 		{
 			if(pcCameWorms){
 				outputText("\n\nYour foe doesn't seem to mind at all...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.anemoneScene.loseToAnemone();
 			}
@@ -95,13 +95,13 @@ public class Anemone extends Monster
 		}
 
 		private function onPCRun():void {
-			if(player.lust < (player.maxLust() * 0.6) || SceneLib.combat.runCheckEscaped()) {
-				SceneLib.combat.runSucceed("Marshalling your thoughts, you frown at the strange girl and turn to march up the beach.  After twenty paces inshore you turn back to look at her again.  The anemone is clearly crestfallen by your departure, pouting heavily as she sinks beneath the water's surface.");
+			if(player.lust < (player.maxLust() * 0.6) || combat.runCheckEscaped()) {
+				combat.runSucceed("Marshalling your thoughts, you frown at the strange girl and turn to march up the beach.  After twenty paces inshore you turn back to look at her again.  The anemone is clearly crestfallen by your departure, pouting heavily as she sinks beneath the water's surface.");
 				return;
 			}
 			outputText("You try to shake off the fog and run but the anemone slinks over to you and her tentacles wrap around your waist.  <i>\"Stay?\"</i> she asks, pressing her small breasts into you as a tentacle slides inside your [armor] and down to your nethers.  The combined stimulation of the rubbing and the tingling venom causes your knees to buckle, hampering your resolve and ending your escape attempt.");
 			applyVenom(4+player.sens/20);
-			SceneLib.combat.combatRoundOver();
+			combat.afterMonsterAction();
 		}
 		
 	}

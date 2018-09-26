@@ -99,7 +99,7 @@ import classes.internals.ChainedDrop;
 		{
 			if (pcCameWorms){
 				outputText("\n\nThe basilisk smirks, but waits for you to finish...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.highMountains.basiliskScene.loseToBasilisk();
 			}
@@ -108,7 +108,7 @@ import classes.internals.ChainedDrop;
 		override public function endRoundChecks():Function {
 			var res:Function = super.endRoundChecks();
 			if (res != null){return res;}
-			if (player.spe <= 1) {return curry(doNext, SceneLib.combat.endHpLoss);}
+			if (player.spe <= 1) {return curry(doNext, combat.endHpLoss);}
 			return null;
 		}
 

@@ -939,7 +939,7 @@ public function urtaSpecials():void {
     if (CoC.instance.inCombat && player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv2(StatusEffects.Sealed) == 5) {
         clearOutput();
 		outputText("You try to ready a special attack, but wind up stumbling dizzily instead.  <b>Your ability to use physical special attacks was sealed, and now you've wasted a chance to attack!</b>\n\n");
-        SceneLib.combat.enemyAIImpl();
+		combat.afterPlayerAction();
         return;
 	}
 	menu();
@@ -956,7 +956,7 @@ public function urtaMSpecials():void {
     if (CoC.instance.inCombat && player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv2(StatusEffects.Sealed) == 6) {
         clearOutput();
 		outputText("You try to ready a special ability, but wind up stumbling dizzily instead.  <b>Your ability to use magical special attacks was sealed, and now you've wasted a chance to attack!</b>\n\n");
-		enemyAI();
+		combat.afterPlayerAction();
 		return;
 	}
 	menu();
@@ -976,7 +976,7 @@ private function berzerk():void {
 	}
 	outputText("You roar and unleash your savage fury, forgetting about defense in order to destroy your foe!\n\n");
 	player.createStatusEffect(StatusEffects.Berzerking,0,0,0,0);
-    SceneLib.combat.enemyAIImpl();
+	combat.afterPlayerAction();
 }
 
 private function urtaMetabolize():void {
@@ -984,7 +984,7 @@ private function urtaMetabolize():void {
 	var damage:int = player.takePhysDamage(Math.round(player.maxHP()/10));
 	outputText("You work your body as hard as you can, restoring your fatigue at the cost of health. (" + damage + ")\nRestored 20 fatigue!\n\n");
 	fatigue(-20);
-    SceneLib.combat.enemyAIImpl();
+	combat.afterPlayerAction();
 }
 
 private function urtaSecondWind():void {
@@ -1002,7 +1002,7 @@ private function urtaSecondWind():void {
 	fatigue(-150);
 	dynStats("lus", -100);
 	outputText("Closing your eyes for a moment, you focus all of your willpower on pushing yourself to your absolute limits, forcing your lusts down and drawing on reserves of energy you didn't know you had!\n\n");
-    SceneLib.combat.enemyAIImpl();
+	combat.afterPlayerAction();
 }
 
 //Combo: 3x attack, higher miss chance, guaranteed hit vs blind
@@ -1046,7 +1046,7 @@ private function urtaComboAttack():void {
 		}
 		else {
 			outputText("\n");
-            SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
             return;
 		}
 	}
@@ -1109,7 +1109,7 @@ private function urtaComboAttack():void {
 	if(damage > 0) {
 		if(player.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
 		if(player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
-		damage = SceneLib.combat.doDamage(damage);
+		damage = combat.doDamage(damage);
 	}
 	if(damage <= 0) {
 		damage = 0;
@@ -1134,11 +1134,11 @@ private function urtaComboAttack():void {
 		}
 		trace("DONE ATTACK");
 		outputText("\n");
-        SceneLib.combat.enemyAIImpl();
+		combat.afterPlayerAction();
     }
 	else {
-		if(monster.HP <= 0) doNext(SceneLib.combat.endHpVictory);
-		else doNext(SceneLib.combat.endLustVictory);
+		if(monster.HP <= 0) doNext(combat.endHpVictory);
+		else doNext(combat.endLustVictory);
 	}
 }
 
@@ -1162,7 +1162,7 @@ private function urtaDirtKick():void {
 	//Dodged!
 	if(rand(20) + 1 + monster.spe/20 > 15 + player.spe/20) {
 		outputText(monster.mf("He","She") + " manages to shield " + monster.mf("his","her") + " eyes.  Damn!\n\n");
-        SceneLib.combat.enemyAIImpl();
+		combat.afterPlayerAction();
         return;
 	}
 	else if(monster.hasStatusEffect(StatusEffects.Blind)) {
@@ -1172,7 +1172,7 @@ private function urtaDirtKick():void {
 		outputText(monster.mf("He","She") + "'s blinded!\n\n");
 		monster.createStatusEffect(StatusEffects.Blind, 2 + rand(3),0,0,0);
 	}
-    SceneLib.combat.enemyAIImpl();
+	combat.afterPlayerAction();
 }
 
 //SideWinder: 70% damage + stun chance
@@ -1199,7 +1199,7 @@ private function urtaSidewinder():void {
 		if(monster.spe - player.spe >= 8 && monster.spe-player.spe < 20) outputText(monster.capitalA + monster.short + " dodges your attack with superior quickness!");
 		if(monster.spe - player.spe >= 20) outputText(monster.capitalA + monster.short + " deftly avoids your slow attack.");
 		outputText("\n\n");
-        SceneLib.combat.enemyAIImpl();
+		combat.afterPlayerAction();
         return;
 	}
 	//Determine damage
@@ -1262,7 +1262,7 @@ private function urtaSidewinder():void {
 	if(damage > 0) {
 		if(player.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
 		if(player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
-		damage = SceneLib.combat.doDamage(damage);
+		damage = combat.doDamage(damage);
 	}
 	if(damage <= 0) {
 		damage = 0;
@@ -1294,11 +1294,11 @@ private function urtaSidewinder():void {
 			return;
 		}
 		outputText("\n");
-        SceneLib.combat.enemyAIImpl();
+		combat.afterPlayerAction();
     }
 	else {
-		if(monster.HP <= 0) doNext(SceneLib.combat.endHpVictory);
-		else doNext(SceneLib.combat.endLustVictory);
+		if(monster.HP <= 0) doNext(combat.endHpVictory);
+		else doNext(combat.endLustVictory);
 	}
 }
 
@@ -1317,7 +1317,7 @@ private function urtaVaultAttack():void {
 	fatigue(20);
 	if(player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv2(StatusEffects.Sealed) == 0) {
 		outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  The seals have made normal attack impossible!  Maybe you could try something else?\n\n");
-        SceneLib.combat.enemyAIImpl();
+		combat.afterPlayerAction();
         return;
 	}
 	//Blind
@@ -1337,7 +1337,7 @@ private function urtaVaultAttack():void {
 			return;
 		}
 		else outputText("\n");
-		enemyAI();
+		combat.afterPlayerAction();
 		return;
 	}
 	//Determine damage
@@ -1400,7 +1400,7 @@ private function urtaVaultAttack():void {
 	if(damage > 0) {
 		if(player.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
 		if(player.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
-		damage = SceneLib.combat.doDamage(damage);
+		damage = combat.doDamage(damage);
 	}
 	if(damage <= 0) {
 		damage = 0;
@@ -1423,11 +1423,11 @@ private function urtaVaultAttack():void {
 			return;
 		}
 		outputText("\n");
-		combat.enemyAIImpl();
+		combat.afterPlayerAction();
 	}
 	else {
-		if(monster.HP <= 0) doNext(SceneLib.combat.endHpVictory);
-		else doNext(SceneLib.combat.endLustVictory);
+		if(monster.HP <= 0) doNext(combat.endHpVictory);
+		else doNext(combat.endLustVictory);
 	}
 }
 

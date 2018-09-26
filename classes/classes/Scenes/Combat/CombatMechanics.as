@@ -18,6 +18,13 @@ public class CombatMechanics extends BaseContent {
 		var toHit:Number = (attacker.attackRating - defender.defenseRating) / 100;
 		return boundFloat(0.1, toHit, 0.95);
 	}
+	
+	////////////////////////////////////////////////////////////////////////////////
+	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////
+	
 	public static function debugHitInfo(attacker:Creature, defender:Creature):String {
 		return " (ToHit: " +
 			   attacker.attackRating.toFixed() + " vs " +

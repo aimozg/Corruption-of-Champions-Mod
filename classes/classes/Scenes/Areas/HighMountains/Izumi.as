@@ -233,7 +233,7 @@ public class Izumi extends Monster
 				outputText(" strength, in an attempt to free yourself from her crushing embrace, without success.");
 				player.takePhysDamage(75 + rand(15), true);
 			}
-			SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
 		}
 		
 		// OH HEY ITS A THING
@@ -251,7 +251,7 @@ public class Izumi extends Monster
 			{
 				outputText(".");
 			}
-			SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
 		}
 		
 		// Player fails to escape from the chokeslam, and after 3 rounds gets nailed to the fuckin floor
@@ -396,7 +396,7 @@ public class Izumi extends Monster
 				}
 				player.dynStats("lus", player.lib / 15 + 5 + rand(5));
 			}
-			SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
 		}
 		
 		// Player breaks free of tiSmother and applies damage to Izumi
@@ -441,7 +441,7 @@ public class Izumi extends Monster
 			{
 				outputText(".");
 			}
-			SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
 		}
 	}
 }

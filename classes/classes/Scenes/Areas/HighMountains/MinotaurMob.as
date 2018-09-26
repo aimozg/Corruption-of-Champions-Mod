@@ -130,11 +130,11 @@ import classes.Scenes.SceneLib;
 		}
 		private function onPCRun():void{
 			if(turnWasting){
-				SceneLib.combat.runSucceed("You slink away while the pack of brutes is arguing.  Once they finish that argument, they'll be sorely disappointed!");
+				combat.runSucceed("You slink away while the pack of brutes is arguing.  Once they finish that argument, they'll be sorely disappointed!");
 			} else if (short == "minotaur tribe" && HPRatio() >= 0.75) {
-				SceneLib.combat.runFail("There's too many of them surrounding you to run!");
+				combat.runFail("There's too many of them surrounding you to run!");
 			} else {
-				SceneLib.combat.runAway(false);
+				combat.runAway(false);
 			}
 		}
 
@@ -147,7 +147,7 @@ import classes.Scenes.SceneLib;
 		{
 			if (pcCameWorms) {
 				outputText("\n\nThe minutaurs share a laugh while you cum, but their throbbing erections don't subside in the slightest.");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.highMountains.minotaurMobScene.minotaurDeFeet();
 			}

@@ -254,7 +254,7 @@ import classes.internals.*;
 				SceneLib.sophieFollowerScene.debimboSophieBeatsYouUp();
 			else if (pcCameWorms) {
 				outputText("\n\nYour foe seems disgusted by the display and leaves you to recover alone...");
-				SceneLib.combat.cleanupAfterCombatImpl();
+				combat.cleanupAfterCombatImpl();
 			} else {
 				SceneLib.sophieScene.sophieWonCombat();
 			}

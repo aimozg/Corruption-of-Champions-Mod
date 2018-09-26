@@ -58,12 +58,9 @@ package classes.Scenes.Combat {
 				outputText("\n\nYou can feel [monster a] [monster name]'s life signs beginning to fade, and before you crush all the life from [monster him], you let go, dropping [monster him] to the floor, unconscious but alive.  In no time, [monster his]'s eyelids begin fluttering, and you've no doubt they'll regain consciousness soon.  ");
 				if(monster.short == "demons")
 					outputText("The others quickly back off, terrified at the idea of what you might do to them.");
-				outputText("\n\n");
-				doNext(endHpVictory);
-				return;
 			}
 			outputText("\n\n");
-			enemyAI();
+			afterPlayerAction();
 		}
 		public function ScyllaTease():void {
 			clearOutput();
@@ -78,7 +75,7 @@ package classes.Scenes.Combat {
 			}
 			if(monster.lustVuln == 0) {
 				outputText("You casualy caress your opponent with a free hand as you use one of your tentacle to expertly molest its bottom half, but it has no effect!  Your foe clearly does not experience lust in the same way as you.\n\n");
-				enemyAI();
+				afterPlayerAction();
 				return;
 			}
 			//(Otherwise)
@@ -193,19 +190,15 @@ package classes.Scenes.Combat {
 					outputText("\n[monster A][monster name] seems unimpressed.");
 				}
 				outputText("\n\n");
-				if(monster.lust >= monster.maxLust()) {
-					doNext(endLustVictory);
-					return;
-				}
 			}
-			enemyAI();
+			afterPlayerAction();
 		}
 		public function ScyllaLeggoMyEggo():void {
 			clearOutput();
 			outputText("You release [monster a] [monster name] from [monster his] bonds, and [monster he] drops to the ground, catching [monster his] breath before [monster he] stands back up, apparently prepared to fight some more.");
 			outputText("\n\n");
 			monster.removeStatusEffect(StatusEffects.ConstrictedScylla);
-			enemyAI();
+			afterPlayerAction();
 		}
 
 		public function GooTease():void {
@@ -218,12 +211,12 @@ package classes.Scenes.Combat {
 			else if(monster.gender == 0)
 			{
 				outputText("You look over [monster a] [monster name], but can't figure out how to tease such an unusual foe.\n\n");
-				enemyAI();
+				afterPlayerAction();
 				return;
 			}
 			if (monster.lustVuln == 0) {
 				outputText("You casualy caress your opponent with a free hand as you use one of your tentacle to expertly molest its bottom half, but it has no effect!  Your foe clearly does not experience lust in the same way as you.\n\n");
-				enemyAI();
+				afterPlayerAction();
 				return;
 			}
 			combat.wrathRegeneration();
@@ -328,18 +321,14 @@ package classes.Scenes.Combat {
 				outputText("\n[monster A][monster name] seems unimpressed.");
 			}
 			outputText("\n\n");
-			if (monster.lust >= monster.maxLust()) {
-				doNext(endLustVictory);
-				return;
-			}
-			enemyAI();
+			afterPlayerAction();
 		}
 		public function GooLeggoMyEggo():void {
 			clearOutput();
 			outputText("You release [monster a] [monster name] from your body and [monster he] drops to the ground, catching [monster his] breath before [monster he] stands back up, apparently prepared to fight some more.");
 			outputText("\n\n");
 			monster.removeStatusEffect(StatusEffects.GooEngulf);
-			enemyAI();
+			afterPlayerAction();
 		}
 
 //Vampiric bite
@@ -356,7 +345,7 @@ package classes.Scenes.Combat {
 				outputText(" Your opponent makes use of your confusion to free itself.");
 				HPChange(-100,false);
 				monster.removeStatusEffect(StatusEffects.EmbraceVampire);
-				enemyAI();
+				afterPlayerAction();
 				return;
 			}
 			outputText("You bite [monster a] [monster name] drinking deep of [monster his] blood ");
@@ -384,14 +373,14 @@ package classes.Scenes.Combat {
 				return;
 			}
 			outputText("\n\n");
-			enemyAI();
+			afterPlayerAction();
 		}
 		public function VampireLeggoMyEggo():void {
 			clearOutput();
 			outputText("You let your opponent free ending your embrace.");
 			outputText("\n\n");
 			monster.removeStatusEffect(StatusEffects.EmbraceVampire);
-			enemyAI();
+			afterPlayerAction();
 		}
 
 //Claws Rend
@@ -407,7 +396,7 @@ package classes.Scenes.Combat {
 				return;
 			}
 			outputText("\n\n");
-			enemyAI();
+			afterPlayerAction();
 		}
 
 		public function PussyLeggoMyEggo():void {
@@ -415,7 +404,7 @@ package classes.Scenes.Combat {
 			outputText("You let your opponent free ending your embrace.");
 			outputText("\n\n");
 			monster.removeStatusEffect(StatusEffects.Pounce);
-			enemyAI();
+			afterPlayerAction();
 		}
 
 		public function greatDive():void {
@@ -451,7 +440,7 @@ package classes.Scenes.Combat {
 				player.removePerk(PerkLib.Resolute);
 			}
 			monster.removeStatusEffect(StatusEffects.MonsterAttacksDisabled);
-			enemyAI();
+			afterPlayerAction();
 		}
 
 		public function takeFlight():void {
@@ -463,7 +452,7 @@ package classes.Scenes.Combat {
 				player.createPerk(PerkLib.Resolute, 0, 0, 0, 0);
 			}
 			monster.createStatusEffect(StatusEffects.MonsterAttacksDisabled, 0, 0, 0, 0);
-			enemyAI();
+			afterPlayerAction();
 		}
 	}
 }
