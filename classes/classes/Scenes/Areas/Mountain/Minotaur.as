@@ -64,7 +64,7 @@ import classes.internals.*;
 				return null;
 			}
 			if (!(player.tallness < 78 && player.str < 90)) {
-				CoC.instance.plotFight = true;
+				SceneLib.combat.plotFight = true;
 				return weapons.L__AXE;
 			}
 			outputText("\nYou find a large axe on the minotaur, but it is too big for a person of your stature to comfortably carry.  ");

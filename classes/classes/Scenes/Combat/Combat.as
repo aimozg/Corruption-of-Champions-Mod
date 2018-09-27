@@ -64,6 +64,9 @@ public class Combat extends BaseContent {
 	public static const PHYSICAL:int = 4;
 	private var _lastAttack:int = 0;
 
+	//FIXME this should be private. Only directly set by Minotaur and EventParser.
+	public var plotFight:Boolean = false;
+
 	public function get inCombat():Boolean {
         return CoC.instance.inCombat;
     }
@@ -2169,7 +2172,7 @@ public function dropItem(monster:Monster, nextFunc:Function = null):void {
 		return;
 	}
 	var itype:ItemType = monster.dropLoot();
-	if(!CoC.instance.plotFight){
+	if(!plotFight){
 		//Chance of armor if at level 1 pierce fetish
 		if(!(monster is Ember) && !(monster is Kiha) && !(monster is Hel) && !(monster is Isabella)
 			&& flags[kFLAGS.PC_FETISH] == 1 && rand(10) == 0 && !player.hasItem(armors.SEDUCTA, 1) && !SceneLib.ceraphFollowerScene.ceraphIsFollower()) {
@@ -2965,7 +2968,7 @@ public function nonPercentBasedRegeneration():Number {
 internal var combatRound:int = 0;
 public function startCombatImpl(monster_:Monster, plotFight_:Boolean = false, immediate:Boolean = false):void {
 	combatRound = 0;
-	CoC.instance.plotFight = plotFight_;
+	plotFight = plotFight_;
 	mainView.hideMenuButton( MainView.MENU_DATA );
 	mainView.hideMenuButton( MainView.MENU_APPEARANCE );
 	mainView.hideMenuButton( MainView.MENU_LEVEL );

@@ -37,7 +37,7 @@ public class EventParser {
             return;
         }
         //Clear restriction on item overlaps if not in combat
-        CoC.instance.plotFight = false;
+        SceneLib.combat.plotFight = false;
         if (DungeonAbstractContent.inDungeon) {
             //dungeonMenu();
             SceneLib.dungeons.checkRoom();

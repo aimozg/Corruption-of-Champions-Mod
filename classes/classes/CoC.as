@@ -73,7 +73,6 @@ public class CoC extends MovieClip
     public var levelCap:Number = 150;
 
     //Used to restrict random drops from overlapping uniques
-    public var plotFight:Boolean = false;
     public var timeQ:Number = 0;
     //FIXME @OXDECEPTION Move above vars to more appropriate classes if possible
 
