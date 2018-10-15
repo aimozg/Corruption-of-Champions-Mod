@@ -49,7 +49,7 @@ font = element font {
 }
 xcc-named-content = Text | String | lib | scene | macro | extend-story
 xcc-content = xcc-named-content
-    | display | dynStats | output | Include
+    | display | command | output | Include
     | set
 namedBlock = attribute name { text }?, content*
 Text = element text { namedBlock }
@@ -74,17 +74,8 @@ display = element display {
     attribute ref { text },
     empty
 }
-dynStats = element dynStats {
-    attribute str { expression }?,
-    attribute tou { expression }?,
-    attribute spe { expression }?,
-    attribute int { expression }?,
-    attribute lib { expression }?,
-    attribute sen { expression }?,
-    attribute lus { expression }?,
-    attribute cor { expression }?,
-    attribute scale { expression }?,
-    empty
+command = element command {
+    text
 }
 output = element output { expression }
 Include = element include {

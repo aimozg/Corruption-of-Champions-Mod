@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extend-story name="/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../story.xsd">
+	<include path="forest/erlking.xml"/>
 	<extend-story name="forest">
 		<lib name = "strings">
 			<text name="trip">
@@ -20,7 +21,8 @@
             <text name="walk">
                 <if test="player.cor lt 80">
                     You enjoy a peaceful walk in the woods, it gives you time to think.
-                    <dynStats tou="0.5" int="1"/>
+                    <command>BuffOrRecover('tou',5,'forest/walk','Forest walk',36,2)</command>
+                    <command>BuffOrRecover('int',10,'forest/walk','Forest walk',36,2)</command>
                     <else>
                         As you wander in the forest, you keep
                         <switch value="player.gender">
@@ -29,7 +31,9 @@
                             <case value="2">idly toying with your [vagina] as you daydream about getting fucked by all kinds of monstrous cocks, from minotaurs' thick, smelly dongs to demons' towering, bumpy pleasure-rods.</case>
                             <case value="3">stroking alternatively your [cocks] and your [vagina] as you daydream about fucking all kinds of women, from weeping tight virgins to lustful succubi with gaping, drooling fuck-holes, before, or while, getting fucked by various monstrous cocks, from minotaurs' thick, smelly dongs to demons' towering, bumpy pleasure-rods.</case>
                         </switch>
-                        <dynStats tou="0.5" lib="0.25" lus="player.lib/5"/>
+						<command>BuffOrRecover('tou',5,'forest/walk','Forest walk',36,2)</command>
+						<command>BuffOrRecover('lib',5,'forest/walk','Forest walk',36,2)</command>
+						<command>ModRawStat('lust',15,false)</command>
                     </else>
                 </if>
             </text>

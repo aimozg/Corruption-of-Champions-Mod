@@ -166,7 +166,7 @@
 			<text name="addCorruption">
 				Just as you're about to go, however, you catch a glimpse of <output>$name</output>’s horse dong as it resumes acting up, just as you wanted. 
 				You’ll need to keep her constantly aroused to educate her properly and set her on the path to depravity if she's to become a proper daughter of yours.
-				<dynStats cor="-1"/>
+				<command>ModRawStat('cor',-1,false)</command>
 			</text>
 			<text name="pureCorruption">
 				<output>$name</output> suddenly starts moaning as she holds her horns with both hands.

@@ -8,7 +8,8 @@
         <lib name="strings">
             <text name="walk">
                 You enjoy a peaceful walk in the deepwoods.  It gives you time to think over the recent, disturbing events.
-                <dynStats tou="0.5" int="1"/>
+                <command>BuffOrRecover('tou',5,'deepwoods/walk','Deepwoods walk',36,2)</command>
+                <command>BuffOrRecover('int',10,'deepwoods/walk','Deepwoods walk',36,2)</command>
             </text>
         </lib>
     </extend-story>

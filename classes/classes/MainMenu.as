@@ -181,13 +181,13 @@ package classes {
 			websiteInfo.htmlText = "<a href=\"http://www.fenoxo.com/\">www.fenoxo.com</a>";
 			var progress:TextField = new TextField();
 			progress.name = "progress";
-			progress.height = websiteInfo.height;
-			progress.width = disclaimerBackground.width;
+			progress.height = 50;
+			progress.width = MainView.SCREEN_W - 20;
 			progress.wordWrap = true;
-			progress.x = disclaimerBackground.x;
+			progress.x = 10;
 			progress.y = websiteInfo.y + websiteInfo.height + 2;
 			progress.selectable = false;
-			progress.defaultTextFormat = websiteInfo.defaultTextFormat;
+			progress.defaultTextFormat = new TextFormat("Palatino Linotype, serif", 16, mainViewManager.isDarkText() ? 0xc0c0c0 : 0, false, null, null, null, null, "center");
 			progress.htmlText = _progressText;
 			mainMenuContent.addElement(background);
 			for (var i:int = 0; i < mainMenuButtons.length; i++) {

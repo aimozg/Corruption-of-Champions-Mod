@@ -168,12 +168,12 @@ public class StoryCompiler extends Compiler {
 //				return compileForward(x);
 			case "display":
 				return compileDisplay(x);
-			case "dynStats":
-				return compileDynStats(x);
 			case "include":
 				return includeFile(x.@path, x.@required != "false");
 			case "output":
 				return compileOutput(x);
+			case "command":
+				return compileCommand(x);
 			case "lib":
 			case "macro":
 			case "scene":
@@ -284,15 +284,12 @@ public class StoryCompiler extends Compiler {
 	protected function compileDisplay(x:XML):DisplayStmt {
 		return new DisplayStmt(stack[0],x.@ref);
 	}
-
-	protected function compileDynStats(x:XML):DynStatsStmt {
-		var attrs:Object = attrMap(x);
-		var d:DynStatsStmt = new DynStatsStmt();
-		for (var attr:String in attrs) d.setAttr(attr,attrs[attr]);
-		return d;
-	}
+	
 	protected function compileOutput(x:XML):OutputStmt {
 		return new OutputStmt(x.text().toString());
+	}
+	protected function compileCommand(x:XML):CommandStmt {
+		return new CommandStmt(x.text().toString());
 	}
 	protected function compileSet(x:XML):SetStmt {
 		var attrs:* = attrMap(x);

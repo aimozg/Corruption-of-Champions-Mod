@@ -42,6 +42,9 @@ public class CoCLoader {
 
 	[Embed(source="../../../content/coc/forest.xml", mimeType="application/octet-stream")]
 	public static var BUNDLE_CONTENT_COC_FOREST_XML:Class;
+
+	[Embed(source="../../../content/coc/forest/erlking.xml", mimeType="application/octet-stream")]
+	public static var BUNDLE_CONTENT_COC_FOREST_ERLKING_XML:Class;
 	
 	[Embed(source="../../../content/coc/monsters/goblin.xml", mimeType="application/octet-stream")]
 	public static var BUNDLE_CONTENT_COC_MONSTERS_GOBLIN_XML:Class;

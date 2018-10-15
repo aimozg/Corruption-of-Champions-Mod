@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xs:import namespace="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="xsi.xsd"/>
     <!-- default namespace = "xxc-story" -->
     <!-- core xlogic -->
     <xs:group name="content">
@@ -93,7 +94,15 @@
             <xs:attribute name="name" use="required"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="story" substitutionGroup="xcc-named-content" type="namedBlock"/>
+    <xs:element name="scene" substitutionGroup="xcc-named-content">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="namedBlock">
+                    <xs:attribute ref="xsi:noNamespaceSchemaLocation"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="macro" substitutionGroup="xcc-named-content" type="namedBlock"/>
     <xs:element name="set" substitutionGroup="xcc-content">
         <xs:complexType mixed="true">
@@ -113,54 +122,12 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="extend-story" substitutionGroup="xcc-named-content" type="namedBlock"/>
-    <xs:element name="zone" substitutionGroup="xcc-named-content">
-        <xs:complexType mixed="true">
-            <xs:complexContent>
-                <xs:extension base="namedBlock">
-                    <xs:sequence>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" ref="encounter"/>
-                    </xs:sequence>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="extend-zone" substitutionGroup="xcc-named-content">
-        <xs:complexType mixed="true">
-            <xs:complexContent>
-                <xs:extension base="namedBlock">
-                    <xs:sequence>
-                        <xs:element minOccurs="0" maxOccurs="unbounded" ref="encounter"/>
-                    </xs:sequence>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="encounter">
-        <xs:complexType mixed="true">
-            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
-            <xs:attribute name="name" use="required"/>
-            <xs:attribute name="chance"/>
-            <xs:attribute name="when"/>
-        </xs:complexType>
-    </xs:element>
     <xs:element name="display" substitutionGroup="xcc-content">
         <xs:complexType>
             <xs:attribute name="ref" use="required"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="dynStats" substitutionGroup="xcc-content">
-        <xs:complexType>
-            <xs:attribute name="str"/>
-            <xs:attribute name="tou"/>
-            <xs:attribute name="spe"/>
-            <xs:attribute name="int"/>
-            <xs:attribute name="lib"/>
-            <xs:attribute name="sen"/>
-            <xs:attribute name="lus"/>
-            <xs:attribute name="cor"/>
-            <xs:attribute name="scale"/>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="command" substitutionGroup="xcc-content" type="xs:string"/>
     <xs:element name="output" substitutionGroup="xcc-content" type="xs:string"/>
     <xs:element name="include" substitutionGroup="xcc-content">
         <xs:complexType>

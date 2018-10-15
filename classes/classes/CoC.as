@@ -418,10 +418,10 @@ public class CoC extends MovieClip
 			failedMods = mods.slice();
 		}
 		var failedIncludes:/*IncludeStmt*/Array = compiler.failedIncludes();
-		var s:String = "Loaded " + compiler.includesTotal() + " content files";
+		var s:String = "Loaded " + compiler.includesTotal() + " files";
         if (mods.length>0) s += ", "+mods.length+" mods";
-		if (failedIncludes.length>0) s += "; failed to load files: "+Utils.mapOneProp(failedIncludes,"path").join(", ");
-        if (failedMods.length>0) s += "; failed to load mods: "+Utils.mapOneProp(failedMods,"name").join(", ");
+        if (failedIncludes.length + failedMods.length > 0) s += "; failed: ";
+		s += (Utils.mapOneProp(failedIncludes,"path").concat(Utils.mapOneProp(failedMods,"name"))).join(", ");
         mainMenu.progressText = s;
 		//mainMenu.mainMenu();
 	}

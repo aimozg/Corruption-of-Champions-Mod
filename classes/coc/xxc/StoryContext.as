@@ -3,8 +3,11 @@
  */
 package coc.xxc {
 import classes.Appearance;
+import classes.BodyParts.Horns;
 import classes.BodyParts.Skin;
+import classes.BodyParts.Tail;
 import classes.CockTypesEnum;
+import classes.Creature;
 import classes.EngineCore;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
@@ -50,7 +53,8 @@ public class StoryContext extends ExecContext{
 				SceneLib:SceneLib,
 				Skin:Skin,
 				silly:EngineCore.silly
-			}
+			},
+				new StdFunctions()
 		]);
 		this.game = game;
 	}
