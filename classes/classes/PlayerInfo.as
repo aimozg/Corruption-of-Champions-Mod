@@ -3,14 +3,12 @@ package classes {
 import classes.BodyParts.Face;
 import classes.BodyParts.Tail;
 import classes.GlobalFlags.*;
-import classes.Scenes.NPCs.IsabellaScene;
 import classes.Scenes.SceneLib;
 import classes.Stats.Buff;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
 import classes.Stats.RawStat;
-import classes.Stats.StatUtils;
 import classes.StatusEffects.VampireThirstEffect;
 import classes.internals.Utils;
 
@@ -25,6 +23,33 @@ import flash.events.TextEvent;
 public class PlayerInfo extends BaseContent {
 	public function PlayerInfo() {}
 
+	private var _tempStats:Object = {
+		"str": 0,
+		"tou": 0,
+		"spe": 0,
+		"int": 0,
+		"wis": 0,
+		"lib": 0
+	};
+
+	private function get strCore():RawStat {return player.strStat.core;}
+	private function get touCore():RawStat {return player.touStat.core;}
+	private function get speCore():RawStat {return player.speStat.core;}
+	private function get intCore():RawStat {return player.intStat.core;}
+	private function get wisCore():RawStat {return player.wisStat.core;}
+	private function get libCore():RawStat {return player.libStat.core;}
+
+	private function getStatCore(statName:String):RawStat {
+		switch (statName) {
+			case "str": return strCore;
+			case "tou": return touCore;
+			case "spe": return speCore;
+			case "int": return intCore;
+			case "wis": return wisCore;
+			case "lib": return libCore;
+		}
+		return null;
+	}
 	//------------
 	// STATS
 	//------------
@@ -55,10 +80,11 @@ public class PlayerInfo extends BaseContent {
 		combatStats += "<b>Black Heals Cost:</b> " + combat.healCostBlack(100) + "%\n";
 
 		if (player.statusEffectv1(StatusEffects.Kelt) > 0) {
-			if (player.statusEffectv1(StatusEffects.Kindra) < 1)
-				combatStats += "<b>Bow Skill:</b> " + Math.round(player.statusEffectv1(StatusEffects.Kelt)) + " / 100\n";
-			if (player.statusEffectv1(StatusEffects.Kindra) > 0)
+			if (player.statusEffectv1(StatusEffects.Kindra) >= 1) {
 				combatStats += "<b>Bow Skill:</b> " + (Math.round(player.statusEffectv1(StatusEffects.Kelt)) + Math.round(player.statusEffectv1(StatusEffects.Kindra))) + " / 250\n";
+			} else {
+				combatStats += "<b>Bow Skill:</b> " + Math.round(player.statusEffectv1(StatusEffects.Kelt)) + " / 100\n";
+			}
 		}
 		combatStats += "<b>Arrow/Bolt Cost:</b> " + combat.bowCost(100) + "%\n";
 		combatStats += "<b>Accuracy (1st range attack):</b> " + (combat.arrowsAccuracy() / 2) + "%\n";
@@ -131,19 +157,7 @@ public class PlayerInfo extends BaseContent {
         if (flags[kFLAGS.EMBER_EGGS] > 0)
 			childStats += "<b>Ember Eggs Produced:</b> " + flags[kFLAGS.EMBER_EGGS] + "\n";
 
-        if (SceneLib.isabellaScene.totalIsabellaChildren() > 0) {
-            if (SceneLib.isabellaScene.getIsabellaChildType(IsabellaScene.OFFSPRING_HUMAN_BOYS) > 0)
-                childStats += "<b>Children With Isabella (Human, Males):</b> " + SceneLib.isabellaScene.getIsabellaChildType(IsabellaScene.OFFSPRING_HUMAN_BOYS) + "\n";
-            if (SceneLib.isabellaScene.getIsabellaChildType(IsabellaScene.OFFSPRING_HUMAN_GIRLS) > 0)
-                childStats += "<b>Children With Isabella (Human, Females):</b> " + SceneLib.isabellaScene.getIsabellaChildType(IsabellaScene.OFFSPRING_HUMAN_GIRLS) + "\n";
-            if (SceneLib.isabellaScene.getIsabellaChildType(IsabellaScene.OFFSPRING_HUMAN_HERMS) > 0)
-                childStats += "<b>Children With Isabella (Human, Herms):</b> " + SceneLib.isabellaScene.getIsabellaChildType(IsabellaScene.OFFSPRING_HUMAN_HERMS) + "\n";
-            if (SceneLib.isabellaScene.getIsabellaChildType(IsabellaScene.OFFSPRING_COWGIRLS) > 0)
-                childStats += "<b>Children With Isabella (Cowgirl, Females):</b> " + SceneLib.isabellaScene.getIsabellaChildType(IsabellaScene.OFFSPRING_COWGIRLS) + "\n";
-            if (SceneLib.isabellaScene.getIsabellaChildType(IsabellaScene.OFFSPRING_COWFUTAS) > 0)
-                childStats += "<b>Children With Isabella (Cowgirl, Herms):</b> " + SceneLib.isabellaScene.getIsabellaChildType(IsabellaScene.OFFSPRING_COWFUTAS) + "\n";
-            childStats += "<b>Total Children With Isabella:</b> " + SceneLib.isabellaScene.totalIsabellaChildren() + "\n"
-        }
+		childStats += SceneLib.isabellaScene.childrenInfo();
 
 		if (flags[kFLAGS.IZMA_CHILDREN_SHARKGIRLS] > 0)
 			childStats += "<b>Children With Izma (Sharkgirls):</b> " + flags[kFLAGS.IZMA_CHILDREN_SHARKGIRLS] + "\n";
@@ -227,14 +241,16 @@ public class PlayerInfo extends BaseContent {
 
 		if (flags[kFLAGS.HUNGER_ENABLED] > 0) {
 			bodyStats += "<b>Satiety:</b> " + Math.floor(player.hunger) + " / " + player.maxHunger() + " (";
-			if (player.hunger <= 0) bodyStats += "<font color=\"#ff0000\">Dying</font>";
-			if (player.hunger > 0 && player.hunger < 10) bodyStats += "<font color=\"#C00000\">Starving</font>";
-			if (player.hunger >= 10 && player.hunger < 25) bodyStats += "<font color=\"#800000\">Very hungry</font>";
-			if (player.hunger >= 25 && player.hunger < 50) bodyStats += "Hungry";
-			if (player.hunger >= 50 && player.hunger < 75) bodyStats += "Not hungry";
-			if (player.hunger >= 75 && player.hunger < 90) bodyStats += "<font color=\"#008000\">Satiated</font>";
-			if (player.hunger >= 90 && player.hunger < 100) bodyStats += "<font color=\"#00C000\">Full</font>";
+
 			if (player.hunger >= 100) bodyStats += "<font color=\"#0000ff\">Very full</font>";
+			else if (player.hunger >= 90) bodyStats += "<font color=\"#00C000\">Full</font>";
+			else if (player.hunger >= 75) bodyStats += "<font color=\"#008000\">Satiated</font>";
+			else if (player.hunger >= 50) bodyStats += "Not hungry";
+			else if (player.hunger >= 25) bodyStats += "Hungry";
+			else if (player.hunger >= 10) bodyStats += "<font color=\"#800000\">Very hungry</font>";
+			else if (player.hunger >= 1) bodyStats += "<font color=\"#C00000\">Starving</font>";
+			else  bodyStats += "<font color=\"#ff0000\">Dying</font>";
+
 			bodyStats += ")\n";
 		}
 		bodyStats += "<b>Times Transformed:</b> " + flags[kFLAGS.TIMES_TRANSFORMED] + "\n";
@@ -456,14 +472,7 @@ public class PlayerInfo extends BaseContent {
 
 		if (flags[kFLAGS.ETNA_AFFECTION] > 0) {
 			interpersonStats += "<b>Etna Affection:</b> " + Math.round(flags[kFLAGS.ETNA_AFFECTION]) + "%\n";
-			if (flags[kFLAGS.ETNA_LVL_UP] == 7) interpersonStats += "<b>Etna lvl:</b> 72\n";
-			if (flags[kFLAGS.ETNA_LVL_UP] == 6) interpersonStats += "<b>Etna lvl:</b> 66\n";
-			if (flags[kFLAGS.ETNA_LVL_UP] == 5) interpersonStats += "<b>Etna lvl:</b> 60\n";
-			if (flags[kFLAGS.ETNA_LVL_UP] == 4) interpersonStats += "<b>Etna lvl:</b> 54\n";
-			if (flags[kFLAGS.ETNA_LVL_UP] == 3) interpersonStats += "<b>Etna lvl:</b> 48\n";
-			if (flags[kFLAGS.ETNA_LVL_UP] == 2) interpersonStats += "<b>Etna lvl:</b> 42\n";
-			if (flags[kFLAGS.ETNA_LVL_UP] == 1) interpersonStats += "<b>Etna lvl:</b> 36\n";
-			if (flags[kFLAGS.ETNA_LVL_UP] < 1) interpersonStats += "<b>Etna lvl:</b> 30\n";
+			interpersonStats += "[b: Etna lvl: ]" + (30 + (6 * flags[kFLAGS.ETNA_LVL_UP]));
 		}
 
 		if (flags[kFLAGS.ELECTRA_AFFECTION] > 0)
@@ -471,35 +480,25 @@ public class PlayerInfo extends BaseContent {
 
 		if (SceneLib.emberScene.emberAffection() > 0) {
             interpersonStats += "<b>Ember Affection:</b> " + Math.round(SceneLib.emberScene.emberAffection()) + "%\n";
-            if (flags[kFLAGS.EMBER_LVL_UP] == 7) interpersonStats += "<b>Ember lvl:</b> 62\n";
-			if (flags[kFLAGS.EMBER_LVL_UP] == 6) interpersonStats += "<b>Ember lvl:</b> 56\n";
-			if (flags[kFLAGS.EMBER_LVL_UP] == 5) interpersonStats += "<b>Ember lvl:</b> 50\n";
-			if (flags[kFLAGS.EMBER_LVL_UP] == 4) interpersonStats += "<b>Ember lvl:</b> 44\n";
-			if (flags[kFLAGS.EMBER_LVL_UP] == 3) interpersonStats += "<b>Ember lvl:</b> 38\n";
-			if (flags[kFLAGS.EMBER_LVL_UP] == 2) interpersonStats += "<b>Ember lvl:</b> 32\n";
-			if (flags[kFLAGS.EMBER_LVL_UP] == 1) interpersonStats += "<b>Ember lvl:</b> 26\n";
-			if (flags[kFLAGS.EMBER_LVL_UP] < 1) interpersonStats += "<b>Ember lvl:</b> 20\n";
+			interpersonStats += "[b: Ember lvl: ]" + (20 + (6 * flags[kFLAGS.EMBER_LVL_UP]));
 		}
 
-		if (SceneLib.helFollower.helAffection() > 0)
-            interpersonStats += "<b>Helia Affection:</b> " + Math.round(SceneLib.helFollower.helAffection()) + "%\n";
-        if (SceneLib.helFollower.helAffection() >= 100)
-            interpersonStats += "<b>Helia Bonus Points:</b> " + Math.round(flags[kFLAGS.HEL_BONUS_POINTS]) + "\n";
+		if (SceneLib.helFollower.helAffection() > 0) {
+			interpersonStats += "<b>Helia Affection:</b> " + Math.round(SceneLib.helFollower.helAffection()) + "%\n";
+			if (SceneLib.helFollower.helAffection() >= 100) {
+				interpersonStats += "<b>Helia Bonus Points:</b> " + Math.round(flags[kFLAGS.HEL_BONUS_POINTS]) + "\n";
+			}
+		}
 
 		if (flags[kFLAGS.ISABELLA_AFFECTION] > 0) {
 			interpersonStats += "<b>Isabella Affection:</b> ";
-            if (!SceneLib.isabellaFollowerScene.isabellaFollower())
-                interpersonStats += Math.round(flags[kFLAGS.ISABELLA_AFFECTION]) + "%\n";
-			else
+			if (!SceneLib.isabellaFollowerScene.isabellaFollower()) {
+				interpersonStats += Math.round(flags[kFLAGS.ISABELLA_AFFECTION]) + "%\n";
+			} else {
 				interpersonStats += "100%\n";
-			if (flags[kFLAGS.ISABELLA_LVL_UP] == 7) interpersonStats += "<b>Isabella lvl:</b> 62\n";
-			if (flags[kFLAGS.ISABELLA_LVL_UP] == 6) interpersonStats += "<b>Isabella lvl:</b> 56\n";
-			if (flags[kFLAGS.ISABELLA_LVL_UP] == 5) interpersonStats += "<b>Isabella lvl:</b> 50\n";
-			if (flags[kFLAGS.ISABELLA_LVL_UP] == 4) interpersonStats += "<b>Isabella lvl:</b> 44\n";
-			if (flags[kFLAGS.ISABELLA_LVL_UP] == 3) interpersonStats += "<b>Isabella lvl:</b> 38\n";
-			if (flags[kFLAGS.ISABELLA_LVL_UP] == 2) interpersonStats += "<b>Isabella lvl:</b> 32\n";
-			if (flags[kFLAGS.ISABELLA_LVL_UP] == 1) interpersonStats += "<b>Isabella lvl:</b> 26\n";
-			if (flags[kFLAGS.ISABELLA_LVL_UP] < 1) interpersonStats += "<b>Isabella lvl:</b> 20\n";
+			}
+
+			interpersonStats += "[b: Isabella lvl: ]" + (20 + (6 * flags[kFLAGS.ISABELLA_LVL_UP])) + "\n";
 		}
 
 		if (flags[kFLAGS.JOJO_BIMBO_STATE] >= 3) {
@@ -520,21 +519,16 @@ public class PlayerInfo extends BaseContent {
 
 		}
 
-		if (flags[kFLAGS.ANEMONE_KID] > 0)
-            interpersonStats += "<b>Kid A's Confidence:</b> " + SceneLib.anemoneScene.kidAXP() + "%\n";
+		if (flags[kFLAGS.ANEMONE_KID] > 0){
+			interpersonStats += "<b>Kid A's Confidence:</b> " + SceneLib.anemoneScene.kidAXP() + "%\n";
+		}
         if (flags[kFLAGS.KIHA_AFFECTION_LEVEL] == 2) {
-            if (SceneLib.kihaFollower.followerKiha())
+            if (SceneLib.kihaFollower.followerKiha()){
                 interpersonStats += "<b>Kiha Affection:</b> " + 100 + "%\n";
-			else
+            } else{
 				interpersonStats += "<b>Kiha Affection:</b> " + Math.round(flags[kFLAGS.KIHA_AFFECTION]) + "%\n";
-			if (flags[kFLAGS.KIHA_LVL_UP] == 7) interpersonStats += "<b>Kiha lvl:</b> 63\n";
-			if (flags[kFLAGS.KIHA_LVL_UP] == 6) interpersonStats += "<b>Kiha lvl:</b> 57\n";
-			if (flags[kFLAGS.KIHA_LVL_UP] == 5) interpersonStats += "<b>Kiha lvl:</b> 51\n";
-			if (flags[kFLAGS.KIHA_LVL_UP] == 4) interpersonStats += "<b>Kiha lvl:</b> 45\n";
-			if (flags[kFLAGS.KIHA_LVL_UP] == 3) interpersonStats += "<b>Kiha lvl:</b> 39\n";
-			if (flags[kFLAGS.KIHA_LVL_UP] == 2) interpersonStats += "<b>Kiha lvl:</b> 33\n";
-			if (flags[kFLAGS.KIHA_LVL_UP] == 1) interpersonStats += "<b>Kiha lvl:</b> 27\n";
-			if (flags[kFLAGS.KIHA_LVL_UP] < 1) interpersonStats += "<b>Kiha lvl:</b> 21\n";
+            }
+	        interpersonStats += "[b: Kiha lvl: ]" + (21 + (6 * flags[kFLAGS.KIHA_LVL_UP])) + "\n";
 		}
 
 		if (flags[kFLAGS.KINDRA_FOLLOWER] > 0)
@@ -577,7 +571,7 @@ public class PlayerInfo extends BaseContent {
 			interpersonStats += "\n";
 		}
 
-if (SceneLib.valeria.valeriaFluidsEnabled()) {
+		if (SceneLib.valeria.valeriaFluidsEnabled()) {
             interpersonStats += "<b>Valeria's Fluid:</b> " + flags[kFLAGS.VALERIA_FLUIDS] + "%\n"
 		}
 
@@ -775,30 +769,32 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 			return s;
 		}
 
-		outputText("Strength: "+statLine(player.strStat,player.tempStr)+"\n");
-		outputText("Toughness: "+statLine(player.touStat,player.tempTou)+"\n");
-		outputText("Speed: "+statLine(player.speStat,player.tempSpe)+"\n");
-		outputText("Intelligence: "+statLine(player.intStat,player.tempInt)+"\n");
-		outputText("Wisdom: "+statLine(player.wisStat,player.tempWis)+"\n");
-		outputText("Libido: "+statLine(player.libStat,player.tempLib)+"\n");
+		outputText("Strength: "+statLine(player.strStat,_tempStats["str"])+"\n");
+		outputText("Toughness: "+statLine(player.touStat,_tempStats["tou"])+"\n");
+		outputText("Speed: "+statLine(player.speStat,_tempStats["spe"])+"\n");
+		outputText("Intelligence: "+statLine(player.intStat,_tempStats["int"])+"\n");
+		outputText("Wisdom: "+statLine(player.wisStat,_tempStats["wis"])+"\n");
+		outputText("Libido: "+statLine(player.libStat,_tempStats["lib"])+"\n");
 
 		menu();
+		var hint:String = "Add 1 point (5 points with Shift) to ";
 		//Add
 		if (player.statPoints > 0) {
-			if ((player.strStat.core.value + player.tempStr) < player.strStat.core.max) addButton(0, "Add STR", addAttribute, "str", null, null, "Add 1 point (5 points with Shift) to Strength.", "Add Strength");
-			if ((player.touStat.core.value + player.tempTou) < player.touStat.core.max) addButton(1, "Add TOU", addAttribute, "tou", null, null, "Add 1 point (5 points with Shift) to Toughness.", "Add Toughness");
-			if ((player.speStat.core.value + player.tempSpe) < player.speStat.core.max) addButton(2, "Add SPE", addAttribute, "spe", null, null, "Add 1 point (5 points with Shift) to Speed.", "Add Speed");
-			if ((player.intStat.core.value + player.tempInt) < player.intStat.core.max) addButton(3, "Add INT", addAttribute, "int", null, null, "Add 1 point (5 points with Shift) to Intelligence.", "Add Intelligence");
-			if ((player.wisStat.core.value + player.tempWis) < player.wisStat.core.max) addButton(4, "Add WIS", addAttribute, "wis", null, null, "Add 1 point (5 points with Shift) to Wisdom.", "Add Wisdom");
-			if ((player.libStat.core.value + player.tempLib) < player.libStat.core.max) addButton(10, "Add LIB", addAttribute, "lib", null, null, "Add 1 point (5 points with Shift) to Libido.", "Add Libido");
+			if ((strCore.value + _tempStats["str"]) < strCore.max) addButton(0, "Add STR", addAttribute, "str").hint(hint + " Strength.", "Add Strength");
+			if ((touCore.value + _tempStats["tou"]) < touCore.max) addButton(1, "Add TOU", addAttribute, "tou").hint(hint + " Toughness.", "Add Toughness");
+			if ((speCore.value + _tempStats["spe"]) < speCore.max) addButton(2, "Add SPE", addAttribute, "spe").hint(hint + " Speed.", "Add Speed");
+			if ((intCore.value + _tempStats["int"]) < intCore.max) addButton(3, "Add INT", addAttribute, "int").hint(hint + " Intelligence.", "Add Intelligence");
+			if ((wisCore.value + _tempStats["wis"]) < wisCore.max) addButton(4, "Add WIS", addAttribute, "wis").hint(hint + " Wisdom.", "Add Wisdom");
+			if ((libCore.value + _tempStats["lib"]) < libCore.max) addButton(10, "Add LIB", addAttribute, "lib").hint(hint + " Libido.", "Add Libido");
 		}
+		hint = "Subtract 1 point (5 points with Shift) from ";
 		//Subtract
-		if (player.tempStr > 0) addButton(5, "Sub STR", subtractAttribute, "str", null, null, "Subtract 1 point (5 points with Shift) from Strength.", "Subtract Strength");
-		if (player.tempTou > 0) addButton(6, "Sub TOU", subtractAttribute, "tou", null, null, "Subtract 1 point (5 points with Shift) from Toughness.", "Subtract Toughness");
-		if (player.tempSpe > 0) addButton(7, "Sub SPE", subtractAttribute, "spe", null, null, "Subtract 1 point (5 points with Shift) from Speed.", "Subtract Speed");
-		if (player.tempInt > 0) addButton(8, "Sub INT", subtractAttribute, "int", null, null, "Subtract 1 point (5 points with Shift) from Intelligence.", "Subtract Intelligence");
-		if (player.tempWis > 0) addButton(9, "Sub WIS", subtractAttribute, "wis", null, null, "Subtract 1 point (5 points with Shift) from Wisdom.", "Subtract Wisdom");
-		if (player.tempLib > 0) addButton(11, "Sub LIB", subtractAttribute, "lib", null, null, "Subtract 1 point (5 points with Shift) from Libido.", "Subtract Libido");
+		if (_tempStats["str"] > 0) addButton(5, "Sub STR", subtractAttribute, "str").hint(hint + "Strength.", "Subtract Strength");
+		if (_tempStats["tou"] > 0) addButton(6, "Sub TOU", subtractAttribute, "tou").hint(hint + "Toughness.", "Subtract Toughness");
+		if (_tempStats["spe"] > 0) addButton(7, "Sub SPE", subtractAttribute, "spe").hint(hint + "Speed.", "Subtract Speed");
+		if (_tempStats["int"] > 0) addButton(8, "Sub INT", subtractAttribute, "int").hint(hint + "Intelligence.", "Subtract Intelligence");
+		if (_tempStats["wis"] > 0) addButton(9, "Sub WIS", subtractAttribute, "wis").hint(hint + "Wisdom.", "Subtract Wisdom");
+		if (_tempStats["lib"] > 0) addButton(11, "Sub LIB", subtractAttribute, "lib").hint(hint + "Libido.", "Subtract Libido");
 
 		addButton(13, "Reset", resetAttributes);
 		addButton(14, "Done", finishAttributes);
@@ -806,142 +802,71 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 
 	private function addAttribute(attribute:String):void {
 		var n:int=1;
-		var m:int;
 		if (flags[kFLAGS.SHIFT_KEY_DOWN]) n = 5;
-		if (n > player.statPoints) n = player.statPoints;
-		switch (attribute) {
-			case "str":
-				m = player.strStat.core.max - int(player.strStat.core.value + player.tempStr);
-				if (m < n) n = m;
-				player.tempStr+=n;
-				break;
-			case "tou":
-				m = player.touStat.core.max - int(player.touStat.core.value + player.tempTou);
-				if (m < n) n = m;
-				player.tempTou+=n;
-				break;
-			case "spe":
-				m = player.speStat.core.max - int(player.speStat.core.value + player.tempSpe);
-				if (m < n) n = m;
-				player.tempSpe+=n;
-				break;
-			case "int":
-				m = player.intStat.core.max - int(player.intStat.core.value + player.tempInt);
-				if (m < n) n = m;
-				player.tempInt+=n;
-				break;
-			case "wis":
-				m = player.wisStat.core.max - int(player.wisStat.core.value + player.tempWis);
-				if (m < n) n = m;
-				player.tempWis+=n;
-				break;
-			case "lib":
-				m = player.libStat.core.max - int(player.libStat.core.value + player.tempLib);
-				if (m < n) n = m;
-				player.tempLib+=n;
-				break;
-			default:
-				n=0; //Failsafe
-		}
-		player.statPoints-=n;
+
+		n = Math.min(n, player.statPoints);
+
+		var statCore:RawStat = getStatCore(attribute);
+		if(statCore == null) {return attributeMenu();}
+
+		n = Math.min(n, statCore.max - int(statCore.value + _tempStats[attribute]));
+		_tempStats[attribute] += n;
+		player.statPoints -= n;
 		attributeMenu();
 	}
 	private function subtractAttribute(attribute:String):void {
 		var n:int=1;
 		if (flags[kFLAGS.SHIFT_KEY_DOWN]) n = 5;
-		switch (attribute) {
-			case "str":
-				if (player.tempStr < n) n = player.tempStr;
-				player.tempStr-=n;
-				break;
-			case "tou":
-				if (player.tempTou < n) n = player.tempTou;
-				player.tempTou-=n;
-				break;
-			case "spe":
-				if (player.tempSpe < n) n = player.tempSpe;
-				player.tempSpe-=n;
-				break;
-			case "int":
-				if (player.tempInt < n) n = player.tempInt;
-				player.tempInt-=n;
-				break;
-			case "wis":
-				if (player.tempWis < n) n = player.tempWis;
-				player.tempWis-=n;
-				break;
-			case "lib":
-				if (player.tempLib < n) n = player.tempLib;
-				player.tempLib-=n;
-				break;
-			default:
-				n=0; //Failsafe
+
+		if(_tempStats[attribute] == undefined){
+			return attributeMenu();
+		} else {
+			n = Math.min(n, _tempStats[attribute]);
+			_tempStats[attribute] -= n;
 		}
 		player.statPoints+=n;
 		attributeMenu();
 	}
 	private function resetAttributes():void {
-		//Increment unspent attribute points.
-		player.statPoints += player.tempStr;
-		player.statPoints += player.tempTou;
-		player.statPoints += player.tempSpe;
-		player.statPoints += player.tempInt;
-		player.statPoints += player.tempWis;
-		player.statPoints += player.tempLib;
-		//Reset temporary attributes to 0.
-		player.tempStr = 0;
-		player.tempTou = 0;
-		player.tempSpe = 0;
-		player.tempInt = 0;
-		player.tempWis = 0;
-		player.tempLib = 0;
-		//DONE!
+		for (var key:String in _tempStats) {
+			player.statPoints += _tempStats[key];
+			_tempStats[key] = 0;
+		}
 		attributeMenu();
 	}
 	private function finishAttributes():void {
 		clearOutput();
-		if (player.tempStr > 0) {
-			if (player.tempStr >= 3) outputText("Your muscles feel significantly stronger from your time adventuring.\n");
-			else outputText("Your muscles feel slightly stronger from your time adventuring.\n");
+		var texts:Array = [
+			["str", "Your muscles feel slightly stronger from your time adventuring.","Your muscles feel significantly stronger from your time adventuring."],
+			["tou", "You feel slightly tougher from all the fights you have endured.","You feel tougher from all the fights you have endured."],
+			["spe", "Your time in combat has driven you to move slightly faster.","Your time in combat has driven you to move faster."],
+			["int", "Your time spent fighting the creatures of this realm has sharpened your wit slightly.","Your time spent fighting the creatures of this realm has sharpened your wit"],
+			["wis", "Your time spent fighting the creatures of this realm has improved your insight slightly.","Your time spent fighting the creatures of this realm has improved your insight."],
+			["lib", "Your time spent in this realm has made you slightly more lustful.","Your time spent in this realm has made you more lustful."]
+		];
+
+		for each (var changed:Array in texts){
+			var statName:String = changed[0];
+			if(_tempStats[statName] >= 3){
+				outputText(changed[2] + "\n");
+			}
+			else if (_tempStats[statName] > 0) {
+				outputText(changed[1] + "\n");
+			}
+			getStatCore(statName).value += _tempStats[statName];
+			_tempStats[statName] = 0;
 		}
-		if (player.tempTou > 0) {
-			if (player.tempTou >= 3) outputText("You feel tougher from all the fights you have endured.\n");
-			else outputText("You feel slightly tougher from all the fights you have endured.\n");
-		}
-		if (player.tempSpe > 0) {
-			if (player.tempSpe >= 3) outputText("Your time in combat has driven you to move faster.\n");
-			else outputText("Your time in combat has driven you to move slightly faster.\n");
-		}
-		if (player.tempInt > 0) {
-			if (player.tempInt >= 3) outputText("Your time spent fighting the creatures of this realm has sharpened your wit.\n");
-			else outputText("Your time spent fighting the creatures of this realm has sharpened your wit slightly.\n");
-		}
-		if (player.tempWis > 0) {
-			if (player.tempWis >= 3) outputText("Your time spent fighting the creatures of this realm has improved your insight.\n");
-			else outputText("Your time spent fighting the creatures of this realm has improved your insight slightly.\n");
-		}
-		if (player.tempLib > 0) {
-			if (player.tempLib >= 3) outputText("Your time spent in this realm has made you more lustful.\n");
-			else outputText("Your time spent in this realm has made you slightly more lustful.\n");
-		}
-		if (player.tempStr + player.tempTou + player.tempSpe + player.tempInt + player.tempWis + player.tempLib <= 0 || player.statPoints > 0) {
+
+		if (player.statPoints > 0) {
 			outputText("\nYou may allocate your remaining stat points later.");
 		}
-		player.strStat.core.value += player.tempStr;
-		player.touStat.core.value += player.tempTou;
-		player.speStat.core.value += player.tempSpe;
-		player.intStat.core.value += player.tempInt;
-		player.wisStat.core.value += player.tempWis;
-		player.libStat.core.value += player.tempLib;
-		player.tempStr = 0;
-		player.tempTou = 0;
-		player.tempSpe = 0;
-		player.tempInt = 0;
-		player.tempWis = 0;
-		player.tempLib = 0;
+
 		statScreenRefresh();
-		if (player.perkPoints > 0) doNext(perkBuyMenu);
-		else doNext(playerMenu);
+		if (player.perkPoints > 0){
+			doNext(perkBuyMenu);
+		} else {
+			doNext(playerMenu);
+		}
 	}
 
 	public function perkBuyMenu():void {
@@ -964,21 +889,21 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
             //CoC.instance.showComboBox(perkList, "Choose a perk", perkCbChangeHandler);
             if (player.perkPoints>1) outputText("You have "+numberOfThings(player.perkPoints,"perk point","perk points")+".\n\n");
 	        mainView.mainText.addEventListener(TextEvent.LINK, linkhandler);
-	        perkList = [];
+	        _perkList = [];
 	        for each(var perk:PerkType in perks) {
 		        var lab:* = {label: perk.name, perk: perk};
-		        perkList.push(lab);
-		        outputText("<u><a href=\"event:"+perkList.indexOf(lab)+"\">"+perk.name+"</a></u>\n");
+		        _perkList.push(lab);
+		        outputText("<u><a href=\"event:"+_perkList.indexOf(lab)+"\">"+perk.name+"</a></u>\n");
 	        }
 			mainView.hideMenuButton(MainView.MENU_NEW_MAIN);
 			menu();
 			addButton(1, "Skip", perkSkip);
 		}
 	}
-	private var perkList:Array = [];
+	private var _perkList:Array = [];
 	private function linkhandler(e:TextEvent):void{
 		trace(e.text);
-		perkCbChangeHandler(perkList[e.text]);
+		perkCbChangeHandler(_perkList[e.text]);
 	}
 	private function perkSelect(selected:PerkType):void {
 		mainView.mainText.removeEventListener(TextEvent.LINK, linkhandler);
@@ -1007,8 +932,8 @@ if (SceneLib.valeria.valeriaFluidsEnabled()) {
 		}
 		outputText("If you would like to select this perk, click <b>Okay</b>.  Otherwise, select a new perk, or press <b>Skip</b> to make a decision later.");
 		if (player.perkPoints>1) outputText("\n\nYou have "+numberOfThings(player.perkPoints,"perk point","perk points")+".\n\n");
-		for each(var p:* in perkList){
-			outputText("<u><a href=\"event:"+perkList.indexOf(p)+"\">"+p.perk.name+"</a></u>\n");
+		for each(var p:* in _perkList){
+			outputText("<u><a href=\"event:"+_perkList.indexOf(p)+"\">"+p.perk.name+"</a></u>\n");
 		}
 		menu();
 		addButton(0, "Okay", perkSelect, selected);

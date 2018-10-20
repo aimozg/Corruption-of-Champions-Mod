@@ -101,6 +101,23 @@ public class IsabellaScene extends NPCAwareContent implements TimeAwareInterface
 			}
 			return count;
 		}
+
+	public function childrenInfo():String {
+		var toReturn:String = "";
+		if(totalIsabellaChildren() <= 0) {return "";}
+		var strings:Array = [
+			[OFFSPRING_HUMAN_BOYS, "[b: Children With Isabella (Human, Males): ]"],
+			[OFFSPRING_HUMAN_GIRLS, "[b: Children With Isabella (Human, Females): ]"],
+			[OFFSPRING_HUMAN_HERMS, "[b: Children With Isabella (Human, Herms): ]"],
+			[OFFSPRING_COWGIRLS, "[b: Children With Isabella (Cowgirl, Females): ]"],
+			[OFFSPRING_COWFUTAS, "[b: Children With Isabella (Cowgirl, Herms): ]"]
+		];
+		for each (var arr:Array in strings) {
+			var children:int = getIsabellaChildType(arr[0]);
+			if(children > 0){toReturn += arr[1] + children + "\n"}
+		}
+		return toReturn + "[b: Total Children With Isabella: ]" +totalIsabellaChildren() + "\n"
+	}
 		
 public function isabellaGreeting():void {
 	spriteSelect(31);

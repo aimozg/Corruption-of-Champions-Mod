@@ -66,12 +66,6 @@ package classes
 		public var statPoints:Number = 0;
 		public var ascensionPerkPoints:Number = 0;
 
-		public var tempStr:Number = 0;
-		public var tempTou:Number = 0;
-		public var tempSpe:Number = 0;
-		public var tempInt:Number = 0;
-		public var tempWis:Number = 0;
-		public var tempLib:Number = 0;
 		//Number of times explored for new areas
 		public var explored:Number = 0;
 		public var exploredForest:Number = 0;
