@@ -4,26 +4,14 @@
  */
 package classes.Scenes.Camp 
 {
-	import classes.*;
-	import classes.GlobalFlags.kFLAGS;
-	import classes.CoC;
-	import classes.GlobalFlags.kACHIEVEMENTS;
-	import classes.BaseContent;
-	
-	import classes.Scenes.NPCs.*;
-	import classes.Scenes.Camp;
-	
-	import coc.model.GameModel;
-	
-	public class CampUpgrades extends BaseContent {
-		
-		public var maxNailSupply:int = 600;
-		public var maxWoodSupply:int = 900;
-		public var maxStoneSupply:int = 900;
-		
-		public var marblehelper:MarbleScene = new MarbleScene();
-		public var helhelper:HelFollower = new HelFollower();
-		public var kihahelper:KihaFollower = new KihaFollower();
+
+import classes.*;
+import classes.GlobalFlags.kFLAGS;
+import classes.Scenes.NPCs.*;
+import classes.internals.Utils;
+
+public class CampUpgrades extends NPCAwareContent {
+
 /*
 flags[kFLAGS.MATERIALS_STORAGE_UPGRADES]:
 1 - Toolbox bought
@@ -78,16 +66,6 @@ flags[kFLAGS.CAMP_UPGRADES_DAM]:
 
 flags[kFLAGS.CAMP_UPGRADES_FISHERY]:
 1 - fishery
-
-flags[kFLAGS.CAMP_UPGRADES_]:
-1 - 
-
-flags[kFLAGS.CAMP_UPGRADES_]:
-1 - 
-
-flagi na przyszłościowe surowce coby nie zapomnieć iż je już wpisałem do kodu w kFLAGS
-CAMP_CABIN_SAND_RESOURCES
-CAMP_CABIN_CONCRETE_RESOURCES
 */
 public function buildmiscMenu():void {
 	//clearOutput();
@@ -114,25 +92,14 @@ public function buildmiscMenu():void {
 //Materials Storages Upgrade
 public function materialgatheringstorageupgrade():void {
 	clearOutput();
-	if (player.fatigue <= player.maxFatigue() - 150)
-	{
-		if (flags[kFLAGS.MATERIALS_STORAGE_UPGRADES] == 1) { 
-			neednailsbox();
-			return; 
-		}
-		if (flags[kFLAGS.MATERIALS_STORAGE_UPGRADES] == 2) { 
-			startWoodStorage();
-			return; 
-		}
-		if (flags[kFLAGS.MATERIALS_STORAGE_UPGRADES] == 3) { 
-			startStoneStorage();
-			return;
-		}
-	}
-	else
-	{	
+	if (player.fatigueLeft() < 150) {
 		outputText("You are too exhausted to work on expanding your materials storage!");
-		doNext(playerMenu);
+		return doNext(playerMenu);
+	}
+	switch(flags[kFLAGS.MATERIALS_STORAGE_UPGRADES]){
+		case 1: return neednailsbox();
+		case 2: return startWoodStorage();
+		case 3: return startStoneStorage();
 	}
 }
 public function neednailsbox():void {
@@ -140,580 +107,136 @@ public function neednailsbox():void {
 	doNext(playerMenu);
 }
 public function startWoodStorage():void {
-	outputText("Do you start work on building wood storage? (Cost: 250 nails, 250 wood and 100 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 250 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 250 && flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 100)
-	{
-		doYesNo(doWoodStorageWork, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function doWoodStorageWork():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 250;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 250;
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 100;
-	clearOutput();
-	outputText("You pull out \"Carpenter's Guide\" and flip pages until you come across instructions on how to build storage for woods. You spend few minutes looking at the instructions.");
-	flags[kFLAGS.MATERIALS_STORAGE_UPGRADES] += 1;
-	outputText("\n\nYou take the wood, saw it and then cut into planks. You put four long and thick wood posts as base, then you connect them with nails. Next you cut few posts into short fragments and impale at the edges. Inside of prepared frame you put few large wood logs that you fix in place with a few short wood desks and stones. After that last part of building is to put all rest wood planks on prepared base and nail them in place.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with building the storage, helping to speed up the process and make construction less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 150;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only one hour!");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours.");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 115 ? "a daunting" : "an easy") + " task but you eventually manage to finish building wood storage for your camp. Now you can store safetly larger amount of wood!");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(doWoodStorageWork, 250, 250, 100, "extra wood storage");
+
+	function doWoodStorageWork():void {
+		useMaterials(250, 250, 100);
+		flags[kFLAGS.MATERIALS_STORAGE_UPGRADES] += 1;
+		clearOutput();
+		outputText("You pull out \"Carpenter's Guide\" and flip pages until you come across instructions on how to build storage for woods. You spend few minutes looking at the instructions.");
+		outputText("\n\nYou take the wood, saw it and then cut into planks. You put four long and thick wood posts as base, then you connect them with nails. Next you cut few posts into short fragments and impale at the edges. Inside of prepared frame you put few large wood logs that you fix in place with a few short wood desks and stones. After that last part of building is to put all rest wood planks on prepared base and nail them in place.");
+		doBuild("building the storage", 150);
+		outputText(" Now you can store safetly larger amount of wood!");
 	}
 }
+
 public function startStoneStorage():void {
-	outputText("Do you start work on building stone storage? (Cost: 350 nails, 400 wood and 200 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 350 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 400 && flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 200)
-	{
-		doYesNo(doStoneStorageWork, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function doStoneStorageWork():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 350;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 400;
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 200;
-	clearOutput();
-	outputText("You pull out \"Carpenter's Guide\" and flip pages until you come across instructions on how to build storage for stones. You spend few minutes looking at the instructions.");
-	flags[kFLAGS.MATERIALS_STORAGE_UPGRADES] += 1;
-	outputText("\n\nYou take the wood, saw it and then cut into planks. Like before you put four long and thick wood posts as base, then you connect them with nails. Next you cut few posts into short fragments and impale at the edges. Inside of prepared frame you put few large wood logs that you fix in place with a few short wood desks and stones. Rest of the stones fill the space inside due to need in future support weight of stones stored above. After that prelast part of building is to put all most of remaining wood planks on prepared base and nail them in place. Final thing to do is use remain wood and nails to make protective barrier around the whole storage.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with building the storage, helping to speed up the process and make construction less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 150;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only one hour!");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours.");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 115 ? "a daunting" : "an easy") + " task but you eventually manage to finish building stone storage for your camp. Now you can store safetly larger amount of stones!");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(doStoneStorageWork, 350, 400, 200, "extra stone storage");
+
+	function doStoneStorageWork():void {
+		useMaterials(350, 400, 200);
+		flags[kFLAGS.MATERIALS_STORAGE_UPGRADES] += 1;
+		clearOutput();
+		outputText("You pull out \"Carpenter's Guide\" and flip pages until you come across instructions on how to build storage for stones. You spend few minutes looking at the instructions.");
+		outputText("\n\nYou take the wood, saw it and then cut into planks. Like before you put four long and thick wood posts as base, then you connect them with nails. Next you cut few posts into short fragments and impale at the edges. Inside of prepared frame you put few large wood logs that you fix in place with a few short wood desks and stones. Rest of the stones fill the space inside due to need in future support weight of stones stored above. After that prelast part of building is to put all most of remaining wood planks on prepared base and nail them in place. Final thing to do is use remain wood and nails to make protective barrier around the whole storage.");
+		doBuild("building the storage", 150);
+		outputText(" Now you can store safetly larger amount of stones!")
 	}
 }
 
 //Warehouse + Granary Upgrade
 public function warehousegranary():void {
 	clearOutput();
-	if (player.fatigue <= player.maxFatigue() - 250)
-	{
-		if (flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] == 0) { 
-			start1stWarehouse1();
-			return; 
-		}
-		if (flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] == 1) { 
-			start1stWarehouse2();
-			return; 
-		}
-		if (flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] == 2) { 
-			startGranary1();
-			return; 
-		}
-		if (flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] == 3) { 
-			startGranary2();
-			return; 
-		}
-		if (flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] == 4) { 
-			start2ndWarehouse1();
-			return; 
-		}
-		if (flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] == 5) { 
-			start2ndWarehouse2();
-			return;
-		}
-	}
-	else
-	{	
+	if (player.fatigue > player.maxFatigue() - 250) {
 		outputText("You are too exhausted to work on constructing your storage building!");
-		doNext(playerMenu);
+		return doNext(playerMenu);
+	}
+	switch (flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY]) {
+		case 0: return start1stWarehouse1();
+		case 1: return start1stWarehouse2();
+		case 2: return startGranary1();
+		case 3: return startGranary2();
+		case 4: return start2ndWarehouse1();
+		case 5: return start2ndWarehouse2();
 	}
 }
 public function start1stWarehouse1():void {
-	outputText("Do you start work on building warehouse frame and walls? (Cost: 200 nails, 100 wood and 40 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 200 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 100 && flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 40)
-	{
-		doYesNo(do1stWarehouse1Work, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function do1stWarehouse1Work():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 200;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 100;
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 40;
-	clearOutput();
-	outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build warehouse. You spend few minutes looking at the instructions.");
-	flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
-	outputText("\n\nYou pick up a log from a nearby pile and saw it into a rectangular plank, fit to be used for the base of your future warehouse.  You lay out the foundation, rooting in planks, and leaving open corners for the thick logs that will be the corners of the building.");
-	outputText("\nAs you begin to connect their tops to make the floor the real work begins, nailing planks together, fitting everything into place.  After a few hours of hard labor the foundation is complete and you wipe the sweat off your brow, tapping a foot on your work and letting out a breathe of air.");
-	outputText("\nFor the last bit of work you get the frame of the building itself into place with a lot of elbow grease and brute strength, they don't call you the champion for nothing!");
-	outputText("\nRapping a knuckle against the walls you're filled with pride of your hard work, though it still needs a roof and actual flooring, but that can wait until tomorrow, you're pretty beat…");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with building the warehouse frame and walls, helping to speed up the process and make construction less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 250;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only one hour!");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours.");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 185 ? "a daunting" : "an easy") + " task but you eventually manage to finish building warehouse frame and walls.");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(do1stWarehouse1Work, 200, 100, 40, "the warehouse frame and walls");
+
+	function do1stWarehouse1Work():void {
+		useMaterials(200, 100, 40);
+		flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
+		clearOutput();
+		outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build warehouse. You spend few minutes looking at the instructions.");
+		outputText("\n\nYou pick up a log from a nearby pile and saw it into a rectangular plank, fit to be used for the base of your future warehouse.  You lay out the foundation, rooting in planks, and leaving open corners for the thick logs that will be the corners of the building.");
+		outputText("\nAs you begin to connect their tops to make the floor the real work begins, nailing planks together, fitting everything into place.  After a few hours of hard labor the foundation is complete and you wipe the sweat off your brow, tapping a foot on your work and letting out a breathe of air.");
+		outputText("\nFor the last bit of work you get the frame of the building itself into place with a lot of elbow grease and brute strength, they don't call you the champion for nothing!");
+		outputText("\nRapping a knuckle against the walls you're filled with pride of your hard work, though it still needs a roof and actual flooring, but that can wait until tomorrow, you're pretty beat…");
+		doBuild("building the warehouse frame and walls", 250);
 	}
 }
+
 public function start1stWarehouse2():void {
-	outputText("Do you start work on building warehouse roof and floor? (Cost: 400 nails, 300 wood and 140 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 400 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 300 && flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 140)
-	{
-		doYesNo(do1stWarehouse2Work, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function do1stWarehouse2Work():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 400;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 300;
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 140;
-	clearOutput();
-	outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build warehouse. You spend few minutes looking at the instructions.");
-	flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
-	outputText("\n\nAs before you preparing wood planks. Constructing temporally ladder you using it to get on top of the construction. Here one by one you nail prepared earlier wood pieces to form simple roof. After it's finished you getting down and entering inside. Putting in marked places wood logs you fill rest of the space with stones to make sure floor would be able to deal with even heavy weight. As last thing you use left planks to make floor. After tiring work you going out to look at your brand new warehouse.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with building the warehouse, helping to speed up the process and make construction less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 250;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only one hour!");
-		outputText("\n\n<b>You've built first warehouse and gained 12 inventory slots.</b>");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours.");
-		outputText("\n\n<b>You've built first warehouse and gained 12 inventory slots.</b>");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 185 ? "a daunting" : "an easy") + " task but you eventually manage to finish building warehouse for your camp. Now you can store safetly larger amount of items!");
-		outputText("\n\n<b>You've built first warehouse and gained 12 inventory slots.</b>");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(do1stWarehouse2Work, 400, 300, 140, "the warehouse roof and floor");
+
+	function do1stWarehouse2Work():void {
+		useMaterials(400, 300, 140);
+		flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
+		clearOutput();
+		outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build warehouse. You spend few minutes looking at the instructions.");
+		outputText("\n\nAs before you preparing wood planks. Constructing temporally ladder you using it to get on top of the construction. Here one by one you nail prepared earlier wood pieces to form simple roof. After it's finished you getting down and entering inside. Putting in marked places wood logs you fill rest of the space with stones to make sure floor would be able to deal with even heavy weight. As last thing you use left planks to make floor. After tiring work you going out to look at your brand new warehouse.");
+		doBuild("building the warehouse", 250);
+		outputText(" Now you can store safetly larger amount of items!\n\n<b>You've built first warehouse and gained 12 inventory slots.</b>");
 	}
 }
+
 public function startGranary1():void {
-	outputText("Do you start work on building granary frame and walls? (Cost: 200 nails, 125 wood and 30 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 200 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 125 && flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 30)
-	{
-		doYesNo(doGranary1Work, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function doGranary1Work():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 200;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 125;
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 30;
-	clearOutput();
-	outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build granary. You spend few minutes looking at the instructions.");
-	flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
-	outputText("\n\nYou pick up a log from a nearby pile and saw it into a rectangular plank, fit to be used for the base of your future granary.  You lay out the foundation, rooting in planks, and leaving open corners for the thick logs that will be the corners of the building.");
-	outputText("\nAs you begin to connect their tops to make the floor the real work begins, nailing planks together, fitting everything into place.  After a few hours of hard labor the foundation is complete and you wipe the sweat off your brow, tapping a foot on your work and letting out a breathe of air.");
-	outputText("\nFor the last bit of work you get the frame of the building itself into place with a lot of elbow grease and brute strength, they don't call you the champion for nothing!");
-	outputText("\nRapping a knuckle against the walls you're filled with pride of your hard work, though it still needs a roof and actual flooring, but that can wait until tomorrow, you're pretty beat…");
-	//outputText("\nAfter moment of pondering and short rest to slight recover you make one more adjustment. Using few more pieces of wood and some nails creating small connection part to standing next to the construction site warehouse. It should be now easier move between those two structures without need going outside.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with building the granary, helping to speed up the process and make construction less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 250;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only one hour!");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours.");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 185 ? "a daunting" : "an easy") + " task but you eventually manage to finish building granary frame and walls.");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(doGranary1Work, 200, 125, 30, "the granary frame and walls");
+
+	function doGranary1Work():void {
+		useMaterials(200, 125, 30);
+		flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
+		clearOutput();
+		outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build granary. You spend few minutes looking at the instructions.");
+		outputText("\n\nYou pick up a log from a nearby pile and saw it into a rectangular plank, fit to be used for the base of your future granary.  You lay out the foundation, rooting in planks, and leaving open corners for the thick logs that will be the corners of the building.");
+		outputText("\nAs you begin to connect their tops to make the floor the real work begins, nailing planks together, fitting everything into place.  After a few hours of hard labor the foundation is complete and you wipe the sweat off your brow, tapping a foot on your work and letting out a breathe of air.");
+		outputText("\nFor the last bit of work you get the frame of the building itself into place with a lot of elbow grease and brute strength, they don't call you the champion for nothing!");
+		outputText("\nRapping a knuckle against the walls you're filled with pride of your hard work, though it still needs a roof and actual flooring, but that can wait until tomorrow, you're pretty beat…");
+		doBuild("building the granary frame and walls", 250);
 	}
 }
+
 public function startGranary2():void {
-	outputText("Do you start work on building granary roof and floor? (Cost: 300 nails, 225 wood and 105 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 300 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 225 && flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 105)
-	{
-		doYesNo(doGranary2Work, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function doGranary2Work():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 300;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 225;
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 105;
-	clearOutput();
-	outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build granary. You spend few minutes looking at the instructions.");
-	flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
-	outputText("As before you preparing wood planks. Constructing temporally ladder you using it to get on top of the construction. Here one by one you nail prepared earlier wood pieces to form simple roof. After it's finished you getting down and entering inside. Putting in marked places wood logs you fill rest of the space with stones to make sure floor would be able to deal with even heavy weight. As last thing you use left planks to make floor. After tiring work you going out to look at your brand new granary.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with building the granary, helping to speed up the process and make construction less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 250;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only one hour!");
-		outputText("\n\n<b>You've built granary and gained 9 inventory slots for consumable items.</b>");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours.");
-		outputText("\n\n<b>You've built granary and gained 9 inventory slots for consumable items.</b>");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 185 ? "a daunting" : "an easy") + " task but you eventually manage to finish building granary for your camp. Now you can store safetly larger amount of consumable items!");
-		outputText("\n\n<b>You've built granary and gained 9 inventory slots for consumable items.</b>");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(doGranary2Work, 300, 225, 105, "the granary roof and floor");
+
+	function doGranary2Work():void {
+		useMaterials(300, 225, 105);
+		flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
+		clearOutput();
+		outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build granary. You spend few minutes looking at the instructions.");
+		outputText("As before you preparing wood planks. Constructing temporally ladder you using it to get on top of the construction. Here one by one you nail prepared earlier wood pieces to form simple roof. After it's finished you getting down and entering inside. Putting in marked places wood logs you fill rest of the space with stones to make sure floor would be able to deal with even heavy weight. As last thing you use left planks to make floor. After tiring work you going out to look at your brand new granary.");
+		doBuild("building the granary",250);
+		outputText(" Now you can store safetly larger amount of consumable items!\n\n<b>You've built granary and gained 9 inventory slots for consumable items.</b>");
 	}
 }
+
 public function start2ndWarehouse1():void {
-	outputText("Do you start work on building warehouse frame and walls? (Cost: 250 nails, 150 wood and 40 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 250 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 150 && flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 40)
-	{
-		doYesNo(do2ndWarehouse1Work, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function do2ndWarehouse1Work():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 250;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 150;
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 40;
-	clearOutput();
-	outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build warehouse. You spend few minutes looking at the instructions.");
-	flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
-	outputText("\n\nYou pick up a log from a nearby pile and saw it into a rectangular plank, fit to be used for the base of your future granary.  You lay out the foundation, rooting in planks, and leaving open corners for the thick logs that will be the corners of the building.");
-	outputText("\nAs you begin to connect their tops to make the floor the real work begins, nailing planks together, fitting everything into place.  After a few hours of hard labor the foundation is complete and you wipe the sweat off your brow, tapping a foot on your work and letting out a breathe of air.");
-	outputText("\nFor the last bit of work you get the frame of the building itself into place with a lot of elbow grease and brute strength, they don't call you the champion for nothing!");
-	outputText("\nRapping a knuckle against the walls you're filled with pride of your hard work, though it still needs a roof and actual flooring, but that can wait until tomorrow, you're pretty beat…");
-	//outputText("\nAfter that you looking at standing next to the frame other two structures. Right it's better to connect them with this one too for future easier access to any of them without need to going outside. So you making another small connection part like earlier between first warehouse and granary.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with building the warehouse frame and walls, helping to speed up the process and make construction less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 250;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only one hour!");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours.");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 185 ? "a daunting" : "an easy") + " task but you eventually manage to finish building warehouse frame and walls.");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(do2ndWarehouse1Work, 250, 150, 40, "the warehouse frame and walls");
+
+	function do2ndWarehouse1Work():void {
+		useMaterials(250, 150, 40);
+		flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
+		clearOutput();
+		outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build warehouse. You spend few minutes looking at the instructions.");
+		outputText("\n\nYou pick up a log from a nearby pile and saw it into a rectangular plank, fit to be used for the base of your future granary.  You lay out the foundation, rooting in planks, and leaving open corners for the thick logs that will be the corners of the building.");
+		outputText("\nAs you begin to connect their tops to make the floor the real work begins, nailing planks together, fitting everything into place.  After a few hours of hard labor the foundation is complete and you wipe the sweat off your brow, tapping a foot on your work and letting out a breathe of air.");
+		outputText("\nFor the last bit of work you get the frame of the building itself into place with a lot of elbow grease and brute strength, they don't call you the champion for nothing!");
+		outputText("\nRapping a knuckle against the walls you're filled with pride of your hard work, though it still needs a roof and actual flooring, but that can wait until tomorrow, you're pretty beat…");
+		doBuild("building the warehouse frame and walls", 250);
 	}
 }
+
 public function start2ndWarehouse2():void {
-	outputText("Do you start work on building warehouse roof and floor? (Cost: 400 nails, 300 wood and 140 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 400 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 300 && flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 140)
-	{
-		doYesNo(do2ndWarehouse2Work, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function do2ndWarehouse2Work():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 400;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 300;
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 140;
-	clearOutput();
-	outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build warehouse. You spend few minutes looking at the instructions.");
-	flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
-	outputText("\n\nAs before you preparing wood planks. Constructing temporally ladder you using it to get on top of the construction. Here one by one you nail prepared earlier wood pieces to form simple roof. After it's finished you getting down and entering inside. Putting in marked places wood logs you fill rest of the space with stones to make sure floor would be able to deal with even heavy weight. As last thing you use left planks to make floor. After tiring work you going out to look at your brand new warehouse.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with building the warehouse, helping to speed up the process and make construction less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 250;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only one hour!");
-		outputText("\n\n<b>You've built second warehouse and gained 12 inventory slots.</b>");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours.");
-		outputText("\n\n<b>You've built second warehouse and gained 12 inventory slots.</b>");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 185 ? "a daunting" : "an easy") + " task but you eventually manage to finish building warehouse for your camp. Now you can store safetly larger amount of items!");
-		outputText("\n\n<b>You've built second warehouse and gained 12 inventory slots.</b>");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(do2ndWarehouse2Work, 400, 300, 140, "the warehouse roof and floor");
+
+	function do2ndWarehouse2Work():void {
+		useMaterials(400, 300, 140);
+		flags[kFLAGS.CAMP_UPGRADES_WAREHOUSE_GRANARY] += 1;
+		clearOutput();
+		outputText("You pull out \"Carpenter's Guide\" and finds instructions on how to build warehouse. You spend few minutes looking at the instructions.");
+		outputText("\n\nAs before you preparing wood planks. Constructing temporally ladder you using it to get on top of the construction. Here one by one you nail prepared earlier wood pieces to form simple roof. After it's finished you getting down and entering inside. Putting in marked places wood logs you fill rest of the space with stones to make sure floor would be able to deal with even heavy weight. As last thing you use left planks to make floor. After tiring work you going out to look at your brand new warehouse.");
+		doBuild("building the warehouse", 250);
+		outputText(" Now you can store safetly larger amount of items!\n\n<b>You've built second warehouse and gained 12 inventory slots.</b>");
 	}
 }
 
@@ -722,636 +245,300 @@ public function kitsuneshrine():void {
 	clearOutput();
 	if (flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] < 1) { 
 		findSpotForShrine();
-		return;
 	}
-	if (player.fatigue <= player.maxFatigue() - 300 && flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] == 1) { 
+	else if (player.fatigueLeft() >=  300 && flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] == 1) {
 		buildStructure();
-		return; 
 	}
-	if (player.fatigue <= player.maxFatigue() - 200 && flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] == 2) { 
+	else if (player.fatigueLeft() >=  200 && flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] == 2) {
 		buildAltair();
-		return;
-	}
-	else
-	{	
+	} else {
 		outputText("You are too exhausted to work on constructing shrine!");
 		doNext(playerMenu);
 	}
 }
 public function findSpotForShrine():void {
-	outputText("Unsatisfied with having to go up to the Deepwoods to offer your prayers, you decide to build a shrine next to your camp. You look for a spot and mark it, planning to come back later with the materials.");
 	flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] = 1;
+	outputText("Unsatisfied with having to go up to the Deepwoods to offer your prayers, you decide to build a shrine next to your camp. You look for a spot and mark it, planning to come back later with the materials.");
 	doNext(camp.returnToCampUseOneHour);
 }
 public function buildStructure():void {
-	outputText("Do you start work on building the structure? (Cost: 500 wood, 200 nails, 100 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 200 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 500 && flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 100)
-	{
-		doYesNo(doBuildStructure, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function doBuildStructure():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 200;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 500;
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 100;
-	clearOutput();
-	outputText("You proceed to build the structure of the shrine. You lose track of time as you work at building Taoth a proper place of prayer. ");
-	flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] += 1;
-	outputText("\n\nSeveral hours later the building is finally ready, although you are completely exhausted.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with building, helping to speed up the process and make it less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 300;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 50) fatigueAmount = 50;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only four hours!");
-		doNext(camp.returnToCampUseFourHours);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only six hours!");
-		doNext(camp.returnToCampUseSixHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 150 ? "a daunting" : "an easy") + " task but you eventually manage to finish it.");
-		doNext(camp.returnToCampUseEightHours);
+	confirmBuild(doBuildStructure, 200, 500, 100, "the structure");
+
+	function doBuildStructure():void {
+		useMaterials(200, 500, 100);
+		flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] += 1;
+		clearOutput();
+		outputText("You proceed to build the structure of the shrine. You lose track of time as you work at building Taoth a proper place of prayer. ");
+		outputText("\n\nSeveral hours later the building is finally ready, although you are completely exhausted.");
+		doBuild("building", 300, 50, 8);
 	}
 }
+
 public function buildAltair():void {
-	outputText("Do you start work on building the structure? (Cost: 200 wood and 100 nails)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 100 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 200)
-	{
-		doYesNo(doBuildAltair, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function doBuildAltair():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 100;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 200;
-	clearOutput();
-	outputText("You build an altar for your shrine. ");
-	flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] += 1;
-	outputText("\n\nIt takes a while, but before nighttime your work is finished.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with building, helping to speed up the process and make it less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 200;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 30) fatigueAmount = 30;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only hour!");
-		doNext(camp.returnToCampUseFourHours);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours!");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 75 ? "a daunting" : "an easy") + " task but you eventually manage to finish it.");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(doBuildAltair, 100, 200, 0, "an altar");
+
+	function doBuildAltair():void {
+		useMaterials(100, 200, 0);
+		flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] += 1;
+		clearOutput();
+		outputText("You build an altar for your shrine. ");
+		outputText("\n\nIt takes a while, but before nighttime your work is finished.");
+		doBuild("building", 200, 30);
 	}
 }
+
 public function kitsuneshrine2():void {
-	clearOutput();
-	outputText("You place the statue on the altar, already feeling Taoth's powers coalescing around the shrine like a thick fog.");
 	player.consumeItem(useables.GLDSTAT);
 	flags[kFLAGS.CAMP_UPGRADES_KITSUNE_SHRINE] += 1;
+	clearOutput();
+	outputText("You place the statue on the altar, already feeling Taoth's powers coalescing around the shrine like a thick fog.");
 	doNext(playerMenu);
 }
 
 //Hot Spring Upgrade
 public function hotspring():void {
 	clearOutput();
-	if (player.fatigue <= player.maxFatigue() - 100)
-	{
-		if (flags[kFLAGS.CAMP_UPGRADES_HOT_SPRINGS] == 2) { 
-			digApool();
-			return; 
-		}
-		if (flags[kFLAGS.CAMP_UPGRADES_HOT_SPRINGS] == 3) { 
-			addAWoodenWalls();
-			return;
-		}
-	}
-	else
-	{	
+	if (player.fatigueLeft() < 100) {
 		outputText("You are too exhausted to work on hot spring!");
-		doNext(playerMenu);
+		return doNext(playerMenu);
+	}
+	if (flags[kFLAGS.CAMP_UPGRADES_HOT_SPRINGS] == 2) {
+		digApool();
+	} else if (flags[kFLAGS.CAMP_UPGRADES_HOT_SPRINGS] == 3) {
+		addAWoodenWalls();
 	}
 }
 public function digApool():void {
-	outputText("Do you start work on digging the pool? (Cost: 500 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 500)
-	{
-		doYesNo(doDigAPoolWork, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function doDigAPoolWork():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 500;
-	clearOutput();
-	outputText("You proceed to dig a proper pool and line it and the border with rocks.");
-	flags[kFLAGS.CAMP_UPGRADES_HOT_SPRINGS] += 1;
-	outputText("\n\nA few hour later the bathing area is steamy and ready for use.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with digging, helping to speed up the process and make it less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 100;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only one hour!");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours.");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 75 ? "a daunting" : "an easy") + " task but you eventually manage to finish digging it.");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(doDigAPoolWork, 0, 0, 500, "a pool");
+
+	function doDigAPoolWork():void {
+		useMaterials(0,0, 500);
+		flags[kFLAGS.CAMP_UPGRADES_HOT_SPRINGS] += 1;
+		clearOutput();
+		outputText("You proceed to dig a proper pool and line it and the border with rocks.");
+		outputText("\n\nA few hour later the bathing area is steamy and ready for use.");
+		doBuild("digging", 100);
 	}
 }
+
 public function addAWoodenWalls():void {
-	outputText("Do you start work on addine wooden walls? (Cost: 500 wood.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 500)
-	{
-		doYesNo(doAddAWoodenWallsWork, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function doAddAWoodenWallsWork():void {
-	var helpers:int = 0;
-	var helperArray:Array = [];
-	if (marblehelper.marbleFollower()) {
-		helperArray[helperArray.length] = "Marble";
-		helpers++;
-	}
-	if (helhelper.followerHel()) {
-		helperArray[helperArray.length] = "Helia";
-		helpers++;
-	}
-	if (kihahelper.followerKiha()) {
-		helperArray[helperArray.length] = "Kiha";
-		helpers++;
-	}
-	if (flags[kFLAGS.ANT_KIDS] > 100) {
-		helperArray[helperArray.length] = "group of your ant children";
-		helpers++;
-	}
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 500;
-	clearOutput();
-	outputText("You start building some cover, so you can actually enjoy bathing without having to worry about potential voyeurs.");
-	flags[kFLAGS.CAMP_UPGRADES_HOT_SPRINGS] += 1;
-	outputText("\n\nIt takes a few hours, but eventually your wall is finally done.");
-	if (helpers > 0) {
-		outputText("\n\n" + formatStringArray(helperArray));
-		outputText(" " + (helpers == 1 ? "assists" : "assist") + " you with making a wooden wall, helping to speed up the process and make it less fatiguing.");
-	}
-	//Gain fatigue.
-	var fatigueAmount:int = 100;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigueAmount /= (helpers + 1);
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	if (helpers >= 2) {
-		outputText("\n\nThanks to your assistants, the construction takes only one hour!");
-		doNext(camp.returnToCampUseOneHour);
-	}
-	else if (helpers == 1) {
-		outputText("\n\nThanks to your assistant, the construction takes only two hours.");
-		doNext(camp.returnToCampUseTwoHours);
-	}
-	else {
-		outputText("\n\nIt's " + (fatigueAmount >= 75 ? "a daunting" : "an easy") + " task but you eventually manage to finish making a wooden wall.");
-		doNext(camp.returnToCampUseFourHours);
+	confirmBuild(doAddAWoodenWallsWork, 0, 500, 0, "some wooden walls");
+
+	function doAddAWoodenWallsWork():void {
+		useMaterials(0, 500, 0);
+		flags[kFLAGS.CAMP_UPGRADES_HOT_SPRINGS] += 1;
+		clearOutput();
+		outputText("You start building some cover, so you can actually enjoy bathing without having to worry about potential voyeurs.");
+		outputText("\n\nIt takes a few hours, but eventually your wall is finally done.");
+		doBuild("making a wooden wall", 100);
 	}
 }
 
 //Sparring Ring Upgrade
 public function sparringRing():void {
 	clearOutput();
-	if (player.fatigue <= player.maxFatigue() - 50)
-	{
-		if (flags[kFLAGS.CAMP_UPGRADES_SPARING_RING] == 1) { 
-			buildSmallRing();
-			return;
-		}/*
-		if (flags[kFLAGS.] == 2) { 
-			digApool() 
-			return; 
-		}
-		if (flags[kFLAGS.] == 3) { 
-			addAWoodenWalls() 
-			return; 
-		}*/
-	}
-	else
-	{	
+	if (player.fatigueLeft() < 50) {
 		outputText("You are too exhausted to work on sparring ring!");
-		doNext(playerMenu);
+		return doNext(playerMenu);
+	}
+	if (flags[kFLAGS.CAMP_UPGRADES_SPARING_RING] == 1) {
+		buildSmallRing();
 	}
 }
 public function buildSmallRing():void {
-	outputText("Do you start work on making sparring ring? (Cost: 50 wood.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 50)
-	{
-		doYesNo(doBuildSmallRing, noThanks);
+	confirmBuild(doBuildSmallRing, 0, 50, 0, "sparring ring");
+
+	function doBuildSmallRing():void {
+		useMaterials(0, 50, 0);
+		flags[kFLAGS.CAMP_UPGRADES_SPARING_RING] += 1;
+		clearOutput();
+		outputText("You consider the many people who reside in the camp and realise you could spar with them if you had a ring for it. You proceed to get a rope and some wooden sticks, then build a small provisory ring for your daily sparring matches.");
+		outputText("\n\nYou work most of the day on this project but by the end the hole is dug and the ring is made!");
+		//Gain fatigue.
+		var fatigueAmount:int = 50;
+		if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
+		fatigue(fatigueAmount);
+		doNext(camp.returnToCampUseFourHours);
 	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function doBuildSmallRing():void {
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 50;
-	clearOutput();
-	outputText("You consider the many people who reside in the camp and realise you could spar with them if you had a ring for it. You proceed to get a rope and some wooden sticks, then build a small provisory ring for your daily sparring matches.");
-	flags[kFLAGS.CAMP_UPGRADES_SPARING_RING] += 1;
-	outputText("\n\nYou work most of the day on this project but by the end the hole is dug and the ring is made!");
-	//Gain fatigue.
-	var fatigueAmount:int = 50;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	fatigue(fatigueAmount);
-	doNext(camp.returnToCampUseFourHours);
 }
 
 //Arcane Circle Upgrade
 public function arcaneCircle():void {
 	clearOutput();
-	if (player.fatigue <= player.maxFatigue() - 50)
-	{
-		if (flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] < 1) { 
-			buildFirstArcaneCircle();
-			return; 
-		}
-		if (flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] == 1) { 
-			if (player.hasPerk(PerkLib.ElementalContractRank4)) {
-				buildSecondArcaneCircle();
-				return; 
-			}
-			else {
-				outputText("You lack the proper knowledge and skill to work on this new ritual circle yet!");
-				doNext(playerMenu);
-			}
-		}
-		if (flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] == 2) { 
-			if (player.hasPerk(PerkLib.ElementalContractRank8)) {
-				buildThirdArcaneCircle();
-				return;
-			}
-			else {
-				outputText("You lack the proper knowledge and skill to work on this new ritual circle yet!");
-				doNext(playerMenu);
-			}
-		}/*
-		if (flags[kFLAGS.] == 3) { 
-			addAWoodenWalls() 
-			return; 
-		}*/
-	}
-	else
-	{	
+	if (player.fatigueLeft() < 50) {
 		outputText("You are too exhausted to work on this new ritual circle yet!");
-		doNext(playerMenu);
+		return doNext(playerMenu);
+	}
+	if (flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] < 1) {
+		buildFirstArcaneCircle();
+	}
+	else if (flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] == 1) {
+		if (player.hasPerk(PerkLib.ElementalContractRank4)) {
+			buildSecondArcaneCircle();
+		} else {
+			outputText("You lack the proper knowledge and skill to work on this new ritual circle yet!");
+			doNext(playerMenu);
+		}
+	}
+	else if (flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] == 2) {
+		if (player.hasPerk(PerkLib.ElementalContractRank8)) {
+			buildThirdArcaneCircle();
+		} else {
+			outputText("You lack the proper knowledge and skill to work on this new ritual circle yet!");
+			doNext(playerMenu);
+		}
 	}
 }
 public function buildFirstArcaneCircle():void {
-	outputText("Do you start work on making first arcane circle? (Cost: 4 stones, 75 HP and 100 mana.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 4 && player.HP >= 75 && player.mana >= 100)
-	{
-		doYesNo(doBuildFirstArcaneCircle, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
+	confirmBuild(doBuildFirstArcaneCircle, 0, 0, 4, "an arcane circle", 75, 100);
+
+	function doBuildFirstArcaneCircle():void {
+		useMaterials(0,0,4);
+		flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] = 1;
+		clearOutput();
+		outputText("You get to building your arcane circle. You set a stone at each of the four cardinal point and draw a perfect circle with the blood. That done you inscribe the runes meant to facilitate the chosen entity passage to mareth punctuating each scribing with a word of power. After several hours of hard work your arcane circle is finally done ready to be used to summon various entity to mareth.\n\n");
+		//Gain fatigue.
+		var fatigueAmount:int = 50;
+		if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
+		HPChange(-75, true);
+		fatigue(fatigueAmount);
+		useMana(100);
+		doNext(camp.returnToCampUseEightHours);
 	}
 }
-private function doBuildFirstArcaneCircle():void {
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 4;
-	clearOutput();
-	outputText("You get to building your arcane circle. You set a stone at each of the four cardinal point and draw a perfect circle with the blood. That done you inscribe the runes meant to facilitate the chosen entity passage to mareth punctuating each scribing with a word of power. After several hours of hard work your arcane circle is finally done ready to be used to summon various entity to mareth.");
-	flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] = 1;
-	//Gain fatigue.
-	var fatigueAmount:int = 50;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	outputText("\n\n");
-	HPChange(-75, true);
-	fatigue(fatigueAmount);
-	useMana(100);
-	doNext(camp.returnToCampUseEightHours);
-}
+
 public function buildSecondArcaneCircle():void {
-	outputText("Do you start work on making second arcane circle? (Cost: 8 stones, 150 HP and 200 mana.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 8 && player.HP >= 150 && player.mana >= 200)
-	{
-		doYesNo(doBuildSecondArcaneCircle, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
+	confirmBuild(doBuildSecondArcaneCircle, 0, 0 , 8, "a second arcane circle", 150, 200);
+
+	function doBuildSecondArcaneCircle():void {
+		useMaterials(0,0,8);
+		flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] += 1;
+		clearOutput();
+		outputText("You decide to upgrade your circle in order to contain a stronger being should the binding ritual fail. You draw a second larger circle around the smaller one inscribing additional protections and ward. Satisfied you nod at the result.");
+		outputText(" \"<b>You can now perform the rituals to release more of your minions powers!</b>\"\n\n");
+		//Gain fatigue.
+		var fatigueAmount:int = 50;
+		if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
+		HPChange(-150, true);
+		fatigue(fatigueAmount);
+		useMana(200);
+		doNext(camp.returnToCampUseEightHours);
 	}
 }
-private function doBuildSecondArcaneCircle():void {
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 8;
-	clearOutput();
-	outputText("You decide to upgrade your circle in order to contain a stronger being should the binding ritual fail. You draw a second larger circle around the smaller one inscribing additional protections and ward. Satisfied you nod at the result.");
-	flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] += 1;
-	outputText(" \"<b>You can now perform the rituals to release more of your minions powers!</b>\"");
-	//Gain fatigue.
-	var fatigueAmount:int = 50;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	outputText("\n\n");
-	HPChange(-150, true);
-	fatigue(fatigueAmount);
-	useMana(200);
-	doNext(camp.returnToCampUseEightHours);
-}
+
 public function buildThirdArcaneCircle():void {
-	outputText("Do you start work on making third arcane circle? (Cost: 12 stones, 225 HP and 300 mana.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 12 && player.HP >= 225 && player.mana >= 300)
-	{
-		doYesNo(doBuildThirdArcaneCircle, noThanks);
+	confirmBuild(doBuildThirdArcaneCircle, 0,0,12, "the third arcane circle", 225, 300);
+
+	function doBuildThirdArcaneCircle():void {
+		useMaterials(0,0,12);
+		flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] += 1;
+		clearOutput();
+		outputText("You decide to upgrade your circle in order to contain a stronger being should the binding ritual fail. You draw a third larger circle around the smaller one inscribing additional protections and ward. Satisfied you nod at the result.");
+		outputText(" \"<b>You can now perform the rituals to release more of your minions powers!</b>\"\n\n");
+		//Gain fatigue.
+		var fatigueAmount:int = 50;
+		if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
+		HPChange(-225, true);
+		fatigue(fatigueAmount);
+		useMana(300);
+		doNext(camp.returnToCampUseEightHours);
 	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function doBuildThirdArcaneCircle():void {
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 12;
-	clearOutput();
-	outputText("You decide to upgrade your circle in order to contain a stronger being should the binding ritual fail. You draw a third larger circle around the smaller one inscribing additional protections and ward. Satisfied you nod at the result.");
-	flags[kFLAGS.CAMP_UPGRADES_ARCANE_CIRCLE] += 1;
-	outputText(" \"<b>You can now perform the rituals to release more of your minions powers!</b>\"");
-	//Gain fatigue.
-	var fatigueAmount:int = 50;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	outputText("\n\n");
-	HPChange(-225, true);
-	fatigue(fatigueAmount);
-	useMana(300);
-	doNext(camp.returnToCampUseEightHours);
 }
 
 //Magic Ward Upgrade
 public function magicWard():void {
 	clearOutput();
-	if (player.fatigue <= player.maxFatigue() - 200)
-	{
-		if (flags[kFLAGS.CAMP_UPGRADES_MAGIC_WARD] == 1) { 
-			setUpMagicWard();
-			return;
-		}
-	}
-	else
-	{	
+	if (player.fatigueLeft() < 200) {
 		outputText("You are too exhausted to work on magic ward!");
-		doNext(playerMenu);
+		return doNext(playerMenu);
+	}
+	if (flags[kFLAGS.CAMP_UPGRADES_MAGIC_WARD] == 1) {
+		setUpMagicWard();
 	}
 }
 public function setUpMagicWard():void {
-	outputText("You’re confident that with the warding tome as reference, you could build a ward to help keep your camp safe from lesser threats, possibly even demons.  Shall you construct the ward? (Cost: 30 stones.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= 30)
-	{
-		doYesNo(setUpMagicWard2, noThanks);
-	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
+	outputText("You’re confident that with the warding tome as reference, you could build a ward to help keep your camp safe from lesser threats, possibly even demons. ");
+	confirmBuild(setUpMagicWard2, 0, 0, 30, "a magic ward");
+
+	function setUpMagicWard2():void {
+		useMaterials(0, 0, 30);
+		flags[kFLAGS.CAMP_UPGRADES_MAGIC_WARD] += 1;
+		player.removeKeyItem("Warding Tome");
+
+		clearOutput();
+		outputText("You flip through the tome, and begin to sketch copies of the required glyphs in the dirt.  Yes, this is definitely possible.  You have something ");
+		if (player.statusEffectv1(StatusEffects.TelAdre) >= 1) {
+			outputText("Tel’Adre doesn’t");
+		} else {
+			outputText("most mages wouldn’t");
+		}
+		outputText(" the portal.  The ambient energy radiating from it could power the ward, as long as you get the web of magic working properly.  It takes hours, a great deal of stress and a lot of channeling to get the stones to their positions, carved into shape and infused with the requisite runes.  ");
+		if (model.time.hours >= 12) {
+			outputText("By the time you’re done, it's already dark.");
+		} else {
+			outputText("By the time you’re done, the sun is beginning to droop in the sky.");
+		}
+		outputText("  But with these warding stones up and running, nothing should chance upon your camp unless it has business there.");
+		//Gain fatigue.
+		buildFatigue(200);
+		doNext(camp.returnToCampUseEightHours);
 	}
 }
-private function setUpMagicWard2():void {
-	flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= 30;
-	clearOutput();
-	outputText("You flip through the tome, and begin to sketch copies of the required glyphs in the dirt.  Yes, this is definitely possible.  You have something ");
-	if (player.statusEffectv1(StatusEffects.TelAdre) >= 1) outputText("Tel’Adre doesn’t");
-	else outputText("most mages wouldn’t");
-	outputText(" the portal.  The ambient energy radiating from it could power the ward, as long as you get the web of magic working properly.  It takes hours, a great deal of stress and a lot of channeling to get the stones to their positions, carved into shape and infused with the requisite runes.  ");
-	flags[kFLAGS.CAMP_UPGRADES_MAGIC_WARD] += 1;
-	if (model.time.hours >= 12) outputText("By the time you’re done, it's already dark.");
-	else outputText("By the time you’re done, the sun is beginning to droop in the sky.");
-	outputText("  But with these warding stones up and running, nothing should chance upon your camp unless it has business there.");
-	player.removeKeyItem("Warding Tome");
-	//Gain fatigue.
-	var fatigueAmount:int = 200;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	doNext(camp.returnToCampUseEightHours);
-}
+
 
 //Dam Upgrade
 public function dam():void {
 	clearOutput();
-	if (player.fatigue <= player.maxFatigue() - 200)
-	{
-		if (flags[kFLAGS.CAMP_UPGRADES_DAM] < 1) { 
-			buildUpMinorWoodDam();
-			return;
-		}/*
-		if (flags[kFLAGS.CAMP_UPGRADES_DAM] == 1) { 
-			buildUpMajorWoodDam() 
-			return; 
-		}*/
-	}
-	else
-	{	
+	if (player.fatigueLeft() < 200) {
 		outputText("You are too exhausted to work on dam!");
-		doNext(playerMenu);
+		return doNext(playerMenu);
+	}
+	if (flags[kFLAGS.CAMP_UPGRADES_DAM] < 1) {
+		buildUpMinorWoodDam();
 	}
 }
 public function buildUpMinorWoodDam():void {
-	outputText("Do you start work on building small wood dam? (Cost: 200 nails, 300 wood.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 200 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 300)
-	{
-		doYesNo(buildUpMinorWoodDam2, noThanks);
+	confirmBuild(buildUpMinorWoodDam2, 200, 300 ,0, "a small wooden dam");
+
+	function buildUpMinorWoodDam2():void {
+		useMaterials(200, 300, 0);
+		flags[kFLAGS.CAMP_UPGRADES_DAM] = 1;
+		clearOutput();
+		outputText("You get down to work building the dam plank by plank. At first it proves to be a challenge to the running water. But you eventually manage to build the structure in full your dam allowing to increase the stream size.");
+		//Gain fatigue.
+		buildFatigue(200);
+		doNext(camp.returnToCampUseEightHours);
 	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function buildUpMinorWoodDam2():void {
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 200;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 300;
-	clearOutput();
-	outputText("You get down to work building the dam plank by plank. At first it proves to be a challenge to the running water. But you eventually manage to build the structure in full your dam allowing to increase the stream size.");
-	flags[kFLAGS.CAMP_UPGRADES_DAM] = 1;
-	//Gain fatigue.
-	var fatigueAmount:int = 200;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	doNext(camp.returnToCampUseEightHours);
 }
 
 //Fishery Upgrade
 public function fishery():void {
 	clearOutput();
-	if (player.fatigue <= player.maxFatigue() - 200)
-	{
-		if (flags[kFLAGS.CAMP_UPGRADES_FISHERY] < 1) { 
-			buildUpFishery();
-			return;
-		}
-	}
-	else
-	{	
+	if (player.fatigueLeft() < 200) {
 		outputText("You are too exhausted to work on fishery!");
-		doNext(playerMenu);
+		return doNext(playerMenu);
+	}
+	if (flags[kFLAGS.CAMP_UPGRADES_FISHERY] < 1) {
+		buildUpFishery();
 	}
 }
 public function buildUpFishery():void {
-	outputText("Do you start work on building fishery? (Cost: 200 nails, 300 wood.)\n");
-	checkMaterials();
-	if (flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= 200 && flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= 300)
-	{
-		doYesNo(buildUpFishery2, noThanks);
+	confirmBuild(buildUpFishery2, 200, 300, 0, "a fishery");
+
+	function buildUpFishery2():void {
+		useMaterials(200, 300, 0);
+		flags[kFLAGS.CAMP_UPGRADES_FISHERY] = 1;
+		flags[kFLAGS.FISHES_STORED_AT_FISHERY] = 0;
+		clearOutput();
+		outputText("You spend a 8 hours hammering nail and building your fishery. At the end of it you look at the result with pride. Time to have someone on fishing duty.");
+		//Gain fatigue.
+		buildFatigue(200);
+		doNext(camp.returnToCampUseEightHours);
 	}
-	else
-	{
-		errorNotEnough();
-		doNext(playerMenu);
-	}
-}
-private function buildUpFishery2():void {
-	flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= 200;
-	flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= 300;
-	clearOutput();
-	outputText("You spend a 8 hours hammering nail and building your fishery. At the end of it you look at the result with pride. Time to have someone on fishing duty.");
-	flags[kFLAGS.CAMP_UPGRADES_FISHERY] = 1;
-	flags[kFLAGS.FISHES_STORED_AT_FISHERY] = 0;
-	//Gain fatigue.
-	var fatigueAmount:int = 200;
-	fatigueAmount -= player.str / 5;
-	fatigueAmount -= player.tou / 10;
-	fatigueAmount -= player.spe / 10;
-	if (player.hasPerk(PerkLib.IronMan)) fatigueAmount -= 20;
-	if (fatigueAmount < 10) fatigueAmount = 10;
-	fatigue(fatigueAmount);
-	doNext(camp.returnToCampUseEightHours);
 }
 
 public function errorNotEnough():void {
-	outputText("\n\n<b>You do not have sufficient resources. You may buy more nails, wood, stones from the carpentry shop in Tel'Adre or find other sources of this materials. It's also possible you lack some of more exotic things.</b>")		
+	outputText("\n\n<b>You do not have sufficient resources. You may buy more nails, wood, stones from the carpentry shop in Tel'Adre or find other sources of this materials. It's also possible you lack some of more exotic things.</b>")
 }
 
 public function noThanks():void {
@@ -1360,58 +547,88 @@ public function noThanks():void {
 }
 
 public function checkMaterials():void {
-	if (flags[kFLAGS.MATERIALS_STORAGE_UPGRADES] >= 2) { 
-	outputText("Nails: " + flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] + "/600" + " \n");
-	}
-	else { 
-	outputText("Nails: " + flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] + "/200" + " \n");
-	}
-	if (flags[kFLAGS.MATERIALS_STORAGE_UPGRADES] >= 3) {
-	outputText("Wood: " + flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] + "/900" + "\n");
-	}
-	else {
-	outputText("Wood: " + flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] + "/300" + "\n");
-	}
-	if (flags[kFLAGS.MATERIALS_STORAGE_UPGRADES] >= 4) {
-	outputText("Stone: " + flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] + "/900" + "\n");
-	}
-	else {
-	outputText("Stone: " + flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] + "/300" + "\n");
-	}
+	var nails:int = flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES];
+	var wood:int = flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES];
+	var stone:int = flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES];
+	outputText("Nails: " + nails + "/" + (nails>=2? 600:200) + "\n");
+	outputText("Wood: " + wood + "/" + (wood>=3? 900:300) + "\n");
+	outputText("Stone: " + stone + "/" + (stone>=4? 900:300) + "\n");
 }
 
+	private function get helpersArr():Array {
+		var helperArray:Array = [];
+		if (marbleFollower()) {helperArray.push("Marble");}
+		if (followerHel()) {helperArray.push("Helia");}
+		if (followerKiha()) {helperArray.push("Kiha");}
+		if (flags[kFLAGS.ANT_KIDS] > 100) {helperArray.push("group of your ant children");}
+		return helperArray;
+	}
 
+	private function buildFatigue(base:int, helpers:int = 0, min:int = 10):int {
+		base /= (helpers + 1);
+		base -= player.str / 5;
+		base -= player.tou / 10;
+		base -= player.spe / 10;
+		if (player.hasPerk(PerkLib.IronMan)) base -= 20;
+		fatigue(Math.max(base, min));
+		return int(base)
+	}
 
-// Page 1
+	private function useMaterials(nails:int, wood:int, stone:int):void {
+		flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] -= nails;
+		flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] -= wood;
+		flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] -= stone;
+	}
 
-// button 0 - material gathering storage upgrade
-// button 1 - warehouse/granary/?stone enhanced version of warehouse and granary?
-// button 2 - Rat lab upgrade/better rest place for rat+mouse-morphs/?Vapula lab upgrade?/Small stone shrine for Jojo or Joy/?upgrade all previous structures to stone lvl?
-// button 3 - central camp nursery instead many individual ones?
-// button 4 - next page
-// button 5 - Phylla cave upgrades - better bed/using wood to make more stable tunnels and having few ranks of this upgrade (?limit max ant children depending on current rank of this upgrade?)
-// button 6 - Ember cave upgrades - better bed/?magic loot gathering place?
-// button 7 - cabin for camp cow-morphs (Marble+Izzy?+Clara?)
-// button 8 - ...
-// button 10 - living place for Kiha+Sophie?+Vapula?
-// button 11 - using wood making small dam on steam near camp to form small pond/pool/mini lake for camp members users - using later stones to make dam better increasing amount of gathered water
-// button 12 - ...
-// button 13 - ...
-// button 14 - Back
+	private function doBuild(action:String, fatigue:int, fatigueMin:int = 10, hours:int = 4):void {
+		var helperArray:Array = helpersArr;
+		var helpers:int       = helperArray.length;
+		var fatigueAmount:int = buildFatigue(fatigue, helpers, fatigueMin);
+		var multi:Boolean     = helpers > 1;
+		if (helpers > 0) {
+			outputText("\n\n" + formatStringArray(helperArray));
+			outputText(" " + (multi ? "assist" : "assists") + " you with " + action + ", helping to speed up the process and make it less fatiguing.");
+			if (multi) {
+				hours = Math.max(hours - 4, 1);
+			} else {
+				hours = Math.max(hours - 2, 2);
+			}
+			outputText("\n\nThanks to your assistant" + (multi ? "s" : "") + ", the construction takes only " + Utils.num2Text(hours) + " hour" + (hours > 1 ? "s" : "") + "!");
+		} else {
+			outputText("\n\nIt's " + (fatigueAmount / fatigue >= 0.75 ? "a daunting" : "an easy") + " task but you eventually manage to finish " + action + ".")
+		}
+		doNext(curry(camp.returnToCamp, hours));
+	}
 
-// Page 2
+	private function confirmBuild(build:Function, nails:int, wood:int, stone:int, text:String, hp:int = 0, mana:int = 0):void {
+		outputText("Do you want to start work on building " + text + "?");
+		if ((nails + wood + stone + hp + mana) > 0) {
+			outputText(" (Cost:");
+			if (nails > 0) {outputText(" " + nails + " nails")}
+			if (wood > 0) {outputText(" " + wood + " wood")}
+			if (stone > 0) {outputText(" " + stone + " stone")}
+			if (hp > 0) {outputText(" " + hp + " HP")}
+			if (mana > 0) {outputText(" " + mana + " mana")}
+			outputText(".)")
+		}
+		outputText("\n");
+		checkMaterials();
+		if (checkResources(nails, wood, stone, hp, mana)) {
+			doYesNo(build, noThanks);
+		} else {
+			errorNotEnough();
+			doNext(playerMenu);
+		}
+	}
 
-// ?button 0 - Izma rest place upgrades?
-// ?button 1 - Milk Slut rest place upgrades?
-// ?button 2 - Latex Goo-Girl rest place upgrades?
-// ?button 3 - Arian Tent changes?
-// ?button 5 - Kid A barrel changes?
-// ?button 6 - Behemoth lair upgr?
-// ?button 7 - Lith lair upgr? (Rycharde corr drider slave)
-// ?button 8 - Kimika living place upgr? (Adorable Sheep-morph archer with "a slight issue" ^^)
-// button 9 - previous page
-// ?button 10 - Helia + Helspawn living place?
-// button 14 - back
-
+	private function checkResources(nails:int, wood:int, stone:int, hp:int = 0, mana:int = 0):Boolean {
+		return (
+			flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES] >= nails &&
+			flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES] >= wood &&
+			flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES] >= stone &&
+			player.HP > hp &&
+			player.mana > mana
+		)
+	}
 }
 }
