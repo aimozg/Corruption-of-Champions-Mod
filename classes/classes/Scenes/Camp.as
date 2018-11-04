@@ -1,4 +1,4 @@
-﻿package classes.Scenes{
+package classes.Scenes{
 import classes.*;
 import classes.BodyParts.Face;
 import classes.BodyParts.LowerBody;
@@ -280,7 +280,7 @@ CoC.instance.saves.saveGame(player.slotName);
 			}
 		}
 	}
-	if(flags[kFLAGS.HELSPAWN_AGE] == 1 && flags[kFLAGS.HELSPAWN_GROWUP_COUNTER] == 7) {
+	if(flags[kFLAGS.HELSPAWN_AGE] == 1 && flags[kFLAGS.HELSPAWN_GROWUP_COUNTER] >= 7) {
 		hideMenus();
 		helSpawnScene.helSpawnGraduation();
 		return;
