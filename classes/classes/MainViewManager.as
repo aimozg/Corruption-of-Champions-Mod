@@ -51,7 +51,7 @@ public class MainViewManager extends BaseContent {
 		var BM:*    = MainView.Backgrounds[style];
 		if (BM is Class) {
 			mainView.background.bitmap = new BM();
-		} else if (BM is Bitmap) {
+		} else {
 			mainView.background.bitmap = BM;
 		}
 		var sidebarBg:Class = StatsView.SidebarBackgrounds[style];
