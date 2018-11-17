@@ -550,9 +550,10 @@ public function checkMaterials():void {
 	var nails:int = flags[kFLAGS.CAMP_CABIN_NAILS_RESOURCES];
 	var wood:int = flags[kFLAGS.CAMP_CABIN_WOOD_RESOURCES];
 	var stone:int = flags[kFLAGS.CAMP_CABIN_STONE_RESOURCES];
-	outputText("Nails: " + nails + "/" + (nails>=2? 600:200) + "\n");
-	outputText("Wood: " + wood + "/" + (wood>=3? 900:300) + "\n");
-	outputText("Stone: " + stone + "/" + (stone>=4? 900:300) + "\n");
+	var upgrades:int = flags[kFLAGS.MATERIALS_STORAGE_UPGRADES];
+	outputText("Nails: " + nails + "/" + (upgrades >= 2? 600:200) + "\n");
+	outputText("Wood: " + wood + "/" + (upgrades >= 3? 900:300) + "\n");
+	outputText("Stone: " + stone + "/" + (upgrades >= 4? 900:300) + "\n");
 }
 
 	private function get helpersArr():Array {
