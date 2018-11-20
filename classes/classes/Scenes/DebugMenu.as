@@ -268,6 +268,7 @@ package classes.Scenes
 			addButton(1, "Toughness", statChangeAttributeMenu, player.touStat);
 			addButton(2, "Speed", statChangeAttributeMenu, player.speStat);
 			addButton(3, "Intelligence", statChangeAttributeMenu, player.intStat);
+			addButton(4, "Wisdom", statChangeAttributeMenu, player.wisStat);
 			addButton(5, "Libido", statChangeAttributeMenu, player.libStat);
 			addButton(6, "Sensitivity", statChangeAttributeMenu, "sen");
 			addButton(7, "Corruption", statChangeAttributeMenu, "cor");
