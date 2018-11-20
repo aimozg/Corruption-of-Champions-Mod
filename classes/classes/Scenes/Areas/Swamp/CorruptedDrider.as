@@ -164,7 +164,7 @@ import classes.internals.*;
 			this.hips.type = Hips.RATING_CURVY + 2;
 			this.butt.type = Butt.RATING_LARGE + 1;
 			this.lowerBody = LowerBody.DRIDER;
-			player.skin.restore();
+			this.skin.restore();
 			this.hairColor = hairColor;
 			this.hairLength = 24;
 			initStrTouSpeInte(110, 75, 70, 100);
