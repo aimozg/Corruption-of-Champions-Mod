@@ -23,8 +23,6 @@ import classes.saves.FileSaver;
 import classes.saves.FileSaverAir;
 import classes.saves.FileSaverStandalone;
 
-import coc.view.ButtonDataList;
-
 import flash.events.MouseEvent;
 import flash.net.FileReference;
 import flash.net.SharedObject;
@@ -68,11 +66,64 @@ public class Saves extends BaseContent {
 private var fileSaver:FileSaver;
 public var file:FileReference;
 
-public var saveFileNames:Array = ["CoC_1", "CoC_2", "CoC_3", "CoC_4", "CoC_5", "CoC_6", "CoC_7", "CoC_8", "CoC_9", "CoC_10", "CoC_11", "CoC_12", "CoC_13", "CoC_14"];
 public var versionProperties:Object = { "legacy" : 100, "0.8.3f7" : 124, "0.8.3f8" : 125, "0.8.4.3":119, "latest" : 119 };
 
 public var notes:String = "";
 	public static const sharedDir:String = "CoC/EndlessJourney/";
+	public static const savePrefix:String = "CoC_";
+
+	/**
+	 * Shows the save or load screen
+	 * @param screenType "save", "load", or "delete"
+	 * @param page which page to display. Each page shows 12 saves
+	 * @param dir which save directory to use, defaults to sharedDir
+	 */
+	private function newSaveScreen(screenType:String, page:int = 0, dir:String = sharedDir):void {
+		var fun:Function;
+		var param:Object;
+		switch(screenType){
+			case "save": fun = saveGame; param = true; break;
+			case "load": fun = loadGame; param = false; break;
+			case "delete": fun = confirmDelete; param = null; break;
+			default: return saveLoad();
+		}
+		clearOutput();
+		if (player && player.slotName != "VOID") {
+			outputText("<b>Last saved or loaded from: " + player.slotName + "</b>\r\r");
+		}
+		outputText("<b><u>Slot: Sex,  Game Days Played</u></b>\r");
+
+		var start:int = 1 + (page * 12);
+		for(var i:int = 0; i < 12; i++){
+			var slot:int = start+i;
+			var test:Object = SharedObject.getLocal(dir+savePrefix+slot, "/");
+			outputText(loadSaveDisplay(test, String(slot)));
+			addButton(i, "Slot " + slot, fun, dir+savePrefix+slot, param)
+				.disableIf(!test.data.exists && !screenType == "save");
+		}
+
+		if(screenType == "save") {
+			if (flags[kFLAGS.HARDCORE_MODE] > 0) {
+				saveGame(flags[kFLAGS.HARDCORE_SLOT]);
+				menu();
+				outputText("You may not create copies of Hardcore save files! Your current progress has been saved.");
+				doNext(playerMenu);
+				return;
+			}
+			mainView.nameBox.x = 210;
+			mainView.nameBox.y = 620;
+			mainView.nameBox.width = 550;
+			mainView.nameBox.text = "";
+			mainView.nameBox.maxChars = 54;
+			mainView.nameBox.visible = true;
+			outputText("<b>Leave the notes box blank if you don't wish to change notes.\r<u>NOTES:</u></b>");
+		}
+
+		addButton(12, "Previous", newSaveScreen, screenType,page-1, dir);
+		addButton(13, "Next", newSaveScreen, screenType, page+1, dir);
+		addButton(14, "Back", saveLoad);
+		if(page <= 0) {addButtonDisabled(12, "Previous")}
+	}
 
 	public function loadSaveDisplay(saveFile:Object, slotName:String):String {
 		if (!saveFile.data.exists) {
@@ -121,75 +172,6 @@ public var notes:String = "";
 		return holding + "\r";
 	}
 
-public function loadScreen(dir:String = sharedDir):void
-{
-	var buttons:ButtonDataList = new ButtonDataList();
-	clearOutput();
-	outputText("<b><u>Slot: Sex,  Game Days Played</u></b>\r");
-	
-	for (var i:int = 0; i < saveFileNames.length; i += 1) {
-		var test:Object = SharedObject.getLocal(dir+saveFileNames[i], "/");
-		outputText(loadSaveDisplay(test, String(i + 1)));
-		buttons.add("Slot " + (i + 1), curry(selectLoadButton,dir+saveFileNames[i], i))
-			.disableIf(!test.data.exists);
-	}
-	buttons.submenu(returnToSaveMenu, buttons.page, false);
-
-	function selectLoadButton(slotName:String, index:int):void {
-		trace("Loading save with name", saveFileNames[index], "at index", index);
-		if(loadGame(slotName)) {
-			doNext(playerMenu);
-			showStats();
-			statScreenRefresh();
-			clearOutput();
-			outputText("Slot " + index + " Loaded!");
-		}
-	}
-}
-
-public function saveScreen(dir:String = sharedDir):void
-{
-	var buttons:ButtonDataList = new ButtonDataList();
-	mainView.nameBox.x = 210;
-	mainView.nameBox.y = 620;
-	mainView.nameBox.width = 550;
-	mainView.nameBox.text = "";
-	mainView.nameBox.maxChars = 54;
-	mainView.nameBox.visible = true;
-
-	clearOutput();
-
-	if (flags[kFLAGS.HARDCORE_MODE] > 0) {
-		saveGame(flags[kFLAGS.HARDCORE_SLOT]);
-		outputText("You may not create copies of Hardcore save files! Your current progress has been saved.");
-		doNext(playerMenu);
-		return;
-	}
-
-	if (player.slotName != "VOID") {
-		outputText("<b>Last saved or loaded from: " + player.slotName + "</b>\r\r");
-	}
-	outputText("<b><u>Slot: Sex,  Game Days Played</u></b>\r");
-	
-	for (var i:int = 0; i < saveFileNames.length; i += 1) {
-		var test:Object = SharedObject.getLocal(dir + saveFileNames[i], "/");
-		outputText(loadSaveDisplay(test, String(i + 1)));
-		buttons.add("Slot " + (i+1), curry(selectSaveButton, dir+saveFileNames[i], i));
-	}
-
-	if (player.slotName == "VOID") {
-		outputText("\r\r");
-	}
-
-	outputText("<b>Leave the notes box blank if you don't wish to change notes.\r<u>NOTES:</u></b>");
-	buttons.submenu(returnToSaveMenu, buttons.page, false);
-
-	function selectSaveButton(slot:String, index:int):void {
-		trace("Saving game with name", saveFileNames[index], "at index", index);
-		saveGame(slot, true)
-	}
-}
-
 public function saveLoad(e:MouseEvent = null):void
 {
 	CoC.instance.mainMenu.hideMainMenu();
@@ -216,12 +198,12 @@ public function saveLoad(e:MouseEvent = null):void
 
 	menu();
 	//addButton(0, "Save", saveScreen);
-	addButton(1, "Load", loadScreen);
-	addButton(2, "Delete", deleteScreen);
+	addButton(1, "Load", newSaveScreen, "load");
+	addButton(2, "Delete", newSaveScreen, "delete");
 	//addButton(5, "Save to File", saveToFile);
 	addButton(6, "Load File", openSave);
 	//addButton(8, "AutoSave: " + autoSaveSuffix, autosaveToggle);
-	addButton(10, "Import",loadScreen,"").hint("Load a save from another mod. \n\n<b>This may cause issues</b>");
+	addButton(10, "Import", newSaveScreen,"load", 0, "").hint("Load a save from another mod. \n\n<b>This may cause issues</b>");
 	addButton(14, "Back", EventParser.gameOver, true);
 
 	if (mainView.getButtonText( 0 ) == "Game Over")
@@ -238,19 +220,16 @@ public function saveLoad(e:MouseEvent = null):void
 		addButton(14, "Back", playerMenu);
 		return;
 	}
-	addButton(0, "Save", saveScreen);
-	addButton(5, "Save to File", saveToFile);
+	addButton(0, "Save", newSaveScreen, "save");
+	addButton(5, "Save to File", saveToFile).disableIf(flags[kFLAGS.HARDCORE_MODE] >= 1, "Disabled in Hardcore mode.");
 	addButton(3, "AutoSave: " + autoSaveSuffix, autosaveToggle);
-	addButton(11, "Export",saveScreen,"").hint("Export your save so it can be used by other mods");
+	addButton(11, "Export",newSaveScreen,"save", 0, "").hint("Export your save so it can be used by other mods");
 	if (gameStateGet() == 3) {
 		addButton(14, "Back", CoC.instance.mainMenu.mainMenu);
 	}
 	else
 	{
 		addButton(14, "Back", playerMenu);
-	}
-	if (flags[kFLAGS.HARDCORE_MODE] >= 1) {
-		removeButton(5); //Disable "Save to File" in Hardcore Mode.
 	}
 }
 
@@ -263,52 +242,26 @@ private function autosaveToggle():void {
 	saveLoad();
 }
 
-public function deleteScreen():void
-{
-	clearOutput();
-	outputText("Slot,  Race,  Sex,  Game Days Played\n");
-	
-	var buttons:ButtonDataList = new ButtonDataList();
-
-	for (var i:int = 0; i < saveFileNames.length; i += 1) {
-		var test:Object = SharedObject.getLocal(sharedDir+saveFileNames[i], "/");
-		outputText(loadSaveDisplay(test, String(i + 1)));
-		buttons.add("Slot " + (i+1), curry(selectDeleteButton,i)).disableIf(!test.data.exists);
-	}
-	
-	outputText("\n<b>ONCE DELETED, YOUR SAVE IS GONE FOREVER.</b>");
-	buttons.submenu(returnToSaveMenu, buttons.page, false);
-
-	function selectDeleteButton(index:int):void {
-		flags[kFLAGS.TEMP_STORAGE_SAVE_DELETION] = saveFileNames[index];
-		confirmDelete();
-	}
-}
-
-public function confirmDelete():void {
+public function confirmDelete(slot:String):void {
 	clearOutput();
 	menu();
-	outputText("You are about to delete the following save: <b>" + flags[kFLAGS.TEMP_STORAGE_SAVE_DELETION] + "</b>\n\nAre you sure you want to delete it?");
-	addButton(0, "No", deleteScreen);
-	addButton(1, "Yes", purgeTheMutant);
+	outputText("You are about to delete the following save: <b>" + slot + "</b>\n\nAre you sure you want to delete it?");
+	addButton(0, "No", newSaveScreen, "delete");
+	addButton(1, "Yes", purgeTheMutant, slot);
 }
 
-public function purgeTheMutant():void
+public function purgeTheMutant(slot:String):void
 {
-	var slot:String = flags[kFLAGS.TEMP_STORAGE_SAVE_DELETION];
 	var test:* = SharedObject.getLocal(slot, "/");
 	trace("DELETING SLOT: " + slot);
 	var blah:Array = ["been virus bombed", "been purged", "been vaped", "been nuked from orbit", "taken an arrow to the knee", "fallen on its sword", "lost its reality matrix cohesion", "been cleansed", "suffered the following error: (404) Porn Not Found", "been deleted"];
-	
-	trace(blah.length + " array slots");
-	var select:Number = rand(blah.length);
 	clearOutput();
-	outputText(slot + " has " + blah[select] + ".");
+	outputText(slot + " has " + randomChoice(blah) + ".");
 	test.clear();
 	if(lastSaveSlot == slot){
 		lastSaved("VOID");
 	}
-	doNext(deleteScreen);
+	doNext(curry(newSaveScreen, "delete"));
 }
 
 public function confirmOverwrite(slot:String):void {
@@ -317,11 +270,12 @@ public function confirmOverwrite(slot:String):void {
 	outputText("You are about to overwrite the following save slot: " + slot + ".");
 	outputText("\n\n<i>If you choose to overwrite a save file from the original CoC, it will no longer be playable on the original version. I recommend you use slots 10-14 for saving on the mod.</i>");
 	outputText("\n\n<b>ARE YOU SURE?</b>");
-	doYesNo(createCallBackFunction(saveGame, slot), saveScreen);
+	doYesNo(createCallBackFunction(saveGame, slot), curry(newSaveScreen, "save"));
 }
 
 public function saveGame(slot:String, bringPrompt:Boolean = false):void
 {
+	trace("Saving game with name ", slot);
 	var saveFile:* = SharedObject.getLocal(slot, "/");
 	if (player.slotName != slot && saveFile.data.exists && bringPrompt) {
 		confirmOverwrite(slot);
