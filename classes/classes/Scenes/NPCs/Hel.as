@@ -162,7 +162,7 @@ public class Hel extends Monster
 		{
 			if (pcCameWorms){
 				outputText("\n\nHelia waits it out in stoic silence...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				if(hasStatusEffect(StatusEffects.Sparring)) SceneLib.helFollower.loseToSparringHeliaLikeAButtRapedChump();
 				else SceneLib.helScene.loseToSalamander();

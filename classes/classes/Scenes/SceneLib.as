@@ -15,6 +15,8 @@ import classes.Scenes.Places.*;
 import classes.Scenes.Places.Boat.SharkGirlScene;
 import classes.Scenes.Quests.UrtaQuest;
 
+import coc.xxc.NamedNode;
+
 public class SceneLib {
     public static var camp:Camp = new Camp(/*campInitialize*/);
 

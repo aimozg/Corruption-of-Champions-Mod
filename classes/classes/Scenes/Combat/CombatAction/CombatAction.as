@@ -19,16 +19,7 @@ package classes.Scenes.Combat.CombatAction {
 
 	import flash.utils.Dictionary;
 
-	public class CombatAction {
-		public static const KiAction:String = "KiAction";
-		public static const ManaAction:String = "ManaAction";
-		public static const FatigueAction:String = "FatigueAction";
-		public static const WrathAction:String = "WrathAction";
-
-		public static const AlignmentBlack:int = -1;
-		public static const AlignmentNone:int = 0;
-		public static const AlignmentWhite:int = 1;
-
+	public class CombatAction extends ACombatAction {
 		internal var _name:String;
 		internal var _cost:int;
 		internal var _alignment:int = 0;
@@ -91,10 +82,10 @@ package classes.Scenes.Combat.CombatAction {
 		 * @param target the creature receiving the action
 		 * @return a button that calls the action
 		 */
-		public function button(host:Creature, target:Creature):ButtonData {
+		public override function button(host:Creature, target:Creature):ButtonData {
 			//todo toggle actions
 			//todo Create a class to hold the actual action and move doaction methods out to that class?
-			var bd:ButtonData = new ButtonData(_name, Utils.curry(doAction, host, target), _toolTip);
+			var bd:ButtonData = super.button(host,target).hint(_toolTip);
 			setCost(bd, host);
 			for each(var cond:Array in _disables) {
 				bd.disableIf(cond[0](host), cond[1]);
@@ -111,7 +102,7 @@ package classes.Scenes.Combat.CombatAction {
 		 * @param host creature using the action
 		 * @param target creature receiving the action
 		 */
-		private function doAction(host:Creature, target:Creature):void {
+		protected override function doAction(host:Creature, target:Creature):void {
 			SceneLib.combat.lastAttack = _lastActionType;
 			EngineCore.clearOutput(); //fixme this should be handled elsewhere
 			EngineCore.outputText(_startText);
@@ -233,7 +224,7 @@ package classes.Scenes.Combat.CombatAction {
 		/**
 		 * The type of this action. Useful for filtering
 		 */
-		public function get actionType():String {
+		public override function get actionType():String {
 			return _actionType;
 		}
 
@@ -257,7 +248,7 @@ package classes.Scenes.Combat.CombatAction {
 		/**
 		 * Used to update the cooldowns every round of combat
 		 */
-		public function onCombatRound():void {
+		public override function onCombatRound():void {
 			for (var cooldown:* in _cooldowns) {
 				if (_cooldowns[cooldown]-- <= 0) {
 					delete _cooldowns[cooldown];
@@ -300,7 +291,7 @@ package classes.Scenes.Combat.CombatAction {
 			//fixme @oxdeception move below into combat?
 			//todo @Oxdeception spell specifics
 			if (!(host is Player)) {
-				SceneLib.combat.combatRoundOver()
+				SceneLib.combat.afterMonsterAction();
 			} else {
 				var dam:Number = 0;
 				for each(var d:* in damage) {
@@ -308,7 +299,7 @@ package classes.Scenes.Combat.CombatAction {
 				}
 				SceneLib.combat.checkAchievementDamage(dam);
 				SceneLib.combat.heroBaneProc(dam);
-				SceneLib.combat.enemyAIImpl();
+				SceneLib.combat.afterPlayerAction();
 			}
 		}
 
@@ -393,39 +384,5 @@ package classes.Scenes.Combat.CombatAction {
 			return text;
 		}
 
-		/**
-		 * Updates the rage status
-		 * If a critical hit was scored, remove the status. Otherwise increase its value by 10 up to 50
-		 * @param host creature to have rage status updated
-		 * @param target target of the action, unused
-		 * @param damage damage dealt in the current action, unused
-		 * @param crit if a critical hit was scored in this action
-		 * @return updated damage
-		 */
-		internal static function rageUpdate(host:Creature, target:Creature, damage:Number, crit:Boolean):Number {
-			if (crit) {
-				host.removeStatusEffect(StatusEffects.Rage);
-			} else {
-				if (host.hasPerk(PerkLib.Rage) && (host.hasStatusEffect(StatusEffects.Berzerking) || host.hasStatusEffect(StatusEffects.Lustzerking))) {
-					var rage:StatusEffectClass = host.createOrFindStatusEffect(StatusEffects.Rage);
-					rage.value1 = Utils.boundInt(10, rage.value1 + 10, 50);
-				}
-			}
-			return damage;
-		}
-
-		/**
-		 * Attempts to stun the target, fails if the target has resolute
-		 * @param target the target to attempt to stun
-		 * @param duration the number of turns the stun should last
-		 */
-		private static function tryStun(target:Creature, duration:int):void {
-			if (!target.hasPerk(PerkLib.Resolute)) {
-				target.createStatusEffect(StatusEffects.Stunned, duration, 0, 0, 0);
-			} else {
-				var isare:String = (target as Monster).plural ? " are " : " is ";
-				EngineCore.outputText("\n\n[b: " + target.capitalA + target.short + isare + "too resolute to be stunned by your attack.]");
-			}
-		}
 	}
 }

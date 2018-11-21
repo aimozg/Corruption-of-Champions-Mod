@@ -1,6 +1,7 @@
 ﻿package classes
 {
 import classes.CoC;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
@@ -64,6 +65,11 @@ public class StatusEffectClass extends Utils
 	public function onCombatEnd():void {
 		// do nothing
 	}
+	
+	public function processRoll(roll:ActionRoll):void {
+		if (_stype.isRollProcessor) _stype.processRoll(this, roll);
+	}
+
 	/**
 	 * Called during combat in combatStatusesUpdate() for player, then for monster
 	 */
@@ -78,7 +84,7 @@ public class StatusEffectClass extends Utils
 	 * Attach a (de)buff to this status effect, will be removed with it
 	 */
 	public function buffHost(stat:String,amount:Number,text:String=null,show:Boolean=true):void {
-		StatUtils.buffByName(host,stat,amount,stype.tagForBuffs,{save:true,text: text || stype.id,show:show});
+		host.statStore.addBuff(stat,amount,stype.tagForBuffs,{save:true,text: text || stype.id,show:show});
 	}
 	
 	public function remove(/*fireEvent:Boolean = true*/):void {
@@ -89,13 +95,18 @@ public class StatusEffectClass extends Utils
 	public function removedFromHostList(fireEvent:Boolean):void {
 		if (fireEvent) {
 			onRemove();
-			_host.removeStatEffects(stype.tagForBuffs);
+			_host.removeBuffs(stype.tagForBuffs);
 		}
 		_host = null;
 	}
 	public function addedToHostList(host:Creature,fireEvent:Boolean):void {
 		_host = host;
-		if (fireEvent) onAttach();
+		if (fireEvent) {
+			if (stype.buffs != null) {
+				host.statStore.addBuffObject(stype.buffs,stype.tagForBuffs,this);
+			}
+			onAttach();
+		}
 	}
 	public function attach(host:Creature/*,fireEvent:Boolean = true*/):void {
 		if (_host == host) return;

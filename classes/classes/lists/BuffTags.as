@@ -1,7 +1,7 @@
 /**
  * Coded by aimozg on 02.06.2018.
  */
-package classes.Stats {
+package classes.lists {
 public class BuffTags {
 	public static const DRAIN:String = "drain";
 	public static const OVERSIZED:String = 'oversized';

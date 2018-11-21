@@ -16,17 +16,16 @@ import classes.BodyParts.Wings;
 import classes.GlobalFlags.kFLAGS;
 import classes.Scenes.NPCs.JojoScene;
 
-import coc.xxc.BoundStory;
+import coc.xxc.BoundNode;
 import coc.xxc.Story;
 
 public class PlayerAppearance extends BaseContent {
 
 
 	public function PlayerAppearance() {
-		onGameInit(init);
 	}
-	private var story:BoundStory;
-	private function init():void {
+	private var story:BoundNode;
+	protected override function init():void {
         story = new Story("story", CoC.instance.rootStory, "appearance").bind(CoC.instance.context);
     }
 	public function appearance():void {
@@ -948,10 +947,8 @@ public class PlayerAppearance extends BaseContent {
 			outputText("  " + Num2Text(player.legCount) + " furry, digitigrade legs form below your [hips].  The fur is thinner on the feet, and your toes are tipped with claws.");
 		else if (player.lowerBody == LowerBody.HOOFED)
 			outputText("  Your " + num2Text(player.legCount) + " legs are muscled and jointed oddly, covered in [skin coat.color] fur, and end in a bestial hooves.");
-		else if (player.lowerBody == LowerBody.DOG)
-			outputText("  " + Num2Text(player.legCount) + " digitigrade legs grow downwards from your waist, ending in dog-like hind-paws.");
-		else if (player.lowerBody == LowerBody.WOLF)
-			outputText("  " + Num2Text(player.legCount) + " digitigrade legs grow downwards from your waist, ending in clawed wolf-like hind-paws.");
+		else if (player.lowerBody == LowerBody.CANINE)
+			outputText("  " + Num2Text(player.legCount) + " digitigrade legs grow downwards from your waist, ending in clawed сanine-like hind-paws.");
 		else if (player.lowerBody == LowerBody.NAGA)
 			outputText("  Below your waist your flesh is fused together into a very long snake-like tail.");
 		//Horse body is placed higher for readability purposes
@@ -1165,10 +1162,8 @@ public class PlayerAppearance extends BaseContent {
 	public function describeArms():void {
 //Wing arms
 		var armType:Number = player.arms.type;
-		if (armType == Arms.HARPY)
-			outputText("  Feathers hang off your arms from shoulder to wrist, giving them a slightly wing-like look.");
-		if (armType == Arms.PHOENIX)
-			outputText("  Crimson feathers hang off your arms from shoulder to wrist, giving them a slightly wing-like look.");
+		if (armType == Arms.HARPY) // PHOENIX
+			outputText("  [Skin coat.color] feathers hang off your arms from shoulder to wrist, giving them a slightly wing-like look.");
 		else if (armType == Arms.SPIDER)
 			outputText("  Shining black exoskeleton covers your arms from the biceps down, resembling a pair of long black gloves from a distance.");
 		else if (armType == Arms.MANTIS)
@@ -1273,14 +1268,8 @@ public class PlayerAppearance extends BaseContent {
 			outputText("  A pair of small leathery wings covered with [skin coat.color] fur rest on your back. Despite being too small to allow flight they at least look cute on you.");
 		if (wingType == Wings.MANTICORE_LIKE_LARGE)
 			outputText("  A pair of large ominous leathery wings covered with [skin coat.color] fur expand from your back. You can open them wide to soar high in search of your next prey.");
-		if (wingType == Wings.FEATHERED_LARGE)
-			outputText("  A pair of large, feathery wings sprout from your back.  Though you usually keep the [haircolor]-colored wings folded close, they can unfurl to allow you to soar as gracefully as a harpy.");
-		if (wingType == Wings.FEATHERED_ALICORN)
-			outputText("  A pair of large, feathery wings sprout from your back.  Though you usually keep the [haircolor]-colored wings folded close, they can unfurl to allow you to soar as gracefully as an alicorn.");
-		if (wingType == Wings.FEATHERED_SPHINX)
-			outputText("  A pair of large, feathery wings sprout from your back.  Though you usually keep the [haircolor]-colored wings folded close, they can unfurl to allow you to soar as gracefully as an sphinx.");
-		if (wingType == Wings.FEATHERED_PHOENIX)
-			outputText("  A pair of large, feathery wings sprout from your back.  Though you usually keep the crimson-colored wings folded close, they can unfurl to allow you to soar as gracefully as a phoenix.");
+		if (wingType == Wings.FEATHERED) // FEATHERED_LARGE, _ALICORN, _SPHINX, _PHOENIX
+			outputText("  A pair of large, feathery wings sprout from your back.  Though you usually keep the [skin coat.color]-colored wings folded close, they can unfurl to allow you to soar gracefully in the sky.");
 		if (wingType == Wings.DRACONIC_SMALL)
 			outputText("  Small, vestigial wings sprout from your shoulders.  They might look like bat's wings, but the membranes are covered in fine, delicate scales.");
 		else if (wingType == Wings.DRACONIC_LARGE)
@@ -1454,33 +1443,24 @@ public class PlayerAppearance extends BaseContent {
 			outputText("  In addition to your primary two [eyecolor] eyes, you have a second, smaller pair on your forehead.");
 		else if(eyeType == Eyes.BLACK_EYES_SAND_TRAP)
 			outputText("  Your eyes are solid spheres of inky, alien darkness.");
-		else if(eyeType == Eyes.CAT_SLITS)
+		else if(eyeType == Eyes.SLITS) // CAT_SLITS, MANTICORE, FOX
 			outputText("  Your [eyecolor] eyes have vertically slit like those of cat.");
-		else if(eyeType == Eyes.GORGON)
-			outputText("  Your [eyecolor] eyes are similar to those of snake-like gorgons with ability to temporally petrify.");
 		else if(eyeType == Eyes.FENRIR)
 			outputText("  Your eyes glows with a freezing blue light icy smoke rising in the air around it.");
-		else if(eyeType == Eyes.MANTICORE)
-			outputText("  Your eyes are similar to those of a cat, with slit pupil. However, their [eyecolor] iris dismiss any links to the regular felines in favor of something way more ominous.");
-		else if(eyeType == Eyes.FOX)
-			outputText("  Your [eyecolor] eyes looks like those of a fox with a slit in the middle.");
 		else if(eyeType == Eyes.REPTILIAN)
 			outputText("  Your eyes looks like those of a reptile with [eyecolor] irises and a slit.");
-		else if(eyeType == Eyes.SNAKE)
+		else if(eyeType == Eyes.SNAKE) // GORGON
 			outputText("  Your [eyecolor] eyes have slitted pupils like that of a snake.");
 		else if(eyeType == Eyes.DRAGON)
 			outputText("  Your [eyecolor] eyes have slitted pupils like that of a dragon.");
-		else if(player.eyes.type == Eyes.DEVIL)
+		else if(eyeType == Eyes.DEVIL)
 			outputText("  Your eyes look fiendish with their black sclera and glowing [eyecolor] irises.");
 		else if(eyeType == Eyes.ONI)
 			outputText("  Your eyes look normal enough save for their fiendish [eyecolor] iris and slitted pupils.");
 		else if(eyeType == Eyes.ELF)
 			outputText("  Your [eyecolor] elven eyes looks somewhat human, save for their cat-like vertical slit which draws light right in, allowing you to see with perfect precision both at day and night time.");
 		else if(eyeType == Eyes.RAIJU)
-			outputText("  Your eyes are of an electric [eyecolor] hue that constantly glows with voltage power. They have slitted pupils like those of a beast.");
-		else if(eyeType == Eyes.VAMPIRE){
-			outputText("  Your eyes looks somewhat normal, but their blood-red irises seem to have the tendency of drawing in people’s gaze, like moths to a flame.");
-		}
+			outputText("  Your eyes are of an electric [eyecolor] hue that constantly glows with voltage power. They have slitted pupils like those of a raiju.");
 		else if(eyeType == Eyes.GEMSTONES){
 			outputText("  Instead of regular eyes you see through a pair of gemstones that change hue based on your mood.");
 		}
@@ -1722,19 +1702,13 @@ public class PlayerAppearance extends BaseContent {
 				outputText("  A set of retractable, needle-like fangs sit in place of your canines and are ready to dispense their venom.");
 			else if (faceType == Face.FERRET_MASK)
 				outputText("  The [skinFurScales] around your eyes is significantly darker than the rest of your face, giving you a cute little ferret mask.");
-			else if (faceType == Face.MANTICORE)
-				outputText("  You have a set of sharp cat-like teeth in your mouth.");
+			else if (faceType == Face.SHARPTEETH)
+				outputText("  You have a set of sharp animal-like teeth in your mouth.");
 			else if (faceType == Face.SNAKE_FANGS) {
 				if (odd==0) {
 					outputText("  The only oddity is your pair of dripping fangs which often hang over your lower lip.");
 				} else {
 					outputText("  In addition, a pair of fangs hang over your lower lip, dripping with venom.");
-				}
-			} else if (faceType == Face.SALAMANDER_FANGS) {
-				if (odd == 0) {
-					outputText(".  The only oddity is your salamander fangs giving you a menacing smile.");
-				} else {
-					outputText("  In addition, a pair of salamander fangs grows out of your mouth giving you a menacing smile.");
 				}
 			} else if (faceType == Face.YETI_FANGS) {
 				if (odd == 0){
@@ -1846,19 +1820,6 @@ public class PlayerAppearance extends BaseContent {
 				if (player.hasKeyItem("Fenrir Collar") >= 0) outputText("  Cold blue mist seems to periodically escape from your mouth.");
 			}
 		}
-		if (faceType == Face.WOLF_FANGS) {
-			if (!player.hasCoat()) {
-				outputText("  Your face is human in shape and structure with [skin coat]");
-				if (skin.hasMagicalTattoo()) outputText(" covered with magical tattoo");
-				else if(skin.hasBattleTattoo()) outputText(" covered with battle tattoo");
-				else if(skin.hasLightningShapedTattoo()) outputText(" covered with a few glowing lightning tattoos");
-				outputText(". Your mouth is somewhat human save for your wolf-like canines.");
-			} else if (player.hasPartialCoat(Skin.FUR)) {
-				outputText("  Your face looks human save for your wolf-like canines.  You've got [skin coat], hiding your [skin noadj] underneath your furry visage.");
-			} else {
-				outputText("  Your face looks human save for your wolf-like canines, but overlaid with glittering [skin coat].");
-			}
-		}
 		//cat-faces
 		if (faceType == Face.CAT || faceType == Face.CHESHIRE) {
 			if (!player.hasCoat()) {
@@ -1874,9 +1835,8 @@ public class PlayerAppearance extends BaseContent {
 			}
 			if (faceType == Face.CHESHIRE) outputText(" For some reason your facial expression is that of an everlasting yet somewhat unsettling grin.");
 		}
-		if (faceType == Face.CAT_CANINES || faceType == Face.CHESHIRE_SMILE) {
-			outputText("  Your face is human in shape and structure with [skin coat]. Your mouth is somewhat human save for your cat-like canines.");
-			if (faceType == Face.CHESHIRE_SMILE) outputText(" For some reason your facial expression is that of an everlasting yet somewhat unsettling grin.");
+		if (faceType == Face.CHESHIRE_SMILE) {
+			outputText("  Your face is human in shape and structure with [skin coat]. Your mouth is somewhat human save for your cat-like canines. For some reason your facial expression is that of an everlasting yet somewhat unsettling grin.");
 		}
 		//Minotaaaauuuur-face
 		if (faceType == Face.COW_MINOTAUR) {
@@ -1905,9 +1865,6 @@ public class PlayerAppearance extends BaseContent {
 		if (faceType == Face.DRAGON) {
 			outputText("  Your face is a narrow, reptilian muzzle.  It looks like a predatory lizard's, at first glance, but with an unusual array of spikes along the under-jaw.  It gives you a regal but fierce visage.  Opening your mouth reveals several rows of dagger-like sharp teeth.  The fearsome visage is decorated by [skin coat].");
 		}
-		if (faceType == Face.DRAGON_FANGS) {
-			outputText("  Your mouth is somewhat human save for your draconic fangs giving you a menacing smile.  It's decorated by [skin coat].");
-		}
 		if (faceType == Face.JABBERWOCKY) {
 			outputText("  Your face is a narrow, reptilian muzzle.  It looks like a predatory lizard's, at first glance, but with an unusual array of spikes along the under-jaw.  It gives you a regal but fierce visage.  Opening your mouth reveals two buck tooth, which are abnormally large.  Like a rabbit or rather a Jabberwocky.  The fearsome visage is decorated by [skin coat].");
 		}
@@ -1916,15 +1873,6 @@ public class PlayerAppearance extends BaseContent {
 		}
 		if (faceType == Face.PLANT_DRAGON) {
 			outputText("  Your face is a narrow, reptilian and regal, reminiscent of a dragon.  A [skin coat] decorates your visage.");
-		}
-		if (faceType == Face.DEVIL_FANGS) {
-			outputText("  Your mouth is somewhat human save for your fiendish canines.  It's decorated by [skin coat].");
-		}
-		if (faceType == Face.ONI_TEETH) {
-			outputText("  Your face is human in shape and structure with [skin coat]. Your mouth could pass for human if not for your two large ogre like canines.");
-		}
-		if (faceType == Face.RAIJU_FANGS) {
-			outputText("  Your face is human in shape and structure with [skin coat]. Your mouth could pass for human if not for your two sharp weasel canines.");
 		}
 		if (faceType == Face.ORCA) {
 			if (skin.hasPlainSkinOnly() && player.skinAdj == "glossy" && player.skinTone == "white and black")
@@ -2021,7 +1969,7 @@ public function RacialScores():void {
 	outputText("\nCHIMERA: " + player.chimeraScore());
 	outputText("\nGRAND CHIMERA: " + player.grandchimeraScore());
 	if (player.internalChimeraScore() >= 1) {
-		outputText("\n<font color=\"#0000a0\">INTERNAL CHIMERICAL DISPOSITION: " + player.internalChimeraScore() + " (+" + (5 * player.internalChimeraScore() * (1 + player.newGamePlusMod())) + " max Str / Tou / Spe / Int / Wis / Lib)</font>");
+		outputText("\n<font color=\"#0000a0\">INTERNAL CHIMERICAL DISPOSITION: " + player.internalChimeraScore() + " (+" + (5 * player.internalChimeraScore()) + " max Str / Tou / Spe / Int / Wis / Lib)</font>");
 	}
 	else if (player.internalChimeraScore() < 1) outputText("\nINTERNAL CHIMERICAL DISPOSITION: 0</font>");
 	outputText("\n\n");

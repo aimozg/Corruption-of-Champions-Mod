@@ -16,7 +16,6 @@ public class Goblin extends Monster
 			if (short == "goblin shaman") multiplier += 0.4;
 			if (short == "goblin warrior") multiplier += 0.5;
 			if (short == "goblin elder") multiplier += 1;
-			multiplier += player.newGamePlusMod() * 0.5;
 			if(short == "Tamani") temp2 = rand(5);
 			if(short == "Tamani's daughters") temp2 = rand(5);
 			var color:String = "";
@@ -121,11 +120,11 @@ public class Goblin extends Monster
 		{
 			if (player.gender == 0 || flags[kFLAGS.SFW_MODE] > 0) {
 				outputText("You collapse in front of the goblin, too wounded to fight.  She giggles and takes out a tube of lipstick smearing it whorishly on your face.  You pass into unconsciousness immediately.  It must have been drugged.");
-				SceneLib.combat.cleanupAfterCombatImpl();
+				combat.cleanupAfterCombatImpl();
 			} else if (pcCameWorms) {
 				outputText("\n\nThe goblin's eyes go wide and she turns to leave, no longer interested in you.");
 				player.orgasm();
-				doNext(SceneLib.combat.cleanupAfterCombatImpl);
+				doNext(combat.cleanupAfterCombatImpl);
 			} else {
 				SceneLib.goblinScene.goblinRapesPlayer();
 			}

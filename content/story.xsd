@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xs:import namespace="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="xsi.xsd"/>
+    <!-- default namespace = "xxc-story" -->
+    <!-- core xlogic -->
+    <xs:group name="content">
+        <xs:sequence>
+            <xs:choice minOccurs="0">
+                <xs:element ref="b"/>
+                <xs:element ref="i"/>
+                <xs:element ref="font"/>
+                <xs:element ref="if"/>
+                <xs:element ref="switch"/>
+                <xs:element ref="xcc-content"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
+    <xs:element name="if" type="ifBody"/>
+    <xs:complexType name="ifBody" mixed="true">
+        <xs:sequence>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+            <xs:choice minOccurs="0">
+                <xs:element ref="elseif"/>
+                <xs:element ref="else"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="test" use="required"/>
+        <xs:attribute name="then"/>
+        <xs:attribute name="else"/>
+    </xs:complexType>
+    <xs:element name="elseif" type="ifBody"/>
+    <xs:element name="else">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="switch">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="case"/>
+                <xs:element minOccurs="0" ref="default"/>
+            </xs:sequence>
+            <xs:attribute name="value"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="case">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+            <xs:attribute name="test"/>
+            <xs:attribute name="value"/>
+            <xs:attribute name="values"/>
+            <xs:attribute name="lt"/>
+            <xs:attribute name="gt"/>
+            <xs:attribute name="ne"/>
+            <xs:attribute name="lte"/>
+            <xs:attribute name="gte"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="default">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- xxc statements -->
+    <xs:element name="b">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="i">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="font">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+            <xs:attribute name="color"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="xcc-named-content" abstract="true" substitutionGroup="xcc-content"/>
+    <xs:element name="xcc-content" abstract="true"/>
+    <xs:complexType name="namedBlock" mixed="true">
+        <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+        <xs:attribute name="name"/>
+    </xs:complexType>
+    <xs:element name="text" substitutionGroup="xcc-named-content" type="namedBlock"/>
+    <xs:element name="string" substitutionGroup="xcc-named-content" type="namedBlock"/>
+    <xs:element name="lib" substitutionGroup="xcc-named-content">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="xcc-named-content"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="scene" substitutionGroup="xcc-named-content">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="namedBlock">
+                    <xs:attribute ref="xsi:noNamespaceSchemaLocation"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="macro" substitutionGroup="xcc-named-content" type="namedBlock"/>
+    <xs:element name="set" substitutionGroup="xcc-content">
+        <xs:complexType mixed="true">
+            <xs:attribute name="var" use="required"/>
+            <xs:attribute name="value"/>
+            <xs:attribute name="op">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="append"/>
+                        <xs:enumeration value="set"/>
+                        <xs:enumeration value="add"/>
+                        <xs:enumeration value="+="/>
+                        <xs:enumeration value="="/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="extend-story" substitutionGroup="xcc-named-content" type="namedBlock"/>
+    <xs:element name="display" substitutionGroup="xcc-content">
+        <xs:complexType>
+            <xs:attribute name="ref" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="command" substitutionGroup="xcc-content" type="xs:string"/>
+    <xs:element name="output" substitutionGroup="xcc-content" type="xs:string"/>
+    <xs:element name="include" substitutionGroup="xcc-content">
+        <xs:complexType>
+            <xs:attribute name="path" use="required"/>
+            <xs:attribute name="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                        <xs:enumeration value="false"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

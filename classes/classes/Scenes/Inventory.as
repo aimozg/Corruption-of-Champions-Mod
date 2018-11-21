@@ -184,19 +184,23 @@ package classes.Scenes
 			if (player.keyItems.length > 0) outputText("<b><u>\nKey Items:</u></b>\n");
 			for (x = 0; x < player.keyItems.length; x++) outputText(player.keyItems[x].keyName + "\n");
 			for (x = 0; x < 10; x++) {
-				if (player.itemSlots[x].unlocked && player.itemSlots[x].quantity > 0) {
-					addButton(x, (player.itemSlots[x].itype.shortName + " x" + player.itemSlots[x].quantity), curry(close, curry(useItemInInventory, x)));
-					foundItem = true;
+				if (player.itemSlots[x].unlocked) {
+					if (player.itemSlots[x].quantity > 0) {
+						addButton(x, (player.itemSlots[x].itype.shortName + " x" + player.itemSlots[x].quantity), curry(close, curry(useItemInInventory, x)));
+						foundItem = true;
+					} else {
+						addButtonDisabled(x, "Nothing");
+					}
 				}
 			}
 
 			if (CoC.instance.inCombat) {
 				if (player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv1(StatusEffects.Sealed) == 3) {
 					outputText("\nYou reach for your items, but you just can't get your pouches open.  <b>Your ability to use items was sealed, and now you've wasted a chance to attack!</b>\n\n");
-					SceneLib.combat.enemyAIImpl();
+					combat.afterPlayerAction();
 					return;
 				}
-				addButton(14, "Back", curry(close, curry(SceneLib.combat.combatMenu, false))); //Player returns to the combat menu on cancel
+				addButton(14, "Back", curry(close, curry(combat.combatMenu, false))); //Player returns to the combat menu on cancel
 			} else {
 				if (inDungeon == false && inRoomedDungeon == false && flags[kFLAGS.IN_INGNAM] == 0) {
 					var miscNieve:Boolean = Holidays.nieveHoliday() && flags[kFLAGS.NIEVE_STAGE] > 0 && flags[kFLAGS.NIEVE_STAGE] < 5;
@@ -450,7 +454,7 @@ package classes.Scenes
 				}
 			}
             if (CoC.instance.inCombat) {
-                enemyAI();
+				combat.afterPlayerAction();
 				return;
 			}
 			if (showNext)
@@ -496,8 +500,7 @@ package classes.Scenes
 		}
 		
 		public function getMaxSlots():int {
-			var slots:int = 3;
-			if (player.hasPerk(PerkLib.StrongBack)) slots += 2;
+			var slots:int = 5;
 			slots += player.keyItemv1("Backpack");
 			//Constrain slots to between 3 and 10.
 			if (slots < 3) slots = 3;
@@ -599,10 +602,8 @@ package classes.Scenes
 		}
 		
 		private function inventoryCombatHandler():void {
-			//Check if the battle is over. If not then go to the enemy's action.
-			if (combat.combatIsOver()) return;
 			outputText("\n\n");
-			enemyAI();
+			combat.afterPlayerAction();
 		}
 		private function deleteItemPrompt(item:BaseUseable, slotNum:int):void {
 			clearOutput();

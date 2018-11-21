@@ -95,7 +95,7 @@ public class SpiderMorphMob extends PackMonster
 		{
 			if (pcCameWorms){
 				outputText("\n\nThe spiders smile to one at another as they watch your display, then close in...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.kihaFollower.loseToSpiderMob();
 			}

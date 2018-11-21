@@ -28,7 +28,7 @@ public class Ember extends Monster
 			gems = 0;
 			XP = 0;
 			HP = 0;
-			SceneLib.combat.cleanupAfterCombatImpl();
+			combat.cleanupAfterCombatImpl();
 		}
 		//Ember Attacks:
 		private function emberAttack():void {
@@ -62,7 +62,7 @@ public class Ember extends Monster
 				//Blind Ember: 
 				outputText("The blinded dragon tracks you with difficulty as you sprint around the landscape; seeing an opportunity, you strafe around " + emberMF("his","her") + " side, planting yourself behind a large flat boulder near " + emberMF("him","her") + " and pelting " + emberMF("him","her") + " with a small rock.  The scream as the dragon turns the magical conflagration toward you, only to have it hit the rock and blow up in " + emberMF("his","her") + " face, is quite satisfying.");
 				//(Ember HP damage)
-				SceneLib.combat.doDamage(50);
+				combat.doDamage(50);
 			}
 			else {
 				outputText("Ember inhales deeply, then "+ emberMF("his","her") + " jaws open up, releasing streams of fire, ice and lightning; magical rather than physical, the gaudy displays lose cohesion and amalgamate into a column of raw energy as they fly at you.");
@@ -167,15 +167,15 @@ public class Ember extends Monster
 			text += ", and Ember, caught up in the moment, gives chase. ";
 
 			//GET AWAY
-			if(SceneLib.combat.runCheckEscaped() || (player.hasPerk(PerkLib.Runner) && rand(100) < 50)) {
+			if(combat.runCheckEscaped() || (player.hasPerk(PerkLib.Runner) && rand(100) < 50)) {
 				player.hasPerk(PerkLib.Runner) ? text += "Using your skill at running, y" : text += "Y";
 				text += "ou easily outpace the dragon, who begins hurling imprecations at you.  \"What the hell, [name], you weenie; are you so scared that you can't even stick out your punishment?\"";
 				text += "\n\nNot to be outdone, you call back, \"Sucks to you!  If even the mighty Last Ember of Hope can't catch me, why do I need to train?  Later, little bird!\"";
-				SceneLib.combat.runSucceed(text);
+				combat.runSucceed(text);
 			}
 			//Fail:
 			else {
-				SceneLib.combat.runFail(text + "Despite some impressive jinking, " + SceneLib.emberScene.emberMF("he","she") + " catches you, tackling you to the ground.\n\n",true);
+				combat.runFail(text + "Despite some impressive jinking, " + SceneLib.emberScene.emberMF("he","she") + " catches you, tackling you to the ground.\n\n",true);
 			}
 		}
 

@@ -25,7 +25,6 @@ use namespace CoC;
 
 		public function Plains()
 		{
-			onGameInit(init);
 		}
 		public function isDiscovered():Boolean {
 			return flags[kFLAGS.TIMES_EXPLORED_PLAINS] > 0;
@@ -38,36 +37,16 @@ use namespace CoC;
 		}
 
 		private var explorationEncounter:GroupEncounter = null;
-
-		private function init():void {
+		
+		protected override function init():void {
 			const game:CoC     = CoC.instance;
 			const fn:FnHelpers = Encounters.fn;
-			explorationEncounter = Encounters.group(/*SceneLib.commonEncounters,*/ {
+			explorationEncounter = game.getEncounterPool("plains").add(/*SceneLib.commonEncounters,*/ {
 				//General Golems, Goblin and Imp Encounters
 				name: "common",
 				call: SceneLib.exploration.genericGolGobImpEncounters
-			}, {
-				//Helia monogamy fucks
-				name  : "helcommon",
-				call  : SceneLib.helScene.helSexualAmbush,
-				chance: 0.2,
-				when  : SceneLib.helScene.helSexualAmbushCondition
-			}, {
-				name: "etna",
-				when: function ():Boolean {
-					return flags[kFLAGS.ETNA_FOLLOWER] < 1
-						   && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2;
-				},
-				chance: 0.5,
-				call: SceneLib.etnaScene.repeatYandereEnc
-			}, {
-				name: "electra",
-				when: function():Boolean {
-					return flags[kFLAGS.ELECTRA_FOLLOWER] < 1 && flags[kFLAGS.ELECTRA_AFFECTION] >= 2;
-				},
-				chance: 0.5,
-				call: SceneLib.electraScene.repeatPlainsEnc
-			}, {
+			}, SceneLib.helScene.helSexualAmbushEncounter,
+			SceneLib.electraScene.plainsEncounter, {
 				name: "sidonie",
 				when: function ():Boolean {
 					return flags[kFLAGS.SIDONIE_FOLLOWER] < 1

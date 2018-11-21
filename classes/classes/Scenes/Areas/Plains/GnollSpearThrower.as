@@ -321,7 +321,7 @@ import classes.internals.*;
 				SceneLib.urtaQuest.loseToGnollPrincessAndGetGangBanged();
 			} else if (pcCameWorms){
 				outputText("\n\nYour foe doesn't seem put off enough to leave...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.plains.gnollSpearThrowerScene.hyenaSpearLossAnal();
 			}

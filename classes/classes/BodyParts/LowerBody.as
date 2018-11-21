@@ -12,7 +12,7 @@ public class LowerBody extends SaveableBodyPart {
 	
 	public static const HUMAN:int                 = EnumValue.add(Types, 0, "HUMAN", {name:"human"});
 	public static const HOOFED:int                = EnumValue.add(Types, 1, "HOOFED", {name:"hoofed"});
-	public static const DOG:int                   = EnumValue.add(Types, 2, "DOG", {name:"dog"});
+	public static const CANINE:int                = EnumValue.add(Types, 2, "CANINE", {name:"canine"});
 	public static const NAGA:int                  = EnumValue.add(Types, 3, "NAGA", {name:"naga"});
 	public static const CENTAUR:int               = EnumValue.add(Types, 4, "CENTAUR", {name:"centaur"});//[Deprecated] use HOOFED and legCount = 4
 	public static const DEMONIC_HIGH_HEELS:int    = EnumValue.add(Types, 5, "DEMONIC_HIGH_HEELS", {name:"demonic high-heels"});
@@ -41,7 +41,7 @@ public class LowerBody extends SaveableBodyPart {
 	public static const GARGOYLE:int              = EnumValue.add(Types, 30, "GARGOYLE", {name:"gargoyle"});
 	public static const PLANT_HIGH_HEELS:int      = EnumValue.add(Types, 31, "PLANT_HIGH_HEELS", {name:"vine-covered"});
 	public static const PLANT_ROOT_CLAWS:int      = EnumValue.add(Types, 32, "PLANT_ROOT_CLAWS", {name:"root feet"});
-	public static const WOLF:int                  = EnumValue.add(Types, 33, "WOLF", {name:"wolf"});
+	private static const DEPRECATED_WOLF:int      = 33;
 	public static const PLANT_FLOWER:int          = EnumValue.add(Types, 34, "PLANT_FLOWER", {name:"plant flower"});
 	public static const LION:int                  = EnumValue.add(Types, 35, "LION", {name:"lion"});
 	public static const YETI:int                  = EnumValue.add(Types, 36, "YETI", {name:"yeti"});
@@ -52,10 +52,11 @@ public class LowerBody extends SaveableBodyPart {
 	public static const RAIJU:int                 = EnumValue.add(Types, 41, "RAIJU", {name:"raiju"});
 	public static const RED_PANDA:int             = EnumValue.add(Types, 42, "RED_PANDA", {name:"red-panda"});
 	public static const GARGOYLE_2:int            = EnumValue.add(Types, 43, "GARGOYLE_2", {name:"gargoyle"});
-	public static const AVIAN:int            	  = EnumValue.add(Types, 44, "AVIAN", {name:"avian"});
-	public static const GRYPHON:int            	  = EnumValue.add(Types, 45, "GRYPHON", {name:"gryphon"});
+	public static const AVIAN:int                 = EnumValue.add(Types, 44, "AVIAN", {name:"avian"});
+	public static const GRYPHON:int               = EnumValue.add(Types, 45, "GRYPHON", {name:"gryphon"});
 	
 	override public function set type(value:int):void {
+		if (value == DEPRECATED_WOLF) value = CANINE;
 		super.type = value;
 		// Reset leg count
 		switch (value) {
@@ -69,7 +70,7 @@ public class LowerBody extends SaveableBodyPart {
 			case CHITINOUS_SPIDER_LEGS:
 			case DEMONIC_CLAWS:
 			case DEMONIC_HIGH_HEELS:
-			case DOG:
+			case CANINE:
 			case DRAGON:
 			case ECHIDNA:
 			case FERRET:
@@ -124,7 +125,7 @@ public class LowerBody extends SaveableBodyPart {
 			case PLANT_FLOWER: return num2Text(legCount) + " vine-like tentacle stamens";
 			case HUMAN: return "legs";
 			case HOOFED: return "legs";
-			case DOG:  return "legs";
+			case CANINE:  return "legs";
 			case NAGA: return "snake-like coils";
 			case GOO:  return "mounds of goo";
 			case PONY: return "cute pony-legs";
@@ -174,7 +175,7 @@ public class LowerBody extends SaveableBodyPart {
 		switch(type){
 			case HUMAN:
 			case HOOFED:
-			case DOG:
+			case CANINE:
 				return "leg";
 			case NAGA:
 				return "snake-tail";
@@ -217,7 +218,7 @@ public class LowerBody extends SaveableBodyPart {
 		switch(type){
 			case HUMAN: return "feet";
 			case HOOFED: return "hooves";
-			case DOG: return "paws";
+			case CANINE: return "paws";
 			case NAGA: return "coils";
 			case CENTAUR: return "hooves";
 			case DEMONIC_HIGH_HEELS: return "demonic high-heels";
@@ -262,7 +263,7 @@ public class LowerBody extends SaveableBodyPart {
 		switch(type){
 			case HUMAN: return "foot";
 			case HOOFED: return "hoof";
-			case DOG: return "paw";
+			case CANINE: return "paw";
 			case NAGA: return "coiled tail";
 			case CENTAUR: return "hoof";
 			case GOO: return "slimey undercarriage";

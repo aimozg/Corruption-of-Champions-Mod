@@ -16,8 +16,7 @@ import classes.Scenes.NPCs.JojoScene;
 import classes.Scenes.SceneLib;
 import classes.Scenes.Areas.Forest.DryadScene;
 
-import coc.xxc.BoundStory;
-import coc.xxc.stmts.ZoneStmt;
+import coc.xxc.BoundNode;
 
 use namespace CoC;
 
@@ -39,7 +38,6 @@ use namespace CoC;
 		public var dryadScene:DryadScene = new DryadScene();
 
 		public function Forest() {
-			onGameInit(init);
 		}
 		
 		public function isDiscovered():Boolean {
@@ -81,28 +79,21 @@ use namespace CoC;
 		public function get deepwoodsEncounter():GroupEncounter {
 			return _deepwoodsEncounter
 		}
-		private var forestStory:BoundStory;
-		private var deepwoodsStory:BoundStory;
-		private function init():void {
-            const game:CoC = CoC.instance;
+		private var forestStory:BoundNode;
+		private var deepwoodsStory:BoundNode;
+		protected override function init():void {
+			const game:CoC = CoC.instance;
             const fn:FnHelpers = Encounters.fn;
-			_forestEncounter = Encounters.group("forest", {
+			_forestEncounter = game.getEncounterPool("forest").add({
 						//General Golems, Goblin and Imp Encounters
 						name: "common",
 						call: SceneLib.exploration.genericGolGobImpEncounters
-					}, 
-					 {
+					}, {
 						//spriggan
 						name: "spriggan",
 						call: SceneLib.forest.dryadScene.encounterdryad,
 						chance: 0.2 
-					},	{
-						//Helia monogamy fucks
-						name  : "helcommon",
-						call  : SceneLib.helScene.helSexualAmbush,
-						chance: 0.2,
-						when  : SceneLib.helScene.helSexualAmbushCondition
-					}, {
+					}, SceneLib.helScene.helSexualAmbushEncounter, {
 						name  : "deepwoods",
 						call  : discoverDeepwoods,
 						when  : function ():Boolean {
@@ -250,34 +241,15 @@ use namespace CoC;
 						chance: 0.10
 					}
 					*/
-			_deepwoodsEncounter = Encounters.group("deepwoods", /*CoC.instance.commonEncounters,*/ {
+			_deepwoodsEncounter = game.getEncounterPool("deepwoods").add(/*CoC.instance.commonEncounters,*/ {
 				name: "shrine",
 				when: function():Boolean {
 					return flags[kFLAGS.KITSUNE_SHRINE_UNLOCKED] < 1;
 				},
 				call: kitsuneScene.kitsuneShrine
-			}, {
-				//Helia monogamy fucks
-				name  : "helcommon",
-				call  : SceneLib.helScene.helSexualAmbush,
-				chance: 0.2,
-				when  : SceneLib.helScene.helSexualAmbushCondition
-			}, {
-				name  : "etna",
-				when  : function():Boolean {
-					return flags[kFLAGS.ETNA_FOLLOWER] < 1
-						   && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2;
-				},
-				call  : SceneLib.etnaScene.repeatYandereEnc
-			}, {
-				name  : "electra",
-				when  : function():Boolean {
-					return flags[kFLAGS.ELECTRA_FOLLOWER] < 1
-						   && flags[kFLAGS.ELECTRA_AFFECTION] >= 2;
-				},
-				chance: 0.5,
-				call  : SceneLib.electraScene.repeatDeepwoodsEnc
-			}, {
+			}, SceneLib.helScene.helSexualAmbushEncounter,
+			SceneLib.etnaScene.yandereEncounter,
+			SceneLib.electraScene.deepwoodsEncounter, {
 				name: "kitsune",
 				call: kitsuneScene.enterTheTrickster
 			},/*{ // [INTERMOD:8chan]
@@ -371,13 +343,12 @@ use namespace CoC;
 				chance	:  	0.5
 			}
 		);
-			// what we do here: create a Story (ZoneStmt) and register it in game.rootStory
-			// so it will be accessible from external files
-			forestStory = ZoneStmt.wrap(_forestEncounter,game.rootStory).bind(game.context);
-			deepwoodsStory = ZoneStmt.wrap(_deepwoodsEncounter,game.rootStory).bind(game.context);
+			// story libraries for XMLs to fill
+			forestStory = game.rootStory.addLib("forest").bind(game.context);
+			deepwoodsStory = game.rootStory.addLib("deepwoods").bind(game.context);
 		}
 		public function exploreDeepwoods():void {
-			deepwoodsStory.execute();
+			deepwoodsEncounter.execEncounter();
 		}
 
 		public function tripOnARoot():void {
@@ -414,8 +385,7 @@ use namespace CoC;
 			doNext(camp.returnToCampUseOneHour);
 			//Increment forest exploration counter.
 			player.exploredForest++;
-			forestStory.execute();
-//			forestEncounter.execEncounter();
+			forestEncounter.execEncounter();
 			flushOutputTextToGUI();
 		}
 		//[FOREST]

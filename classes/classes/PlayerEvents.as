@@ -12,9 +12,9 @@ import classes.GlobalFlags.*;
 import classes.Items.*;
 import classes.Scenes.Dreams;
 import classes.Scenes.Holidays;
-import classes.Scenes.NPCs.DivaScene;
 import classes.Scenes.SceneLib;
 import classes.StatusEffects.VampireThirstEffect;
+import classes.lists.StatNames;
 
 public class PlayerEvents extends BaseContent implements TimeAwareInterface {
 		//Handles all timeChange events for the player. Needed because player is not unique.
@@ -553,8 +553,6 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 				if (flags[kFLAGS.CHI_CHI_DAILY_TRAINING] > 0) flags[kFLAGS.CHI_CHI_DAILY_TRAINING] = 0;
 				//Reset Luna Meal CD
 				if (flags[kFLAGS.LUNA_MEAL] > 0) flags[kFLAGS.LUNA_MEAL] = 0;
-				//Reset Diva Red Vial daiy limit
-				DivaScene.instance.tookVialToday = false;
 				//Clear sidewinder cooldown
 				if (player.hasStatusEffect(StatusEffects.CooldownSideWinder)) player.removeStatusEffect(StatusEffects.CooldownSideWinder);
 				//Daily Fishery production
@@ -587,66 +585,66 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 					if (flags[kFLAGS.LUNA_MOON_CYCLE] > 8) flags[kFLAGS.LUNA_MOON_CYCLE] = 1;
 					var lycan:PerkClass = player.getPerk(PerkLib.Lycanthropy);
 					if (lycan) {
-						var changeV:Number = 10 * player.newGamePlusMod();
+						var changeV:Number = 0.1;
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 5) {
 							outputText("<b>\nYou can’t help but notice the moon is almost full as it rises up.  It seems transfixing like it is calling to you.");
 							outputText("\n\nYou feel your might increasing as the moon draws closer to fullness.</b>\n");
-							lycan.buffHost('str',changeV);
-							lycan.buffHost('tou',changeV);
-							lycan.buffHost('spe',changeV);
+							lycan.buffHost(StatNames.STR_MULT, changeV);
+							lycan.buffHost(StatNames.TOU_MULT, changeV);
+							lycan.buffHost(StatNames.SPE_MULT, changeV);
 							lycan.value1 = 10;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 6) {
 							outputText("<b>\nWhen the almost-full moon appears it causes your heart to race with excitement.  You hearing seems better than ever.  Every breath brings a rush of smells through your nose that seem much more pronounced than they should.");
 							outputText("\n\nYou feel your might increasing as the moon draws closer to fullness.</b>\n");
-							lycan.buffHost('str',changeV);
-							lycan.buffHost('tou',changeV);
-							lycan.buffHost('spe',changeV);
+							lycan.buffHost(StatNames.STR_MULT, changeV);
+							lycan.buffHost(StatNames.TOU_MULT, changeV);
+							lycan.buffHost(StatNames.SPE_MULT, changeV);
 							lycan.value1 = 20;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 7) {
 							outputText("<b>\nYou gaze at the moon and it seems to gaze back into you.   Something is coming and it won’t be long now.   You feel like you are crawling in your skin.  It feels like tear out of your body and be born anew.");
 							outputText("\n\nYou feel your might increasing as the moon draws closer to fullness. It's almost time.</b>\n");
-							lycan.buffHost('str',changeV);
-							lycan.buffHost('tou',changeV);
-							lycan.buffHost('spe',changeV);
+							lycan.buffHost(StatNames.STR_MULT, changeV);
+							lycan.buffHost(StatNames.TOU_MULT, changeV);
+							lycan.buffHost(StatNames.SPE_MULT, changeV);
 							lycan.value1 = 30;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 8) {
 							outputText("<b>\nYou are at the peak of your strength, it's a full moon tonight and you feel yourself burning with maddening desire as you go into " + player.mf("rut","heat") + ".</b>\n");
-							lycan.buffHost('str',changeV);
-							lycan.buffHost('tou',changeV);
-							lycan.buffHost('spe',changeV);
+							lycan.buffHost(StatNames.STR_MULT, changeV);
+							lycan.buffHost(StatNames.TOU_MULT, changeV);
+							lycan.buffHost(StatNames.SPE_MULT, changeV);
 							lycan.value1 = 40;
 							if (player.hasCock() || (player.gender == 3 && rand(2) == 0)) player.goIntoRut(false);
 							else if (player.hasVagina()) player.goIntoHeat(false);
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 1) {
 							outputText("<b>\nThe moon is waning, you are feeling less powerful.</b>\n");
-							lycan.buffHost('str',-changeV);
-							lycan.buffHost('tou',-changeV);
-							lycan.buffHost('spe',-changeV);
+							lycan.buffHost(StatNames.STR_MULT, -changeV);
+							lycan.buffHost(StatNames.TOU_MULT, -changeV);
+							lycan.buffHost(StatNames.SPE_MULT, -changeV);
 							lycan.value1 = 30;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 2) {
 							outputText("<b>\nThe moon is waning, you are feeling less powerful.</b>\n");
-							lycan.buffHost('str',-changeV);
-							lycan.buffHost('tou',-changeV);
-							lycan.buffHost('spe',-changeV);
+							lycan.buffHost(StatNames.STR_MULT, -changeV);
+							lycan.buffHost(StatNames.TOU_MULT, -changeV);
+							lycan.buffHost(StatNames.SPE_MULT, -changeV);
 							lycan.value1 = 20;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 3) {
 							outputText("<b>\nThe moon is waning, you are feeling less powerful.</b>\n");
-							lycan.buffHost('str',-changeV);
-							lycan.buffHost('tou',-changeV);
-							lycan.buffHost('spe',-changeV);
+							lycan.buffHost(StatNames.STR_MULT, -changeV);
+							lycan.buffHost(StatNames.TOU_MULT, -changeV);
+							lycan.buffHost(StatNames.SPE_MULT, -changeV);
 							lycan.value1 = 10;
 						}
 						if (flags[kFLAGS.LUNA_MOON_CYCLE] == 4) {
 							outputText("<b>\nIt's a new moon tonight, you feel somewhat weak.</b>\n");
-							lycan.buffHost('str',-changeV);
-							lycan.buffHost('tou',-changeV);
-							lycan.buffHost('spe',-changeV);
+							lycan.buffHost(StatNames.STR_MULT, -changeV);
+							lycan.buffHost(StatNames.TOU_MULT, -changeV);
+							lycan.buffHost(StatNames.SPE_MULT, -changeV);
 							lycan.value1 = 0;
 						}
 						needNext = true;

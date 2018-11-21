@@ -25,7 +25,7 @@ import classes.internals.*;
 		{
 			if(pcCameWorms){
 				outputText("\n\nThe spider flashes a predatory grin while she waits it out...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.swamp.femaleSpiderMorphScene.loseToFemaleSpiderMorph();
 			}

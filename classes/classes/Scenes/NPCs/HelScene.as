@@ -2,6 +2,8 @@ package classes.Scenes.NPCs{
 import classes.*;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
+import classes.Scenes.API.Encounter;
+import classes.Scenes.API.Encounters;
 import classes.Scenes.Holidays;
 import classes.Scenes.SceneLib;
 
@@ -1899,6 +1901,14 @@ private function satisfyHelSoSheStopsMinoFucking():void {
 	flags[kFLAGS.HEL_FUCKBUDDY] = 1;
 	helFuckMenu();
 }
+	
+	public const helSexualAmbushEncounter:Encounter = Encounters.build({
+		//Helia monogamy fucks
+		name  : "helcommon",
+		call  : helSexualAmbush,
+		chance: 0.2,
+		when  : helSexualAmbushCondition
+	});
 
 	public function helSexualAmbushCondition():Boolean {
 		return flags[kFLAGS.PC_PROMISED_HEL_MONOGAMY_FUCKS] == 1

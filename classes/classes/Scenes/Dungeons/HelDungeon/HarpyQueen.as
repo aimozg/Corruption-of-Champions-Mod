@@ -154,7 +154,7 @@ public class HarpyQueen extends Monster
 			this.gems = rand(25)+160;
 			this.additionalXP = 50;
 			this.tailType = Tail.HARPY;
-			this.wings.type = Wings.FEATHERED_LARGE;
+			this.wings.type = Wings.FEATHERED;
 			this.drop = NO_DROP;
 			this.createPerk(PerkLib.JobSorcerer, 0, 0, 0, 0);
 			this.createPerk(PerkLib.Spellpower, 0, 0, 0, 0);

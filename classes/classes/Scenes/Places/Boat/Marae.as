@@ -121,7 +121,7 @@ package classes.Scenes.Places.Boat
 				text += "You may not be able to swim fast enough. ";
 			}
 			text += "It looks like you cannot escape. ";
-			SceneLib.combat.runFail(text,true);
+			combat.runFail(text,true);
 		}
 		
 		public function Marae() 

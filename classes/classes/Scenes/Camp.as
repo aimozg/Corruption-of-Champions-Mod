@@ -11,7 +11,7 @@ import classes.Scenes.Areas.HighMountains.TempleOfTheDivine;
 import classes.Scenes.Camp.*;
 import classes.Scenes.Dungeons.*;
 import classes.Scenes.NPCs.*;
-import classes.Stats.BuffTags;
+import classes.lists.BuffTags;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
@@ -19,6 +19,8 @@ import classes.lists.Gender;
 
 import coc.view.ButtonDataList;
 import coc.view.MainView;
+import coc.xxc.NamedNode;
+import coc.xxc.Story;
 
 use namespace CoC;
 
@@ -45,9 +47,13 @@ use namespace CoC;
 		}
 */
 
-		public function Camp(/*campInitialize:Function*/) {
+		public function Camp() {
 			EventParser.doCamp=doCamp;
-			//campInitialize(doCamp); //Pass the doCamp function up to CoC. This way doCamp is private but the CoC class itself can call it.
+		}
+		protected override function init():void {
+			var lib:NamedNode = CoC.instance.rootStory.locate("camp");
+			lib.addFunctionAsStory("return",returnToCampUseOneHour);
+			lib.addFunctionAsStory("return8",returnToCampUseEightHours);
 		}
 		
 		public var cabinProgress:CabinProgress = new CabinProgress();
@@ -66,11 +72,11 @@ use namespace CoC;
 		public var HolliPure:HolliPureScene = new HolliPureScene();
 		public var templeofdivine:TempleOfTheDivine = new TempleOfTheDivine();
 		
-		private static var _campFollowers:Vector.<XXCNPC> = new Vector.<XXCNPC>;
+		private static var _campFollowers:Vector.<INPC> = new Vector.<INPC>;
 		
-		public static function addFollower(newEntry:XXCNPC):void {_campFollowers.push(newEntry); }
+		public static function addFollower(newEntry:INPC):void {_campFollowers.push(newEntry); }
 		
-		public static function removeFollower(toRemove:XXCNPC):void{
+		public static function removeFollower(toRemove:INPC):void{
 			var i:int = _campFollowers.indexOf(toRemove);
 			if (i >= 0){_campFollowers.splice(i, 1); }
 		}
@@ -426,7 +432,7 @@ CoC.instance.saves.saveGame(player.slotName);
 		hideMenus();
 		return;
 	}
-	for each (var npc:XXCNPC in _campFollowers){
+	for each (var npc:INPC in _campFollowers){
 		if (npc.checkCampEvent()){return;}
 	}
 	//Exgartuan clearing
@@ -908,7 +914,7 @@ public function followersCount():Number {
 	if (flags[kFLAGS.KONSTANTIN_FOLLOWER] >= 2) counter++;
     if (flags[kFLAGS.SIDONIE_FOLLOWER] >= 1) counter++;
     if (flags[kFLAGS.LUNA_FOLLOWER] >= 4) counter++;
-	for each (var npc:XXCNPC in _campFollowers){
+	for each (var npc:INPC in _campFollowers){
         if(npc.isCompanion(XXCNPC.FOLLOWER)){counter++;}
     }
 	return counter;
@@ -925,7 +931,7 @@ public function slavesCount():Number {
 	if (flags[kFLAGS.PATCHOULI_FOLLOWER] >= 5) counter++;
 	if (ceraphIsFollower()) counter++;
 	if (milkSlave() && flags[kFLAGS.FOLLOWER_AT_FARM_BATH_GIRL] == 0) counter++;
-    for each (var npc:XXCNPC in _campFollowers){
+    for each (var npc:INPC in _campFollowers){
         if(npc.isCompanion(XXCNPC.SLAVE)){counter++;}
     }
 	return counter;
@@ -946,7 +952,7 @@ public function loversCount():Number {
 	if (followerKiha()) counter++;
 	if (flags[kFLAGS.NIEVE_STAGE] == 5) counter++;
 	if (flags[kFLAGS.ANT_WAIFU] > 0) counter++;
-	for each (var npc:XXCNPC in _campFollowers){
+	for each (var npc:INPC in _campFollowers){
         if(npc.isCompanion(XXCNPC.LOVER)){counter++;}
     }
 	return counter;
@@ -1308,7 +1314,7 @@ public function campLoversMenu(descOnly:Boolean = false):void {
 		outputText("\n\n");
         buttons.add( "Nieve", Holidays.approachNieve);
     }
-    for each(var npc:XXCNPC in _campFollowers){
+    for each(var npc:INPC in _campFollowers){
 		npc.campDescription(buttons,XXCNPC.LOVER);
     }
 	if(!descOnly){buttons.submenu(playerMenu);}
@@ -1367,7 +1373,7 @@ public function campSlavesMenu(descOnly:Boolean = false):void {
 		sophieBimbo.sophieCampLines();
 		buttons.add( "Sophie", sophieBimbo.approachBimboSophieInCamp);
 	}
-    for each(var npc:XXCNPC in _campFollowers){
+    for each(var npc:INPC in _campFollowers){
         npc.campDescription(buttons,XXCNPC.SLAVE);
     }
     if(!descOnly){buttons.submenu(playerMenu);}
@@ -1399,7 +1405,7 @@ public function campFollowers(descOnly:Boolean = false):void {
 		else if(rand(4) == 0) outputText("Sophie is sitting in her nest, idly brushing out her feathers.  Occasionally, she looks up from her work to give you a sultry wink and a come-hither gaze.\n\n");
 		else if(rand(3) == 0) outputText("Sophie is fussing around in her nest, straightening bits of straw and grass, trying to make it more comfortable.  After a few minutes, she flops down in the middle and reclines, apparently satisfied for the moment.\n\n");
 		else if(rand(2) == 0 || flags[kFLAGS.SOPHIE_ADULT_KID_COUNT] == 0) {
-			if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00282] > 0) outputText("Your platinum-blonde harpy, Sophie, is currently reading a book - a marked change from her bimbo-era behavior.  Occasionally, though, she glances up from the page and gives you a lusty look.  Some things never change....\n\n");
+			if(flags[kFLAGS.SOPHIE_BIMBO] > 0) outputText("Your platinum-blonde harpy, Sophie, is currently reading a book - a marked change from her bimbo-era behavior.  Occasionally, though, she glances up from the page and gives you a lusty look.  Some things never change....\n\n");
 			else outputText("Your pink harpy, Sophie, is currently reading a book.  She seems utterly absorbed in it, though you question how she obtained it.  Occasionally, though, she'll glance up from the pages to shoot you a lusty look.\n\n");
 		}
 		else {
@@ -1555,7 +1561,7 @@ public function campFollowers(descOnly:Boolean = false):void {
 		outputText("\n\n");
 		buttons.add( "Luna", SceneLib.lunaFollower.mainLunaMenu).hint("Visit Luna.").disableIf(player.statusEffectv1(StatusEffects.CampSparingNpcsTimers3) > 0,"Training.");
 	}
-    for each(var npc:XXCNPC in _campFollowers){
+    for each(var npc:INPC in _campFollowers){
         npc.campDescription(buttons,XXCNPC.FOLLOWER);
     }
     if(!descOnly){buttons.submenu(playerMenu);}
@@ -2310,16 +2316,18 @@ public function sleepRecovery(display:Boolean = false):void {
 	HPChange(timeQ * hpRecovery * multiplier, display);
 	//fatigue
 	fatigue(-(timeQ * fatRecovery * multiplier));
-	for each(var istat:IStat in player.stats) {
-		var stat:PrimaryStat = istat as PrimaryStat;
-		if (!stat) continue;
-		var drain:Number = stat.bonus.valueOfBuff(BuffTags.DRAIN);
+	player.statStore.forEachStat(function(stat:BuffableStat):void{
+		var drain:Number = stat.valueOfBuff(BuffTags.DRAIN);
 		if (drain < 0) {
 			// Recover 10% of stat drained, at least 1
-			var delta:Number = Math.max(1, -drain/10);
-			player.drainStat(stat.name, -delta);
+			drain = drain - Math.min(-1, drain/10);
+			if (drain < 0) {
+				stat.addOrReplaceBuff(BuffTags.DRAIN, drain);
+			} else {
+				stat.removeBuff(BuffTags.DRAIN)
+			}
 		}
-	}
+	},BuffableStat);
 }
 
 //Bad End if your balls are too big. Only happens in Realistic Mode.
@@ -2906,7 +2914,7 @@ private function ascendForReal():void {
 	//Children
 	var childPerformance:int = 0;
 	childPerformance += (flags[kFLAGS.MINERVA_CHILDREN] + flags[kFLAGS.BEHEMOTH_CHILDREN] + flags[kFLAGS.MARBLE_KIDS] + (flags[kFLAGS.SHEILA_JOEYS] + flags[kFLAGS.SHEILA_IMPS]) + izmaScene.totalIzmaChildren() + isabellaScene.totalIsabellaChildren() + kihaFollower.totalKihaChildren() + emberScene.emberChildren() + urtaPregs.urtaKids() + sophieBimbo.sophieChildren());
-	childPerformance += (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] + flags[kFLAGS.KELLY_KIDS] + flags[kFLAGS.EDRYN_NUMBER_OF_KIDS] + flags[kFLAGS.COTTON_KID_COUNT] + flags[kFLAGS.AMILY_BIRTH_TOTAL] + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] + joyScene.getTotalLitters());
+	childPerformance += (flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] + flags[kFLAGS.KELLY_KIDS] + flags[kFLAGS.EDRYN_NUMBER_OF_KIDS] + flags[kFLAGS.COTTON_KID_COUNT] + flags[kFLAGS.AMILY_BIRTH_TOTAL] + flags[kFLAGS.PC_TIMES_BIRTHED_AMILYKIDS] + joyScene.getTotalLitters());
 	childPerformance += ((flags[kFLAGS.TAMANI_NUMBER_OF_DAUGHTERS] / 4) + (flags[kFLAGS.LYNNETTE_BABY_COUNT] / 4) + (flags[kFLAGS.ANT_KIDS] / 100) + (flags[kFLAGS.PHYLLA_DRIDER_BABIES_COUNT] / 4));
 	performancePoints += Math.sqrt(childPerformance);
 	//Level
@@ -2955,12 +2963,9 @@ public function setLevelButton(allowAutoLevelTransition:Boolean):Boolean {
 		}
 		mainView.showMenuButton( MainView.MENU_LEVEL );
 		mainView.statsView.showLevelUp();
-		if (player.strStat.core.value >= player.strStat.core.max &&
-			player.touStat.core.value >= player.touStat.core.max &&
-			player.intStat.core.value >= player.intStat.core.max &&
-			player.speStat.core.value >= player.speStat.core.max &&
-			player.wisStat.core.value >= player.wisStat.core.max &&
-			player.libStat.core.value >= player.libStat.core.max &&
+		if (player.primaryStats().every(function(e:PrimaryStat,...args):Boolean{
+				return e.core.value >= e.core.max;
+			}) &&
 			(player.perkPoints <= 0 || PerkTree.availablePerks(CoC.instance.player).length <= 0) && (player.XP < player.requiredXP() || player.level >= CoC.instance.levelCap)) {
 			mainView.statsView.hideLevelUp();
 		}

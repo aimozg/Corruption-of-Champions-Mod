@@ -5,14 +5,14 @@ import classes.ItemType;
 
 import coc.view.ButtonDataList;
 import coc.view.CoCButton;
-import coc.xxc.BoundStory;
+import coc.xxc.BoundNode;
 
 public class Shop extends TelAdreAbstractContent {
     protected var sprite:int = -1;
-    protected var story:BoundStory;
+    protected var story:BoundNode;
     protected var localvars:Object = {};
-    private static var _baseStory:BoundStory;
-    protected function get baseStory():BoundStory{
+    private static var _baseStory:BoundNode;
+    protected function get baseStory():BoundNode{
         if(!_baseStory){
             _baseStory = CoC.instance.rootStory.locate("teladreshops").bind(CoC.instance.context);
         }

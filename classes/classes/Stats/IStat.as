@@ -6,6 +6,5 @@ public interface IStat {
 	function get value():Number;
 	function get min():Number;
 	function get max():Number;
-	function get name():String;
 }
 }

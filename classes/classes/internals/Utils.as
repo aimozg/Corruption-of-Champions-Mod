@@ -5,7 +5,9 @@ package classes.internals
 {
 	import classes.*;
 
-	public class Utils extends Object
+import flash.utils.describeType;
+
+public class Utils extends Object
 	{
 		private static const NUMBER_WORDS_NORMAL:Array		= ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
 		private static const NUMBER_WORDS_CAPITAL:Array		= ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
@@ -23,6 +25,24 @@ package classes.internals
 			return function (...args2):*{
 				return func.apply(null,args.concat(args2));
 			};
+		}
+		public static function curryConstructor(cls:Class,...args1):Function {
+			return function (...args2):* {
+				var args:Array = args1.concat(args2);
+				// hey, Adobe does that too
+				switch(args.length){
+					case 0: return new cls();
+					case 1: return new cls(args[0]);
+					case 2: return new cls(args[0],args[1]);
+					case 3: return new cls(args[0],args[1],args[2]);
+					case 4: return new cls(args[0],args[1],args[2],args[3]);
+					case 5: return new cls(args[0],args[1],args[2],args[3],args[4]);
+					case 6: return new cls(args[0],args[1],args[2],args[3],args[4],args[5]);
+					case 7: return new cls(args[0],args[1],args[2],args[3],args[4],args[5],args[6]);
+					case 8: return new cls(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]);
+				}
+				return null;
+			}
 		}
 		public static function bindThis(func:Function,thiz:Object):Function {
 			return function(...args2):* {
@@ -81,7 +101,8 @@ package classes.internals
 			if (decimals == 0) return ''+Math.floor(value);
 			var base:Number = ipow(10,decimals);
 			value = Math.floor(value*base)/base;
-			return ''+value.toFixed(decimals);
+			return ''+value.toFixed(decimals).replace(/\.?0+$/,'');
+			// no risk stripping 0s from 123000 because that's the case of decimals=0
 		}
 		public static function boundInt(min:int, x:int, max:int):int {
 			return x < min ? min : x > max ? max : x;
@@ -97,6 +118,24 @@ package classes.internals
 			var r:/*String*/Array = [];
 			for (var k:String in o) r.push(k);
 			return r;
+		}
+		/**
+		 * Mimics JS Object.values
+		 */
+		public static function values(o:Object):Array {
+			var r:Array = [];
+			for each(var k:* in o) r.push(k);
+			return r;
+		}
+		/**
+		 * @return src.map( el => el['propname'] )
+		 */
+		public static function mapOneProp(src:Array,propname:String):Array {
+			var result:Array = [];
+			for (var i:int = 0; i< src.length; i++) {
+				result.push(src[i][propname]);
+			}
+			return result;
 		}
 		/**
 		 * @return src.filter(el=>el).map( el => mapping.map(prop => el[prop]) )
@@ -232,6 +271,22 @@ package classes.internals
 			}
 			return dest;
 		}
+		public static function objectAllMembers(o:Object):/*String*/Array {
+			var ox:XML = describeType(o);
+			var rslt:/*String*/Array = [];
+			for each(var item:XML in ox.*) {
+				rslt.push(item.@name);
+			}
+			return rslt;
+		}
+		public static function objectMembers(o:Object, type:String):/*String*/Array {
+			var ox:XML = describeType(o);
+			var rslt:/*String*/Array = [];
+			for each(var item:XML in ox[type]) {
+				rslt.push(item.@name);
+			}
+			return rslt;
+		}
 		/**
 		 * [ [key1,value1], [key2, value2], ... ] -> { key1: value1, key2: value2, ... }
 		 */
@@ -300,6 +355,19 @@ package classes.internals
 		public static function Num2Text(number:int):String {
 			if (number >= 0 && number <= 10) return NUMBER_WORDS_CAPITAL[number];
 			return number.toString();
+		}
+		
+		public static function parseLength(src:String):Number {
+			if (!isNaN(parseFloat(src))) return parseFloat(src);
+			var m:Array;
+			if ((m = src.match(/^(?:(\d+)')(?:(\d+)")?$/))) {
+				return (+m[1])*12+ +m[2];
+			} else if ((m = src.match(/^(?:(\d+)m)?\s*(?:(\d+)cm)$/))) {
+				var cm:Number = (+m[1])*100 + +m[2];
+				return parseFloat(floor(cm/2.54,1));
+			} else {
+				throw "Not a valid length: " + src;
+			}
 		}
 		
 		public static function addComma(num:int):String{

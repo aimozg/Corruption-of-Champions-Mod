@@ -19,11 +19,11 @@ public class LustyDemons extends PackMonster
 		override protected function performCombatAction():void
 		{
 			strStat.core.value = 70;
-			this.weaponAttack = 14 + (3 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			this.weaponAttack = 14;
 			createStatusEffect(StatusEffects.Attacks, 4, 0, 0, 0);
 			eAttack();
 			strStat.core.value = 140;
-			this.weaponAttack = 56 + (12 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			this.weaponAttack = 56;
 			eAttack();
 		}
 
@@ -36,7 +36,7 @@ public class LustyDemons extends PackMonster
 		{
 			if (pcCameWorms){
 				outputText("\n\nThe demons smile to one at another as they watch your display, then close in...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.owca.loseOrSubmitToVapula();
 			}

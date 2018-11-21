@@ -70,7 +70,7 @@ public class PerkClass
 		 * Attach a (de)buff to this status effect, will be removed with it
 		 */
 		public function buffHost(stat:String,amount:Number):void {
-			StatUtils.buffByName(host,stat,amount, ptype.tagForBuffs,{save:false,text:ptype.name});
+			host.statStore.addBuff(stat,amount, ptype.tagForBuffs,{save:false,text:ptype.name});
 		}
 		public function remove(/*fireEvent:Boolean = true*/):void {
 			if (_host == null) return;
@@ -80,14 +80,13 @@ public class PerkClass
 		public function removedFromHostList(fireEvent:Boolean):void {
 			if (fireEvent) {
 				onRemove();
-				_host.removeStatEffects(ptype.tagForBuffs);
+				_host.removeBuffs(ptype.tagForBuffs);
 			}
 			_host = null;
 		}
 		public function addedToHostList(host:Creature,fireEvent:Boolean):void {
 			_host = host;
-			StatUtils.applyBuffObject(
-					host,
+			host.statStore.addBuffObject(
 					ptype.buffs,
 					ptype.tagForBuffs,
 					{save:false,text:ptype.name},

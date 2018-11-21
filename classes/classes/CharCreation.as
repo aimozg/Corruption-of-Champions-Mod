@@ -23,7 +23,8 @@
 	import classes.Scenes.NPCs.JojoScene;
 	import classes.Scenes.NPCs.XXCNPC;
 	import classes.Scenes.SceneLib;
-	import classes.lists.BreastCup;
+import classes.Stats.PrimaryStat;
+import classes.lists.BreastCup;
 	import classes.lists.Gender;
 
 	import coc.view.ButtonDataList;
@@ -75,6 +76,7 @@
 		public function newGameGo():void {
 			CoC.instance.mainMenu.hideMainMenu();
 			XXCNPC.unloadSavedNPCs();
+			CoC.instance.resetMods();
 			mainView.eventTestInput.x = -10207.5;
 			mainView.eventTestInput.y = -1055.1;
 			hideStats();
@@ -152,12 +154,9 @@
             }
 
 			model.player = player;
-			player.strStat.reset(15);
-			player.touStat.reset(15);
-			player.speStat.reset(15);
-			player.intStat.reset(15);
-			player.wisStat.reset(15);
-			player.libStat.reset(15);
+			for each (var ps:PrimaryStat in player.primaryStats()) {
+				ps.reset(15);
+			}
 			player.sens = 15;
 			player.cor = 15;
 			player.ki = 50;
@@ -223,9 +222,9 @@
 				player.itemSlot2.emptySlot();
 				player.itemSlot3.unlocked = true;
 				player.itemSlot3.emptySlot();
-				player.itemSlot4.unlocked = false;
+				player.itemSlot4.unlocked = true;
 				player.itemSlot4.emptySlot();
-				player.itemSlot5.unlocked = false;
+				player.itemSlot5.unlocked = true;
 				player.itemSlot5.emptySlot();
 			}
             //PIERCINGS
@@ -1493,15 +1492,14 @@
 			if (player.hasPerk(PerkLib.HistoryAlchemist) || player.hasPerk(PerkLib.HistoryFortune) || player.hasPerk(PerkLib.HistoryHealer) || player.hasPerk(PerkLib.HistoryReligious) || player.hasPerk(PerkLib.HistorySlacker) || player.hasPerk(PerkLib.HistorySlut)) player.perkPoints += 1;
 			clearOutput();
 			statScreenRefresh();
-			outputText("Would you like to play through the " + (1 * (1 + player.newGamePlusMod())) + "-day");
-			if (player.newGamePlusMod() > 0) outputText("s");
+			outputText("Would you like to play through the " + (1 + flags[kFLAGS.NEW_GAME_PLUS_LEVEL]) + "-day");
 			outputText(" prologue in Ingnam or just skip?");
 			player.HP = player.maxHP();
 			doYesNo(goToIngnam, arrival);
 		}
 
 		public function goToIngnam():void {
-			model.time.days = -(1 * (1 + player.newGamePlusMod()));
+			model.time.days = -(1 + flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
 			model.time.hours = 8;
 			flags[kFLAGS.IN_INGNAM] = 1;
 			SceneLib.ingnam.menuIngnam();
@@ -1594,9 +1592,9 @@
 			player.itemSlot2.emptySlot();
 			player.itemSlot3.unlocked = true;
 			player.itemSlot3.emptySlot();
-			player.itemSlot4.unlocked = false;
+			player.itemSlot4.unlocked = true;
 			player.itemSlot4.emptySlot();
-			player.itemSlot5.unlocked = false;
+			player.itemSlot5.unlocked = true;
 			player.itemSlot5.emptySlot();
 			doNext(removeLevelPerks);
 		}

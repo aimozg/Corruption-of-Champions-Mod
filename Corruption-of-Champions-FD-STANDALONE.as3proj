@@ -4,7 +4,7 @@
   <output>
     <movie outputType="Application" />
     <movie input="" />
-    <movie path="..\..\Desktop\CoC_Xianxia_0.8i2.swf" />
+    <movie path="CoC_EJ.swf" />
     <movie fps="24" />
     <movie width="1000" />
     <movie height="800" />
@@ -55,6 +55,7 @@
   <libraryPaths>
     <element path="lib\bin\MainView.swc" />
     <element path="lib\bin\ScrollPane.swc" />
+    <element path="lib\bin\lua.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

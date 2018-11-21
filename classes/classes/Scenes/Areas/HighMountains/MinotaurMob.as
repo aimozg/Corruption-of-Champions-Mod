@@ -130,11 +130,11 @@ import classes.Scenes.SceneLib;
 		}
 		private function onPCRun():void{
 			if(turnWasting){
-				SceneLib.combat.runSucceed("You slink away while the pack of brutes is arguing.  Once they finish that argument, they'll be sorely disappointed!");
+				combat.runSucceed("You slink away while the pack of brutes is arguing.  Once they finish that argument, they'll be sorely disappointed!");
 			} else if (short == "minotaur tribe" && HPRatio() >= 0.75) {
-				SceneLib.combat.runFail("There's too many of them surrounding you to run!");
+				combat.runFail("There's too many of them surrounding you to run!");
 			} else {
-				SceneLib.combat.runAway(false);
+				combat.runAway(false);
 			}
 		}
 
@@ -147,7 +147,7 @@ import classes.Scenes.SceneLib;
 		{
 			if (pcCameWorms) {
 				outputText("\n\nThe minutaurs share a laugh while you cum, but their throbbing erections don't subside in the slightest.");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.highMountains.minotaurMobScene.minotaurDeFeet();
 			}
@@ -156,12 +156,12 @@ import classes.Scenes.SceneLib;
 		public function MinotaurMob()
 		{
 			this.a = "the ";
-			if (game.flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] < 20)
+			if (game.flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] < 20)
 				this.short = "minotaur gang";
 			else
 				this.short = "minotaur tribe";
 			this.imageName = "minotaurmob";
-			this.long = Num2Text(game.flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326]) + " shaggy beastmen stand around you in a loose circle.  Their postures aren't exactly threatening.  If anything, they seem to be standing protectively around you, as if their presence would somehow shelter you from the rest of the mountain.  All of their features share a brotherly similarity, though there's still a fair bit of differences between your minotaur sons.  One of them is a head above the rest, a massive hulk of muscle so big he seems to dwarf the rest.  In stark contrast, a feminine minitaur keeps his distance in the rear."+(game.flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] >= 20?"  The tribe constantly makes hoots and cat-calls, fully expecting to be fucking you soon.":"");
+			this.long = Num2Text(game.flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS]) + " shaggy beastmen stand around you in a loose circle.  Their postures aren't exactly threatening.  If anything, they seem to be standing protectively around you, as if their presence would somehow shelter you from the rest of the mountain.  All of their features share a brotherly similarity, though there's still a fair bit of differences between your minotaur sons.  One of them is a head above the rest, a massive hulk of muscle so big he seems to dwarf the rest.  In stark contrast, a feminine minitaur keeps his distance in the rear."+(game.flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] >= 20?"  The tribe constantly makes hoots and cat-calls, fully expecting to be fucking you soon.":"");
 			this.plural = true;
 			this.pronoun1 = "they";
 			this.pronoun2 = "them";
@@ -191,16 +191,16 @@ import classes.Scenes.SceneLib;
 			this.weaponAttack = 36;
 			this.armorName = "thick fur";
 			this.armorDef = 30;
-			var bonusHP:Number = 600 + 50 * (game.flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] - 3);
+			var bonusHP:Number = 600 + 50 * (game.flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] - 3);
 			var lustVuln:Number = 0.45;
-			if((game.flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] - 3) * 2 > 13) lustVuln = .3;
-			else lustVuln -= (game.flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] - 3) * 0.02;
+			if((game.flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] - 3) * 2 > 13) lustVuln = .3;
+			else lustVuln -= (game.flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] - 3) * 0.02;
 			this.bonusHP = bonusHP;
-			this.bonusLust = 20 * Math.round((game.flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] - 3)/2);
+			this.bonusLust = 20 * Math.round((game.flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] - 3)/2);
 			this.lust = 30;
 			this.lustVuln = lustVuln;
 			this.temperment = TEMPERMENT_LUSTY_GRAPPLES;
-			var level:int = 26 + Math.round((game.flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] - 3)/2);
+			var level:int = 26 + Math.round((game.flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] - 3)/2);
 			if(level > 29) level = 29;
 			this.level = level;
 			this.gems = rand(50) + 100;

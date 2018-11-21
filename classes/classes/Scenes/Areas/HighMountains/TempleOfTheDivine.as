@@ -1628,7 +1628,7 @@ use namespace CoC;
 			}
 			player.skin.setBaseOnly({type:Skin.STONE});
 			player.hairType = Hair.NORMAL;
-			player.faceType = Face.DEVIL_FANGS;
+			player.faceType = Face.SHARPTEETH;
 			player.tongue.type = Tongue.DEMONIC;
 			player.horns.type = Horns.GARGOYLE;
 			player.horns.count = 12 + rand(4);

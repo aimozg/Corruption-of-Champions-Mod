@@ -227,14 +227,14 @@ import classes.StatusEffects.Combat.GardenerSapSpeedDebuff;
 				player.dynStats("lus+", 3 + rand(3));
 				if (flags[kFLAGS.PC_FETISH] >= 2) player.dynStats("lus+", 5);
 			}
-			SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
 		}
 		
 		public function grappleWait():void
 		{
 			clearOutput();
 			squeeze();
-			SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
 		}
 		
 		private function squeeze():void

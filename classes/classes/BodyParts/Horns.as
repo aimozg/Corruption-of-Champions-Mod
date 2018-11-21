@@ -7,7 +7,7 @@ public class Horns extends BodyPart {
 	public static const NONE:int                     = EnumValue.add(Types, 0, "NONE", {name:"no"});
 	public static const DEMON:int                    = EnumValue.add(Types, 1, "DEMON", {name:"demon"});
 	public static const COW_MINOTAUR:int             = EnumValue.add(Types, 2, "COW_MINOTAUR", {name:"cow"});
-	public static const DRACONIC_X2:int              = EnumValue.add(Types, 3, "DRACONIC_X2", {name:"2 draconig"});
+	public static const DRACONIC_X2:int              = EnumValue.add(Types, 3, "DRACONIC_X2", {name:"2 draconic"});
 	public static const DRACONIC_X4_12_INCH_LONG:int = EnumValue.add(Types, 4, "DRACONIC_X4_12_INCH_LONG", {name:"four 12\" long draconic"});
 	public static const ANTLERS:int                  = EnumValue.add(Types, 5, "ANTLERS", {name:"deer"});
 	public static const GOAT:int                     = EnumValue.add(Types, 6, "GOAT", {name:"goat"});

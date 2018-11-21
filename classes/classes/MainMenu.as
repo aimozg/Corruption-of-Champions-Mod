@@ -60,6 +60,19 @@ package classes {
 			}
 		}
 		private var _mainMenu:Block;
+		private var _progressText:String="";
+		
+		public function set progressText(value:String):void {
+			_progressText = value;
+			if (_mainMenu) {
+				var ele:TextField = _mainMenu.getElementByName("progress") as TextField;
+				if (ele) {
+					ele.htmlText      = value;
+					return;
+				}
+			}
+			trace(value);
+		}
 		private function configureMainMenu():void{
 			var achievements:Achievements = new Achievements();
 			var resume:Function = playerMenu;
@@ -166,6 +179,16 @@ package classes {
 			websiteInfo.selectable = false;
 			websiteInfo.defaultTextFormat = new TextFormat("Palatino Linotype, serif", 20, mainViewManager.isDarkText() ? 0xc0c0c0 : 0, true, null, null, "www.fenoxo.com", null, "center");
 			websiteInfo.htmlText = "<a href=\"http://www.fenoxo.com/\">www.fenoxo.com</a>";
+			var progress:TextField = new TextField();
+			progress.name = "progress";
+			progress.height = 50;
+			progress.width = MainView.SCREEN_W - 20;
+			progress.wordWrap = true;
+			progress.x = 10;
+			progress.y = websiteInfo.y + websiteInfo.height + 2;
+			progress.selectable = false;
+			progress.defaultTextFormat = new TextFormat("Palatino Linotype, serif", 16, mainViewManager.isDarkText() ? 0xc0c0c0 : 0, false, null, null, null, null, "center");
+			progress.htmlText = _progressText;
 			mainMenuContent.addElement(background);
 			for (var i:int = 0; i < mainMenuButtons.length; i++) {
 				var button:CoCButton = new CoCButton();
@@ -187,6 +210,7 @@ package classes {
 			mainMenuContent.addElement(disclaimerInfo);
 			mainMenuContent.addElement(miniCredit);
 			mainMenuContent.addElement(websiteInfo);
+			mainMenuContent.addElement(progress);
 			mainMenuContent.addElement(versionInfo);
 			_mainMenu = mainMenuContent;
 			mainView.addElementAt(_mainMenu, 2);

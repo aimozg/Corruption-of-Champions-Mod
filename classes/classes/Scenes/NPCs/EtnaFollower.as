@@ -6,7 +6,10 @@ package classes.Scenes.NPCs
 {
 	import classes.*;
 	import classes.GlobalFlags.kFLAGS;
-	import classes.display.SpriteDb;
+import classes.Scenes.API.Encounter;
+import classes.Scenes.API.Encounters;
+import classes.Scenes.API.SimpleEncounter;
+import classes.display.SpriteDb;
 	public class EtnaFollower extends NPCAwareContent
 	{
 		
@@ -54,6 +57,15 @@ public function repeatEnc():void
 	doNext(playerMenu);
 }
 
+public const yandereEncounter:Encounter = Encounters.build({
+	name  : "etna",
+	when  : function():Boolean {
+		return flags[kFLAGS.ETNA_FOLLOWER] < 1
+			   && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2;
+	},
+	chance: 0.2,
+	call  : repeatYandereEnc
+});
 public function repeatYandereEnc():void
 {
 	spriteSelect(SpriteDb.s_etna);

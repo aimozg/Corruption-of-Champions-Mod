@@ -563,7 +563,7 @@ public class CombatMagic extends BaseCombatContent {
 		clearOutput();
 		outputText("Deciding you not need for now to keep youe mana shield you concentrate and deactivating it.\n\n");
 		player.removeStatusEffect(StatusEffects.ManaShield);
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function spellNosferatu():void {
@@ -901,7 +901,7 @@ public class CombatMagic extends BaseCombatContent {
 	private function frostBoulder():Boolean{
 		if (monster is FrostGiant && player.hasStatusEffect(StatusEffects.GiantBoulder)) {
 			(monster as FrostGiant).giantBoulderHit(2);
-			enemyAI();
+			afterPlayerAction();
 			return true;
 		}
 		return false;
@@ -918,10 +918,10 @@ public class CombatMagic extends BaseCombatContent {
 		player.createOrFindStatusEffect(StatusEffects.CastedSpell);
 		spellPerkUnlock();
 		statScreenRefresh();
-		if(combatIsOver() || silent){
+		if(silent){
 			return;
 		}
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	private function handleShell():Boolean {

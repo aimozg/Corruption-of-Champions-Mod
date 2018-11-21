@@ -108,7 +108,7 @@ public class Ceraph extends Monster
 				}
 			}
 			outputText("\n\n");
-			SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
 		}
 
 //(Wait)
@@ -122,7 +122,7 @@ public class Ceraph extends Monster
 			}
 			player.dynStats("lus", player.lib / 20 + 5 + rand(5));
 			outputText("\n\n");
-			SceneLib.combat.enemyAIImpl();
+			combat.afterPlayerAction();
 		}
 
 //[Double-Attack]
@@ -135,8 +135,10 @@ public class Ceraph extends Monster
 				//(+10 str/toughness, 1 level, and 10 xp reward.)
 				XP += 20;
 				level += 2;
-				strStat.bonus.addOrIncreaseBuff('Mini-cum',15);
-				touStat.bonus.addOrIncreaseBuff('Mini-cum',15);
+				statStore.addBuffObject({
+					'str':+15,
+					'tou':+15
+				},'Mini-cum');
 				HP += 100;
 				lust = (maxLust() * 0.33);
 				player.dynStats("lus", 30);
@@ -279,7 +281,7 @@ public class Ceraph extends Monster
 		{
 			if(pcCameWorms){
 				outputText("\n\nYour foe doesn't seem disgusted enough to leave...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.ceraphScene.loseFUCKME();
 			}

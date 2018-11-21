@@ -42,7 +42,7 @@ public class SecretarialSuccubus extends AbstractSuccubus
 		{
 			if(pcCameWorms){
 				outputText("\n\nYour foe doesn't seem to care...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				doNext(factory.doLossSuccubus);
 			}

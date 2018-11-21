@@ -316,7 +316,7 @@ public class Exploration extends BaseContent
 				ryubirepenc();
 				return;
 			}
-*/			if (flags[kFLAGS.PC_PROMISED_HEL_MONOGAMY_FUCKS] == 1 && flags[kFLAGS.HEL_RAPED_TODAY] == 0 && rand(10) == 0 && player.gender > 0 && !SceneLib.helFollower.followerHel()) {
+*/			if (rand(10) == 0 && SceneLib.helScene.helSexualAmbushCondition()) {
 				SceneLib.helScene.helSexualAmbush();
 				return;
 			}
@@ -341,7 +341,7 @@ public class Exploration extends BaseContent
 					outputText("You stumble as the ground shifts a bit underneath you.  Groaning in frustration, you straighten up and discover the rough feeling of sand ");
 					if (player.lowerBody == LowerBody.HUMAN) outputText("inside your footwear, between your toes");
 					if (player.lowerBody == LowerBody.HOOFED) outputText("in your hooves");
-					if (player.lowerBody == LowerBody.DOG) outputText("in your paws");
+					if (player.lowerBody == LowerBody.CANINE) outputText("in your paws");
 					if (player.lowerBody == LowerBody.NAGA) outputText("in your scales");
 					outputText(".\n\n<b>You've discovered the Desert!</b>");
 					player.exploredDesert = 1;

@@ -27,8 +27,8 @@ class ForestScene { /*...*/
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!--content/coc/desert.xml-->
-<extend-story name="/" xmlns="xxc-story">
-    <extend-zone name="forest">
+<extend-story name="/">
+    <extend-story name="forest">
         <lib name="strings">
             <text name="trip">
                 You trip on an exposed root, scraping yourself somewhat, but otherwise the hour is uneventful.
@@ -37,7 +37,7 @@ class ForestScene { /*...*/
                 You spot something unusual. Taking a closer look, it's definitely a truffle of some sort.
             </text>
         </lib>
-    </extend-zone>
+    </extend-story>
 </extend-story>
 ```
 
@@ -78,42 +78,16 @@ TODO
 
 ### Creating new encounters
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<!--content/coc/desert.xml-->
-<extend-zone name="desert" xmlns="xxc-story">
-    <encounter name="walk" chance="50" when="model.time.hours eq 23">
-        <lib name="ss">
-            <string name="intro">You walk through the shifting sands for an hour, finding nothing. </string>
-            <string name="str">The effort of struggling with the uncertain footing has made you STRONGEST.</string>
-            <string name="tou">The effort of struggling with the uncertain footing has made you TOUGHEST.</string>
-        </lib>
-        <!-- logic -->
-        <display ref="ss/intro"/>
-        <if test="rand(2) eq 0">
-            <if test="rand(2)==0 and player.str lt 500">
-                <display ref="ss/str"/>
-                <dynStats str="50"/>
-                <elseif test="player.tou lt 500">
-                    <display ref="ss/tou"/>
-                    <dynStats tou="50"/>
-                </elseif>
-            </if>
-        </if>
-    </encounter>
-</extend-zone>
-```
-
-TODO
+(Removed from XXC)
 
 ## Reference
 
 ### Display elements
 
-#### text, string, story, lib, macro
+#### story, lib, text, macro, string
 
 ```relax-ng
-Text = element text { 
+story = element story { 
     attribute name { text }?, 
     content*
 }
@@ -125,21 +99,21 @@ Outputs its content, processing whitespace __in XML text during compilation__ (i
 
 This _story_ is saved in the outer text block as `name`.
 
-##### <string>
-
-As `<text>` but no whitespace processing is done.
-
 ##### <lib>
 
 Used for grouping. Can only contain named display elements 
 
-##### <macro>
+##### <text>
 
 Skipped when iterated from outer element, but can be displayed by name
 
-##### <story>
+##### <macro>
 
 Same as `<text>`  
+
+##### <string>
+
+As `<text>` but no whitespace processing is done.
 
 #### display
 
@@ -151,10 +125,6 @@ display = element display {
 Locates 
 
 #### output
-
-TODO
-
-#### zone, encounter
 
 TODO
 
@@ -182,22 +152,22 @@ TODO
 
 TODO
 
-#### extend-zone
-
-TODO
-
 ### Logic elements
 
 #### if-elseif-else
 
 ```xml
-<if test="condition" then="thenString" else="elseString">
+<if test="condition">
     thenContent
-    <elseif>...</elseif>
-    <else>
+    <elseif test="condition"/>
+    then2Content
+    <else/>
     elseContent
-    </else>
 </if>
+```
+or (deprecated)
+```xml
+<if test="condition" then="thenString" else="elseString"/>
 ```
 
 * `condition` (expression) is required;
@@ -275,11 +245,11 @@ Supported:
 3. Predefined constants 
 3. Dot operator `object_expr.key`
 4. Array element access `array[index_expr]`
-5. Array creation `[element_expr, element_expr, ..., element_expr]`
+5. Array literal `[element_expr, element_expr, ..., element_expr]`
+6. Object literal `{key:expr,'key':expr,"key":expr,...}`
 6. Function call `function_expr(arg_expr, arg_expr, ..., arg_expr)`
 
 **NOT** supported:
-1. (might be added) Object literals.
 1. (some might be added) `is`, `instanceof`, `as`, `|`, `&`, `^`, unary `+` `-` `~`
 1. L-values (and all asignment operators).
 2. Control structures (basically everything that isn't a statement)

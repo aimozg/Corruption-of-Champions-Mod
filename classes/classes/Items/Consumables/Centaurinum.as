@@ -268,7 +268,7 @@ package classes.Items.Consumables {
 		if (player.lowerBody != LowerBody.HOOFED && player.lowerBody != LowerBody.GARGOYLE && !player.isTaur()) {
 			if (changes < changeLimit && rand(3) == 0) {
 				changes++;
-				//else if (player.lowerBody == DOG) outputText("\n\nYou stagger as your paws change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
+				//else if (player.lowerBody == CANINE) outputText("\n\nYou stagger as your paws change, curling up into painful angry lumps of flesh.  They get tighter and tighter, harder and harder, until at last they solidify into hooves!");
 				if (player.lowerBody == LowerBody.NAGA || player.lowerBody == LowerBody.SCYLLA) {
 					if (player.lowerBody == LowerBody.NAGA) {
 						outputText("\n\nYou collapse as your sinuous snake-tail tears in half, shifting into legs.  The pain is immense, particularly in your new feet as they curl inward and transform into hooves!");

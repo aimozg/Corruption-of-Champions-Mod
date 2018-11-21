@@ -33,10 +33,10 @@ public class DemonPackDesert extends PackMonster
 			if(hasStatusEffect(StatusEffects.phyllafight)) {
 				doNext(SceneLib.desert.antsScene.consolePhylla);
 			} else if (hpVictory || flags[kFLAGS.SFW_MODE] > 0){
-				SceneLib.combat.cleanupAfterCombatImpl();
+				combat.cleanupAfterCombatImpl();
 			} else {
 				outputText("  Do you rape them?", true);
-				EngineCore.doYesNo(rapeDemons, SceneLib.combat.cleanupAfterCombatImpl);
+				EngineCore.doYesNo(rapeDemons, combat.cleanupAfterCombatImpl);
 			}
 		}
 
@@ -53,10 +53,10 @@ public class DemonPackDesert extends PackMonster
 				} else {
 					outputText("You offer yourself to the demons, who promptly begin laughing at your lack of endowments.  They fall on you as one, beating you into unconsciousness.", true);
 				}
-				SceneLib.combat.cleanupAfterCombatImpl();
+				combat.cleanupAfterCombatImpl();
 			} else if (flags[kFLAGS.SFW_MODE] > 0) {
 				outputText("Because SFW mode is enabled, this scene is disabled.");
-				SceneLib.combat.cleanupAfterCombatImpl();
+				combat.cleanupAfterCombatImpl();
 			} else if (hpVictory){
 				outputText("The demons finally beat you down and you collapse onto the sand of the oasis. Almost immediately you feel demonic hands pressing and probing your prone form. You hear the leader of the group say something in a strange tongue but you have a feeling you know what it means. The demons dive onto your inert body with intent and begin to press themselves against you...", true);
 				doNext(SceneLib.desert.oasis.oasisSexing);

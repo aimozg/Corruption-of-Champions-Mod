@@ -2,30 +2,29 @@
  * Coded by aimozg on 30.05.2017.
  */
 package classes.Scenes.Combat {
-	import classes.Creature;
-	import classes.EngineCore;
-	import classes.GlobalFlags.kFLAGS;
-	import classes.Items.ShieldLib;
-	import classes.Items.WeaponLib;
-	import classes.PerkLib;
-	import classes.Scenes.API.FnHelpers;
-	import classes.Scenes.Combat.CombatAction.CombatAction;
-	import classes.Scenes.SceneLib;
-	import classes.StatusEffectClass;
-	import classes.StatusEffectClass;
+import classes.Creature;
+import classes.EngineCore;
+import classes.GlobalFlags.kFLAGS;
+import classes.Items.ShieldLib;
+import classes.Items.WeaponLib;
+import classes.PerkLib;
+import classes.Scenes.API.FnHelpers;
+import classes.Scenes.Combat.CombatAction.ACombatAction;
+import classes.Scenes.SceneLib;
+import classes.StatusEffectClass;
 import classes.StatusEffects;
 
-	import coc.view.ButtonDataList;
+import coc.view.ButtonDataList;
 
-	public class CombatKiPowers extends BaseCombatContent {
+public class CombatKiPowers extends BaseCombatContent {
 	public function CombatKiPowers() {
 	}
 	//------------
 	// S. SPECIALS
 	//------------
 	internal function buildMenu(buttons:ButtonDataList):void {
-		var actions:Array = player.availableActions.filter(function(item:CombatAction, index:int, array:Array):Boolean{return item.actionType == CombatAction.KiAction;});
-		for each(var action:CombatAction in actions){
+		var actions:Array = player.availableActions.filter(function(item:ACombatAction, index:int, array:Array):Boolean{return item.actionType == ACombatAction.KiAction;});
+		for each(var action:ACombatAction in actions){
 			buttons.list.push(action.button(player,monster));
 		}
 		var base:int = kiPowerCost();
@@ -79,11 +78,11 @@ import classes.StatusEffects;
 	}
 
 	private static function endAction(target:Creature, damage:Number):void {
-		SceneLib.combat.checkAchievementDamage(damage);
+		combat.checkAchievementDamage(damage);
 		EngineCore.outputText("\n\n");
-		SceneLib.combat.heroBaneProc(damage);
-		if (target.HP < 1) EngineCore.doNext(SceneLib.combat.endHpVictory);
-		else SceneLib.combat.enemyAIImpl();
+		combat.heroBaneProc(damage);
+		if (target.HP < 1) EngineCore.doNext(combat.endHpVictory);
+		else combat.afterPlayerAction();
 	}
 
 	private static function weaponMod(host:Creature):Number {
@@ -103,14 +102,14 @@ import classes.StatusEffects;
 		switch(damType){
 			case MAGICAL:
 				damage = Math.max(10, host.scalingBonusIntelligence());
-				damage *= SceneLib.combat.spellMod();
+				damage *= combat.spellMod();
 				damage *= host.kiPowerMod(false);
 				break;
 			case PHYSICAL:
 				damage = Math.max(10, host.str + (host.scalingBonusStrength() / 2));
 				damage *= weaponMod(host);
 				damage *= host.kiPowerMod(true);
-				if (host.hasPerk(PerkLib.HoldWithBothHands) && host.weaponName != WeaponLib.FISTS.name && host.shieldName == ShieldLib.NOTHING.name && !SceneLib.combat.isWieldingRangedWeapon()) damage *= 1.2;
+				if (host.hasPerk(PerkLib.HoldWithBothHands) && host.weaponName != WeaponLib.FISTS.name && host.shieldName == ShieldLib.NOTHING.name && !host.isWieldingRangedWeapon()) damage *= 1.2;
 				if (host.hasPerk(PerkLib.ThunderousStrikes) && host.str >= 80) damage *= 1.2;
 				if (host.hasPerk(PerkLib.HistoryFighter)) damage *= 1.1;
 				if (host.hasPerk(PerkLib.JobWarrior)) damage *= 1.05;
@@ -118,7 +117,7 @@ import classes.StatusEffects;
 				if (host.hasStatusEffect(StatusEffects.Overlimit)) damage *= 2;
 				break;
 			case UNARMED:
-				damage = SceneLib.combat.unarmedAttack();
+				damage = combat.unarmedAttack();
 				damage += host.str + host.scalingBonusStrength();
 				damage += host.wis + host.scalingBonusWisdom();
 				break;
@@ -134,7 +133,7 @@ import classes.StatusEffects;
 		damage += host.wis;
 		damage += host.scalingBonusWisdom() * 1.8;
 		if (damage < 10) damage = 10;
-		damage *= SceneLib.combat.spellMod();
+		damage *= combat.spellMod();
 		//kiPower mod effect
 		damage *= host.kiPowerMod();
 		return damage;
@@ -144,28 +143,28 @@ import classes.StatusEffects;
 		clearOutput();
 		outputText("You let out a primal roar of pain and fury, as you push your body beyond its normal capacity, a blood red aura cloaking your form.\n\n");
 		player.createStatusEffect(StatusEffects.Overlimit, 0, 0, 0, 0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function deactivaterOverlimit():void {
 		clearOutput();
 		outputText("You let your rage cool down, feeling relieved as the stress in your body diminish along with your power.\n\n");
 		player.removeStatusEffect(StatusEffects.Overlimit);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function VioletPupilTransformation():void {
 		clearOutput();
 		outputText("Deciding you need additional regeneration during current fight you spend moment to concentrate and activate Violet Pupil Transformation.  Your eyes starting to glow with a violet hua and you can feel refreshing feeling spreading all over your body.\n");
 		player.createStatusEffect(StatusEffects.VioletPupilTransformation,0,0,0,0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function DeactivateVioletPupilTransformation():void {
 		clearOutput();
 		outputText("Deciding you not need for now to constantly using Violet Pupil Transformation you concentrate and deactivating it.");
 		player.removeStatusEffect(StatusEffects.VioletPupilTransformation);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	private static const TranceABC:Object = FnHelpers.FN.buildLogScaleABC(10,100,1000,10,100);
@@ -193,14 +192,14 @@ import classes.StatusEffects;
 		sec.buffHost('str',TranceBoost);
 		sec.buffHost('tou',TranceBoost);
 		statScreenRefresh();
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function DeactivateTranceTransformation():void {
 		clearOutput();
 		outputText("You disrupt the flow of power within you, softly falling to the ground as the crystal sheathing your [skin] dissipates into nothingness.");
 		player.removeStatusEffect(StatusEffects.TranceTransformation);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function BeatOfWar():void {

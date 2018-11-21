@@ -2203,7 +2203,7 @@ public class Appearance extends Utils
 		}
 		public static function earsDescript(i_creature:Creature):String
 		{
-			return i_creature.ears.type + " ears";
+			return Ears.Types[i_creature.ears.type].name + " ears";
 		}
 
 /* All of these functions have been replaced with direct calls to the appropriate form of cockNoun().
@@ -2348,12 +2348,13 @@ public class Appearance extends Utils
 
 		/**
 		 * Returns breast size from cup name.
-		 * Acceptable input: "flat","A","B","C","D","DD","DD+",... "ZZZ","ZZZ+" or exact match from BREAST_CUP_NAMES array
+		 * Acceptable input: number (returned unchanged), "flat","A","B","C","D","DD","DD+",... "ZZZ","ZZZ+" or exact match from BREAST_CUP_NAMES array
 		 */
 		public static function breastCupInverse(name:String, defaultValue:Number = 0):Number
 		{
 			if (name.length == 0) return defaultValue;
 			if (name == "flat") return 0;
+			if (!isNaN(parseInt(name))) return parseInt(name);
 			var big:Boolean = name.charAt(name.length - 1) == "+";
 			if (big) name = name.substr(0, name.length - 1);
 			for (var i:int = 0; i < BREAST_CUP_NAMES.length; i++) {
@@ -2375,15 +2376,12 @@ public class Appearance extends Utils
 					[Wings.BAT_LIKE_TINY, "tiny, bat-like"],
 					[Wings.BAT_LIKE_LARGE, "large, bat-like"],
 				//	[SHARK_FIN, ""],
-					[Wings.FEATHERED_LARGE, "large, feathered"],
+					[Wings.FEATHERED, "large, feathered"],
 					[Wings.DRACONIC_SMALL, "small, draconic"],
 					[Wings.DRACONIC_LARGE, "large, draconic"],
 					[Wings.GIANT_DRAGONFLY, "giant dragonfly"],
 					[Wings.BAT_LIKE_LARGE_2, "two large pairs of bat-like"],
 					[Wings.DRACONIC_HUGE, "large, majestic draconic"],
-					[Wings.FEATHERED_PHOENIX, "large crimson feathered"],
-					[Wings.FEATHERED_ALICORN, "large white feathered"],
-					[Wings.FEATHERED_SPHINX, "large feathered"],
 					[Wings.MANTIS_LIKE_SMALL, "small mantis-like"],
 					[Wings.MANTIS_LIKE_LARGE, "large mantis-like"],
 					[Wings.MANTIS_LIKE_LARGE_2, "two large pairs of mantis-like"],

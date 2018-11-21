@@ -420,7 +420,7 @@ public class Race {
 				'tail'      : [Tail.HORSE, +1],
 				'legs'      : [LowerBody.HOOFED, +1],
 				'legs.count': [4, +1],
-				'wings'     : [Wings.FEATHERED_ALICORN, +2]
+				'wings'     : [Wings.FEATHERED, +2]
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.horns.type == Horns.UNICORN && ch.horns.count < 6)
@@ -507,7 +507,7 @@ public class Race {
 				'wings': [Wings.BAT_ARM, +5],
 				'legs' : [LowerBody.HUMAN, +1],
 				'face' : [Face.VAMPIRE, +2],
-				'eyes' : [Eyes.VAMPIRE, +1],
+				'eyes' : [Eyes.SLITS, +1],
 				'rear' : [RearBody.BAT_COLLAR, +1]
 			}).withBonusTier(6,{
 				'str': +20,
@@ -594,12 +594,12 @@ public class Race {
 			.simpleScores({
 				'face'     : [
 					Face.CAT, +1,
-					Face.CAT_CANINES, +1,
+					Face.SHARPTEETH, +1,
 					Face.CHESHIRE, -7,
 					Face.CHESHIRE_SMILE, -7
 				],
 				'eyes'     : [
-					Eyes.CAT_SLITS, +1,
+					Eyes.SLITS, +1,
 					Eyes.FERAL, -11,
 				],
 				'ears'     : [Ears.CAT, +1],
@@ -687,7 +687,7 @@ public class Race {
 
 	public static var CHESHIRE:Race = new Race("cheshire")
 			.simpleScores({
-				'eyes'     : [Eyes.CAT_SLITS, +1],
+				'eyes'     : [Eyes.SLITS, +1],
 				'ears'     : [Ears.CAT, +1],
 				'tongue'   : [Tongue.CAT, +1],
 				'tail'     : [Tail.CAT, +1],
@@ -722,7 +722,7 @@ public class Race {
 				'ears'     : [Ears.SNAKE, +1],
 				'eyes'     : [Eyes.SNAKE, +1],
 				'hair'     : [Hair.FEATHER, +1],
-				'wings'    : [Wings.FEATHERED_LARGE, +2],
+				'wings'    : [Wings.FEATHERED, +2],
 				'legs'     : [LowerBody.NAGA, +2],
 				'skin.coat': [Skin.SCALES, +1]
 			}).withBonusTier(11,{
@@ -830,7 +830,7 @@ public class Race {
 				'face': [Face.DOG, +1],
 				'ears': [Ears.DOG, +1],
 				'tail': [Tail.DOG, +1],
-				'legs': [LowerBody.DOG, +1]
+				'legs': [LowerBody.CANINE, +1]
 			}).withFinalizerScript(function (ch:Creature, metrics:*, score:int):int {
 				if (ch.dogCocks() > 0)
 					score++;
@@ -888,7 +888,7 @@ public class Race {
 				'arms' : [Arms.DEVIL, +1],
 				'horns': [Horns.GOAT, +1],
 				'ears' : [Ears.GOAT, +1],
-				'face' : [Face.DEVIL_FANGS, +1],
+				'face' : [Face.SHARPTEETH, +1],
 				'eyes' : [Eyes.DEVIL, +1]
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
@@ -928,7 +928,7 @@ public class Race {
 				'tongue'   : [Tongue.DRACONIC, +1],
 				'face'     : [
 					Face.DRAGON, +1,
-					Face.DRAGON_FANGS, +1,
+					Face.SHARPTEETH, +1,
 					Face.JABBERWOCKY, -10,
 					Face.BUCKTOOTH, -10
 				],
@@ -1111,7 +1111,7 @@ public class Race {
 	public static var FOX:Race = new Race("fox")
 			.simpleScores({
 				'face': [Face.FOX, +1],
-				'eyes': [Eyes.FOX, +1],
+				'eyes': [Eyes.SLITS, +1],
 				'ears': [Ears.FOX, +1],
 				'tail': [Tail.FOX, +1],
 				'arms': [Arms.FOX, +1],
@@ -1145,7 +1145,7 @@ public class Race {
 				'horns'     : [Horns.GARGOYLE, +1],
 				'eyes'      : [Eyes.GEMSTONES, +1],
 				'ears'      : [Ears.ELFIN, +1],
-				'face'      : [Face.DEVIL_FANGS, +1],
+				'face'      : [Face.SHARPTEETH, +1],
 				'tongue'    : [Tongue.DEMONIC, +1],
 				'hair.color': [
 					"light grey", +1,
@@ -1258,8 +1258,7 @@ public class Race {
 				'arms'     : [Arms.HUMAN, +1],
 				'ears'     : [Ears.SNAKE, +1],
 				'eyes'     : [
-					Eyes.SNAKE, +1,
-					Eyes.GORGON, +2
+					Eyes.SNAKE, +2
 				],
 				'legs'     : [LowerBody.NAGA, +2],
 				'skin.coat': [Skin.SCALES, +1],
@@ -1289,7 +1288,7 @@ public class Race {
 			.simpleScores({
 				'arms' : [Arms.HARPY, +1],
 				'hair' : [Hair.FEATHER, +1],
-				'wings': [Wings.FEATHERED_LARGE, +2],
+				'wings': [Wings.FEATHERED, +2],
 				'tail' : [
 					Tail.HARPY, +1,
 					Tail.SHARK, -5,
@@ -1361,7 +1360,7 @@ public class Race {
 					Face.JABBERWOCKY, +1,
 					Face.BUCKTOOTH, +1,
 					Face.DRAGON, -10,
-					Face.DRAGON_FANGS, -10
+					Face.SHARPTEETH, -10
 				],
 				'eyes'     : [Eyes.DRAGON, +1],
 				'ears'     : [Ears.DRAGON, +1],
@@ -1511,7 +1510,7 @@ public class Race {
 	public static const KitsuneElderColors:/*String*/Array = ["metallic golden", "golden blonde", "metallic silver", "silver blonde", "snow white", "iridescent gray"];
 	public static var KITSUNE:Race                         = new Race("kitsune")
 			.simpleScores({
-				'eyes'             : [Eyes.FOX, +1],
+				'eyes'             : [Eyes.SLITS, +1],
 				'ears'             : [Ears.FOX, +1],
 				'arms'             : [
 					Arms.HUMAN, +1,
@@ -1638,8 +1637,8 @@ public class Race {
 
 	public static var MANTICORE:Race = new Race("manticore")
 			.simpleScores({
-				'face'  : [Face.MANTICORE, +1],
-				'eyes'  : [Eyes.MANTICORE, +1],
+				'face'  : [Face.SHARPTEETH, +1],
+				'eyes'  : [Eyes.SLITS, +1],
 				'ears'  : [Ears.LION, +1],
 				'rear'  : [RearBody.LION_MANE, +1],
 				'arms'  : [Arms.LION, +1],
@@ -1812,9 +1811,9 @@ public class Race {
 			.simpleScores({
 				'face'  : [
 					Face.CAT, +1,
-					Face.CAT_CANINES, +1
+					Face.SHARPTEETH, +1
 				],
-				'eyes'  : [Eyes.CAT_SLITS, +1],
+				'eyes'  : [Eyes.SLITS, +1],
 				'ears'  : [Ears.CAT, +1],
 				'tongue': [Tongue.CAT, +1],
 				'tail'  : [Tail.CAT, +1],
@@ -1838,7 +1837,7 @@ public class Race {
 	public static var ONI:Race                       = new Race("oni")
 			.simpleScores({
 				'ears'             : [Ears.ONI, +1],
-				'face'             : [Face.ONI_TEETH, +1],
+				'face'             : [Face.SHARPTEETH, +1],
 				'horns'            : [Horns.ONI, +1],
 				'arms'             : [Arms.ONI, +1],
 				'legs'             : [LowerBody.ONI, +1],
@@ -1913,8 +1912,8 @@ public class Race {
 	public static var PHOENIX:Race = new Race("phoenix")
 			.simpleScores({
 				'eyes' : [Eyes.REPTILIAN, +1],
-				'wings': [Wings.FEATHERED_PHOENIX, +1],
-				'arms' : [Arms.PHOENIX, +1],
+				'wings': [Wings.FEATHERED, +1],
+				'arms' : [Arms.HARPY, +1],
 				'legs' : [LowerBody.SALAMANDER, +1],
 				'tail' : [Tail.SALAMANDER, +1],
 				'hair' : [Hair.FEATHER, +1]
@@ -2051,7 +2050,7 @@ public class Race {
 			.simpleScores({
 				'ears'             : [Ears.WEASEL, +1],
 				'eyes'             : [Eyes.RAIJU, +1],
-				'face'             : [Face.RAIJU_FANGS, +1],
+				'face'             : [Face.SHARPTEETH, +1],
 				'arms'             : [Arms.RAIJU, +1],
 				'legs'             : [LowerBody.RAIJU, +1],
 				'tail'             : [Tail.RAIJU, +1],
@@ -2144,13 +2143,13 @@ public class Race {
 				'arms': [Arms.SALAMANDER, +1],
 				'legs': [LowerBody.SALAMANDER, +1],
 				'tail': [Tail.SALAMANDER, +1],
-				'face': [Face.SALAMANDER_FANGS, +1]
+				'face': [Face.SHARPTEETH, +1]
 			}).complexScore(+1, {
 				'skin.coat'    : Skin.SCALES,
 				'skin.coverage': Skin.COVERAGE_LOW
 			}).complexScore(+1, {
 				'ears': Ears.HUMAN,
-				'face': Face.SALAMANDER_FANGS
+				'face': Face.SHARPTEETH
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.lizardCocks() > 0)
@@ -2327,7 +2326,7 @@ public class Race {
 				'face'      : [Face.SHARK_TEETH, +1],
 				'hair'      : [Hair.FEATHER, +1],
 				'tail'      : [Tail.SHARK, +1],
-				'wings'     : [Wings.FEATHERED_LARGE, +2],
+				'wings'     : [Wings.FEATHERED, +2],
 				'arms'      : [Arms.HARPY, +1],
 				'legs'      : [LowerBody.SHARK, +1],
 				'gills'     : [Gills.FISH, +1],
@@ -2350,7 +2349,7 @@ public class Race {
 
 	public static var SPHINX:Race = new Race("sphinx")
 			.simpleScores({
-				'eyes'  : [Eyes.CAT_SLITS, +1],
+				'eyes'  : [Eyes.SLITS, +1],
 				'ears'  : [Ears.LION, +1],
 				'tongue': [Tongue.CAT, +1],
 				'tail'  : [
@@ -2358,8 +2357,8 @@ public class Race {
 					Tail.LION, +1
 				],
 				'legs'  : [LowerBody.CAT, +1],
-				'face'  : [Face.CAT_CANINES, +1],
-				'wings' : [Wings.FEATHERED_SPHINX, +2]
+				'face'  : [Face.SHARPTEETH, +1],
+				'wings' : [Wings.FEATHERED, +2]
 			}).complexScore(+2, {
 				'legs.count': 4,
 				'legs'      : LowerBody.CAT
@@ -2383,7 +2382,7 @@ public class Race {
 			}).complexScore(+1, {
 				'legs.count': 4,
 				'legs'      : LowerBody.CAT,
-				'face'      : Face.CAT_CANINES
+				'face'      : Face.SHARPTEETH
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
@@ -2456,7 +2455,7 @@ public class Race {
 			}).withFinalizerScript(
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch.horns.type != Horns.UNICORN) return 0;
-						if (ch.wings.type == Wings.FEATHERED_ALICORN) return 0;
+						if (ch.wings.type == Wings.FEATHERED) return 0;
 						if (ch.horns.count >= 6) score++;
 						if (ch.hasFur() || ch.hasPlainSkinOnly())
 							score++;
@@ -2485,7 +2484,7 @@ public class Race {
 				'wings': [Wings.VAMPIRE, +4],
 				'legs' : [LowerBody.HUMAN, +1],
 				'face' : [Face.VAMPIRE, +2],
-				'eyes' : [Eyes.VAMPIRE, +1],
+				'eyes' : [Eyes.SLITS, +1],
 				'arms' : [Arms.HUMAN, +1]
 			}).withBonusTier(6,{
 				'str': +20,
@@ -2543,7 +2542,7 @@ public class Race {
 
 	public static var WEREWOLF:Race = new Race("werewolf")
 			.simpleScores({
-				'face'  : [Face.WOLF_FANGS, +1],
+				'face'  : [Face.SHARPTEETH, +1],
 				'eyes'  : [
 					Eyes.FERAL, +1,
 					Eyes.FENRIR, -7
@@ -2551,7 +2550,7 @@ public class Race {
 				'ears'  : [Ears.WOLF, +1],
 				'tongue': [Tongue.DOG, +1],
 				'arms'  : [Arms.WOLF, +1],
-				'legs'  : [LowerBody.WOLF, +1],
+				'legs'  : [LowerBody.CANINE, +1],
 				'tail'  : [Tail.WOLF, +1],
 				'rear'  : [
 					RearBody.WOLF_COLLAR, +1,
@@ -2594,7 +2593,7 @@ public class Race {
 				'skin.coat': [Skin.FUR, +1],
 				'ears'     : [Ears.WOLF, +1],
 				'arms'     : [Arms.WOLF, +1],
-				'legs'     : [LowerBody.WOLF, +1],
+				'legs'     : [LowerBody.CANINE, +1],
 				'tail'     : [Tail.WOLF, +1],
 				'rear'     : [RearBody.FENRIR_ICE_SPIKES, +1]
 			}).complexScore(+1, {

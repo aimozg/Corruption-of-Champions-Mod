@@ -4,7 +4,7 @@
 package classes.Scenes.Combat {
 import classes.BaseContent;
 
-public class BaseCombatContent extends BaseContent {
+public class BaseCombatContent extends CombatMechanics {
 	public function BaseCombatContent() {
 	}
 	// ====================
@@ -23,21 +23,11 @@ public class BaseCombatContent extends BaseContent {
 	protected function combatIsOver():Boolean {
 		return combat.combatIsOver();
 	}
-	protected function combatRoundOver():void
-	{
-		combat.combatRoundOver();
+	protected function afterPlayerAction():void {
+		combat.afterPlayerAction();
 	}
-	protected function endHpVictory():void {
-		combat.endHpVictory();
-	}
-	protected function endLustVictory():void {
-		combat.endLustVictory();
-	}
-	protected function endHpLoss():void {
-		combat.endHpLoss();
-	}
-	protected function endLustLoss():void {
-		combat.endLustLoss();
+	protected function afterMonsterAction():void {
+		combat.afterMonsterAction();
 	}
 	// ==================
 	// APPLY EFFECTS
@@ -77,9 +67,6 @@ public class BaseCombatContent extends BaseContent {
 	}
 	protected function checkAchievementDamage(damage:Number):void {
 		combat.checkAchievementDamage(damage);
-	}
-	protected function isWieldingRangedWeapon():Boolean {
-		return combat.isWieldingRangedWeapon();
 	}
 	protected function isPlayerBound():Boolean {
 		return combat.isPlayerBound();

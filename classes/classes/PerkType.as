@@ -263,17 +263,6 @@ public class PerkType
 			});
 			return this;
 		}
-		public function requireNGPlus(value:int):PerkType {
-			requirements.push({
-				fn  : function(player:Player):Boolean {
-					return player.newGamePlusMod() >= value;
-				},
-				text: "New Game+ " + value,
-				type: "ng+",
-				value: value
-			});
-			return this;
-		}
 		public function requirePrestigeJobSlot():PerkType {
 			requirements.push({
 				fn  : function(player:Player):Boolean {

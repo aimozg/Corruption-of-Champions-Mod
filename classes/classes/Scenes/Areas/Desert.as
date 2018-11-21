@@ -12,8 +12,7 @@ import classes.Scenes.API.GroupEncounter;
 import classes.Scenes.Areas.Desert.*;
 import classes.Scenes.SceneLib;
 
-import coc.xxc.BoundStory;
-import coc.xxc.stmts.ZoneStmt;
+import coc.xxc.BoundNode;
 
 use namespace CoC;
 
@@ -27,18 +26,17 @@ use namespace CoC;
 		public var wanderer:Wanderer = new Wanderer();
 		public function Desert()
 		{
-			onGameInit(init);
 		}
-		private var story:BoundStory;
+		private var story:BoundNode;
 		
 		private var _desertEncounter:GroupEncounter = null;
 		public function get desertEncounter():GroupEncounter {
 			return _desertEncounter;
 		}
-		private function init():void {
-            const game:CoC = CoC.instance;
-            const fn:FnHelpers = Encounters.fn;
-			_desertEncounter = Encounters.group("desert",
+		protected override function init():void {
+			const game:CoC = CoC.instance;
+			const fn:FnHelpers = Encounters.fn;
+			_desertEncounter = game.getEncounterPool("desert").add(
 					//game.commonEncounters,
 					{
 						name: "naga",
@@ -140,29 +138,21 @@ use namespace CoC;
 						chance: 0.25,
 						when  : fn.ifLevelMin(2),
 						call  : oasis.oasisEncounter
-					}, {
-						name: "Etna",
-						chance: 0.2,
-						when: function ():Boolean
-						{
-							return (flags[kFLAGS.ETNA_FOLLOWER] < 1 && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2);
-						},
-						call: SceneLib.etnaScene.repeatYandereEnc
-					}, {
-						//Helia monogamy fucks
-						name  : "helcommon",
-						call  : SceneLib.helScene.helSexualAmbush,
-						chance: 0.2,
-						when  : SceneLib.helScene.helSexualAmbushCondition
+					}, SceneLib.etnaScene.yandereEncounter,
+					SceneLib.helScene.helSexualAmbushEncounter, {
+						name: "walk",
+						call: function ():void {
+							story.locate("walk").execute();
+						}
 					});
-			story = ZoneStmt.wrap(_desertEncounter,game.rootStory).bind(game.context);
+			story = game.rootStory.addLib("desert").bind(game.context);
 		}
 		//Explore desert
 		public function exploreDesert():void {
 			player.exploredDesert++;
 			clearOutput();
 			doNext(camp.returnToCampUseOneHour); // default button
-			story.execute();
+			desertEncounter.execEncounter();
 			flushOutputTextToGUI();
 		}
 
@@ -226,12 +216,12 @@ use namespace CoC;
 				//50/50 strength/toughness
 				if (rand(2) == 0 && player.str < 50) {
 					outputText("The effort of struggling with the uncertain footing has made you stronger.");
-					dynStats("str", .5);
+					buffOrRecover("str",1+rand(5),"desert/walk","Desert walk");
 				}
 				//Toughness
 				else if (player.tou < 50) {
 					outputText("The effort of struggling with the uncertain footing has made you tougher.");
-					dynStats("tou", .5);
+					buffOrRecover("tou",1+rand(5),"desert/walk","Desert walk");
 				}
 			}
 			doNext(camp.returnToCampUseOneHour);

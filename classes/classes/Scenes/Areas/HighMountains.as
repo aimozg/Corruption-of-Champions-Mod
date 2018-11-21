@@ -6,10 +6,14 @@ package classes.Scenes.Areas
 import classes.*;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
+import classes.Scenes.API.Encounters;
+import classes.Scenes.API.FnHelpers;
+import classes.Scenes.API.GroupEncounter;
 import classes.Scenes.Areas.HighMountains.*;
 import classes.Scenes.Holidays;
 import classes.Scenes.Monsters.DarkElfScene;
 import classes.Scenes.SceneLib;
+import classes.display.SpriteDb;
 
 use namespace CoC;
 
@@ -36,143 +40,126 @@ use namespace CoC;
 			flags[kFLAGS.DISCOVERED_HIGH_MOUNTAIN]++;
 			doNext(camp.returnToCampUseOneHour);
 		}
+		private var _encounter:GroupEncounter;
+		public function get encounter():GroupEncounter {
+			return _encounter;
+		}
+		protected override function init():void {
+			const game:CoC     = CoC.instance;
+			const fn:FnHelpers = Encounters.fn;
+			_encounter         = game.getEncounterPool("highMountains").add(
+					SceneLib.helScene.helSexualAmbushEncounter, {
+						name: "d3",
+						when: function ():Boolean {
+							return flags[kFLAGS.D3_DISCOVERED] == 0 && player.hasKeyItem("Zetaz's Map") >= 0;
+						},
+						call: SceneLib.d3.discoverD3
+					}, {
+						name: "snowangel",
+						when: function ():Boolean {
+							return player.gender > 0
+								   && isHolidays()
+								   && flags[kFLAGS.GATS_ANGEL_DISABLED] == 0
+								   && flags[kFLAGS.GATS_ANGEL_GOOD_ENDED] == 0
+								   && (flags[kFLAGS.GATS_ANGEL_QUEST_BEGAN] == 0
+									   || player.hasKeyItem("North Star Key") >= 0);
+						},
+						call: Holidays.gatsSpectacularRouter
+					}, {
+						name: "minerva",
+						when: function ():Boolean {
+							return flags[kFLAGS.MET_MINERVA] < 4;
+						},
+						call: minervaScene.encounterMinerva
+					}, {
+						name: "minomob",
+						when: function ():Boolean {
+							return flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] >= 3 && player.hasVagina();
+						},
+						call: minotaurMobScene.meetMinotaurSons,
+						mods: [SceneLib.exploration.furriteMod]
+					}, SceneLib.etnaScene.yandereEncounter,
+					{
+						name  : "harpychicken",
+						when  : function ():Boolean {
+							return player.hasItem(consumables.OVIELIX)
+								   || flags[kFLAGS.TIMES_MET_CHICKEN_HARPY] <= 0
+						},
+						chance: function ():Number { return player.itemCount(consumables.OVIELIX); },
+						call  : chickenHarpy
+					}, {
+						name: "phoenix",
+						when: function():Boolean{
+							return flags[kFLAGS.HEL_PHOENIXES_DEFEATED] > 0;
+						},
+						call: phoenixScene.encounterPhoenix1
+					}, {
+						name: "minotaur",
+						when: function ():Boolean {
+							return flags[kFLAGS.MINOTAUR_CUM_ADDICTION_STATE] > 0;
+						},
+						call: minoRouter,
+						mods: [SceneLib.exploration.furriteMod]
+					}, {
+						name: "harpy",
+						call: harpyEncounter
+					}, {
+						name: "basilisk",
+						call: basiliskScene.basiliskGreeting
+					}, {
+						name: "sophie",
+						when: function ():Boolean {
+							return flags[kFLAGS.SOPHIE_BIMBO] <= 0
+								   && flags[kFLAGS.SOPHIE_DISABLED_FOREVER] <= 0
+								   && !SceneLib.sophieFollowerScene.sophieFollower();
+						},
+						call: SceneLib.sophieScene.sophieRouter
+					}, {
+						name: "izumi",
+						call: izumiScenes.encounter
+					}, {
+						name:"hike",
+						chance:0.2,
+						call:hike
+					}, {
+						name: "temple",
+						call: templeofdivine.firstvisitintro,
+						when: function ():Boolean {
+							return flags[kFLAGS.FOUND_TEMPLE_OF_THE_DIVINE] < 1
+						}
+					}, {
+						name: "darkelf",
+						chance:0.5,
+						call: darkelfScene.introDarkELfSlaver
+					}
+			);
+		}
 		//Explore High Mountain
 		public function exploreHighMountain():void
 		{
 			flags[kFLAGS.DISCOVERED_HIGH_MOUNTAIN]++;
-			doNext(playerMenu);
-			
-			if (SceneLib.d3.discoverD3() == true)
-			{
-				return;
+			encounter.execEncounter();
+		}
+		
+		public function harpyEncounter():void {
+			clearOutput();
+			outputText(images.showImage("encounter-harpy"));
+			outputText("A harpy wings out of the sky and attacks!");
+			if (flags[kFLAGS.CODEX_ENTRY_HARPIES] <= 0) {
+				flags[kFLAGS.CODEX_ENTRY_HARPIES] = 1;
+				outputText("\n\n<b>New codex entry unlocked: Harpies!</b>")
 			}
-			
-			var chooser:Number = rand(5);
-			//Boosts mino and hellhound rates!
-			if (player.hasPerk(PerkLib.PiercedFurrite) && rand(3) == 0) {
-				chooser = 1;
-			}
-			//Helia monogamy fucks
-			if (flags[kFLAGS.PC_PROMISED_HEL_MONOGAMY_FUCKS] == 1 && flags[kFLAGS.HEL_RAPED_TODAY] == 0 && rand(10) == 0 && player.gender > 0 && !SceneLib.helScene.followerHel()) {
-				SceneLib.helScene.helSexualAmbush();
-				return;
-			}
-			//Gats xmas adventure!
-			if (rand(5) == 0 && player.gender > 0 && isHolidays() && flags[kFLAGS.GATS_ANGEL_DISABLED] == 0 && flags[kFLAGS.GATS_ANGEL_GOOD_ENDED] == 0 && (flags[kFLAGS.GATS_ANGEL_QUEST_BEGAN] == 0 || player.hasKeyItem("North Star Key") >= 0)) {
-				Holidays.gatsSpectacularRouter();
-				return;
-			}
-			//Minerva
-			if (flags[kFLAGS.DISCOVERED_HIGH_MOUNTAIN] % 8 == 0) {
-				if (flags[kFLAGS.MET_MINERVA] < 4)
-				{
-					minervaScene.encounterMinerva();
-					return;
-				}
-			}
-			//Etna
-			if (flags[kFLAGS.ETNA_FOLLOWER] < 1 && rand(3) == 0) {
-				if (flags[kFLAGS.ETNA_AFFECTION] < 5) SceneLib.etnaScene.firstEnc();
-				else SceneLib.etnaScene.repeatEnc();
-				return;
-			}
-			//Temple of the Divine
-			if (flags[kFLAGS.FOUND_TEMPLE_OF_THE_DIVINE] < 1 && rand(4) == 0) {
-				templeofdivine.firstvisitintro();
-				return;
-			}
-			//25% minotaur sons!
-			if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] >= 3 && rand(4) == 0 && player.hasVagina()) {
-				spriteSelect(44);
-				minotaurMobScene.meetMinotaurSons();
-				return;
-			}
-			//Harpy odds!
-			if (player.hasItem(consumables.OVIELIX) || flags[kFLAGS.TIMES_MET_CHICKEN_HARPY] <= 0) {
-				if (player.hasItem(consumables.OVIELIX, 2)) {
-					if (rand(4) == 0) {
-						chickenHarpy();
-						return;
-					}
-				}
-				else {
-					if (rand(10) == 0) {
-						chickenHarpy();
-						return;
-					}
-				}
-			}
-			if (flags[kFLAGS.HEL_PHOENIXES_DEFEATED] > 0 && rand(4) == 0) {
-				phoenixScene.encounterPhoenix1();
-				return;
-			}
-			if ((player.hasKeyItem("Gryphon Statuette") < 0 || player.hasKeyItem("Peacock Statuette") < 0) && rand(4) == 0) {
-				caveScene();
-				return;
-			}
-			//10% chance to mino encounter rate if addicted
-			if (flags[kFLAGS.MINOTAUR_CUM_ADDICTION_STATE] > 0 && rand(10) == 0) {
-				spriteSelect(44);
-				//Cum addictus interruptus!  LOL HARRY POTTERFAG
-				//Withdrawl auto-fuck!
-				if (flags[kFLAGS.MINOTAUR_CUM_ADDICTION_STATE] == 3) {
-                    SceneLib.mountain.minotaurScene.minoAddictionFuck();
-                    return;
-				}
-                SceneLib.mountain.minotaurScene.getRapedByMinotaur(true);
-                spriteSelect(44);
-				return;
-			}
-			trace("Chooser goin for" + chooser);
-			
-			//Generic harpy
-			if (chooser == 0) {
-				clearOutput();
-				outputText("A harpy wings out of the sky and attacks!");
-				if (flags[kFLAGS.CODEX_ENTRY_HARPIES] <= 0) {
-					flags[kFLAGS.CODEX_ENTRY_HARPIES] = 1;
-					outputText("\n\n<b>New codex entry unlocked: Harpies!</b>")
-				}
-				startCombat(new Harpy());
-				spriteSelect(26);
-				return;
-			}
-			//Basilisk!
-			if (chooser == 1) {
-				basiliskScene.basiliskGreeting();
-				return;
-			}
-			//Sophie
-			if (chooser == 2) {
-				if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00282] > 0 || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00283] > 0 || SceneLib.sophieFollowerScene.sophieFollower()) {
-					clearOutput();
-					outputText("A harpy wings out of the sky and attacks!");
-					startCombat(new Harpy());
-					spriteSelect(26);
-				}
-				else {
-					if (flags[kFLAGS.MET_SOPHIE_COUNTER] == 0) SceneLib.sophieScene.meetSophie();
-					else SceneLib.sophieScene.meetSophieRepeat();
-				}
-			}
-			if (chooser == 3) 
-			{
-				this.izumiScenes.encounter();
-			}
-			//Dark Elf Scout
-			if (chooser == 4) {
-				if (rand(2) == 0) darkelfScene.introDarkELfSlaver();
-				else {
-					clearOutput();
-					outputText("A harpy wings out of the sky and attacks!");
-					if (flags[kFLAGS.CODEX_ENTRY_HARPIES] <= 0) {
-						flags[kFLAGS.CODEX_ENTRY_HARPIES] = 1;
-						outputText("\n\n<b>New codex entry unlocked: Harpies!</b>")
-					}
-					startCombat(new Harpy());
-					spriteSelect(26);
-				}
-				return;
+			startCombat(new Harpy());
+			spriteSelect(SpriteDb.s_harpy);
+		}
+		public function minoRouter():void {
+			spriteSelect(SpriteDb.s_minotaur);
+			//Cum addictus interruptus!  LOL HARRY POTTERFAG
+			if (flags[kFLAGS.MINOTAUR_CUM_ADDICTION_STATE] == 3) //Withdrawl auto-fuck!
+				SceneLib.mountain.minotaurScene.minoAddictionFuck();
+			else {
+				SceneLib.mountain.minotaurScene.getRapedByMinotaur(true);
+				spriteSelect(SpriteDb.s_minotaur);
 			}
 		}
 		
@@ -260,36 +247,17 @@ use namespace CoC;
 			doNext(camp.returnToCampUseOneHour);
 		}
 		
-		public function caveScene():void {
+		private function hike():void {
 			clearOutput();
-			outputText("Wandering once more around the rocky cliffs on the higher area of the mountains, you find yourself increasingly bores, as you spend the most of the hour tossing aside pebbles and rocks that fell on the path, or crushing the solidified snow with your footwear.\n\n");
-			outputText("On the middle of your careless, and surprisingly peaceful stroll, you happen to find an alcove carved on the cliff’s stone. It’s not very big, maybe three or four feet tall, five feet wide and two feet deep, resting one feet above the path ground, so you’re forced to get on your knees to examine it better.\n\n");
-			outputText("The alcove itself is seemingly empty, though after a better examination, the back has engraved on the cliff rock a long, detailed inscription. Sadly, you can’t get a word from it, since it’s written in a strange, old language that’s doesn’t barely resemble anything that you’ve found in Mareth. Carved on each side there area stylized figures of avian creatures, ");
-			outputText("the most noticeable ones being a gryphon with the wings spread, and in the other side, a peacock doing the same with its tail. As you put your hands on them, you notice a that a shape vaguely resembling a hand forming in the floor of the alcove.\n\n");
-			outputText("Tentatively you put one hand on place");
-			if (player.avianScore() < 9) {
-				outputText(", but absolutely nothing happens. Maybe the magic or whatever that thing was supposed to do stopped working long ago? In any case, you had enough looking for a while, and since you’re not getting anything useful from there, you resume your walk.\n\n");
-				doNext(camp.returnToCampUseOneHour);
+			outputText(images.showImage("area-highmountains"));
+			if (player.cor < 90) {
+				outputText("Your hike in the highmountains, while fruitless, reveals pleasant vistas and provides you with good exercise and relaxation.");
+				dynStats("tou", .25, "spe", .5, "lus", player.lib / 10 - 15);
 			}
 			else {
-				outputText(" and gasp in surprise as the figures depicting the creatures at the sides of the alcove recede as you do so, leaving in place two smaller alcoves with two statuettes on them.\n\n");
-				outputText("The first one, made on brass and bronze, depicts a fierce looking gryphon in an assault stance. Every bit of the artifact emanates an unnatural strength. On the other side, a statue made of alabaster and ruby gemstones is shaped as a graceful peacock. Strangely, besides being pretty, the way it’s crafted gives you a weird, mystic feel.\n\n");
-				outputText("You try to grab both, but as soon as you put your hands in one of them, the alcove with the other starts closing. Seems like you’ll have only one choice here.\n\n");
-				menu();
-				addButton(0, "Gryphon", caveSceneGryphon);
-				addButton(1, "Peacock", caveScenePeacock);
+				outputText("During your hike into the highmountains, your depraved mind keeps replaying your most obcenely warped sexual encounters, always imagining new perverse ways of causing pleasure.\n\nIt is a miracle no predator picked up on the strong sexual scent you are emitting.");
+				dynStats("tou", .25, "spe", .5, "lib", .25, "lus", player.lib / 10);
 			}
-		}
-		public function caveSceneGryphon():void {
-			outputText("Picking the brass-forged statuette, you immediately feel how its energy rushes through your avian body, invigorating it with an unknown force. Carefully putting it on your bag, you see how the other one is stored away by the hidden mechanism.\n\n");
-			outputText("With nothing useful left to you here, you resume your walk and return to your camp with the gryphon idol on your bag.\n\n");
-			player.createKeyItem("Gryphon Statuette", 0, 0, 0, 0);
-			doNext(camp.returnToCampUseOneHour);
-		}
-		public function caveScenePeacock():void {
-			outputText("Picking the alabaster statuette, you immediately feel how its energy rushes through your avian body, invigorating it with an unknown force. Carefully putting it on your bag, you see how the other one is stored away by the hidden mechanism.\n\n");
-			outputText("With nothing useful left to you here, you resume your walk and return to your camp with the peacock idol on your bag.\n\n");
-			player.createKeyItem("Peacock Statuette", 0, 0, 0, 0);
 			doNext(camp.returnToCampUseOneHour);
 		}
 	}

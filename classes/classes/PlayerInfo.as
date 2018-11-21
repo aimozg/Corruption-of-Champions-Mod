@@ -3,10 +3,13 @@ package classes {
 import classes.BodyParts.Face;
 import classes.BodyParts.Tail;
 import classes.GlobalFlags.*;
+import classes.Scenes.Combat.CombatMechanics;
+import classes.Scenes.NPCs.IsabellaScene;
 import classes.Scenes.SceneLib;
 import classes.Stats.Buff;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
+import classes.Stats.IStatHolder;
 import classes.Stats.PrimaryStat;
 import classes.Stats.RawStat;
 import classes.StatusEffects.VampireThirstEffect;
@@ -60,6 +63,8 @@ public class PlayerInfo extends BaseContent {
 		// Begin Combat Stats
 		var combatStats:String = "";
 
+		combatStats += "<b>Attack Rating:</b> " + player.attackRating + "\n";
+		combatStats += "<b>Defense Rating:</b> " + player.defenseRating + "\n";
 		combatStats += "<b>Resistance (Physical Damage):</b> " + (100 - Math.round(player.damagePercent(true))) + "-" + (100 - Math.round(player.damagePercent(true) - player.damageToughnessModifier(true))) + "% (Higher is better.)\n";
 
 		combatStats += "<b>Resistance (Magic Damage):</b> " + (100 - Math.round(player.damageMagicalPercent(true))) + "-" + (100 - Math.round(player.damageMagicalPercent(true) - player.damageIntelligenceModifier(true) - player.damageWisdomModifier(true))) + "% (Higher is better.)\n";
@@ -222,11 +227,11 @@ public class PlayerInfo extends BaseContent {
 		if (flags[kFLAGS.TAMANI_NUMBER_OF_DAUGHTERS] > 0)
 			childStats += "<b>Children With Tamani:</b> " + flags[kFLAGS.TAMANI_NUMBER_OF_DAUGHTERS] + " (after all forms of natural selection)\n";
 
-		if (SceneLib.urtaPregs.urtaKids() > 0)
-			childStats += "<b>Children With Urta:</b> " + SceneLib.urtaPregs.urtaKids() + "\n";
-		//Mino sons
-		if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] > 0)
-			childStats += "<b>Number of Adult Minotaur Offspring:</b> " + flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00326] + "\n";
+        if (SceneLib.urtaPregs.urtaKids() > 0)
+            childStats += "<b>Children With Urta:</b> " + SceneLib.urtaPregs.urtaKids() + "\n";
+        //Mino sons
+		if (flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] > 0)
+			childStats += "<b>Number of Adult Minotaur Offspring:</b> " + flags[kFLAGS.ADULT_MINOTAUR_OFFSPRINGS] + "\n";
 
 		//Alraune daughters
 		if (flags[kFLAGS.ALRAUNE_SEEDS] > 0)
@@ -676,32 +681,43 @@ public class PlayerInfo extends BaseContent {
 		addButton(0,"Back",playerMenu);
 	}
 	
+	private function debugStat(fullname:String,stat:IStat):void {
+		var sh:IStatHolder = stat as IStatHolder;
+		if (sh) {
+			for each(var key:String in sh.allStatNames()) {
+				debugStat(fullname+"."+key,sh.findStat(key));
+			}
+		}
+		outputText('<b>'+fullname+' = '+floor(stat.value,5)+'</b> ');
+		var pstat:PrimaryStat = stat as PrimaryStat;
+		var bstat:BuffableStat = stat as BuffableStat;
+		var rstat:RawStat = stat as RawStat;
+		if (pstat) {
+			outputText(' = '+fullname+'.core×'+fullname+'.mult + '+fullname+'.bonus');
+		} else if (bstat) {
+			var buffs:/*Buff*/Array = bstat.listBuffs();
+			if (buffs.length==0) {
+				outputText(" = base");
+			} else {
+				outputText('(base = '+bstat.base+')');
+			}
+			for each(var buff:Buff in buffs) {
+				var value:Number = buff.value;
+				outputText('\n\t'+buff.tag + ': ' + (value >= 0 ? '+' : '') + floor(value,5));
+				if (buff.save) outputText(', saved');
+				if (!buff.show) outputText(', hidden');
+			}
+		} else if (rstat) {
+			outputText('(raw)');
+		} else {
+			outputText('(/!\\ unknown type '+stat['prototype']['constructor']+')');
+		}
+		outputText('\n');
+	}
 	public function debugStats():void {
 		clearOutput();
-		var statnames:/*String*/Array = Utils.keys(player.stats).sort();
-		for each(var statname:String in statnames) {
-			var stat:IStat = player.stats[statname];
-			outputText('<b>'+statname+' = '+stat.value+'</b> ');
-			var pstat:PrimaryStat = stat as PrimaryStat;
-			var bstat:BuffableStat = stat as BuffableStat;
-			var rstat:RawStat = stat as RawStat;
-			if (pstat) {
-				outputText(' = '+pstat.core.name+'×'+pstat.mult.name+' + '+pstat.bonus.name);
-			} else if (bstat) {
-				outputText('(base '+bstat.base+')');
-				var buffs:/*Buff*/Array = bstat.listBuffs();
-				for each(var buff:Buff in buffs) {
-					var value:Number = buff.value;
-					outputText('\n\t'+buff.tag + ': ' + (value >= 0 ? '+' : '') + value);
-					if (buff.save) outputText(', save+');
-					if (!buff.show) outputText(', show-');
-				}
-			} else if (rstat) {
-				outputText('(raw)');
-			} else {
-				outputText('/!\\ Unknown stat class '+stat['prototype']['constructor']);
-			}
-			outputText('\n');
+		for each(var stat:String in player.allStatNames()) {
+			debugStat(stat, player.findStat(stat));
 		}
 		menu();
 		addButton(0,"Back",displayStats);
@@ -718,14 +734,13 @@ public class PlayerInfo extends BaseContent {
 		if (player.XP >= player.requiredXP() && player.level < CoC.instance.levelCap) {
 			player.XP -= player.requiredXP();
 			player.level++;
-			outputText("<b>You are now level " + num2Text(player.level) + "!</b>");
+	        outputText("<b>You are now level " + num2Text(player.level) + "!</b>");
+	        outputText("\n\nYou have gained five attribute points!");
+			player.statPoints += 5;
 			if(player.level % 2 == 0){
-				outputText("\n\nYou have gained five attribute points!");
-				player.statPoints += 5;
-			} else {
-				outputText("\n\nYou have gained one perk point!");
-				player.perkPoints++;
-			}
+		        outputText("\n\nYou have gained one perk point!");
+		        player.perkPoints++;
+	        }
 
 			if (player.statPoints>0) {
 				doNext(attributeMenu);
@@ -945,15 +960,11 @@ public class PlayerInfo extends BaseContent {
 		player.perkPoints--;
 		//Apply perk here.
 		outputText("<b>" + perk.name + "</b> gained!");
+		var hp100before:Number = player.hp100;
 		player.createPerk(perk, perk.defaultValue1, perk.defaultValue2, perk.defaultValue3, perk.defaultValue4);
-		if (perk == PerkLib.StrongBack){
-			player.itemSlot4.unlocked = true;
-			player.itemSlot5.unlocked = true;
-		}
-		if (perk == PerkLib.Tank) {
-			HPChange(player.tou, false);
-			statScreenRefresh();
-		}
+		player.updateStats();
+		player.HP = player.maxHP()*hp100before/100;
+		statScreenRefresh();
 		if (player.perkPoints > 0) {
 			doNext(perkBuyMenu);
 		} else {

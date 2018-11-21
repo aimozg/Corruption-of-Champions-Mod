@@ -214,11 +214,11 @@ public class StatsView extends Block {
 				var bar:StatBar = event.target as StatBar;
 				if (!bar) return;
 				var statname:String  = bar.dataset.statname;
-				var stat:PrimaryStat = player.stats[statname];
+				var stat:PrimaryStat = player.findPrimaryStat(statname);
 				if (!stat) return;
 				var text:String            = '';
 				text += '<b>Base value:</b> ' + Utils.floor(stat.core.value, 1) + '\n';
-				var buffs:/*Buff*/Array = stat.mult.listBuffs();
+				var buffs:/*Buff*/Array = stat.mult.listBuffs().concat(stat.bonus.listBuffs());
 				var hasHidden:Boolean = false;
 				for each(var buff:Buff in buffs) {
 					var value:Number = buff.value;
@@ -228,18 +228,19 @@ public class StatsView extends Block {
 						continue;
 					}
 					text += '<b>' + buff.text + ':</b> ';
-					text += (value >= 0 ? '+' : '') + Utils.floor(value * 100) + '%';
-					text += '\n';
-				}
-				buffs = stat.bonus.listBuffs();
-				for each(buff in buffs) {
-					value = buff.value;
-					if (value >= 0.0 && value < 0.1) continue;
-					if (!buff.show) {
-						hasHidden = true;
-						continue;
+					if (buff.stat == stat.mult) {
+						text += (value >= 0 ? '+' : '') + Utils.floor(value * 100) + '%';
+					} else {
+						text += (value >= 0 ? '+' : '') + Utils.floor(value, 1);
 					}
-					text += '<b>' + buff.text + ':</b> ' + (value >= 0 ? '+' : '') + Utils.floor(value, 1) + '\n';
+					if (buff.rate != Buff.RATE_PERMANENT) {
+						text += ' ('+Utils.numberOfThings(buff.tick, {
+							([Buff.RATE_ROUNDS]):'round',
+							([Buff.RATE_HOURS]):'hour',
+							([Buff.RATE_DAYS]):'day'
+						}[buff.rate])+')'
+					}
+					text += '\n';
 				}
 				if (hasHidden) text += '<b>Unknown Sources:</b> ±??\n';
 				text += '\n';
@@ -346,7 +347,8 @@ public class StatsView extends Block {
 		var maxes:Object      = player.getAllMaxStats();
 		nameText.htmlText     = "<b>Name: " + player.short + "</b>";
 		for each(var e:StatBar in allStats) {
-			var stat:PrimaryStat = player.stats[e.dataset.statname] as PrimaryStat;
+			if (!e.dataset.statname) continue;
+			var stat:PrimaryStat = player.findPrimaryStat(e.dataset.statname);
 			if (!stat) continue;
 			e.maxValue = stat.max;
 			e.value = stat.value;

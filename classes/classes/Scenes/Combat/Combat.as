@@ -20,8 +20,8 @@ import classes.PerkLib;
 import classes.Scenes.Areas.Desert.SandTrap;
 import classes.Scenes.Areas.Forest.Alraune;
 import classes.Scenes.Areas.GlacialRift.FrostGiant;
-import classes.Scenes.Areas.HighMountains.Basilisk;
-import classes.Scenes.Combat.CombatAction.CombatAction;
+import classes.Scenes.Combat.CombatAction.ACombatAction;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Scenes.Dungeons.D3.*;
 import classes.Scenes.NPCs.*;
 import classes.Scenes.Places.TelAdre.UmasShop;
@@ -33,7 +33,7 @@ import coc.view.ButtonData;
 import coc.view.ButtonDataList;
 import coc.view.MainView;
 
-public class Combat extends BaseContent {
+public class Combat extends CombatMechanics {
 	public const pspecials:PhysicalSpecials  = new PhysicalSpecials();
 	public const mspecials:MagicSpecials     = new MagicSpecials();
 	public const magic:CombatMagic           = new CombatMagic();
@@ -227,8 +227,6 @@ public class Combat extends BaseContent {
 		}
 		var gemsLost: int = rand(10) + 1 + Math.round(monster.level / 2);
 		if (inDungeon) gemsLost += 20 + monster.level * 2;
-		//Increases gems lost in NG+.
-		gemsLost *= 1 + (player.newGamePlusMod() * 0.5);
 		//Round gems.
 		gemsLost = Math.round(gemsLost);
 		//Keep gems from going below zero.
@@ -275,7 +273,7 @@ public function approachAfterKnockback1():void
 	outputText("At the same time, you open the magazine of your " + player.weaponRangePerk.toLowerCase());
 	outputText(" to reload the ammunition.");
 	outputText("  This takes up a turn.\n\n");
-	enemyAI();
+	afterPlayerAction();
 }
 public function approachAfterKnockback2():void
 {
@@ -284,15 +282,13 @@ public function approachAfterKnockback2():void
 	player.removeStatusEffect(StatusEffects.KnockedBack);
 	outputText("At the same time, you fire a round at [monster name]. ");
 	fireBow();
-	return;
 }
 public function approachAfterKnockback3():void
 {
 	clearOutput();
 	outputText("You close the distance between you and [monster a] [monster name] as quickly as possible.\n\n");
 	player.removeStatusEffect(StatusEffects.KnockedBack);
-	enemyAI();
-	return;
+	afterPlayerAction();
 }
 
 public function isPlayerSilenced():Boolean
@@ -352,6 +348,7 @@ public function canUseMagic():Boolean {
 	if (player.hasStatusEffect(StatusEffects.ThroatPunch)) return false;
 	if (player.hasStatusEffect(StatusEffects.WebSilence)) return false;
 	if (player.hasStatusEffect(StatusEffects.GooArmorSilence)) return false;
+	//noinspection RedundantIfStatementJS
 	if (player.hasStatusEffect(StatusEffects.WhipSilence)) return false;
 	return true;
 }
@@ -362,7 +359,7 @@ public function combatMenu(newRound:Boolean = true):void { //If returning from a
 	if (newRound) {
 		flags[kFLAGS.IN_COMBAT_PLAYER_ELEMENTAL_ATTACKED] = 0;
 		//todo move this?
-		for each (var action:CombatAction in player.availableActions){
+		for each (var action:ACombatAction in player.availableActions){
 			action.onCombatRound();
 		}
 	}
@@ -443,14 +440,14 @@ public function stopChanneledSpecial():void {
 
 public function unarmedAttack():Number {
 	var unarmed:Number = 0;
-	if (player.hasPerk(PerkLib.AdvancedJobMonk) && player.wis >= 60) unarmed += 10 * (1 + player.newGamePlusMod());
-	if (player.hasPerk(PerkLib.PrestigeJobKiArtMaster) && player.wis >= 200) unarmed += 10 * (1 + player.newGamePlusMod());
+	if (player.hasPerk(PerkLib.AdvancedJobMonk) && player.wis >= 60) unarmed += 10;
+	if (player.hasPerk(PerkLib.PrestigeJobKiArtMaster) && player.wis >= 200) unarmed += 10;
 	if (player.hasStatusEffect(StatusEffects.MetalSkin)) {
-		if (player.statusEffectv2(StatusEffects.SummonedElementalsMetal) >= 6) unarmed += 4 * player.statusEffectv2(StatusEffects.SummonedElementalsMetal) * (1 + player.newGamePlusMod());
-		else unarmed += 2 * player.statusEffectv2(StatusEffects.SummonedElementalsMetal) * (1 + player.newGamePlusMod());
+		if (player.statusEffectv2(StatusEffects.SummonedElementalsMetal) >= 6) unarmed += 4 * player.statusEffectv2(StatusEffects.SummonedElementalsMetal);
+		else unarmed += 2 * player.statusEffectv2(StatusEffects.SummonedElementalsMetal);
 	}
 	if (player.hasStatusEffect(StatusEffects.CrinosShape)) unarmed *= 1.1;
-	if (player.hasPerk(PerkLib.Lycanthropy)) unarmed += 8 * (1 + player.newGamePlusMod());
+	if (player.hasPerk(PerkLib.Lycanthropy)) unarmed += 8;
 //	if (player.jewelryName == "fox hairpin") unarmed += .2;
 	unarmed = Math.round(unarmed);
 	return unarmed;
@@ -503,9 +500,9 @@ public function elementalattacks(elementType:int, summonedElementals:int):void {
 	if (elementalDamage < 10) elementalDamage = 10;
 	
 	var elementalamplification:Number = 1;
-	if (player.hasPerk(PerkLib.ElementalConjurerResolve)) elementalamplification += 0.1 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL];
-	if (player.hasPerk(PerkLib.ElementalConjurerDedication)) elementalamplification += 0.2 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL];
-	if (player.hasPerk(PerkLib.ElementalConjurerSacrifice)) elementalamplification += 0.3 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL];
+	if (player.hasPerk(PerkLib.ElementalConjurerResolve)) elementalamplification += 0.1;
+	if (player.hasPerk(PerkLib.ElementalConjurerDedication)) elementalamplification += 0.2;
+	if (player.hasPerk(PerkLib.ElementalConjurerSacrifice)) elementalamplification += 0.3;
 	if (player.weapon == weapons.SCECOMM) elementalamplification += 0.5;
 	elementalDamage *= elementalamplification;
 	//Determine if critical hit!
@@ -581,7 +578,7 @@ public function elementalattacks(elementType:int, summonedElementals:int):void {
 			fatigueRecovery();
 			manaRegeneration();
 			kiRegeneration();
-			enemyAI();
+			afterPlayerAction();
 		}
 	}
 	else {
@@ -613,25 +610,20 @@ public function elementalattacks(elementType:int, summonedElementals:int):void {
 		}
 
 		if (skipMonsterAction == true) {
-			combatRoundOver();
+			afterMonsterAction();
 		} else {
-			enemyAI();
+			afterPlayerAction();
 		}
 	}
 
 	internal function struggle():void {
 		clearOutput();
 		if (monster.handleStruggle()) {
-			combatRoundOver();
+			afterMonsterAction();
 		} else {
-			enemyAI();
+			afterPlayerAction();
 		}
 	}
-
-public function meleeAccuracy():Number {
-	var accmod:Number = 200;
-	return accmod;
-}
 
 public function arrowsAccuracy():Number {
 	var accmod:Number = 80;
@@ -701,12 +693,12 @@ public function fireBow():void {
 	//Amily!
 	if (monster.hasStatusEffect(StatusEffects.Concentration)) {
 		outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.\n\n");
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
 	if (monster.hasStatusEffect(StatusEffects.Sandstorm) && rand(10) > 1) {
 		outputText("Your attack is blown off target by the tornado of sand and wind.  Damn!\n\n");
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
 	//[Bow Response]
@@ -721,31 +713,31 @@ public function fireBow():void {
 		if (SceneLib.isabellaFollowerScene.isabellaAccent())
 			outputText("\"<i>You remind me of ze horse-people.  They cannot deal vith mein shield either!</i>\" cheers Isabella.\n\n");
 		else outputText("\"<i>You remind me of the horse-people.  They cannot deal with my shield either!</i>\" cheers Isabella.\n\n");
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
 	//worms are immune
 	if (monster.short == "worms") {
 		outputText("The " + ammoWord + " slips between the worms, sticking into the ground.\n\n");
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
 	//Vala miss chance!
 	if (monster.short == "Vala" && rand(10) < 7 && !monster.hasStatusEffect(StatusEffects.Stunned)) {
 		outputText("Vala flaps her wings and twists her body. Between the sudden gust of wind and her shifting of position, the " + ammoWord + " goes wide.\n\n");
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
 	//Blind miss chance
 	if (player.hasStatusEffect(StatusEffects.Blind)) {
 		outputText("The " + ammoWord + " hits something, but blind as you are, you don't have a chance in hell of hitting anything with a bow.\n\n");
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
 	if (monster is Lethice && monster.hasStatusEffect(StatusEffects.Shell))
 	{
 		outputText("Your " + ammoWord + " pings of the side of the shield and spins end over end into the air. Useless.\n\n");
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
 	if (player.weaponRangePerk == "Bow" || player.weaponRangePerk == "Crossbow") {
@@ -1018,8 +1010,7 @@ public function multiArrowsStrike():void {
 		outputText("\n\n<i>“Ouch. Such a cowardly weapon,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your pathetic " + ammoWord + "s?”</i>\n\n");
 		monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
 	}
-	if(combatIsOver()){return;}
-	enemyAI();
+	afterPlayerAction();
 }
 
 public function bowPerkUnlock():void {
@@ -1179,7 +1170,7 @@ public function throwWeapon():void {
 		monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
 	}
 	if (player.ammo == 0) outputText("\n\n<b>You're out of weapons to throw in this fight.</b>\n\n");
-	enemyAI();
+	afterPlayerAction();
 }
 
 public function shootWeapon():void {
@@ -1305,7 +1296,7 @@ public function shootWeapon():void {
 		outputText("\n\n<i>“Ouch. Such a cowardly weapon,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your pathetic weapon?”</i>\n\n");
 		monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
 	}
-	enemyAI();
+	afterPlayerAction();
 }
 
 public function reloadWeapon():void {
@@ -1313,7 +1304,7 @@ public function reloadWeapon():void {
 	outputText("You open the magazine of your [weaponrangename] to reload the ammunition. ");
 	if(player.fatigue + (10 * player.ammo) > player.maxFatigue()) {
 		outputText("You are too tired to act in this round after reloaing your weapon.");
-		enemyAI();
+		afterPlayerAction();
 	}
 	else {
 		fatigue(5 * player.ammo);
@@ -1336,7 +1327,7 @@ public function fantasize():void {
 		lustChange = 10 + rand(player.lib / 5 + player.cor / 8);
 		dynStats("lus", lustChange, "scale", false);
 		(monster as FrostGiant).giantBoulderFantasize();
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
 	if(player.armorName == "goo armor") {
@@ -1378,13 +1369,13 @@ public function fantasize():void {
 			return;
 		}
 	}
-	enemyAI();	
+	afterPlayerAction();
 }
 public function defendpose():void {
 	clearOutput();
 	outputText("You decide not to take any offensive action this round preparing for [monster a] [monster name] attack assuming defensive pose.\n\n");
 	player.createStatusEffect(StatusEffects.Defend, 0, 0, 0, 0);
-	enemyAI();
+	afterPlayerAction();
 }
 public function seconwindGo():void {
 	clearOutput();
@@ -1396,7 +1387,7 @@ public function seconwindGo():void {
 	fatigueRecovery();
 	manaRegeneration();
 	kiRegeneration();
-	enemyAI();
+	afterPlayerAction();
 }
 public function surrender():void {
 	var remainingLust:Number = (player.maxLust() - player.lust);
@@ -1419,48 +1410,47 @@ public function fatigueRecovery():void {
 	if (player.hasPerk(PerkLib.KitsuneThyroidGlandEvolved)) fatiguecombatrecovery += 1;
 	fatigue(-(1 + fatiguecombatrecovery));
 }
-
+	
+	/**
+	 * Everything reacts to the roll
+	 */
+	private function processRoll(roll:ActionRoll):void {
+		monster.processRoll(roll);
+		if (roll.canceled) return;
+		for each (var statusEffect:StatusEffectClass in player.statusEffects) {
+			statusEffect.processRoll(roll);
+			if (roll.canceled) return;
+		}
+		for each (statusEffect in monster.statusEffects) {
+			statusEffect.processRoll(roll);
+			if (roll.canceled) return;
+		}
+	}
+	
+	
 //ATTACK
 public function attack():void {
-	if (monster is DriderIncubus) {
-		(monster as DriderIncubus).taintedMindAttackAttempt();
-		return;
-	}
 	clearOutput();
+
+	var roll:ActionRoll = new ActionRoll(player, monster, ActionRoll.Types.MELEE);
+	// PHASE: PREPARE
+	processRoll(roll);
+	if (roll.canceled) return;
+	// PHASE: PERFORM
+	roll.advanceTo(ActionRoll.Phases.PERFORM);
 	lastAttack = PHYSICAL;
-	if(player.hasStatusEffect(StatusEffects.Sealed) && player.statusEffectv2(StatusEffects.Sealed) == 0 && !isWieldingRangedWeapon()) {
-		outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  The kitsune's seals have made normal melee attack impossible!  Maybe you could try something else?\n\n");
-		enemyAI();
+	processRoll(roll);
+	if (roll.canceled) {
+		afterPlayerAction();
 		return;
 	}
-	if(player.hasStatusEffect(StatusEffects.Sealed2) && player.statusEffectv2(StatusEffects.Sealed2) == 0) {
-		outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  Recent enemy attack have made normal melee attack impossible!  Maybe you could try something else?\n\n");
-		enemyAI();
-		return;
-	}
-	if(flags[kFLAGS.PC_FETISH] >= 3 && !SceneLib.urtaQuest.isUrta() && !isWieldingRangedWeapon()) {
+
+	if(flags[kFLAGS.PC_FETISH] >= 3 && !SceneLib.urtaQuest.isUrta() && !player.isWieldingRangedWeapon()) {
 		outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  Ceraph's piercings have made normal melee attack impossible!  Maybe you could try something else?\n\n");
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
-	//Amily!
-	if(monster.hasStatusEffect(StatusEffects.Concentration) && !isWieldingRangedWeapon()) {
-		clearOutput();
-		outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.\n\n");
-		enemyAI();
-		return;
-	}
-	if(monster.hasStatusEffect(StatusEffects.Level) && !player.hasStatusEffect(StatusEffects.FirstAttack) && !isWieldingRangedWeapon()) {
-		if (monster is SandTrap) {
-			outputText("It's all or nothing!  With a bellowing cry you charge down the treacherous slope and smite the sandtrap as hard as you can!  ");
-			(monster as SandTrap).trapLevel(-4);
-		}
-		if (monster is Alraune) {
-			outputText("It’s all or nothing!  If this leafy woman is so keen on pulling you in, you will let her do just that!  You use her own strength against her, using it to increase your momentum as you leap towards her and smash into her with your weapon!  ");
-			(monster as Alraune).trapLevel(-6);
-		}
-	}
-	else if(SceneLib.urtaQuest.isUrta()) {
+	if(SceneLib.urtaQuest.isUrta()) {
 		if(player.hasStatusEffect(StatusEffects.FirstAttack)) {
 			player.removeStatusEffect(StatusEffects.FirstAttack);
 		}
@@ -1468,32 +1458,6 @@ public function attack():void {
 			player.createStatusEffect(StatusEffects.FirstAttack,0,0,0,0);
 			outputText("Utilizing your skills as a bareknuckle brawler, you make two attacks!\n");
 		}
-	}
-	//Blind
-	if(player.hasStatusEffect(StatusEffects.Blind)) {
-		outputText("You attempt to attack, but as blinded as you are right now, you doubt you'll have much luck!  ");
-	}
-	if (monster is Basilisk && !player.hasPerk(PerkLib.BasiliskResistance) && !isWieldingRangedWeapon()) {
-		if (monster.hasStatusEffect(StatusEffects.Blind) || monster.hasStatusEffect(StatusEffects.InkBlind))
-			outputText("Blind basilisk can't use his eyes, so you can actually aim your strikes!  ");
-		//basilisk counter attack (block attack, significant speed loss): 
-		else if(player.inte/5 + rand(20) < 25) {
-			outputText("Holding the basilisk in your peripheral vision, you charge forward to strike it.  Before the moment of impact, the reptile shifts its posture, dodging and flowing backward skillfully with your movements, trying to make eye contact with you. You find yourself staring directly into the basilisk's face!  Quickly you snap your eyes shut and recoil backwards, swinging madly at the lizard to force it back, but the damage has been done; you can see the terrible grey eyes behind your closed lids, and you feel a great weight settle on your bones as it becomes harder to move.");
-			player.addCombatBuff('spe', -20);
-			player.removeStatusEffect(StatusEffects.FirstAttack);
-			combatRoundOver();
-			flags[kFLAGS.BASILISK_RESISTANCE_TRACKER] += 2;
-			return;
-		}
-		//Counter attack fails: (random chance if PC int > 50 spd > 60; PC takes small physical damage but no block or spd penalty)
-		else {
-			outputText("Holding the basilisk in your peripheral vision, you charge forward to strike it.  Before the moment of impact, the reptile shifts its posture, dodging and flowing backward skillfully with your movements, trying to make eye contact with you. You twist unexpectedly, bringing your [weapon] up at an oblique angle; the basilisk doesn't anticipate this attack!  ");
-		}
-	}
-	if (monster is FrostGiant && player.hasStatusEffect(StatusEffects.GiantBoulder)) {
-		(monster as FrostGiant).giantBoulderHit(0);
-		enemyAI();
-		return;
 	}
 	//Worms are special
 	if(monster.short == "worms") {
@@ -1516,12 +1480,12 @@ public function attack():void {
 			attack();
 			return;
 		}
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
 	
 	//Determine if dodged!
-	if ((player.hasStatusEffect(StatusEffects.Blind) && rand(2) == 0) || (monster.spe - player.spe > 0 && int(Math.random() * (((monster.spe - player.spe) / 4) + 80)) > 80)) {
+	if (!randomChance(basicHitChance(player, monster) * 100)) {
 		//Akbal dodges special education
 		if(monster.short == "Akbal") outputText("Akbal moves like lightning, weaving in and out of your furious strikes with the speed and grace befitting his jaguar body.\n");
 		else if(monster.short == "plain girl") outputText("You wait patiently for your opponent to drop her guard. She ducks in and throws a right cross, which you roll away from before smacking your [weapon] against her side. Astonishingly, the attack appears to phase right through her, not affecting her in the slightest. You glance down to your [weapon] as if betrayed.\n");
@@ -1544,7 +1508,7 @@ public function attack():void {
 			}
 			else outputText("\n");
 		}
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
 	//BLOCKED ATTACK:
@@ -1555,10 +1519,12 @@ public function attack():void {
 			return;
 		}
 		else outputText("\n");
-		enemyAI();
+		afterPlayerAction();
 		return;
 	}
-	meleeDamageAcc();
+	// PHASE: CONNECT
+	roll.advanceTo(ActionRoll.Phases.CONNECT);
+	meleeDamageAcc(roll);
 }
 	private static function weaponMod(host:Creature):Number {
 		var weaponAttack:Number = host.weaponAttack;
@@ -1569,16 +1535,15 @@ public function attack():void {
 		return mod;
 	}
 
-public function meleeDamageAcc():void {
-	var damage:Number = player.str + (player.scalingBonusStrength() * 0.25);
+public function meleeDamageAcc(roll:ActionRoll):void {
 	//------------
 	// DAMAGE
 	//------------
 	//Determine damage
 	//BASIC DAMAGE STUFF
-	if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !isWieldingRangedWeapon()) damage *= 1.2;
+	var damage:Number = basicMeleeDamage(player, Math.random());
+	if (player.hasPerk(PerkLib.HoldWithBothHands) && player.weapon != WeaponLib.FISTS && player.shield == ShieldLib.NOTHING && !player.isWieldingRangedWeapon()) damage *= 1.2;
 	if (damage < 10) damage = 10;
-	damage *= weaponMod(player);
 	//Bonus sand trap damage!
 	if (monster.hasStatusEffect(StatusEffects.Level) && (monster is SandTrap || monster is Alraune)) damage = Math.round(damage * 1.75);
 	//All special weapon effects like...fire/ice
@@ -1666,20 +1631,24 @@ public function meleeDamageAcc():void {
 	if (player.hasStatusEffect(StatusEffects.Overlimit)) damage *= 2;
 	//One final round
 	damage = Math.round(damage);
+	processRoll(roll);
+	if (roll.canceled) {
+		afterPlayerAction();
+		return;
+	}
 	
 	//ANEMONE SHIT
-	if (monster is Anemone && !isWieldingRangedWeapon() && randomChance(20)) {
+	if (monster is Anemone && !player.isWieldingRangedWeapon() && randomChance(20)) {
 		outputText("Seeing your [weapon] raised, the anemone looks down at the water, angles her eyes up at you, and puts out a trembling lip.  ");
 		if (player.cor >= 75) {
 			outputText("Though you lose a bit of steam to the display, the drive for dominance still motivates you to follow through on your swing.");
 		} else {
 			outputText("You stare into her hangdog expression and lose most of the killing intensity you had summoned up for your attack, stopping a few feet short of hitting her.\n");
-			if (combatIsOver()) {return;}
-			if (player.hasStatusEffect(StatusEffects.FirstAttack)) {
+			if (player.hasStatusEffect(StatusEffects.FirstAttack) && !combatIsOver()) {
 				attack();
 				return;
 			}
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 	}
@@ -1746,7 +1715,7 @@ public function meleeDamageAcc():void {
 		}
 
 		//Lust raised by anemone contact!
-		if((monster.short == "sea anemone" || monster.short == "anemone") && !isWieldingRangedWeapon()) {
+		if((monster.short == "sea anemone" || monster.short == "anemone") && !player.isWieldingRangedWeapon()) {
 			outputText("\nThough you managed to hit the "+monster.short+", several of the tentacles surrounding her body sent home jolts of venom when your swing brushed past them.");
 			//(gain lust, temp lose str/spd)
 			(monster as Anemone).applyVenom((1 + rand(2)));
@@ -1899,7 +1868,7 @@ public function meleeDamageAcc():void {
 	fatigueRecovery();
 	manaRegeneration();
 	kiRegeneration();
-	enemyAI();
+	afterPlayerAction();
 }
 
 public function WrathWeaponsProc():void {
@@ -1964,9 +1933,6 @@ public function combatBlock(doFatigue:Boolean = false):Boolean {
 		return true;
 	}
 	else return false;
-}
-public function isWieldingRangedWeapon():Boolean {
-	return player.weaponName.indexOf("staff") != -1 && player.hasPerk(PerkLib.StaffChanneling);
 }
 
 //DEAL DAMAGE
@@ -2144,16 +2110,15 @@ public function fatigueImpl(mod:Number,type:Number  = USEFATG_NORMAL):void {
 		if (player.hasPerk(PerkLib.SpeedyRecovery)) multi += 1;
 		return multi;
 	}
-//ENEMYAI!
-public function enemyAIImpl():void {
-	if(monster.HP < 1) {
-		doNext(endHpVictory);
-		return;
-	}
+/**
+ * If combat is not over, proceeds to monster AI
+ */
+public function afterPlayerAction():void {
+	if(combatIsOver()) return;
 	monster.doAI();
 	if (player.hasStatusEffect(StatusEffects.TranceTransformation)) player.ki -= 50;
 	if (player.hasStatusEffect(StatusEffects.CrinosShape)) player.wrath -= mspecials.crinosshapeCost();
-	combatRoundOver();
+	afterMonsterAction();
 }
 public function finishCombat():void
 {
@@ -2948,11 +2913,6 @@ public function wrathRegeneration(combat:Boolean = true):void {
 
 public function maximumRegeneration():Number {
 	var maxRegen:Number = 2;
-	if (player.newGamePlusMod() >= 1) maxRegen += 1;
-	if (player.newGamePlusMod() >= 2) maxRegen += 1;
-	if (player.newGamePlusMod() >= 3) maxRegen += 1;
-	if (player.newGamePlusMod() >= 4) maxRegen += 1;
-	if (player.newGamePlusMod() >= 5) maxRegen += 1;
 	if (player.hasPerk(PerkLib.LizanRegeneration)) maxRegen += 1.5;
 	if (player.hasPerk(PerkLib.LizanMarrow)) maxRegen += 0.5;
 	if (player.hasPerk(PerkLib.LizanMarrowEvolved)) maxRegen += 0.5;
@@ -3041,14 +3001,21 @@ public function display():void {
 }
 //VICTORY OR DEATH?
 	// Called after the monster's action. Increments round counter. Setups doNext to win/loss/combat menu
-public function combatRoundOver():void {
+	public function afterMonsterAction():void {
+		combatRoundOver();
+	}
+private function combatRoundOver():void {
 	combatRound++;
 	statScreenRefresh();
 	flags[kFLAGS.ENEMY_CRITICAL] = 0;
-	combatIsOver();
+	if (!combatIsOver()) {
+		//This takes us back to the combatMenu and a new combat round
+		doNext(combatMenu);
+	}
 }
 
-// Returns true if combat is over. Setups doNext to win/loss/combat menu
+// If combat is over, returns true and setups doNext to win/loss menu
+// Else return false -- DOES NOT setup doNext to combat menu
 public function combatIsOver():Boolean {
 	if (!inCombat) {
 		return false;
@@ -3066,7 +3033,6 @@ public function combatIsOver():Boolean {
 		doNext(endLustLoss);
 		return true;
 	}
-	doNext(playerMenu); //This takes us back to the combatMenu and a new combat round
 	return false;
 }
 
@@ -3091,7 +3057,7 @@ public function combatIsOver():Boolean {
 	public function runFail(text:String = "", doAi:Boolean = false):void {
 		outputText(text);
 		if(doAi){
-			return enemyAI();
+			return afterPlayerAction();
 		}
 		doNext(curry(combatMenu,false));
 	}

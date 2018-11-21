@@ -106,7 +106,7 @@ public class GooArmor extends GooGirl
 		{
 			if (pcCameWorms){
 				outputText("\n\nThe armored goo sighs while you exhaust yourself...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				if(hasStatusEffect(StatusEffects.Spar)) SceneLib.valeria.pcWinsValeriaSparDefeat();
 				else SceneLib.dungeons.heltower.gooArmorBeatsUpPC();

@@ -1,6 +1,8 @@
-default namespace = "xxc-story"
+namespace xsi = "http://www.w3.org/2001/XMLSchema-instance"
+# default namespace = "xxc-story"
 
-start = story | zone
+start = scene
+
 # core xlogic
 content =
     text | b | i | font | if | switch | xcc-content
@@ -45,9 +47,9 @@ font = element font {
     attribute color { text }?,
     content*
 }
-xcc-named-content = Text | String | lib | story | macro | extend-story | zone | extend-zone
+xcc-named-content = Text | String | lib | scene | macro | extend-story
 xcc-content = xcc-named-content
-    | display | dynStats | output | Include
+    | display | command | output | Include
     | set
 namedBlock = attribute name { text }?, content*
 Text = element text { namedBlock }
@@ -56,7 +58,10 @@ lib = element lib {
 	attribute name { text },
 	xcc-named-content*
 }
-story = element story { namedBlock }
+scene = element scene {
+	attribute xsi:noNamespaceSchemaLocation { text }?
+	&namedBlock
+}
 macro = element macro { namedBlock }
 set = element set {
     attribute var { text },
@@ -65,35 +70,12 @@ set = element set {
     text*
 }
 extend-story = element extend-story { namedBlock }
-zone = element zone {
-    namedBlock,
-    encounter*
-}
-extend-zone = element extend-zone {
-    namedBlock,
-    encounter*
-}
-encounter = element encounter {
-    attribute name { text },
-    attribute chance { expression }?,
-    attribute when { expression }?,
-    content*
-}
 display = element display {
     attribute ref { text },
     empty
 }
-dynStats = element dynStats {
-    attribute str { expression }?,
-    attribute tou { expression }?,
-    attribute spe { expression }?,
-    attribute int { expression }?,
-    attribute lib { expression }?,
-    attribute sen { expression }?,
-    attribute lus { expression }?,
-    attribute cor { expression }?,
-    attribute scale { expression }?,
-    empty
+command = element command {
+    text
 }
 output = element output { expression }
 Include = element include {

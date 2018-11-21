@@ -24,9 +24,11 @@ import fl.data.DataProvider;
 
 import flash.display.Sprite;
 import flash.events.Event;
+import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.text.TextField;
-	import flash.text.TextFormat;
+import flash.text.TextFieldType;
+import flash.text.TextFormat;
 
 	public class MainView extends Block {
 	[Embed(source="../../../res/ui/CoCLogo.png")]
@@ -548,6 +550,14 @@ import flash.text.TextField;
 
 		return -1;
 	}
+	public function firstButtonByVisibility(visible:Boolean):int {
+		var i:int;
+		for (i = 0; i < this.bottomButtons.length; ++i) {
+			if (buttonIsVisible(i) == visible)
+				return i;
+		}
+		return -1;
+	}
 
 	public function clearBottomButtons():void {
 		var i:int;
@@ -717,35 +727,57 @@ import flash.text.TextField;
 	public function hideSprite():void {
 		this.sprite.visible = false;
 	}
-
+	
+	private var testInputShown:Boolean = false;
+	private var mainTextCoords:Object = {};
 	public function showTestInputPanel():void {
-		this.eventTestInput.x = 207.5;
-		this.eventTestInput.y = 55.1;
-
-		this.mainText.visible = false;
-
-		this.eventTestInput.selectable = true;
-//		this.eventTestInput.type       = TextFieldType.INPUT;
-		this.eventTestInput.visible    = true;
-
-		this.scrollBar.scrollTarget = this.eventTestInput;
-
+		if (testInputShown) return;
+		var svx:int = statsView.x;
+		var svy:int = statsView.y;
+		var svw:int = statsView.width;
+		mainTextCoords.x = mainText.x;
+		mainTextCoords.y = mainText.y;
+		eventTestInput.multiline = true;
+		eventTestInput.x = monsterStatsView.x - svw;
+		eventTestInput.y = monsterStatsView.y;
+		eventTestInput.height = monsterStatsView.height;
+		eventTestInput.width = monsterStatsView.width + svw;
+		eventTestInput.type = TextFieldType.INPUT;
+		eventTestInput.visible = true;
+		eventTestInput.selectable = true;
+		eventTestInput.wordWrap = true;
+		mainText.x = svx;
+		mainText.y = svy;
+		textBGTan.x = svx;
+		textBGTan.y = svy;
+		textBGTranslucent.x = svx;
+		textBGTranslucent.y = svy;
+		textBGWhite.x = svx;
+		textBGWhite.y = svy;
+		scrollBar.visible = false;
+		statsView.hide();
+		CoC.instance.stage.removeEventListener(KeyboardEvent.KEY_DOWN, CoC.instance.inputManager.KeyHandler);
+		testInputShown = true;
 	}
 
 	public function hideTestInputPanel():void {
-
-		this.eventTestInput.x = -10207.5;
-		this.eventTestInput.y = -1055.1;
-
-		this.mainText.visible = true;
-
-
-		this.eventTestInput.selectable = false;
-//		this.eventTestInput.type       = TextFieldType.DYNAMIC;
-		this.eventTestInput.visible    = false;
-
-		this.scrollBar.scrollTarget = this.mainText;
-
+		if (!testInputShown) return;
+		CoC.instance.stage.removeEventListener(KeyboardEvent.KEY_DOWN, CoC.instance.inputManager.KeyHandler);
+		CoC.instance.stage.addEventListener(KeyboardEvent.KEY_DOWN, CoC.instance.inputManager.KeyHandler);
+		var svx:int = mainTextCoords.x;
+		var svy:int = mainTextCoords.y;
+		eventTestInput.visible = false;
+		eventTestInput.selectable = false;
+		mainText.x = svx;
+		mainText.y = svy;
+		textBGTan.x = svx;
+		textBGTan.y = svy;
+		textBGTranslucent.x = svx;
+		textBGTranslucent.y = svy;
+		textBGWhite.x = svx;
+		textBGWhite.y = svy;
+		scrollBar.visible = true;
+		testInputShown = false;
 	}
 		public function showMainText():void {
 			this.setTextBackground();

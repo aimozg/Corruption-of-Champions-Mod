@@ -595,6 +595,7 @@ public class EngineCore {
     }
 
     public static function button(pos:int):CoCButton {
+		if (pos == -1) pos = CoC.instance.mainView.firstButtonByVisibility(false); // first free slot
         return CoC.instance.mainView.bottomButtons[pos];
     }
 

@@ -127,7 +127,7 @@ public class Satyr extends Monster
 		{
 			if (pcCameWorms) {
 				outputText("\n\nThe satyr laughs heartily at your eagerness...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.plains.satyrScene.loseToSatyr();
 			}

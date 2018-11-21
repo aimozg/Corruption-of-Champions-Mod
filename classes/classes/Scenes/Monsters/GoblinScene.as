@@ -8,18 +8,17 @@ import classes.BodyParts.Tail;
 import classes.GlobalFlags.kFLAGS;
 import classes.Scenes.NPCs.JojoScene;
 
-import coc.xxc.BoundStory;
+import coc.xxc.BoundNode;
 import coc.xxc.Story;
 
 public class GoblinScene extends BaseContent
 	{
 		public function GoblinScene()
 		{
-			onGameInit(init);
 		}
-		private var story:BoundStory;
-		private function init():void {
-            story = new Story("story", CoC.instance.rootStory.locate("monsters"), "goblin").bind(CoC.instance.context);
+		private var story:BoundNode;
+		protected override function init():void {
+            story = CoC.instance.rootStory.locate("monsters").addLib("goblin").bind(CoC.instance.context);
         }
 
 		/*Goblins

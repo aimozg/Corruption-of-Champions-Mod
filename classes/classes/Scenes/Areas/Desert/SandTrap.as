@@ -4,6 +4,7 @@ import classes.*;
 import classes.BodyParts.Butt;
 import classes.BodyParts.Hips;
 import classes.BodyParts.Tail;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Scenes.SceneLib;
 import classes.internals.*;
 
@@ -31,7 +32,7 @@ public class SandTrap extends Monster
 			}
 			outputText("\n\n");
 			doAI();
-			SceneLib.combat.combatRoundOver();
+			combat.afterMonsterAction();
 		}
 
 		public function trapLevel(adjustment:Number = 0):Number {
@@ -44,8 +45,18 @@ public class SandTrap extends Monster
 			}
 			return statusEffectv1(StatusEffects.Level);
 		}
-
-
+		
+		
+		override protected function intercept(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+			if (phase == ActionRoll.Phases.PERFORM
+				&& type == ActionRoll.Types.MELEE
+				&& !actor.hasStatusEffect(StatusEffects.FirstAttack)
+				&& !actor.isWieldingRangedWeapon()) {
+				outputText("It's all or nothing!  With a bellowing cry you charge down the treacherous slope and smite the sandtrap as hard as you can!  ");
+				trapLevel(-4);
+			}
+		}
+		
 		//sandtrap pheromone attack:
 		private function sandTrapPheremones():void {
 			game.spriteSelect(97);
@@ -102,7 +113,7 @@ public class SandTrap extends Monster
 		{
 			if (pcCameWorms) {
 				outputText("\n\nThe sand trap seems bemused by the insects your body houses...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.desert.sandTrapScene.sandtrapmentLoss(true);
 			}
@@ -178,11 +189,11 @@ public class SandTrap extends Monster
 
 		private function onPCRun():void{
 			if(player.canFly()){
-				SceneLib.combat.runSucceed("You flex the muscles in your back and, shaking clear of the sand, burst into the air!  Wasting no time you fly free of the sandtrap and its treacherous pit.  \"One day your wings will fall off, little ant,\" the snarling voice of the thwarted androgyne carries up to you as you make your escape.  \"And I will be waiting for you when they do!\"");
+				combat.runSucceed("You flex the muscles in your back and, shaking clear of the sand, burst into the air!  Wasting no time you fly free of the sandtrap and its treacherous pit.  \"One day your wings will fall off, little ant,\" the snarling voice of the thwarted androgyne carries up to you as you make your escape.  \"And I will be waiting for you when they do!\"");
 			} else if(statusEffectv1(StatusEffects.Level) < 4){
-				SceneLib.combat.runFail("You're too deeply mired to escape!  You'll have to <b>climb</b> some first!");
+				combat.runFail("You're too deeply mired to escape!  You'll have to <b>climb</b> some first!");
 			}
-			SceneLib.combat.runAway(false);
+			combat.runAway(false);
 		}
 	}
 }

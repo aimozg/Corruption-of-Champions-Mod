@@ -7,8 +7,9 @@
 
 
 namespace spred {
-	export const basedir                 = window['spred_basedir'] || '../../';
-	export const canAjax                 = location.protocol != 'file:';
+	import loadFile = utils.loadFile;
+	import basedir = utils.basedir;
+	import url2img = utils.url2img;
 	export let g_model: Model;
 	export let g_composites: Composite[] = [];
 	export let g_selsprite: string       = '';
@@ -54,79 +55,6 @@ namespace spred {
 	}
 	
 	
-	namespace FileAsker {
-		let fileReaders = {} as Dict<(data: File) => any>;
-		
-		export function filename(f: string): string {
-			let j = f.lastIndexOf('/');
-			if (j >= 0) return f.substring(j + 1);
-			return f;
-		}
-		
-		export function wantFile(f: string) {
-			return filename(f) in fileReaders;
-		}
-		
-		function checkFiles(e: Event) {
-			let filesArray = (e.target as HTMLInputElement).files;
-			for (let i = 0; i < filesArray.length; i++) {
-				let file    = filesArray[i];
-				let name    = filename(file.name);
-				let handler = fileReaders[name];
-				if (handler) {
-					delete fileReaders[name];
-					handler(file);
-				}
-			}
-			
-		}
-		
-		export function askFile(url: string, handler: (File) => any) {
-			let fileinput = $new('input').attr('type', 'file').attr('multiple', 'true').change(checkFiles);
-			let dropzone  = $new('p',
-				'Please select manually the ',
-				$new('code', url),
-				' file:',
-				fileinput);
-			$('#LoadingList').append(dropzone);
-			$('#Loading').show();
-			fileReaders[filename(url)] = (file) => {
-				dropzone.remove();
-				$('#Loading').toggle($('#LoadingList>*').length > 0);
-				handler(file);
-			}
-		}
-	}
-	
-	
-	export function loadFile(url: string, format: 'xml'): Promise<XMLDocument>;
-	export function loadFile(url: string, format: 'text'): Promise<string>;
-	export function loadFile(url: string, format: 'img'): Promise<HTMLImageElement>;
-	export function loadFile(url: string, format: string): Promise<any> {
-		
-		return new Promise<any>((resolve, reject) => {
-			if (!canAjax) {
-				FileAsker.askFile(url, file => {
-					if (format == 'img') {
-						url2img(URL.createObjectURL(file)).then(resolve);
-					} else {
-						let fr    = new FileReader();
-						fr.onload = () => {
-							if (format == 'xml') {
-								resolve($.parseXML(fr.result));
-							} else {
-								resolve(fr.result);
-							}
-							return;
-						};
-						fr.readAsText(file);
-					}
-				});
-			} else if (format != 'img') {
-				$.ajax(url, {dataType: format}).then(resolve).fail(reject);
-			} else url2img(url).then(resolve);
-		});
-	}
 	
 	/*
 	function mkimg(colors: string[][]): HTMLCanvasElement {
@@ -357,15 +285,6 @@ namespace spred {
 		}
 	}
 	
-	function url2img(src: string): Promise<HTMLImageElement> {
-		return new Promise<HTMLImageElement>((resolve, reject) => {
-			let img    = document.createElement('img');
-			img.onload = (e) => {
-				resolve(img);
-			};
-			img.src    = src;
-		});
-	}
 	
 	export class Spritesheet {
 		public cellwidth: number;
@@ -1327,8 +1246,10 @@ namespace spred {
 </button>*/
 	}
 	
-	$(() => {
-		
+	export function initSpred() {
 		loadFile(basedir + 'res/model.xml', 'xml').then(loadModel);
+	}
+	$(()=>{
+		initSpred();
 	});
 }

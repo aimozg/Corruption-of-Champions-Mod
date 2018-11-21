@@ -2,16 +2,19 @@ package classes
 {
 
 	import classes.Scenes.Combat.Combat;
-	import classes.Scenes.Combat.CombatAction.CombatAction;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
+import classes.Scenes.Combat.CombatAction.CombatAction;
 	import classes.Scenes.Combat.CombatAction.CombatActionBuilder;
+	import classes.Scenes.Combat.CombatAction.ACombatAction;
 	import classes.Scenes.Combat.CombatKiPowers;
 	import classes.StatusEffects.Combat.*;
 	import classes.StatusEffects.CombatStatusEffect;
 	import classes.StatusEffects.KnowledgeStatusEffect;
 	import classes.StatusEffects.VampireThirstEffect;
 	import classes.internals.Utils;
+import classes.lists.StatNames;
 
-	/**
+/**
 	 * IMPORTANT NOTE:
 	 * You can rename the constants BUT NOT the string ids (they are stored in saves).
 	 */
@@ -204,7 +207,16 @@ package classes
 		public static const BowDisabled:StatusEffectType        = mk("Bow Disabled");
 		public static const Charged:StatusEffectType            = mk("Charged");
 		public static const Climbed:StatusEffectType            = mk("Climbed");
-		public static const Concentration:StatusEffectType      = mk("Concentration");
+		public static const Concentration:StatusEffectType      = mk("Concentration")
+				.withRollInterceptor(ActionRoll.Phases.PERFORM, ActionRoll.Types.MELEE,
+						function (roll: ActionRoll, actor: Creature, target: Creature, effect: StatusEffectClass):void {
+							if (actor == CoC.instance.player && !actor.isWieldingRangedWeapon()) {
+								EngineCore.outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.\n\n");
+							}
+							roll.cancel();
+						}
+				);
+		;
 		public static const Constricted:StatusEffectType        = mk("Constricted");
 		public static const ConstrictedScylla:StatusEffectType  = mk("Constricted Scylla");
 		public static const CoonWhip:StatusEffectType           = mk("Coon Whip");
@@ -314,7 +326,7 @@ package classes
 		public static const UnlockedHarpyTail:StatusEffectType           = mk("Unlocked Harpy Tail");
 		public static const UnlockedHarpyArms:StatusEffectType           = mk("Unlocked Harpy Arms");
 		public static const UnlockedHarpyHair:StatusEffectType           = mk("Unlocked Harpy Hair");
-		public static const UnlockedHarpyWings:StatusEffectType          = mk("Unlocked Harpy Wings");
+		public static const UnlockedHarpyWings:StatusEffectType          = mk("Unlocked Harpy Wings"); // TODO actually FeatheredWings
 		public static const UnlockedElfinEars:StatusEffectType           = mk("Unlocked Elfin Ears");
 		public static const UnlockedSpiderFourEyes:StatusEffectType      = mk("Unlocked Spider Four Eyes");
 		public static const UnlockedSpiderFangs:StatusEffectType         = mk("Unlocked Spider Fangs");
@@ -337,7 +349,7 @@ package classes
 		public static const UnlockedSalamanderArms:StatusEffectType 	 = mk("Unlocked Salamander Arms");
 		public static const UnlockedSalamanderFace:StatusEffectType 	 = mk("Unlocked Salamander Face");
 		public static const UnlockedPhoenixArms:StatusEffectType		 = mk("Unlocked Phoenix Arms");
-		public static const UnlockedPhoenixWings:StatusEffectType		 = mk("Unlocked Phoenix Wings");
+		public static const UnlockedPhoenixWings:StatusEffectType		 = mk("Unlocked Phoenix Wings"); // TODO replace with UnlockedHarpyWings
 		public static const UnlockedOrcaLegs:StatusEffectType			 = mk("Unlocked Orca Legs");
 		public static const UnlockedOrcaArms:StatusEffectType			 = mk("Unlocked Orca Arms");
 		public static const UnlockedOrcaTail:StatusEffectType			 = mk("Unlocked Orca Tail");
@@ -350,7 +362,7 @@ package classes
 		public static const UnlockedSnakeEyes:StatusEffectType			 = mk("Unlocked Snake Eyes");
 		public static const UnlockedSnakeEars:StatusEffectType			 = mk("Unlocked Snake Ears");
 		public static const UnlockedGorgonHair:StatusEffectType			 = mk("Unlocked Gorgon Hair");
-		public static const UnlockedGorgonEyes:StatusEffectType			 = mk("Unlocked Gorgon Eyes");
+		public static const UnlockedGorgonEyes:StatusEffectType			 = mk("Unlocked Gorgon Eyes"); // TODO replace with UnlockedSnakeEyes
 		public static const UnlockedDraconicEars:StatusEffectType		 = mk("Unlocked Draconic Ears");
 		public static const UnlockedDraconicWingsSmall:StatusEffectType	 = mk("Unlocked Draconic Wings Small");
 		public static const UnlockedDraconicWingsLarge:StatusEffectType	 = mk("Unlocked Draconic Wings Large");
@@ -423,7 +435,17 @@ package classes
 		public static const BeatOfWar:StatusEffectType                 = mkCombat("Beat of War");
 		public static const Berzerking:StatusEffectType                = mkCombat("Berzerking");
 		public static const BladeDance:StatusEffectType                = mkCombat("Blade Dance");
-		public static const Blind:StatusEffectType                     = mkCombat("Blind");
+		public static const Blind:StatusEffectType                     = mkCombat("Blind")
+				.withRollAlteration(ActionRoll.Phases.PERFORM, ActionRoll.Types.MELEE,
+						function (roll:ActionRoll, actor:Creature, target:Creature, effect:StatusEffectClass):void {
+							if (actor == CoC.instance.player) {
+								EngineCore.outputText("You attempt to attack, but as blinded as you are right now, you doubt you'll have much luck!  ");
+							}
+							if (Utils.randomChance(50)) {
+								roll.cancel();
+							}
+						}
+				);
 		public static const Blink:StatusEffectType                     = mkCombat("Blink");
 		public static const Blizzard:StatusEffectType                  = mkCombat("Blizzard");
 		public static const Bloodlust:StatusEffectType                 = mkCombat("Bloodlust");
@@ -450,7 +472,10 @@ package classes
 		public static const FirstAttack:StatusEffectType               = mkCombat("FirstAttack");
 		public static const Flying:StatusEffectType                    = mkCombat("Flying");
 		public static const FlyingNoStun:StatusEffectType              = mkCombat("FlyingNoStun");
-		public static const FreezingBreathStun:StatusEffectType        = mkCombat("FreezingBreathStun");
+		public static const FreezingBreathStun:StatusEffectType        = mkCombat("FreezingBreathStun")
+				.withBuffs({
+					([StatNames.SPE_MULT]): 0
+			});
 		public static const Frostbite:StatusEffectType                 = mkCombat("Frostbite");
 		public static const Frozen:StatusEffectType	                   = mkCombat("Frozen");
 		public static const GiantBoulder:StatusEffectType              = mkCombat("Giant Boulder");
@@ -495,16 +520,42 @@ package classes
 		public static const ResonanceVolley:StatusEffectType           = mkCombat("Resonance Volley");
 		public static const Sandstorm:StatusEffectType                 = mkCombat("sandstorm");
 		public static const ScyllaBind:StatusEffectType                = mkCombat("Scylla Bind");
-		public static const Sealed:StatusEffectType                    = mkCombat("Sealed");
-		public static const Sealed2:StatusEffectType                   = mkCombat("Sealed2");
+		public static const Sealed:StatusEffectType = mkCombat("Sealed")
+				.withRollAlteration(ActionRoll.Phases.PERFORM, ActionRoll.Types.MELEE,
+						function (roll:ActionRoll, actor:Creature, target:Creature, effect:StatusEffectClass):void {
+							if (effect.value2 == 0 && !actor.isWieldingRangedWeapon()) {
+								if (effect.host == CoC.instance.player) {
+									EngineCore.outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  The kitsune's seals have made normal melee attack impossible!  Maybe you could try something else?\n\n");
+								}
+								roll.cancel();
+							}
+						}
+				);
+		public static const Sealed2:StatusEffectType = mkCombat("Sealed2")
+				.withRollAlteration(ActionRoll.Phases.PERFORM, ActionRoll.Types.MELEE,
+						function (roll: ActionRoll, actor: Creature, target: Creature, effect: StatusEffectClass):void {
+							if (effect.value2 == 0) {
+								if (effect.host == CoC.instance.player) {
+									EngineCore.outputText("You attempt to attack, but at the last moment your body wrenches away, preventing you from even coming close to landing a blow!  Recent enemy attack have made normal melee attack impossible!  Maybe you could try something else?\n\n");
+								}
+							}
+							roll.cancel();
+						}
+				);
 		public static const SecondWindRegen:StatusEffectType           = mkCombat("Second Wind Regen");
 		public static const SharkBiteBleed:StatusEffectType            = mkCombat("Shark Bite Bleed");
 		public static const SheilaOil:StatusEffectType                 = mkCombat("Sheila Oil");
 		public static const Shielding:StatusEffectType                 = mkCombat("Sheilding");
 		public static const StoneLust:StatusEffectType                 = mkCombat("Stone Lust");
 		public static const StoneSkin:StatusEffectType                 = mkCombat("Stone Skin");
-		public static const Stunned:StatusEffectType                   = mkCombat("Stunned");
-		public static const StunnedTornado:StatusEffectType            = mkCombat("Stunned (Tornado)");
+		public static const Stunned:StatusEffectType                   = mkCombat("Stunned")
+				.withBuffs({
+					([StatNames.SPE_MULT]): 0
+				});
+		public static const StunnedTornado:StatusEffectType            = mkCombat("Stunned (Tornado)")
+				.withBuffs({
+					([StatNames.SPE_MULT]): 0
+				});
 		public static const TailWhip:StatusEffectType                  = mkCombat("Tail Whip");
 		public static const TemporaryHeat:StatusEffectType             = mkCombat("Temporary Heat");
 		public static const TentacleBind:StatusEffectType              = mkCombat("TentacleBind");
@@ -582,7 +633,7 @@ package classes
 		public static const KnowsCharge:StatusEffectType                    = mk("Knows Charge");//Charge Weapon
 		public static const KnowsChargeA:StatusEffectType                   = mk("Knows Charge Armor");
 		public static const KnowsComet:StatusEffectType                     = mkKnowledge("Knows Comet",
-				new CombatActionBuilder("Comet", 60, CombatAction.KiAction, Combat.HPSPELL, "Project a shard of ki, which will come crashing down upon your opponent as a crystalline comet.")
+				new CombatActionBuilder("Comet", 60, ACombatAction.KiAction, Combat.HPSPELL, "Project a shard of ki, which will come crashing down upon your opponent as a crystalline comet.")
 						.customDamage(Utils.curry(CombatKiPowers.kiDamage,CombatKiPowers.MAGICAL))
 						.disablingStatus(OniRampage, "You are too angry to think straight. Smash your puny opponents first and think later.")
 						.startText("You focus for a moment, projecting a fragment of your ki above you.  A moment later, a prismatic comet crashes down on your opponents [monster a][monster name], shattering into thousands of fragments that shower anything and everything around you.")
@@ -596,7 +647,7 @@ package classes
 		);
 		public static const KnowsDarknessShard:StatusEffectType             = mk("Knows Darkness Shard");
 		public static const KnowsDracoSweep:StatusEffectType                = mkKnowledge("Knows Draco Sweep",
-				new CombatActionBuilder("Draco Sweep", 50, CombatAction.KiAction, Combat.PHYSICAL, "Use a little bit of ki to infuse your weapon and then sweep ahead hitting as many enemies as possible.")
+				new CombatActionBuilder("Draco Sweep", 50, ACombatAction.KiAction, Combat.PHYSICAL, "Use a little bit of ki to infuse your weapon and then sweep ahead hitting as many enemies as possible.")
 						.customDamage(Utils.curry(CombatKiPowers.kiDamage,CombatKiPowers.PHYSICAL))
 						.startText("You ready your [weapon] and prepare to sweep it towards [monster a][monster name].")
 						.enableDodge("your attack")
@@ -609,14 +660,14 @@ package classes
 						.build()
 		);
 		public static const KnowsEarthStance:StatusEffectType               = mkKnowledge("Knows Earth Stance",
-				new CombatActionBuilder("Earth Stance", 30, CombatAction.KiAction, 0, "Take on the stability and strength of the earth gaining 30% damage reduction for the next 3 rounds.")
+				new CombatActionBuilder("Earth Stance", 30, ACombatAction.KiAction, 0, "Take on the stability and strength of the earth gaining 30% damage reduction for the next 3 rounds.")
 						.addStatus(EarthStance, 3, true)
 						.startText("Your body suddenly hardens like rock. You will be way harder to damage for a while.")
 						.setCooldown(10)
 						.build()
 		);
 		public static const KnowsFirePunch:StatusEffectType                 = mkKnowledge("Knows Fire Punch",
-				new CombatActionBuilder("Fire Punch", 30, CombatAction.KiAction,  Combat.HPSPELL, "Ignite your opponents dealing fire damage and setting them ablaze.")
+				new CombatActionBuilder("Fire Punch", 30, ACombatAction.KiAction,  Combat.HPSPELL, "Ignite your opponents dealing fire damage and setting them ablaze.")
 						.customDamage(Utils.curry(CombatKiPowers.kiDamage,CombatKiPowers.UNARMED))
 						.addStatus(FirePunchBurnDoT, 16)
 						.hitText("Setting your fist ablaze, you rush at [monster a] [monster name] and scorch [monster him] with your searing flames.")
@@ -627,14 +678,14 @@ package classes
 		public static const KnowsFireStorm:StatusEffectType                 = mk("Knows Fire Storm");
 		public static const KnowsHeal:StatusEffectType                      = mk("Knows Heal");
 		public static const KnowsHurricaneDance:StatusEffectType            = mkKnowledge("Knows Hurricane Dance",
-				new CombatActionBuilder("Hurricane Dance", 30, CombatAction.KiAction, 0, "Take on the aspect of the wind dodging attacks with aerial graces for a time.")
+				new CombatActionBuilder("Hurricane Dance", 30, ACombatAction.KiAction, 0, "Take on the aspect of the wind dodging attacks with aerial graces for a time.")
 						.startText("Your movement becomes more fluid and precise, increasing your speed and evasion.")
 						.addStatus(HurricaneDance, 5, true)
 						.setCooldown(10)
 						.build()
 		);
 		public static const KnowsIceFist:StatusEffectType                   = mkKnowledge("Knows Ice Fist",
-				new CombatActionBuilder("Ice Fist", 30, CombatAction.KiAction, Combat.HPSPELL, "A chilling strike that can freeze an opponent solid, leaving it vulnerable to shattering soul art and hindering its movement.")
+				new CombatActionBuilder("Ice Fist", 30, ACombatAction.KiAction, Combat.HPSPELL, "A chilling strike that can freeze an opponent solid, leaving it vulnerable to shattering soul art and hindering its movement.")
 						.disablingPerk(PerkLib.FireAffinity,"Try as you want, you can’t call on the power of this technique due to your close affinity to fire.")
 						.customDamage(Utils.curry(CombatKiPowers.kiDamage,CombatKiPowers.UNARMED))
 						.hitText("Air seems to lose all temperature around your fist as you dash at [monster a][monster name] and shove your palm on [monster him], [monster his] body suddenly is frozen solid, encased in a thick block of ice!")
@@ -651,7 +702,7 @@ package classes
 		public static const KnowsIceSpike:StatusEffectType                  = mk("Knows Ice Spike");
 		public static const KnowsLightningBolt:StatusEffectType             = mk("Knows Lightning Bolt");
 		public static const KnowsManyBirds:StatusEffectType                 = mkKnowledge("Knows Many Birds",
-				new CombatActionBuilder("Many Birds", 10, CombatAction.KiAction, Combat.HPSPELL, "Project a figment of your ki as a crystal traveling at extreme speeds.")
+				new CombatActionBuilder("Many Birds", 10, ACombatAction.KiAction, Combat.HPSPELL, "Project a figment of your ki as a crystal traveling at extreme speeds.")
 						.customDamage(Utils.curry(CombatKiPowers.kiDamage,CombatKiPowers.MAGICAL))
 						.disablingStatus(OniRampage, "You are too angry to think straight. Smash your puny opponents first and think later.")
 						.startText("[if(silly) You focus your ki, projecting it as an aura around you.  As you concentrate, dozens, hundreds, thousands of tiny, ethereal birds shimmer into existence.  As you raise your hand up, more and more appear, until the area around you and [monster a][monster name] is drowned in spectral flappy shapes." +
@@ -667,7 +718,7 @@ package classes
 		public static const KnowsNosferatu:StatusEffectType                 = mk("Knows Nosferatu");
 		public static const KnowsOverlimit:StatusEffectType                 = mk("Knows Overlimit");
 		public static const KnowsPunishingKick:StatusEffectType	            = mkKnowledge("Knows Punishing Kick",
-				new CombatActionBuilder("Punishing Kick", 30, CombatAction.KiAction, Combat.PHYSICAL, "A vicious kick that can daze an opponent, reducing its damage for a while.")
+				new CombatActionBuilder("Punishing Kick", 30, ACombatAction.KiAction, Combat.PHYSICAL, "A vicious kick that can daze an opponent, reducing its damage for a while.")
 						.customDamage(Utils.curry(CombatKiPowers.kiDamage,CombatKiPowers.UNARMED))
 						.disableWhen(function(host:Creature):Boolean{return !host.isBiped() || !host.isTaur()}, "<b>Your legs are not suited for this technique.</b>")
 						.setCooldown(10)
@@ -678,7 +729,7 @@ package classes
 		public static const KnowsRegenerate:StatusEffectType                = mk("Knows Regenerate");
 		public static const KnowsSidewinder:StatusEffectType                = mk("Knows Sidewinder");
 		public static const KnowsSoulBlast:StatusEffectType                 = mkKnowledge("Knows Soul Blast",
-				new CombatActionBuilder("Soul Blast", 100, CombatAction.KiAction, Combat.HPSPELL, "Take in your reserve of soul force to unleash a torrent of devastating energy and obliterate your opponent.")
+				new CombatActionBuilder("Soul Blast", 100, ACombatAction.KiAction, Combat.HPSPELL, "Take in your reserve of soul force to unleash a torrent of devastating energy and obliterate your opponent.")
 						.customDamage(CombatKiPowers.SoulBlast)
 						.setCooldown(15)
 						.hitText("You wave the sign of the gate, tiger and serpent as you unlock all of your ki for an attack. [monster A][monster name] can’t figure out what you are doing until a small sphere of energy explodes at the end of your fist in a massive beam of condensed ki.")
@@ -686,7 +737,7 @@ package classes
 						.build()
 		);
 		public static const KnowsTripleThrust:StatusEffectType              = mkKnowledge("Knows Triple Thrust",
-				new CombatActionBuilder("Triple Thrust", 30, CombatAction.KiAction, Combat.PHYSICAL, "Use a little bit of ki to infuse your weapon and thrust three times toward your enemy.")
+				new CombatActionBuilder("Triple Thrust", 30, ACombatAction.KiAction, Combat.PHYSICAL, "Use a little bit of ki to infuse your weapon and thrust three times toward your enemy.")
 						.customDamage(Utils.curry(CombatKiPowers.kiDamage,CombatKiPowers.PHYSICAL))
 						.startText("You ready your [weapon] and prepare to thrust it towards [monster a][monster name].")
 						.enableDodge("your attack")
@@ -730,7 +781,7 @@ package classes
 		 * @param action CombatAction to unlock when this status is gained
 		 * @return
 		 */
-		private static function mkKnowledge(id:String, action:CombatAction):StatusEffectType{
+		private static function mkKnowledge(id:String, action:ACombatAction):StatusEffectType{
 			var stype:StatusEffectType =  new StatusEffectType(id,KnowledgeStatusEffect,1);
 			KnowledgeStatusEffect.registerAction(stype, action);
 			return stype;

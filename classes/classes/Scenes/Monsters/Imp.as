@@ -72,7 +72,7 @@ public class Imp extends Monster
 			}
 			outputText("\n");
 			if (player.lust >= player.maxLust())
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			else doNext(EventParser.playerMenu);
 		}
 		
@@ -113,7 +113,7 @@ public class Imp extends Monster
 			}
 			outputText("\n");
 			if (player.lust >= player.maxLust())
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			else doNext(EventParser.playerMenu);
 		}
         public function allVaginaDescript():String {

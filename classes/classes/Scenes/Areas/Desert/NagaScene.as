@@ -900,28 +900,28 @@ public function nagaPlayerConstrict():void {
 		outputText("You just don't have the energy to wrap yourself so tightly around someone right now...");
 //Gone		menuLoc = 1;
 		menu();
-		addButton(0, "Next", SceneLib.combat.combatMenu, false);
+		addButton(0, "Next", combat.combatMenu, false);
 		return;
 	}
 	//Cannot be used on plural enemies
 	if(monster.plural) {
 		outputText("You launch yourself at " + monster.a + monster.short + ", but with multiple enemies, wrapping one up would leave you completely open to attack.  You hastily slither backwards before you expose yourself to danger.");
 		outputText("\n\n");
-        SceneLib.combat.enemyAIImpl();
+		combat.afterPlayerAction();
         return;
 	}
 	if(monster.short == "pod") {
 		outputText("You can't constrict something you're trapped inside of!");
 //Gone		menuLoc = 1;
 		menu();
-		addButton(0, "Next", SceneLib.combat.combatMenu, false);
+		addButton(0, "Next", combat.combatMenu, false);
 		return;
 	}
 	fatigue(10, USEFATG_PHYSICAL);
 	//Amily!
 	if(monster.hasStatusEffect(StatusEffects.Concentration)) {
 		outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
-        SceneLib.combat.enemyAIImpl();
+		combat.afterPlayerAction();
         return;
 	}
 	//WRAP IT UPPP
@@ -941,25 +941,25 @@ public function nagaPlayerConstrict():void {
 		outputText("You launch yourself at your opponent and attempt to wrap yourself around " + monster.pronoun2 + ". Before you can even get close enough, " +monster.a + monster.short + " jumps out of the way, causing you to fall flat on your face. You quickly pick yourself up and jump back. ");
 		player.takePhysDamage(5, true);
 		if(player.HP <= 0) {
-			doNext(SceneLib.combat.endHpLoss);
+			doNext(combat.endHpLoss);
 			return;
 		}
 	}
 	outputText("\n\n");
-    SceneLib.combat.enemyAIImpl();
+	combat.afterPlayerAction();
 }
 
 public function naggaSqueeze():void {
 	clearOutput();
 	if (player.fatigue + combat.physicalCost(20) > player.maxFatigue()) {
 		outputText("You are too tired to squeeze " + monster.a + " " + monster.short + ".");
-		addButton(0, "Next", SceneLib.combat.combatMenu, false);
+		addButton(0, "Next", combat.combatMenu, false);
 		return;
 	}
 	//Squeeze -
 	outputText("Your coils wrap tighter around your prey, leaving " + monster.pronoun2 + " short of breath. You can feel it in your tail as " + monster.pronoun3 + " struggles are briefly intensified. ");
 	var damage:int = monster.maxHP() * (.10 + rand(15) / 100);
-	SceneLib.combat.doDamage(damage, true, true);
+	combat.doDamage(damage, true, true);
 	fatigue(20, USEFATG_PHYSICAL);
 	//Enemy faints -
 	if(monster.HP < 1) {
@@ -967,11 +967,11 @@ public function naggaSqueeze():void {
 		if(monster.short == "demons")
 			outputText("The others quickly back off, terrified at the idea of what you might do to them.");
 		outputText("\n\n");
-		doNext(SceneLib.combat.endHpVictory);
+		doNext(combat.endHpVictory);
 		return;
 	}
 	outputText("\n\n");
-    SceneLib.combat.enemyAIImpl();
+	combat.afterPlayerAction();
 }
 //Tease
 public function naggaTease():void {
@@ -987,10 +987,10 @@ public function naggaTease():void {
 	}
     if (monster.lustVuln == 0) {
         outputText("You attempt to stimulate " + monster.a + monster.short + " by rubbing " + monster.pronoun3 + " nether regions, but it has no effect!  Your foe clearly does not experience lust in the same way as you.\n\n");
-        enemyAI();
+		combat.afterPlayerAction();
         return;
     }
-    SceneLib.combat.fatigueRecovery();
+    combat.fatigueRecovery();
     var damage:Number;
     var chance:Number = 60;
     var bimbo:Boolean = false;
@@ -1042,16 +1042,16 @@ public function naggaTease():void {
     //partial skins bonuses
     switch (player.coatType()) {
         case Skin.FUR:
-            damage += (1 + player.newGamePlusMod());
+            damage += 1;
             break;
         case Skin.SCALES:
-            damage += (2 * (1 + player.newGamePlusMod()));
+            damage += 2;
             break;
         case Skin.CHITIN:
-            damage += (3 * (1 + player.newGamePlusMod()));
+            damage += 3;
             break;
         case Skin.BARK:
-            damage += (4 * (1 + player.newGamePlusMod()));
+            damage += 4;
             break;
     }
     chance += 2;
@@ -1095,21 +1095,21 @@ public function naggaTease():void {
         }
         monster.teased(monster.lustVuln * damage);
         if (crit == true) outputText(" <b>Critical!</b>");
-        SceneLib.combat.teases.teaseXP(1);
+        combat.teases.teaseXP(1);
     }
     //Nuttin honey
     else {
-        SceneLib.combat.teases.teaseXP(5);
+        combat.teases.teaseXP(5);
         outputText("\n" + monster.capitalA + monster.short + " seems unimpressed.");
     }
     outputText("\n\n");
     //OLD
     //monster.lust += 5 + rand(15);
     if (monster.lust >= monster.maxLust()) {
-        doNext(SceneLib.combat.endLustVictory);
+        doNext(combat.endLustVictory);
         return;
     }
-    SceneLib.combat.enemyAIImpl();
+	combat.afterPlayerAction();
 }
 
 public function nagaLeggoMyEggo():void {
@@ -1117,7 +1117,7 @@ public function nagaLeggoMyEggo():void {
 	outputText("You release " + monster.a + monster.short + " from " + monster.pronoun3 + " bonds, and " + monster.pronoun1 + " drops to the ground, catching " + monster.pronoun3 + " breath before " + monster.pronoun1 + " stands back up, apparently prepared to fight some more.");
 	outputText("\n\n");
 	monster.removeStatusEffect(StatusEffects.Constricted);
-    SceneLib.combat.enemyAIImpl();
+	combat.afterPlayerAction();
 }
 
 

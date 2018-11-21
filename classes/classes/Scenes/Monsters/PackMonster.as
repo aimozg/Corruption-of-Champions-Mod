@@ -45,7 +45,7 @@ package classes.Scenes.Monsters {
 		}
 
 		public function lustAttack():void {
-			SceneLib.combat.lastAttack = Combat.LUSTSPELL;
+			combat.lastAttack = Combat.LUSTSPELL;
 			if (player.lust < (player.maxLust() * 0.35)) {
 				outputText("The [monster name] press in close against you and although they fail to hit you with an attack, the sensation of their skin rubbing against yours feels highly erotic.");
 			}

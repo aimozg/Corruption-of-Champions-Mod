@@ -1,4 +1,4 @@
-package classes
+﻿package classes
 {
 
 import classes.BodyParts.Antennae;
@@ -13,6 +13,7 @@ import classes.BodyParts.Tongue;
 import classes.GlobalFlags.kACHIEVEMENTS;
 import classes.GlobalFlags.kFLAGS;
 import classes.Items.*;
+import classes.Modding.GameMod;
 import classes.Scenes.Areas.Desert.SandWitchScene;
 import classes.Scenes.Dungeons.DungeonAbstractContent;
 import classes.Scenes.NPCs.JojoScene;
@@ -22,6 +23,9 @@ import classes.lists.Gender;
 import classes.saves.FileSaver;
 import classes.saves.FileSaverAir;
 import classes.saves.FileSaverStandalone;
+import classes.Stats.IStat;
+import classes.internals.Jsonable;
+import classes.lists.BreastCup;
 
 import flash.events.MouseEvent;
 import flash.net.FileReference;
@@ -603,12 +607,13 @@ public function saveGameObject(slot:String, isFile:Boolean):void
 		saveFile.data.nosePLong = player.nosePLong;
 		
 		//MAIN STATS
-		saveFile.data.strStat = player.strStat.saveToObject();
-		saveFile.data.touStat = player.touStat.saveToObject();
-		saveFile.data.speStat = player.speStat.saveToObject();
-		saveFile.data.intStat = player.intStat.saveToObject();
-		saveFile.data.wisStat = player.wisStat.saveToObject();
-		saveFile.data.libStat = player.libStat.saveToObject();
+		saveFile.data.stats = {};
+		for each(var k:String in player.allStatNames()) {
+			var stat:Jsonable = player.findStat(k) as Jsonable;
+			if (stat) {
+				saveFile.data.stats[k] = (stat as Jsonable).saveToObject();
+			}
+		}
 		saveFile.data.str = player.str;
 		saveFile.data.tou = player.tou;
 		saveFile.data.spe = player.spe;
@@ -937,6 +942,10 @@ public function saveGameObject(slot:String, isFile:Boolean):void
 		for each(var npc:XXCNPC in XXCNPC.SavedNPCs){
 			npc.save(saveFile.data.world.x);
 		}
+		saveFile.data.world.mods = [];
+		for each(var mod:GameMod in CoC.instance.mods) {
+			saveFile.data.world.mods[mod.name] = mod.saveToObject();
+		}
 	}
 	catch (error:Error) {
 		trace(error.message);
@@ -1113,18 +1122,12 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 	player.nosePShort     = data.nosePShort;
 	player.nosePLong      = data.nosePLong;
 
-	if (data.strStat) {
-		player.strStat.loadFromObject(data.strStat, false);
-		player.touStat.loadFromObject(data.touStat, false);
-		player.speStat.loadFromObject(data.speStat, false);
-		player.intStat.loadFromObject(data.intStat, false);
-		player.wisStat.loadFromObject(data.wisStat, false);
-		player.libStat.loadFromObject(data.libStat, false);
-	} else {
+	//MAIN STATS
+	if (!data.strStat && !data.stats) {
 		// TODO @aimozg/stats & @Oxdeception properly import stats...
 		// Total possible stats (15 per stat + 5 points per level)
 		var sptot:int    = data.level * 5 + 15 * 6;
-		var sstot:Number = data.str + data.tou + data.spe + data.inte + data.wis + data.lib;
+		var sstot:Number = data.str + data.tou + data.spe + saveFile.data.inte + saveFile.data.wis + saveFile.data.lib;
 		var ratio:Number = sptot / sstot;
 		player.strStat.reset(int(data.str * ratio));
 		player.touStat.reset(int(data.tou * ratio));
@@ -1132,8 +1135,24 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		player.intStat.reset(int(data.inte * ratio));
 		player.wisStat.reset(int(data.wis * ratio));
 		player.libStat.reset(int(data.lib * ratio));
-		if (saveFile.data.wis == undefined) {
-			player.wisStat.reset(15);
+	}
+	if (data.strStat) player.strStat.loadFromObject(data.strStat, false);
+	if (data.touStat) player.touStat.loadFromObject(data.touStat, false);
+	if (data.speStat) player.speStat.loadFromObject(data.speStat, false);
+	if (data.intStat) player.intStat.loadFromObject(data.intStat, false);
+	if (data.wisStat) player.wisStat.loadFromObject(data.wisStat, false);
+	if (data.libStat) player.libStat.loadFromObject(data.libStat, false);
+	if (data.stats) {
+		for (var k:String in data.stats) {
+			var statdata:* = data.stats[k];
+			var m:Array = k.match(/^(str|tou|spe|int|wis|lib)(Mult|Bonus)$/);
+			if (m) {
+				k = m[1] + '.'+m[2].toLowerCase();
+			}
+			var stat:IStat = player.findStat(k);
+			if (stat && stat is Jsonable) {
+				(stat as Jsonable).loadFromObject(statdata, false);
+			}
 		}
 	}
 	player.sens    = data.sens;
@@ -1386,6 +1405,15 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		if (savedNPC.myClass != undefined) {
 			var ref:Class = getDefinitionByName(savedNPC.myClass) as Class;
 			ref["instance"].load(saveFile.data.world.x);
+		}
+	}
+	if (saveFile.data.world.mods == undefined) saveFile.data.world.mods = [];
+	for each(var mod:GameMod in CoC.instance.mods) {
+		var d:* = saveFile.data.world.mods[mod.name];
+		if (d) {
+			mod.loadFromObject(d,true);
+		} else {
+			mod.reset();
 		}
 	}
 

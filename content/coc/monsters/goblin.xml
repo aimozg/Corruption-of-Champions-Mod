@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extend-story name="/monsters/goblin" xmlns="xxc-story">
+<extend-story name="/monsters/goblin" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../story.xsd">
     <lib name="strings">
         <lib name="defeated">
             <text name="intro">
@@ -9,7 +10,7 @@
                     <else>
                         <!--[Lust Intro]-->
                         The goblin groans and drops onto her back. Her legs spread wide, displaying amazing flexibility as one hand dives into her cunt and the other begins twisting her pierced nipples, one at a time. The display manages to stir your loins.
-                        <dynStats lus="20"/>
+                        <command>ModRawStat('lust',20,false)</command>
                     </else>
                 </if>
             </text>
@@ -35,7 +36,8 @@
             She struggles against your grip, trying to get something, anything inside her needy pussy while yelling "<i>Come on <output>player.mf("slut","stud")</output>, you know you want to - mmph!</i>"  You cut her off by shoving her mouth onto your [nipple]. She gasps involuntarily, filling her mouth with your milk. In an instant she freezes, then slowly swallows the milk in her mouth. She relaxes in your arms a moment later, gently suckling at your nipple. Her old lust-filled self is gone, replaced with a pliant girl who now wants nothing but your milk. You slowly lower your hand and start rubbing at her still-slick pussy. In response, she puts her hand on your other [nipple], playing with it and teasing you.
 
             After a while, you feel the goblin fall asleep in your arms. Even then, she still continues suckling gently on your [nipple]. You smile, satisfied, and gently lift the goblin off your chest. You pat her shoulder softly, and she stirs awake again. She gives you a bit of a dazed look before you give her a gentle push, and she starts walking away with a vacant, drooling stare.
-            <dynStats lib="0.2" lus="-50"/>
+            <command>BuffOrRecover('lib',2,'goblin/breastfed','Goblin breastfed',36,2)</command>
+            <command>ModRawStat('lust',15,false)</command>
         </text>
         <text name="RapeAnal"><!-- argument: $x is cock that fits -->
             As usual, you easily defeat another slutty goblin. Was there any doubt you could? Knowing what's about to happen, the goblin braces herself for the inevitable. Her face is flushed from arousal as she licks her lips. To goad you even further, she spreads her legs, revealing more of her sopping cunt.

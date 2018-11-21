@@ -10,6 +10,7 @@ import classes.Scenes.Holidays;
 import classes.Scenes.Inventory;
 import classes.Scenes.Places.Ingnam;
 import classes.Scenes.SceneLib;
+import classes.Stats.Buff;
 import classes.internals.Utils;
 
 import coc.model.GameModel;
@@ -32,7 +33,11 @@ import coc.xxc.StoryContext;
 	{
         public function BaseContent()
 		{
-			
+			CoC.onGameInit(init);
+		}
+		
+		protected function init():void {
+		
 		}
 
 		protected function cheatTime(time:Number, needNext:Boolean = false):void
@@ -167,18 +172,13 @@ import coc.xxc.StoryContext;
 			EngineCore.statScreenRefresh();
 		}
 
-		protected function get combat():Combat {
+		protected static function get combat():Combat {
 			return SceneLib.combat;
 		}
 
 		protected function cleanupAfterCombat(nextFunc:Function = null):void
 		{
 			SceneLib.combat.cleanupAfterCombatImpl(nextFunc);
-		}
-
-		protected function enemyAI():void
-		{
-			SceneLib.combat.enemyAIImpl();
 		}
 
 		protected function clearStatuses(visibility: Boolean):void
@@ -650,6 +650,34 @@ import coc.xxc.StoryContext;
 			// Bullshit to unroll the incoming array
 			player.dynStats.apply(player, args);
 		}
+		/**
+		 * If stat `statname` is drained, recover it by `value` points and return **false**.
+		 * If it is not drained, add temporary buff (default **36 hours**) and return **true**.
+		 *
+		 * If already buffed with the `tag`, reset its value and duration.
+		 * @param value Amount to recover/increase
+		 * @param tag Tag to identify the buff
+		 * @param text Displayable name; `null` if hidden buff
+		 * @param tick Duration amount (default **36**)
+		 * @param rate Duration time unit (default `Buff.RATE_HOUR`)
+		 * @return
+		 */
+		public static function buffOrRecover(
+				statname:String,
+				value:Number,
+				tag:String,
+				text:String,
+				tick:int=36,
+				rate:int=Buff.RATE_HOURS
+		):Boolean {
+			if (CoC.instance.player.drainOfStat(statname)>0) {
+				CoC.instance.player.drainStat(statname, -value);
+				return false;
+			} else {
+				CoC.instance.player.addTempBuff(statname,value,tag,text,tick,rate);
+				return true;
+			}
+		}
 
 		protected function silly():Boolean
 		{
@@ -905,9 +933,6 @@ import coc.xxc.StoryContext;
 				
 		protected function darkTheme():Boolean {
 			return CoC.instance.mainViewManager.isDarkTheme();
-		}
-		protected static function onGameInit(f:Function):void {
-			CoC.onGameInit(f);
 		}
 		protected function get context():StoryContext {
 			return CoC.instance.context;

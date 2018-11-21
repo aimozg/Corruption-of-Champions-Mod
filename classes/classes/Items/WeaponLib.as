@@ -4,7 +4,8 @@
 package classes.Items {
 	import classes.Items.Weapons.*;
 	import classes.PerkLib;
-	import classes.lists.DamageType;
+import classes.lists.StatNames;
+import classes.lists.DamageType;
 
 	public final class WeaponLib {
 		public static const DEFAULT_VALUE:Number = 6;
@@ -273,7 +274,7 @@ package classes.Items {
 				.withDescription("A peculiar sword. The letter V is engraved into the blade perhaps its former owner name."));
 		public const W_STAFF:Weapon = new Weapon(new WeaponBuilder("W.Staff", Weapon.TYPE_STAFF, "wizard's staff", "Staff")
 				.withAttack(3).withValue(240)
-				.withBuff("spellPower", +0.4)
+				.withBuff(StatNames.SPELLPOWER, +0.4)
 				.withDescription("This staff is made of very old wood and seems to tingle to the touch.  The top has an odd zig-zag shape to it, and the wood is worn smooth from lots of use.  It probably belonged to a wizard at some point and would aid magic use."));
 		public const WARHAMR:Weapon = new HugeWarhammer();
 		public const WHIP:Weapon = new Whip();

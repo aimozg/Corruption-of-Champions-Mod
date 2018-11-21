@@ -105,7 +105,7 @@ public class Kiha extends Monster
 				outputText("Using your cat-like flexibility, you manage to sidestep the flames in the nick of time; much to the dragoness' displeasure.");
 			}
 			else {
-				var damage:Number = Math.round(90 + rand(10) + (player.newGamePlusMod() * 30));
+				var damage:Number = Math.round(90 + rand(10));
 				if (player.hasPerk(PerkLib.FromTheFrozenWaste) || player.hasPerk(PerkLib.ColdAffinity)) damage *= 3;
 				if (player.hasPerk(PerkLib.FireAffinity)) damage *= 0.3;
 				if (flags[kFLAGS.KIHA_LVL_UP] >= 1) damage *= (1 + (flags[kFLAGS.KIHA_LVL_UP] * 0.1));
@@ -183,7 +183,7 @@ public class Kiha extends Monster
 				SceneLib.kihaFollower.sparWithFriendlyKihaLose();
 			else if (pcCameWorms){
 				outputText("\n\nKiha seems visibly disturbed by your infection, enough that she turns to leave.");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.kihaScene.kihaLossIntro();
 			}
@@ -284,7 +284,7 @@ public class Kiha extends Monster
 			this.weaponVerb="fiery cleave";
 			this.armorName = "thick scales";
 			if (game.flags[kFLAGS.KIHA_UNDERGARMENTS] > 0)
-				this.armorDef += (2 * (1 + flags[kFLAGS.NEW_GAME_PLUS_LEVEL]));
+				this.armorDef += 2;
 			this.bonusLust = 20;
 			this.lust = 10;
 			this.lustVuln = 0.4;

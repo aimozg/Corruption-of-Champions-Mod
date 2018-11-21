@@ -2,11 +2,11 @@
  * Coded by aimozg on 06.05.2018.
  */
 package classes.Stats {
+import classes.internals.Jsonable;
 import classes.internals.Utils;
 
-public class RawStat implements IStat {
+public class RawStat implements IStat,Jsonable {
 	
-	private var _name:String;
 	private var _min:Number   = -Infinity;
 	private var _max:Number   = +Infinity;
 	private var _value:Number = 0;
@@ -16,12 +16,8 @@ public class RawStat implements IStat {
 	 * value: default 0;
 	 * min: default -Infinity
 	 * max: default +Infinity
-	 * @param saveInto If present, saveInto[this.name] = this
 	 */
-	public function RawStat(name:String,
-							 options:*=null,
-							 saveInto:*=null) {
-		this._name = name;
+	public function RawStat(options:*=null) {
 		options = Utils.extend({
 			value:0.0,
 			min:-Infinity,
@@ -30,15 +26,8 @@ public class RawStat implements IStat {
 		this._value = options['value'];
 		this._min = options['min'];
 		this._max = options['max'];
-		if (saveInto) saveInto[name] = this;
 	}
 	
-	public function get name():String {
-		return _name;
-	}
-	public function set name(value:String):void {
-		_name = value;
-	}
 	public function get min():Number {
 		return _min;
 	}
@@ -58,6 +47,19 @@ public class RawStat implements IStat {
 	}
 	public function set value(value:Number):void {
 		_value = Utils.boundFloat(min,value,max);
+	}
+	public function saveToObject():Object {
+		return {value:_value};
+	}
+	public function loadFromObject(o:Object, ignoreErrors:Boolean):void {
+		var x:* = o['value'];
+		if (typeof x != 'number') {
+			var errmsg:String = "Expected number, got " + (typeof x) + " " + x;
+			if (!ignoreErrors) throw errmsg;
+			else trace(errmsg);
+			x = 0.0;
+		}
+		_value = x;
 	}
 }
 }

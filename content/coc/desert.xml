@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--content/coc/desert.xml-->
-<extend-zone name="desert" xmlns="xxc-story">
+<extend-story name="desert" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../story.rnc">
     <lib name="strings">
         <lib name="chest">
             <text name="a">
@@ -33,8 +33,7 @@
             </text>
         </lib>
     </lib>
-    <!-- This encounter is not present in the code and added through xml only -->
-    <encounter name="walk">
+    <scene name="walk">
         <lib name="ss">
             <string name="intro">You walk through the shifting sands for an hour, finding nothing. </string>
             <string name="str">The effort of struggling with the uncertain footing has made you stronger.</string>
@@ -45,12 +44,12 @@
         <if test="rand(2)==0">
             <if test="rand(2)==0 and player.str lt 50">
                 <display ref="ss/str"/>
-                <dynStats str="0.5"/>
+                <command>BuffOrRecover('str',5,'desert/walk','Desert walk',36,2)</command>
                 <elseif test="player.tou lt 50">
                     <display ref="ss/tou"/>
-                    <dynStats tou="0.5"/>
+                    <command>BuffOrRecover('tou',5,'desert/walk','Desert walk',36,2)</command>
                 </elseif>
             </if>
         </if>
-    </encounter>
-</extend-zone>
+    </scene>
+</extend-story>

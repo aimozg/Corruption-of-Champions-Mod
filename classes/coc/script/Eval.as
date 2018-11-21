@@ -143,6 +143,7 @@ public class Eval {
 				}
 			} else break;
 		}
+		eatWs();
 		return x;
 	}
 	public static function calculateOp(x:*,op:String,y:*):* {
@@ -226,38 +227,67 @@ public class Eval {
 				while (eatStr(',')) {
 					f.push(evalExpr(0));
 				}
-				if (!eatStr("]")) throw error(_src,expr,"Expected ',' or ']'");
+				if (!eatStr("]")) throw error(_src, expr, "Expected ',' or ']'");
 			}
 			x = wrapArray(f);
+		} else if (eatStr('{')) {
+			if (eatStr('}')) {
+				f = [];
+			} else {
+				f = [];
+				while (true) {
+					eatWs();
+					var key:String;
+					if ((m = eat(/^['"]/))) {
+						var delim:String = m[0];
+						key = evalStringLiteral(delim);
+					} else if ((m = eat(LA_ID))) {
+						key = m[1];
+					} else break;
+					f.push(wrapVal(key));
+					eatWs();
+					if (!eatStr(':')) throw error(_src, expr, "Expected ':' after '"+key+"'");
+					eatWs();
+					f.push(evalExpr(0));
+					if (eatStr('}')) break;
+					if (!eatStr(',')) throw error(_src, expr, "Expected ',' or '}'");
+				}
+			}
+			x = wrapCall(wrapVal(Utils.createMapFromPairs),f);
 		} else if ((m = eat(LA_FLOAT))) {
 			x = wrapVal(parseFloat(m[0]));
 		} else if ((m = eat(LA_INT))) {
 			x = wrapVal(parseInt(m[0]));
 		} else if ((m = eat(/^['"]/))) {
-			var delim:String = m[0];
-			var s:String = '';
-			var rex:RegExp = delim == '"' ? /^[^"\\]*/ : /^[^'\\]*/;
-			while(true) {
-				if (eatStr('\\')) {
-					var c:String = eatN(1);
-					s += {
-						'n':'\n','t':'\t','r':'','"':'"',"'":"'"
-					}[c] || '';
-				} else if (eatStr(delim)) {
-					break
-				} else if ((m = eat(rex))) {
-					s += m[0];
-				} else {
-					throw error(_src,expr,"Expected text");
-				}
-			}
-			x = wrapVal(s);
+			delim = m[0];
+			var s:String     = evalStringLiteral(delim);
+			x                = wrapVal(s);
 		} else if ((m = eat(LA_ID))) {
 			x = wrapId(m[0]);
 		} else {
 			throw error(_src,expr,"Not a sub-expr");
 		}
 		return evalPostExpr(x,minPrio);
+	}
+	private function evalStringLiteral(delim:String):String {
+		var s:String   = '';
+		var m:/*String*/Array;
+		var rex:RegExp = delim == '"' ? /^[^"\\]*/ : /^[^'\\]*/;
+		while (true) {
+			if (eatStr('\\')) {
+				var c:String = eatN(1);
+				s += {
+						 'n': '\n', 't': '\t', 'r': '', '"': '"', "'": "'"
+					 }[c] || '';
+			} else if (eatStr(delim)) {
+				break
+			} else if ((m = eat(rex))) {
+				s += m[0];
+			} else {
+				throw error(_src, expr, "Expected text");
+			}
+		}
+		return s;
 	}
 	private function evalUntil(until:String):* {
 		var x:* = evalExpr(0);
@@ -321,6 +351,10 @@ public class Eval {
 	private function wrapVal(x:*):Function {
 		return function ():* { return x; };
 	}
+	/**
+	 * @param fn ()=>( (args)=>any )
+	 * @param args (()=>arg)[]
+	 */
 	private function wrapCall(fn:Function,args:/*Function*/Array):Function {
 		return function ():* {
 			var a:Array = [];

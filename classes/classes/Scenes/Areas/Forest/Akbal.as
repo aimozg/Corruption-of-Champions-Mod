@@ -4,6 +4,7 @@ import classes.*;
 import classes.BodyParts.Butt;
 import classes.BodyParts.Hips;
 import classes.BodyParts.Tail;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Scenes.SceneLib;
 import classes.internals.WeightedDrop;
 
@@ -85,7 +86,7 @@ public class Akbal extends Monster
 		override public function won(hpVictory:Boolean, pcCameWorms:Boolean):void
 		{
 			SceneLib.forest.akbalScene.akbalWon(hpVictory,pcCameWorms);
-			SceneLib.combat.cleanupAfterCombatImpl();
+			combat.cleanupAfterCombatImpl();
 		}
 		
 		public function akbalLustAttack():void

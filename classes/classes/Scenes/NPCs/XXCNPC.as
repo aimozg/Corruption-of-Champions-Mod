@@ -6,13 +6,13 @@ import classes.CoC;
 
 import coc.view.ButtonDataList;
 
-import coc.xxc.BoundStory;
+import coc.xxc.BoundNode;
 
 /**
 	 * ...
 	 * @author Oxdeception
 	 */
-	public class XXCNPC extends BaseContent
+	public class XXCNPC extends BaseContent implements INPC
 	{
 		public static const COMPANION:int = -1;
 		public static const FOLLOWER:int = 0;
@@ -37,9 +37,9 @@ import coc.xxc.BoundStory;
 			}
 			_savedNPCs = new Vector.<XXCNPC>();
 		}
-		protected var _story:BoundStory;
+		protected var _story:BoundNode;
 		protected var _storyName:String;
-		protected function get story():BoundStory{
+		protected function get story():BoundNode{
 			if(!_story){
 				_story = CoC.instance.rootStory.locate(_storyName).bind(CoC.instance.context);
 			}

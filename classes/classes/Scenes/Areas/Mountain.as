@@ -30,32 +30,17 @@ public class Mountain extends BaseContent
 		
 		public function Mountain()
 		{
-			onGameInit(init);
 		}
 		private var explorationEncounter:GroupEncounter = null;
-		private function init():void {
+		protected override function init():void {
 			const game:CoC     = CoC.instance;
 			const fn:FnHelpers = Encounters.fn;
 			explorationEncounter =
-					Encounters.group(/*game.commonEncounters.withImpGob,*/{
+					game.getEncounterPool("mountain").add(/*game.commonEncounters.withImpGob,*/{
 						//General Golems, Goblin and Imp Encounters
 						name: "common",
 						call: SceneLib.exploration.genericGolGobImpEncounters
-					}, {
-						//Helia monogamy fucks
-						name  : "helcommon",
-						call  : SceneLib.helScene.helSexualAmbush,
-						chance: 0.2,
-						when  : SceneLib.helScene.helSexualAmbushCondition
-					}, {
-						name  : "etna",
-						when  : function():Boolean {
-							return flags[kFLAGS.ETNA_FOLLOWER] < 1
-								   && flags[kFLAGS.ETNA_TALKED_ABOUT_HER] == 2;
-						},
-						chance: 0.5,
-						call  : SceneLib.etnaScene.repeatYandereEnc
-					}, {
+					}, SceneLib.helScene.helSexualAmbushEncounter, {
 						name: "salon",
 						when: fn.not(salon.isDiscovered),
 						call: salon.hairDresser
@@ -69,9 +54,9 @@ public class Mountain extends BaseContent
 						name: "highmountains",
 						when: function ():Boolean {
 							return !SceneLib.highMountains.isDiscovered()
-								   && (player.level >= 15)
 						},
-						call: SceneLib.highMountains.discover
+						call: SceneLib.highMountains.discover,
+						mods:[fn.ifLevelMin(12)]
 					},{
 						name: "snowangel",
 						when: function():Boolean {
@@ -143,7 +128,7 @@ public class Mountain extends BaseContent
 									/*&& game.fetishManager.compare(FetishManager.FETISH_EXHIBITION)*/;
 						},
 						call:ceraphFn,
-						mods:[fn.ifLevelMin(2)]
+						mods:[fn.ifLevelMin(6)]
 					},{
 						name:"hhound_master",
 						chance:2,
@@ -153,7 +138,7 @@ public class Mountain extends BaseContent
 							var check2:Boolean = player.dogCocks() >= 2
 												 || (player.hasVagina() && player.pregnancyType == PregnancyStore.PREGNANCY_HELL_HOUND);
 							var check3:int = (player.tail.type == Tail.DOG ? 1 : 0) +
-											 (player.lowerBody == LowerBody.DOG ? 1 : 0) +
+											 (player.lowerBody == LowerBody.CANINE ? 1 : 0) +
 											 (player.hairColor == "midnight black" ? 1 : 0);
 							var check4a:Boolean = flags[kFLAGS.HELLHOUND_MASTER_PROGRESS] == 0;
 							var check4b:Boolean = flags[kFLAGS.HELLHOUND_MASTER_PROGRESS] == 1
@@ -163,23 +148,14 @@ public class Mountain extends BaseContent
 								   && check1 && check2 && check3 && (check4a || check4b);
 						},
 						call:hellHoundScene.HellHoundMasterEncounter
-					}, {
-						name: "electra",
-						when: function ():Boolean {
-							return flags[kFLAGS.ELECTRA_FOLLOWER] < 1;
-						},
-						chance:0.5,
-						call: function ():void {
-							if (flags[kFLAGS.ELECTRA_AFFECTION] < 2) SceneLib.electraScene.firstEnc();
-							else SceneLib.electraScene.repeatMountainEnc();
-						}
-					}, {
+					}, SceneLib.electraScene.mountainsEncounter, {
+					/*
 						name: "diva",
 						when: function():Boolean {
 							return flags[kFLAGS.FACTORY_SHUTDOWN] > 0 && DivaScene.instance.status >= 0;
 						},
 						call: DivaScene.encounter
-					},{
+					,{ */
 						name:"darkelf",
 						call:darkelfScene.introDarkELfScout
 					},{
@@ -314,13 +290,16 @@ public class Mountain extends BaseContent
 		}
 		private function hike():void {
 			clearOutput();
+			buffOrRecover("tou",2.5,"mountain/hike","Mountain hike");
+			buffOrRecover("spe",5,"mountain/hike","Mountain hike");
 			if (player.cor < 90) {
 				outputText("Your hike in the mountains, while fruitless, reveals pleasant vistas and provides you with good exercise and relaxation.");
-				dynStats("tou", .25, "spe", .5, "lus", player.lib / 10 - 15);
+				dynStats("lus", player.lib / 10 - 15);
 			}
 			else {
 				outputText("During your hike into the mountains, your depraved mind keeps replaying your most obcenely warped sexual encounters, always imagining new perverse ways of causing pleasure.\n\nIt is a miracle no predator picked up on the strong sexual scent you are emitting.");
-				dynStats("tou", .25, "spe", .5, "lib", .25, "lus", player.lib / 10);
+				buffOrRecover("дши",2.5,"mountain/hike","Mountain hike");
+				dynStats("lus", player.lib / 10);
 			}
 			doNext(camp.returnToCampUseOneHour);
 		}

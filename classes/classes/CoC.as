@@ -15,12 +15,20 @@ import classes.GlobalFlags.kACHIEVEMENTS;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
 import classes.Items.*;
+import classes.Modding.GameMod;
+import classes.Modding.IMonsterPrototype;
+import classes.Modding.MonsterLib;
+import classes.Modding.MonsterPrototype;
 import classes.Parser.Parser;
 import classes.Scenes.*;
+import classes.Scenes.API.GroupEncounter;
 import classes.Scenes.NPCs.JojoScene;
 import classes.display.DebugInfo;
 import classes.display.PerkMenu;
 import classes.display.SpriteDb;
+import classes.internals.Utils;
+
+import coc.lua.LuaEngine;
 
 import coc.model.GameModel;
 import coc.model.TimeModel;
@@ -28,6 +36,7 @@ import coc.view.MainView;
 import coc.xxc.Story;
 import coc.xxc.StoryCompiler;
 import coc.xxc.StoryContext;
+import coc.xxc.stmts.IncludeStmt;
 
 import flash.display.MovieClip;
 import flash.display.Sprite;
@@ -103,9 +112,13 @@ public class CoC extends MovieClip
     public var playerInfo:PlayerInfo = new PlayerInfo();
     public var debugInfoMenu:DebugInfo = new DebugInfo();
     public var gameSettings:GameSettings = new GameSettings();
-    public var rootStory:Story = new Story("story",null,"root",true);
+    public var rootStory:Story = new Story("story",null,"root");
     public var compiler:StoryCompiler = new StoryCompiler("content/").attach(rootStory);
+    public var mods:/*GameMod*/Array = [];
+    public var monsterLib:MonsterLib;
+    public var encounterPools:/*[index:string] => GroupEncounter*/Object = {};
     public var context:StoryContext;
+    public var lua:LuaEngine;
 
     public var perkTree:PerkTree = new PerkTree();
 
@@ -208,6 +221,11 @@ public class CoC extends MovieClip
         this.stage.addChild( this.mainView );
     }
     private function _postInit(e:Event):void {
+        try {
+            this.lua = new LuaEngine();
+        } catch (e:Error) {
+            trace(e.getStackTrace());
+        }
         PerkLib.initDependencies();
         // Hooking things to MainView.
         this.mainView.onNewGameClick = charCreation.newGameGo;
@@ -360,21 +378,77 @@ public class CoC extends MovieClip
         mainView.hideSprite();
         //Hide up/down arrows
         mainView.statsView.hideUpDown();
-        new Story("lib",rootStory,"monsters",true);
+        rootStory.addLib("monsters");
+        rootStory.addLib("camp");
         execPostInit();
-        loadStory();
         this.addFrameScript( 0, this.run );
         //setTimeout(this.run,0);
     }
+    public function getEncounterPool(name:String):GroupEncounter {
+        return encounterPools[name] || ((encounterPools[name] = new GroupEncounter(name,[])));
+    }
 
     private function loadStory():void {
+		mainMenu.progressText = "Loading content files...";
+        compiler.onLoad = initMods;
+        compiler.onProgress = loadingMods;
         compiler.includeFile("coc.xml", true);
+		mainMenu.mainMenu();
+    }
+    private function loadingMods(compiler:StoryCompiler,nLoaded:int,nTotal:int):void {
+        mainMenu.progressText = "Loaded "+nLoaded+"/"+nTotal+" content files";
+    }
+	private function initMods():void {
+		monsterLib = new MonsterLib();
+		var failedMods:/*GameMod*/Array = [];
+		if (lua) {
+			mods = [];
+			for each (var mod:GameMod in compiler.mods) {
+				try {
+					mod.finishInit(this);
+					mods.push(mod);
+				} catch (e:Error) {
+					trace(e.getStackTrace());
+					failedMods.push(mod);
+				}
+			}
+		} else {
+			mods                  = [];
+			failedMods = mods.slice();
+		}
+		var failedIncludes:/*IncludeStmt*/Array = compiler.failedIncludes();
+		var s:String = "Loaded " + compiler.includesTotal() + " files";
+        if (mods.length>0) s += ", "+mods.length+" mods";
+        if (failedIncludes.length + failedMods.length > 0) s += "; failed: ";
+		s += (Utils.mapOneProp(failedIncludes,"path").concat(Utils.mapOneProp(failedMods,"name"))).join(", ");
+        mainMenu.progressText = s;
+		//mainMenu.mainMenu();
+	}
+    public function resetMods():void {
+		for each (var mod:GameMod in mods) {
+            mod.reset();
+		}
+    }
+    public function findMod(name:String):GameMod {
+		for each (var mod:GameMod in mods) {
+            if (mod.name == name) return mod;
+		}
+        return null;
+    }
+    public function findModMonster(id:String):IMonsterPrototype {
+		for each (var mod:GameMod in mods) {
+            var mon:IMonsterPrototype = mod.findMonsterPrototype(id);
+            if (mon) return mon;
+		}
+        if (monsterLib) mon = monsterLib.find(id);
+        if (mon) return mon;
+        return null;
     }
 
     public function run():void
     {
 	    mainView.setTextBackground(flags[kFLAGS.TEXT_BACKGROUND_STYLE]);
-        mainMenu.mainMenu();
+		loadStory();
         this.stop();
 
         if (_updateHack) {

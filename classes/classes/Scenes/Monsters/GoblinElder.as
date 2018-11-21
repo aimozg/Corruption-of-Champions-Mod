@@ -142,9 +142,7 @@ public class GoblinElder extends Goblin
 		}
 		
 		private function spellMultiplier():Number {
-			var mult:Number = 1;
-			mult += 0.5 * player.newGamePlusMod();
-			return mult;
+			return 1;
 		}
 		
 		override protected function performCombatAction():void {
@@ -163,7 +161,7 @@ public class GoblinElder extends Goblin
 		{
 			if (player.gender == 0 || flags[kFLAGS.SFW_MODE] > 0) {
 				outputText("You collapse in front of the goblin, too wounded to fight.  She growls and kicks you in the head, making your vision swim. As your sight fades, you hear her murmur, \"<i>Fucking dicks can't even bother to grow a dick or cunt.</i>\"");
-				SceneLib.combat.cleanupAfterCombatImpl();
+				combat.cleanupAfterCombatImpl();
 			} 
 			else {
 				SceneLib.goblinElderScene.goblinElderBeatYaUp();

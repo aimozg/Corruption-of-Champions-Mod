@@ -27,11 +27,21 @@ package classes
 	import classes.Items.JewelryLib;
 	import classes.Items.WeaponLib;
 	import classes.Scenes.Camp.CampMakeWinions;
-	import classes.Scenes.Places.TelAdre.UmasShop;
-import classes.Stats.BuffTags;
+import classes.Scenes.Combat.Combat;
+import classes.Scenes.Combat.CombatAction.ACombatAction;
+import classes.Scenes.Combat.CombatMechanics;
+import classes.Scenes.Places.TelAdre.UmasShop;
+import classes.Scenes.SceneLib;
+import classes.Stats.Buff;
+import classes.lists.BuffTags;
 import classes.Stats.BuffableStat;
-	import classes.Stats.PrimaryStat;
-	import classes.StatusEffects.Combat.CombatInteBuff;
+import classes.Stats.IStat;
+import classes.Stats.IStatHolder;
+import classes.Stats.PrimaryStat;
+import classes.lists.StatNames;
+import classes.Stats.StatStore;
+import classes.Stats.StatUtils;
+import classes.StatusEffects.Combat.CombatInteBuff;
 	import classes.StatusEffects.Combat.CombatSpeBuff;
 	import classes.StatusEffects.Combat.CombatStrBuff;
 	import classes.StatusEffects.Combat.CombatTouBuff;
@@ -48,6 +58,9 @@ import classes.Stats.BuffableStat;
 
         public function get game():CoC {
 			return CoC.instance;
+		}
+		public function get combat():Combat {
+			return SceneLib.combat;
 		}
 		public function get flags():DefaultDict {
 			return game.flags;
@@ -122,32 +135,125 @@ import classes.Stats.BuffableStat;
 		   [   S T A T S   ]
 		
 		 */
-		public var stats:Object = {};// [index:string]:IStat
+		protected var _stats:StatStore = new StatStore({
+			([StatNames.STR]): new PrimaryStat(),
+			([StatNames.TOU]): new PrimaryStat(),
+			([StatNames.SPE]): new PrimaryStat(),
+			([StatNames.INT]): new PrimaryStat(),
+			([StatNames.WIS]): new PrimaryStat(),
+			([StatNames.LIB]): new PrimaryStat(),
+			
+			([StatNames.SENS_MIN]): new BuffableStat({base:10}),
+			([StatNames.SENS_MAX]): new BuffableStat(),
+			([StatNames.LUST_MIN]): new BuffableStat(),
+			([StatNames.LUST_MAX]): new BuffableStat({base:100}),
+			([StatNames.HP_MAX]): new BuffableStat({base:50}),
+			([StatNames.STAMINA_MAX]): new BuffableStat({base:100}),
+			([StatNames.KI_MAX]): new BuffableStat({base:50}),
+			
+			([StatNames.DEFENSE])       : new BuffableStat(),
+			([StatNames.SPELLPOWER])    :new BuffableStat({base:1.0,min:0.0}),
+			([StatNames.HP_PER_TOU])    :new BuffableStat({base:2, min:0.1}),
+			([StatNames.ATTACK_RATING]) :new BuffableStat({
+				base: curry(CombatMechanics.attackRatingBase, this)
+			}),
+			([StatNames.DEFENSE_RATING]):new BuffableStat({
+				base: curry(CombatMechanics.defenseRatingBase, this)
+				// this doesn't work because it doesn't properly capture Creature.this
+				// 		base: function():Number { return 15 + (spe + 3 * level)/2; }
+				// so argument should be non-inline function
+			})
+		});
+		public function get statStore():StatStore {
+			return _stats;
+		}
 		
+		public function findStat(fullname:String):IStat {
+			return _stats.findStat(fullname);
+		}
+		public function statValue(fullname:String):Number {
+			var stat:IStat = findStat(fullname);
+			return stat ? stat.value : NaN;
+		}
+		public function findPrimaryStat(name:String):PrimaryStat {
+			return findStat(name) as PrimaryStat;
+		}
+		public function findBuffableStat(fullname:String):BuffableStat {
+			return _stats.findBuffableStat(fullname);
+		}
+		public function allStats():/*IStat*/Array {
+			return _stats.allStats();
+		}
+		public function allStatNames():/*String*/Array {
+			return _stats.allStatNames();
+		}
+		public function allStatsAndSubstats():/*IStat*/Array {
+			return _stats.allStatsAndSubstats();
+		}
+
 		//Primary stats
-		public var strStat:PrimaryStat = new PrimaryStat("str",stats);
-		public var touStat:PrimaryStat = new PrimaryStat("tou",stats);
-		public var speStat:PrimaryStat = new PrimaryStat("spe",stats);
-		public var intStat:PrimaryStat = new PrimaryStat("int",stats);
-		public var wisStat:PrimaryStat = new PrimaryStat("wis",stats);
-		public var libStat:PrimaryStat = new PrimaryStat("lib",stats);
+		public const strStat:PrimaryStat = _stats.findStat(StatNames.STR) as PrimaryStat;
+		public const touStat:PrimaryStat = _stats.findStat(StatNames.TOU) as PrimaryStat;
+		public const speStat:PrimaryStat = _stats.findStat(StatNames.SPE) as PrimaryStat;
+		public const intStat:PrimaryStat = _stats.findStat(StatNames.INT) as PrimaryStat;
+		public const wisStat:PrimaryStat = _stats.findStat(StatNames.WIS) as PrimaryStat;
+		public const libStat:PrimaryStat = _stats.findStat(StatNames.LIB) as PrimaryStat;
+		public function primaryStats():/*PrimaryStat*/Array {
+			return _stats.allStats().filter(function(e:IStat,...args):Boolean{return e is PrimaryStat});
+		}
 		public function get str():Number {
 			return strStat.value;
+		}
+		public function get strMin():Number {
+			return strStat.min;
+		}
+		public function get strMax():Number {
+			return strStat.max;
 		}
 		public function get tou():Number {
 			return touStat.value;
 		}
+		public function get touMin():Number {
+			return touStat.min;
+		}
+		public function get touMax():Number {
+			return touStat.max;
+		}
 		public function get spe():Number {
 			return speStat.value;
+		}
+		public function get speMin():Number {
+			return speStat.min;
+		}
+		public function get speMax():Number {
+			return speStat.max;
 		}
 		public function get inte():Number {
 			return intStat.value;
 		}
+		public function get intMin():Number {
+			return intStat.min;
+		}
+		public function get intMax():Number {
+			return intStat.max;
+		}
 		public function get wis():Number {
 			return wisStat.value;
 		}
+		public function get wisMin():Number {
+			return wisStat.min;
+		}
+		public function get wisMax():Number {
+			return wisStat.max;
+		}
 		public function get lib():Number {
 			return libStat.value;
+		}
+		public function get libMin():Number {
+			return libStat.min;
+		}
+		public function get libMax():Number {
+			return libStat.max;
 		}
 		public var sens:Number = 0;
 		public var cor:Number = 0;
@@ -167,8 +273,21 @@ import classes.Stats.BuffableStat;
 		public var additionalXP:Number = 0;
 		
 		// Other buffable stats
-		public var spellPowerStat:BuffableStat = new BuffableStat("spellPower",{base:1.0,min:0.0},stats);
+		public const spellPowerStat:BuffableStat = _stats.findStat(StatNames.SPELLPOWER) as BuffableStat;
 		public function get spellPower():Number { return spellPowerStat.value }
+		public const sensMinStat:BuffableStat    = _stats.findStat(StatNames.SENS_MIN) as BuffableStat;
+		public const sensMaxStat:BuffableStat     = _stats.findStat(StatNames.SENS_MAX) as BuffableStat;
+		public const lustMinStat:BuffableStat    = _stats.findStat(StatNames.LUST_MIN) as BuffableStat;
+		public const lustMaxStat:BuffableStat    = _stats.findStat(StatNames.LUST_MAX) as BuffableStat;
+		public const hpMaxStat:BuffableStat        = _stats.findStat(StatNames.HP_MAX) as BuffableStat;
+		public const hpPerTouStat:BuffableStat     = _stats.findStat(StatNames.HP_PER_TOU) as BuffableStat;
+		public const staminaMaxStat:BuffableStat   = _stats.findStat(StatNames.STAMINA_MAX) as BuffableStat;
+		public const kiMaxStat:BuffableStat        = _stats.findStat(StatNames.KI_MAX) as BuffableStat;
+		public const defenseStat:BuffableStat      = _stats.findStat(StatNames.DEFENSE) as BuffableStat;
+		public const attackRatingStat:BuffableStat = _stats.findStat(StatNames.ATTACK_RATING) as BuffableStat;
+		public function get attackRating():Number { return attackRatingStat.value }
+		public const defenseRatingStat:BuffableStat = _stats.findStat(StatNames.DEFENSE_RATING) as BuffableStat;
+		public function get defenseRating():Number { return defenseRatingStat.value }
 		
 		public function get hp100():Number { return 100*HP/maxHP(); }
 		public function get wrath100():Number { return 100*wrath/maxWrath(); }
@@ -177,19 +296,18 @@ import classes.Stats.BuffableStat;
 		public function get lust100():Number { return 100*lust/maxLust(); }
 		
 		public function minLust():Number {
-			return 0;
+			return lustMinStat.value;
 		}
 		public function minSens():Number {
-			return 10;
+			return sensMinStat.value;
+		}
+		public function maxSens():Number {
+			return sensMaxStat.value;
 		}
 
 		protected function maxHP_base():Number {
-			var max:Number = 0;
-			max += int(tou * 2 + 50);
-			var under100: int = Math.floor(Math.min(tou, 100) / 20);
-			var over100: int = Math.floor(Math.max(tou - 100, 0) / 50);
-			max += tou * (over100 + under100);
-			if (hasPerk(PerkLib.Tank)) max += Math.round(tou*3);
+			var max:Number = hpMaxStat.value;
+			max += int(tou * (hpPerTouStat.value + level/10));
 			if (hasPerk(PerkLib.ElementalBondFlesh)) {
 				for each (var status:StatusEffectType in CampMakeWinions.summon_statuses){
 					if(hasStatusEffect(status)){
@@ -197,14 +315,11 @@ import classes.Stats.BuffableStat;
 					}
 				}
 			}
-			if (hasPerk(PerkLib.JobGuardian)) max += 30;
-			if (hasPerk(PerkLib.ChiReflowDefense)) max += UmasShop.NEEDLEWORK_DEFENSE_EXTRA_HP;
-			max += level * 15;
 			if (jewelryEffectId == JewelryLib.MODIFIER_HP) max += jewelryEffectMagnitude;
-			return max;
+			return Math.round(max);
 		}
 		protected function maxLust_base():Number {
-			var max:Number = 100;
+			var max:Number = lustMaxStat.value;
 			if (hasPerk(PerkLib.ElementalBondUrges)) {
 				for each (var status:StatusEffectType in CampMakeWinions.summon_statuses){
 					if(hasStatusEffect(status)){
@@ -212,14 +327,10 @@ import classes.Stats.BuffableStat;
 					}
 				}
 			}
-			if (hasPerk(PerkLib.BroBody) || hasPerk(PerkLib.BimboBody) || hasPerk(PerkLib.FutaForm)) max += 20;
-			if (hasPerk(PerkLib.OmnibusGift)) max += 15;
-			if (hasPerk(PerkLib.JobCourtesan)) max += 20;
-			if (hasPerk(PerkLib.JobSeducer)) max += 10;
 			return max;
 		}
 		protected function maxHP_mult():Number {
-			return 1 + (countCockSocks("green") * 0.02);
+			return 1;
 		}
 		protected function maxLust_mult():Number {
 			return 1;
@@ -233,13 +344,13 @@ import classes.Stats.BuffableStat;
 			return Math.min(24499,max);
 		}
 		public function maxFatigue():Number {
-			return 100;
+			return staminaMaxStat.value;
 		}
 		public function maxWrath():Number {
 			return 250;
 		}
 		public function maxKi():Number {
-			return 0;
+			return kiMaxStat.value;
 		}
 		public function maxMana():Number {
 			return 100;
@@ -260,25 +371,25 @@ import classes.Stats.BuffableStat;
 		 */
 		public function getAllMaxStats():Object {
 			return {
-				str:strStat.max,
-				tou:touStat.max,
-				spe:speStat.max,
-				inte:intStat.max,
-				wis:wisStat.max,
-				lib:libStat.max,
-				sens:100,
+				str:strMax,
+				tou:touMax,
+				spe:speMax,
+				inte:intMax,
+				wis:wisMax,
+				lib:libMax,
+				sens:maxSens(),
 				cor:100
 			};
 		}
 		public function getAllMinStats():Object {
 			return {
-				str:strStat.min,
-				tou:touStat.min,
-				spe:speStat.min,
-				inte:intStat.min,
-				wis:wisStat.min,
-				lib:libStat.min,
-				sens:10,
+				str:strMin,
+				tou:touMin,
+				spe:speMin,
+				inte:intMin,
+				wis:wisMin,
+				lib:libMin,
+				sens:minSens(),
 				cor:0
 			};
 		}
@@ -288,7 +399,7 @@ import classes.Stats.BuffableStat;
 		public function updateStats():void {
 			Begin("Creature","updateStats");
 			var racialScores:* = this.racialScores();
-			var racials:* = racialBonuses();
+			var racials:* = Race.AllBonusesFor(this,racialScores);
 			
 			Begin("Creature","updateStats.perks");
 			//Alter max speed if you have oversized parts. (Realistic mode)
@@ -327,61 +438,80 @@ import classes.Stats.BuffableStat;
 			End("Creature","updateStats.perks");
 			
 			Begin("Creature","updateStats.racial");
-			strStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_str] / 100, {save:false,text:'Racial'});
-			touStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_tou] / 100, {save:false,text:'Racial'});
-			speStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_spe] / 100, {save:false,text:'Racial'});
-			intStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_int] / 100, {save:false,text:'Racial'});
-			wisStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_wis] / 100, {save:false,text:'Racial'});
-			libStat.mult.addOrReplaceBuff(BuffTags.RACE, racials[Race.BonusName_lib] / 100, {save:false,text:'Racial'});
+			statStore.replaceBuffObject({
+				'str.mult': racials[Race.BonusName_str] / 100,
+				'tou.mult': racials[Race.BonusName_tou] / 100,
+				'spe.mult': racials[Race.BonusName_spe] / 100,
+				'int.mult': racials[Race.BonusName_int] / 100,
+				'wis.mult': racials[Race.BonusName_wis] / 100,
+				'lib.mult': racials[Race.BonusName_lib] / 100,
+				'sensMin': racials[Race.BonusName_minsen],
+				'sensMax': racials[Race.BonusName_maxsen],
+				'lustMax': racials[Race.BonusName_maxlust],
+				'hpMax': racials[Race.BonusName_maxhp],
+				'staminaMax': racials[Race.BonusName_maxfatigue],
+				'kiMax': racials[Race.BonusName_maxki],
+				'defense': racials[Race.BonusName_defense]
+			}, BuffTags.RACE, {save: false, text: 'Racial'});
 			if (isNaga()) {
-				strStat.mult.addOrReplaceBuff(BuffTags.NAGA,0.15,{save:false, text:'Naga'});
-				speStat.mult.addOrReplaceBuff(BuffTags.NAGA,0.15,{save:false, text:'Naga'});
+				statStore.replaceBuffObject({
+					'strMult': +0.15,
+					'speMult': +0.15
+				}, BuffTags.NAGA, {save: false, text: 'Naga'});
 			} else {
-				strStat.mult.removeBuff(BuffTags.NAGA);
-				speStat.mult.removeBuff(BuffTags.NAGA);
+				removeBuffs(BuffTags.NAGA);
 			}
 			if (isTaur()) {
-				speStat.mult.addOrReplaceBuff(BuffTags.TAUR,0.20,{save:false, text:'Taur'});
+				statStore.replaceBuffObject({
+					'speMult': +0.20
+				}, BuffTags.TAUR, {save:false, text:'Taur'});
 			} else {
-				speStat.mult.removeBuff(BuffTags.TAUR);
+				removeBuffs(BuffTags.TAUR);
 			}
 			if (isDrider()) {
-				touStat.mult.addOrReplaceBuff(BuffTags.DRIDER,0.15,{save:false, text:'Drider'});
-				speStat.mult.addOrReplaceBuff(BuffTags.DRIDER,0.15,{save:false, text:'Drider'});
+				statStore.replaceBuffObject({
+					'touMult': +0.15,
+					'speMult': +0.15
+				}, BuffTags.DRIDER, {save:false, text:'Drider'});
 			} else {
-				touStat.mult.removeBuff(BuffTags.DRIDER);
-				speStat.mult.removeBuff(BuffTags.DRIDER);
+				removeBuffs(BuffTags.DRIDER);
 			}
 			if (isScylla()) {
-				strStat.mult.addOrReplaceBuff(BuffTags.SCYLLA,0.30,{save:false, text:'Scylla'});
+				statStore.replaceBuffObject({
+					'strMult': +0.30
+				}, BuffTags.SCYLLA, {save:false, text:'Scylla'});
 			} else {
-				strStat.mult.removeBuff(BuffTags.SCYLLA);
+				removeBuffs(BuffTags.SCYLLA);
 			}
 			if (racialScores[Race.GARGOYLE.name] >= 21) {
 				if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 1) {
-					strStat.mult.addOrReplaceBuff(BuffTags.GARGOYLE,0.20,{save:false, text:'Gargoyle'});
-					intStat.mult.removeBuff(BuffTags.GARGOYLE);
+					statStore.replaceBuffObject({
+						'strMult': +0.20,
+						'intMult': +0.00
+					}, BuffTags.GARGOYLE, {save:false, text:'Gargoyle'});
 				} else if (flags[kFLAGS.GARGOYLE_BODY_MATERIAL] == 2) {
-					strStat.mult.removeBuff(BuffTags.GARGOYLE);
-					intStat.mult.addOrReplaceBuff(BuffTags.GARGOYLE,0.20,{save:false, text:'Gargoyle'});
+					statStore.replaceBuffObject({
+						'strMult': +0.00,
+						'intMult': +0.20
+					}, BuffTags.GARGOYLE, {save:false, text:'Gargoyle'});
 				} else {
-					strStat.mult.removeBuff(BuffTags.GARGOYLE);
-					intStat.mult.removeBuff(BuffTags.GARGOYLE);
+					removeBuffs(BuffTags.GARGOYLE);
 				}
 			} else {
-				strStat.mult.removeBuff(BuffTags.GARGOYLE);
-				intStat.mult.removeBuff(BuffTags.GARGOYLE);
+				removeBuffs(BuffTags.GARGOYLE);
 			}
 			var ics:Number = internalChimeraScore();
 			if (ics >= 1) {
-				strStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
-				touStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
-				speStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
-				intStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
-				wisStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
-				libStat.mult.addOrReplaceBuff(BuffTags.CHIMERA, 0.05 * ics,{save:false, text:'Chimera'});
+				statStore.replaceBuffObject({
+					'strMult':+0.05 * ics,
+					'touMult':+0.05 * ics,
+					'speMult':+0.05 * ics,
+					'intMult':+0.05 * ics,
+					'wisMult':+0.05 * ics,
+					'libMult':+0.05 * ics
+				}, BuffTags.CHIMERA, {save:false, text:'Chimera'});
 			} else {
-				removeStatEffects(BuffTags.CHIMERA);
+				removeBuffs(BuffTags.CHIMERA);
 			}
 			End("Creature","updateStats.racial");
 			
@@ -393,17 +523,17 @@ import classes.Stats.BuffableStat;
 				if (perk2) {
 					mult = 2.0;
 					perk = perk2;
-					speStat.mult.removeBuff(PerkLib.MantislikeAgility.tagForBuffs);
+					removeBuffs(PerkLib.MantislikeAgility.tagForBuffs);
 				} else {
-					speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.tagForBuffs);
+					removeBuffs(PerkLib.MantislikeAgilityEvolved.tagForBuffs);
 				}
-				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) perk.buffHost('speMult', +0.20*mult);
-				else if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) perk.buffHost('speMult', +0.15*mult);
-				else if (skinType == Skin.SCALES) perk.buffHost('speMult', +0.10*mult);
-				else if (hasPerk(PerkLib.ThickSkin)) perk.buffHost('speMult', +0.05*mult);
+				if (hasCoatOfType(Skin.CHITIN) && hasPerk(PerkLib.ThickSkin)) perk.buffHost('spe.mult', +0.20*mult);
+				else if ((skinType == Skin.SCALES && hasPerk(PerkLib.ThickSkin)) || hasCoatOfType(Skin.CHITIN)) perk.buffHost('spe.mult', +0.15*mult);
+				else if (skinType == Skin.SCALES) perk.buffHost('spe.mult', +0.10*mult);
+				else if (hasPerk(PerkLib.ThickSkin)) perk.buffHost('spe.mult', +0.05*mult);
 			} else {
-				speStat.mult.removeBuff(PerkLib.MantislikeAgility.tagForBuffs);
-				speStat.mult.removeBuff(PerkLib.MantislikeAgilityEvolved.tagForBuffs);
+				removeBuffs(PerkLib.MantislikeAgility.tagForBuffs);
+				removeBuffs(PerkLib.MantislikeAgilityEvolved.tagForBuffs);
 			}
 			End("Creature","updateStats.perks2");
 			
@@ -447,8 +577,12 @@ import classes.Stats.BuffableStat;
 				cor:cor-prevCor
 			};
 		}
+		/**
+		 * Apply "drain" debuff to stat.
+		 * @param damage Positive means reduce stat, negative - recover from drain.
+		 */
 		public function drainStat(statname:String, damage:Number):Number {
-			var stat:BuffableStat = stats[statname + 'Bonus'];
+			var stat:BuffableStat = findBuffableStat(statname);
 			if (!stat) {
 				// TODO report error
 				return NaN;
@@ -456,28 +590,54 @@ import classes.Stats.BuffableStat;
 			if (damage == 0) return 0;
 			var delta:Number = -damage;
 			var current:Number = stat.valueOfBuff(BuffTags.DRAIN);
-			if (delta > 0 && delta+current > 0) delta = -current;
-			stat.addOrIncreaseBuff(BuffTags.DRAIN, delta,{text:'Drain'});
+			if (delta > 0 && delta+current > 0) {
+				stat.removeBuff(BuffTags.DRAIN);
+			} else {
+				stat.addOrIncreaseBuff(BuffTags.DRAIN, delta, {text: 'Drain'});
+			}
 			return damage;
 		}
-		public function removeStatEffects(tag:String):void {
-			for (var statname:String in stats) {
-				var stat:BuffableStat = stats[statname] as BuffableStat;
-				if (!stat) continue;
-				stat.removeBuff(tag);
-			}
-		}
 		/**
-		 * If perk is present, add/replace stat buff. If not, remove stat buff
- 		 */
-		public function setPerkStatEffect(ptype:PerkType,statname:String,value:Number):void {
-			var stat:BuffableStat = (stats[statname] as BuffableStat) || (stats[statname] as PrimaryStat).bonus;
-			var perk:PerkClass    = getPerk(ptype);
-			if (perk) {
-				stat.addOrReplaceBuff(ptype.id,value,{save:false,text:ptype.name});
-			} else {
-				stat.removeBuff(ptype.tagForBuffs);
-			}
+		 * Return current inverse value (positive=reduced stat) of "drain" debuff for stat
+		 */
+		public function drainOfStat(statname: String):Number {
+			return -findBuffableStat(statname).valueOfBuff(BuffTags.DRAIN);
+		}
+		public function removeBuffs(tag:String):void {
+			statStore.removeBuffs(tag);
+		}
+		public function addItemTaggedTempBuff(
+				item:ItemType,
+				statname:String,
+				value:Number,
+				tick:int=36,
+				rate:int=Buff.RATE_HOURS
+		):void{
+			addTempBuff(statname,value,item.tagForBuffs,item.shortName,tick,rate);
+		}
+		public function addTempBuff(
+				statname:String,
+				value:Number,
+				tag:String,
+				text:String,
+				tick:int,
+				rate:int=Buff.RATE_HOURS
+		):void {
+			var stat:BuffableStat = statStore.findBuffableStat(statname);
+			stat.addOrReplaceBuff(tag, value, {rate: rate, tick: tick, text: text, show: !!text});
+			updateStats();
+		}
+		public function incTempBuff(
+				statname:String,
+				value:Number,
+				tag:String,
+				text:String,
+				tick:int,
+				rate:int=Buff.RATE_HOURS
+		):void {
+			var stat:BuffableStat = statStore.findBuffableStat(statname);
+			stat.addOrIncreaseBuff(tag, value, {rate: rate, tick: tick, text: text, show: !!text});
+			updateStats();
 		}
 		public function modStats(dstr:Number, dtou:Number, dspe:Number, dinte:Number, dwis:Number, dlib:Number, dsens:Number, dlust:Number, dcor:Number, scale:Boolean):void {
 			var maxes:Object;
@@ -1354,17 +1514,17 @@ import classes.Stats.BuffableStat;
 			trace("/!\\ ERROR: addCombatBuff('"+stat+"', "+buff+")");
 		}
 
-		public var availableActions:Array = [];
-		public function addAction(action:Object):void {
+		public var availableActions:/*ACombatAction*/Array = [];
+		public function addAction(action:ACombatAction):void {
 			if(availableActions.indexOf(action) < 0){
 				availableActions.push(action);
 			}
 		}
 
-		public function removeAction(action:Object):void {
+		public function removeAction(action:ACombatAction):void {
 			var i:int = availableActions.indexOf(action);
 			if(i >=0){
-				availableActions.removeAt(i);
+				availableActions.splice(i,1);
 			}
 		}
 
@@ -2167,8 +2327,7 @@ import classes.Stats.BuffableStat;
 			Wings.BEE_LIKE_LARGE,
 			Wings.BAT_LIKE_LARGE,
 			Wings.BAT_LIKE_LARGE_2,
-			Wings.FEATHERED_LARGE,
-			Wings.FEATHERED_PHOENIX,
+			Wings.FEATHERED,
 			Wings.DRACONIC_LARGE,
 			Wings.DRACONIC_HUGE,
 			Wings.GIANT_DRAGONFLY,
@@ -2180,7 +2339,6 @@ import classes.Stats.BuffableStat;
 			Wings.VAMPIRE,
 			Wings.FEY_DRAGON_WINGS,
 			Wings.FEATHERED_AVIAN,
-			Wings.FEATHERED_SPHINX,
 			//WING_TYPE_IMP_LARGE,
 		];
 
@@ -2196,7 +2354,7 @@ import classes.Stats.BuffableStat;
 		public static const canPounceLeg:Array = [
 			LowerBody.CAT,
 			LowerBody.LION,
-			LowerBody.WOLF,
+			LowerBody.CANINE,
 		];
 
 		public static const canPounceArms:Array = [
@@ -3211,25 +3369,19 @@ import classes.Stats.BuffableStat;
 		}
 
 		public function damageToughnessModifier(displayMode:Boolean = false):Number {
-			var temp:Number = 0;
-			temp += tou / 20;
-			if (temp > (20 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]))) temp = 20 + (5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			var temp:Number = Math.min(20, tou/20);
 			//displayMode is for stats screen.
 			if (displayMode) return temp;
 			else return rand(temp);
 		}
 		public function damageIntelligenceModifier(displayMode:Boolean = false):Number {
-			var temp:Number = 0;
-			temp += inte / 20;
-			if (temp > (10 + (2.5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]))) temp = 10 + (2.5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			var temp:Number = Math.min(10, inte/20);
 			//displayMode is for stats screen.
 			if (displayMode) return temp;
 			else return rand(temp);
 		}
 		public function damageWisdomModifier(displayMode:Boolean = false):Number {
-			var temp:Number = 0;
-			temp += wis / 20;
-			if (temp > (10 + (2.5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]))) temp = 10 + (2.5 * flags[kFLAGS.NEW_GAME_PLUS_LEVEL]);
+			var temp:Number = Math.min(10, wis/20);
 			//displayMode is for stats screen.
 			if (displayMode) return temp;
 			else return rand(temp);
@@ -3259,7 +3411,7 @@ import classes.Stats.BuffableStat;
 			//Take damage you masochist!
 			if (hasPerk(PerkLib.Masochist) && lib >= 60) {
 				mult -= 0.2;
-				if (short == game.player.short && !displayMode) game.player.dynStats("lus", (2 * (1 + game.player.newGamePlusMod())));
+				if (short == game.player.short && !displayMode) game.player.dynStats("lus", 2);
 			}
 			if (hasPerk(PerkLib.FenrirSpikedCollar)) {
 				mult -= 0.15;
@@ -3309,7 +3461,7 @@ import classes.Stats.BuffableStat;
 				mult -= damageWisdomModifier();
 				if (mult < 70) mult = 70;
 			}
-			if (hasPerk(PerkLib.NakedTruth)) mult -= 0.45 + (5 * game.player.newGamePlusMod());
+			if (hasPerk(PerkLib.NakedTruth)) mult -= 0.45;
 			//--PERKS--
 			if (hasPerk(PerkLib.NakedTruth) && spe >= 75 && lib >= 60 && (armorName == "arcane bangles" || armorName == "practically indecent steel armor" || armorName == "revealing chainmail bikini" || armorName == "slutty swimwear" || armorName == "barely-decent bondage straps" || armorName == "nothing")) {
 				mult -= 0.1;
@@ -3625,7 +3777,11 @@ import classes.Stats.BuffableStat;
 		{
 			return weaponRangeName == "nothing" || weaponRangeName == "Inquisitor’s Tome" || weaponRangeName == "Sage’s Sketchbook";
 		}
-
+		public function isWieldingRangedWeapon():Boolean {
+			return weaponName.indexOf("staff") != -1 && hasPerk(PerkLib.StaffChanneling);
+		}
+		
+		
 		public function spellCost(mod:Number, type:int = 0, heal:Boolean = false):Number{
 			var white:Boolean = type ===  1;
 			var black:Boolean = type === -1;

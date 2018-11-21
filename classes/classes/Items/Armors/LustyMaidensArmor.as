@@ -140,8 +140,7 @@ package classes.Items.Armors
 			if(monster is Minotaur || monster is MinotaurMob) player.minoCumAddiction(3);
 			if(monster.short == "Ceraph") game.flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00291]++;
 			//Usable on: Imps, Minotaurs, Satyrs, Incubus Mechanic, Anemones, Spider Guys, Akbal, Drider, Fetish Zealot, Sand Trap, Very Corrupt Jojo (Maybe slight decorruption to him), Ceraph, Red Kitsune if cock out.
-			if (game.inCombat)
-				SceneLib.combat.cleanupAfterCombatImpl();
+			if (game.inCombat) combat.cleanupAfterCombatImpl();
 			else EngineCore.doNext(SceneLib.camp.returnToCampUseOneHour);
 		}
 	}

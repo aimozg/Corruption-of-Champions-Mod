@@ -302,7 +302,7 @@ import classes.Items.*;
 			player.butt.type = 5;
 			player.teaseLevel = 1;
 			//Large feathered wings (Any chance in heck I could get 'angel' as the race descriptor? Just asking. I'm fine if the answer is 'no')
-			player.wings.type = Wings.FEATHERED_LARGE;
+			player.wings.type = Wings.FEATHERED;
 			player.wings.desc = "large, feathered";
 			
 			//While we're on the subject, would glowing eyes be possible? I'll take normal eyes if not.
@@ -392,8 +392,6 @@ import classes.Items.*;
 			//Perks: Feeder, Strong Back, Strong Back 2
 			player.createStatusEffect(StatusEffects.Feeder,0,0,0,0);
 			player.createPerk(PerkLib.Feeder, 0, 0, 0, 0);
-	
-			player.createPerk(PerkLib.StrongBack, 0, 0, 0, 0);
 
 			//Equipment: 
 			//Weapon: Warhammer
@@ -412,9 +410,7 @@ import classes.Items.*;
 			player.itemSlot1.setItemAndQty(consumables.LACTAID,5);
 			player.itemSlot2.setItemAndQty(consumables.GROPLUS,5);
 			player.itemSlot3.setItemAndQty(consumables.BIMBOLQ,1);
-			player.itemSlot4.unlocked = true;
 			player.itemSlot4.setItemAndQty(armors.BIMBOSK,1);
-			player.itemSlot5.unlocked = true;
 			outputText("You've got large breasts prone to lactation.  You aren't sure WHY you got chosen as a champion, but with your considerable strength, you're sure you'll do a good job protecting Ingnam.");
 		}
 		
@@ -830,7 +826,7 @@ import classes.Items.*;
 			//Tail- Canine
 			player.tailType = Tail.DOG;
 			//Lower body- Canine
-			player.lowerBody = LowerBody.DOG;
+			player.lowerBody = LowerBody.CANINE;
 			//White Fur (if possible)
 			player.hairColor = "white";
 			player.skin.growFur({});
@@ -1044,7 +1040,7 @@ import classes.Items.*;
 			player.wings.desc = "non-existant";
 			//6' 10"" german-shepherd morph, face ears hands feet tail, the whole nine yards
 			player.faceType = Face.DOG;
-			player.lowerBody = LowerBody.DOG;
+			player.lowerBody = LowerBody.CANINE;
 			player.tailType = Tail.DOG;
 			player.ears.type = Ears.DOG;
 			////"	"I'm picturing a tall, feminine German-Shepherd morph, solid white and gorgeous. She has both sets of genitals, with no balls, and a large set of breasts. She wields a large claymore and is dressed in a full chain vest and pants. 
@@ -1346,7 +1342,7 @@ import classes.Items.*;
 			//CoC.instance.monk = 5;
 			
 			// Bimbo Sophie
-			flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00282] = 1;
+			flags[kFLAGS.SOPHIE_BIMBO] = 1;
 			
 			// Isabella
 			flags[kFLAGS.ISABELLA_FOLLOWER_ACCEPTED] = 1;
@@ -1483,7 +1479,7 @@ import classes.Items.*;
 			player.lowerBody = LowerBody.CAT;
 			player.tailType = Tail.CAT;
 			player.createPerk(PerkLib.Incorporeality,0,0,0,0);
-			player.wings.type = Wings.FEATHERED_LARGE;
+			player.wings.type = Wings.FEATHERED;
 			player.arms.type = Arms.HARPY;
 			player.horns.type = Horns.DRACONIC_X2;
 			player.horns.count = 4;
@@ -1533,7 +1529,6 @@ import classes.Items.*;
 			player.createPerk(PerkLib.Fast, 0.25, 0, 0, 0);
 			player.createPerk(PerkLib.Smart, 0.25, 0, 0, 0);
 			player.createPerk(PerkLib.HistoryScholar, 0, 0, 0, 0);
-			player.createPerk(PerkLib.StrongBack,0,0,0,0);
 			player.itemSlot4.unlocked = true;
 			player.itemSlot5.unlocked = true;
 			player.createPerk(PerkLib.HistorySlacker,0,0,0,0);
@@ -1670,7 +1665,6 @@ import classes.Items.*;
 				if (player.teaseLevel < 3) player.teaseLevel = 3; }			
 			
 			// almost compulsive hoarder, start with backpack, chests and racks... never enough storage space
-			if (!player.hasPerk(PerkLib.StrongBack)) { player.createPerk(PerkLib.StrongBack, 0, 0, 0, 0); player.itemSlot4.unlocked = true; player.itemSlot5.unlocked = true; }
 			var i:int = 0;
 			if (player.hasKeyItem("Backpack") < 0) player.createKeyItem("Backpack", 5, 0, 0, 0);			
 			if (player.hasKeyItem("Camp - Chest") < 0) { player.createKeyItem("Camp - Chest", 0, 0, 0, 0); for (i = 0; i < 6; i++) inventory.createStorage(); }			
@@ -1919,7 +1913,7 @@ import classes.Items.*;
 				player.wings.type = Wings.BAT_LIKE_LARGE;
 				player.wings.desc = "large, bat-like";}
 			else if(wings == 1){
-				player.wings.type = Wings.FEATHERED_LARGE;
+				player.wings.type = Wings.FEATHERED;
 				player.wings.desc = "large, feathered";}
 			else if(wings == 2){
 				player.wings.type = Wings.DRACONIC_LARGE;
@@ -1930,7 +1924,7 @@ import classes.Items.*;
 				
 			
 			var arms:Number = rand(100); // if have harpy wings 33% chance to have harpy hands, otherwise 5% to have spider hands
-			if(player.wings.type == Wings.FEATHERED_LARGE && rand(4) == 0)
+			if(player.wings.type == Wings.FEATHERED && rand(4) == 0)
 				player.arms.type = Arms.HARPY;
 			else if(rand(20) == 0)
 				player.arms.type = Arms.SPIDER;

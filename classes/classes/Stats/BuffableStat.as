@@ -21,19 +21,16 @@ public class BuffableStat implements IStat, Jsonable {
 	public static const AGGREGATE_MIN:int  = EnumValue.add(AggregateTypes, 2, 'AGGREGATE_MIN', {short: 'min'});
 	public static const AGGREGATE_PROD:int = EnumValue.add(AggregateTypes, 3, 'AGGREGATE_PROD', {short: 'prod'});
 	
-	private var _name:String;
-	private var _base:Number;
-	private var _aggregate:int;
-	private var _min:Number;
-	private var _max:Number;
-	private var _value:Number;
+	private var _base:Number = 0.0;
+	private var _baseFn:Function = null;
+	private var _aggregate:int = AGGREGATE_SUM;
+	private var _min:Number = -Infinity;
+	private var _max:Number = +Infinity;
+	private var _value:Number = 0.0; // Aggregate of buffs ONLY
 	private var _buffs:/*Buff*/Array = [];
 	
-	public function get name():String {
-		return _name;
-	}
 	public function get base():Number {
-		return _base;
+		return _baseFn ? _baseFn() : _base;
 	}
 	public function get aggregate():int {
 		return _aggregate;
@@ -44,46 +41,55 @@ public class BuffableStat implements IStat, Jsonable {
 	public function get max():Number {
 		return _max;
 	}
-	public function get value():Number {
-		if (_value < _min) return _min;
-		if (_value > _max) return _max;
-		return _value;
-	}
-	
-	/**
-	 * @param options Options object: {
-	 *     aggregate: how to aggregate multiple effects, AGGREGATE_constant or 'sum'/'min'/'max';
-	 *     base: default 0;
-	 *     min: default -Infinity;
-	 *     max: default +Infinity;
-	 * }
-	 * @param saveInto If present, saveInto[this.name] = this
-	 */
-	public function BuffableStat(name:String,
-								 options:*  = null,
-								 saveInto:* = null) {
-		this._name = name;
+	public function redefine(options:Object):void {
 		options    = Utils.extend({
-			aggregate: AGGREGATE_SUM,
-			base     : 0.0,
-			min      : -Infinity,
-			max      : +Infinity
+			aggregate: this.aggregate,
+			base     : this._baseFn || this.base,
+			min      : this.min,
+			max      : this.max
 		}, options);
 		if (options.aggregate is String) {
 			options.aggregate = EnumValue.findByProperty(AggregateTypes, 'short', options.aggregate).value;
 		}
 		if (options.aggregate == AGGREGATE_PROD && options.base == 0.0) options.base = 1.0;
 		this._aggregate = options.aggregate;
-		this._base      = options['base'];
+		var base:* = options['base'];
+		if (base is Function) {
+			this._baseFn = base;
+			this._base = aggregateBase();
+		} else {
+			this._base = base;
+			this._baseFn = null;
+		}
 		this._min       = options['min'];
 		this._max       = options['max'];
-		this._value     = this._base;
-		if (saveInto) saveInto[name] = this;
+		recalculate();
+	}
+	public function get value():Number {
+		var x:Number = aggregateStep(this.base, _value);
+		if (x < min) return min;
+		if (x > max) return max;
+		return x;
+	}
+	
+	/**
+	 * @param options Options object: {
+	 *     aggregate: how to aggregate multiple effects, AGGREGATE_constant or 'sum'/'min'/'max';
+	 *     base: default 0; can be Function ()=>Number
+	 *     min: default -Infinity;
+	 *     max: default +Infinity;
+	 * }
+	 */
+	public function BuffableStat(options:*=null) {
+		redefine(options);
 		
 		if (!(this._aggregate in AggregateTypes)) throw new Error("Invalid aggregate type");
 		// TODO validate other arguments
 	}
 	
+	private function aggregateBase():Number {
+		return _aggregate == AGGREGATE_PROD ? 1 : 0;
+	}
 	private function aggregateStep(accumulator:Number, value:Number):Number {
 		switch (_aggregate) {
 			case AGGREGATE_SUM:
@@ -102,7 +108,7 @@ public class BuffableStat implements IStat, Jsonable {
 		return accumulator;
 	}
 	public function calculate():Number {
-		var value:Number = _base;
+		var value:Number = aggregateBase();
 		for each(var buff:Buff in _buffs) {
 			value = aggregateStep(value, buff.value);
 		}
@@ -177,7 +183,38 @@ public class BuffableStat implements IStat, Jsonable {
 	}
 	public function removeAllBuffs():void {
 		this._buffs = [];
-		this._value = _base;
+		this._value = aggregateBase();
+	}
+	/**
+	 * Advance time-tracking buffs by `ticks` units, unit type is defined by `rate`
+	 * Buffs with their countdown expired are removed
+	 */
+	public function advanceTime(rate:int, ticks:int):void {
+		if (rate == Buff.RATE_PERMANENT) throw "Invalid time unit "+rate;
+		if (ticks < 0) throw "Invalid ticks count "+ticks;
+		if (ticks == 0) return;
+		var changed:Boolean = false;
+		for (var i:int = _buffs.length-1; i>=0; i--) {
+			var buff:Buff = _buffs[i];
+			if (buff.rate == rate) {
+				buff.tick-=ticks;
+				if (buff.tick < 0) {
+					_buffs.splice(i,1);
+					changed = true;
+				}
+			}
+		}
+		if (changed) recalculate();
+	}
+	public function removeCombatRoundTrackingBuffs():void {
+		var changed:Boolean = false;
+		for (var i:int = _buffs.length-1; i>=0; i--) {
+			if (_buffs[i].rate == Buff.RATE_ROUNDS) {
+				_buffs.splice(i,1);
+				changed = true;
+			}
+		}
+		if (changed) recalculate();
 	}
 	
 	public function saveToObject():Object {
@@ -190,7 +227,7 @@ public class BuffableStat implements IStat, Jsonable {
 	}
 	public function loadFromObject(o:Object, ignoreErrors:Boolean):void {
 		removeAllBuffs();
-		var value:Number = _base;
+		var value:Number = aggregateBase();
 		for each(var savedBuff:Object in o.effects) {
 			var buff:Buff = new Buff(this, 0, '', false);
 			buff.loadFromObject(savedBuff, ignoreErrors);

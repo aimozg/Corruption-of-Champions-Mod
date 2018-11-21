@@ -3,8 +3,10 @@ package classes.Scenes.Dungeons.D3
 import classes.BodyParts.Butt;
 import classes.BodyParts.Hips;
 import classes.CockTypesEnum;
+import classes.Creature;
 import classes.PerkLib;
 import classes.Scenes.Areas.Swamp.AbstractSpiderMorph;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
 import classes.Scenes.SceneLib;
 import classes.StatusEffectClass;
 import classes.StatusEffects;
@@ -44,7 +46,6 @@ public class DriderIncubus extends AbstractSpiderMorph
 		}
 
 		private static const VENOM_SPEED_DRAIN_FLAT:int = 30;
-		private static const VENOM_SPEED_DRAIN_MULT:int = 10;
 		
 		override public function defeated(hpVictory:Boolean):void
 		{
@@ -106,6 +107,13 @@ if (this.lust < .65 * this.maxLust() && this.HP < .33 * this.maxHP()) {
 				goblinAI();
 			}
 			
+		}
+		
+		override protected function intercept(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+			if (phase == ActionRoll.Phases.PREPARE && type == ActionRoll.Types.MELEE) {
+				roll.cancel();
+				taintedMindAttackAttempt();
+			}
 		}
 		
 		private function performPhysicalAttack():void
@@ -210,7 +218,7 @@ this.HP -= (this.maxHP() * 0.08);
 			{
 				var sec:StatusEffectClass = player.createOrFindStatusEffect(StatusEffects.DriderIncubusVenom);
 				sec.value1 += 5;
-				amount = VENOM_SPEED_DRAIN_FLAT + VENOM_SPEED_DRAIN_MULT*player.newGamePlusMod();
+				amount = VENOM_SPEED_DRAIN_FLAT;
 				sec.buffHost('str',-amount);
 				player.addStatusValue(StatusEffects.DriderIncubusVenom, 2, amount);
 					
@@ -249,7 +257,7 @@ this.HP -= (this.maxHP() * 0.08);
 						sec = player.createStatusEffect(StatusEffects.DriderIncubusVenom, 5, 0, 0, 0);
 					}
 					
-					amount = VENOM_SPEED_DRAIN_FLAT + VENOM_SPEED_DRAIN_MULT*player.newGamePlusMod();
+					amount = VENOM_SPEED_DRAIN_FLAT;
 					sec.buffHost('str',-amount);
 					player.addStatusValue(StatusEffects.DriderIncubusVenom, 2, amount);
 				}				
@@ -515,7 +523,7 @@ this.HP -= (this.maxHP() * 0.08);
 			outputText("\n\nYou’re forced to drop her as the enraged drider prepares his counterattack. She lands on her feet, surprisingly enough.");
 			outputText("\n\n<i>“Oh, forgive me master! I’ll still get you off - I promise!”</i> The green slut wiggles away from you, trying to get at her master’s loins.");
 			outputText("\n\nWell... maybe she didn’t want free after all. At least she’ll make for a good distraction.");
-            SceneLib.combat.enemyAIImpl();
+            combat.afterPlayerAction();
         }
 	}
 }

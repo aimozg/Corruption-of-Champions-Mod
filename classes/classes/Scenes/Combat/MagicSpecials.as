@@ -232,7 +232,7 @@ package classes.Scenes.Combat {
 			bd.requireFatigue(spellCost(50));
 			bd.disableIf(player.hasStatusEffect(StatusEffects.OniRampage), "You already rampaging!");
 		}
-		if (player.eyes.type == Eyes.GORGON && player.hairType == Hair.GORGON || player.hasPerk(PerkLib.GorgonsEyes)) {
+		if (player.eyes.type == Eyes.SNAKE && player.hairType == Hair.GORGON || player.hasPerk(PerkLib.GorgonsEyes)) {
 			bd = buttons.add("Petrify", petrify).hint("Use your gaze to temporally turn your enemy into a stone. \n");
 			bd.requireFatigue(spellCost(100),true);
 			if (monster is LivingStatue) {
@@ -311,49 +311,49 @@ package classes.Scenes.Combat {
 	//[Abilities]
 	//Whisper
 	public function superWhisperAttack():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		if (monster.short == "pod" || monster.inte == 0) {
 			outputText("You reach for the enemy's mind, but cannot find anything.  You frantically search around, but there is no consciousness as you know it in the room.\n\n");
 			fatigue(1);
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		if (monster is LivingStatue)
 		{
 			outputText("There is nothing inside the golem to whisper to.");
 			fatigue(1);
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		fatigue(10, USEFATG_MAGIC_NOBM);
 		if (handleShell()) {return;}
 		if (monster.hasPerk(PerkLib.Focused)) {
 			if (!monster.plural) outputText(monster.capitalA + monster.short + " is too focused for your whispers to influence!\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//Enemy too strong or multiplesI think you
 		if (player.inte < monster.inte || monster.plural) {
 			outputText("You reach for your enemy's mind, but can't break through.\n");
 			fatigue(10);
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		//[Failure]
 		if (rand(10) == 0) {
 			outputText("As you reach for your enemy's mind, you are distracted and the chorus of voices screams out all at once within your mind. You're forced to hastily silence the voices to protect yourself.");
 			fatigue(10);
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		outputText("You reach for your enemy's mind, watching as its sudden fear petrifies your foe.\n\n");
 		monster.createStatusEffect(StatusEffects.Fear,1,0,0,0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function fenrirFreezingBreath():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(150, USEFATG_MAGIC_NOBM);
 		player.createStatusEffect(StatusEffects.CooldownFreezingBreath,10,0,0,0);
@@ -403,13 +403,13 @@ package classes.Scenes.Combat {
 		{
 			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
 			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-			enemyAI();
+			afterPlayerAction();
 		}
-		else combatRoundOver();
+		else afterMonsterAction();
 	}
 
 	public function yetiFreezingBreath():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(50, USEFATG_MAGIC_NOBM);
 		player.createStatusEffect(StatusEffects.CooldownFreezingBreathYeti,10,0,0,0);
@@ -462,13 +462,13 @@ package classes.Scenes.Combat {
 		{
 			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
 			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-			enemyAI();
+			afterPlayerAction();
 		}
-		else combatRoundOver();
+		else afterMonsterAction();
 	}
 
 	public function singCompellingAria():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		if (player.statusEffectv1(StatusEffects.ChanneledAttack) == 2) {
 			outputText("You end your theme with a powerful finale compelling everyone around adore and love you.");
@@ -512,11 +512,11 @@ package classes.Scenes.Combat {
 			player.createStatusEffect(StatusEffects.ChanneledAttack, 1, 0, 0, 0);
 			player.createStatusEffect(StatusEffects.ChanneledAttackType, 1, 0, 0, 0);
 		}
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function OrgasmicLightningStrike():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		var lust:Number = 5 + rand(player.lib / 5 + player.cor / 10);
 		dynStats("lus", lust, "scale", false);
@@ -551,16 +551,16 @@ package classes.Scenes.Combat {
 
 			switch (player.coatType()) {
 				case Skin.FUR:
-					lustDmgF += (1 + player.newGamePlusMod());
+					lustDmgF += 1;
 					break;
 				case Skin.SCALES:
-					lustDmgF += (2 * (1 + player.newGamePlusMod()));
+					lustDmgF += 2;
 					break;
 				case Skin.CHITIN:
-					lustDmgF += (3 * (1 + player.newGamePlusMod()));
+					lustDmgF += 3;
 					break;
 				case Skin.BARK:
-					lustDmgF += (4 * (1 + player.newGamePlusMod()));
+					lustDmgF += 4;
 					break;
 			}
 
@@ -595,11 +595,11 @@ package classes.Scenes.Combat {
 			player.removeStatusEffect(StatusEffects.ChanneledAttack);
 			player.removeStatusEffect(StatusEffects.ChanneledAttackType);
 		}
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function startOniRampage():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		if (player.statusEffectv1(StatusEffects.ChanneledAttack) == 1) {
 			outputText("A terrifying red aura of power shroud your body as you shout a loud thundering war cry and enter a murderous rampage.");
@@ -609,7 +609,7 @@ package classes.Scenes.Combat {
 			player.removeStatusEffect(StatusEffects.ChanneledAttack);
 			player.removeStatusEffect(StatusEffects.ChanneledAttackType);
 			outputText("\n\n");
-			enemyAI();
+			afterPlayerAction();
 		}
 		else {
 			fatigue(50, USEFATG_MAGIC_NOBM);
@@ -617,12 +617,12 @@ package classes.Scenes.Combat {
 			outputText("That does it! You crouch and lift a leg then another in alternance, stomping the ground as you focus your anger.\n\n");
 			player.createStatusEffect(StatusEffects.ChanneledAttack, 1, 0, 0, 0);
 			player.createStatusEffect(StatusEffects.ChanneledAttackType, 2, 0, 0, 0);
-			enemyAI();
+			afterPlayerAction();
 		}
 	}
 
 	public function phoenixfireBreath():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(40, USEFATG_MAGIC_NOBM);
 		player.createStatusEffect(StatusEffects.CooldownPhoenixFireBreath,5,0,0,0);
@@ -648,7 +648,7 @@ package classes.Scenes.Combat {
 			}
 			damage *= 1.75;
 			doDamage(damage, true, true);
-			combatRoundOver();
+			afterMonsterAction();
 			return;
 		}
 		outputText("Tapping into the power deep within you, you let loose a bellowing roar at your enemy, so forceful that even the environs crumble around " + monster.pronoun2 + ".  " + monster.capitalA + monster.short + " does " + monster.pronoun3 + " best to avoid it, but the wave of force is too fast.");
@@ -714,9 +714,9 @@ package classes.Scenes.Combat {
 		{
 			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
 			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-			enemyAI();
+			afterPlayerAction();
 		}
-		else combatRoundOver();
+		else afterMonsterAction();
 	}
 
 //Attack used:
@@ -724,7 +724,7 @@ package classes.Scenes.Combat {
 	//once a day or something
 	//Effect of attack: Damages and stuns the enemy for the turn you used this attack on, plus 2 more turns. High chance of success.
 	public function dragonfireBreath():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(50, USEFATG_MAGIC_NOBM);
 		player.createStatusEffect(StatusEffects.DragonFireBreathCooldown,0,0,0,0);
@@ -756,7 +756,7 @@ package classes.Scenes.Combat {
 			damage *= 1.75;
 			outputText(" (" + damage + ")");
 			monster.HP -= damage;
-			combatRoundOver();
+			afterMonsterAction();
 			return;
 		}
 		outputText("Tapping into the power deep within you, you let loose a bellowing roar at your enemy, so forceful that even the environs crumble around " + monster.pronoun2 + ".  " + monster.capitalA + monster.short + " does " + monster.pronoun3 + " best to avoid it, but the wave of force is too fast.");
@@ -823,13 +823,13 @@ package classes.Scenes.Combat {
 		{
 			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
 			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-			enemyAI();
+			afterPlayerAction();
 		}
-		else combatRoundOver();
+		else afterMonsterAction();
 	}
 
 	public function dragoniceBreath():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(50, USEFATG_MAGIC_NOBM);
 		player.createStatusEffect(StatusEffects.DragonIceBreathCooldown,0,0,0,0);
@@ -893,13 +893,13 @@ package classes.Scenes.Combat {
 		{
 			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
 			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-			enemyAI();
+			afterPlayerAction();
 		}
-		else combatRoundOver();
+		else afterMonsterAction();
 	}
 
 	public function dragonlightningBreath():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(50, USEFATG_MAGIC_NOBM);
 		player.createStatusEffect(StatusEffects.DragonLightningBreathCooldown,0,0,0,0);
@@ -964,13 +964,13 @@ package classes.Scenes.Combat {
 		{
 			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
 			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-			enemyAI();
+			afterPlayerAction();
 		}
-		else combatRoundOver();
+		else afterMonsterAction();
 	}
 
 	public function dragondarknessBreath():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(50, USEFATG_MAGIC_NOBM);
 		player.createStatusEffect(StatusEffects.DragonDarknessBreathCooldown,0,0,0,0);
@@ -1034,13 +1034,13 @@ package classes.Scenes.Combat {
 		{
 			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
 			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-			enemyAI();
+			afterPlayerAction();
 		}
-		else combatRoundOver();
+		else afterMonsterAction();
 	}
 //* Terrestrial Fire
 	public function fireballuuuuu():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		fatigue(20);
 
@@ -1053,7 +1053,7 @@ package classes.Scenes.Combat {
 			fatigue(10);
 			player.takeMagicDamage(10 + rand(20), true);
 			outputText("\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 
@@ -1084,7 +1084,7 @@ package classes.Scenes.Combat {
 			outputText("Isabella shoulders her shield into the path of the emerald flames.  They burst over the wall of steel, splitting around the impenetrable obstruction and washing out harmlessly to the sides.\n\n");
 			if (SceneLib.isabellaFollowerScene.isabellaAccent()) outputText("\"<i>Is zat all you've got?  It'll take more than a flashy magic trick to beat Izabella!</i>\" taunts the cow-girl.\n\n");
 			else outputText("\"<i>Is that all you've got?  It'll take more than a flashy magic trick to beat Isabella!</i>\" taunts the cow-girl.\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		else if (monster.short == "Vala" && !monster.hasStatusEffect(StatusEffects.Stunned)) {
@@ -1104,7 +1104,7 @@ package classes.Scenes.Combat {
 				//Determine if blocked!
 				if (combatBlock(true)) {
 					outputText("You manage to block your own fire with your [shield]!");
-					combatRoundOver();
+					afterMonsterAction();
 					return;
 				}
 				outputText("Your own fire smacks into your face! <b>(<font color=\"#800000\">" + damage + "</font>)</b>");
@@ -1120,8 +1120,7 @@ package classes.Scenes.Combat {
 			damage = int(player.level * 10 + 45 + rand(10));
 			damage *= 1.75;
 			doDamage(damage, true, true);
-			if(combatIsOver()){return;}
-			enemyAI();
+			afterPlayerAction();
 		}
 		else {
 			//Using fire attacks on the goo]
@@ -1139,8 +1138,7 @@ package classes.Scenes.Combat {
 		}
 		checkAchievementDamage(damage);
 		combat.heroBaneProc(damage);
-		if(combatIsOver()){return;}
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	//player gains hellfire perk.
@@ -1148,9 +1146,9 @@ package classes.Scenes.Combat {
 //lust damage to completely corrupt foes, and a mix for those in between.  Its power is based on the PC's corruption and level.  Appearance is slightly changed to mention that the PC's eyes and mouth occasionally show flicks of fire from within them, text could possibly vary based on corruption.
 	public function hellFire():void {
 		if (monster.cor < 50) {
-			SceneLib.combat.lastAttack = Combat.HPSPELL;
+			combat.lastAttack = Combat.HPSPELL;
 		} else {
-			SceneLib.combat.lastAttack = Combat.LUSTSPELL;
+			combat.lastAttack = Combat.LUSTSPELL;
 		}
 		clearOutput();
 		fatigue(20, USEFATG_MAGIC_NOBM);
@@ -1167,8 +1165,7 @@ package classes.Scenes.Combat {
 			damage = int(player.level * 8 + rand(10) + player.cor / 5);
 			damage *= 1.75;
 			doDamage(damage, true, true);
-			if(combatIsOver()){return;}
-			return enemyAI();
+			return afterPlayerAction();
 		}
 
 		if (!player.hasStatusEffect(StatusEffects.GooArmorSilence)) outputText("You take in a deep breath and unleash a wave of corrupt red flames from deep within.");
@@ -1186,7 +1183,7 @@ package classes.Scenes.Combat {
 			outputText("  Isabella shoulders her shield into the path of the crimson flames.  They burst over the wall of steel, splitting around the impenetrable obstruction and washing out harmlessly to the sides.\n\n");
 			if (SceneLib.isabellaFollowerScene.isabellaAccent()) outputText("\"<i>Is zat all you've got?  It'll take more than a flashy magic trick to beat Izabella!</i>\" taunts the cow-girl.\n\n");
 			else outputText("\"<i>Is that all you've got?  It'll take more than a flashy magic trick to beat Isabella!</i>\" taunts the cow-girl.\n\n");
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		else if (monster.short == "Vala" && !monster.hasStatusEffect(StatusEffects.Stunned)) {
@@ -1229,16 +1226,15 @@ package classes.Scenes.Combat {
 		outputText("\n");
 		combat.heroBaneProc(damage);
 		if (monster.short == "Holli" && !monster.hasStatusEffect(StatusEffects.HolliBurning)) (monster as Holli).lightHolliOnFireMagically();
-		if (combatIsOver()){return;}
-		if (monster is Lethice && (monster as Lethice).fightPhase == 3)
+		if (monster is Lethice && (monster as Lethice).fightPhase == 3 && !combatIsOver())
 		{
 			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
 			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
 		}
-		enemyAI();
+		afterPlayerAction();
 	}
 	public function magicbolt():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 //	fatigue(40, USEFATG_MAGIC);
 		if (monster.hasStatusEffect(StatusEffects.Shell)) {
@@ -1246,7 +1242,7 @@ package classes.Scenes.Combat {
 			flags[kFLAGS.SPELLS_CAST]++;
 			if (!player.hasStatusEffect(StatusEffects.CastedSpell)) player.createStatusEffect(StatusEffects.CastedSpell,0,0,0,0);
 			spellPerkUnlock();
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		outputText("You narrow your eyes, focusing your mind with deadly intent.  ");
@@ -1274,13 +1270,12 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		combat.heroBaneProc(damage);
 		statScreenRefresh();
-		if(combatIsOver()){return;}
-		if (monster is Lethice && (monster as Lethice).fightPhase == 3)
+		if (monster is Lethice && (monster as Lethice).fightPhase == 3 && !combatIsOver())
 		{
 			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
 			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
 		}
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function dwarfrage():void {
@@ -1303,7 +1298,7 @@ package classes.Scenes.Combat {
 		sec.buffHost('tou',tempTouSpe);
 		sec.buffHost('spe',tempTouSpe);
 		statScreenRefresh();
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function berzerk():void {
@@ -1316,7 +1311,7 @@ package classes.Scenes.Combat {
 		}
 		else outputText("You roar and unleash your savage fury, forgetting about defense in order to destroy your foe!\n\n");
 		player.createStatusEffect(StatusEffects.Berzerking,berzerkDuration,0,0,0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function lustzerk():void {
@@ -1329,7 +1324,7 @@ package classes.Scenes.Combat {
 		}
 		else outputText("You roar and unleash your lustful fury, forgetting about defense from any sexual attacks in order to destroy your foe!\n\n");
 		player.createStatusEffect(StatusEffects.Lustzerking,lustzerkDuration,0,0,0);
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function crinosshapeCost():Number {
@@ -1348,13 +1343,13 @@ package classes.Scenes.Combat {
 		sec.buffHost('tou',tempTou);
 		sec.buffHost('spe',tempSpe);
 		statScreenRefresh();
-		enemyAI();
+		afterPlayerAction();
 	}
 	public function returnToNormalShape():void {
 		clearOutput();
 		outputText("Gathering all you willpower you forcefully subduing your inner beast and returning to your normal shape.");
 		player.removeStatusEffect(StatusEffects.CrinosShape);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function EverywhereAndNowhere():void {
@@ -1363,7 +1358,7 @@ package classes.Scenes.Combat {
 		outputText("You smirk as you start to phase in and out of existence. Good luck to whoever going to try and hit you because they will have to try extra hard.\n\n");
 		player.createStatusEffect(StatusEffects.EverywhereAndNowhere,6,0,0,0);
 		player.createStatusEffect(StatusEffects.CooldownEveryAndNowhere,10,0,0,0);
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function maleficium():void {
@@ -1372,12 +1367,12 @@ package classes.Scenes.Combat {
 		var maleficiumDuration:Number = 10;
 		outputText("You laugh malevolently as your body fills with profane powers empowering your spells but making you blush with barely contained desire.\n\n");
 		player.createStatusEffect(StatusEffects.Maleficium,maleficiumDuration,0,0,0);
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function infernalflare():void {
 		clearOutput();
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		doNext(combatMenu);
 		useMana(40,1);
@@ -1386,12 +1381,12 @@ package classes.Scenes.Combat {
 			flags[kFLAGS.SPELLS_CAST]++;
 			if (!player.hasStatusEffect(StatusEffects.CastedSpell)) player.createStatusEffect(StatusEffects.CastedSpell,0,0,0,0);
 			spellPerkUnlock();
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		if (monster is FrostGiant && player.hasStatusEffect(StatusEffects.GiantBoulder)) {
 			(monster as FrostGiant).giantBoulderHit(2);
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		clearOutput();
@@ -1434,19 +1429,12 @@ package classes.Scenes.Combat {
 		monster.HP -= damage;
 		combat.heroBaneProc(damage);
 		statScreenRefresh();
-		if (monster.HP < 1)
+		if (monster is Lethice && (monster as Lethice).fightPhase == 3 && !combatIsOver())
 		{
-			doNext(endHpVictory);
+			outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
+			monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
 		}
-		else
-		{
-			if (monster is Lethice && (monster as Lethice).fightPhase == 3)
-			{
-				outputText("\n\n<i>“Ouch. Such arcane skills for one so uncouth,”</i> Lethice growls. With a snap of her fingers, a pearlescent dome surrounds her. <i>“How will you beat me without your magics?”</i>\n\n");
-				monster.createStatusEffect(StatusEffects.Shell, 2, 0, 0, 0);
-			}
-			enemyAI();
-		}
+		afterPlayerAction();
 	}
 
 	public function petrify():void {
@@ -1464,12 +1452,12 @@ package classes.Scenes.Combat {
 			outputText(" and then casual glance at enemy.  Caught off guard [monster a][monster name] petrify.\n\n");
 			if (!monster.hasStatusEffect(StatusEffects.Stunned)) monster.createStatusEffect(StatusEffects.Stunned, 3, 0, 0, 0);
 		}
-		enemyAI();
+		afterPlayerAction();
 	}
 
 //Corrupted Fox Fire
 	public function corruptedFoxFire():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		var kicost:int = 40 * kiPowerCost();
 		player.ki -= kicost;
@@ -1543,15 +1531,11 @@ package classes.Scenes.Combat {
 		if (!player.hasStatusEffect(StatusEffects.CastedSpell)) player.createStatusEffect(StatusEffects.CastedSpell,0,0,0,0);
 		spellPerkUnlock();
 		combat.heroBaneProc(damage);
-		if (monster.HP > 0 && monster.lust < monster.maxLust()) enemyAI();
-		else {
-			if (monster.HP <= 0) doNext(endHpVictory);
-			if (monster.lust >= monster.maxLust()) doNext(endLustVictory);
-		}
+		afterPlayerAction();
 	}
 //Fused Fox Fire
 	public function fusedFoxFire():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		var kicost:int = 100 * kiPowerCost();
 		player.ki -= kicost;
@@ -1616,15 +1600,11 @@ package classes.Scenes.Combat {
 		if (!player.hasStatusEffect(StatusEffects.CastedSpell)) player.createStatusEffect(StatusEffects.CastedSpell,0,0,0,0);
 		spellPerkUnlock();
 		combat.heroBaneProc(damage);
-		if (monster.HP > 0 && monster.lust < monster.maxLust()) enemyAI();
-		else {
-			if (monster.HP <= 0) doNext(endHpVictory);
-			if (monster.lust >= monster.maxLust()) doNext(endLustVictory);
-		}
+		afterPlayerAction();
 	}
 //Pure Fox Fire
 	public function pureFoxFire():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		var kicost:int = 40 * kiPowerCost();
 		player.ki -= kicost;
@@ -1695,11 +1675,7 @@ package classes.Scenes.Combat {
 		if (!player.hasStatusEffect(StatusEffects.CastedSpell)) player.createStatusEffect(StatusEffects.CastedSpell,0,0,0,0);
 		spellPerkUnlock();
 		combat.heroBaneProc(damage);
-		if (monster.HP > 0 && monster.lust < monster.maxLust()) enemyAI();
-		else {
-			if (monster.HP <= 0) doNext(endHpVictory);
-			if (monster.lust >= monster.maxLust()) doNext(endLustVictory);
-		}
+		afterPlayerAction();
 	}
 
 	public function kitsuneskillCost():Number {
@@ -1718,7 +1694,7 @@ package classes.Scenes.Combat {
 		if (monster.short == "pod" || monster.inte == 0) {
 			outputText("You reach for the enemy's mind, but cannot find anything.  You frantically search around, but there is no consciousness as you know it in the room.\n\n");
 			fatigue(1);
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		var kicost:int = 20 * kiPowerCost();
@@ -1741,7 +1717,7 @@ package classes.Scenes.Combat {
 		//Inflicts fear and reduces enemy SPD.
 		outputText("The world goes dark, an inky shadow blanketing everything in sight as you fill [monster a][monster name]'s mind with visions of otherworldly terror that defy description.  They cower in horror as they succumb to your illusion, believing themselves beset by eldritch horrors beyond their wildest nightmares.\n\n");
 		monster.createStatusEffect(StatusEffects.Fear, 2, 0, 0, 0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 //Illusion
@@ -1751,7 +1727,7 @@ package classes.Scenes.Combat {
 		if (monster.short == "pod" || monster.inte == 0) {
 			outputText("In the tight confines of this pod, there's no use making such an attack!\n\n");
 			fatigue(1);
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		var kicost:int = 20 * kiPowerCost();
@@ -1782,8 +1758,7 @@ package classes.Scenes.Combat {
 			monster.teased(lustDmg);
 		}
 		outputText("\n\n");
-		if(combatIsOver()){return;}
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	//cursed riddle
@@ -1853,8 +1828,7 @@ package classes.Scenes.Combat {
 			else {
 				outputText("\n\nTo your complete frustration, [monster a][monster name] answers correctly.\n\n");
 			}
-			if (combatIsOver()) {return;}
-			enemyAI();
+			afterPlayerAction();
 		}
 
 //Transfer
@@ -1869,8 +1843,7 @@ package classes.Scenes.Combat {
 			monster.lust += lusttransfered;
 		}
 		outputText("\n\n");
-		if (combatIsOver()) {return;}
-		enemyAI();
+		afterPlayerAction();
 	}
 
 //Fascinate
@@ -1880,7 +1853,7 @@ package classes.Scenes.Combat {
 		if (monster.short == "pod" || monster.inte == 0) {
 			outputText("You reach for the enemy's mind, but cannot find anything.  You frantically search around, but there is no consciousness as you know it in the room.\n\n");
 			fatigue(1);
-			enemyAI();
+			afterPlayerAction();
 			return;
 		}
 		fatigue(30, USEFATG_PHYSICAL);
@@ -1897,8 +1870,7 @@ package classes.Scenes.Combat {
 			}
 		}
 		outputText("\n\n");
-		if (combatIsOver()) {return;}
-		enemyAI();
+		afterPlayerAction();
 	}
 
 //Lust strike
@@ -1913,12 +1885,11 @@ package classes.Scenes.Combat {
 			monster.teased(lustDmg);
 			outputText("\n\n");
 		}
-		if (combatIsOver()) {return;}
-		enemyAI();
+		afterPlayerAction();
 	}
 	
 	public function possess():void {
-		SceneLib.combat.lastAttack = Combat.LUSTSPELL;
+		combat.lastAttack = Combat.LUSTSPELL;
 		clearOutput();
 		if(handleStatue("There is nothing to possess inside the golem.")) {return;}
 		if (monster.short == "plain girl" || monster.hasPerk(PerkLib.Incorporeality)) {
@@ -1941,7 +1912,7 @@ package classes.Scenes.Combat {
 		else {
 			outputText("With a smile and a wink, your form becomes completely intangible, and you waste no time in throwing yourself into the opponent's frame. Unfortunately, it seems they were more mentally prepared than you hoped, and you're summarily thrown out of their body before you're even able to have fun with them. Darn, you muse. Gotta get smarter.\n\n");
 		}
-		if (!combatIsOver()) enemyAI();
+		afterPlayerAction();
 	}
 
 //Eclipsing shadow
@@ -1952,7 +1923,7 @@ package classes.Scenes.Combat {
 		player.createStatusEffect(StatusEffects.CooldownEclipsingShadow,20,0,0,0);
 		outputText("You open your wings wide and call upon the power of your tainted blood a pair of black orbs forming at your fingertips. You shatter them on the ground plunging the area in complete darkness and extinguishing all light. While your opponent will be hard pressed to see anything your ability to echolocate allows you to navigate with perfect clarity.");
 		monster.createStatusEffect(StatusEffects.Blind, 10, 0, 0, 0);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 //Sonic scream
@@ -1975,8 +1946,7 @@ package classes.Scenes.Combat {
 		checkAchievementDamage(damage);
 		combat.heroBaneProc(damage);
 		doNext(playerMenu);
-		if (monster.HP <= 0) doNext(endHpVictory);
-		else enemyAI();
+		afterPlayerAction();
 	}
 
 	public function ElementalAspectAir():void {
@@ -1986,7 +1956,7 @@ package classes.Scenes.Combat {
 		duration += player.statusEffectv2(StatusEffects.SummonedElementalsAir);
 		player.createStatusEffect(StatusEffects.WindWall, 0, duration, 0, 0);
 		outputText("You call on your elemental projecting a air wall between you and [monster a][monster name] to deflect incoming projectiles.\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function ElementalAspectEarth():void {
@@ -1996,12 +1966,12 @@ package classes.Scenes.Combat {
 		var duration:Number = player.statusEffectv2(StatusEffects.SummonedElementalsEarth);
 		player.createStatusEffect(StatusEffects.StoneSkin, bonus, duration, 0, 0);
 		outputText("Your elemental lifts stone and dirt from the ground, encasing you in a earthen shell stronger than any armor.\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function ElementalAspectFire():void {
 		clearOutput();
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		player.createStatusEffect(StatusEffects.CooldownEAspectFire, 0, 0, 0, 0);
 		var effectv2:Number = player.statusEffectv2(StatusEffects.SummonedElementalsFire);
 		var damage:Number = scalingBonusIntelligence() + scalingBonusWisdom();
@@ -2009,7 +1979,7 @@ package classes.Scenes.Combat {
 		damage = Math.round(damage);
 		outputText("Your fire elemental douses your opponent with a torrent of fire!");
 		doDamage(damage, true, true);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function ElementalAspectWater():void {
@@ -2022,12 +1992,12 @@ package classes.Scenes.Combat {
 		outputText("Your elemental encases your body within a bubble of curative spring water, slowly closing your wounds. The bubbles pop leaving you wet, but on the way to full recovery. <b>(<font color=\"#008000\">+" + damage + "</font>)</b>");
 		HPChange(damage,false);
 		outputText("\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function ElementalAspectEther():void {
 		clearOutput();
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		player.createStatusEffect(StatusEffects.CooldownEAspectEther, 0, 0, 0, 0);
 		var effectv2:Number = player.statusEffectv2(StatusEffects.SummonedElementalsEther);
 		var damage:Number = scalingBonusIntelligence() + scalingBonusWisdom();
@@ -2035,7 +2005,7 @@ package classes.Scenes.Combat {
 		damage = Math.round(damage);
 		outputText("Your elemental unleash a barrage of star shaped bolts of arcane energy, blasting your opponent!");
 		doDamage(damage, true, true);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function ElementalAspectWood():void {
@@ -2052,7 +2022,7 @@ package classes.Scenes.Combat {
 		outputText("Your elemental temporarily covers your skin with bark, shielding you against strikes. This is the bark of medicinal plants and as such you recover from your injuries. <b>(<font color=\"#008000\">+" + damage + "</font>)</b>");
 		HPChange(damage,false);
 		outputText("\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function ElementalAspectMetal():void {
@@ -2062,12 +2032,12 @@ package classes.Scenes.Combat {
 		var duration:Number = player.statusEffectv2(StatusEffects.SummonedElementalsMetal);
 		player.createStatusEffect(StatusEffects.MetalSkin, bonus, duration, 0, 0);
 		outputText("Your elemental encases your body into a layer of flexible yet solid steel. The metal gives strength to your frame, empowering your unarmed strikes.\n\n");
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function ElementalAspectIce():void {
 		clearOutput();
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		player.createStatusEffect(StatusEffects.CooldownEAspectIce, 0, 0, 0, 0);
 		var effectv2:Number = player.statusEffectv2(StatusEffects.SummonedElementalsIce);
 		var damage:Number = scalingBonusIntelligence() + scalingBonusWisdom();
@@ -2075,12 +2045,12 @@ package classes.Scenes.Combat {
 		damage = Math.round(damage);
 		outputText("Your elemental produces a ray of hyper condensed cold and aims it straight at [monster a][monster name]!");
 		doDamage(damage, true, true);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function ElementalAspectLightning():void {
 		clearOutput();
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		player.createStatusEffect(StatusEffects.CooldownEAspectLightning, 0, 0, 0, 0);
 		var effectv2:Number = player.statusEffectv2(StatusEffects.SummonedElementalsLightning);
 		var damage:Number = scalingBonusIntelligence() + scalingBonusWisdom();
@@ -2088,12 +2058,12 @@ package classes.Scenes.Combat {
 		damage = Math.round(damage);
 		outputText("Your elemental charges electricity, then discharges it with a blinding bolt!");
 		doDamage(damage, true, true);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function ElementalAspectDarkness():void {
 		clearOutput();
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		player.createStatusEffect(StatusEffects.CooldownEAspectDarkness, 0, 0, 0, 0);
 		var effectv2:Number = player.statusEffectv2(StatusEffects.SummonedElementalsDarkness);
 		var damage:Number = scalingBonusIntelligence() + scalingBonusWisdom();
@@ -2101,13 +2071,13 @@ package classes.Scenes.Combat {
 		damage = Math.round(damage);
 		outputText("Your darkness elemental condenses shadows into solid matter, striking your opponent with them!");
 		doDamage(damage, true, true);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	//Arian's stuff
 //Using the Talisman in combat
 	public function immolationSpell():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		outputText("You gather energy in your Talisman and unleash the spell contained within.  A wave of burning flames gathers around [monster a][monster name], slowly burning " + monster.pronoun2 + ".");
 		var damage:int = int(100+(player.inte/2 + rand(player.inte)) * spellMod());
@@ -2117,7 +2087,7 @@ package classes.Scenes.Combat {
 		SceneLib.arianScene.clearTalisman();
 		monster.createStatusEffect(StatusEffects.ImmolationDoT,3,0,0,0);
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function shieldingSpell():void {
@@ -2126,11 +2096,11 @@ package classes.Scenes.Combat {
 		player.createStatusEffect(StatusEffects.Shielding,0,0,0,0);
 		player.removeStatusEffect(StatusEffects.ShieldingSpell);
 		SceneLib.arianScene.clearTalisman();
-		enemyAI();
+		afterPlayerAction();
 	}
 
 	public function iceprisonSpell():void {
-		SceneLib.combat.lastAttack = Combat.HPSPELL;
+		combat.lastAttack = Combat.HPSPELL;
 		clearOutput();
 		outputText("You gather energy in your Talisman and unleash the spell contained within.  A wave of cold air gathers around [monster a][monster name], slowly freezing " + monster.pronoun2 + ".");
 		var damage:int = int(100+(player.inte/2 + rand(player.inte)) * spellMod());
@@ -2141,7 +2111,7 @@ package classes.Scenes.Combat {
 		SceneLib.arianScene.clearTalisman();
 		monster.createStatusEffect(StatusEffects.Stunned,3,0,0,0);
 		combat.heroBaneProc(damage);
-		enemyAI();
+		afterPlayerAction();
 		
 	}
 
@@ -2212,7 +2182,7 @@ package classes.Scenes.Combat {
 		private function handleShell():Boolean {
 			if (monster.hasStatusEffect(StatusEffects.Shell)) {
 				outputText("As soon as your magic touches the multicolored shell around [monster a][monster name], it sizzles and fades to nothing.  Whatever that thing is, it completely blocks your magic!\n\n");
-				enemyAI();
+				afterPlayerAction();
 				return true;
 			}
 			return false;
@@ -2221,7 +2191,7 @@ package classes.Scenes.Combat {
 		private function handleConcentration():Boolean {
 			if (monster.hasStatusEffect(StatusEffects.Concentration)) {
 				outputText("Amily easily glides around your attack thanks to her complete concentration on your movements.");
-				enemyAI();
+				afterPlayerAction();
 				return true;
 			}
 			return false;
@@ -2230,7 +2200,7 @@ package classes.Scenes.Combat {
 		private function handleStatue(text:String):Boolean {
 			if(monster is LivingStatue){
 				outputText(text);
-				enemyAI();
+				afterPlayerAction();
 				return true;
 			}
 			return false;

@@ -4,6 +4,7 @@
 package classes.Stats {
 import classes.Creature;
 import classes.internals.Utils;
+import classes.lists.StatNames;
 
 import coc.script.Eval;
 
@@ -11,32 +12,18 @@ public class StatUtils {
 	public function StatUtils() {
 	}
 	
-	public static function buffByName(host:Creature, stat:String, amount:Number, tag:String, options:*):void {
-		var s:IStat = host.stats[stat];
-		if (s is PrimaryStat) {
-			(s as PrimaryStat).bonus.addOrIncreaseBuff(tag, amount, options);
-		} else if (s is BuffableStat) {
-			(s as BuffableStat).addOrIncreaseBuff(tag, amount, options);
-		} else {
-			trace("/!\\ buffByName(" + stat + ", " + amount + ") in " + tag);
+	/**
+	 * Warning: can cause infinite recursion if called from owner.findStat() unchecked
+	 */
+	public static function findStatByPath(owner:IStatHolder, path:String):IStat {
+		var parts:Array = path.split(/\./);
+		var s:IStat;
+		for (var i:int = 0; i<parts.length; i++) {
+			if (!owner) break;
+			s = owner.findStat(parts[i]);
+			owner = s as IStatHolder;
 		}
-	}
-	
-	public static function applyBuffObject(host:Creature, buffs:Object, tag:String, options:*, evalContext:*):void {
-		
-		for (var statname:String in buffs) {
-			var buff:* = buffs[statname];
-			var value:Number;
-			if (buff is Number) {
-				value = buff;
-			} else if (buff is String) {
-				value = Eval.eval(evalContext, buff);
-			} else {
-				trace("/!\\ applyBuffObject: " + tag + "/" + statname);
-				value = +buff;
-			}
-			StatUtils.buffByName(host, statname, value, tag, options);
-		}
+		return s;
 	}
 	
 	public static function explainBuff(stat:String,value:Number):String {
@@ -64,27 +51,40 @@ public class StatUtils {
 		}
 	}
 	public static const PlainNumberStats:Object = Utils.createMapFromPairs([
-		['str','Strength'],
-		['tou','Toughness'],
-		['spe','Speed'],
-		['int','Intellect'],
-		['wis','Wisdom'],
-		['lib','Libido'],
-		['strBonus','Strength'],
-		['touBonus','Toughness'],
-		['speBonus','Speed'],
-		['intBonus','Intellect'],
-		['wisBonus','Wisdom'],
-		['libBonus','Libido'],
+		[StatNames.STR, 'Strength'],
+		[StatNames.TOU, 'Toughness'],
+		[StatNames.SPE, 'Speed'],
+		[StatNames.INT, 'Intellect'],
+		[StatNames.WIS, 'Wisdom'],
+		[StatNames.LIB, 'Libido'],
+		[StatNames.STR_BONUS, 'Strength'],
+		[StatNames.TOU_BONUS, 'Toughness'],
+		[StatNames.SPE_BONUS, 'Speed'],
+		[StatNames.INT_BONUS, 'Intellect'],
+		[StatNames.WIS_BONUS, 'Wisdom'],
+		[StatNames.LIB_BONUS, 'Libido'],
+		
+		[StatNames.SENS_MIN, 'Min Sensitivity'],
+		[StatNames.SENS_MAX, 'Max Sensitivity'],
+		[StatNames.LUST_MIN, 'Min Lust'],
+		[StatNames.LUST_MAX, 'Max Lust'],
+		[StatNames.HP_MAX, 'Max HP'],
+		[StatNames.STAMINA_MAX, 'Max Stamina'],
+		[StatNames.KI_MAX, 'Max Ki'],
+		
+		[StatNames.DEFENSE, 'Defense'],
+		[StatNames.HP_PER_TOU, 'HP per Toughness'],
+		[StatNames.ATTACK_RATING, 'Attack Rating'],
+		[StatNames.DEFENSE_RATING, 'Defense Rating'],
 	]);
 	public static const PercentageStats:Object = Utils.createMapFromPairs([
-			['strMult','Strength'],
-			['touMult','Toughness'],
-			['speMult','Speed'],
-			['intMult','Intellect'],
-			['wisMult','Wisdom'],
-			['libMult','Libido'],
-			['spellPower','Spellpower']
+		[StatNames.STR_MULT, 'Strength'],
+		[StatNames.TOU_MULT, 'Toughness'],
+		[StatNames.SPE_MULT, 'Speed'],
+		[StatNames.INT_MULT, 'Intellect'],
+		[StatNames.WIS_MULT, 'Wisdom'],
+		[StatNames.LIB_MULT, 'Libido'],
+		[StatNames.SPELLPOWER, 'Spellpower']
 	]);
 }
 }

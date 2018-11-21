@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extend-story name="/" xmlns="xxc-story">
+<extend-story name="/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="story.xsd">
     <!--Areas-->
     <include path="coc/desert.xml"/>
     <include path="coc/forest.xml"/>
-    <extend-zone name="deepwoods">
+    <extend-story name="deepwoods">
         <lib name="strings">
             <text name="walk">
                 You enjoy a peaceful walk in the deepwoods.  It gives you time to think over the recent, disturbing events.
-                <dynStats tou="0.5" int="1"/>
+                <command>BuffOrRecover('tou',5,'deepwoods/walk','Deepwoods walk',36,2)</command>
+                <command>BuffOrRecover('int',10,'deepwoods/walk','Deepwoods walk',36,2)</command>
             </text>
         </lib>
-    </extend-zone>
+    </extend-story>
 
     <!-- Monsters -->
     <include path="coc/monsters/goblin.xml"/>
@@ -18,12 +20,12 @@
     <!-- NPCs -->
     <include path="coc/NPC/celess.xml"/>
     <include path="coc/NPC/samirah.xml"/>
-    <include path="coc/NPC/diva.xml"/>
+    <!--<include path="coc/NPC/diva.xml"/>-->
     <include path="coc/NPC/teladreshops.xml"/>
 
     <!--Other-->
     <include path="coc/appearance.xml"/>
 
     <!-- Modding -->
-    <include path="mod.xml" required="false"/>
+    <include path="modlist.xml" required="false"/>
 </extend-story>

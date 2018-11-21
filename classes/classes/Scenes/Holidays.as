@@ -15,6 +15,8 @@ import classes.Items.ConsumableLib;
 import classes.PerkLib;
 import classes.Player;
 import classes.PregnancyStore;
+import classes.Scenes.API.Encounter;
+import classes.Scenes.API.Encounters;
 import classes.Scenes.NPCs.JojoScene;
 import classes.StatusEffects;
 import classes.VaginaClass;
@@ -626,17 +628,22 @@ public class Holidays {
         return date.date == 1 && date.month == 3;
     }
 
-    public static function poniesYN():Boolean {
+    public static const poniesEncounter:Encounter = Encounters.build({
+        name: "ponies",
+        when: function():Boolean {
+            return player.lowerBody == LowerBody.HOOFED && player.isTaur() && isAprilFools() && flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00118] == 0
+        },
+        chance: Encounters.ALWAYS,
+        call: poniesYN
+    });
+    
+    public static function poniesYN():void {
         // Encounter Chance 1 out of 40 and only if you're a centaur
-        if (player.lowerBody == LowerBody.HOOFED && player.isTaur() && date.date == 1 && date.month == 3 && flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00118] == 0) {
-            EngineCore.clearOutput();
-            EngineCore.outputText("While walking around the lake, you hear the sound of feminine voices laughing and talking, accompanied by the distinctive clip-clop of hooves. Stepping lightly through the overgrowth you stumble across a group of small brightly colored ponies. The strange part about them isn't so much their size, but rather the shape of their bodies.  They almost look cartoonish in nature, a few even sport fluttery, feathery looking wings.\n\n");
-            //(option: Approach? Leave them Be?)
-            EngineCore.simpleChoices("Approach", approachPonies, "", null, "", null, "", null, "Leave", leavePonies);
-            flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00118]++;
-            return true;
-        }
-        return false;
+        EngineCore.clearOutput();
+        EngineCore.outputText("While walking around the lake, you hear the sound of feminine voices laughing and talking, accompanied by the distinctive clip-clop of hooves. Stepping lightly through the overgrowth you stumble across a group of small brightly colored ponies. The strange part about them isn't so much their size, but rather the shape of their bodies.  They almost look cartoonish in nature, a few even sport fluttery, feathery looking wings.\n\n");
+        //(option: Approach? Leave them Be?)
+        EngineCore.simpleChoices("Approach", approachPonies, "", null, "", null, "", null, "Leave", leavePonies);
+        flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00118]++;
 
         //----------Next Page-----------
         function leavePonies():void {
@@ -1905,7 +1912,7 @@ public class Holidays {
         }
         EngineCore.awardAchievement("Naughty or Nice", kACHIEVEMENTS.HOLIDAY_CHRISTMAS_I);
         EngineCore.outputText("You wonder out loud, \"<i>So this... present is mine?</i>\"\n\n");
-        if (player.cor >= 90 || JojoScene.monk >= 5 || player.hasStatusEffect(StatusEffects.Exgartuan) || SceneLib.amilyScene.amilyCorrupt() || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00283] > 0 || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00282] > 0 || flags[kFLAGS.NIAMH_STATUS] > 0) {
+        if (player.cor >= 90 || JojoScene.monk >= 5 || player.hasStatusEffect(StatusEffects.Exgartuan) || SceneLib.amilyScene.amilyCorrupt() || flags[kFLAGS.SOPHIE_DISABLED_FOREVER] > 0 || flags[kFLAGS.SOPHIE_BIMBO] > 0 || flags[kFLAGS.NIAMH_STATUS] > 0) {
             EngineCore.outputText("She nods, bouncing up and down in excitement and flushing slightly, \"<i>Yup, just tear the lid off and get your gift!</i>\"\n\n");
             if (flags[kFLAGS.PC_ENCOUNTERED_CHRISTMAS_ELF_BEFORE] > 0) EngineCore.outputText("Here we go again...\n\n");
             //[Open Present] [Unwrap Elf] [Decline]
@@ -1936,7 +1943,7 @@ public class Holidays {
             CoC.instance.spriteSelect(9);
             EngineCore.clearOutput();
             EngineCore.outputText("You easily rip through the ribbons holding the box together and pull off the top.   You gasp in ");
-            if (player.cor >= 90 || JojoScene.monk >= 5 || player.hasStatusEffect(StatusEffects.Exgartuan) || SceneLib.amilyScene.amilyCorrupt() || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00283] > 0 || flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00282] > 0 || flags[kFLAGS.NIAMH_STATUS] > 0) {
+            if (player.cor >= 90 || JojoScene.monk >= 5 || player.hasStatusEffect(StatusEffects.Exgartuan) || SceneLib.amilyScene.amilyCorrupt() || flags[kFLAGS.SOPHIE_DISABLED_FOREVER] > 0 || flags[kFLAGS.SOPHIE_BIMBO] > 0 || flags[kFLAGS.NIAMH_STATUS] > 0) {
                 //[Bad Present]
                 EngineCore.outputText("shock at the box's contents – a nine inch cock with damn near a dozen buzzing, elliptical devices taped to it.  A pair of coal lumps rattles around underneath it, positioned as if they were the dick's testicles.\n\n"
                         +"Before you can utter a single word of confusion or protest, the elf moans and the cock erupts, spurting a rope of cum into your hair.  The next blast takes you across the nose, then on your lips, then your chin, and finally onto your [allbreasts].  Shocked and dripping, you stand dumbfounded as the elf plants a kiss on your lips, tears off the box, and runs away with her cock flopping and buzzing in time with each step.  There's no way to catch her in this darkness.\n\n"

@@ -112,7 +112,7 @@ public class Phoenix extends Monster
 		{
 			if (pcCameWorms) {
 				outputText("\n\nYour foe doesn't seem disgusted enough to leave...");
-				doNext(SceneLib.combat.endLustLoss);
+				doNext(combat.endLustLoss);
 			} else {
 				SceneLib.highMountains.phoenixScene.loseToPhoenix();
 			}
@@ -158,7 +158,7 @@ public class Phoenix extends Monster
 			this.drop = new ChainedDrop().add(useables.EBONBLO,1/20)
 					.add(weapons.SCIMITR,1/20)
 					.elseDrop(consumables.NOCELIQ);
-			this.wings.type = Wings.FEATHERED_PHOENIX;
+			this.wings.type = Wings.FEATHERED;
 			this.special1 = doubleSlash;
 			this.special2 = phoenixFireBreath;
 			this.special3 = lustBang;

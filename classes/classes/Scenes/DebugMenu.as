@@ -20,15 +20,27 @@ package classes.Scenes
 	import classes.BodyParts.Tail;
 	import classes.BodyParts.Tongue;
 	import classes.BodyParts.Wings;
-	import classes.GlobalFlags.kFLAGS;
-	import classes.Parser.Parser;
+import classes.CoC;
+import classes.GlobalFlags.kFLAGS;
+import classes.Modding.GameMod;
+import classes.Modding.ModMonster;
+import classes.Modding.MonsterPrototype;
+import classes.Parser.Parser;
 	import classes.Scenes.NPCs.JojoScene;
 	import classes.Stats.PrimaryStat;
+	import classes.internals.EnumValue;
+	import classes.lists.Gender;
+
+	import coc.lua.LuaEngine;
 
 	import coc.view.ButtonDataList;
-	import coc.view.Color;
+import coc.view.CoCButton;
+import coc.view.Color;
+import coc.view.MainView;
+import coc.xxc.BoundNode;
+import coc.xxc.NamedNode;
 
-	import flash.events.Event;
+import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.TextEvent;
 	import flash.text.TextFieldType;
@@ -70,10 +82,12 @@ package classes.Scenes
 				addButton(1, "Change Stats", statChangeMenu).hint("Change your core stats.");
 				addButton(2, "Flag Editor", flagEditor).hint("Edit any flag. \n\nCaution: This might screw up your save!");
 				addButton(3, "Reset NPC", resetNPCMenu).hint("Choose a NPC to reset.");
+				addButton(4, "TS Export", tsExport).hint("Export stuff to TypeScript for editor");
 				//addButton(5, "Event Trigger", eventTriggerMenu);
 				//addButton(6, "MeaninglessCorr", toggleMeaninglessCorruption).hint("Toggles the Meaningless Corruption flag. If enabled, all corruption requirements are disabled for scenes.");
 				if (player.isPregnant()) addButton(4, "Abort Preg", abortPregnancy);
 				addButton(5, "DumpEffects", dumpEffectsMenu).hint("Display your status effects");
+				addButton(6, "Lua REPL", luaRepl).hint("Scripting Read-Eval-Print Loop");
 				addButton(7, "HACK STUFFZ", styleHackMenu).hint("H4X0RZ");
 	            addButton(8, "Test Scene", testScene).hint("Select a scene.  Don't use unless you are trying to test something.");
 				addButton(9, "Echo", echo).hint("Paste text into box to have it echo back.");
@@ -92,42 +106,42 @@ package classes.Scenes
 			}
 			doNext(playerMenu);
 		}
+		private function luaRepl():void {
+			clearOutput();
+			mainView.showTestInputPanel();
+			mainView.eventTestInput.text = "Print('Hello ' .. GetName(GetPlayer()))";
+			menu();
+			button(0).show("Exec",luaExec);
+			button(14).show("Back",luaBack);
+			
+			function luaExec():void {
+				clearOutput();
+				try {
+					var r:* = CoC.instance.lua.evalInNamespace('temp', mainView.eventTestInput.text);
+					if (r !== null && r !== undefined) rawOutputText("&gt; " + r);
+				} catch (e:Error) {
+					rawOutputText(e.getStackTrace());
+					CoC.instance.lua.recover();
+				}
+				flushOutputTextToGUI();
+				mainView.showTestInputPanel();
+			}
+			function luaBack():void {
+				CoC.instance.lua.removeNamespace('temp');
+				mainView.hideTestInputPanel();
+				accessDebugMenu();
+			}
+		}
 
 
 		//todo @Oxdeception clean echo function
 		private var mainTextCoords:Object = {};
 		private var mvtf:TextFormat;
 		private function echo():void{
-			var svx:int = mainView.statsView.x;
-			var svy:int = mainView.statsView.y;
-			var svw:int = mainView.statsView.width;
 			mvtf = mainView.mainText.defaultTextFormat;
-			mainTextCoords.x = mainView.mainText.x;
-			mainTextCoords.y = mainView.mainText.y;
 
             clearOutput();
-            mainView.eventTestInput.text = "";
-			mainView.eventTestInput.multiline = true;
-			mainView.eventTestInput.x = mainView.monsterStatsView.x - svw;
-			mainView.eventTestInput.y = mainView.monsterStatsView.y;
-			mainView.eventTestInput.height = mainView.monsterStatsView.height;
-			mainView.eventTestInput.width = mainView.monsterStatsView.width + svw;
-			mainView.eventTestInput.type = TextFieldType.INPUT;
-			mainView.eventTestInput.visible = true;
-			mainView.eventTestInput.selectable = true;
-			mainView.eventTestInput.wordWrap = true;
-
-
-			mainView.mainText.x = svx;
-			mainView.mainText.y = svy;
-			mainView.textBGTan.x = svx;
-			mainView.textBGTan.y = svy;
-			mainView.textBGTranslucent.x = svx;
-			mainView.textBGTranslucent.y = svy;
-			mainView.textBGWhite.x = svx;
-			mainView.textBGWhite.y = svy;
-			mainView.scrollBar.visible = false;
-			mainView.statsView.hide();
+			mainView.showTestInputPanel();
 
             doNext(doecho);
 
@@ -144,63 +158,142 @@ package classes.Scenes
 				mainView.removeEventListener(KeyboardEvent.KEY_DOWN, inputHandler);
 				CoC.instance.stage.addEventListener(KeyboardEvent.KEY_DOWN, CoC.instance.inputManager.KeyHandler);
 				mainView.hideTestInputPanel();
-				mainView.eventTestInput.height = mainView.mainText.height;
-				mainView.eventTestInput.width = mainView.mainText.width;
-
-				svx = mainTextCoords.x;
-				svy = mainTextCoords.y;
-				mainView.mainText.x = svx;
-				mainView.mainText.y = svy;
-				mainView.textBGTan.x = svx;
-				mainView.textBGTan.y = svy;
-				mainView.textBGTranslucent.x = svx;
-				mainView.textBGTranslucent.y = svy;
-				mainView.textBGWhite.x = svx;
-				mainView.textBGWhite.y = svy;
-
-				mainView.scrollBar.visible = true;
 				doNext(accessDebugMenu);
 			}
 		}
 		private var selectedScene:*;
 		private function testScene(selected:*=null):void{
+			function printlink(event:String,display:String=''):void {
+				outputText('<u><a href="event:'+event+'">'+(display||event)+'</a></u>\n');
+			}
+			var node:NamedNode;
 			clearOutput();
-			if(!selected){selected = SceneLib;}
+			if (!selected) {
+				selected = SceneLib;
+			}
 			selectedScene = selected;
 			mainView.mainText.addEventListener(TextEvent.LINK, linkhandler);
-			getFun("variable",selected);
-			getFun("method",selected);
+			if (selected is GameMod) {
+				var mod:GameMod = selected;
+				if (mod.monsterList.length > 0) outputText("<b>MONSTERS</b>\n");
+				for each (var mon:MonsterPrototype in mod.monsterList) {
+					printlink("@monster:" + mon.id, mon.id);
+				}
+				node = mod.story.node;
+				if (keys(node.lib).length>0) {
+					outputText("<b>SCENES</b>\n");
+					for each (inode in node.lib) {
+						if (inode.name) {
+							printlink('@scene:'+inode.name,inode.name);
+						}
+					}
+				}
+			} else if (selected is NamedNode || selected is BoundNode) {
+				node = selected as NamedNode || (selected as BoundNode).node;
+				if (keys(node.lib).length>0) {
+					outputText("<b>SCENE</b>\n");
+					if (node.tagname != "lib") {
+						printlink('this','(Play scene)');
+						outputText('<b>Subscenes</b>\n');
+					}
+					for each (var inode:NamedNode in node.lib) {
+						if (inode.name) {
+							printlink(inode.name);
+						}
+					}
+				} else if (selected is BoundNode) {
+					menu();
+					(selected as BoundNode).execute();
+					if (mainView.firstButtonByVisibility(true) >= 0) return
+				} else {
+					node.execute(context);
+				}
+			} else {
+				if (selected == SceneLib) {
+					printlink("@rootStory","Inspect scenes");
+					var mods:/*GameMod*/Array = CoC.instance.mods;
+					if (mods.length > 0) outputText("<b>MODS</b>\n");
+					for each (mod in mods) {
+						printlink("@mod:"+mod.name,mod.name);
+					}
+				}
+				getFun("variable", selected);
+				getFun("method", selected);
+			}
 			menu();
 			addButton(0,"Back",linkhandler,new TextEvent(TextEvent.LINK,false,false,"-1"));
 			
 			function getFun(type:String, scene:*):void{
-				var funsxml:XML = describeType(scene);
-				var funs:Array = [];
-				for each(var item:XML in funsxml[type]){
-					funs.push(item);
-				}
-				funs.sortOn("@name");
+				var funs:Array = objectMembers(scene, type);
+				funs.sort();
 				if(funs.length > 0){outputText("<b><u>"+type.toUpperCase()+"</u></b>\n");}
 				for each (var fun:* in funs){
-					outputText("<u><a href=\"event:"+fun.@name+"\">"+fun.@name+"</a></u>\n")
+					printlink(fun);
 				}
 			}
 			function linkhandler(e:TextEvent):void{
+				var m:Array;
 				mainView.mainText.removeEventListener(TextEvent.LINK, linkhandler);
 				if(e.text == "-1"){
+					// Special event: go back
 					mainView.mainText.removeEventListener(TextEvent.LINK, linkhandler);
 					if(selectedScene != SceneLib){testScene();}
 					else{accessDebugMenu();}
 					return;
+				} else if (e.text == "@rootStory") {
+					// Special event: inspect rootStory
+					testScene(CoC.instance.rootStory);
+					return;
+				} else if ((m = e.text.match(/^@mod:(.*)$/))) {
+					// Special event: inspect mod
+					testScene(CoC.instance.findMod(m[1]));
+					return;
 				}
-				if(selectedScene[e.text] is Function){
+				// Not a special event, inspect selectedScene[e.text]
+				if (selectedScene is NamedNode || selectedScene is BoundNode) {
+					var bnode:BoundNode = (selectedScene as BoundNode);
+					var node:NamedNode = (selectedScene as NamedNode) || bnode.node;
+					if (e.text == 'this') {
+						clearOutput();
+						menu();
+						if (bnode) {
+							bnode.execute();
+						} else {
+							node.execute(context);
+						}
+						if (mainView.firstButtonByVisibility(true) >= 0) return;
+						flushOutputTextToGUI();
+						addButton(0,"Back",linkhandler,new TextEvent(TextEvent.LINK,false,false,"-1"));
+					} else {
+						if (bnode) {
+							selectedScene = bnode.locate(e.text);
+							testScene(selectedScene);
+						} else {
+							selectedScene = node.locate(e.text);
+							testScene(selectedScene);
+						}
+					}
+				} else if (selectedScene is GameMod) {
+					clearOutput();
+					if ((m = e.text.match(/^@monster:(.*)$/))) {
+						outputText("You will be fighting " + m[1] + "\n");
+						var monster:Monster = (selectedScene as GameMod).spawnMonster(m[1]);
+						startCombat(monster);
+					} else if ((m = e.text.match(/^@scene:(.*)$/))) {
+						selectedScene = (selectedScene as GameMod).story;
+						e.text = m[1];
+						linkhandler(e);
+					} else {
+						outputText("ERROR UNKNOWN URL "+e.text);
+						doNext(accessDebugMenu);
+					}
+				} else if(selectedScene[e.text] is Function){
 					clearOutput();
 					doNext(accessDebugMenu);
 					var selected:Function = selectedScene[e.text];
 					selectedScene = null;
 					selected();
-				}
-				else{
+				} else{
 					selectedScene = selectedScene[e.text];
 					testScene(selectedScene);
 				}
@@ -208,6 +301,42 @@ package classes.Scenes
 			}
 		}
 
+		private function tsExport():void {
+			clearOutput();
+			rawOutputText("/*\n" +
+						  " * Generated by CoC/DebugMenu/TS-Export\n" +
+						  " */\n");
+			
+			var lists:/*Array*/Array = [
+					['AntennaeTypes',Antennae.Types],
+					['ArmTypes',Arms.Types],
+					['BeardTypes',Beard.Types],
+					['ClawTypes',Claws.Types],
+					['EarTypes',Ears.Types],
+					['EyeTypes',Eyes.Types],
+					['FaceTypes',Face.Types],
+					['GenderValues',Gender.Values],
+					['GillTypes',Gills.Types],
+					['HairTypes',Hair.Types],
+					['HornTypes',Horns.Types],
+					['LowerBodyTypes',LowerBody.Types],
+					['RearBodyTypes',RearBody.Types],
+					['SkinPatterns',Skin.Patterns],
+					['SkinTypes',Skin.Types],
+					['TailTypes',Tail.Types],
+					['TongueTypes',Tongue.Types],
+					['WingTypes',Wings.Types]
+			];
+			for each(var list:Array in lists) {
+				rawOutputText("\nenum "+list[0]+" { \n");
+				for each(var enumValue:EnumValue in list[1]) {
+					rawOutputText("\t"+enumValue.id+" = "+enumValue.value+",\n");
+				}
+				rawOutputText("}\n");
+			}
+			menu();
+			addButton(14,"Back",accessDebugMenu);
+		}
 		private function itemSpawnMenu():void {
 			setItemArrays();
 			clearOutput();

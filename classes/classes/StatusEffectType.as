@@ -3,12 +3,15 @@
  */
 package classes
 {
+import classes.Scenes.Combat.CombatAction.ActionRoll;
+
 import flash.utils.Dictionary;
 
 public class StatusEffectType
 {
 	private static var STATUSAFFECT_LIBRARY:Dictionary = new Dictionary();
 	private var arity:int;
+	private var _buffs:Object;
 	
 	public static function lookupStatusEffect(id:String):StatusEffectType{
 		return STATUSAFFECT_LIBRARY[id];
@@ -33,6 +36,67 @@ public class StatusEffectType
 	
 	public function get tagForBuffs():String {
 		return 'status/'+id;
+	}
+	public function get buffs():Object {
+		return _buffs;
+	}
+	private var _rollInterceptors:/*Array*/Array = []; // [phase, type, function(roll, actor, target, effect):void][]
+	private var _rollAlterations:/*Array*/Array = []; // [phase, type, function(roll, actor, target, effect):void][]
+	
+	public function processRoll(effect:StatusEffectClass,roll:ActionRoll):void {
+		if (effect.host == roll.target && _rollInterceptors.length > 0) {
+			for each (var a:Array in _rollInterceptors) {
+				if (a[0] != null && roll.phase != a[0]) continue;
+				if (a[1] != null && roll.type != a[1]) continue;
+				a[2](roll, roll.actor, roll.target, effect);
+			}
+		}
+		if (effect.host == roll.actor && _rollAlterations.length > 0) {
+			for each (a in _rollAlterations) {
+				if (a[0] != null && roll.phase != a[0]) continue;
+				if (a[1] != null && roll.type != a[1]) continue;
+				a[2](roll, roll.actor, roll.target, effect);
+			}
+		}
+	}
+	public function get isRollProcessor():Boolean {
+		return _rollInterceptors.length > 0 || _rollAlterations.length > 0;
+	}
+	
+	private function withRollProcess(target:Array,phase:String,type:String,callback:Function):void {
+		if (phase == "*") phase = null;
+		if (phase != null && !ActionRoll.isValidPhase(phase)) throw "Invalid ActionRoll phase '"+phase+"' in StatusEffect '"+_id+"'";
+		if (type == "*") type = null;
+		if (type != null && !ActionRoll.isValidType(type)) throw "Invalid ActionRoll type '"+type+"' in StatusEffect '"+_id+"'";
+		target.push([phase,type,callback]);
+	}
+	/**
+	 * Host intercepts other's actions when under effect:
+	 * When `actor` performs `roll` onto `target`,
+	 * and `roll.type == type` or `type == null`,
+	 * and `roll.phase == phase` or `phase == null`,
+	 * and `target` is under `effect` of `this` type,
+	 * call `callback(roll:ActionRoll, actor:Creature, target:Creature, effect:StatusEffectClass):void`
+	 */
+	public function withRollInterceptor(phase:String, type:String, callback:Function):StatusEffectType {
+		withRollProcess(_rollInterceptors,phase,type,callback);
+		return this;
+	}
+	/**
+	 * Host's actions are altered when under effect:
+	 * When `actor` performs `roll` onto `target`,
+	 * and `roll.type == type` or `type == null`,
+	 * and `roll.phase == phase` or `phase == null`,
+	 * and `actor` is under `effect` of `this` type,
+	 * call `callback(roll:ActionRoll, actor:Creature, target:Creature, effect:StatusEffectClass):void`
+	 */
+	public function withRollAlteration(phase:String,type:String,callback:Function):StatusEffectType {
+		withRollProcess(_rollAlterations,phase,type,callback);
+		return this;
+	}
+	public function withBuffs(buffs:Object):StatusEffectType {
+		this._buffs = buffs;
+		return this;
 	}
 	
 	/**

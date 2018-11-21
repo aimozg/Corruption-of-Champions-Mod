@@ -134,21 +134,21 @@ package classes.Items.Consumables {
 			changes++;
 		}
 		//Face
-		if (player.ears.type == Ears.LION && player.faceType != Face.MANTICORE && changes < changeLimit && rand(3) == 0) {
+		if (player.ears.type == Ears.LION && player.faceType != Face.SHARPTEETH && changes < changeLimit && rand(3) == 0) {
 			outputText("\n\nY");
 			if (player.faceType != Face.HUMAN) outputText("our face suddenly mold back into it’s former human shape. However you feel your canines changing, elongating into sharp, dagger-like teeth capable of causing severe injuries. Y");
 			outputText("ou feel your canines changing, elongating into sharp, dagger-like teeth capable of causing severe injuries. Funnily, your face remained relatively human even after the change. You feel the need to roar like a lion, to show the world how ferocious you look. <b>Your mouth is now filled with dagger-like canines.</b>");
-			mutations.setFaceType(Face.MANTICORE);
+			mutations.setFaceType(Face.SHARPTEETH);
 			changes++;
 		}
 		//Eyes
-		if (player.faceType == Face.MANTICORE && player.eyes.type != Eyes.MANTICORE && changes < changeLimit && rand(3) == 0) {
+		if (player.faceType == Face.SHARPTEETH && player.eyes.type != Eyes.SLITS && changes < changeLimit && rand(3) == 0) {
 			outputText("\n\nFor a moment your sight shifts as the ambient light suddenly turns extremely bright, almost blinding you. You walk around disoriented for a moment until the luminosity fades back to normal. You run to a puddle of water to check your reflection and quickly notice your pupils have become cat-like. While you do see way better in the dark, your now red iris are extremely intimidating and clearly don't belong on any normal feline. <b>You now have manticore eyes.</b>");
-			mutations.setEyeTypeAndColor(Eyes.MANTICORE, "red");
+			mutations.setEyeTypeAndColor(Eyes.SLITS, "red");
 			changes++;
 		}
 		//Cat tounge
-		if (player.faceType == Face.MANTICORE && player.tongue.type != Tongue.CAT && rand(3) == 0 && changes < changeLimit) {
+		if (player.faceType == Face.SHARPTEETH && player.tongue.type != Tongue.CAT && rand(3) == 0 && changes < changeLimit) {
 			outputText("\n\nYour tongue suddenly feels weird. You try to stick it out to see what’s going on and discover it changed to look similar to the tongue of a cat. At least you will be able to groom yourself properly with <b>your new cat tongue.</b>");
 			mutations.setTongueType(Tongue.CAT);
 			changes++;

@@ -26,7 +26,9 @@ import classes.Scenes.Areas.Forest.Alraune;
 import classes.Scenes.Areas.Ocean.UnderwaterSharkGirl;
 import classes.Scenes.Areas.Ocean.UnderwaterTigersharkGirl;
 	import classes.Scenes.Combat.Combat;
-	import classes.Scenes.Dungeons.DenOfDesire.HeroslayerOmnibus;
+import classes.Scenes.Combat.CombatAction.ActionRoll;
+import classes.Scenes.Combat.CombatMechanics;
+import classes.Scenes.Dungeons.DenOfDesire.HeroslayerOmnibus;
 import classes.Scenes.Dungeons.Factory.OmnibusOverseer;
 import classes.Scenes.Dungeons.Factory.SecretarialSuccubus;
 import classes.Scenes.NPCs.ChiChi;
@@ -146,19 +148,15 @@ import flash.utils.getQualifiedClassName;
 		public function set lowerGarmentName(value:String):void { _lowerGarmentName = value; }
 		public function set lowerGarmentPerk(value:String):void { _lowerGarmentPerk = value; }
 		public function set lowerGarmentValue(value:Number):void { _lowerGarmentValue = value; }
-
-
-
-        public function newGamePlusMod():int {
-            return player.newGamePlusMod();
-        }
+		
+		
 		protected final function outputText(text:String,clear:Boolean=false):void{
 			if (clear) EngineCore.clearOutputTextOnly();
 			EngineCore.outputText(text);
 		}
 		protected final function cleanupAfterCombat():void
 		{
-			SceneLib.combat.cleanupAfterCombatImpl();
+			combat.cleanupAfterCombatImpl();
 		}
 		protected static function showStatDown(a:String):void{
 			CoC.instance.mainView.statsView.showStatDown(a);
@@ -170,13 +168,13 @@ import flash.utils.getQualifiedClassName;
 			EngineCore.doNext(eventNo);
 		}
 		protected final function combatMiss():Boolean {
-			return SceneLib.combat.combatMiss();
+			return combat.combatMiss();
 		}
 		protected final function combatParry():Boolean {
-			return SceneLib.combat.combatParry();
+			return combat.combatParry();
 		}
 		protected final function combatBlock(doFatigue:Boolean = false):Boolean {
-			return SceneLib.combat.combatBlock(doFatigue);
+			return combat.combatBlock(doFatigue);
 		}
 		protected function get consumables():ConsumableLib{
 			return game.consumables;
@@ -221,7 +219,7 @@ import flash.utils.getQualifiedClassName;
 		protected var bonusAscWis:Number = 0;
 		protected var bonusAscLib:Number = 0;
 		protected var bonusAscSen:Number = 0;
-		protected var bonusAscMaxHP:Number = 0;
+		
 		private var _long:String = "<b>You have encountered an unitialized  Please report this as a bug</b>.";
 		public function get long():String
 		{
@@ -229,7 +227,6 @@ import flash.utils.getQualifiedClassName;
 		}
 		public function set long(value:String):void
 		{
-			initsCalled.long = true;
 			_long = value;
 		}
 
@@ -288,44 +285,10 @@ import flash.utils.getQualifiedClassName;
 
 		private var _drop:RandomDrop = new ChainedDrop();
 		public function get drop():RandomDrop { return _drop; }
-		public function set drop(value:RandomDrop):void
-		{
-			_drop = value;
-			initedDrop = true;
-		}
+		public function set drop(value:RandomDrop):void { _drop = value; }
 
 		protected override function maxHP_base():Number {
-			//Base HP
-			var temp:Number = 100 + this.level * 15 + this.bonusHP;
-			temp += (this.tou);
-			if (this.tou >= 21) temp += (this.tou*2);
-			if (this.tou >= 41) temp += (this.tou*3);
-			if (this.tou >= 61) temp += (this.tou*4);
-			if (this.tou >= 81) temp += (this.tou*5);
-			if (this.tou >= 101) temp += (this.tou*6);
-			if (this.tou >= 151) temp += (this.tou*8);
-			if (this.tou >= 201) temp += (this.tou*10);
-			if (this.tou >= 251) temp += (this.tou*12);
-			if (this.tou >= 301) temp += (this.tou*14);
-			if (this.tou >= 351) temp += (this.tou*16);
-			if (this.tou >= 401) temp += (this.tou*18);
-			if (this.tou >= 451) temp += (this.tou*20);
-			if (this.tou >= 501) temp += (this.tou*22);
-			if (this.tou >= 551) temp += (this.tou*24);
-			if (this.tou >= 601) temp += (this.tou*26);
-			if (this.tou >= 651) temp += (this.tou*28);
-			if (this.tou >= 701) temp += (this.tou*30);
-			if (this.tou >= 751) temp += (this.tou*32);
-			if (this.tou >= 801) temp += (this.tou*34);
-			if (this.tou >= 851) temp += (this.tou*36);
-			if (this.tou >= 901) temp += (this.tou*38);
-			if (this.tou >= 951) temp += (this.tou*40);
-			//Apply NG+, NG++, NG+++, etc.
-			temp += this.bonusAscMaxHP * newGamePlusMod();
-			//Apply perks
-			if (hasPerk(PerkLib.Tank)) temp += ((this.tou*3) * (1 + newGamePlusMod()));
-			if (hasPerk(PerkLib.JobGuardian)) temp += 30;
-			return temp;
+			return super.maxHP_base() + bonusHP;
 		}
 		protected override function maxHP_mult():Number {
 			var temp:Number = 1.0;
@@ -357,8 +320,6 @@ import flash.utils.getQualifiedClassName;
 			//Apply perks
 			if (hasPerk(PerkLib.JobCourtesan)) temp += 20;
 			if (hasPerk(PerkLib.JobSeducer)) temp += 10;
-			//Apply NG+, NG++, NG+++, etc.
-			temp += this.bonusLust * newGamePlusMod();
 			temp += this.level * 2;
 			if (this.level >= 24) temp += (this.level - 23) * 3;
 			if (this.level >= 42) temp += (this.level - 42) * 5;
@@ -370,7 +331,7 @@ import flash.utils.getQualifiedClassName;
 		public override function maxFatigue():Number
 		{
 			//Base fatigue
-			var temp:Number = 100 + this.level * 5;
+			var temp:Number = super.maxFatigue() + this.level * 5;
 			//Apply perks
 			if (hasPerk(PerkLib.JobHunter)) temp += 50;
 			if (hasPerk(PerkLib.JobRanger)) temp += 5;
@@ -381,7 +342,7 @@ import flash.utils.getQualifiedClassName;
 		public override function maxKi():Number
 		{
 			//Base ki
-			var temp:Number = 50 + this.bonusKi;
+			var temp:Number = super.maxKi() + this.bonusKi;
 			if (hasPerk(PerkLib.EnemyTrueDemon)) temp = 0;
 			return temp;
 		}
@@ -390,7 +351,7 @@ import flash.utils.getQualifiedClassName;
 		{
 			//Base wrath
 			var temp:Number = 250 + this.bonusWrath;
-			if (hasPerk(PerkLib.PrimalFury)) temp += (10 * (1 + newGamePlusMod()));
+			if (hasPerk(PerkLib.PrimalFury)) temp += 10;
 			if (hasPerk(PerkLib.FeralArmor)) temp += 20;
 			if (hasPerk(PerkLib.JobDervish)) temp += 20;
 			if (hasPerk(PerkLib.JobWarrior)) temp += 10;
@@ -421,15 +382,8 @@ import flash.utils.getQualifiedClassName;
 		 * @return damage not reduced by player stats
 		 */
 		public function eBaseDamage():Number {
-			var damage:Number = 0;
-			damage += str + (scalingBonusStrength() * 0.25);
-			if (str < 10) damage = 10;
-			//weapon bonus
-			if (weaponAttack < 51) damage *= (1 + (weaponAttack * 0.03));
-			else if (weaponAttack >= 51 && weaponAttack < 101) damage *= (2.5 + ((weaponAttack - 50) * 0.025));
-			else if (weaponAttack >= 101 && weaponAttack < 151) damage *= (3.75 + ((weaponAttack - 100) * 0.02));
-			else if (weaponAttack >= 151 && weaponAttack < 201) damage *= (4.75 + ((weaponAttack - 150) * 0.015));
-			else damage *= (5.5 + ((weaponAttack - 200) * 0.01));
+			var damage:Number = CombatMechanics.meleeDamageFormula(str, weaponAttack, Math.random());
+			if (damage < 10) damage = 10;
 			if (hasStatusEffect(StatusEffects.PunishingKick)) damage *= 0.5;
 			//monster exclusive perks bonus
 			if (hasPerk(PerkLib.EnemyBossType)) damage *= 2;
@@ -562,6 +516,7 @@ import flash.utils.getQualifiedClassName;
 
 		public function Monster()
 		{
+			hpMaxStat.redefine({base: 0.0});
 			// trace("Generic Monster Constructor!");
 
 			//// INSTRUCTIONS
@@ -570,10 +525,6 @@ import flash.utils.getQualifiedClassName;
 			//// See existing monsters for examples
 
 			// super(mainClassPtr);
-
-			//// INIITIALIZERS
-			//// If you want to skip something that is REQUIRED, you shoud set corresponding
-			//// this.initedXXX property to true, e.g. this.initedGenitals = true;
 
 			//// 1. Names and plural/singular
 			///*REQUIRED*/ this.a = "a";
@@ -595,7 +546,7 @@ import flash.utils.getQualifiedClassName;
 			//// 2.3. Hermaphrodite
 			//// Just create cocks and vaginas. Last call determines pronouns.
 			//// 2.4. Genderless
-			///*REQUIRED*/ initGenderless(); // this functions removes genitals!
+			////*OPTIONAL*/ initGenderless(); // this functions removes genitals!
 
 			//// Note for 2.: during initialization pronouns are set in:
 			//// * createCock: he/him/his
@@ -743,65 +694,12 @@ import flash.utils.getQualifiedClassName;
 		private var _checkCalled:Boolean = false;
 		public function get checkCalled():Boolean { return _checkCalled; }
 		public var checkError:String = "";
-		public var initsCalled:Object = {
-			a:false,
-			short:false,
-			long:false,
-			genitals:false,
-			breasts:false,
-			tallness:false,
-			str_tou_spe_inte:false,
-			wis_lib_sens_cor:false,
-			drop:false
-		};
+		
 		// MONSTER INITIALIZATION HELPER FUNCTIONS
-		protected function set initedGenitals(value:Boolean):void{
-			initsCalled.genitals = value;
-		}
-		protected function set initedBreasts(value:Boolean):void{
-			initsCalled.breasts = value;
-		}
-		protected function set initedDrop(value:Boolean):void{
-			initsCalled.drop = value;
-		}
-		protected function set initedStrTouSpeInte(value:Boolean):void{
-			initsCalled.str_tou_spe_inte = value;
-		}
-		protected function set initedWisLibSensCor(value:Boolean):void{
-			initsCalled.wis_lib_sens_cor = value;
-		}
 		protected const NO_DROP:WeightedDrop = new WeightedDrop();
-
-		public function isFullyInit():Boolean {
-			for each (var phase:Object in initsCalled) {
-				if (phase is Boolean && phase == false) return false;
-			}
-			return true;
-		}
-		public function missingInits():String{
-			var result:String = "";
-			for (var phase:String in initsCalled){
-				if (initsCalled[phase] is Boolean && initsCalled[phase] == false){
-					if (result == "") result = phase;
-					else result+=", "+phase;
-				}
-			}
-			return result;
-		}
-
-		override public function set a(value:String):void {
-			initsCalled.a = true;
-			super.a = value;
-		}
-
-		override public function set short(value:String):void {
-			initsCalled.short = true;
-			super.short = value;
-		}
-
+		
 		override public function createCock(clength:Number = 5.5, cthickness:Number = 1, ctype:CockTypesEnum = null):Boolean
 		{
-			initedGenitals = true;
 			if (!_checkCalled) {
 				if (plural) {
 					this.pronoun1 = "they";
@@ -819,7 +717,6 @@ import flash.utils.getQualifiedClassName;
 
 		override public function createVagina(virgin:Boolean = true, vaginalWetness:Number = 1, vaginalLooseness:Number = 0):Boolean
 		{
-			initedGenitals = true;
 			if (!_checkCalled) {
 				if (plural) {
 					this.pronoun1 = "they";
@@ -839,7 +736,6 @@ import flash.utils.getQualifiedClassName;
 		{
 			this.cocks = [];
 			this.vaginas = new <VaginaClass>[];
-			initedGenitals = true;
 			if (plural) {
 				this.pronoun1 = "they";
 				this.pronoun2 = "them";
@@ -851,43 +747,32 @@ import flash.utils.getQualifiedClassName;
 			}
 		}
 
-		override public function createBreastRow(size:Number = 0, nipplesPerBreast:Number = 1):Boolean
-		{
-			initedBreasts = true;
-			return super.createBreastRow(size, nipplesPerBreast);
-		}
-
-		override public function set tallness(value:Number):void
-		{
-			initsCalled.tallness = true;
-			super.tallness = value;
-		}
-
 		protected function initStrTouSpeInte(str:Number, tou:Number, spe:Number, inte:Number):void
 		{
+			this.strStat.core.max = Math.max(100,str*2);
 			this.strStat.core.value = str;
+			this.touStat.core.max = Math.max(100,tou*2);
 			this.touStat.core.value = tou;
+			this.speStat.core.max = Math.max(100,spe*2);
 			this.speStat.core.value = spe;
+			this.intStat.core.max = Math.max(100,inte*2);
 			this.intStat.core.value = inte;
-			initedStrTouSpeInte = true;
 		}
 
 		protected function initWisLibSensCor(wis:Number, lib:Number, sens:Number, cor:Number):void
 		{
+			this.wisStat.core.max = Math.max(100,wis*2);
 			this.wisStat.core.value = wis;
+			this.libStat.core.max = Math.max(100,lib*2);
 			this.libStat.core.value = lib;
 			this.sens = sens;
 			this.cor = cor;
-			initedWisLibSensCor = true;
 		}
 
 		override public function validate():String
 		{
 			var error:String = "";
 			// 1. Required fields must be set
-			if (!isFullyInit()) {
-				error += "Missing phases: "+missingInits()+". ";
-			}
 			this.HP = maxHP();
 			this.XP = totalXP();
 			error += super.validate();
@@ -965,6 +850,13 @@ import flash.utils.getQualifiedClassName;
 			}
 			removeStatusEffect(StatusEffects.Attacks);
 		}
+		
+		public function processRoll(roll:ActionRoll):void {
+			if (this == roll.target) intercept(roll,roll.actor,roll.phase,roll.type);
+		}
+		protected function intercept(roll:ActionRoll, actor:Creature, phase:String, type:String):void {
+		
+		}
 
 		/**
 		 * Called no matter of success of the attack
@@ -1012,6 +904,9 @@ import flash.utils.getQualifiedClassName;
 				outputText("<b>(<font color=\"#800000\">" + damage + "</font>)</b>");
 			}
 			else outputText("<b>(<font color=\"#000080\">" + damage + "</font>)</b>");
+			if (CoC_Settings.debugBuild) {
+				outputText(CombatMechanics.debugHitInfo(this,player));
+			}
 		}
 
 		/**
@@ -1039,6 +934,9 @@ import flash.utils.getQualifiedClassName;
 				if (plural) outputText("'");
 				else outputText("'s");
 				outputText(" slow " + weaponVerb + ".\n");
+			}
+			if (CoC_Settings.debugBuild) {
+				outputText(CombatMechanics.debugHitInfo(this,player));
 			}
 		}
 
@@ -1261,7 +1159,7 @@ import flash.utils.getQualifiedClassName;
 		 */
 		public function defeated(hpVictory:Boolean):void
 		{
-			SceneLib.combat.finishCombat();
+			combat.finishCombat();
 		}
 
 		/**
@@ -1300,7 +1198,7 @@ import flash.utils.getQualifiedClassName;
 		public var onPcRunAttempt:Function = null;
 
 		public function genericPcRunDisabled():void {
-			SceneLib.combat.runFail("You can't escape from this fight!");
+			combat.runFail("You can't escape from this fight!");
 		}
 		/**
 		 * Final method to handle hooks before calling overriden method
@@ -1623,7 +1521,7 @@ import flash.utils.getQualifiedClassName;
 				else {
 					var store:Number = maxHP() * (4 + rand(7)) / 100;
 					if (game.player.hasPerk(PerkLib.ThirstForBlood)) store *= 1.5;
-					store = SceneLib.combat.doDamage(store);
+					store = combat.doDamage(store);
 					if (plural) outputText(capitalA + short + " bleed profusely from the jagged wounds your weapon left behind. <b>(<font color=\"#800000\">" + store + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " bleeds profusely from the jagged wounds your weapon left behind. <b>(<font color=\"#800000\">" + store + "</font>)</b>\n\n");
 				}
@@ -1639,7 +1537,7 @@ import flash.utils.getQualifiedClassName;
 				//Deal damage if still wounded.
 				else {
 					var store3:Number = (player.str + player.spe) * 2;
-					store3 = SceneLib.combat.doDamage(store3);
+					store3 = combat.doDamage(store3);
 					if(plural) outputText(capitalA + short + " bleed profusely from the jagged wounds your bite left behind. <b>(<font color=\"#800000\">" + store3 + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " bleeds profusely from the jagged wounds your bite left behind. <b>(<font color=\"#800000\">" + store3 + "</font>)</b>\n\n");
 				}
@@ -1658,7 +1556,7 @@ import flash.utils.getQualifiedClassName;
 				//Deal damage if still wounded.
 				else {
 					var store5:Number = (player.str + player.spe) * 2;
-					store5 = SceneLib.combat.doDamage(store5);
+					store5 = combat.doDamage(store5);
 					if (plural) {
 						outputText(capitalA + short + " bleed profusely from the jagged ");
 						if (player.horns.type == Horns.COW_MINOTAUR) outputText("wounds your horns");
@@ -1775,7 +1673,7 @@ import flash.utils.getQualifiedClassName;
 				//Deal damage if still wounded.
 				else {
 					var store2:Number = int(50+(player.inte/10));
-					store2 = SceneLib.combat.doDamage(store2);
+					store2 = combat.doDamage(store2);
 					if(plural) outputText(capitalA + short + " burn from lingering immolination after-effect. <b>(<font color=\"#800000\">" + store2 + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " burns from lingering immolination after-effect. <b>(<font color=\"#800000\">" + store2 + "</font>)</b>\n\n");
 				}
@@ -1792,7 +1690,7 @@ import flash.utils.getQualifiedClassName;
 				//Deal damage if still wounded.
 				else {
 					var store4:Number = (player.str + player.spe) * 2.5;
-					store4 = SceneLib.combat.doDamage(store4);
+					store4 = combat.doDamage(store4);
 					if(plural) outputText(capitalA + short + " burn from lingering Burn after-effect. <b>(<font color=\"#800000\">" + store4 + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " burns from lingering Burn after-effect. <b>(<font color=\"#800000\">" + store4 + "</font>)</b>\n\n");
 				}
@@ -1809,7 +1707,7 @@ import flash.utils.getQualifiedClassName;
 				//Deal damage if still wounded.
 				else {
 					var store6:Number = (player.spe + player.inte) * player.kiPowerMod() * 0.5;
-					store6 = SceneLib.combat.doDamage(store6);
+					store6 = combat.doDamage(store6);
 					if(plural) outputText(capitalA + short + " burn from lingering Fire Punch after-effect. <b>(<font color=\"#800000\">" + store6 + "</font>)</b>\n\n");
 					else outputText(capitalA + short + " burns from lingering Fire Punch after-effect. <b>(<font color=\"#800000\">" + store6 + "</font>)</b>\n\n");
 				}
@@ -1819,7 +1717,7 @@ import flash.utils.getQualifiedClassName;
 			     || hasPerk(PerkLib.MonsterRegeneration) || hasStatusEffect(StatusEffects.MonsterRegen) || hasStatusEffect(StatusEffects.MonsterRegen2)) && (this.HP < maxHP()) && (this.HP > 0)) {
 				var healingPercent:Number = 0;
 				var temp2:Number = 0;
-				if (hasPerk(PerkLib.Regeneration)) healingPercent += (0.5 * (1 + newGamePlusMod()));
+				if (hasPerk(PerkLib.Regeneration)) healingPercent += 0.5;
 				if (hasPerk(PerkLib.LizanRegeneration)) healingPercent += 1.5;
 				if (hasPerk(PerkLib.LizanMarrow)) healingPercent += 0.5;
 				if (hasPerk(PerkLib.LizanMarrowEvolved)) healingPercent += 0.5;
@@ -1875,7 +1773,7 @@ import flash.utils.getQualifiedClassName;
 				nagaVenom.buffHost('str',-nagaVenom.value1);
 				nagaVenom.buffHost('spe',-nagaVenom.value1);
 				if (nagaVenom.value3 >= 1) lust += nagaVenom.value3;
-				if (SceneLib.combat.combatIsOver()) {
+				if (combat.combatIsOver()) {
 					return;
 				}
 			}
@@ -1912,7 +1810,6 @@ import flash.utils.getQualifiedClassName;
 		}
 
 		public function endRoundChecks():Function {
-			var combat:Combat = SceneLib.combat;
 			if(HP < 1) {return curry(doNext, combat.endHpVictory);}
 			if(lust >= maxLust()) {return curry(doNext, combat.endLustVictory);}
 			return null;
@@ -1987,35 +1884,6 @@ import flash.utils.getQualifiedClassName;
 			return 8; //This allows different monsters to delay the player by different amounts of time after a combat loss. Normal loss causes an eight hour blackout
 		}
 		public function prepareForCombat():void {
-			var mod:int = newGamePlusMod();
-			var bonusStatsAmp:Number = 0.2;
-			if (level > 25) bonusStatsAmp += 0.1*((int)(level-1)/25);
-			bonusStatsAmp *= mod;
-			var bonusAscStr:int = Math.round(bonusStatsAmp * str);
-			var bonusAscTou:int = Math.round(bonusStatsAmp * tou);
-			var bonusAscSpe:int = Math.round(bonusStatsAmp * spe);
-			var bonusAscInt:int = Math.round(bonusStatsAmp * inte);
-			var bonusAscWis:int = Math.round(bonusStatsAmp * wis);
-			var bonusAscLib:int = Math.round(bonusStatsAmp * lib);
-			var bonusAscSen:int = Math.round(bonusStatsAmp * sens);
-			this.strStat.core.value += bonusAscStr;
-			this.touStat.core.value += bonusAscTou;
-			this.speStat.core.value += bonusAscSpe;
-			this.intStat.core.value += bonusAscInt;
-			this.wisStat.core.value += bonusAscWis;
-			this.libStat.core.value += bonusAscLib;
-			this.sens += bonusAscSen;
-			bonusAscMaxHP += bonusAscStr + bonusAscTou + bonusAscSpe + bonusAscInt + bonusAscWis + bonusAscLib + bonusAscSen;
-			if (level > 10) {
-				bonusAscMaxHP *= (int)(level / 10 + 1);
-			}
-			weaponAttack += (1 + (int)(weaponAttack / 5)) * mod;
-			if (weaponRangeAttack > 0) {
-				weaponRangeAttack += (1 + (int)(weaponRangeAttack / 5)) * mod;
-			}
-			armorDef += ((int)(1 + armorDef / 10)) * mod;
-
-			lustVuln *= 1 - (Math.min(mod, 4)/10);
 
 			HP = maxHP();
 			mana = maxMana();

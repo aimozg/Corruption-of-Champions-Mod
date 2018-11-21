@@ -21,8 +21,9 @@ package classes.Scenes.NPCs
 import classes.PerkClass;
 import classes.Scenes.SceneLib;
 	import classes.Items.MutationsHelper;
-	
-	public class LunaFollower extends NPCAwareContent
+import classes.lists.StatNames;
+
+public class LunaFollower extends NPCAwareContent
 	{
 		public var mutations:MutationsHelper = new MutationsHelper();
 		
@@ -237,13 +238,13 @@ import classes.Scenes.SceneLib;
 			outputText("Fur begins to grow on various point of your body, namely your arms and legs. Your nails sharpen and curve, turning into a full set of claws as your hands and feet reshape into 5 digit paws. You groan in pleasure, revealing your forming canines as your spine extends into a furry tail while your ears migrate to the top of your head, covering in fur and changing into triangular points like those of a wolf. You pant in pleasure at the change, revealing a moist dog like tongue");
 			if (player.hasCock()) outputText(" as you feel a tightness near the base of your cock where your skin seems to be bunching up. A canine-looking sheath begins forming around your cock’s base, tightening and pulling your penis inside its depths. A hot feeling envelops your member as it surges out and starts throbbing, the crown now a point. The sensations are too much for you.  You throw back your head and howl as the transformation completes, your pointed shaft erupting with intense force");
 			outputText(".\n\n");
-			player.lowerBody = LowerBody.WOLF;
+			player.lowerBody = LowerBody.CANINE;
 			if (player.legCount != 2) player.legCount = 2;
 			player.tailType = Tail.WOLF;
 			if (player.tailCount != 1) player.tailCount = 1;
 			player.rearBody.type = RearBody.WOLF_COLLAR;
 			player.arms.type = Arms.WOLF;
-			player.faceType = Face.WOLF_FANGS;
+			player.faceType = Face.SHARPTEETH;
 			player.ears.type = Ears.WOLF;
 			player.eyes.type = Eyes.FERAL;
 			player.tongue.type = Tongue.DOG;
@@ -273,9 +274,10 @@ import classes.Scenes.SceneLib;
 			if (flags[kFLAGS.LUNA_MOON_CYCLE] == 1 || flags[kFLAGS.LUNA_MOON_CYCLE] == 7) bonusStats += 30;
 			if (flags[kFLAGS.LUNA_MOON_CYCLE] == 8) bonusStats += 40;
 			var perk:PerkClass = player.createPerk(PerkLib.Lycanthropy,bonusStats,0,0,0);
-			perk.buffHost('str', bonusStats * player.newGamePlusMod());
-			perk.buffHost('tou', bonusStats * player.newGamePlusMod());
-			player.dynStats("spe", (bonusStats * player.newGamePlusMod()), "cor", 20);
+			perk.buffHost(StatNames.STR_MULT, bonusStats/100);
+			perk.buffHost(StatNames.TOU_MULT, bonusStats/100);
+			perk.buffHost(StatNames.SPE_MULT, bonusStats/100);
+			player.dynStats("cor", 20);
 			statScreenRefresh();
 			outputText("Barely satiated your eyes now focus back on Luna, lust overwhelming your cursed body. You must have her... NOW!\n\n");
 			doNext(sexMenuDominateHer);
@@ -367,7 +369,7 @@ import classes.Scenes.SceneLib;
 				addButton(0, "Yes", sexMenuMain);
 				addButton(1, "No", nurseLunaEnd);
 			}
-			else doNext(camp.returnToCampUseFourHours);
+			else doNext(camp.returnToCampUseOneHour);
 		}
 		public function nurseLunaEnd():void {
 			outputText("You decide to leave her hanging. If she wants you to fuck her, she will have to do better than that. She’s a little frustrated by your lack of an erotic response, but does not comment on it.");
@@ -522,13 +524,13 @@ import classes.Scenes.SceneLib;
 			outputText("Fur begins to grow on various point of your body, namely your arms and legs. Your nails sharpen and curve, turning into a full set of claws as your hands and feet reshape into 5 digit paws. You groan in pleasure, revealing your forming canines as your spine extends into a furry tail while your ears migrate to the top of your head, covering in fur and changing into triangular points like those of a wolf. You pant in pleasure at the change, revealing a moist dog like tongue");
 			if (player.hasCock()) outputText(" as you feel a tightness near the base of your cock where your skin seems to be bunching up. A canine-looking sheath begins forming around your cock’s base, tightening and pulling your penis inside its depths. A hot feeling envelops your member as it surges out and starts throbbing, the crown now a point. The sensations are too much for you.  You throw back your head and howl to the moon as the transformation completes, your pointed shaft erupting with intense force");
 			outputText(".\n\n");
-			player.lowerBody = LowerBody.WOLF;
+			player.lowerBody = LowerBody.CANINE;
 			if (player.legCount != 2) player.legCount = 2;
 			player.tailType = Tail.WOLF;
 			if (player.tailCount != 1) player.tailCount = 1;
 			player.rearBody.type = RearBody.WOLF_COLLAR;
 			player.arms.type = Arms.WOLF;
-			player.faceType = Face.WOLF_FANGS;
+			player.faceType = Face.SHARPTEETH;
 			player.ears.type = Ears.WOLF;
 			player.eyes.type = Eyes.FERAL;
 			player.tongue.type = Tongue.DOG;
@@ -553,9 +555,10 @@ import classes.Scenes.SceneLib;
 				}
 			}
 			var perk:PerkClass = player.createPerk(PerkLib.Lycanthropy,40,0,0,0);
-			perk.buffHost('str', 40 * player.newGamePlusMod());
-			perk.buffHost('tou', 40 * player.newGamePlusMod());
-			player.dynStats("spe", (40 * player.newGamePlusMod()), "cor", 20);
+			perk.buffHost(StatNames.STR_MULT, 0.4);
+			perk.buffHost(StatNames.TOU_MULT, 0.4);
+			perk.buffHost(StatNames.SPE_MULT, 0.4);
+			player.dynStats("cor", 20);
 			statScreenRefresh();
 			outputText("Barely satiated your eyes now focus back on Luna, lust overwhelming your cursed body. You must have her... NOW!\n\n");
 			monster.createPerk(PerkLib.NoGemsLost, 0, 0, 0, 0);
