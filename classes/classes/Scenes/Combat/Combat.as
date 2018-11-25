@@ -2261,7 +2261,7 @@ private function combatStatusesUpdate():void {
 		[StatusEffects.BarkSkin, 2, -1, "<b>Bark Skin effect wore off!</b>\n\n", ""],
 		[StatusEffects.MetalSkin, 2, -1, "<b>Metal Skin effect wore off!</b>\n\n", ""],
 		[StatusEffects.HurricaneDance, 1, -1, "<b>Hurricane Dance effect wore off!</b>\n\n", ""],
-		[StatusEffects.CooldownEclipsingShadow, 1, -1, ""],
+		[StatusEffects.CooldownEclipsingShadow, 1, -1, "", ""],
 		[StatusEffects.CooldownSonicScream, 1, -1, "", ""],
 		[StatusEffects.CooldownTornadoStrike, 1, -1, "", ""],
 		[StatusEffects.SecondWindRegen, 2, -1, "", ""],
