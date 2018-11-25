@@ -6,6 +6,7 @@ package classes.Scenes.Monsters
 import classes.*;
 import classes.BodyParts.Tail;
 import classes.GlobalFlags.kFLAGS;
+import classes.Modding.GameMod;
 import classes.Scenes.NPCs.JojoScene;
 
 import coc.xxc.BoundNode;
@@ -16,10 +17,11 @@ public class GoblinScene extends BaseContent
 		public function GoblinScene()
 		{
 		}
-		private var story:BoundNode;
-		protected override function init():void {
-            story = CoC.instance.rootStory.locate("monsters").addLib("goblin").bind(CoC.instance.context);
-        }
+		private var _mod:GameMod;
+		private function get mod():GameMod {
+			if (_mod == null) _mod = CoC.instance.findMod("goblin");
+			return _mod
+		}
 
 		/*Goblins
 		 Gender: Female
@@ -209,7 +211,7 @@ public class GoblinScene extends BaseContent
 		{
 			spriteSelect(24);
 			clearOutput();
-			story.display("strings/defeated/intro");
+			mod.display("defeated/intro");
 			var buttseks:Function =null;
 			var feeder:Function =null;
 			var fitsFuck:Function =null;
@@ -249,15 +251,15 @@ public class GoblinScene extends BaseContent
 			}
 			if (player.lust >= 33 && player.gender > 0 && (fitsFuck != null || cuntFuck != null || tooBig != null ||
 					corruptTooBig != null || buttseks != null || feeder != null || spiderCondom != null || eggs != null) && flags[kFLAGS.SFW_MODE] <= 0) {
-				story.display("strings/defeated/prompt-sex");
+				mod.display("defeated/prompt-sex");
 				choices("Dick Fuck", fitsFuck, "DickTooBig", tooBig, "CorruptDick", corruptTooBig, "Dick In Ass", buttseks, "Jog Fuck", jog, "Breastfeed", feeder, "Web Condom", spiderCondom, "Pussies", cuntFuck, "Lay Eggs", eggs, "Leave", cleanupAfterCombat);
 				if (player.hasItem(useables.CONDOM) && player.cockThatFits(monster.vaginalCapacity()) >= 0) {
 					addButton(6, "Use Condom", goblinCondomed, 1);
 				}
 			}
 			else if (feeder!=null || eggs!=null) {
-				if (feeder!=null) story.display("strings/defeated/prompt-feed");
-				else story.display("strings/defeated/prompt-eggs");
+				if (feeder!=null) mod.display("defeated/prompt-feed");
+				else mod.display("defeated/prompt-eggs");
 				simpleChoices("Feed", feeder, "Lay Eggs", eggs, "", null, "", null, "Leave", cleanupAfterCombat);
 			}
 			else {
@@ -267,7 +269,7 @@ public class GoblinScene extends BaseContent
 		}
 		private function giveGoblinAMilkMustache():void {
 			clearOutput();
-			story.display("strings/Breastfeed");
+			mod.display("Breastfeed");
 			//You've now been milked, reset the timer for that
 			player.addStatusValue(StatusEffects.Feeder,1,1);
 			player.changeStatusValue(StatusEffects.Feeder,2,0);
@@ -280,7 +282,7 @@ public class GoblinScene extends BaseContent
 			if (x < 0) x = 0;
 			clearOutput();
 			outputText(images.showImage("goblin-win-male-buttsex"));
-			story.display("strings/RapeAnal",{$x:x});
+			mod.display("RapeAnal",{$x:x});
 			cleanupAfterCombat();
 			player.orgasm();
 		}
@@ -292,20 +294,20 @@ public class GoblinScene extends BaseContent
 			clearOutput();
 			if (player.isTaur()) {
 				outputText(images.showImage("goblin-win-female-taur-rapedfem"));
-				story.display("strings/RapeFemTaur");
+				mod.display("RapeFemTaur");
 				cleanupAfterCombat();
 				player.orgasm();
 			}
 			//Goblin victory rape, female naga:
 			else if (player.isNaga()) {
 				outputText(images.showImage("goblin-win-female-naga-rapedfem"));
-				story.display("strings/RapeFemNaga");
+				mod.display("RapeFemNaga");
 				cleanupAfterCombat();
 				player.orgasm();
 			}
 			else {
 				outputText(images.showImage("goblin-win-female-rapedfem"));
-				story.display("strings/RapeFem");
+				mod.display("RapeFem");
 				cleanupAfterCombat();
 				player.orgasm();
 			}
@@ -318,7 +320,7 @@ public class GoblinScene extends BaseContent
 			clearOutput();
 			spriteSelect(24);
 			outputText(images.showImage("goblin-win-male-corruptedfuck"));
-			story.display("strings/CorruptDick");
+			mod.display("CorruptDick");
 			player.orgasm();
 			dynStats("cor", 1);
 			cleanupAfterCombat();
@@ -330,7 +332,7 @@ public class GoblinScene extends BaseContent
 			clearOutput();
 			spriteSelect(24);
 			outputText(images.showImage("goblin-win-male-corruptedbj"));
-			story.display("strings/DickTooBig");
+			mod.display("DickTooBig");
 			player.orgasm();
 			cleanupAfterCombat();
 		}
@@ -343,7 +345,7 @@ public class GoblinScene extends BaseContent
 			if (x < 0) x = player.biggestCockIndex();
 			clearOutput();
 			outputText(images.showImage("goblin-win-male-getridden"));
-			story.display("strings/RapeJog");
+			mod.display("RapeJog");
 			cleanupAfterCombat();
 			player.orgasm();
 		}

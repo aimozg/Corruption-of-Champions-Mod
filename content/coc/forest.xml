@@ -33,7 +33,7 @@
                         </switch>
 						<command>BuffOrRecover('tou',5,'forest/walk','Forest walk',36,2)</command>
 						<command>BuffOrRecover('lib',5,'forest/walk','Forest walk',36,2)</command>
-						<command>ModRawStat('lust',15,false)</command>
+						<command>ModRawStat(player,'lust',15,false)</command>
                     </else>
                 </if>
             </text>

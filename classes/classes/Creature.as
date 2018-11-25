@@ -1565,7 +1565,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			return breastRows.concat().sortOn("breastRating", Array.NUMERIC | Array.DESCENDING)[0].breastRating;
 		}
 
-		public function cockArea(i_cockIndex:uint):Number {
+		public function cockArea(i_cockIndex:uint=0):Number {
 			if (i_cockIndex >= cocks.length) {
 				return 0;
 			}

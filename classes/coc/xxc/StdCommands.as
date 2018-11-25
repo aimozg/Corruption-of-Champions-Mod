@@ -7,6 +7,7 @@ import classes.Character;
 import classes.CoC;
 import classes.Creature;
 import classes.Player;
+import classes.display.SpriteDb;
 
 public class StdCommands {
 	/* *****
@@ -50,7 +51,7 @@ public class StdCommands {
 				creature.dynStats(statname,value,'scaled',!unscaled);
 				break;
 			default:
-				trace("[WARN] ModRawStat "+statname)
+				warn("ModRawStat",statname)
 		}
 	}
 	/* *****
@@ -69,6 +70,19 @@ public class StdCommands {
 		if (creature is Player) {
 			(creature as Player).orgasm(type);
 		}
+	}
+	/* ****
+	   misc
+	   **** */
+	public function ShowSprite(fieldname:String):void {
+		if (fieldname in SpriteDb) {
+			CoC.instance.spriteSelect(SpriteDb[fieldname]);
+		} else {
+			warn("ShowSprite",fieldname);
+		}
+	}
+	private static function warn(where:String,...what:Array):void {
+		trace("[WARN] "+where+' '+what.join(' '));
 	}
 	public function StdCommands() {
 	}

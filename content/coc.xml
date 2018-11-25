@@ -4,6 +4,7 @@
     <!--Areas-->
     <include path="coc/desert.xml"/>
     <include path="coc/forest.xml"/>
+    <include path="coc/mountain.xml"/>
     <extend-story name="deepwoods">
         <lib name="strings">
             <text name="walk">

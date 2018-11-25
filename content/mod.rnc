@@ -37,7 +37,7 @@ lib = element lib {
 }
 Text = element text {
     attribute name { text },
-    content*
+    (content|storynode)*
 }
 scene = element scene {
     attribute name { text }
@@ -287,7 +287,10 @@ comment = element comment { text }
 array-content-expression = text
 if = element if {
     attribute test { expression },
-    (if-big | if-short)
+    # (if-big | if-short)
+    content*,
+    elseif*,
+    else?
 }
 if-big = (
     content*,

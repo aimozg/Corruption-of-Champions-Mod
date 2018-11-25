@@ -23,7 +23,7 @@ public class StoryContext extends ExecContext{
 		return _recording;
 	}
 	public function output(content:String):void {
-		debug(this,'print');
+		debug('','print');
 		if (_recording) {
 			outputBuffer += content;
 		} else {

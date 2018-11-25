@@ -20,8 +20,10 @@ public class ErlKingScene extends BaseContent
 
 		}
 		
+		private var _mod:GameMod;
 		private function get mod():GameMod {
-			return CoC.instance.findMod("erlking");
+			if (_mod == null) _mod = CoC.instance.findMod("erlking");
+			return _mod
 		}
 		public function encounterWildHunt():void
 		{

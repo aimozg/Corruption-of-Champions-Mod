@@ -2,6 +2,7 @@
  * Coded by aimozg on 06.07.2018.
  */
 package classes.Modding {
+import classes.Scenes.Areas.Mountain.HellHound;
 import classes.Scenes.Monsters.Goblin;
 import classes.Scenes.Monsters.Imp;
 import classes.internals.Utils;
@@ -10,6 +11,7 @@ public class MonsterLib extends Utils {
 	
 	public var goblin:Function = curryConstructor(Goblin);
 	public var imp:Function = curryConstructor(Imp);
+	public var hellhound:Function = curryConstructor(HellHound);
 	
 	public function MonsterLib() {
 	}
