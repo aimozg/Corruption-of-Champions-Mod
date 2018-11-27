@@ -26,8 +26,18 @@ public class StatUtils {
 		return s;
 	}
 	
+	/**
+	 * Returns string like "Strength +10" or "Spell Power -50%"
+	 */
 	public static function explainBuff(stat:String,value:Number):String {
-		var signum:String  = (value < 0 ? '' : '+');
+		return explainStat(stat,value,true);
+	}
+	/**
+	 * Returns string like "Strength 10" or "Spell Power -50%"
+	 * if withSignum = true, positive values have "+"
+	 */
+	public static function explainStat(stat:String,value:Number,withSignum:Boolean=false):String {
+		var signum:String  = (value >= 0 && withSignum ? '+' : '');
 		var x:String       = signum + value;
 		
 		if (stat in PlainNumberStats) {
@@ -49,6 +59,12 @@ public class StatUtils {
 			trace('[WARN] Unknown stat '+stat);
 			return stat;
 		}
+	}
+	public static function isPlainNumberStat(statname:String):Boolean {
+		return statname in PlainNumberStats;
+	}
+	public static function isPercentageStat(statname:String):Boolean {
+		return statname in PlainNumberStats;
 	}
 	public static const PlainNumberStats:Object = Utils.createMapFromPairs([
 		[StatNames.STR, 'Strength'],

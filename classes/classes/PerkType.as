@@ -6,7 +6,9 @@ package classes
 import classes.EngineCore;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
+import classes.Stats.StatUtils;
 import classes.internals.Utils;
+import classes.lists.StatNames;
 
 import coc.script.XMLEval;
 
@@ -171,6 +173,16 @@ public class PerkType
 			});
 			return this;
 		}
+		public function requireStat(statname:String,value:Number):PerkType {
+			requirements.push({
+				fn  : fnRequireStat(statname, value),
+				text: StatUtils.explainStat(statname,value),
+				type: "stat",
+				attr: statname,
+				value: value
+			});
+			return this;
+		}
 		public function requireStr(value:int):PerkType {
 			requirements.push({
 				fn  : fnRequireAttr("str", value),
@@ -319,6 +331,11 @@ public class PerkType
 		private function fnRequireAttr(attrname:String,value:int):Function {
 			return function(player:Player):Boolean {
 				return player[attrname] >= value;
+			};
+		}
+		private function fnRequireStat(attrname:String,value:Number):Function {
+			return function(player:Player):Boolean {
+				return player.statValue(attrname) >= value;
 			};
 		}
 		public function requireStatusEffect(effect:StatusEffectType, text:String):PerkType {

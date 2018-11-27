@@ -29,7 +29,7 @@ hook = element hook {
     attribute type { 'daily' | 'hourly' },
     content*
 }
-exportable = monster | script | storynode
+exportable = monster | script | storynode | perk
 storynode = lib | scene | Text
 lib = element lib {
     attribute name { text },
@@ -71,6 +71,40 @@ timed-trigger = (
     }?
 )
 
+# #############################################
+# perk
+perk = element perk {
+    attribute id { text }
+    & attribute name { text }
+    & element desc { text }
+    & element offer { text }?
+    & element buffs {
+        element buff {
+            attribute name { text }
+            & attribute value { text }
+        }*
+    }?
+    & element requirements {
+        perk-requirement*
+    }
+}
+perk-requirement = require-level | require-stat | require-perk | require-any | require-not
+require-level = element require-level {
+    attribute level { text }
+}
+require-stat = element require-stat {
+    attribute name { text }
+    & attribute value { text }
+}
+require-perk = element require-perk {
+    attribute id { text }
+}
+require-any = element require-any {
+    perk-requirement+
+}
+require-not = element require-not {
+    perk-requirement
+}
 # #############################################
 # monster
 monster = element monster {

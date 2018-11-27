@@ -5,6 +5,7 @@ package coc.xxc {
 import classes.Modding.GameMod;
 import classes.Modding.ModEncounter;
 import classes.Modding.MonsterPrototype;
+import classes.PerkType;
 import classes.internals.Utils;
 
 import coc.script.Eval;
@@ -89,6 +90,39 @@ public class StoryCompiler extends Compiler {
 		compileStoryBody(me,x.scene[0]);
 		return me;
 	}
+	public function compileModPerk(mod:GameMod, x:XML):PerkType {
+		var id:String = x.@id;
+		var name:String = x.@name;
+		var desc:String = x.@desc;
+		var offer:String = ('@offer' in x) ? x.@offer : x.desc;
+		var buffs:Object = {};
+		for each (var xbuff:XML in x.buffs) {
+			buffs[xbuff.@name] = xbuff.@value;
+		}
+		var pt:PerkType = new PerkType(id,name,desc,null,1,offer,buffs);
+		for each (var xreq:XML in x.requirements.*) {
+			var tag:String = xreq.localName();
+			switch(tag) {
+				case 'require-level':
+					pt.requireLevel(xreq.@level);
+					break;
+				case 'require-stat':
+					pt.requireStat(xreq.@name,xreq.@value);
+					break;
+				case 'require-perk':
+					// TODO delayed execution - other PerkValues might not be available yet
+					pt.requirePerk(PerkType.lookupPerk(xreq.@id));
+					break;
+				case 'require-any':
+					throw "Not implemented yet"; // TODO implement
+				case 'require-not':
+					throw "Not implemented yet"; // TODO implement
+				default:
+					unknownTag(tag,xreq);
+			}
+		}
+		return pt;
+	}
 	public function compileMod(x:XML):ModStmt {
 		var name:String    = x.@name;
 		var stmt:ModStmt   = new ModStmt(name, x.@version, stack[0]);
@@ -119,6 +153,9 @@ public class StoryCompiler extends Compiler {
 					break;
 				case 'encounter':
 					compileModEncounter(mod,item);
+					break;
+				case 'perk':
+					compileModPerk(mod,item);
 					break;
 				default:
 					unknownTag(tag,item);
