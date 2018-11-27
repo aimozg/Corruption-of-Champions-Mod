@@ -110,7 +110,6 @@ public class StatStore implements IStatHolder {
 				trace("/!\\ applyBuffObject: " + tag + "/" + statname);
 				value = +buff;
 			}
-			addBuff(statname, value, tag, options);
 			var s:BuffableStat = findBuffableStat(statname);
 			if (!s) {
 				trace("/!\\ addBuff(" + statname + ", " + value + ") in " + tag);

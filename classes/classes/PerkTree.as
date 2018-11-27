@@ -12,6 +12,9 @@ public class PerkTree extends BaseContent {
 	private var pdata:Dictionary = new Dictionary();
 
 	public function PerkTree() {
+		generate();
+	}
+	public function generate():void {
 		var library:Dictionary = PerkType.getPerkLibrary();
 		var perk:PerkType;
 		// 0. Initialize PerkTreeEntries
@@ -40,6 +43,7 @@ public class PerkTree extends BaseContent {
 	 * Returns Array of PerkType
 	 */
 	public function listUnlocks(p:PerkType):Array {
+		if (!(p.id in pdata)) generate();
 		return pdata[p.id].unlocks.map(function(entry:PerkTreeEntry,idx:int,array:/*PerkTreeEntry*/Array):PerkType {
 			return entry.perk;
 		});

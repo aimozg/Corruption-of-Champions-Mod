@@ -15,6 +15,8 @@ import coc.xlogic.StmtList;
 import coc.xxc.stmts.*;
 
 import flash.utils.setTimeout;
+import flash.xml.XMLNode;
+import flash.xml.XMLNodeType;
 
 public class StoryCompiler extends Compiler {
 	private var _basedir:String;
@@ -93,14 +95,14 @@ public class StoryCompiler extends Compiler {
 	public function compileModPerk(mod:GameMod, x:XML):PerkType {
 		var id:String = x.@id;
 		var name:String = x.@name;
-		var desc:String = x.@desc;
-		var offer:String = ('@offer' in x) ? x.@offer : x.desc;
+		var desc:String = x.desc;
+		var offer:String = ('offer' in x) ? x.offer : x.desc;
 		var buffs:Object = {};
-		for each (var xbuff:XML in x.buffs) {
-			buffs[xbuff.@name] = xbuff.@value;
+		for each (var xbuff:XML in x.buffs.buff) {
+			buffs[xbuff.@name] = xbuff.@value.toString();
 		}
 		var pt:PerkType = new PerkType(id,name,desc,null,1,offer,buffs);
-		for each (var xreq:XML in x.requirements.*) {
+		for each (var xreq:XML in x.requirements.elements()) {
 			var tag:String = xreq.localName();
 			switch(tag) {
 				case 'require-level':

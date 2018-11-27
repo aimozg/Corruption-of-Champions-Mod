@@ -399,13 +399,15 @@ import flash.events.Event;
 			addButton(3, "Intelligence", statChangeAttributeMenu, player.intStat);
 			addButton(4, "Wisdom", statChangeAttributeMenu, player.wisStat);
 			addButton(5, "Libido", statChangeAttributeMenu, player.libStat);
-			addButton(6, "Sensitivity", statChangeAttributeMenu, "sen");
+			addButton(6, "Sensitivity", statChangeAttributeMenu, "sens");
 			addButton(7, "Corruption", statChangeAttributeMenu, "cor");
+			addButton(10, "Stat Points", statChangeAttributeMenu, "statPoints");
+			addButton(11, "Perk Points", statChangeAttributeMenu, "perkPoints");
 			addButton(14, "Back", accessDebugMenu);
 		}
 		
 		private function statChangeAttributeMenu(stats:* = null):void {
-			var attribute:* = stats;
+			menu();
 			clearOutput();
 			outputText("Increment or decrement by how much?");
 			addButton(0, "Add 1", statChangeApply, stats, 1);
@@ -423,7 +425,8 @@ import flash.events.Event;
 		
 		private function statChangeApply(stats:* = null, increment:Number = 0):void {
 			if (stats is String) {
-				dynStats(stats, increment);
+				player[stats] += increment;
+				player.updateStats();
 			} else if (stats is PrimaryStat) {
 				(stats as PrimaryStat).core.value += increment
 			}
