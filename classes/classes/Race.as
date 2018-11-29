@@ -90,6 +90,7 @@ public class Race {
 			'skin.coverage'  : ch.skin.coverage,
 			'skin.tone'      : ch.skinTone,
 			'skin.adj'       : ch.skinAdj,
+			'skin.base.pattern' : ch.skin.base.pattern,
 			'skin.coat'      : ch.skin.coat.type,
 			'skin.coat.color': ch.skin.coat.color,
 			'hair'           : ch.hairType,
@@ -120,6 +121,8 @@ public class Race {
 				return Skin.Types[value].name;
 			case 'skin.coverage'  :
 				return ["no", "partial", "medium", "high", "complete"]+" coat";
+			case 'skin.base.pattern' :
+				return Skin.Patterns[value].name;
 			case 'skin.coat'      :
 				return Skin.Types[value].name+" coat";
 			case 'hair'           :
