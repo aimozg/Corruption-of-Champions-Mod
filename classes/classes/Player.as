@@ -1327,7 +1327,7 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 			}
 			if (racialScores[Race.ONI.name] >= 6)
 			{
-				if (racialScores[Race.ONI.name] >= 12) {
+				if (racialScores[Race.ONI.name] >= 11) {
 					if (isTaur()) race = "oni-taur";
 					else race = "oni";
 				}

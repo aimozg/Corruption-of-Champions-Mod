@@ -1859,8 +1859,6 @@ public class Race {
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch is Character && (ch as Character).tone >= 75)
 							score++;
-						if ((ch.hasVagina() && ch.biggestTitSize() >= BreastCup.H) || (ch.cocks.length > 18))
-							score++;
 						if (ch.tallness >= 120)
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
@@ -1872,7 +1870,7 @@ public class Race {
 				'tou': +30,
 				'int': -10,
 				'wis': +20
-			}).withBonusTier(12,{
+			}).withBonusTier(11,{
 				'str': +100,
 				'tou': +60,
 				'int': -20,
