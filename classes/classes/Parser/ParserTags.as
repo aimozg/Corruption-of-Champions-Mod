@@ -1,4 +1,5 @@
 package classes.Parser {
+
 import classes.Appearance;
 import classes.CoC;
 import classes.EngineCore;
@@ -143,6 +144,12 @@ public class ParserTags {
         "chestadj": function ():String {return SceneLib.arianScene.arianChestAdjective(); },
         "chest"   : function ():String {return SceneLib.arianScene.arianChest();}
     };
+
+    internal static var emberLookups:Object = {
+        "him": function ():String {return SceneLib.emberScene.emberMF("him", "her")},
+        "he" : function ():String {return SceneLib.emberScene.emberMF("he", "she")}
+    };
+
     /**
      * provides lookups for subject: "rubi"
      * note that these are only used in doubleArgLookups
@@ -408,6 +415,7 @@ public class ParserTags {
         // NPCs:
         "rubi"   : rubiLookups,
         "arian"  : arianLookups,
+        "ember"  : emberLookups,
         "monster": monsterLookups,
 
         // PC Attributes:

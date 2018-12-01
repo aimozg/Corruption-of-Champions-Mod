@@ -575,10 +575,6 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 					if (flags[kFLAGS.CHI_CHI_LVL_UP] < 2) flags[kFLAGS.CHI_CHI_LVL_UP] = 2;
 					else flags[kFLAGS.CHI_CHI_LVL_UP]++;
 				}
-				//Mishaps reset
-				if (player.hasStatusEffect(StatusEffects.CampLunaMishaps1)) player.removeStatusEffect(StatusEffects.CampLunaMishaps1);
-				if (player.hasStatusEffect(StatusEffects.CampLunaMishaps2)) player.removeStatusEffect(StatusEffects.CampLunaMishaps2);
-				if (player.hasStatusEffect(StatusEffects.CampLunaMishaps3)) player.removeStatusEffect(StatusEffects.CampLunaMishaps3);
 				//Full moon
 				if (flags[kFLAGS.LUNA_FOLLOWER] >= 4) {
 					flags[kFLAGS.LUNA_MOON_CYCLE]++;
