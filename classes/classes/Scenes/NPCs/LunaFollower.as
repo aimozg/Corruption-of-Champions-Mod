@@ -19,13 +19,10 @@ package classes.Scenes.NPCs
 	import classes.BodyParts.Wings;
 	import classes.GlobalFlags.kFLAGS;
 import classes.PerkClass;
-import classes.Scenes.SceneLib;
-	import classes.Items.MutationsHelper;
 import classes.lists.StatNames;
 
 public class LunaFollower extends NPCAwareContent
 	{
-		public var mutations:MutationsHelper = new MutationsHelper();
 		
 		public function LunaFollower() 
 		{
@@ -46,8 +43,16 @@ public class LunaFollower extends NPCAwareContent
 			if (flags[kFLAGS.LUNA_JEALOUSY] < 0) flags[kFLAGS.LUNA_JEALOUSY] = 0;
 			return flags[kFLAGS.LUNA_JEALOUSY];
 		}
-		
-		public function meetingLunaFirstTime():void {
+		public function meetInTelAdre():Boolean {
+			if (flags[kFLAGS.LUNA_FOLLOWER] >= 2 || rand(10) != 0) { return false }
+			if (flags[kFLAGS.LUNA_FOLLOWER] == 1) {
+				meetingLunaRepated();
+			} else {
+				meetingLunaFirstTime();
+			}
+			return true;
+		}
+		private function meetingLunaFirstTime():void {
 			clearOutput();
 			outputText("As you wander the streets of Tel'Adre, you see a woman being brutally thrown out of a house along with her belongings. The crowd seems to be ignoring her.  Curious, you walk up to her just in time to see her start to cry. She wears what looks like a formal maid dress. Under her white bonnet, the maid sports short, ashen hair. You decide to break the ice and ask her what's going on. By all means she looks human, which is a surprise to you.\n\n");
 			outputText("\"<i>Why, this is terrible... I’m masterless, and out of a job! What am I going to do?</i>\"\n\n");
@@ -59,37 +64,43 @@ public class LunaFollower extends NPCAwareContent
 			menu();
 			addButton(0, "Help", meetingLunaFirstTimeHelp);
 			addButton(1, "Leave", meetingLunaFirstTimeLeave);
+
+			function meetingLunaFirstTimeLeave():void {
+				outputText("Sadly you see no way you could help her out. You leave, wishing her the best of luck.\n\n");
+				flags[kFLAGS.LUNA_FOLLOWER] = 1;
+				doNext(telAdre.telAdreMenu);
+			}
+
+			function meetingLunaFirstTimeHelp():void {
+				clearOutput();
+				outputText("Now that you think about it, life at camp would be infinitely easier if you had a person like her helping around. How about she comes over to live with you at your camp?\n\n");
+				outputText("\"<i>You.. you would hire me? Even after I’ve been kicked out? Oh this is wonderful! Thank you so much!!</i>\"\n\n");
+				doNext(meetingLunaCamp);
+			}
 		}
-		public function meetingLunaFirstTimeLeave():void {
-			outputText("Sadly you see no way you could help her out. You leave, wishing her the best of luck.\n\n");
-			flags[kFLAGS.LUNA_FOLLOWER] = 1;
-			doNext(camp.returnToCampUseOneHour);
-		}
-		public function meetingLunaFirstTimeHelp():void {
-			clearOutput();
-			outputText("Now that you think about it, life at camp would be infinitely easier if you had a person like her helping around. How about she comes over to live with you at your camp?\n\n");
-			outputText("\"<i>You.. you would hire me? Even after I’ve been kicked out? Oh this is wonderful! Thank you so much!!</i>\"\n\n");
-			doNext(meetingLunaCamp);
-		}
-		public function meetingLunaRepated():void {
+
+		private function meetingLunaRepated():void {
 			clearOutput();
 			outputText("As you walk the streets of Tel’Adre, you spot the human maid from before. She's holding an empty can and using it to beg for money as she sits on the side of the street. Seeing the former servant girl reduced to this state makes you feel terribly sorry for her. It is not too late to revise your decision, will you help her out?\n\n");
 			menu();
 			addButton(0, "Yes", meetingLunaRepatedYes);
 			addButton(1, "No", meetingLunaRepatedNo);
+
+			function meetingLunaRepatedNo():void {
+				outputText("There is nothing you can do for her. You leave her be, for now.\n\n");
+				doNext(telAdre.telAdreMenu);
+			}
+
+			function meetingLunaRepatedYes():void {
+				clearOutput();
+				outputText("Now that you think about it, life at camp would be infinitely easier if you had a person like her helping. How about she comes over to live with you at your camp? You walk to her and tell her that while you don’t own much but you would gladly take her.\n\n");
+				outputText("The maid, now beggar, looks at you with tears in her eyes, as if snapping out of a bad dream, then stands up as she replies.\n\n");
+				outputText("\"<i>You.. you would hire me? Even after I’ve been kicked out? Oh this is wonderful, thank you so much!!</i>\"\n\n");
+				doNext(meetingLunaCamp);
+			}
 		}
-		public function meetingLunaRepatedNo():void {
-			outputText("There is nothing you can do for her. You leave her be, for now.\n\n");
-			doNext(camp.returnToCampUseOneHour);
-		}
-		public function meetingLunaRepatedYes():void {
-			clearOutput();
-			outputText("Now that you think about it, life at camp would be infinitely easier if you had a person like her helping. How about she comes over to live with you at your camp? You walk to her and tell her that while you don’t own much but you would gladly take her.\n\n");
-			outputText("The maid, now beggar, looks at you with tears in her eyes, as if snapping out of a bad dream, then stands up as she replies.\n\n");
-			outputText("\"<i>You.. you would hire me? Even after I’ve been kicked out? Oh this is wonderful, thank you so much!!</i>\"\n\n");
-			doNext(meetingLunaCamp);
-		}
-		public function meetingLunaCamp():void {
+
+		private function meetingLunaCamp():void {
 			outputText("The two of you head back to camp. The maid doesn’t comment on the fact you only have a cabin for a house");
 			if (camp.companionsCount() > 2) outputText(", let alone the many people camping next to you");
 			outputText(". In fact, she is practically overjoyed.\n\n");
@@ -129,6 +140,7 @@ public class LunaFollower extends NPCAwareContent
 			}
 			if (flags[kFLAGS.LUNA_FOLLOWER] == 9 || flags[kFLAGS.LUNA_FOLLOWER] == 10) addButton(7, "Unchain", lunaChainToggle).hint("Unchain Luna and see what happens.");
 			if (flags[kFLAGS.LUNA_FOLLOWER] == 7 || flags[kFLAGS.LUNA_FOLLOWER] == 8) addButton(7, "Chain", lunaChainToggle).hint("Chain Luna.");
+			addButton(10, "Fire", FireHer).hint("Kick Luna out of your camp and ask her never to return");
 			addButton(14, "Leave", camp.campFollowers);
 		}
 		
@@ -483,21 +495,28 @@ public class LunaFollower extends NPCAwareContent
 			monster.createPerk(PerkLib.NoGemsLost, 0, 0, 0, 0);
 			cleanupAfterCombat();
 			menu();
-			addButton(0, "Fire Her", fullMoonEventResistWinFireHer);
+			addButton(0, "Fire Her", FireHer, true );
 			addButton(1, "Accept", fullMoonEventAccept);
 			addButton(2, "Chain Her", fullMoonEventResistWinChainHer);
 		}
-		public function fullMoonEventResistWinFireHer():void {
+		private function FireHer(fromSleep:Boolean = false):void {
 			clearOutput();
 			outputText("Luna looks at you as if her world is breaking apart.\n\n");
 			outputText("\"<i>[name], y..you’re firing me?</i>\"\n\n");
 			outputText("You have been clear, she should scram now. Luna looks at you for a split second before running off in the woods. You have a bad feeling about this.\n\n");
 			flags[kFLAGS.LUNA_FOLLOWER] = 2;
 			flags[kFLAGS.LUNA_MOONING] = 1;
-			if (model.time.hours >= 21) CoC.instance.timeQ = 24 - model.time.hours;
-			else CoC.instance.timeQ = 0;
-			CoC.instance.timeQ += 6;
-			doNext(camp.sleepWrapper);
+			if (!fromSleep) {
+				doNext(playerMenu);
+			} else {
+				if (model.time.hours >= 21) {
+					CoC.instance.timeQ = 24 - model.time.hours;
+				} else {
+					CoC.instance.timeQ = 0;
+				}
+				CoC.instance.timeQ += 6;
+				doNext(camp.sleepWrapper);
+			}
 		}
 		public function fullMoonEventResistWinFireHerForest():void {
 			clearOutput();
