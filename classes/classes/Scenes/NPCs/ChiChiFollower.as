@@ -325,10 +325,7 @@ public function SoulskilsManualsShop():void {
 	}
 }
 
-public function ChiChiCampMainMenu(initial:Boolean = false):void {
-	if (initial && ((flags[kFLAGS.LUNA_JEALOUSY] > 100 && rand(10) < 4) || (flags[kFLAGS.LUNA_JEALOUSY] > 150 && rand(10) < 8))){
-		return mishapsLunaChiChi();
-	}
+public function ChiChiCampMainMenu():void {
 	clearOutput();
 	outputText("You go over to Chi Chi who pauses her training to head to you once you are close.");
 	if (flags[kFLAGS.CHI_CHI_FOLLOWER] < 4) outputText("\"<i>Oh how are you doing [name]? I just finished a new set of kicks and punches. Did you want us to train together or did you have something else in mind?</i>\" She’s arm crossed waiting on your reply.");
@@ -425,17 +422,6 @@ public function chichiSparring():void {
 	startCombat(new ChiChi());
 }
 
-public function mishapsLunaChiChi():void {
-	clearOutput();
-	outputText("As you go to visit Chi Chi you hear her scream. Running over to check whats going on you notice the fire mouse is now a sobbing mess, wet with water. You don’t recall her crying before so this must be serious.\n\n");
-	outputText("\"<i>Why why? Why would someone put a bucket right above my bedroll now I’m all wet and my fire will take hours to rise again!</i>\"\n\n");
-	outputText("She notice you checking her and panic.\n\n");
-	outputText("\"<i>Eep go away [name]! D..don’t look at me!! The last thing I need is you looking at me right now.</i>\"\n\n");
-	outputText("That’s quite the surprise. Does the proud fighter she normaly is turn into an awkward village girl the moment shes wet? Well regardless you guess you will have to visit her later because there’s no way she’s letting you approach her right now.\n\n");
-	if (player.hasStatusEffect(StatusEffects.CampLunaMishaps2)) player.addStatusValue(StatusEffects.CampLunaMishaps2, 4, 1);
-	else player.createStatusEffect(StatusEffects.CampLunaMishaps2, 0, 0, 0, 1);
-	doNext(playerMenu);
-}
 
 	}
 }

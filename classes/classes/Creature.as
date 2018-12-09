@@ -1077,7 +1077,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 				[Race.ALICORN.name,   11], [Race.CENTAUR.name,   8], [Race.MINOTAUR.name,     9],
 				[Race.COW.name,        9], [Race.BEE.name,       9], [Race.DEMON.name,       11],
 				[Race.DEVILKIN.name,  10], [Race.SHARK.name,     8], [Race.ORCA.name,        12],
-				[Race.ONI.name,       12], [Race.ELF.name,      11], [Race.RAIJU.name,       10],
+				[Race.ONI.name,       11], [Race.ELF.name,      11], [Race.RAIJU.name,       10],
 				[Race.HARPY.name,      8], [Race.SPIDER.name,    7], [Race.MANTIS.name,      12],
 				[Race.SALAMANDER.name, 7], [Race.NAGA.name,      8], [Race.GORGON.name,      11],
 				[Race.VOUIVRE.name,   11], [Race.COUATL.name,   11], [Race.PHOENIX.name,     10],

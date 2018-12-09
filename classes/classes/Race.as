@@ -90,6 +90,7 @@ public class Race {
 			'skin.coverage'  : ch.skin.coverage,
 			'skin.tone'      : ch.skinTone,
 			'skin.adj'       : ch.skinAdj,
+			'skin.base.pattern' : ch.skin.base.pattern,
 			'skin.coat'      : ch.skin.coat.type,
 			'skin.coat.color': ch.skin.coat.color,
 			'hair'           : ch.hairType,
@@ -120,6 +121,8 @@ public class Race {
 				return Skin.Types[value].name;
 			case 'skin.coverage'  :
 				return ["no", "partial", "medium", "high", "complete"]+" coat";
+			case 'skin.base.pattern' :
+				return Skin.Patterns[value].name;
 			case 'skin.coat'      :
 				return Skin.Types[value].name+" coat";
 			case 'hair'           :
@@ -1856,8 +1859,6 @@ public class Race {
 					function (ch:Creature, metrics:*, score:int):int {
 						if (ch is Character && (ch as Character).tone >= 75)
 							score++;
-						if ((ch.hasVagina() && ch.biggestTitSize() >= BreastCup.H) || (ch.cocks.length > 18))
-							score++;
 						if (ch.tallness >= 120)
 							score++;
 						if (ch.hasPerk(PerkLib.ChimericalBodyPerfectStage))
@@ -1869,7 +1870,7 @@ public class Race {
 				'tou': +30,
 				'int': -10,
 				'wis': +20
-			}).withBonusTier(12,{
+			}).withBonusTier(11,{
 				'str': +100,
 				'tou': +60,
 				'int': -20,
