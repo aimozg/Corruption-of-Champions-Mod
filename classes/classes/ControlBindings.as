@@ -210,38 +210,19 @@ internal class ControlBindings {
                     "Cheat! Give Hummus",
                     "Cheat code to get free hummus",
                     function (keyCode:int):void {
-                        if (CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER] == 0) {
-                            if (keyCode == 38) {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER]++;
-                            }
-                            else {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER] = 0;
-                            }
+                        const keyCodes:Array = [Keyboard.UP, Keyboard.DOWN, Keyboard.LEFT, Keyboard.RIGHT];
+                        var counterVal:int = CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER];
+                        if(counterVal < keyCodes.length && keyCodes[counterVal] == keyCode){
+                            CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER]++;
+                        } else {
+                            CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER] = 0;
+                            return;
                         }
-                        else if (CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER] == 1) {
-                            if (keyCode == 40) {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER]++;
-                            }
-                            else {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER] = 0;
-                            }
-                        }
-                        else if (CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER] == 2) {
-                            if (keyCode == 37) {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER]++;
-                            }
-                            else {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER] = 0;
-                            }
-                        }
-                        else if (CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER] == 3) {
-                            if (keyCode == 39) {
-                                if (CoC.instance.player.str > 0 && mainView.getButtonText(0).indexOf("Game Over") == -1) {
-                                    SceneLib.inventory.giveHumanizer();
-                                }
-                            }
-                            else {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER] = 0;
+
+                        if (counterVal == 3){
+                            CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER] = 0;
+                            if (CoC.instance.player.str > 0 && mainView.getButtonText(0).indexOf("Game Over") == -1) {
+                                SceneLib.inventory.giveHumanizer();
                             }
                         }
                     },
@@ -251,46 +232,22 @@ internal class ControlBindings {
                     "Cheat! Access debug menu",
                     "Cheat code to access debug menu and spawn ANY items or change stats.",
                     function (keyCode:int):void {
-                        if (CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] == 0) {
-                            if (keyCode == 68) {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2]++;
-                            }
-                            else {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] = 0;
-                            }
+                        const keyCodes:Array = [Keyboard.D, Keyboard.E, Keyboard.B, Keyboard.U, Keyboard.G];
+                        var counterVal:int = CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2];
+                        if(counterVal < keyCodes.length && keyCodes[counterVal] == keyCode){
+                            CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2]++;
+                        } else {
+                            CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] = 0;
+                            return;
                         }
-                        else if (CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] == 1) {
-                            if (keyCode == 69) {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2]++;
-                            }
-                            else {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] = 0;
-                            }
-                        }
-                        else if (CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] == 2) {
-                            if (keyCode == 66) {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2]++;
-                            }
-                            else {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] = 0;
-                            }
-                        }
-                        else if (CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] == 3) {
-                            if (keyCode == 85) {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2]++;
-                            }
-                            else {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] = 0;
-                            }
-                        }
-                        else if (CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] == 4) {
-                            if (keyCode == 71) {
-                                if (CoC.instance.player && CoC.instance.player.str > 0 && mainView.getButtonText(0).indexOf("Game Over") == -1 && (CoC.instance.debug && CoC.instance.flags[kFLAGS.HARDCORE_MODE] <= 0 || CoC_Settings.debugBuild)) {
-                                    SceneLib.debugMenu.accessDebugMenu();
-                                }
-                            }
-                            else {
-                                CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] = 0;
+                        if (counterVal == 4){
+                            CoC.instance.flags[kFLAGS.CHEAT_ENTERING_COUNTER_2] = 0;
+                            if (CoC.instance.player &&
+                                CoC.instance.player.str > 0 &&
+                                mainView.getButtonText(0).indexOf("Game Over") == -1 &&
+                                (CoC.instance.debug && CoC.instance.flags[kFLAGS.HARDCORE_MODE] <= 0 ||
+                                    CoC_Settings.debugBuild)) {
+                                SceneLib.debugMenu.accessDebugMenu();
                             }
                         }
                     },

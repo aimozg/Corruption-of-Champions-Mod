@@ -41,29 +41,26 @@ package classes
 
 		public static function execQuickLoad(slot:uint):void
 		{
-			if (game.mainView.menuButtonIsVisible(MainView.MENU_DATA)) {
-				var saveFile:SharedObject = SharedObject.getLocal(Saves.sharedDir + "CoC_" + slot, "/");
-				var doQuickLoad:Function = function():void {
-					if (game.saves.loadGame(Saves.sharedDir + "CoC_" + slot)) {
-						EngineCore.showStats();
-						EngineCore.statScreenRefresh();
-						EngineCore.clearOutput();
-						EngineCore.outputText("Slot " + slot + " Loaded!");
-						EngineCore.doNext(EventParser.playerMenu);
-					}
-				};
-				if (saveFile.data.exists) {
-					if (game.player.str === 0 || flags[kFLAGS.DISABLE_QUICKLOAD_CONFIRM] !== 0) {
-						doQuickLoad();
-						return;
-					}
+			var saveFile:SharedObject = SharedObject.getLocal(Saves.sharedDir + "CoC_" + slot, "/");
+			if (!saveFile.data.exists) { return; }
+			var doQuickLoad:Function  = function ():void {
+				if (game.saves.loadGame(Saves.sharedDir + "CoC_" + slot)) {
+					EngineCore.showStats();
+					EngineCore.statScreenRefresh();
 					EngineCore.clearOutput();
-					EngineCore.outputText("You are about to quickload the current game from slot <b>" + slot + "</b>\n\nAre you sure?");
-					EngineCore.menu();
-					EngineCore.addButton(0, "No", EventParser.playerMenu);
-					EngineCore.addButton(1, "Yes", doQuickLoad);
+					EngineCore.outputText("Slot " + slot + " Loaded!");
+					EngineCore.doNext(EventParser.playerMenu);
 				}
+			};
+			if (game.player.str === 0 || flags[kFLAGS.DISABLE_QUICKLOAD_CONFIRM] !== 0) {
+				doQuickLoad();
+				return;
 			}
+			EngineCore.clearOutput();
+			EngineCore.outputText("You are about to quickload the current game from slot <b>" + slot + "</b>\n\nAre you sure?");
+			EngineCore.menu();
+			EngineCore.addButton(0, "No", EventParser.playerMenu);
+			EngineCore.addButton(1, "Yes", doQuickLoad);
 		}
 	}
 }
