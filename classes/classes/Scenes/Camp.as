@@ -86,7 +86,37 @@ use namespace CoC;
 		}
 */
 		
+		private var interceptor:Function = null;
+		/**
+		 * Replaces next call to {@link #returnToCamp} and its derivatives with {@param interceptor}
+		 *
+		 * Example:
+		 * <pre>
+		 *     captureReturnToCamp(function(timeUsed:int):void {
+		 *         clearOutput();
+		 *         outputText("You return to town");
+		 *         menu();
+		 *         doNext(townMenu);
+		 *     });
+		 *     execEncounter();
+		 * </pre>
+		 *
+		 * @param interceptor (timeUsed:int)=>void
+		 */
+		public function captureReturnToCamp(interceptor:Function):void {
+			if (this.interceptor != null) {
+				trace("[WARN] captureReturnToCamp multi-call. Will overwrite")
+			}
+			this.interceptor = interceptor;
+		}
+		
 		public function returnToCamp(timeUsed:int):void {
+			if (interceptor != null) {
+				var f:Function = interceptor;
+				interceptor = null;
+				f(timeUsed);
+				return;
+			}
 			clearOutput();
 			if (timeUsed == 1)
 				outputText("An hour passes...\n");

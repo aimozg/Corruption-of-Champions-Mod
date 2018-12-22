@@ -65,7 +65,7 @@ public class Encounters {
 	// =================================================================================================================
 
 	/**
-	 * Runs the encounter selection check. DOES NOT call .execute()
+	 * Runs the encounter selection check. DOES NOT call .execEncounter()
 	 * Returns null if all encounters have chance <= 0
 	 */
 	public static function selectOrNull(encounters:Array):Encounter {
@@ -116,12 +116,29 @@ public class Encounters {
 	}
 	internal static var debug_indent:String = "";
 	/**
-	 * Runs the encounter selection check. DOES NOT call .execute()
+	 * Runs the encounter selection check. DOES NOT call .execEncounter()
 	 * Returns last if all encounters have chance <= 0.
 	 * Throws an error if there are 0 encounters
+	 *
+	 * If `unroll = true` and picked encounter is a GroupEncounter, it would recursively
+	 * select and actual non-group Encounter from it
 	 */
-	public static function select(encounters:Array):Encounter {
-		return selectOrNull(encounters) || encounters[encounters.length-1];
+	public static function select(encounters:Array, unroll: Boolean):Encounter {
+		Encounters.debug_indent += "  ";
+		var e:Encounter = selectOrNull(encounters) || encounters[encounters.length-1];
+		if (unroll) e = unrollEncounter(e);
+		Encounters.debug_indent = Encounters.debug_indent.slice(2);
+		return e;
+	}
+	
+	/**
+	 * Recursively selects encounter from nested GroupEncounter
+	 */
+	public static function unrollEncounter(e:Encounter):Encounter {
+		while (e is GroupEncounter) {
+			e = select((e as GroupEncounter).components, false);
+		}
+		return e;
 	}
 
 	/**

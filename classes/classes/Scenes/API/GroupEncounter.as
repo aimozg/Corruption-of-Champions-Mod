@@ -3,11 +3,15 @@
  */
 package classes.Scenes.API {
 public class GroupEncounter implements Encounter {
-	protected var components:Array;// of Encounter
+	private var _components:Array;// of Encounter
 	protected var name:String;
+	
+	public function get components():Array {
+		return _components;
+	}
 	public function GroupEncounter(name:String, components:Array) {
-		this.name = name;
-		this.components = [];
+		this.name        = name;
+		this._components = [];
 		for each (var c:* in components) {
 			add(c);
 		}
@@ -35,22 +39,29 @@ public class GroupEncounter implements Encounter {
 	public function add(...defs):GroupEncounter {
 		if (defs.length==1 && defs[0] instanceof Array) defs = defs[0];
 		for each (var def:* in defs) {
-			if (def is Encounter) components.push(def);
-			else components.push(Encounters.build(def));
+			if (def is Encounter) _components.push(def);
+			else _components.push(Encounters.build(def));
 		}
 		return this;
 	}
 
 	public function execEncounter():void {
-		trace(Encounters.debug_indent+encounterName()+".execEncounter()");
-		Encounters.debug_indent += "  ";
-		Encounters.select(components).execEncounter();
-		Encounters.debug_indent = Encounters.debug_indent.slice(2);
+		select(false).execEncounter();
+	}
+	
+	/**
+	 * Select encounter from this group.
+	 *
+	 * @param unroll Recursively select and return non-GroupEncounter
+	 */
+	public function select(unroll:Boolean):Encounter {
+		trace(Encounters.debug_indent+encounterName()+".execute()");
+		return Encounters.select(_components, unroll);
 	}
 
 	public function encounterChance():Number {
 		var sum:Number = 0;
-		for each (var encounter:Encounter in components) sum += encounter.encounterChance();
+		for each (var encounter:Encounter in _components) sum += encounter.encounterChance();
 		return sum;
 	}
 }
