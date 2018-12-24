@@ -355,12 +355,16 @@ public class StoryCompiler extends Compiler {
 		var s:String = x.toString();
 		if (s.replace(/^\s+/g,'').replace(/\s+$/g,'') == '') return null;
 		var trimStyle:int;
-		if (stack[0].tagname == 'string') {
+		if (stack[0].tagname === 'string') {
 			trimStyle = TextStmt.TRIMSTYLE_NONE;
 		} else {
-			trimStyle  = TextStmt.TRIM_SQUEEZE | TextStmt.TRIM_UNINDENT;
-			var ptn:XMLList = x.parent().text();
-			if (x==ptn[0]) trimStyle |= TextStmt.TRIM_LEFT;
+			trimStyle = TextStmt.TRIM_SQUEEZE | TextStmt.TRIM_UNINDENT;
+			
+			// Trim left whitespace from first text node (unless it's a <t> node)
+			if (x.parent().localName() != "t") {
+				var ptn:XMLList = x.parent().text();
+				if (x == ptn[0]) trimStyle |= TextStmt.TRIM_LEFT;
+			}
 		}
 		return new TextStmt(s, trimStyle);
 	}

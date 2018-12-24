@@ -1,9 +1,73 @@
-<?xml version="1.0" ?><mod name="hellhound" version="0"><scene name="encounter"><t>You hear a fiery howl as a demonic, two-headed beast-man leaps out in front of you!</t><comment>TODO: move from code codex entry unlock</comment><command>ShowSprite('s_hellhound')</command><battle monster="hellhound"></battle></scene><scene name="hellhoundRapesPlayer"><if test="player.HP &gt; 0"><t>Overcome by sexual desire, you submit to the hungry hellhound.
+<?xml version="1.0" ?>
+<mod name="hellhound" version="0">
+<scene name="encounter">
+	<t>You hear a fiery howl as a demonic, two-headed beast-man leaps out in front of you!</t>
+	<comment>TODO: move from code codex entry unlock</comment>
+	<command>ShowSprite('s_hellhound')</command>
+	<battle monster="hellhound"/>
+</scene>
+<scene name="hellhoundRapesPlayer">
+	<if test="player.HP &gt; 0">
+		<t>Overcome by sexual desire, you submit to the hungry hellhound.
 
-</t><else></else><t>Too weak to continue fighting, you fall to your knees.
+		</t>
+		<else/>
+		<t>Too weak to continue fighting, you fall to your knees.
 
-</t></if><t>The heads of the hellhound grin with desire as he rises onto his hind legs. As the hellhound stands before you, your eyes widen at the sight of its equipment: a pair of eight-inch long black rods, one above the other, with a sack containing a quad of flaming balls underneath. As the hound swaggers closer, you gulp at the thought of what those fiery balls are going to be pumping into you. You are helpless against the hellhound as he pushes you onto your </t><if test="CreatureTestLegType(player,true,'HOOFED')"><t>hocks and knees</t><else></else><t>hands and knees</t></if><t> and positions himself behind you. He grips you with his clawed hands on your shoulders and easily holds you in place. The powerful creature is easily able to get past your [armor] and you feel one of his rods brush against your [butt].  A shudder shoots through your body as he brings his two heads down to either side of your own, his hot canine breath blowing past your ears. He stays there for a few moments, completely still... before suddenly pulling his heads back and </t><if test="CreatureTestSex(player,[2, 3]) and CreatureHasTrait(player,'naga',true)"><t>slamming his twin dicks into your [vagina] and your [ass].  </t><if test="player.vaginalCapacity() &lt; monster.cockArea()"><t>You feel an intense mixture of sensations in your lower body as your [asshole] feels like it is being torn apart, while your [vagina] is filled with an intense pleasure at being filled with the creature's large member.  </t><else></else><t>Your lower body explodes with pain as the hellhound forces himself in too quickly for either your [asshole] or your [vagina] to handle.  </t></if><if test="player.vaginas[0].virgin"><t>&lt;b&gt;You are no longer a virgin!  &lt;/b&gt;</t></if><if test="player.cuntChange(monster.cockArea(0), false)"><t>The beast howls as your [vagina] is stretched to accommodate the large shaft.  </t></if><t>The hellhound pants for a few seconds before continuing.  </t><if test="player.vaginas[0].vaginalWetness &lt; VaginaClass.WETNESS_WET"><t>The pause gives your [vagina] time to moisten, ensuring the next thrust won't be quite as rough.  </t></if><t>This time the beast starts pumping in and out more gently, only a short distance at a time as the hellhound continues panting.  As the pain in your [asshole] fades, you start feeling pleasure to match the sensations rising from your [vagina]. Each thrust of the beast's twin manhoods bring you closer and closer to your peak.
+		</t>
+	</if>
+	<t>The heads of the hellhound grin with desire as he rises onto his hind legs. As the hellhound stands before you, your eyes widen at the sight of its equipment: a pair of eight-inch long black rods, one above the other, with a sack containing a quad of flaming balls underneath. As the hound swaggers closer, you gulp at the thought of what those fiery balls are going to be pumping into you. You are helpless against the hellhound as he pushes you onto your </t>
+	<if test="CreatureTestLegType(player,true,'HOOFED')">
+		<t>hocks and knees</t>
+		<else/>
+		<t>hands and knees</t>
+	</if>
+	<t> and positions himself behind you. He grips you with his clawed hands on your shoulders and easily holds you in place. The powerful creature is easily able to get past your [armor] and you feel one of his rods brush against your [butt].  A shudder shoots through your body as he brings his two heads down to either side of your own, his hot canine breath blowing past your ears. He stays there for a few moments, completely still... before suddenly pulling his heads back and </t>
+	<if test="CreatureTestSex(player,[2, 3]) and CreatureHasTrait(player,'naga',true)">
+		<t>slamming his twin dicks into your [vagina] and your [ass].  </t>
+		<if test="player.vaginalCapacity() &lt; monster.cockArea()">
+			<t>You feel an intense mixture of sensations in your lower body as your [asshole] feels like it is being torn apart, while your [vagina] is filled with an intense pleasure at being filled with the creature's large member.  </t>
+			<else/>
+			<t>Your lower body explodes with pain as the hellhound forces himself in too quickly for either your [asshole] or your [vagina] to handle.  </t>
+		</if>
+		<if test="player.vaginas[0].virgin">
+			<t><b>You are no longer a virgin! </b></t>
+		</if>
+		<if test="player.cuntChange(monster.cockArea(0), false)">
+			<t>The beast howls as your [vagina] is stretched to accommodate the large shaft.  </t>
+		</if>
+		<t>The hellhound pants for a few seconds before continuing.  </t>
+		<if test="player.vaginas[0].vaginalWetness &lt; 2">
+			<t>The pause gives your [vagina] time to moisten, ensuring the next thrust won't be quite as rough.  </t>
+		</if>
+		<t>This time the beast starts pumping in and out more gently, only a short distance at a time as the hellhound continues panting.  As the pain in your [asshole] fades, you start feeling pleasure to match the sensations rising from your [vagina]. Each thrust of the beast's twin manhoods bring you closer and closer to your peak.
 
-</t><t>As you reach your climax, the beast howls and you feel its incredibly hot seed pour into you.  </t><if test="player.cor &lt; 40"><t>You moan as your insides begin to heat up. The uncomfortably hot sensation only grows as more and more of its fiery seed is pumped into your body. After what feels like an eternity, the beast pulls out of you. He gives your [vagina] and your [asshole] a single extended lick with its long dog-like tongue before running off out of sight. The tainted heat inside you proves to be too much and you pass out. After some time passes, you wake up to find the corrupt warmth inside you has thankfully faded away. You're able to stand up again, but the damage is done and the creature's seed has left you feeling rather weak.</t><else></else><t>His flaming seed brings about a pleasure you had not expected; your insides feel like they are burning with passion and power.  It is an incredible and fiery experience, one that you don't think you could have had if it wasn't for the power of corruption that you've gained since you got here. Too soon, the beast pulls out of you.  He gives your [vagina] and your [asshole] a single extended lick with his long dog-like tongue before he runs off. You quickly look over and manage to catch a glimpse of its tail before it disappears from view, just before your body falls into a deep sleep. When you wake, you can still feel the afterglow of the hot seed inside you.</t></if><comment>FIXME Needs checking: </comment><command>player.knockUp(PregnancyStore.PREGNANCY_HELL_HOUND, PregnancyStore.INCUBATION_HELL_HOUND, 101)</command><else></else><t>slamming his lower dick into your [asshole], while rubbing the other between the cheeks of your [butt].  </t><t>Your lower body explodes with pain as the hellhound forces himself in too quickly for your [asshole] to handle. He pauses and pants for a few seconds, but you barely have enough time to catch your breath before the beast starts thrusting in and out again. However, this time the beast starts pumping in and out more gently, only a short distance at a time as the hellhound continues panting.  As the pain in your [asshole] fades, you start feeling strong pleasure from it. Each thrust of the beast's lower manhood, combined with the upper one tickling and teasing your [ass] above it brings you closer and closer to your peak.
+		</t>
+		<t>As you reach your climax, the beast howls and you feel its incredibly hot seed pour into you.  </t>
+		<if test="player.cor &lt; 40">
+			<t>You moan as your insides begin to heat up. The uncomfortably hot sensation only grows as more and more of its fiery seed is pumped into your body. After what feels like an eternity, the beast pulls out of you. He gives your [vagina] and your [asshole] a single extended lick with its long dog-like tongue before running off out of sight. The tainted heat inside you proves to be too much and you pass out. After some time passes, you wake up to find the corrupt warmth inside you has thankfully faded away. You're able to stand up again, but the damage is done and the creature's seed has left you feeling rather weak.</t>
+			<else/>
+			<t>His flaming seed brings about a pleasure you had not expected; your insides feel like they are burning with passion and power.  It is an incredible and fiery experience, one that you don't think you could have had if it wasn't for the power of corruption that you've gained since you got here. Too soon, the beast pulls out of you.  He gives your [vagina] and your [asshole] a single extended lick with his long dog-like tongue before he runs off. You quickly look over and manage to catch a glimpse of its tail before it disappears from view, just before your body falls into a deep sleep. When you wake, you can still feel the afterglow of the hot seed inside you.</t>
+		</if>
+		<comment>FIXME Needs checking:</comment>
+		<command>player.knockUp(PregnancyStore.PREGNANCY_HELL_HOUND, PregnancyStore.INCUBATION_HELL_HOUND, 101)</command>
+		<else/>
+		<t>slamming his lower dick into your [asshole], while rubbing the other between the cheeks of your [butt].  </t>
+		<t>Your lower body explodes with pain as the hellhound forces himself in too quickly for your [asshole] to handle. He pauses and pants for a few seconds, but you barely have enough time to catch your breath before the beast starts thrusting in and out again. However, this time the beast starts pumping in and out more gently, only a short distance at a time as the hellhound continues panting.  As the pain in your [asshole] fades, you start feeling strong pleasure from it. Each thrust of the beast's lower manhood, combined with the upper one tickling and teasing your [ass] above it brings you closer and closer to your peak.
 
-</t><t>As you reach your climax, the beast howls and you feel its incredibly hot seed pour into you and onto your back.  </t><if test="player.cor &lt; 40"><t>You moan while trying to break free to get the heat off your back... but the beast keeps a firm grip on you as more and more of its fiery seed is pumped into and onto your body. After what feels like an eternity, the beast pulls out of you. He gives your [asshole] a single extended lick with his long dog-like tongue before running off out of sight. You are finally able to roll around and get the heat off of your back, but you can do nothing about the tainted warmth inside you. The heat proves to be too much and you pass out. After some time passes, you wake up to find the fire inside you has thankfully faded away. You're able to stand up again, but the damage is done and the creature's seed has left you feeling rather weak.</t><else></else><t>His flaming seed brings about a pleasure you had not expected; your insides feel like they are alight with passion and power. You feel a similar joy on your back, and your muscles feel like they are being massaged from the heat.  It is an incredible and fiery experience, one that you don't think you could have had if it wasn't for the power of corruption that you've gained since you got here. Too soon, the beast pulls out of you, giving your [asshole] a single extended lick with its long dog-like tongue before running off. You quickly look over and manage to catch a glimpse of its tail before it disappears from view, just before your body falls into a deep sleep. When you wake, you can still feel the afterglow of the flaming seed inside you.</t></if></if><if test="player.cor &lt; 40"><comment>FIXME Needs checking: </comment><command>dynStats("tou", -2, "cor", 1)</command><else></else><comment>FIXME Needs checking: </comment><command>dynStats("cor", 1.5)</command></if></scene></mod>
+		</t>
+		<t>As you reach your climax, the beast howls and you feel its incredibly hot seed pour into you and onto your back.  </t>
+		<if test="player.cor &lt; 40">
+			<t>You moan while trying to break free to get the heat off your back... but the beast keeps a firm grip on you as more and more of its fiery seed is pumped into and onto your body. After what feels like an eternity, the beast pulls out of you. He gives your [asshole] a single extended lick with his long dog-like tongue before running off out of sight. You are finally able to roll around and get the heat off of your back, but you can do nothing about the tainted warmth inside you. The heat proves to be too much and you pass out. After some time passes, you wake up to find the fire inside you has thankfully faded away. You're able to stand up again, but the damage is done and the creature's seed has left you feeling rather weak.</t>
+			<else/>
+			<t>His flaming seed brings about a pleasure you had not expected; your insides feel like they are alight with passion and power. You feel a similar joy on your back, and your muscles feel like they are being massaged from the heat.  It is an incredible and fiery experience, one that you don't think you could have had if it wasn't for the power of corruption that you've gained since you got here. Too soon, the beast pulls out of you, giving your [asshole] a single extended lick with its long dog-like tongue before running off. You quickly look over and manage to catch a glimpse of its tail before it disappears from view, just before your body falls into a deep sleep. When you wake, you can still feel the afterglow of the flaming seed inside you.</t>
+		</if>
+	</if>
+	<if test="player.cor &lt; 40">
+		<command>DrainStat("tou", 2)</command>
+		<command>ModRawStat(player, "cor", 1, false)</command>
+		<else/>
+		<command>ModRawStat(player, "cor", 1.5, false)</command>
+	</if>
+</scene>
+</mod>

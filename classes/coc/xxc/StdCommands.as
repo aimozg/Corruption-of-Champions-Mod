@@ -16,6 +16,12 @@ public class StdCommands {
 	public function BuffOrRecover(statname:String, value:Number, tag:String, text:String, tick: int, rate:int):void {
 		BaseContent.buffOrRecover(statname, value,tag,text,tick,rate);
 	}
+	public function DrainStat(statname:String, value:Number):void {
+		CoC.instance.player.drainStat(statname,value);
+	}
+	public function RecoverStat(statname:String, value:Number):void {
+		CoC.instance.player.drainStat(statname,-value);
+	}
 	public function Buff(creature:Creature,statname:String,value:Number,tag:String,text:String,tick:int,rate:int):void {
 		creature.incTempBuff(statname,value,tag,text,tick,rate);
 	}

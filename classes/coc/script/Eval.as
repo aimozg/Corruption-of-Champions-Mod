@@ -27,7 +27,7 @@ public class Eval {
 		try {
 			return _call();
 		} catch (e:Error){
-			error(_src,"",e.message,false);
+			throw error(_src,"",e.message,false);
 		}
 	}
 

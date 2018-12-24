@@ -204,9 +204,11 @@ import flash.events.Event;
 				} else if (selected is BoundNode) {
 					menu();
 					(selected as BoundNode).execute();
+					player.updateStats();
 					if (mainView.firstButtonByVisibility(true) >= 0) return
 				} else {
 					node.execute(context);
+					player.updateStats();
 				}
 			} else {
 				if (selected == SceneLib) {

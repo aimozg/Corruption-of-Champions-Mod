@@ -11,6 +11,7 @@ import classes.Creature;
 import classes.EngineCore;
 import classes.GlobalFlags.kFLAGS;
 import classes.CoC;
+import classes.PregnancyStore;
 import classes.Scenes.SceneLib;
 
 import coc.xlogic.ExecContext;
@@ -50,6 +51,7 @@ public class StoryContext extends ExecContext{
 				kFLAGS:kFLAGS,
 				kGAMECLASS:CoC.instance,
 				Math:Math,
+				PregnancyStore:PregnancyStore,
 				SceneLib:SceneLib,
 				Skin:Skin,
 				silly:EngineCore.silly
