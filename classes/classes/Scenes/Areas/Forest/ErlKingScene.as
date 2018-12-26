@@ -1,5 +1,6 @@
 package classes.Scenes.Areas.Forest
 {
+
 import classes.*;
 import classes.BodyParts.Ears;
 import classes.BodyParts.Face;
@@ -10,8 +11,6 @@ import classes.BodyParts.Tail;
 import classes.BodyParts.Wings;
 import classes.GlobalFlags.kFLAGS;
 import classes.Modding.GameMod;
-
-import coc.xxc.BoundNode;
 
 public class ErlKingScene extends BaseContent
 	{
@@ -63,90 +62,33 @@ public class ErlKingScene extends BaseContent
 					-10 for Goo Half
 					-10 for Centaur Half
 			*/
+			var bonuses:Array = [
+				[player.hasPerk(PerkLib.Evade),                20, "+20 for Evade"],
+				[player.hasPerk(PerkLib.Runner),               20, "+20 for Runner"],
+				[player.isDrider(),                            20, "+20 for Drider"],
+				[player.hasPerk(PerkLib.CorruptedNinetails),   30, "+30 For Ninetails"],
+				[player.hasPerk(PerkLib.EnlightenedNinetails), 30, "+30 for Ninetails"],
 
-			if (player.hasPerk(PerkLib.Evade))
-			{
-				baseVal += 20;
-				trace("+20 for Evade");
-			}
-			if (player.hasPerk(PerkLib.Runner))
-			{
-				baseVal += 20;
-				trace("+20 for Runner");
-			}
-			if (player.isDrider())
-			{
-				baseVal += 20;
-				trace("+20 for Drider");
-			}
-			if (player.hasPerk(PerkLib.CorruptedNinetails))
-			{
-				baseVal += 30;
-				trace("+30 For Ninetails");
-			}
-			if (player.hasPerk(PerkLib.EnlightenedNinetails))
-			{
-				baseVal += 30;
-				trace("+30 for Ninetails");
-			}
+				// Akbal Blessings
+				[player.hasPerk(PerkLib.FireLord),             10, "+10 for Firelord"],
+				[player.hasPerk(PerkLib.Whispered),            10, "+10 for Whispered"],
 
-			// Akbal Blessings
-			if (player.hasPerk(PerkLib.FireLord))
-			{
-				baseVal += 10;
-				trace("+10 for Firelord");
+				[player.hasPerk(PerkLib.Fast),                 10, "+10 for Fast"],
+				[player.hasPerk(PerkLib.Incorporeality),       10, "+10 for Incorporeal"],
+				[player.canFly(),                              10, "+10 for Flight"],
+				// Heavy penalty for prey features. The penalty is applied PER FEATURE.
+				[player.kitsuneScore(),                       -20, "-20 for each Kitsune part"],
+				[player.bunnyScore(),                         -20, "-20 for each Bunny part"],
+				[player.harpyScore(),                         -20, "-20 for each Harpy part"],
+				[player.gooScore(),                           -10, "-10 for each Goo part"],
+				[player.isTaur(),                             -10, "-10 for Taur"]
+			];
+			for each(var bonus:Array in bonuses) {
+				var b:int = Math.max(int(bonus[0]), 0) * bonus[1];
+				baseVal += b;
+				trace(b.toString() + ": " + bonus[2]);
 			}
-			if (player.hasPerk(PerkLib.Whispered))
-			{
-				baseVal += 10;
-				trace("+10 for Whispered");
-			}
-
-			if (player.hasPerk(PerkLib.Fast))
-			{
-				baseVal += 10;
-				trace("+10 for Fast");
-			}
-			if (player.hasPerk(PerkLib.Incorporeality))
-			{
-				baseVal += 10;
-				trace("+10 for Incorporeal");
-			}
-			if (player.canFly())
-			{
-				baseVal += 10;
-				trace("+10 for Flight");
-			}
-
-			// Heavy penalty for prey features. The penalty is applied PER FEATURE.
-			if (player.kitsuneScore() > 0)
-			{
-				baseVal -= (player.kitsuneScore() * 20);
-				trace("-20 for each Kitsune part (-" + String(player.kitsuneScore() * 20) + ")");
-			}
-			if (player.bunnyScore() > 0) 							
-			{
-				baseVal -= (player.bunnyScore() * 20);
-				trace("-20 for each Bunny part (-" + String(player.bunnyScore() * 20) + ")");
-			}
-			if (player.harpyScore() > 0)
-			{
-				baseVal -= (player.harpyScore() * 20);
-				trace("-20 for each Harpy part (-" + String(player.harpyScore() * 20) + ")");
-			}
-			if (player.gooScore() > 0)
-			{
-				baseVal -= (player.gooScore() * 10);
-				trace("-10 for each Goo part (-" + String(player.gooScore() * 10) + ")");
-			}
-
-			if (player.isTaur())
-			{
-				baseVal -= 10;
-				trace("-10 for Taur");
-			}
-
-			if (baseVal < 0) baseVal = 0;
+			baseVal = Math.max(baseVal, 0);
 			trace("Wild Hunt Points = " + baseVal);
 			
 			return baseVal;
@@ -159,10 +101,10 @@ public class ErlKingScene extends BaseContent
 			outputText("As you explore between the tall, ancient trees, you notice a thick fog beginning to spill out from between the trees and over the mossy ground. As the haze pours forth and flows past your [feet], you notice the forest around you growing distinctly darker and colder. \n\n");
 
 			outputText("A shiver of unnatural fear runs up your spine, just as a hunting horns sounds from the distance.  You gasp, your breath materializing as a puff of fine, white mist.  Just as the echoes of the horns fade, a chorus of canine howls breaks through the");
-			if (model.time.hours >= 0 && model.time.hours <= 10) outputText(" chill morning");
-			else if (model.time.hours >= 11 && model.time.hours <= 13) outputText(" unusually cold daytime");
-			else if (model.time.hours >= 14 && model.time.hours <= 17) outputText(" brisk afternoon");
-			else if (model.time.hours >= 18 && model.time.hours <= 24) outputText(" freezing night");
+			if (model.time.hours >= 18) outputText(" freezing night");
+			else if (model.time.hours >= 14) outputText(" brisk afternoon");
+			else if (model.time.hours >= 11) outputText(" unusually cold daytime");
+			else outputText(" chill morning");
 			outputText(" air. Your eyes twitch and ears ring at the sound of hooves pounding through the forest.\n\n");
 
 			outputText("The unholy choir of horns, hounds, and hooves shake the woods around you as the fog rises, shoulder-high.  Your heart pounds - you’re not sure <b>why</b> you’re frightened, only that you <b>are</b>.  Something is out there in the darkness, and it's coming for you!  Do you flee, or stand your ground?\n\n");
@@ -414,13 +356,11 @@ public class ErlKingScene extends BaseContent
 			var gemFind:int = 10 + rand(15);
 
 			outputText("<b>You found " + gemFind + " gems.</b>\n\n");
-
-			var selector:int = rand(4);
-
-			if (selector == 0) inventory.takeItem(consumables.CANINEP, camp.returnToCampUseOneHour);
-			if (selector == 1) inventory.takeItem(consumables.FOXBERY, camp.returnToCampUseOneHour);
-			if (selector == 2) inventory.takeItem(consumables.NPNKEGG, camp.returnToCampUseOneHour);
-			if (selector == 3) inventory.takeItem(consumables.GLDRIND, camp.returnToCampUseOneHour);
+			player.gems += gemFind;
+			inventory.takeItem(
+				randomChoice(consumables.CANINEP, consumables.FOXBERY, consumables.NPNKEGG, consumables.GLDRIND),
+				camp.returnToCampUseOneHour
+			);
 		}
 
 		protected function stopTheMadness():void
