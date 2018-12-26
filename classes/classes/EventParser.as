@@ -399,105 +399,47 @@ public class EventParser {
         return 0;
     }
 
+    //Used by UrtaPregs to stop updates in order to display a scene
+    public static function escape():void {
+        _escape = true;
+    }
+    private static var _escape:Boolean = false;
+    private static function get parser_escape():Boolean {
+        var r:Boolean = _escape;
+        _escape = false;
+        return r;
+    }
     private static function pregnancyProgress():int {
         var needNext:Boolean = false;
-        //No diapause?  Normal!
         var player:Player = CoC.instance.player;
         var flags:DefaultDict = CoC.instance.flags;
-        if (!player.hasPerk(PerkLib.Diapause)) {
-            if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
-            //DOUBLE PREGGERS SPEED
-            if (player.hasPerk(PerkLib.MaraesGiftFertility)) {
-                if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            }
-            //DOUBLE PREGGERS SPEED
-            if (player.hasPerk(PerkLib.MagicalFertility)) {
-                if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            }
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
-            if (player.hasPerk(PerkLib.FerasBoonBreedingBitch)) {
-                if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            }
-            if (player.hasPerk(PerkLib.FerasBoonWideOpen) || player.hasPerk(PerkLib.FerasBoonMilkingTwat)) {
-                if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            }
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
-            //DOUBLE PREGGERS SPEED
-            if (player.hasPerk(PerkLib.BroodMother)) {
-                if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            }
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
+        var conditions:/*PerkType*/Array = [
+            PerkLib.MaraesGiftFertility,
+            PerkLib.MagicalFertility,
+            PerkLib.FerasBoonBreedingBitch,
+            PerkLib.FerasBoonWideOpen,
+            PerkLib.FerasBoonMilkingTwat
+        ];
+        var updates:int = 1;
+        for each (var pType:PerkType in conditions){
+            if(player.hasPerk(pType)){updates += 1;}
         }
-        //Diapause!
-        else if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00228] > 0 && (player.pregnancyIncubation > 0 || player.buttPregnancyIncubation > 0)) {
+        if (player.hasPerk(PerkLib.Diapause)) {
+            if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00228] <= 0 || (player.pregnancyIncubation <= 0 && player.buttPregnancyIncubation <= 0)) {
+                return 0;
+            }
             if (flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00229] == 1) {
                 flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00229] = 0;
                 EngineCore.outputText("\n\nYour body reacts to the influx of nutrition, accelerating your pregnancy. Your belly bulges outward slightly.");
                 needNext = true;
             }
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
             flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00228]--;
-            if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
-            if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
-            if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
-            //DOUBLE PREGGERS SPEED
-            if (player.hasPerk(PerkLib.MaraesGiftFertility)) {
-                if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            }
-            //DOUBLE PREGGERS SPEED
-            if (player.hasPerk(PerkLib.MagicalFertility)) {
-                if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            }
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
-            if (player.hasPerk(PerkLib.FerasBoonBreedingBitch)) {
-                if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            }
-            if (player.hasPerk(PerkLib.FerasBoonWideOpen) || player.hasPerk(PerkLib.FerasBoonMilkingTwat)) {
-                if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            }
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
-            //DOUBLE PREGGERS SPEED
-            if (player.hasPerk(PerkLib.BroodMother)) {
-                if (player.pregnancyAdvance()) needNext = true; //Make sure pregnancy texts aren't hidden
-            }
-            if (flags[kFLAGS.EVENT_PARSER_ESCAPE] == 1) {
-                flags[kFLAGS.EVENT_PARSER_ESCAPE] = 0;
-                return 2;
-            }
+            updates += 2;
+        }
+
+        for(var i:int = 0; i < updates; i++) {
+            needNext ||= player.pregnancyAdvance();
+            if(parser_escape){return 2;}
         }
         return needNext ? 1 : 0;
     }
@@ -615,65 +557,16 @@ public class EventParser {
         var player:Player = CoC.instance.player;
         var currentLength:Number = player.hairLength;
         player.hairLength += amount;
+        var thresholds:Array = [1, 3, 6, 10, 16, 26, 40, Math.max(40, player.tallness)];
         if (player.hairLength > 0 && currentLength == 0) {
             EngineCore.outputText("\n<b>You are no longer bald.  You now have " + Appearance.hairDescription(player) + " coating your head.\n</b>");
             return true;
         }
-        else if (player.hairLength >= 1 && currentLength < 1) {
-            EngineCore.outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairLength >= 3 && currentLength < 3) {
-            EngineCore.outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairLength >= 6 && currentLength < 6) {
-            EngineCore.outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairType == Hair.GORGON && player.hairLength >= 6 && currentLength < 6) {
-            EngineCore.outputText("\n<b>Your gorgon's hair growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairLength >= 10 && currentLength < 10) {
-            EngineCore.outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairType == Hair.GORGON && player.hairLength >= 10 && currentLength < 10) {
-            EngineCore.outputText("\n<b>Your gorgon's hair growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairLength >= 16 && currentLength < 16) {
-            EngineCore.outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairType == Hair.GORGON && player.hairLength >= 16 && currentLength < 16) {
-            EngineCore.outputText("\n<b>Your gorgon's hair growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairLength >= 26 && currentLength < 26) {
-            EngineCore.outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairType == Hair.GORGON && player.hairLength >= 26 && currentLength < 26) {
-            EngineCore.outputText("\n<b>Your gorgon's hair growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairLength >= 40 && currentLength < 40) {
-            EngineCore.outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairType == Hair.GORGON && player.hairLength >= 40 && currentLength < 40) {
-            EngineCore.outputText("\n<b>Your gorgon's hair growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairLength >= 40 && player.hairLength >= player.tallness && currentLength < player.tallness) {
-            EngineCore.outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.hairType == Hair.GORGON && player.hairLength >= 40 && player.hairLength >= player.tallness && currentLength < player.tallness) {
-            EngineCore.outputText("\n<b>Your gorgon's hair growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
-            return true;
+        for each (var t:Number in thresholds){
+            if(player.hairLength >= t && currentLength < t){
+	            EngineCore.outputText("\n<b>Your hair's growth has reached a new threshhold, giving you " + Appearance.hairDescription(player) + ".\n</b>");
+	            return true;
+            }
         }
         return false;
     }
@@ -683,32 +576,17 @@ public class EventParser {
         var player:Player = CoC.instance.player;
         var tempBeard:Number = player.beardLength;
         player.beardLength += amount;
-
+        var thresholds:Array = [0.2, 0.5, 1.5, 3, 6];
         if (player.beardLength > 0 && tempBeard == 0) {
             EngineCore.outputText("\n<b>You feel a tingling in your cheeks and chin.  You now have " + Appearance.beardDescription(player) + " coating your cheeks and chin.\n</b>");
             return true;
         }
-        else if (player.beardLength >= 0.2 && tempBeard < 0.2) {
-            EngineCore.outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + Appearance.beardDescription(player) + ".\n</b>");
-            return true;
+        for each (var t:Number in thresholds) {
+            if(player.beardLength >= t && tempBeard < t){
+                EngineCore.outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + Appearance.beardDescription(player) + ".\n</b>");
+                return true;
+            }
         }
-        else if (player.beardLength >= 0.5 && tempBeard < 0.5) {
-            EngineCore.outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + Appearance.beardDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.beardLength >= 1.5 && tempBeard < 1.5) {
-            EngineCore.outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + Appearance.beardDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.beardLength >= 3 && tempBeard < 3) {
-            EngineCore.outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + Appearance.beardDescription(player) + ".\n</b>");
-            return true;
-        }
-        else if (player.beardLength >= 6 && tempBeard < 6) {
-            EngineCore.outputText("\n<b>Your beard's growth has reached a new threshhold, giving you " + Appearance.beardDescription(player) + ".\n</b>");
-            return true;
-        }
-
         return false;
     }
     //Any classes that need to be aware of the passage of time can add themselves to this array using timeAwareAdd.
