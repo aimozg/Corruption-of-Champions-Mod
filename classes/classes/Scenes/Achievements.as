@@ -42,6 +42,7 @@ public class Achievements extends BaseContent
 		*/
 		public function achievementsScreen():void {
 			CoC.instance.mainMenu.hideMainMenu();
+			CoC.instance.saves.loadPermObject();
 			achievementsEarned = 0;
 			achievementsTotal = 0;
 			clearOutput();

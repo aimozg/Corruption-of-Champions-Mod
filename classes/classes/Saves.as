@@ -10,7 +10,6 @@ import classes.BodyParts.Horns;
 import classes.BodyParts.RearBody;
 import classes.BodyParts.Tail;
 import classes.BodyParts.Tongue;
-import classes.GlobalFlags.kACHIEVEMENTS;
 import classes.GlobalFlags.kFLAGS;
 import classes.Items.*;
 import classes.Modding.GameMod;
@@ -19,13 +18,12 @@ import classes.Scenes.Dungeons.DungeonAbstractContent;
 import classes.Scenes.NPCs.JojoScene;
 import classes.Scenes.NPCs.XXCNPC;
 import classes.Scenes.SceneLib;
+import classes.Stats.IStat;
+import classes.internals.Jsonable;
 import classes.lists.Gender;
 import classes.saves.FileSaver;
 import classes.saves.FileSaverAir;
 import classes.saves.FileSaverStandalone;
-import classes.Stats.IStat;
-import classes.internals.Jsonable;
-import classes.lists.BreastCup;
 
 import flash.events.MouseEvent;
 import flash.net.FileReference;
@@ -367,133 +365,77 @@ public function loadGame(slot:String,fromMain:Boolean = false):void
 	}
 }
 
-//Used for tracking achievements.
-public function savePermObject(isFile:Boolean):void {
-	//Initialize the save file
-	var saveFile:*;
-	var backup:SharedObject;
-	if (isFile)
-	{
-		saveFile = {};
-		
-		saveFile.data = {};
-	}
-	else
-	{
-		saveFile = SharedObject.getLocal(sharedDir+"CoC_Main", "/");
-	}
-	
-	saveFile.data.exists = true;
-	saveFile.data.version = ver;
-	
-	var processingError:Boolean = false;
-	var dataError:Error;
-	
-	try {
-		var i:int;
-		//flag settings
-		saveFile.data.flags = [];
-		for (i = 0; i < achievements.length; i++) {
-			if (flags[i] != 0)
-			{
-				saveFile.data.flags[i] = 0;
-			}			
-		}
-		saveFile.data.flags[kFLAGS.NEW_GAME_PLUS_BONUS_UNLOCKED_HERM] = flags[kFLAGS.NEW_GAME_PLUS_BONUS_UNLOCKED_HERM];
-		
-		saveFile.data.flags[kFLAGS.SHOW_SPRITES_FLAG] = flags[kFLAGS.SHOW_SPRITES_FLAG];
-		saveFile.data.flags[kFLAGS.SILLY_MODE_ENABLE_FLAG] = flags[kFLAGS.SILLY_MODE_ENABLE_FLAG];
-		saveFile.data.flags[kFLAGS.WATERSPORTS_ENABLED] = flags[kFLAGS.WATERSPORTS_ENABLED];
-		
-		saveFile.data.flags[kFLAGS.CHARVIEWER_ENABLED] = flags[kFLAGS.CHARVIEWER_ENABLED];
-		saveFile.data.flags[kFLAGS.USE_OLD_INTERFACE] = flags[kFLAGS.USE_OLD_INTERFACE];
-		saveFile.data.flags[kFLAGS.USE_OLD_FONT] = flags[kFLAGS.USE_OLD_FONT];
-		saveFile.data.flags[kFLAGS.BACKGROUND_STYLE] = flags[kFLAGS.BACKGROUND_STYLE];
-		saveFile.data.flags[kFLAGS.IMAGEPACK_OFF] = flags[kFLAGS.IMAGEPACK_OFF];
-		saveFile.data.flags[kFLAGS.SPRITE_STYLE] = flags[kFLAGS.SPRITE_STYLE];
-		saveFile.data.flags[kFLAGS.SFW_MODE] = flags[kFLAGS.SFW_MODE];
-		saveFile.data.flags[kFLAGS.WATERSPORTS_ENABLED] = flags[kFLAGS.WATERSPORTS_ENABLED];
-		saveFile.data.flags[kFLAGS.USE_12_HOURS] = flags[kFLAGS.USE_12_HOURS];
-		saveFile.data.flags[kFLAGS.AUTO_LEVEL] = flags[kFLAGS.AUTO_LEVEL];
 
-		saveFile.data.settings = [];
-		saveFile.data.settings.useMetrics = Measurements.useMetrics;
-		//achievements
-		saveFile.data.achievements = [];
-		for (i = 0; i < achievements.length; i++)
-		{
-			// Don't save unset/default achievements
-			if (achievements[i] != 0)
-			{
-				saveFile.data.achievements[i] = achievements[i];
+	private const _permObjectFlags:Array = [
+		kFLAGS.NEW_GAME_PLUS_BONUS_UNLOCKED_HERM,
+		kFLAGS.SHOW_SPRITES_FLAG,
+		kFLAGS.SILLY_MODE_ENABLE_FLAG,
+		kFLAGS.CHARVIEWER_ENABLED,
+		kFLAGS.USE_OLD_INTERFACE,
+		kFLAGS.USE_OLD_FONT,
+		kFLAGS.BACKGROUND_STYLE,
+		kFLAGS.IMAGEPACK_OFF,
+		kFLAGS.SPRITE_STYLE,
+		kFLAGS.SFW_MODE,
+		kFLAGS.WATERSPORTS_ENABLED,
+		kFLAGS.USE_12_HOURS,
+		kFLAGS.AUTO_LEVEL
+	];
+
+	public function savePermObject(isFile:Boolean):void {
+		//Initialize the save file
+		var saveFile:*        = SharedObject.getLocal(sharedDir + "CoC_Main", "/");
+		saveFile.data.exists  = true;
+		saveFile.data.version = ver;
+
+		try {
+			//flag settings
+			saveFile.data.flags = [];
+			for each (var permObjectFlag:* in _permObjectFlags) {
+				saveFile.data.flags[permObjectFlag] = flags[permObjectFlag];
 			}
-		}
-        if (CoC.instance.permObjVersionID != 0)
-            saveFile.data.permObjVersionID = CoC.instance.permObjVersionID;
-    }
-	catch (error:Error)
-	{
-		processingError = true;
-		dataError = error;
-		trace(error.message);
-	}
-	trace("done saving achievements");
-}
 
-public function loadPermObject():void {
-	var saveFile:* = SharedObject.getLocal(sharedDir+"CoC_Main", "/");
-	trace("Loading achievements!");
-	//Initialize the save file
-	//var saveFile:Object = loader.data.readObject();
-	if (saveFile.data.exists)
-	{
-		//Load saved flags.
+			saveFile.data.settings            = [];
+			saveFile.data.settings.useMetrics = Measurements.useMetrics;
+			//achievements
+			var current:Object = {};
+			if(saveFile.data.achievements != undefined) {
+				current = saveFile.data.achievements;
+			}
+			saveFile.data.achievements = [];
+			for (var i:int = 0; i < achievements.length; i++) {
+				if (achievements[i] != 0 || (i in current && current[i] != 0)) {
+					saveFile.data.achievements[i] = 1;
+				}
+			}
+		} catch (error:Error) {
+			trace(error.message);
+		}
+		trace("done saving achievements");
+	}
+
+	public function loadPermObject():void {
+		var saveFile:* = SharedObject.getLocal(sharedDir + "CoC_Main", "/");
+		trace("Loading achievements!");
+		if (!saveFile.data.exists) { return; }
 		if (saveFile.data.flags) {
-			if (saveFile.data.flags[kFLAGS.NEW_GAME_PLUS_BONUS_UNLOCKED_HERM] != undefined) flags[kFLAGS.NEW_GAME_PLUS_BONUS_UNLOCKED_HERM] = saveFile.data.flags[kFLAGS.NEW_GAME_PLUS_BONUS_UNLOCKED_HERM];
-			
-			if (saveFile.data.flags[kFLAGS.SHOW_SPRITES_FLAG] != undefined) flags[kFLAGS.SHOW_SPRITES_FLAG] = saveFile.data.flags[kFLAGS.SHOW_SPRITES_FLAG];
-			if (saveFile.data.flags[kFLAGS.SILLY_MODE_ENABLE_FLAG] != undefined) flags[kFLAGS.SILLY_MODE_ENABLE_FLAG] = saveFile.data.flags[kFLAGS.SILLY_MODE_ENABLE_FLAG];
-			
-			if (saveFile.data.flags[kFLAGS.CHARVIEWER_ENABLED] != undefined) flags[kFLAGS.CHARVIEWER_ENABLED] = saveFile.data.flags[kFLAGS.CHARVIEWER_ENABLED];
-			if (saveFile.data.flags[kFLAGS.USE_OLD_INTERFACE] != undefined) flags[kFLAGS.USE_OLD_INTERFACE] = saveFile.data.flags[kFLAGS.USE_OLD_INTERFACE];
-			if (saveFile.data.flags[kFLAGS.USE_OLD_FONT] != undefined) flags[kFLAGS.USE_OLD_FONT] = saveFile.data.flags[kFLAGS.USE_OLD_FONT];
-			if (saveFile.data.flags[kFLAGS.BACKGROUND_STYLE] != undefined) flags[kFLAGS.BACKGROUND_STYLE] = saveFile.data.flags[kFLAGS.BACKGROUND_STYLE];
-			if (saveFile.data.flags[kFLAGS.IMAGEPACK_OFF] != undefined) flags[kFLAGS.IMAGEPACK_OFF] = saveFile.data.flags[kFLAGS.IMAGEPACK_OFF];
-			if (saveFile.data.flags[kFLAGS.SPRITE_STYLE] != undefined) flags[kFLAGS.SPRITE_STYLE] = saveFile.data.flags[kFLAGS.SPRITE_STYLE];
-			if (saveFile.data.flags[kFLAGS.SFW_MODE] != undefined) flags[kFLAGS.SFW_MODE] = saveFile.data.flags[kFLAGS.SFW_MODE];
-			if (saveFile.data.flags[kFLAGS.WATERSPORTS_ENABLED] != undefined) flags[kFLAGS.WATERSPORTS_ENABLED] = saveFile.data.flags[kFLAGS.WATERSPORTS_ENABLED];
-			if (saveFile.data.flags[kFLAGS.USE_12_HOURS] != undefined) flags[kFLAGS.USE_12_HOURS] = saveFile.data.flags[kFLAGS.USE_12_HOURS];
-			if (saveFile.data.flags[kFLAGS.AUTO_LEVEL] != undefined) flags[kFLAGS.AUTO_LEVEL] = saveFile.data.flags[kFLAGS.AUTO_LEVEL];
-		}
-		if(saveFile.data.settings){
-			if(saveFile.data.settings.useMetrics != undefined){Measurements.useMetrics = saveFile.data.settings.useMetrics;}
-		}
-		//achievements, will check if achievement exists.
-		if (saveFile.data.achievements) {
-			for (var i:int = 0; i < achievements.length; i++)
-			{
-				if (saveFile.data.achievements[i] != undefined)
-					achievements[i] = saveFile.data.achievements[i];
+			for each (var permObjectFlag:* in _permObjectFlags) {
+				if (saveFile.data.flags[permObjectFlag] != undefined) {
+					flags[permObjectFlag] = saveFile.data.flags[permObjectFlag];
+				}
 			}
 		}
-
-		if (saveFile.data.permObjVersionID != undefined) {
-            CoC.instance.permObjVersionID = saveFile.data.permObjVersionID;
-            trace("Found internal permObjVersionID:", CoC.instance.permObjVersionID);
-        }
-
-if (CoC.instance.permObjVersionID < 1039900) {
-            // apply fix for issue #337 (Wrong IDs in kACHIEVEMENTS conflicting with other achievements)
-			achievements[kACHIEVEMENTS.ZONE_EXPLORER] = 0;
-			achievements[kACHIEVEMENTS.ZONE_SIGHTSEER] = 0;
-			achievements[kACHIEVEMENTS.GENERAL_PORTAL_DEFENDER] = 0;
-			achievements[kACHIEVEMENTS.GENERAL_BAD_ENDER] = 0;
-            CoC.instance.permObjVersionID = 1039900;
-            savePermObject(false);
-            trace("PermObj internal versionID updated:", CoC.instance.permObjVersionID);
-        }
+		if (saveFile.data.settings) {
+			if (saveFile.data.settings.useMetrics != undefined) {
+				Measurements.useMetrics = saveFile.data.settings.useMetrics;
+			}
+		}
+		if (saveFile.data.achievements) {
+			for (var achievementKey:String in saveFile.data.achievements) {
+				achievements[achievementKey] = saveFile.data.achievements[achievementKey];
+			}
+		}
 	}
-}
 
 /*
 
