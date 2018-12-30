@@ -41,6 +41,39 @@ public class HellHoundScene extends BaseContent
 				outputText("\n\n<b>New codex entry unlocked: Hellhounds!</b>")
 			}
 		}
+		
+		public function hellHoundDefeated(hpVictory:Boolean):void {
+			clearOutput();
+			if (hpVictory) {
+				outputText("The hellhound's flames dim and the heads let out a whine before the creature slumps down, defeated and nearly unconscious.");
+				//Rape if not naga, turned on, and girl that can fit!
+				if (player.hasVagina() && player.lust >= 33 && !player.isNaga()) {
+					outputText("  You find yourself musing that you could probably take advantage of the poor 'doggy'.  Do you fuck it?");
+					menu();
+					button(0).show("Fuck it", hellHoundPropahRape);
+					button(4).show("Leave", combat.cleanupAfterCombatImpl);
+				} else {
+					combat.cleanupAfterCombatImpl();
+				}
+			} else {
+				outputText("Unable to bear hurting you anymore, the hellhound's flames dim as he stops his attack. The two heads look at you, whining plaintively.  The hellhound slowly pads over to you and nudges its noses at your crotch.  It seems he wishes to pleasure you.\n\n");
+				if (player.gender > 0 && player.lust >= 33) {
+					outputText("You realize your desires aren't quite sated.  You could let it please you");
+					menu();
+					button(0).show("Lick", hellHoundGetsRaped);
+					//Rape if not naga, turned on, and girl that can fit!
+					if (player.hasVagina() && player.lust >= 33 && !player.isNaga()) {
+						outputText(" or make it fuck you");
+						button(1).show("Fuck", hellHoundPropahRape);
+					}
+					outputText(".  What do you do?");
+					button(4).show("Leave", combat.cleanupAfterCombatImpl);
+				} else {
+					outputText("You turn away, not really turned on enough to be interested in such an offer.");
+					combat.cleanupAfterCombatImpl();
+				}
+			}
+		}
 
 
 		public function hellhoundRapesPlayer():void
@@ -49,25 +82,13 @@ public class HellHoundScene extends BaseContent
 			clearOutput();
 			mod.display("hellhoundRapesPlayer");
 			player.slimeFeed();
-			player.orgasm();
 			cleanupAfterCombat();
 		}
 
 		public function hellHoundGetsRaped():void
 		{
 			clearOutput();
-			//(Raped by player)
-			//[if player has only one dick and no vagina]
-			if (player.cocks.length == 1 && player.vaginas.length == 0) outputText("The twin heads of the hellhound eagerly lick your [cock] for a while.  The large, flat tongues give you a rather unusual feeling, but it is definitely effective. As you approach your peak, one of the heads tries to take your manhood into its mouth. But the other head doesn't seem all that pleased with this, and the two start to nip at each other in an effort to claim the right to be the one to push you over the edge. Annoyed at being ignored, you give both heads a smack with your hand. After a moment of recoil, they look down apologetically before resuming their licking. As you peak, the heads pull back and try to catch all the cum that erupts from your [cock] in their mouths. The fierce competition between the two means that most of the cum ends up outside their eager maws, but they are nontheless satisfied.  With a pair of happy barks, the hellhound turns and runs away.");
-			//[if player has only a vagina and no dick] 
-			if (player.gender == 2) outputText("The twin heads of the hellhound eagerly lick your [vagina] for a while.  The large, flat tongues give you a rather unusual feeling, but it is definitely effective. As you approach your peak, one of the heads tries to force the other out of the way and push its snout into your [vagina]. But the other head doesn't seem all that pleased with this, and the two start to nip at each other in an effort to claim the right to be the one to push you over the edge. Annoyed at being ignored, you give both heads a smack with your hand. After a moment of recoil, they look down apologetically before resuming their licking. As you peak, the heads resume their quarrel and try to drink as much as the fluids coming from your [vagina] as they can.  You don't know which got the most, but before long your [vagina] is definitely quite clean.  With a pair of happy barks, the hellhound turns and runs away.");
-			//[if player has a dick and a vagina] 
-			if (player.gender == 3 && player.cocks.length == 1) outputText("One of the heads eagerly starts licking your [cock] while the other starts working on your [vagina]. The large, flat tongues give you a rather unusual feeling, but it is definitely effective.  As you approach your peak, the head that had been licking your [cock] suddenly takes it into its mouth while the other pushes its snout into your [vagina]. The pleasure from this new arrangement quickly overwhelms you, leaving you dazed.  When your senses return to you, you look up to see the hellhound's tongues running all over their mouths, clearly very happy.  With a pair of happy barks, the hellhound turns and runs away.");
-			//If player has multiple endowments
-			if (player.cocks.length > 1) outputText("One of the heads eagerly starts licking your [cock] while the other starts to work on your " + cockDescript(1) + ". The large, flat tongues give you a rather unusual feeling, but it is definitely effective.   As you approach your peak, the heads quickly take your [cock] and " + cockDescript(1) + " into their mouths. The pleasure from this new arrangement quickly overwhelms you, leaving you dazed.  When your senses return to you, you look up to see the hellhound's tongues running all over their mouths, clearly very happy.  With a pair of happy barks, the hellhound turns and runs away.");
-			//[if player has no endowments] 
-			if (player.gender == 0) outputText("The two heads stare at your lack of sexual endowments for a few seconds before looking up at you sadly.  With a whine, the hellhound wanders off.  Feeling rather unsatisfied, you think that you should probably fix your lack of sexual 'parts'...");
-			else player.orgasm();
+			mod.display("hellHoundGetsRaped");
 			cleanupAfterCombat();
 		}
 

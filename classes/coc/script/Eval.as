@@ -218,6 +218,8 @@ public class Eval {
 		if (eatStr('(')) {
 			x = evalUntil(")");
 			eatStr(")");
+		} else if (eatStr('!') || eat(/^not\b/)) {
+			x = wrapNot(evalExpr(60));
 		} else if (eatStr('[')) {
 			var f:/*Function*/Array;
 			if (eatStr(']')) {
@@ -373,6 +375,11 @@ public class Eval {
 	private function wrapOp(x:Function,op:String,y:Function):Function {
 		return function():* {
 			return calculate(x,op,y);
+		};
+	}
+	private function wrapNot(x:Function):Function {
+		return function():* {
+			return !x();
 		};
 	}
 	private function wrapArray(array:/*Function*/Array):Function {
