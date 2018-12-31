@@ -2964,185 +2964,76 @@ public final class Mutations extends MutationsHelper
 		}
 
 
+	private function spellBookEffect(player:Player, item:ItemType, unlocks:Array):void {
+		var intBuff:Number = rand(5);
+		if (player.inte < 30) {
+			outputText("\n\nYou feel greatly enlightened by your time spent reading.");
+			intBuff += 15;
+		}
+		else if (player.inte < 60) {
+			outputText("\n\nSpending some time reading was probably good for you, and you definitely feel smarter for it.");
+			intBuff += 10;
+		}
+		else if (player.inte < 90) {
+			outputText("\n\nAfter reading the small tome your already quick mind feels invigorated.");
+			intBuff += 5;
+		}
+		else {
+			outputText("\n\nThe contents of the book did little for your already considerable intellect.");
+			intBuff += 1;
+		}
+		player.addItemTaggedTempBuff(item,"int",intBuff);
+
+		for each (var unlock:* in unlocks) {
+			if(player.inte >= unlock.inte && !player.hasStatusEffect(unlock.status)){
+				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: " + unlock.status.id.replace("Knows", "") + ".</b>");
+				player.createStatusEffect(unlock.status,0,0,0,0);
+				return;
+			}
+		}
+	}
 		public function blackSpellbook(player:Player):void
 		{
 			clearOutput();
 			outputText("You open the small black book, and discover it to be an instructional book on the use of black magic.  Most of it is filled with generic information about black magic - how it is drawn from emotions (typically lust), and how it has the power to affect bodies and emotions.  It also warns against using it on oneself, as it is difficult to draw on your emotions while meddling with your own body.  In no time at all you've read the whole thing, but it disappears into thin air before you can put it away.");
-			var intBuff:Number;
-			if (player.inte < 30) {
-				outputText("\n\nYou feel greatly enlightened by your time spent reading.");
-				intBuff = 15+rand(5);
-			}
-			else if (player.inte < 60) {
-				outputText("\n\nSpending some time reading was probably good for you, and you definitely feel smarter for it.");
-				intBuff = 10+rand(5);
-			}
-			else if (player.inte < 90) {
-				outputText("\n\nAfter reading the small tome your already quick mind feels invigorated.");
-				intBuff = 5+rand(5);
-			}
-			else {
-				outputText("\n\nThe contents of the book did little for your already considerable intellect.");
-				intBuff = 1+rand(5);
-			}
-			player.addItemTaggedTempBuff(consumables.B__BOOK,"int",intBuff);
-			//Smart enough for arouse and doesnt have it
-			if (player.inte >= 20 && !player.hasStatusEffect(StatusEffects.KnowsArouse)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Arouse.</b>");
-				player.createStatusEffect(StatusEffects.KnowsArouse, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for regenerate and doesnt have it
-			if (player.inte >= 25 && !player.hasStatusEffect(StatusEffects.KnowsRegenerate)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Regenerate.</b>");
-				player.createStatusEffect(StatusEffects.KnowsRegenerate, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for might and doesnt have it
-			if (player.inte >= 30 && !player.hasStatusEffect(StatusEffects.KnowsMight)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Might.</b>");
-				player.createStatusEffect(StatusEffects.KnowsMight, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for blink and doesnt have it
-			if (player.inte >= 35 && !player.hasStatusEffect(StatusEffects.KnowsBlink)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Blink.</b>");
-				player.createStatusEffect(StatusEffects.KnowsBlink, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for ice spike and doesnt have it
-			if (player.inte >= 40 && !player.hasStatusEffect(StatusEffects.KnowsIceSpike)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Ice Spike.</b>");
-				player.createStatusEffect(StatusEffects.KnowsIceSpike, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for darkness shard and doesnt have it
-			if (player.inte >= 45 && !player.hasStatusEffect(StatusEffects.KnowsDarknessShard)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Darkness Shard.</b>");
-				player.createStatusEffect(StatusEffects.KnowsDarknessShard, 0, 0, 0, 0);
-			}
+			var unlocks:Array = [
+				{inte:20, status:StatusEffects.KnowsArouse},
+				{inte:25, status:StatusEffects.KnowsRegenerate},
+				{inte:30, status:StatusEffects.KnowsMight},
+				{inte:35, status:StatusEffects.KnowsBlink},
+				{inte:40, status:StatusEffects.KnowsIceSpike},
+				{inte:45, status:StatusEffects.KnowsDarknessShard}
+			];
+			spellBookEffect(player, consumables.B__BOOK, unlocks);
 		}
 
 		public function greySpellbook(player:Player):void
 		{
 			clearOutput();
 			outputText("You open the grey volume, and discover it to be an instructional book on the use of grey magic.  Most of it is filled with generic information about grey magic - how it is drawn from both mental focus and emotions (typically lust), is difficult to use when tired and too little or too much aroused, and is used to at the same time create or control energy and affect bodies or emotions to create final effect.  In no time at all you've read the whole thing, but it disappears into thin air before you can put it away.");
-			if (player.inte < 100) {
-				outputText("\n\nYou feel greatly enlightened by your time spent reading.");
-				dynStats("int", 4);
-			}
-			else if (player.inte < 150) {
-				outputText("\n\nSpending some time reading was probably good for you, and you definitely feel smarter for it.");
-				dynStats("int", 2);
-			}
-			else if (player.inte < 200) {
-				outputText("\n\nAfter reading the small tome your already quick mind feels invigorated.");
-				dynStats("int", 1);
-			}
-			else {
-				outputText("\n\nThe contents of the book did little for your already considerable intellect.");
-				dynStats("int", .6);
-			}
-			//Smart enough for (single target fire spell) and doesnt have it (player.inte >= 120)
-			/*if (player.inte >= 120 && !player.hasStatusEffect(StatusEffects.)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: .</b>");
-				player.createStatusEffect(StatusEffects., 0, 0, 0, 0);
-				return;
-			}*/
-			//Smart enough for fire storm and doesnt have it
-			if (player.inte >= 125 && !player.hasStatusEffect(StatusEffects.KnowsFireStorm)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Fire Storm.</b>");
-				player.createStatusEffect(StatusEffects.KnowsFireStorm, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for (single target ice spell) and doesnt have it (player.inte >= 120)
-			/*if (player.inte >= 120 && !player.hasStatusEffect(StatusEffects.)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: .</b>");
-				player.createStatusEffect(StatusEffects., 0, 0, 0, 0);
-				return;
-			}*/
-			//Smart enough for ice rain and doesnt have it
-			if (player.inte >= 125 && !player.hasStatusEffect(StatusEffects.KnowsIceRain)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Ice Rain.</b>");
-				player.createStatusEffect(StatusEffects.KnowsIceRain, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for nosferatu and doesnt have it
-			if (player.inte >= 125 && !player.hasStatusEffect(StatusEffects.KnowsNosferatu)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Nosferatu.</b>");
-				player.createStatusEffect(StatusEffects.KnowsNosferatu, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for mana shield and doesnt have it
-			if (player.inte >= 130 && !player.hasStatusEffect(StatusEffects.KnowsManaShield)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Mana Shield.</b>");
-				player.createStatusEffect(StatusEffects.KnowsManaShield, 0, 0, 0, 0);
-			}
+			var unlocks:Array = [
+				{inte:125, status:StatusEffects.KnowsFireStorm},
+				{inte:125, status:StatusEffects.KnowsIceRain},
+				{inte:125, status:StatusEffects.KnowsNosferatu},
+				{inte:130, status:StatusEffects.KnowsManaShield},
+			];
+			spellBookEffect(player, consumables.G__BOOK, unlocks);
 		}
 
 		public function whiteSpellbook(player:Player):void
 		{
 			clearOutput();
 			outputText("You open the white tome, and discover it to be an instructional book on the use of white magic.  Most of it is filled with generic information about white magic - how it is drawn for mental focus, is difficult to use when tired or aroused, and can be used to create and control energy.  In no time at all you've read the whole thing, but it disappears into thin air before you can put it away.");
-			var intBuff:Number;
-			if (player.inte < 30) {
-				outputText("\n\nYou feel greatly enlightened by your time spent reading.");
-				intBuff = 15+rand(5);
-			}
-			else if (player.inte < 60) {
-				outputText("\n\nSpending some time reading was probably good for you, and you definitely feel smarter for it.");
-				intBuff = 10+rand(5);
-			}
-			else if (player.inte < 90) {
-				outputText("\n\nAfter reading the small tome your already quick mind feels invigorated.");
-				intBuff = 5+rand(5);
-			}
-			else {
-				outputText("\n\nThe contents of the book did little for your already considerable intellect.");
-				intBuff = 1+rand(5);
-			}
-			player.addItemTaggedTempBuff(consumables.B__BOOK,"int",intBuff);
-			//Smart enough for charge weapon and doesnt have it
-			if (player.inte >= 20 && !player.hasStatusEffect(StatusEffects.KnowsCharge)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Charge Weapon.</b>");
-				player.createStatusEffect(StatusEffects.KnowsCharge, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for charge armor and doesnt have it
-			if (player.inte >= 25 && !player.hasStatusEffect(StatusEffects.KnowsChargeA)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Charge Armor.</b>");
-				player.createStatusEffect(StatusEffects.KnowsChargeA, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for heal and doesnt have it
-			if (player.inte >= 30 && !player.hasStatusEffect(StatusEffects.KnowsHeal)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Heal.</b>");
-				player.createStatusEffect(StatusEffects.KnowsHeal, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for blind and doesnt have it
-			if (player.inte >= 35 && !player.hasStatusEffect(StatusEffects.KnowsBlind)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Blind.</b>");
-				player.createStatusEffect(StatusEffects.KnowsBlind, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for whitefire and doesnt have it
-			if (player.inte >= 40 && !player.hasStatusEffect(StatusEffects.KnowsWhitefire)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Whitefire.</b>");
-				player.createStatusEffect(StatusEffects.KnowsWhitefire, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for lightning bolt and doesnt have it
-			if (player.inte >= 45 && !player.hasStatusEffect(StatusEffects.KnowsLightningBolt)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Lightning Bolt.</b>");
-				player.createStatusEffect(StatusEffects.KnowsLightningBolt, 0, 0, 0, 0);
-				return;
-			}
-			//Smart enough for blizzard and doesnt have it
-			if (player.inte >= 50 && !player.hasStatusEffect(StatusEffects.KnowsBlizzard)) {
-				outputText("\n\nYou blink in surprise, assaulted by the knowledge of a <b>new spell: Blizzard.</b>");
-				player.createStatusEffect(StatusEffects.KnowsBlizzard, 0, 0, 0, 0);
-			}
+			var unlocks:Array = [
+				{inte:20, status:StatusEffects.KnowsCharge},
+				{inte:25, status:StatusEffects.KnowsChargeA},
+				{inte:30, status:StatusEffects.KnowsHeal},
+				{inte:35, status:StatusEffects.KnowsBlind},
+				{inte:40, status:StatusEffects.KnowsWhitefire},
+				{inte:45, status:StatusEffects.KnowsLightningBolt},
+				{inte:50, status:StatusEffects.KnowsBlizzard},
+			];
+			spellBookEffect(player, consumables.W__BOOK, unlocks);
 		}
 
 		public function lustDraft(fuck:Boolean,player:Player):void
