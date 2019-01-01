@@ -1294,7 +1294,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 				iSlot.setItemAndQty(ItemType.lookupItem(saveArr[i].id || saveArr[i].shortName), saveArr[i].quantity);
 				iSlot.unlocked = saveArr[i].unlocked;
 			}
-			gameArr.push(iSlot);
+			gameArr[i] = iSlot;
 		}
 	}
 	loadStorage(data.itemStorage,  itemStorageGet(),  16, null);
