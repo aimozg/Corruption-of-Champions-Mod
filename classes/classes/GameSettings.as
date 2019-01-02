@@ -232,14 +232,12 @@ public class GameSettings extends BaseContent {
 	private function displaySettingPane(pane:SettingPane):void {
 		hideSettingPane();
 		lastDisplayedPane = pane;
-		mainView.mainText.visible = false;
-		mainView.addChild(pane);
+		mainView.setMainFocus(pane);
 		pane.update();
 		setButtons();
 	}
 	private function hideSettingPane():void {
-		mainView.mainText.visible = true;
-		if (lastDisplayedPane != null && lastDisplayedPane.parent != null) lastDisplayedPane.parent.removeChild(lastDisplayedPane);
+		mainView.resetMainFocus();
 	}
 	private function enterDebugPane():void {
 		hideSettingPane();

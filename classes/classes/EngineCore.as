@@ -237,6 +237,9 @@ public class EngineCore {
         }
         CoC.instance.currentText = "";
         CoC.instance.mainView.clearOutputText();
+        CoC.instance.mainView.hideComboBox();
+        CoC.instance.mainView.nameBox.visible = false;
+        CoC.instance.mainView.resetMainFocus();
     }
 
     /**

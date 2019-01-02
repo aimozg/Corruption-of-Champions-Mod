@@ -52,7 +52,7 @@ package classes
 					EngineCore.doNext(EventParser.playerMenu);
 				}
 			};
-			if (game.player.str === 0 || flags[kFLAGS.DISABLE_QUICKLOAD_CONFIRM] !== 0) {
+			if (!game.player || game.player.str === 0 || flags[kFLAGS.DISABLE_QUICKLOAD_CONFIRM] !== 0) {
 				doQuickLoad();
 				return;
 			}

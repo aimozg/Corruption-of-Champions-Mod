@@ -76,12 +76,7 @@ package classes.Scenes
 		private var invenPane:Block;
 		private var scrollPane:CoCScrollPane;
 		private function close(next:Function):void {
-			scrollPane.visible = false;
-			invenPane.visible = false;
-			mainView.removeElement(scrollPane);
-			mainView.mainText.visible = true;
-			mainView.scrollBar.visible = true;
-			mainView.scrollBar.update();
+			mainView.resetMainFocus();
 			next();
 		}
 		private function setupScrollPane():void {
@@ -118,7 +113,6 @@ package classes.Scenes
 			setupScrollPane();
 			setupInvenPane();
 			scrollPane.addChild(invenPane);
-			mainView.addElementAt(scrollPane, mainView.getElementIndex(mainView.mainText)+1);
 		}
 		public function inventoryMenu():void {
 			setup();
@@ -248,6 +242,7 @@ package classes.Scenes
 			invenPane.addElement(textField);
 			invenPane.doLayout();
 			scrollPane.update();
+			mainView.setMainFocus(scrollPane);
 		}
 		
 		public function miscitemsMenu():void {
@@ -864,6 +859,7 @@ package classes.Scenes
 			}
 			addButton(13, "Bang", curry(close,bang));
 			addButton(14, "Back", curry(close,playerMenu));
+			CoC.instance.mainView.setMainFocus(scrollPane);
 
 			function bang():void {
 				outputText("You decide to bang the new stash system. It is gorgeous, after all.\n\nHowever, since the author has no idea how to write a scene for it, you decide to hold off until later.");

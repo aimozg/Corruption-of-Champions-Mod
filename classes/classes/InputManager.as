@@ -296,12 +296,10 @@ import coc.view.MainView;
 		 */
 		public function DisplayBindingPane():void
 		{
-			_mainText.visible = false;
-			
 			_bindingPane.functions = this.GetAvailableFunctions();
 			_bindingPane.ListBindingOptions();
 			
-			_mainText.parent.addChild(_bindingPane);
+			_mainView.setMainFocus(_bindingPane);
 			_bindingPane.update();
 		}
 		
@@ -310,8 +308,7 @@ import coc.view.MainView;
 		 */
 		public function HideBindingPane():void
 		{
-			_mainText.visible = true;
-			_bindingPane.parent.removeChild(_bindingPane);
+			_mainView.resetMainFocus();
 		}
 		
 		/**
