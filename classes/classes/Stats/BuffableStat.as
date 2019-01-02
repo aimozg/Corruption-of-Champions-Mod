@@ -30,7 +30,7 @@ public class BuffableStat implements IStat, Jsonable {
 	private var _buffs:/*Buff*/Array = [];
 	
 	public function get base():Number {
-		return _baseFn ? _baseFn() : _base;
+		return (_baseFn != null) ? _baseFn() : _base;
 	}
 	public function get aggregate():int {
 		return _aggregate;

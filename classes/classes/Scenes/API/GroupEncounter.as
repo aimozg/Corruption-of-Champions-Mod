@@ -33,7 +33,7 @@ public class GroupEncounter implements Encounter {
 	 * @see Encounters.build
 	 */
 	public function add(...defs):GroupEncounter {
-		if (defs.length==1 && defs[0] instanceof Array) defs = defs[0];
+		if (defs.length==1 && defs[0] is Array) defs = defs[0];
 		for each (var def:* in defs) {
 			if (def is Encounter) components.push(def);
 			else components.push(Encounters.build(def));
