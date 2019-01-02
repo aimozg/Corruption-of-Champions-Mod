@@ -17,7 +17,7 @@ public class CoCScrollPane extends ScrollPane {
 
 	private function mouseWheelHandler(e:MouseEvent):void {
 		if (content.height < this.height) {return;}
-		content.y         = Utils.boundFloat(this.height - content.height, content.y + (10 * e.delta), 0);
+		content.y         = Utils.boundFloat(-_vScrollbar.maximum, content.y + (10 * e.delta), _vScrollbar.minimum);
 		_vScrollbar.value = -content.y;
 	}
 }
