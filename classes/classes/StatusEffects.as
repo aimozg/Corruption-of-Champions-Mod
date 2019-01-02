@@ -717,7 +717,7 @@ import classes.lists.StatNames;
 		public static const KnowsPunishingKick:StatusEffectType	            = mkKnowledge("Knows Punishing Kick",
 				new CombatActionBuilder("Punishing Kick", 30, ACombatAction.KiAction, Combat.PHYSICAL, "A vicious kick that can daze an opponent, reducing its damage for a while.")
 						.customDamage(Utils.curry(CombatKiPowers.kiDamage,CombatKiPowers.UNARMED))
-						.disableWhen(function(host:Creature):Boolean{return !host.isBiped() || !host.isTaur()}, "<b>Your legs are not suited for this technique.</b>")
+						.disableWhen(function(host:Creature):Boolean{return !(host.isBiped() || host.isTaur())}, "<b>Your legs are not suited for this technique.</b>")
 						.setCooldown(10)
 						.hitText("You lash out with a devastating kick, knocking your opponent back and disorienting it. [monster a][monster name] will have a hard time recovering its balance for a while.")
 						.addStatus(PunishingKick, 5)
