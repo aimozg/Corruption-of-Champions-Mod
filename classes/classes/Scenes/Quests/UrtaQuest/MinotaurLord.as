@@ -43,7 +43,7 @@ use namespace CoC;
 		override protected function performCombatAction():void
 		{
 			if (HP < 300 && statusEffectv1(StatusEffects.MinoMilk) < 4 && flags[kFLAGS.URTA_QUEST_STATUS] == 0.75) minotaurDrankMalk();
-			else if (rand(4) == 0 && player.weaponName != "fists") minotaurDisarm();
+			else if (trueOnceInN(4) && player.weapon != WeaponLib.FISTS) minotaurDisarm();
 			else if (!hasStatusEffect(StatusEffects.Timer)) minotaurLordEntangle();
 			else if (hasStatusEffect(StatusEffects.MinotaurEntangled)) minotaurCumPress();
 			else {

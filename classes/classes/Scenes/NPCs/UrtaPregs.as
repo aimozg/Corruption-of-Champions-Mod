@@ -1,6 +1,7 @@
 ﻿package classes.Scenes.NPCs{
 import classes.BodyParts.Face;
 import classes.BodyParts.Tongue;
+import classes.EventParser;
 import classes.GlobalFlags.*;
 import classes.PregnancyStore;
 import classes.Scenes.SceneLib;
@@ -568,7 +569,7 @@ public function urtaPregooUpdates():Boolean {
 		menu();
 		//addButton(0,"Sex",getUrtaSexWhenPreggoz);
 		addButton(0,"Massage",getAnUrtaMassageWhenPreggo);
-		flags[kFLAGS.EVENT_PARSER_ESCAPE] = 1;
+		EventParser.escape();
 		return true;
 	}
 	//5
@@ -592,7 +593,7 @@ public function urtaPregooUpdates():Boolean {
 		menu();
 		addButton(0,"Accept",acceptUrtaLevelSixPreggoHelps);
 		addButton(1,"Decline",declineUrtaLevelSixPreggoHelps);
-		flags[kFLAGS.EVENT_PARSER_ESCAPE] = 1;
+		EventParser.escape();
 		return true;
 	}
 	else if(player.pregnancyIncubation == 72) {

@@ -3,7 +3,8 @@ package classes.display
 	import classes.InputManager;
 
 	import coc.view.Block;
-	import coc.view.MainView;
+import coc.view.CoCScrollPane;
+import coc.view.MainView;
 
 	import com.bit101.components.ScrollPane;
 
@@ -23,7 +24,7 @@ package classes.display
 	 * keyboard controls.
 	 * @author Gedan
 	 */
-	public class BindingPane extends ScrollPane
+	public class BindingPane extends CoCScrollPane
 	{	
 		private var _inputManager:InputManager;
 		private var _stage:Stage;
@@ -87,23 +88,14 @@ package classes.display
 			this.addEventListener(Event.REMOVED_FROM_STAGE, RemovedFromStage);
 			
 			_stage = this.stage;
-			
-			_stage.addEventListener(MouseEvent.MOUSE_WHEEL, MouseScrollEvent);
 		}
 		
 		private function RemovedFromStage(e:Event):void
 		{
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, RemovedFromStage);
 			this.addEventListener(Event.ADDED_TO_STAGE, AddedToStage);
-			
-			_stage.removeEventListener(MouseEvent.MOUSE_WHEEL, MouseScrollEvent);
 		}
-		
-		private function MouseScrollEvent(e:MouseEvent):void
-		{
-			this._vScrollbar.value += -( e.delta * 8 );
-			update();
-		}
+
 		
 		public function ListBindingOptions():void
 		{

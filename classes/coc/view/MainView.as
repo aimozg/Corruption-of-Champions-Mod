@@ -22,6 +22,10 @@ import fl.controls.ScrollBarDirection;
 import fl.controls.UIScrollBar;
 import fl.data.DataProvider;
 
+import flash.display.DisplayObject;
+
+import flash.display.InteractiveObject;
+
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
@@ -832,6 +836,33 @@ import flash.text.TextFormat;
 	}
 	public function placeComboBox(x:Number,y:Number):void {
 		aCb.move(x,y);
+	}
+	private var _mainFocus:DisplayObject;
+	public function setMainFocus(e:DisplayObject, hideTextBackground:Boolean = false,  resize:Boolean = false):void {
+		if (resize) {
+			e.height = TEXTZONE_H;
+			e.width = TEXTZONE_W;
+		}
+		e.x = TEXTZONE_X;
+		e.y = TEXTZONE_Y;
+		this.addElementAt(e, getElementIndex(mainText) + 1);
+		if (hideTextBackground) {
+			clearTextBackground();
+		}
+		mainText.visible = false;
+		scrollBar.visible = false;
+		e.visible = true;
+		_mainFocus = e;
+	}
+	public function resetMainFocus():void {
+		try {
+			this.removeElement(_mainFocus);
+		} catch (e:Error) {
+			//noop
+		}
+		mainText.visible = true;
+		scrollBar.visible = true;
+		setTextBackground(CoC.instance.flags[kFLAGS.TEXT_BACKGROUND_STYLE]);
 	}
 }
 }

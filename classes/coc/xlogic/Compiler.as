@@ -40,7 +40,7 @@ public class Compiler {
 	protected function compileChildrenInto(x:XML,stmts:/*Statement*/Array):/*Statement*/Array {
 		for each(var item:XML in x.children()) {
 			var e:Statement = compile(item);
-			if (e instanceof StmtList) {
+			if (e is StmtList) {
 				stmts.push.apply(stmts,(e as StmtList).stmts)
 			} else if (e) stmts.push(e);
 		}
@@ -52,7 +52,7 @@ public class Compiler {
 	protected function compileXMLListInto(x:XMLList,stmts:/*Statement*/Array):/*Statement*/Array {
 		for each(var item:XML in x) {
 			var e:Statement = compile(item);
-			if (e instanceof StmtList) {
+			if (e is StmtList) {
 				stmts.push.apply(stmts,(e as StmtList).stmts)
 			} else if (e) stmts.push(e);
 		}
@@ -115,7 +115,7 @@ public class Compiler {
 					break;
 				default:
 					var e:Statement = compile(item);
-					if (e instanceof StmtList) {
+					if (e is StmtList) {
 						currentThen.push.apply(currentThen,(e as StmtList).stmts)
 					} else if (e) currentThen.push(e);
 			}

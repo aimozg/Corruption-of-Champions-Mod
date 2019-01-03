@@ -3,8 +3,6 @@ package classes {
 import classes.BodyParts.Face;
 import classes.BodyParts.Tail;
 import classes.GlobalFlags.*;
-import classes.Scenes.Combat.CombatMechanics;
-import classes.Scenes.NPCs.IsabellaScene;
 import classes.Scenes.SceneLib;
 import classes.Stats.Buff;
 import classes.Stats.BuffableStat;
@@ -13,7 +11,6 @@ import classes.Stats.IStatHolder;
 import classes.Stats.PrimaryStat;
 import classes.Stats.RawStat;
 import classes.StatusEffects.VampireThirstEffect;
-import classes.internals.Utils;
 
 import coc.view.MainView;
 
@@ -898,61 +895,93 @@ public class PlayerInfo extends BaseContent {
 		}
 		if (CoC.instance.testingBlockExiting) {
 			menu();
-			addButton(0, "Next", perkSelect, perks[rand(perks.length)]);
+			addButton(0, "Next", applyPerk, perks[rand(perks.length)]);
 		} else {
 			outputText("Please select a perk from the drop-down list, then click 'Okay'.  You can press 'Skip' to save your perk point for later.\n");
-			//CoC.instance.showComboBox(perkList, "Choose a perk", perkCbChangeHandler);
-			if (player.perkPoints>1) outputText("You have "+numberOfThings(player.perkPoints,"perk point","perk points")+".\n\n");
-			mainView.mainText.addEventListener(TextEvent.LINK, linkhandler);
-			_perkList = [];
-			for each(var perk:PerkType in perks) {
-				var lab:* = {label: perk.name, perk: perk};
-				_perkList.push(lab);
-				outputText("<u><a href=\"event:"+_perkList.indexOf(lab)+"\">"+perk.name+"</a></u>\n");
+			perkListDisplay();
+		}
+	}
+
+	private function perkListDisplay(selPerk:PerkType = null):void {
+		var perks:/*PerkType*/Array = PerkTree.availablePerks(player);
+		var unavailable:Array       = PerkTree.obtainablePerks().filter(function (e:*, i:int, a:Array):Boolean {
+			return !player.hasPerk(e) && perks.indexOf(e) < 0;
+		});
+
+		mainView.mainText.addEventListener(TextEvent.LINK, perkLinkHandler);
+
+		if (player.perkPoints > 1) {
+			outputText("You have " + numberOfThings(player.perkPoints, "perk point", "perk points") + ".\n\n");
+		}
+
+		for each(var perk:PerkType in perks) {
+			outputText("<u><b><a href=\"event:" + perk.id + "\">" + perk.name + "</a></b></u>\n");
+			if (selPerk === perk) {
+				outputText(perk.longDesc + "\n");
+				var unlocks:Array = CoC.instance.perkTree.listUnlocks(perk);
+				if (unlocks.length > 0) {
+					outputText("<b>Unlocks:</b> <ul>");
+					for each (var pt:PerkType in unlocks) {
+						outputText("<li>" + pt.name + " (" + pt.longDesc + ")</li>");
+					}
+					outputText("</ul>\n");
+				}
+				outputText("\n");
 			}
-			mainView.hideMenuButton(MainView.MENU_NEW_MAIN);
-			menu();
-			addButton(1, "Skip", perkSkip);
 		}
-	}
-	private var _perkList:Array = [];
-	private function linkhandler(e:TextEvent):void{
-		trace(e.text);
-		perkCbChangeHandler(_perkList[e.text]);
-	}
-	private function perkSelect(selected:PerkType):void {
-		mainView.mainText.removeEventListener(TextEvent.LINK, linkhandler);
-		mainView.hideComboBox();
-		applyPerk(selected);
-	}
 
-	private function perkSkip():void {
-		mainView.mainText.removeEventListener(TextEvent.LINK, linkhandler);
-		mainView.hideComboBox();
-		playerMenu();
-	}
+		outputText("\n\n");
 
-	public function perkCbChangeHandler(selectedItem:*):void {
-		//Store perk name for later addition
-		clearOutput();
-		var selected:PerkType = selectedItem.perk;
-		outputText("You have selected the following perk:\n");
-		outputText("<b>" + selected.name + ":</b> " + selected.longDesc);
-		CoC.instance.placeComboBoxAfterText();
-		var unlocks:Array = CoC.instance.perkTree.listUnlocks(selected);
-		if (unlocks.length > 0) {
-			outputText("<b>Unlocks:</b> <ul>");
-			for each (var pt:PerkType in unlocks) outputText("<li>" + pt.name + " (" + pt.longDesc + ")</li>");
-			outputText("</ul>");
-		}
-		outputText("If you would like to select this perk, click <b>Okay</b>.  Otherwise, select a new perk, or press <b>Skip</b> to make a decision later.");
-		if (player.perkPoints>1) outputText("\n\nYou have "+numberOfThings(player.perkPoints,"perk point","perk points")+".\n\n");
-		for each(var p:* in _perkList){
-			outputText("<u><a href=\"event:"+_perkList.indexOf(p)+"\">"+p.perk.name+"</a></u>\n");
+		for each (perk in unavailable) {
+			outputText("<u><a href=\"event:" + perk.id + "\">" + perk.name + "</a></u> ");
+			outputText(" <i>Requires: " + getRequirements(perk) + "</i>\n");
+			if (selPerk === perk) {
+				outputText(perk.longDesc + "\n\n")
+			}
 		}
 		menu();
-		addButton(0, "Okay", perkSelect, selected);
 		addButton(1, "Skip", perkSkip);
+
+		function perkSkip():void {
+			clearListener();
+			playerMenu();
+		}
+
+		function getRequirements(pk:PerkType):String {
+			var colour:String;
+			const dark:Boolean     = darkTheme();
+			const darkMeets:String = dark ? '#ffffff' : '#000000';
+			const darkNeeds:String = dark ? '#ff4444' : '#aa2222';
+			var requirements:Array = [];
+			for each(var cond:* in pk.requirements) {
+				colour = cond.fn(player) ? darkMeets : darkNeeds;
+				requirements.push("<font color='" + colour + "'>" + cond.text + "</font>");
+			}
+			return requirements.join(", ");
+		}
+	}
+
+	private function clearListener():void {
+		mainView.mainText.removeEventListener(TextEvent.LINK, perkLinkHandler);
+	}
+
+	public function perkLinkHandler(event:TextEvent):void {
+		clearListener();
+		var lastPos:int = mainView.mainText.scrollV;
+		var selected:PerkType = PerkType.lookupPerk(event.text);
+
+		clearOutput();
+		outputText("You have selected the following perk:\n");
+		outputText("<b>" + selected.name + "</b>\n");
+
+		perkListDisplay(selected);
+		addButton(0, "Okay", perkSelect, selected).disableIf(!selected.available(player));
+		mainView.mainText.scrollV = lastPos;
+
+		function perkSelect(sel:PerkType):void {
+			clearListener();
+			applyPerk(sel);
+		}
 	}
 
 	public function applyPerk(perk:PerkType):void {

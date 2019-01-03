@@ -62,6 +62,10 @@ package classes.Scenes.Combat.CombatAction {
 			_toolTip = toolTip;
 		}
 
+		override public function get name():String {
+			return _name;
+		}
+
 		/**
 		 * Checks if the action is enabled for a creature
 		 * @param host
