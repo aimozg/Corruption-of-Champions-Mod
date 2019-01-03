@@ -67,7 +67,7 @@ package classes.display
 		public function get htmlText():String { return _nameLabel.htmlText; }
 		public function set htmlText(value:String):void { _nameLabel.htmlText = value; }
 
-		public function get buttons():Array { return _buttons; }
+		public function get buttons():/*CoCButton*/Array { return _buttons; }
 		public function get label():TextField { return _nameLabel; }
 	}
 

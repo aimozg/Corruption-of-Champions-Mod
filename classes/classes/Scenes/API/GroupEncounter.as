@@ -44,6 +44,29 @@ public class GroupEncounter implements Encounter {
 		}
 		return this;
 	}
+	/**
+	 * Removes encounters from group. Does not perform deep search.
+	 *
+	 * @param entries Array of names or Encounter objects (compared with ==)
+	 */
+	public function remove(...entries):void {
+		for each (var e:* in entries) {
+			var i:int = -1;
+			if (e is String) {
+				for (var j:int = 0; j<_components.length; j++) {
+					if (_components[j].encounterName() == e) {
+						i = j;
+						break;
+					}
+				}
+			} else {
+				i = _components.indexOf(e);
+			}
+			if (i != -1) {
+				_components.splice(i, 1);
+			}
+		}
+	}
 
 	public function execEncounter():void {
 		select(false).execEncounter();

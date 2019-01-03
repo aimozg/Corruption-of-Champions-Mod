@@ -100,8 +100,8 @@ import flash.text.TextFormat;
 
 
 	public static const GAP:Number   = 4; // Gap between UI panels
-	internal static const BTN_W:Number = 150; // Button size
-	internal static const BTN_H:Number = 40;
+	public static const BTN_W:Number = 150; // Button size
+	public static const BTN_H:Number = 40;
 
 	public static const SCREEN_W:Number       = 1200;
 	public static const SCREEN_H:Number       = 800;
@@ -133,11 +133,11 @@ import flash.text.TextFormat;
 	internal static const TEXTZONE_W:Number = 770; // width = const
 	internal static const TEXTZONE_H:Number = SCREEN_H - TOPROW_H - BOTTOM_H; // height = screen height - toprow height - buttons height, so calculated later
 	 */
-	internal static const TEXTZONE_X:Number = 208; // left = const
-	internal static const TEXTZONE_Y:Number = 52; // top = const
-	internal static const TEXTZONE_W:Number = 769; // width = const
-	internal static const VSCROLLBAR_W:Number = 15;
-	internal static const TEXTZONE_H:Number = 602; // height = const
+	public static const TEXTZONE_X:Number = 208; // left = const
+	public static const TEXTZONE_Y:Number = 52; // top = const
+	public static const TEXTZONE_W:Number = 769; // width = const
+	public static const VSCROLLBAR_W:Number = 15;
+	public static const TEXTZONE_H:Number = 602; // height = const
 	// Sprite (bottom right)
 	internal static const SPRITE_W:Number = 80;
 	internal static const SPRITE_H:Number = 80;
@@ -146,14 +146,14 @@ import flash.text.TextFormat;
 	// toprow width = statbar width + textzone width, so calculated later
 	internal static const TOPROW_W:Number = TEXTZONE_X + TEXTZONE_W;
 	// Bottom buttons
-	internal static const BOTTOM_X:Number         = STATBAR_RIGHT; // left = statbar right
-	internal static const BOTTOM_COLS:Number      = 5;
-	internal static const BOTTOM_ROWS:Number      = 3;
-	internal static const BOTTOM_BUTTON_COUNT:int = BOTTOM_COLS * BOTTOM_ROWS;
-	internal static const BOTTOM_H:Number         = (GAP + BTN_H) * BOTTOM_ROWS; // height = rows x button height
-	internal static const BOTTOM_W:Number         = TEXTZONE_W; // width = textzone width
-	internal static const BOTTOM_HGAP:Number      = (BOTTOM_W - BTN_W * BOTTOM_COLS) / (2 * BOTTOM_COLS); // between btns
-	internal static const BOTTOM_Y:Number         = SCREEN_H - BOTTOM_H; // bottom = screen bottom
+	public static const BOTTOM_X:Number         = STATBAR_RIGHT; // left = statbar right
+	public static const BOTTOM_COLS:Number      = 5;
+	public static const BOTTOM_ROWS:Number      = 3;
+	public static const BOTTOM_BUTTON_COUNT:int = BOTTOM_COLS * BOTTOM_ROWS;
+	public static const BOTTOM_H:Number         = (GAP + BTN_H) * BOTTOM_ROWS; // height = rows x button height
+	public static const BOTTOM_W:Number         = TEXTZONE_W; // width = textzone width
+	public static const BOTTOM_HGAP:Number      = (BOTTOM_W - BTN_W * BOTTOM_COLS) / (2 * BOTTOM_COLS); // between btns
+	public static const BOTTOM_Y:Number         = SCREEN_H - BOTTOM_H; // bottom = screen bottom
 	internal static const MONSTER_X:Number        = TEXTZONE_X + MainView.TEXTZONE_W + GAP;
 	internal static const MONSTER_Y:Number        = TEXTZONE_Y;
 	internal static const MONSTER_W:Number        = SCREEN_W - MONSTER_X;

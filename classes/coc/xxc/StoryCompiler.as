@@ -57,11 +57,11 @@ public class StoryCompiler extends Compiler {
 		}
 		return this;
 	}
-	public function compileFile(x:XML):Statement {
+	public function compileFile(x:XML,path:String,sourceType:String):Statement {
 		if (x.nodeKind() != 'element') throw new Error("Not an XML element in compile.File:" +x);
 		var tag:String = x.localName();
 		if (tag == "mod") {
-			var mod:ModStmt = compileMod(x);
+			var mod:ModStmt = compileMod(x, path, sourceType);
 			this.mods.push(mod.mod);
 			return mod;
 		} else {
@@ -125,9 +125,9 @@ public class StoryCompiler extends Compiler {
 		}
 		return pt;
 	}
-	public function compileMod(x:XML):ModStmt {
+	public function compileMod(x:XML,path:String,sourceType:String):ModStmt {
 		var name:String    = x.@name;
-		var stmt:ModStmt   = new ModStmt(name, x.@version, stack[0]);
+		var stmt:ModStmt   = new ModStmt(name, x.@version, stack[0], path, sourceType);
 		stack.unshift(stmt);
 		var mod:GameMod = stmt.mod;
 		for each(var item:XML in x.elements()) {

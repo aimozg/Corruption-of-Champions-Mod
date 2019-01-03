@@ -3,6 +3,7 @@
  */
 package coc.view {
 import classes.internals.LoggerFactory;
+import classes.internals.Utils;
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -27,6 +28,7 @@ public class CoCLoader {
 	}
 	// [path:String]=>String
 	private static var TEXT_BUNDLE:Object  = {};
+	private static var TEXT_BUNDLE_EMBED_ONLY:Object  = {};
 
 	[Embed(source="../../../res/model.xml", mimeType="application/octet-stream")]
 	public static var BUNDLE_RES_MODEL_XML:Class;
@@ -48,6 +50,12 @@ public class CoCLoader {
 	
 	[Embed(source="../../../content/coc/monsters/goblin.xml", mimeType="application/octet-stream")]
 	public static var BUNDLE_CONTENT_COC_MONSTERS_GOBLIN_XML:Class;
+	
+	[Embed(source="../../../content/coc/mountain.xml", mimeType="application/octet-stream")]
+	public static var BUNDLE_CONTENT_COC_MOUNTAIN_XML:Class;
+	
+	[Embed(source="../../../content/coc/mountain/hellhound.xml", mimeType="application/octet-stream")]
+	public static var BUNDLE_CONTENT_COC_MOUNTAIN_HELLHOUND_XML:Class;
 	
 	[Embed(source="../../../content/coc/NPC/celess.xml", mimeType="application/octet-stream")]
 	public static var BUNDLE_CONTENT_COC_NPC_CELESS_XML:Class;
@@ -97,9 +105,12 @@ public class CoCLoader {
 		var o:BitmapData = c ? ((new c() as Bitmap).bitmapData) : null;
 		if (o) IMAGE_BUNDLE[key] = o;
 	}
+	public static function hasEmbedText(path:String):Boolean {
+		return path in TEXT_BUNDLE_EMBED_ONLY;
+	}
 	/**
 	 * @param path
-	 * @param callback Function (success:Boollean, result:*,event:Event):*
+	 * @param callback Function (success:Boolean, result:*,event:Event):void
 	 * where result is String or Error
 	 * @param location "external", "internal"
 	 */
@@ -249,6 +260,6 @@ public class CoCLoader {
 		}
 	}
 	bundleResources(CoCLoader);
-	TEXT_BUNDLE['content/modlist.xml'] = <extend-story name="/"/>;
+	Utils.extend(TEXT_BUNDLE_EMBED_ONLY,TEXT_BUNDLE);
 }
 }

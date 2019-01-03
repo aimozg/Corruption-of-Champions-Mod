@@ -1,7 +1,10 @@
 package classes {
 
 import classes.GlobalFlags.*;
+import classes.Modding.KnownModEntry;
 import classes.display.SettingPane;
+import classes.internals.Jsonable;
+import classes.internals.Utils;
 
 import coc.view.MainView;
 
@@ -19,7 +22,7 @@ import flash.text.TextFormat;
  * ...
  * @author ...
  */
-public class GameSettings extends BaseContent {
+public class GameSettings extends BaseContent implements Jsonable {
 	private var lastDisplayedPane:SettingPane;
 	private var initializedPanes:Boolean = false;
 
@@ -30,7 +33,44 @@ public class GameSettings extends BaseContent {
 		["settingPaneInterface", "Interface Settings", "You can customize aspects of the interface to your liking."],
 		["settingPaneFetish", "Fetish Settings", "You can turn on or off weird and extreme fetishes."]
 	];
-
+	
+	public var knownMods:/*KnownModEntry*/Array = [];
+	public function saveToObject():Object {
+		var sdkm:Array = [];
+		for each (var kme:KnownModEntry in knownMods) {
+			if (kme.hasInternal) continue;
+			sdkm.push({file:kme.path,name:kme.name,enabled:kme.enabled});
+		}
+		return {
+			knownMods:sdkm,
+			useMetrics:Measurements.useMetrics
+		}
+	}
+	public function loadFromObject(o:Object, ignoreErrors:Boolean):void {
+		if (o.useMetrics) {
+			Measurements.useMetrics = !!o.useMetrics;
+		}
+		if (o.knownMods is Array) {
+			for each (var e:* in o.knownMods) {
+				if (!(e is Object && e.file && e.name)) continue;
+				var found:Boolean = false;
+				for each (var kme:KnownModEntry in knownMods) {
+					if (kme.path == e.file) {
+						found = true;
+						if (!kme.isInternal) {
+							kme.enabled = !!e.enabled;
+						}
+						break;
+					}
+				}
+				if (!found) {
+					this.knownMods.push(new KnownModEntry(
+						e.file, e.name, e.enabled, false
+					));
+				}
+			}
+		}
+	}
 	public function GameSettings() {}
 
 	public function configurePanes():void {

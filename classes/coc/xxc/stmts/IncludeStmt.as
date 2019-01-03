@@ -37,7 +37,7 @@ public class IncludeStmt extends Statement{
 			XML.ignoreWhitespace = false;
 			var xml:XML = XML(content);
 			try {
-				_body = compiler.attach(parent).compileFile(xml);
+				_body = compiler.attach(parent).compileFile(xml,_path, event.target?"external":"internal");
 				compiler.includeLoaded(IncludeStmt$this);
 			} catch (e:Error) {
 				_loaded = false;

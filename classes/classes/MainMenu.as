@@ -20,6 +20,8 @@ package classes {
 	import flash.text.TextFormat;
 
 	public class MainMenu extends BaseContent {
+		
+		public var modulesMenu:ModulesMenu = new ModulesMenu();
 
 		public function MainMenu() {}
 		//------------
@@ -76,11 +78,13 @@ package classes {
 		private function configureMainMenu():void{
 			var achievements:Achievements = new Achievements();
 			var resume:Function = playerMenu;
+			const buttonsPerRow:int = 5;
 			var mainMenuButtons:Array = [
 				["Continue", resume, "Get back to gameplay?"],
 				["New Game", CoC.instance.charCreation.newGameFromScratch, "Start a new game."],
 				["Data", CoC.instance.saves.saveLoad, "Load or manage saved games."],
 				["Options",CoC.instance.gameSettings.enterSettings, "Configure game settings and enable cheats."],
+				["Modules",modulesMenu.open, "Configure internal/external modules and modifications"],
 				["Achievements", achievements.achievementsScreen, "View all achievements you have earned so far."],
 				["Instructions", howToPlay, "How to play. Starting tips. And hotkeys for easy left-handed play..."],
 				["Credits", creditsScreen, "See a list of all the cool people who have contributed to content for this game!"],
@@ -191,11 +195,14 @@ package classes {
 			progress.htmlText = _progressText;
 			mainMenuContent.addElement(background);
 			for (var i:int = 0; i < mainMenuButtons.length; i++) {
+				if (!mainMenuButtons[i]) continue;
 				var button:CoCButton = new CoCButton();
 				button.name = "mainmenu_button_" + i;
 				button.bitmapClass = MainView.ButtonBackground0;
-				button.x = Math.floor(MainView.SCREEN_W / 2) - 310 + ((i % 4) * 155);
-				button.y = Math.floor(MainView.SCREEN_H / 2) + 175 + (Math.floor(i / 4) * 45);
+				button.x = Math.floor(MainView.SCREEN_W / 2) +
+						   (((i % buttonsPerRow) - buttonsPerRow/2) * 155);
+				button.y = Math.floor(MainView.SCREEN_H / 2) + 175 +
+						   (Math.floor(i / buttonsPerRow) * 45);
 				button.labelText = mainMenuButtons[i][0];
 				button.callback = mainMenuButtons[i][1];
 				button.hint(mainMenuButtons[i][2]);

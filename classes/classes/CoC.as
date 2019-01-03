@@ -17,6 +17,7 @@ import classes.CoC;
 import classes.Items.*;
 import classes.Modding.GameMod;
 import classes.Modding.IMonsterPrototype;
+import classes.Modding.KnownModEntry;
 import classes.Modding.MonsterLib;
 import classes.Modding.MonsterPrototype;
 import classes.Parser.Parser;
@@ -381,35 +382,77 @@ public class CoC extends MovieClip
         rootStory.addLib("monsters");
         rootStory.addLib("camp");
         execPostInit();
+        saves.loadPermObject();
         this.addFrameScript( 0, this.run );
         //setTimeout(this.run,0);
     }
     public function getEncounterPool(name:String):GroupEncounter {
         return encounterPools[name] || ((encounterPools[name] = new GroupEncounter(name,[])));
     }
-
-    private function loadStory():void {
+	
+	private function loadStory():void {
 		mainMenu.progressText = "Loading content files...";
-        compiler.onLoad = initMods;
-        compiler.onProgress = loadingMods;
-        compiler.includeFile("coc.xml", true);
+		compiler.onLoad       = initMods;
+		compiler.onProgress   = loadingMods;
+		compiler.includeFile("coc.xml", true);
+		for each (var kme:KnownModEntry in gameSettings.knownMods) {
+			if (kme.enabled && !kme.isInternal) {
+				loadKnownMod(kme);
+			}
+		}
 		mainMenu.mainMenu();
-    }
-    private function loadingMods(compiler:StoryCompiler,nLoaded:int,nTotal:int):void {
-        mainMenu.progressText = "Loaded "+nLoaded+"/"+nTotal+" content files";
-    }
+	}
+	private function loadingMods(compiler:StoryCompiler, nLoaded:int, nTotal:int):void {
+		mainMenu.progressText = "Loaded " + nLoaded + "/" + nTotal + " content files";
+	}
+	public function addMod(mod:GameMod):Boolean {
+		try {
+			mod.finishInit(this);
+			mods.push(mod);
+		} catch (e:Error) {
+			trace(e.getStackTrace());
+			return false;
+		}
+		return true;
+	}
+	public function loadKnownMod(kme:KnownModEntry):void {
+		compiler.includeFile(kme.path.slice(compiler.basedir.length), false);
+	}
+	public function removeMod(mod:GameMod):void {
+		var i:int = mods.indexOf(mod);
+		if (i == -1) return;
+		mods.splice(i, 1);
+		mod.unloaded();
+	}
 	private function initMods():void {
+		compiler.onLoad       = initAdditionalMods;
+		compiler.onProgress   = null;
 		monsterLib = new MonsterLib();
 		var failedMods:/*GameMod*/Array = [];
 		if (lua) {
 			mods = [];
 			for each (var mod:GameMod in compiler.mods) {
-				try {
-					mod.finishInit(this);
-					mods.push(mod);
-				} catch (e:Error) {
-					trace(e.getStackTrace());
+				var modLoaded:Boolean = addMod(mod);
+				if (!modLoaded) {
 					failedMods.push(mod);
+				}
+				var kme:KnownModEntry = new KnownModEntry(
+						mod.unboundNode.path,
+						mod.name,
+						modLoaded,
+						mod.unboundNode.sourceType == "internal"
+				);
+				var found:Boolean = false;
+				for each (var kme2:KnownModEntry in gameSettings.knownMods) {
+					if (kme2.path == kme.path) {
+						kme2.isInternal = kme.isInternal;
+						kme2.enabled = kme.enabled;
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					gameSettings.knownMods.push(kme);
 				}
 			}
 		} else {
@@ -423,6 +466,13 @@ public class CoC extends MovieClip
 		s += (Utils.mapOneProp(failedIncludes,"path").concat(Utils.mapOneProp(failedMods,"name"))).join(", ");
         mainMenu.progressText = s;
 		//mainMenu.mainMenu();
+	}
+	private function initAdditionalMods():void {
+		for each (var mod:GameMod in compiler.mods) {
+			if (mods.indexOf(mod) == -1) {
+				addMod(mod);
+			}
+		}
 	}
     public function resetMods():void {
 		for each (var mod:GameMod in mods) {

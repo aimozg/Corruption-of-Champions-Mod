@@ -4,6 +4,7 @@
 package classes.Modding {
 import classes.CoC;
 import classes.Monster;
+import classes.Scenes.API.GroupEncounter;
 import classes.internals.Jsonable;
 import classes.internals.Utils;
 
@@ -14,6 +15,7 @@ import coc.xxc.BoundNode;
 import coc.xxc.NamedNode;
 import coc.xxc.Story;
 import coc.xxc.StoryContext;
+import coc.xxc.stmts.ModStmt;
 
 public class GameMod implements Jsonable {
 	public var name:String;
@@ -26,13 +28,13 @@ public class GameMod implements Jsonable {
 	private var _newScript:String = "";
 	private var _initialized:Boolean = false;
 	private var _compiled:Boolean = false;
-	private var _unboundNode:NamedNode;
+	private var _unboundNode:ModStmt;
 	public var story:BoundNode;
 	public var monsterList:/*MonsterPrototype*/Array = [];
 	public var encounterList:/*ModEncounter*/Array = [];
 	private var game:CoC;
 	public var context:StoryContext;
-	public function GameMod(name:String, version:int, story:NamedNode) {
+	public function GameMod(name:String, version:int, story:ModStmt) {
 		this.name = name;
 		this.version = version || 1;
 		this._unboundNode = story;
@@ -59,6 +61,10 @@ public class GameMod implements Jsonable {
 			_newScript = "";
 		}
 		return _ns;
+	}
+	
+	public function get unboundNode():ModStmt {
+		return _unboundNode;
 	}
 	public function finishInit(game:CoC):void {
 		this.game = game;
@@ -92,6 +98,11 @@ public class GameMod implements Jsonable {
 		}
 		_initialized = true;
 		reset();
+	}
+	public function unloaded():void {
+		for each (var encounter:ModEncounter in encounterList) {
+			game.getEncounterPool(encounter.poolName).remove(encounter);
+		}
 	}
 	private function setupContext():void {
 		context = new StoryContext(game);

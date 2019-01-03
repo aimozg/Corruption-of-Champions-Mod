@@ -395,8 +395,7 @@ public function loadGame(slot:String,fromMain:Boolean = false):void
 				saveFile.data.flags[permObjectFlag] = flags[permObjectFlag];
 			}
 
-			saveFile.data.settings            = [];
-			saveFile.data.settings.useMetrics = Measurements.useMetrics;
+			saveFile.data.settings            = CoC.instance.gameSettings.saveToObject();
 			//achievements
 			var current:Object = {};
 			if(saveFile.data.achievements != undefined) {
@@ -426,9 +425,7 @@ public function loadGame(slot:String,fromMain:Boolean = false):void
 			}
 		}
 		if (saveFile.data.settings) {
-			if (saveFile.data.settings.useMetrics != undefined) {
-				Measurements.useMetrics = saveFile.data.settings.useMetrics;
-			}
+			CoC.instance.gameSettings.loadFromObject(saveFile.data.settings, true);
 		}
 		if (saveFile.data.achievements) {
 			for (var achievementKey:String in saveFile.data.achievements) {

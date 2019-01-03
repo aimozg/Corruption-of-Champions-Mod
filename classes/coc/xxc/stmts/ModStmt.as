@@ -8,9 +8,13 @@ import coc.xxc.*;
 
 public class ModStmt extends NamedNode {
 	public var mod:GameMod;
-	public function ModStmt(name:String, version:int, parent:NamedNode) {
+	public var path:String;
+	public var sourceType:String; // "external" or "internal"
+	public function ModStmt(name:String, version:int, parent:NamedNode,path:String,sourceType:String) {
 		super("mod", parent, name);
 		this.mod = new GameMod(name,version,this);
+		this.path = path;
+		this.sourceType = sourceType;
 	}
 }
 }

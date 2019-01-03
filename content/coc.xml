@@ -26,7 +26,4 @@
 
     <!--Other-->
     <include path="coc/appearance.xml"/>
-
-    <!-- Modding -->
-    <include path="modlist.xml" required="false"/>
 </extend-story>
