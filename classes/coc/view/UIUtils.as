@@ -2,7 +2,11 @@
  * Coded by aimozg on 06.06.2017.
  */
 package coc.view {
+import flash.display.DisplayObject;
 import flash.events.IEventDispatcher;
+import flash.text.AntiAliasType;
+import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 
 public class UIUtils {
@@ -31,7 +35,15 @@ public class UIUtils {
 		if (options) for (var key:String in options) {
 			if (options.hasOwnProperty(key)) {
 				var value:*      = options[key];
-				if (key in e) {
+				if (key === "children" && e is DisplayObject) {
+					for each (var child:DisplayObject in value) {
+						if (e is Block) {
+							e.addElement(child);
+						} else {
+							e.addChild(child);
+						}
+					}
+				} else if (key in e) {
 					var spc:Function = special ? special[key] as Function : null;
 					if (spc != null) {
 						e[key] = spc(value);
@@ -45,6 +57,22 @@ public class UIUtils {
 		}
 		return e;
 	}
-
+	public static function newTextField(options:Object):TextField {
+		var e:TextField = new TextField();
+		e.antiAliasType = AntiAliasType.ADVANCED;
+		if ('defaultTextFormat' in options) {
+			e.defaultTextFormat = convertTextFormat(options['defaultTextFormat']);
+		}
+		UIUtils.setProperties(e, options, {
+			defaultTextFormat: convertTextFormat,
+			background: convertColor,
+			textColor: convertColor
+		});
+		if (!('mouseEnabled' in options) && options['type'] != 'input') e.mouseEnabled = false;
+		if (!('width' in options || 'height' in options || 'autoSize' in options)) {
+			e.autoSize = TextFieldAutoSize.LEFT;
+		}
+		return e;
+	}
 }
 }

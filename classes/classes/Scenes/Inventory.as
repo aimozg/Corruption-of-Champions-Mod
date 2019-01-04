@@ -241,7 +241,6 @@ package classes.Scenes
 
 			invenPane.addElement(textField);
 			invenPane.doLayout();
-			scrollPane.update();
 			mainView.setMainFocus(scrollPane);
 		}
 		
@@ -940,7 +939,6 @@ package classes.Scenes
 			}));
 			invenPane.addElement(base);
 			invenPane.doLayout();
-			scrollPane.update();
 		}
 		
 		//Place in storage functions

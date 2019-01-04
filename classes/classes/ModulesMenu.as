@@ -9,14 +9,19 @@ import coc.view.CoCButton;
 import coc.view.CoCLoader;
 import coc.view.CoCScrollPane;
 import coc.view.MainView;
+import coc.view.UIUtils;
+
+import flash.display.DisplayObject;
 
 import flash.events.Event;
 import flash.net.FileFilter;
 import flash.net.FileReference;
+import flash.text.TextField;
 
 public class ModulesMenu extends BaseContent {
 	private var _view:Block;
 	private var _entries:Block;
+	private var _scroll:CoCScrollPane;
 	
 	public function ModulesMenu() {
 	}
@@ -65,25 +70,62 @@ public class ModulesMenu extends BaseContent {
 	}
 	
 	private function buildView():void {
-		_view = new Block({
+		_view          = new Block({
 			name: "ModulesMenu",
 			x: 0,
 			y: 0,
 			height: MainView.SCREEN_H,
 			width: MainView.SCREEN_W
 		});
-		var _scroll:CoCScrollPane= new CoCScrollPane();
-		_scroll.x = MainView.TEXTZONE_X;
-		_scroll.y = MainView.TEXTZONE_Y;
-		_scroll.width = MainView.TEXTZONE_W + MainView.VSCROLLBAR_W;
+		_scroll        = new CoCScrollPane();
+		_scroll.x      = MainView.TEXTZONE_X;
+		_scroll.y      = MainView.TEXTZONE_Y;
+		_scroll.width  = MainView.TEXTZONE_W + MainView.VSCROLLBAR_W;
 		_scroll.height = MainView.TEXTZONE_H;
-		_view.addElement(_scroll);
-		_scroll.addChild(_entries = new Block({
+		var _scrollContent:Block = new Block({
+			name: "scrollContent",
 			layoutConfig: {
 				type: 'flow',
 				direction: 'column'
-			}
-		}));
+			},
+			children:[
+				_entries = new Block({
+					name: "entries",
+					layoutConfig: {
+						type: 'flow',
+						direction: 'column'
+					}
+				}),
+				UIUtils.newTextField({
+					defaultTextFormat: {
+						size: 18,
+						font: CoCButton.ButtonLabelFontName
+					},
+					embedFonts:true,
+					text: "Help"
+				}),
+				UIUtils.newTextField({
+					width: MainView.TEXTZONE_W,
+					height: MainView.TEXTZONE_H/2,
+					multiline:true,
+					wordWrap:true,
+					defaultTextFormat: {
+						size: 15
+					},
+					htmlText: "<p>" +
+					          "1. All locations are relative to the game SWF file, so if game is located in <b>C:/study/books/CoC-debug.swf</b>, then <i>content/coc/monsters/imp.xml</i> means file <b>C:/study/books/<u>content/coc/monsters/imp.xml</u></b>." +
+					          "</p><p>" +
+					          "2. <b>'built-in'</b> resources are default, bundled within the game, <b>'external'</b> are loaded from your file system, and <b>'built-in + external'</b> indicates that instead of default content, a modded external version is used." +
+					          "</p><p>" +
+					          "3. To modify built-in content, [Extract] it into EXACT place indicated, modify, then [Reload]." +
+					          "</p><p>" +
+					          "4. If you have mod file, put it under <b>content/mods</b> folder, select it through [Load Mod File], then [Enable]." +
+					          "</p>"
+				})
+			]
+		});
+		_scroll.addChild(_scrollContent);
+		_view.addElement(_scroll);
 		var buttonsRow:Block = new Block({
 			layoutConfig: {
 				type: 'flow',
@@ -91,19 +133,20 @@ public class ModulesMenu extends BaseContent {
 			},
 			x: MainView.BOTTOM_X,
 			y: MainView.BOTTOM_Y,
-			width: MainView.BOTTOM_W
+			width: MainView.BOTTOM_W,
+			children: [
+				new CoCButton({
+					labelText  : 'Load Mod File',
+					bitmapClass: MainView.ButtonBackground1,
+					callback: loadModFile
+				}),
+				new CoCButton({
+					labelText  : 'Back',
+					bitmapClass: MainView.ButtonBackground3,
+					callback: goBack
+				})
+			]
 		});
-		buttonsRow.addElement(new CoCButton({
-			labelText  : 'Load Mod File',
-			bitmapClass: MainView.ButtonBackground1,
-			callback: loadModFile,
-			toolTipText: 'Add external mod file to list. It <b>MUST</b> be located under content/mods folder (relatively to SWF file)'
-		}));
-		buttonsRow.addElement(new CoCButton({
-			labelText  : 'Back',
-			bitmapClass: MainView.ButtonBackground3,
-			callback: goBack
-		}));
 		_view.addElement(buttonsRow);
 	}
 	

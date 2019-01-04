@@ -119,8 +119,8 @@ public class Block extends Sprite {
 	public function Block(options:Object = null) {
 		super();
 		_layoutConfig = {type: LAYOUT_NONE};
-		UIUtils.setProperties(this, options || {});
 		_container = new Sprite();
+		UIUtils.setProperties(this, options || {});
 		addChild(_container);
 		addEventListener(Event.ADDED_TO_STAGE, addedToStage);
 		invalidateLayout();
@@ -286,6 +286,22 @@ public class Block extends Sprite {
 				break;
 		}
 		dispatchEvent(new Event(ON_LAYOUT, true, true));
+		var p:DisplayObject = parent;
+		while (p) {
+			if (p is Block) {
+				(p as Block).doLayout();
+				// To protect from (possible in theory) endless re-layouting loop TODO
+				// 1. Do not invalidate parents if my size wasn't change
+				// 2. Do not invalidate parents if they don't care about children dimensions (Grid layout)
+				// 3. Consider invalidating parents in self invalidation, not in the self layout
+				break;
+			}
+			if (p is CoCScrollPane) {
+				(p as CoCScrollPane).update();
+				break;
+			}
+			p = p.parent;
+		}
 	}
 
 	protected function maybeDoLayout():void {
@@ -302,20 +318,7 @@ public class Block extends Sprite {
 		return e;
 	}
 	public function addTextField(options:Object, hint:Object = null):TextField {
-		var e:TextField = new TextField();
-		e.antiAliasType = AntiAliasType.ADVANCED;
-		if ('defaultTextFormat' in options) {
-			e.defaultTextFormat = UIUtils.convertTextFormat(options['defaultTextFormat']);
-		}
-		UIUtils.setProperties(e, options, {
-			defaultTextFormat: UIUtils.convertTextFormat,
-			background: UIUtils.convertColor,
-			textColor: UIUtils.convertColor
-		});
-		if (!('mouseEnabled' in options) && options['type'] != 'input') e.mouseEnabled = false;
-		if (!('width' in options || 'height' in options || 'autoSize' in options)) {
-			e.autoSize = TextFieldAutoSize.LEFT;
-		}
+		var e:TextField = UIUtils.newTextField(options);
 		addElement(e, hint);
 		return e;
 	}
