@@ -50,9 +50,11 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 	import classes.lists.BreastCup;
 	import classes.lists.Gender;
 
-	import flash.errors.IllegalOperationError;
+import coc.view.charview.IColorNameProvider;
 
-	public class Creature extends Utils
+import flash.errors.IllegalOperationError;
+
+	public class Creature extends Utils implements IColorNameProvider
 	{
 
 
@@ -3859,6 +3861,33 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 
 			mod = Math.round(mod * 100)/100;
 			return mod;
+		}
+		
+		
+		public function getKeyColor(layerName:String, keyColorName:String):String {
+			switch (keyColorName) {
+				case 'hair':
+				case 'hair2':
+					return hairColor;
+				case 'skin':
+					return skin.base.color;
+				case 'skin2':
+					return skin.base.color2;
+				case 'fur':
+					return hasFur() ? skin.coat.color : hairColor;
+				case 'fur2':
+					return hasFur() ? skin.coat.color2 : hairColor;
+				case 'scales':
+				case 'chitin':
+					return skin.coat.color;
+				case 'scales2':
+				case 'chitin2':
+					return skin.coat.color2;
+				case 'iris':
+					return eyes.colour;
+				default:
+					return "";
+			}
 		}
 	}
 }

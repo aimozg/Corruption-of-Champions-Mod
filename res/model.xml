@@ -181,17 +181,17 @@
         </palette>
     </palettes>
     <properties>
-        <property name="hair" src="hairColor" palette="hair,common" default="#ffffff"/>
-        <property name="hair2" src="hairColor" palette="hair,common" default="#ffffff"/>
-        <property name="fur" src="skin.coat.color" palette="hair,common" default="#ffffff"/>
-        <property name="fur2" src="skin.coat.color2" palette="hair,common" default="#ffffff"/>
-        <property name="scales" src="skin.coat.color" palette="common" default="#ffffff"/>
-        <property name="scales2" src="skin.coat.color2" palette="common" default="#ffffff"/>
-        <property name="chitin" src="skin.coat.color" palette="common" default="#ffffff"/>
-        <property name="chitin2" src="skin.coat.color2" palette="common" default="#ffffff"/>
-        <property name="skin" src="skin.base.color" palette="skin,common" default="#ffffff"/>
-        <property name="skin2" src="skin.base.color2" palette="skin,common" default="#ffffff"/>
-        <property name="iris" src="eyes.colour" palette="common" default="#0000ff"/>
+        <property name="hair" palette="hair,common" default="#ffffff"/>
+        <property name="hair2" palette="hair,common" default="#ffffff"/>
+        <property name="fur" palette="hair,common" default="#ffffff"/>
+        <property name="fur2" palette="hair,common" default="#ffffff"/>
+        <property name="scales" palette="common" default="#ffffff"/>
+        <property name="scales2" palette="common" default="#ffffff"/>
+        <property name="chitin" palette="common" default="#ffffff"/>
+        <property name="chitin2" palette="common" default="#ffffff"/>
+        <property name="skin" palette="skin,common" default="#ffffff"/>
+        <property name="skin2" palette="skin,common" default="#ffffff"/>
+        <property name="iris" palette="common" default="#0000ff"/>
     </properties>
     <colorkeys>
         <key src="#FF88FF" base="hair" transform="lighten(25)"/>
