@@ -1,14 +1,16 @@
 /**
  * Coded by aimozg on 10.07.2017.
  */
-package coc.view {
+package coc.view.composite {
+import coc.view.*;
+
 import flash.display.BitmapData;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
 public class CompositeImage {
-	private var list:/*coc.view.CompositeLayer*/Array;
+	private var list:/*CompositeLayer*/Array;
 	private var visibility:Object;
 	private var bmp:BitmapData;
 	public function get width():int {

@@ -6,6 +6,7 @@ import coc.view.charview.CharViewCompiler;
 import coc.view.charview.CharViewContext;
 import coc.view.charview.CharViewSprite;
 import coc.view.charview.Palette;
+import coc.view.composite.CompositeImage;
 import coc.xlogic.Statement;
 import coc.xlogic.StmtList;
 

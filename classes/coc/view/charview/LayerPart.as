@@ -2,8 +2,7 @@
  * Coded by aimozg on 27.07.2017.
  */
 package coc.view.charview {
-import coc.view.CharView;
-import coc.view.CompositeImage;
+import coc.view.composite.CompositeImage;
 import coc.xlogic.ExecContext;
 import coc.xlogic.Statement;
 
