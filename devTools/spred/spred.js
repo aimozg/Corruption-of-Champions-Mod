@@ -1086,9 +1086,7 @@ var spred;
             this.height = parseInt(xmodel.attr('height'));
             this.spritesheets = [];
             this.spritemaps = [];
-            this.palettes = {
-                common: {}
-            };
+            this.palettes = {};
             xmodel.find('colorkeys>key').each((i, e) => {
                 this.colorkeys.push({
                     src: e.getAttribute('src'),
@@ -1097,19 +1095,21 @@ var spred;
                 });
             });
             //noinspection CssInvalidHtmlTagReference
-            xmodel.find('palette>common>color').each((i, e) => {
-                this.palettes.common[e.getAttribute('name')] = e.textContent;
+            xmodel.find('palettes>palette').each((i, e) => {
+                let palette = {};
+                $(e).find('color').each((i, e) => {
+                    palette[e.getAttribute('name')] = e.textContent;
+                });
+                this.palettes[e.getAttribute('name')] = palette;
             });
-            xmodel.find('property').each((i, e) => {
+            //noinspection CssInvalidHtmlTagReference
+            xmodel.find('properties>property').each((i, e) => {
                 let cpname = e.getAttribute('name');
                 this.colorProps.push({
                     name: cpname,
                     src: e.getAttribute('src'),
+                    palette: (e.getAttribute('palette') || 'common').split(','),
                     def: e.getAttribute('default')
-                });
-                let p = this.palettes[cpname] = {};
-                $(e).find('color').each((ci, ce) => {
-                    p[ce.getAttribute('name')] = ce.textContent;
                 });
             });
             xmodel.find('spritesheet').each((i, x) => {
@@ -1709,13 +1709,15 @@ var spred;
         }), $new('textarea.form-control').val(content)))).css('flex-shrink', '0'));
     }
     function savePalettes() {
-        saveSomething(''
-            + '        <common>'
-            + Object.keys(spred.g_model.palettes['common']).map(cname => `\r\n            <color name="${cname}">${spred.g_model.palettes.common[cname]}</color>`).join('')
-            + '\r\n        </common>'
-            + spred.g_model.colorProps.map(cp => `\r\n        <property name="${cp.name}" src="${cp.src}" default="${cp.def}">`
-                + Object.keys(spred.g_model.palettes[cp.name]).map(cname => `\r\n            <color name="${cname}">${spred.g_model.palettes[cp.name][cname]}</color>`).join('')
-                + '\r\n        </property>').join(''));
+        let s = ['    <palettes>'];
+        for (let pname in spred.g_model.palettes) {
+            s.push(`        <palette name="${pname}">`);
+            for (let cname in spred.g_model.palettes[pname]) {
+                s.push(`            <color name="${cname}">${spred.g_model.palettes[pname][cname]}</color>`);
+            }
+            s.push(`        </palette>`);
+        }
+        saveSomething(s.join('\r\n'));
     }
     spred.savePalettes = savePalettes;
     function saveSpritemaps() {

@@ -162,7 +162,7 @@ namespace utils {
 						let fr    = new FileReader();
 						fr.onload = () => {
 							if (format == 'xml') {
-								resolve($.parseXML(fr.result));
+								resolve($.parseXML(fr.result as string));
 							} else {
 								resolve(fr.result);
 							}
