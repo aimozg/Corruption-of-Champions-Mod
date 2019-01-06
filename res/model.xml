@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE model [
-        <!ELEMENT model (palette|colorkeys|spritemap|layers|logic)*>
+        <!ELEMENT model (palettes|properties|colorkeys|spritemap|layers|logic)*>
         <!ATTLIST model
                 name CDATA #REQUIRED
                 dir CDATA #REQUIRED
@@ -9,16 +9,20 @@
                 scale CDATA #REQUIRED
                 originX CDATA #IMPLIED
                 originY CDATA #IMPLIED>
-        <!ELEMENT palette (common|property)*>
-        <!ELEMENT common (color)*>
+        <!ELEMENT palettes (palette)*>
+        <!ELEMENT palette (color)*>
+        <!ATTLIST palette
+                name CDATA #REQUIRED>
         <!ELEMENT color (#PCDATA)>
         <!ATTLIST color
                 name CDATA #REQUIRED>
-        <!ELEMENT property (color)*>
+        <!ELEMENT properties (property)*>
+        <!ELEMENT property EMPTY>
         <!ATTLIST property
                 default CDATA #REQUIRED
                 name CDATA #REQUIRED
-                src CDATA #REQUIRED>
+                src CDATA #REQUIRED
+                palette CDATA #REQUIRED>
         <!ELEMENT colorkeys (key)*>
         <!ELEMENT key (#PCDATA)>
         <!ATTLIST key
@@ -60,9 +64,9 @@
         ]>
 <!--suppress EqualityComparisonWithCoercionJS, CheckTagEmptyBody -->
 <model name="demo" dir="./res/charview/" width="180" height="220" scale="1" originX="15" originY="10">
-    <palette>
+    <palettes>
         <!--Colors common for skin/hair/fur/scales/... go here. Can be overriden later-->
-        <common>
+        <palette name="common">
             <color name="albino">#f2f2e8</color>
             <color name="aqua">#00cccc</color>
             <color name="ashen">#817d79</color>
@@ -161,8 +165,8 @@
             <color name="yellowish-green">#e1eca7</color>
             <color name="black and yellow">#000000</color>
             <color name="white and black">#eff3f6</color>
-        </common>
-        <property name="hair" src="hairColor" default="#ffffff">
+        </palette>
+        <palette name="hair">
             <color name="red">#d85741</color>
             <color name="flaxen">#e1ba94</color>
             <color name="brown">#674f42</color>
@@ -171,23 +175,24 @@
             <color name="white">#aeaba3</color>
             <color name="raven">#101728</color>
             <color name="snowy">#dddfe4</color>
-        </property>
-        <property name="hair2" src="hairColor" default="#ffffff"></property>
-        <property name="fur" src="skin.coat.color" default="#ffffff"></property>
-        <property name="fur2" src="skin.coat.color2" default="#ffffff"></property>
-        <property name="scales" src="skin.coat.color" default="#ffffff"></property>
-        <property name="scales2" src="skin.coat.color2" default="#ffffff"></property>
-        <property name="chitin" src="skin.coat.color" default="#ffffff"></property>
-        <property name="chitin2" src="skin.coat.color2" default="#ffffff"></property>
-        <property name="skin" src="skinTone" default="#ffffff">
+        </palette>
+        <palette name="skin">
             <color name="pale">#f2e8e3</color>
-        </property>
-        <property name="skin2" src="skin.base.color2" default="#ffffff">
-            <color name="pale">#f2e8e3</color>
-        </property>
-        <property name="iris" src="eyes.colour" default="#0000ff">
-        </property>
-    </palette>
+        </palette>
+    </palettes>
+    <properties>
+        <property name="hair" src="hairColor" palette="hair,common" default="#ffffff"/>
+        <property name="hair2" src="hairColor" palette="hair,common" default="#ffffff"/>
+        <property name="fur" src="skin.coat.color" palette="hair,common" default="#ffffff"/>
+        <property name="fur2" src="skin.coat.color2" palette="hair,common" default="#ffffff"/>
+        <property name="scales" src="skin.coat.color" palette="common" default="#ffffff"/>
+        <property name="scales2" src="skin.coat.color2" palette="common" default="#ffffff"/>
+        <property name="chitin" src="skin.coat.color" palette="common" default="#ffffff"/>
+        <property name="chitin2" src="skin.coat.color2" palette="common" default="#ffffff"/>
+        <property name="skin" src="skin.base.color" palette="skin,common" default="#ffffff"/>
+        <property name="skin2" src="skin.base.color2" palette="skin,common" default="#ffffff"/>
+        <property name="iris" src="eyes.colour" palette="common" default="#0000ff"/>
+    </properties>
     <colorkeys>
         <key src="#FF88FF" base="hair" transform="lighten(25)"/>
         <key src="#CC00CC" base="hair"/>
@@ -235,7 +240,6 @@
 		<key src="#AA0000" base="iris" transform="darken(25)"/>
         <!--<key src="#F9A98E" base="nipples"/>-->
         <!--<key src="#FFFFFF" base="sclera"/>-->
-        <!--<key src="#0026FF" base="iris"/>-->
     </colorkeys>
     <!--<spritesheet file="char1.png" cellwidth="192" cellheight="192">
         <row>name1,name2,,,,,,,,,,,,,</row>
