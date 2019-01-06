@@ -5,7 +5,7 @@ package coc.view {
 import coc.view.charview.CharViewCompiler;
 import coc.view.charview.CharViewContext;
 import coc.view.charview.CharViewSprite;
-import coc.view.charview.Palette;
+import coc.view.charview.EvalPalette;
 import coc.view.composite.CompositeImage;
 import coc.view.composite.SimpleKeyColorProvider;
 import coc.xlogic.Statement;
@@ -35,9 +35,9 @@ public class CharView extends Sprite {
 	private var pendingRedraw:Boolean;
 	private var loaderLocation:String;
 	private var parts:Statement;
-	private var _palette:Palette;
+	private var _palette:EvalPalette;
 
-	public function get palette():Palette {
+	public function get palette():EvalPalette {
 		return _palette;
 	}
 	public function CharView() {
@@ -115,7 +115,7 @@ public class CharView extends Sprite {
 		if (pendingRedraw) redraw();
 	}
 	private function loadPalette(xml:XML):void {
-		_palette                 = new Palette();
+		_palette                 = new EvalPalette();
 		for each (var xpal:XML in xml.palettes.palette) {
 			var lookups:Object = {};
 			for each (var color:XML in xpal.color) {

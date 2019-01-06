@@ -5,13 +5,13 @@ package coc.view.charview {
 import coc.script.Eval;
 import coc.view.Color;
 
-public class PaletteProperty {
+public class EvalPaletteProperty {
 	public var name:String;
 	private var srcfn:Eval;
 	private var defaultt:uint;
 	private var lookupNames:/*String*/Array;
 
-	public function PaletteProperty(name:String, expr:String,defaultt:uint,lookupNames:/*String*/Array) {
+	public function EvalPaletteProperty(name:String, expr:String, defaultt:uint, lookupNames:/*String*/Array) {
 		this.name = name;
 		this.srcfn = Eval.compile(expr);
 		this.defaultt = defaultt;
