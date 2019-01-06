@@ -7,6 +7,7 @@ import coc.view.charview.CharViewContext;
 import coc.view.charview.CharViewSprite;
 import coc.view.charview.Palette;
 import coc.view.composite.CompositeImage;
+import coc.view.composite.SimpleKeyColorProvider;
 import coc.xlogic.Statement;
 import coc.xlogic.StmtList;
 
@@ -181,7 +182,7 @@ public class CharView extends Sprite {
 		parts.execute(new CharViewContext(this,_character));
 
 		var keyColors:Object = _palette.calcKeyColors(_character);
-		var bd:BitmapData    = composite.draw(keyColors);
+		var bd:BitmapData    = composite.draw(new SimpleKeyColorProvider(keyColors));
 		var g:Graphics       = graphics;
 		g.clear();
 		g.beginBitmapFill(bd);

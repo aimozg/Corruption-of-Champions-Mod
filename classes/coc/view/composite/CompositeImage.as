@@ -59,11 +59,11 @@ public class CompositeImage {
 			visibility[layer.name] = false;
 		}
 	}
-	public function draw(keyColors:Object):BitmapData {
+	public function draw(keyColorProvider:IKeyColorProvider):BitmapData {
 		bmp.fillRect(bmp.rect, 0);
 		for each (var layer:CompositeLayer in list) {
 			if (visibility[layer.name]) {
-				layer.setKeyColors(keyColors);
+				layer.setKeyColors(keyColorProvider.allKeyColorsFor(layer.name));
 				var sx:int = 0,sy:int = 0;
 				var sw:int = layer.width;
 				var sh:int = layer.height;
