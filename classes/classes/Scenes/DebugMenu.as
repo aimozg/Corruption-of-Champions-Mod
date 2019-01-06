@@ -474,7 +474,7 @@ import flash.events.Event;
 			var h:int,s:int,l:int;
 			if (c.charAt(0) != '$') {
 				oldColor = c;
-				hsl = Color.toHsl(mainView.charView.lookupColorValue(pickerMode, c));
+				hsl = Color.toHsl(mainView.charView.lookupColorValue(pickerMode, pickerMode, c));
 				c        = '$hsl('+int(hsl.h)+','+int(hsl.s)+','+int(hsl.l)+')';
 				if (pickerMode == 'skin') player.skin.base.color = c;
 				else if (pickerMode == 'hair') player.hairColor = c;

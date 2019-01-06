@@ -5,7 +5,9 @@ package coc.view {
 import coc.view.charview.CharViewCompiler;
 import coc.view.charview.CharViewContext;
 import coc.view.charview.CharViewSprite;
-import coc.view.charview.EvalPalette;
+import coc.view.charview.Palette;
+import coc.view.charview.EvalPaletteProperty;
+import coc.view.charview.PaletteProperty;
 import coc.view.composite.CompositeImage;
 import coc.view.composite.SimpleKeyColorProvider;
 import coc.xlogic.Statement;
@@ -35,9 +37,9 @@ public class CharView extends Sprite {
 	private var pendingRedraw:Boolean;
 	private var loaderLocation:String;
 	private var parts:Statement;
-	private var _palette:EvalPalette;
+	private var _palette:Palette;
 
-	public function get palette():EvalPalette {
+	public function get palette():Palette {
 		return _palette;
 	}
 	public function CharView() {
@@ -73,11 +75,19 @@ public class CharView extends Sprite {
 		this.ss_loaded     = 0;
 		this.file_total    = 0;
 		this.file_loaded   = 0;
-		this._width        = 1;
-		this._height       = 1;
+		this._width        = 180;
+		this._height       = 220;
 		this.scale         = 1;
 		this.pendingRedraw = false;
 		this.parts         = new StmtList();
+		clearSprite();
+	}
+	private function clearSprite():void {
+		var g:Graphics = graphics;
+		g.clear();
+		g.beginFill(0, 0);
+		g.drawRect(0, 0, _width, _height);
+		g.endFill();
 	}
 	private function init(xml:XML):void {
 		_width    = xml.@width;
@@ -104,10 +114,7 @@ public class CharView extends Sprite {
 		ss_total = n;
 		if (n == 0) loadLayers(xml);
 		var g:Graphics = graphics;
-		g.clear();
-		g.beginFill(0, 0);
-		g.drawRect(0, 0, _width, _height);
-		g.endFill();
+		clearSprite();
 		scale       = parseFloat(xml.@scale);
 		this.scaleX = scale;
 		this.scaleY = scale;
@@ -115,7 +122,7 @@ public class CharView extends Sprite {
 		if (pendingRedraw) redraw();
 	}
 	private function loadPalette(xml:XML):void {
-		_palette                 = new EvalPalette();
+		_palette                 = new Palette();
 		for each (var xpal:XML in xml.palettes.palette) {
 			var lookups:Object = {};
 			for each (var color:XML in xpal.color) {
@@ -125,11 +132,16 @@ public class CharView extends Sprite {
 		}
 		for each (var prop:XML in xml.properties.property) {
 			var propname:String = prop.@name.toString();
-			_palette.addPaletteProperty(
-					propname,
-					prop.@src.toString(),
-					Color.convertColor(prop.@default.toString()),
-					prop.@palette.toString().split(','));
+			
+			var pp:PaletteProperty;
+			var defaultt:uint = Color.convertColor(prop.@default.toString());
+			var lookupNames:* = prop.@palette.toString().split(',');
+			if ('@src' in prop) {
+				pp = new EvalPaletteProperty(_palette,propname,defaultt,lookupNames,prop.@src.toString());
+			} else {
+				pp = new PaletteProperty(_palette,propname,defaultt,lookupNames);
+			}
+			_palette.addPaletteProperty(pp);
 		}
 		for each (var key:XML in xml.colorkeys.key) {
 			var src:uint    = Color.convertColor(key.@src.toString());
@@ -138,8 +150,8 @@ public class CharView extends Sprite {
 			_palette.addKeyColor(src, base, tf);
 		}
 	}
-	public function lookupColorValue(propname:String, colorname:String):uint {
-		return _palette.lookupColor(propname, colorname);
+	public function lookupColorValue(layername:String, propname:String, colorname:String):uint {
+		return _palette.lookupColor(layername, propname, colorname);
 	}
 	private function loadLayers(xml:XML):void {
 		file_loaded = 0;
@@ -178,8 +190,8 @@ public class CharView extends Sprite {
 		composite.hideAll();
 		parts.execute(new CharViewContext(this,_character));
 
-		var keyColors:Object = _palette.calcKeyColors(_character);
-		var bd:BitmapData    = composite.draw(new SimpleKeyColorProvider(keyColors));
+		_palette.character   = _character;
+		var bd:BitmapData    = composite.draw(_palette);
 		var g:Graphics       = graphics;
 		g.clear();
 		g.beginBitmapFill(bd);

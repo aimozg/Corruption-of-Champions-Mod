@@ -21,7 +21,7 @@
         <!ATTLIST property
                 default CDATA #REQUIRED
                 name CDATA #REQUIRED
-                src CDATA #REQUIRED
+                src CDATA #IMPLIED
                 palette CDATA #REQUIRED>
         <!ELEMENT colorkeys (key)*>
         <!ELEMENT key (#PCDATA)>
