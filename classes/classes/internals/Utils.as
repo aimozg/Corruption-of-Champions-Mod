@@ -128,6 +128,14 @@ public class Utils extends Object
 			return r;
 		}
 		/**
+		 * Mimics JS Object.entries
+		 */
+		public static function entries(o:Object):Array {
+			var r:Array = [];
+			for (var k:String in o) r.push([k,o[k]]);
+			return r;
+		}
+		/**
 		 * @return src.map( el => el['propname'] )
 		 */
 		public static function mapOneProp(src:Array,propname:String):Array {
@@ -188,6 +196,45 @@ public class Utils extends Object
 		 */
 		public static function shallowCopy(src:Object):Object {
 			return copyObject({},src);
+		}
+		public static function deepCopy(src:Object):Object {
+			var dest:Object = {};
+			var queue:Array = [[dest,src]];
+			while (queue.length > 0) {
+				var ds:Array = queue.pop();
+				var d:Object = ds[0];
+				var s:Object = ds[1];
+				for (var k:String in s) {
+					if (s.hasOwnProperty(k)) {
+						var sv:* = s[k];
+						var dv:*;
+						if (sv is Array) {
+							dv = [];
+							queue.push([dv,sv]);
+						} else if (typeof sv === "object") {
+							dv = {};
+							queue.push([dv,sv]);
+						} else if (sv is Function) {
+							continue;
+						} else {
+							dv = sv;
+						}
+						d[k] = dv;
+					}
+				}
+			}
+			return dest;
+		}
+		/**
+		 * @return Boolean if src is "true" or "false", Number if src looks like one, String otherwise
+		 */
+		public static function softParse(src:String):* {
+			if (src === "true") return true;
+			if (src === "false") return false;
+			if (src === null || src === undefined) return "";
+			var n:Number = parseFloat(src);
+			if (!isNaN(n)) return n;
+			return src;
 		}
 		/**
 		 * Performs a shallow copy of properties from `src` to `dest`.
