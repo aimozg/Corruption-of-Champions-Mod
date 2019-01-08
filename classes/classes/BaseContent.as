@@ -13,8 +13,6 @@ import classes.Scenes.SceneLib;
 import classes.Stats.Buff;
 import classes.internals.Utils;
 
-import coc.model.GameModel;
-import coc.model.TimeModel;
 import coc.view.ButtonData;
 import coc.view.ButtonDataList;
 import coc.view.CoCButton;

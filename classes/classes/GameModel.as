@@ -1,4 +1,5 @@
-package coc.model {
+package classes {
+	
 	import classes.Player;
 	import classes.DefaultDict;
 

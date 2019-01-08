@@ -1,4 +1,4 @@
-package coc.model 
+package classes
 {
 	public class TimeModel 
 	{

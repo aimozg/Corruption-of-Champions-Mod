@@ -31,8 +31,6 @@ import classes.internals.Utils;
 
 import coc.lua.LuaEngine;
 
-import coc.model.GameModel;
-import coc.model.TimeModel;
 import coc.view.MainView;
 import coc.xxc.Story;
 import coc.xxc.StoryCompiler;
