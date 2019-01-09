@@ -4,11 +4,14 @@ package classes.Items
 	 * ...
 	 * @author Kitteh6660
 	 */
-	import classes.Items.Jewelries.*;
+
+import classes.ItemType;
+import classes.Items.Jewelries.*;
 	import classes.PerkLib;
 	import classes.PerkType;
+import classes.internals.Utils;
 
-	//Enchantment IDs
+//Enchantment IDs
 	/*
 	 * 0: Nothing
 	 * 1: Minimum lust
@@ -38,7 +41,7 @@ package classes.Items
 		
 		public static const DEFAULT_VALUE:Number = 6;
 		
-		public static const NOTHING:Nothing = new Nothing();
+		public static const NOTHING:Nothing = new Nothing().register() as Nothing;
 		
 		//Pre-Enchanted rings
 		public const CRIMRNG:Jewelry = new Jewelry("CrimRng", "Crimst.Ring", "crimstone ring", "an enchanted crimstone ring", MODIFIER_MINIMUM_LUST, 10, 1000, "This ring is topped with crimstone. It is said that this will help to keep your desires burning. \n\nType: Jewelry (Ring) \nBase value: 1,000 \nSpecial: Increases minimum lust by 10.","Ring");
@@ -71,6 +74,9 @@ package classes.Items
 		}*/
 		public function JewelryLib()
 		{
+			for each (var e:* in Utils.objectMemberValues(this,"constant")) {
+				if (e is ItemType) (e as ItemType).register();
+			}
 		}
 	}
 

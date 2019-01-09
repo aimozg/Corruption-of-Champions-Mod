@@ -2,15 +2,17 @@
  * Created by aimozg on 09.01.14.
  */
 package classes.Items {
-	import classes.Items.Weapons.*;
+import classes.ItemType;
+import classes.Items.Weapons.*;
 	import classes.PerkLib;
+import classes.internals.Utils;
 import classes.lists.StatNames;
 import classes.lists.DamageType;
 
 	public final class WeaponLib {
 		public static const DEFAULT_VALUE:Number = 6;
 
-		public static const FISTS:Fists = new Fists();
+		public static const FISTS:Fists = new Fists().register() as Fists;
 
 		public const ACLAYMO:GemClaymore = new GemClaymore(DamageType.DARKNESS, new WeaponBuilder("AClaymo", Weapon.TYPE_SWORD, "amphyst claymore", "Large")
 				.withShortName("A.Claymore").withLongName("an amphyst claymore")
@@ -305,5 +307,11 @@ import classes.lists.DamageType;
 				.withDescription("These black gloves are made in black leather and an ebony alloy. Their corrupt touch seeks to destroy the pure and innocent. As such, it will seek the weak points of its victims when striking.")
 				.withPerk(PerkLib.BodyCultivatorsFocus, 0.5));
 		public const ZWNDER:Weapon = new Zweihander();
+		
+		public function WeaponLib() {
+			for each (var e:* in Utils.objectMemberValues(this,"constant")) {
+				if (e is ItemType) (e as ItemType).register();
+			}
+		}
 	}
 }

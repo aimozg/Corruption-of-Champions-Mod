@@ -4,15 +4,16 @@
 package classes.Items
 {
 	import classes.CoC;
-	import classes.Items.Other.DebugWand;
+import classes.ItemType;
+import classes.Items.Other.DebugWand;
 	import classes.Items.Other.SimpleUseable;
 	import classes.Scenes.SceneLib;
+import classes.internals.Utils;
 
-	use namespace CoC;
+use namespace CoC;
 
 	public final class UseableLib
 	{
-		public function UseableLib() {}
 		
 		//MATERIALS
 		public const AMETIST:SimpleUseable = new SimpleUseable("Ametist", "Flawless Ametist", "a Flawless Ametist", 1000, 
@@ -84,5 +85,11 @@ package classes.Items
 			"You look at the unopened packet of condom.  If applicable, you can use the condom to prevent pregnancy most of the time.");
 		//CHEAT ITEM
 		public const DBGWAND:DebugWand = new DebugWand();
+		
+		public function UseableLib() {
+			for each (var e:* in Utils.objectMemberValues(this,"constant")) {
+				if (e is ItemType) (e as ItemType).register();
+			}
+		}
 	}
 }

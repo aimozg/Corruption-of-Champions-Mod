@@ -4,13 +4,16 @@ package classes.Items
 	 * ...
 	 * @author Kitteh6660
 	 */
-	import classes.Items.Shields.*;
+
+import classes.ItemType;
+import classes.Items.Shields.*;
 	import classes.PerkLib;
 	import classes.PerkType;
-	
-	public final class ShieldLib 
+import classes.internals.Utils;
+
+public final class ShieldLib
 	{
-		public static const NOTHING:Nothing = new Nothing();
+		public static const NOTHING:Nothing = new Nothing().register() as Nothing;
 		
 		public const BLASPHE:Shield = new Shield("Blasphe", "Blasphemy", "Blasphemy", "a Blasphemy", 1, 200, "Metal prayer beads, engraved with holy symbols of dead gods.", "Obsession", PerkLib.Obsession, 0.2, 0.15);
 		public const BUCKLER:Shield = new Shield("Buckler", "Buckler", "buckler", "a buckler", 5, 50, "A simple wooden rounded shield.");
@@ -27,6 +30,9 @@ package classes.Items
 		
 		public function ShieldLib() 
 		{
+			for each (var e:* in Utils.objectMemberValues(this,"constant")) {
+				if (e is ItemType) (e as ItemType).register();
+			}
 		}
 	}
 

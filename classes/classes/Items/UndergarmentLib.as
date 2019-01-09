@@ -5,12 +5,14 @@ package classes.Items
 	 * @author Kitteh6660
 	 */
 
-	import classes.Items.Undergarments.*;
+import classes.ItemType;
+import classes.Items.Undergarments.*;
 	import classes.PerkLib;
+import classes.internals.Utils;
 
-	public final class UndergarmentLib
+public final class UndergarmentLib
 	{
-		public static const NOTHING:Undergarment = new Nothing();
+		public static const NOTHING:Undergarment = new Nothing().register() as Undergarment;
 		
 		//Upper
 		public const C_BRA  :Undergarment = new Undergarment("C. Bra ", "C. Bra", "comfortable bra", "a pair of comfortable bra", Undergarment.TYPE_UPPERWEAR, 6, 0, 0, "A generic pair of bra.");
@@ -41,6 +43,9 @@ package classes.Items
 		
 		public function UndergarmentLib() 
 		{
+			for each (var e:* in Utils.objectMemberValues(this,"constant")) {
+				if (e is ItemType) (e as ItemType).register();
+			}
 		}
 		
 	}

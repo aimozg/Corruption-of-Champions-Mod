@@ -3,11 +3,13 @@
  * @author Ormael
  */
 package classes.Items {
-	import classes.Items.WeaponsRange.*;
+import classes.ItemType;
+import classes.Items.WeaponsRange.*;
 	import classes.PerkLib;
+import classes.internals.Utils;
 
-	public final class WeaponRangeLib {
-		public static const NOTHING:WeaponRange = new Nothing();
+public final class WeaponRangeLib {
+		public static const NOTHING:WeaponRange = new Nothing().register() as WeaponRange;
 		public const ARTEMIS:Artemis = new Artemis();
 		public const BLUNDER:WeaponRange = new WeaponRange(new WeaponBuilder("Blunder", WeaponRange.TYPE_RIFLE, "blunderbuss rifle", WeaponRange.TYPE_RIFLE)
 				.withShortName("Blunderbuss").withLongName("a blunderbuss rifle")
@@ -132,5 +134,12 @@ package classes.Items {
 				.withAttack(0).withValue(500)
 				.withDescription("Strangely, this ornate blue book is completely blank.  Yet, as you flip through it, you occasionally see magical glyphs and complicated diagrams out of the corner of your eye, only to disappear as you focus.  Still, the arcane energies within the book could augment your spellcraft.")
 				.withPerk(PerkLib.SagesKnowledge, 0.6));
+		
+		
+		public function WeaponRangeLib() {
+			for each (var e:* in Utils.objectMemberValues(this,"constant")) {
+				if (e is ItemType) (e as ItemType).register();
+			}
+		}
 	}
 }

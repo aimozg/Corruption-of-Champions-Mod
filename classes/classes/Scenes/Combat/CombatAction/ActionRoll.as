@@ -22,8 +22,9 @@ public class ActionRoll {
 		CONNECT: 'connect',
 		DONE: 'done'
 	};
+	private static const PhaseValues:Array = Utils.values(Phases);
 	public static function isValidPhase(phase:String):Boolean {
-		return Utils.values(Phases).indexOf(phase) >= 0;
+		return PhaseValues.indexOf(phase) >= 0;
 	}
 	private static const NextPhase:* = Utils.createMapFromPairs([
 			[Phases.PREPARE, Phases.PERFORM],

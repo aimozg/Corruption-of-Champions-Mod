@@ -3,14 +3,16 @@
  */
 package classes.Items
 {
+	import classes.ItemType;
 	import classes.Items.Armors.*;
 	import classes.PerkLib;
 	import classes.PerkType;
+	import classes.internals.Utils;
 
 	public final class ArmorLib
 	{
-		public static const COMFORTABLE_UNDERCLOTHES:Armor = new ComfortableUnderclothes();
-		public static const NOTHING:Armor = new Nothing();
+		public static const COMFORTABLE_UNDERCLOTHES:Armor = new ComfortableUnderclothes().register() as Armor;
+		public static const NOTHING:Armor = new Nothing().register() as Armor;
 //25 za 1 ptk robes, 20 dla light, 40 dla medium i 60 dla heavy, z perkiem/dod. efektem podwaja koszt za każdy
 		public const ADVCLTH:Armor = new Armor("AdvClth","G. Clothes","green adventurer's clothes","a green adventurer's outfit, complete with pointed cap",2,50,"A set of comfortable green adventurer's clothes.  It even comes complete with a pointy hat!",Armor.LIGHT);
 		public const A_ROBE_:Armor = new Armor("A.Robe", "A.Robe", "apprentice's robe", "an apprentice's robe", 1, 25, "This drab robe lacks adornment, yet retains an air of mysticality. The low quality of the fabric coupled with its mystic air suggests that it is a garment meant for mages in training.", Armor.LIGHT, false, true, PerkLib.WizardsEndurance, 10, 0, 0, 0);
@@ -74,6 +76,9 @@ package classes.Items
 
 		public function ArmorLib()
 		{
+			for each (var e:* in Utils.objectMemberValues(this,"constant")) {
+				if (e is ItemType) (e as ItemType).register();
+			}
 		}
 	}
 }

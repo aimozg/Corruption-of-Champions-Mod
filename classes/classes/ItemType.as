@@ -11,7 +11,7 @@ import flash.utils.Dictionary;
 	{
 		private static var ITEM_LIBRARY:Dictionary = new Dictionary();
 		private static var ITEM_SHORT_LIBRARY:Dictionary = new Dictionary();
-		public static const NOTHING:ItemType = new ItemType("NOTHING!");
+		public static const NOTHING:ItemType = new ItemType("NOTHING!").register();
 
 		/**
 		 * Looks up item by <b>ID</b>.
@@ -94,14 +94,20 @@ import flash.utils.Dictionary;
 			this._longName = _longName || this.shortName;
 			this._description = _description || this.longName;
 			this._value = _value;
-			if (ITEM_LIBRARY[_id] != null) {
-				CoC_Settings.error("Duplicate itemid "+_id+", old item is "+(ITEM_LIBRARY[_id] as ItemType).longName);
 			}
+
+		public function register():ItemType {
+			var prev:* = ITEM_LIBRARY[_id];
+			if (prev === this) return this;
+			if (prev != null) {
+				CoC_Settings.error("Duplicate itemid "+_id+", old item is "+prev.longName);
+			}
+			ITEM_LIBRARY[_id] = this;
 			if (ITEM_SHORT_LIBRARY[_shortName] != null){
 				trace("WARNING: Item with duplicate shortname: '"+_id+"' and '"+(ITEM_SHORT_LIBRARY[this._shortName] as ItemType)._id+"' share "+this._shortName);
 			}
-			ITEM_LIBRARY[_id] = this;
 			ITEM_SHORT_LIBRARY[this._shortName] = this;
+			return this;
 		}
 
 

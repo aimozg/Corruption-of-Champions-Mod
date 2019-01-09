@@ -322,7 +322,7 @@ public class Utils extends Object
 			var ox:XML = describeType(o);
 			var rslt:/*String*/Array = [];
 			for each(var item:XML in ox.*) {
-				rslt.push(item.@name);
+				rslt.push(item.@name.toString());
 			}
 			return rslt;
 		}
@@ -330,7 +330,15 @@ public class Utils extends Object
 			var ox:XML = describeType(o);
 			var rslt:/*String*/Array = [];
 			for each(var item:XML in ox[type]) {
-				rslt.push(item.@name);
+				rslt.push(item.@name.toString());
+			}
+			return rslt;
+		}
+		public static function objectMemberValues(o:Object, type:String):Array {
+			var ox:XML = describeType(o);
+			var rslt:Array = [];
+			for each(var item:XML in ox[type]) {
+				rslt.push(o[item.@name.toString()]);
 			}
 			return rslt;
 		}

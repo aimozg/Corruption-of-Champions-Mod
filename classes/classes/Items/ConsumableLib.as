@@ -5,6 +5,7 @@ package classes.Items
 {
 import classes.BaseContent;
 import classes.EngineCore;
+import classes.ItemType;
 import classes.Items.Consumables.*;
 import classes.Player;
 import classes.Scenes.SceneLib;
@@ -289,6 +290,9 @@ import classes.CoC;
 		}
 		public function ConsumableLib()
 		{
+			for each (var e:* in Utils.objectMemberValues(this,"constant")) {
+				if (e is ItemType) (e as ItemType).register();
+			}
 		}
 	}
 }
