@@ -18,8 +18,9 @@ public class AbstractFactory {
 	 * Overwrites some of original object with data from patch
 	 * @param original:T Original object
 	 * @param patch Data, partially defining new object
+	 * @return original
 	 */
-	public function modify(original:Object, patch:XML):void {
+	public function modify(original:Object, patch:XML):Object {
 		throw "Abstract method invocation";
 	}
 	/**
@@ -36,9 +37,7 @@ public class AbstractFactory {
 	 * @return clone:T
 	 */
 	public function fork(original:Object, newId:String, patch:XML):Object {
-		var neww:Object = clone(original, newId);
-		modify(neww, patch);
-		return neww;
+		return modify(clone(original, newId), patch);
 	}
 	public function idOf(o:Object):String {
 		throw "Abstract method invocation";

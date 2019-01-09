@@ -365,11 +365,9 @@ public class EngineCore {
         }
 
         //Get items
-        var itype:ItemType = ItemType.lookupItem(buttonText);
+        var itype:ItemType = ItemType.lookupItemByShort(buttonText) || ItemType.lookupItem(buttonText);
         var temp:String = "";
-        if (itype != null) temp = itype.longName;
-        itype = ItemType.lookupItemByShort(buttonText);
-        if (itype != null) temp = itype.longName;
+        if (itype != null) temp = ('name' in itype) ? itype['name'] : itype.longName;
         if (temp != "") {
             temp = Utils.capitalizeFirstLetter(temp);
             toolTipHeader = temp;

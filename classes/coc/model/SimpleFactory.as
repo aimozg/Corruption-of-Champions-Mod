@@ -27,8 +27,8 @@ public class SimpleFactory extends AbstractFactory {
 	override public function create(input:XML):Object {
 		return modifyObject({},input);
 	}
-	override public function modify(original:Object, patch:XML):void {
-		modifyObject(original, patch);
+	override public function modify(original:Object, patch:XML):Object {
+		return modifyObject(original, patch);
 	}
 	override public function clone(original:Object, newId:String):Object {
 		return Utils.extend(Utils.deepCopy(original),{id:newId});

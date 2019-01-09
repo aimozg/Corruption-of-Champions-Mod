@@ -15,21 +15,18 @@ public final class ArmorLib
 	{
 		public static const COMFORTABLE_UNDERCLOTHES:Armor = new ComfortableUnderclothes().register() as Armor;
 		public static const NOTHING:Armor = new Nothing().register() as Armor;
+		private static const factory:ArmorTypeFactory = new ArmorTypeFactory();
 //25 za 1 ptk robes, 20 dla light, 40 dla medium i 60 dla heavy, z perkiem/dod. efektem podwaja koszt za każdy
-		public const XmlLib:XML = <g>
-			<armor id="AdvClth">
-				<short>G. Clothes</short>
-				<name>green adventurer's clothes</name>
-				<long>a green adventurer's outfit, complete with pointed cap</long>
-				<defense>2</defense>
-				<value>50</value>
-				<desc>A set of comfortable green adventurer's clothes.  It even comes complete with a pointy hat!</desc>
-				<category>Light</category>
-			</armor>
-		</g>;
-		public function get ADVCLTH():Armor {
-			return ItemType.lookupItem("AdvClth") as Armor || null;
-		}
+		public const ADVCLTH:Armor = factory.createArmorType(<armor id="AdvClth">
+			<short>G. Clothes</short>
+			<name>green adventurer's clothes</name>
+			<long>a green adventurer's outfit, complete with pointed cap</long>
+			<defense>2</defense>
+			<value>50</value>
+			<description>A set of comfortable green adventurer's clothes.  It even comes complete with a pointy hat!</description>
+			<category>Light</category>
+			<supportsBulge>true</supportsBulge>
+		</armor>);
 		public const A_ROBE_:Armor = new Armor("A.Robe", "A.Robe", "apprentice's robe", "an apprentice's robe", 1, 25, "This drab robe lacks adornment, yet retains an air of mysticality. The low quality of the fabric coupled with its mystic air suggests that it is a garment meant for mages in training.", Armor.LIGHT, false, true, PerkLib.WizardsEndurance, 10, 0, 0, 0);
 		public const ARCBANG:Armor = new Armor("ArcaBangl", "ArcaneBangles", "arcane bangles", "a set of arcane bangles", 1, 150, "Silver bangles to be worn from the wrists and ankles, inscribed with arcane runes.  For some reason, you feel like wearing these with armor or clothes is somehow wrong.", Armor.LIGHT, false, true, PerkLib.WizardsEnduranceAndSluttySeduction, 20, 5, 0, 0, "Your arcane bangles allows you access to 'Seduce', an improved form of 'Tease'.");
 		public const B_DRESS:Armor = new Armor("B.Dress","Long Dress","long ballroom dress patterned with sequins","a ballroom dress patterned with sequins",0,40,"A long ballroom dress patterned with sequins.  Perfect for important occasions.",Armor.MEDIUM);
@@ -37,7 +34,16 @@ public final class ArmorLib
 		public const BIMBOSK:Armor = new Armor("BimboSk", "BimboSk", "bimbo skirt", "a skirt that looks like it belongs on a bimbo", 1, 40, "A tight, cleavage-inducing halter top and an extremely short miniskirt.  The sexual allure of this item is undoubtable.", Armor.LIGHT, false, false, PerkLib.SluttySeduction, 10, 0, 0, 0, "Your delightfully slutty yet upbeat garb helps you seduce your foes!");
 		public const BKIMONO:Armor = new Armor("B.Kimono", "B.Kimono", "blue kimono", "a blue kimono", 1, 200, "This lovely blue kimono is adorned with a floral pattern. It will likely increase your spiritual power as a kitsune.", Armor.LIGHT, false, true, PerkLib.WizardsAndDaoistsEndurance, 20, 20, 0, 0);
 		public const BONSTRP:Armor = new Armor("BonStrp", "BonStrp", "barely-decent bondage straps", "a set of bondage straps", 0, 40, "These leather straps and well-placed hooks are actually designed in such a way as to be worn as clothing.  While they technically would cover your naughty bits, virtually every other inch of your body would be exposed.", Armor.LIGHT, false, false, PerkLib.SluttySeduction, 10, 0, 0, 0, "Your fetishy bondage outfit allows you access to an improved form of 'Tease'.");
-		public const C_CLOTH:Armor = new Armor("C.Cloth", "C.Cloth", "comfortable clothes", "a set of comfortable clothes", 0, 1, "These loose fitting and comfortable clothes allow you to move freely while protecting you from the elements.", "Light", true);
+		public const C_CLOTH:Armor = factory.createArmorType(<armor id="C.Cloth">
+			<short>C.Cloth</short>
+			<name>comfortable clothes</name>
+			<long>a set of comfortable clothes</long>
+			<defense>0</defense>
+			<value>1</value>
+			<description>These loose fitting and comfortable clothes allow you to move freely while protecting you from the elements.</description>
+			<category>Light</category>
+			<supportsBulge>true</supportsBulge>
+		</armor>);
 		public const CHBIKNI:Armor = new Armor("ChBikni", "Chn Bikini", "revealing chainmail bikini", "a chainmail bikini", 2, 80, "A revealing chainmail bikini that barely covers anything.  The bottom half is little more than a triangle of metal and a leather thong.", Armor.LIGHT, false, false, PerkLib.SluttySeduction, 5, 0, 0, 0, "Your revealing chain bikini allows you access to 'Seduce', an improved form of 'Tease'.");
 		public const CLSSYCL:Armor = new Armor("ClssyCl", "Suitclothes", "classy suitclothes", "a set of classy suit-clothes", 1, 40, "A set of classy suitclothes.", Armor.LIGHT);
 		public const CTPALAD:Armor = new CentaurArmor();
@@ -93,12 +99,6 @@ public final class ArmorLib
 		{
 			for each (var e:* in Utils.objectMemberValues(this,"constant")) {
 				if (e is ItemType) (e as ItemType).register();
-			}
-			var itf:ArmorTypeFactory = new ArmorTypeFactory();
-			for each (var x:XML in XmlLib.elements()) {
-				if (!itf.handleInput(x, ItemType.getItemLibrary())) {
-					trace("[WARN] Unhandled <"+x.localName()+"/>");
-				}
 			}
 		}
 	}

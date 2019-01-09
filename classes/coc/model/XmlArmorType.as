@@ -20,16 +20,17 @@ public class XmlArmorType extends Armor {
 		this._xml = xml;
 		rebuild();
 	}
-	public function modifyXml(patch:XML):void {
+	public function modifyXml(patch:XML):XmlArmorType {
 		XmlUtils.merge(_xml, patch, {
 			'@id':'skip'
 		});
 		rebuild();
+		return this;
 	}
 	protected function rebuild():void {
-		redefineItemTypeShortName(_xml.short);
-		this._longName = _xml.long;
-		this._description = _xml.description;
+		redefineItemTypeShortName(_xml.short || id);
+		this._longName = _xml.long || _shortName;
+		this._description = _xml.description || _longName;
 		this._value = Utils.intOr(_xml.value, 0);
 		this._name = _xml.name.text();
 		this._perk = Utils.stringOr(_xml.category,"");
@@ -42,7 +43,7 @@ public class XmlArmorType extends Armor {
 		this._buffs = {};
 		this._itemPerks.splice(0,this._itemPerks.length);
 		this._supportsBulge = Utils.booleanOr(_xml.supportsBulge, false);
-		this._supportsUndergarment = Utils.booleanOr(_xml.supportsUndergarment, false);
+		this._supportsUndergarment = Utils.booleanOr(_xml.supportsUndergarment, true);
 	}
 }
 }
