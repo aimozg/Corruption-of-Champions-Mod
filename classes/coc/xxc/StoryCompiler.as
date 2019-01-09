@@ -2,11 +2,16 @@
  * Coded by aimozg on 28.08.2017.
  */
 package coc.xxc {
+import classes.ItemType;
 import classes.Modding.GameMod;
 import classes.Modding.ModEncounter;
 import classes.Modding.MonsterPrototype;
 import classes.PerkType;
+import classes.internals.LoggerFactory;
 import classes.internals.Utils;
+
+import coc.model.ArmorTypeFactory;
+import coc.model.XmlArmorType;
 
 import coc.script.Eval;
 import coc.xlogic.Compiler;
@@ -18,12 +23,25 @@ import flash.utils.setTimeout;
 import flash.xml.XMLNode;
 import flash.xml.XMLNodeType;
 
+import mx.logging.ILogger;
+
 public class StoryCompiler extends Compiler {
+	private static const LOGGER:ILogger = LoggerFactory.getLogger(StoryCompiler);
+	
 	private var _basedir:String;
 	public var mods:/*GameMod*/Array = [];
 	private var _includes:/*IncludeStmt*/Array = [];
 	public var onLoad:Function = null; // (StoryCompiler)->void or ()->void
 	public var onProgress:Function = null; // (StoryCompiler, loaded:int, total:int)->void
+	private var stack:/*NamedNode*/Array = [];
+	private const armorTypeFactory:ArmorTypeFactory = new ArmorTypeFactory();
+
+	private function currentMod():GameMod {
+		for each (var stmt:NamedNode in stack) {
+			if (stmt is ModStmt) return (stmt as ModStmt).mod;
+		}
+		return null;
+	}
 
 	public function get basedir():String {
 		return _basedir;
@@ -32,7 +50,6 @@ public class StoryCompiler extends Compiler {
 		this._basedir = basedir;
 		if (basedir.charAt(basedir.length-1)!='/') this._basedir+='/';
 	}
-	private var stack:/*NamedNode*/Array = [];
 	public function clone(basedir:String=""):StoryCompiler {
 		var cloned:StoryCompiler = new StoryCompiler(basedir?basedir:_basedir);
 		cloned.mods = this.mods;
@@ -146,7 +163,7 @@ public class StoryCompiler extends Compiler {
 					break;
 				case 'import':
 				case 'hook':
-					trace('[WARNING] Not yet implemented mod/'+tag);
+					LOGGER.warn('Not yet implemented mod/'+tag);
 					break;
 				case 'lib':
 				case 'text':
@@ -167,6 +184,7 @@ public class StoryCompiler extends Compiler {
 		return stmt;
 	}
 	override protected function compileTag(tag:String, x:XML):Statement {
+		var mod:GameMod = currentMod();
 		var list:StmtList;
 		switch (tag) {
 			case "comment":
@@ -224,6 +242,15 @@ public class StoryCompiler extends Compiler {
 				return compileSet(x);
 			case "extend-story":
 				return compileStoryBody(locate(x.@name) as Story, x);
+			case "armor":
+				var armorType:ItemType = armorTypeFactory.createArmorType(x);
+				if (mod) {
+					mod.itemTypeList.push(armorType);
+				} else {
+					LOGGER.debug("New item type: "+armorType.id);
+					armorType.register();
+				}
+				return null;
 			default:
 				return super.compileTag(tag, x);
 		}

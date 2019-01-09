@@ -112,6 +112,18 @@ import flash.utils.Dictionary;
 			ITEM_SHORT_LIBRARY[this._shortName] = this;
 			return this;
 		}
+		public function unregister():void {
+			if (!(_id in ITEM_LIBRARY)) {
+				trace("WARNING: Wanted to unregister item type "+_id+" but already unregistered");
+			} else if (ITEM_LIBRARY[_id] !== this) {
+				trace("WARNING: Wanted to unregister item type "+_id+" but another already registered under that name");
+			} else {
+				delete ITEM_LIBRARY[_id];
+			}
+			if (ITEM_SHORT_LIBRARY[_shortName] === this) {
+				delete ITEM_SHORT_LIBRARY[_shortName];
+			}
+		}
 		public function redefineItemTypeShortName(newShortName:String):void {
 			if (_shortName == newShortName) return;
 			delete ITEM_SHORT_LIBRARY[_shortName];

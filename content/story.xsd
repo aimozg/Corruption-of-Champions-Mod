@@ -12,6 +12,7 @@
                 <xs:element ref="if"/>
                 <xs:element ref="switch"/>
                 <xs:element ref="xcc-content"/>
+                <xs:element ref="mod-content"/>
             </xs:choice>
         </xs:sequence>
     </xs:group>
@@ -142,4 +143,53 @@
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <!-- mod content -->
+    <xs:element name="mod-content" abstract="true">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="short"/>
+                <xs:element ref="name"/>
+                <xs:element ref="long"/>
+                <xs:element ref="description"/>
+                <xs:element ref="value"/>
+                <xs:element ref="defense"/>
+                <xs:element ref="subType"/>
+                <xs:element ref="supportsUndergarment"/>
+                <xs:element ref="perk"/>
+            </xs:choice>
+            <xs:attribute name="id" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- | mod-armor | fork-armor -->
+    <xs:element name="armor" substitutionGroup="mod-content"/>
+    <xs:element name="short" type="xs:string"/>
+    <xs:element name="name" type="xs:string"/>
+    <xs:element name="long" type="xs:string"/>
+    <xs:element name="description" type="xs:string"/>
+    <xs:element name="value" type="xs:string"/>
+    <xs:element name="defense" type="xs:string"/>
+    <xs:element name="subType" type="xs:string"/>
+    <xs:element name="supportsUndergarment">
+        <xs:simpleType>
+            <xs:restriction base="xs:token">
+                <xs:enumeration value="true"/>
+                <xs:enumeration value="false"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="perk">
+        <xs:complexType>
+            <xs:all>
+                <xs:element minOccurs="0" ref="value1"/>
+                <xs:element minOccurs="0" ref="value2"/>
+                <xs:element minOccurs="0" ref="value3"/>
+                <xs:element minOccurs="0" ref="value4"/>
+            </xs:all>
+            <xs:attribute name="id" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="value1" type="xs:string"/>
+    <xs:element name="value2" type="xs:string"/>
+    <xs:element name="value3" type="xs:string"/>
+    <xs:element name="value4" type="xs:string"/>
 </xs:schema>

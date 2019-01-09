@@ -3675,9 +3675,6 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 
 		public function kiPowerCostMod():Number {
 			var mod:int = 1;
-			if(hasPerk(PerkLib.WizardsAndDaoistsEndurance)){
-				mod -= (0.01 * perkv2(PerkLib.WizardsAndDaoistsEndurance))
-			}
 			if(hasPerk(PerkLib.SeersInsight)){
 				mod -= perkv1(PerkLib.SeersInsight);
 			}
@@ -3788,8 +3785,6 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			var costPercent:Number = 100;
 			costPercent -= (100 * perkv1(PerkLib.SeersInsight));
 			costPercent -= perkv1(PerkLib.SpellcastingAffinity);
-			costPercent -= perkv1(PerkLib.WizardsEnduranceAndSluttySeduction);
-			costPercent -= perkv1(PerkLib.WizardsAndDaoistsEndurance);
 			costPercent -= perkv1(PerkLib.WizardsEndurance);
 
 			if (jewelryName == game.jewelries.FOXHAIR.name) costPercent -= 20;

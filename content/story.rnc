@@ -5,7 +5,7 @@ start = scene
 
 # core xlogic
 content =
-    text | b | i | font | if | switch | xcc-content
+    text | b | i | font | if | switch | xcc-content | mod-content
 expression = text
 array-content-expression = text
 if = element if {
@@ -82,4 +82,24 @@ Include = element include {
     attribute path { text },
     attribute required { "true" | "false" }?,
     empty
+}
+# mod content
+mod-content = armor #| mod-armor | fork-armor
+armor = element armor {
+	attribute id { text }
+	& element short { text }
+	& element name { text }
+	& element long { text }
+	& element description { text }?
+	& element value { text }?
+	& element defense { text }?
+	& element subType { text }?
+	& element supportsUndergarment { "true" | "false" }?
+	& element perk {
+		attribute id { text }
+		& element value1 { text }?
+		& element value2 { text }?
+		& element value3 { text }?
+		& element value4 { text }?
+	}*
 }

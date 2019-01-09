@@ -1391,18 +1391,8 @@ public class PerkLib
 		});
 		public static const WellspringOfLust:PerkType                   = mk("Wellspring of Lust", "Wellspring of Lust",
 				"At the beginning of combat, gain lust up to black magic threshold if lust is bellow black magic threshold.", null);
-		public static const WizardsEnduranceAndSluttySeduction:PerkType = jmk({
-			id   : "Wizard's Endurance/Slutty Seduction",
-			name : "Wizard's Endurance/Slutty Seduction",
-			short: "Reduces mana cost of spells by <eval>value1</eval>% and increases odds of successfully teasing and lust damage of successful teases by <eval>value2</eval> points.",
-			long : "Your spellcasting equipment makes your spell-casting cost less mana you and allows access to 'Seduce', an improved form of 'Tease'.!"
-		});
-		public static const WizardsAndDaoistsEndurance:PerkType         = jmk({
-			id   : "Wizard's and Daoists's Endurance",
-			name : "Wizard's and Daoists's Endurance",
-			short: "Reduces mana cost of spells by <eval>value1</eval>% and ki cost of soulskills by <eval>value2</eval>%.",
-			long : "Your equipment makes it harder for spell-casting to drain your mana or souskills to drain your ki!"
-		});
+		
+		
 		public static const WizardsEndurance:PerkType                   = jmk({
 			id   : "Wizard's Endurance",
 			name : "Wizard's Endurance",

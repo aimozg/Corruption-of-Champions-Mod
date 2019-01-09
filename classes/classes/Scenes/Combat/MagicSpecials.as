@@ -543,7 +543,6 @@ package classes.Scenes.Combat {
 			}
 			if (player.hasPerk(PerkLib.Seduction)) lustDmgF += 5;
 			lustDmgF += player.perkv1(PerkLib.SluttySeduction);
-			lustDmgF += player.perkv2(PerkLib.WizardsEnduranceAndSluttySeduction);
 			lustDmgF += scalingBonusLibido() * 0.1;
 			if (player.hasPerk(PerkLib.JobSeducer)) lustDmgF += player.teaseLevel * 3;
 			else lustDmgF += player.teaseLevel * 2;

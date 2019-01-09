@@ -87,7 +87,7 @@ package classes.Scenes.Combat {
 		//10% for seduction perk
 		if (player.hasPerk(PerkLib.Seduction)) chance += 10;
 		//10% for sexy armor types
-		if (player.hasPerk(PerkLib.SluttySeduction) || player.hasPerk(PerkLib.WizardsEnduranceAndSluttySeduction)) {
+		if (player.hasPerk(PerkLib.SluttySeduction)) {
 			chance += 10;
 		}
 		//10% for bimbo shits
@@ -109,7 +109,6 @@ package classes.Scenes.Combat {
 		if (player.hasPerk(PerkLib.Seduction)) damage += 5;
 		//+ slutty armor bonus
 		damage += player.perkv1(PerkLib.SluttySeduction);
-		damage += player.perkv2(PerkLib.WizardsEnduranceAndSluttySeduction);
 		//10% for bimbo shits
 		if (bimbo || bro || futa) {
 			damage += 5;

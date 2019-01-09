@@ -3,6 +3,7 @@
  */
 package classes.Modding {
 import classes.CoC;
+import classes.ItemType;
 import classes.Monster;
 import classes.Scenes.API.GroupEncounter;
 import classes.internals.Jsonable;
@@ -32,6 +33,7 @@ public class GameMod implements Jsonable {
 	public var story:BoundNode;
 	public var monsterList:/*MonsterPrototype*/Array = [];
 	public var encounterList:/*ModEncounter*/Array = [];
+	public var itemTypeList:Array = [];
 	private var game:CoC;
 	public var context:StoryContext;
 	public function GameMod(name:String, version:int, story:ModStmt) {
@@ -96,12 +98,18 @@ public class GameMod implements Jsonable {
 		for each (var encounter:ModEncounter in encounterList) {
 			game.getEncounterPool(encounter.poolName).add(encounter);
 		}
+		for each (var itemType:ItemType in itemTypeList) {
+			itemType.register();
+		}
 		_initialized = true;
 		reset();
 	}
 	public function unloaded():void {
 		for each (var encounter:ModEncounter in encounterList) {
 			game.getEncounterPool(encounter.poolName).remove(encounter);
+		}
+		for each (var itemType:ItemType in itemTypeList) {
+			itemType.unregister();
 		}
 	}
 	private function setupContext():void {
