@@ -11,6 +11,7 @@ import classes.internals.Utils;
 
 import coc.lua.LuaEngine;
 import coc.lua.LuaNamespace;
+import coc.model.RefList;
 import coc.script.Eval;
 import coc.xxc.BoundNode;
 import coc.xxc.NamedNode;
@@ -33,7 +34,8 @@ public class GameMod implements Jsonable {
 	public var story:BoundNode;
 	public var monsterList:/*MonsterPrototype*/Array = [];
 	public var encounterList:/*ModEncounter*/Array = [];
-	public var itemTypeList:Array = [];
+	public var itemTypeList:/*ItemType*/Array = [];
+	public var refListList:/*RefList*/Array = [];
 	private var game:CoC;
 	public var context:StoryContext;
 	public function GameMod(name:String, version:int, story:ModStmt) {
@@ -101,6 +103,10 @@ public class GameMod implements Jsonable {
 		for each (var itemType:ItemType in itemTypeList) {
 			itemType.register();
 		}
+		for each (var refList:RefList in refListList) {
+			// TODO remember overwritten?
+			game.refLists[refList.id] = refList;
+		}
 		_initialized = true;
 		reset();
 	}
@@ -110,6 +116,9 @@ public class GameMod implements Jsonable {
 		}
 		for each (var itemType:ItemType in itemTypeList) {
 			itemType.unregister();
+		}
+		for each (var refList:RefList in refListList) {
+			delete game.refLists[refList.id];
 		}
 	}
 	private function setupContext():void {

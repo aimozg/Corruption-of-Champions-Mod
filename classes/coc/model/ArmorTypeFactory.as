@@ -2,6 +2,8 @@
  * Coded by aimozg on 09.01.2019.
  */
 package coc.model {
+import flash.utils.Dictionary;
+
 public class ArmorTypeFactory extends AbstractFactory {
 	public function ArmorTypeFactory() {
 	}
@@ -30,18 +32,6 @@ public class ArmorTypeFactory extends AbstractFactory {
 	}
 	override public function idOf(o:Object):String {
 		return (o as XmlArmorType).id;
-	}
-	public function handleInput(input:XML, library:Library):Boolean {
-		switch (input.localName().toString()) {
-			case "armor":
-				saveTo(create(input),library);
-				return true;
-			case "mod-armor":
-				modify(library.get(input.@id.toString()), input);
-				return true;
-			default:
-				return false;
-		}
 	}
 }
 }

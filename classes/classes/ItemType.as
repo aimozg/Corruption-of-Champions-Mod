@@ -3,16 +3,12 @@
  */
 package classes
 {
-import classes.internals.Utils;
-
-import coc.model.Library;
 
 import flash.utils.Dictionary;
 
 	public class ItemType
 	{
 		private static var ITEM_LIBRARY:Dictionary = new Dictionary();
-		private static var ITEM_LIBRARY_AS_LIBRARY:Library = new Library(ITEM_LIBRARY);
 		private static var ITEM_SHORT_LIBRARY:Dictionary = new Dictionary();
 		public static const NOTHING:ItemType = new ItemType("NOTHING!").register();
 
@@ -34,9 +30,9 @@ import flash.utils.Dictionary;
 			return ITEM_SHORT_LIBRARY[shortName];
 		}
 
-		public static function getItemLibrary():Library
+		public static function getItemLibrary():Dictionary
 		{
-			return ITEM_LIBRARY_AS_LIBRARY;
+			return ITEM_LIBRARY;
 		}
 
 		private var _id:String;

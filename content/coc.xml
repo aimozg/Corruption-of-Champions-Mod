@@ -522,4 +522,27 @@
             <value1>0.2</value1>
         </perk>
     </armor>
+	<reflist id="VictoriaTailorShopClothes" type="ItemType">
+		<ref id="ClssyCl"/>
+		<ref id="RbbrClt"/>
+		<ref id="AdvClth"/>
+		<ref id="TubeTop"/>
+		<ref id="Overall"/>
+		<ref id="B.Dress"/>
+		<ref id="T.BSuit"/>
+		<ref id="M.Robes"/>
+		<ref id="LthrPnt"/>
+		<ref id="BimboSk"/>
+		<ref id="A.Robe"/>
+	</reflist>
+	<reflist id="VictoriaTailorShopUndergarments" type="ItemType">
+		<ref id="C. Bra "/>
+		<ref id="C.Panty"/>
+		<ref id="C. Loin"/>
+		<ref id="FurLoin"/>
+		<ref id="Garters"/>
+		<ref id="Ltx.Bra"/>
+		<ref id="LtxShrt"/>
+		<ref id="LtxThng"/>
+	</reflist>
 </extend-story>

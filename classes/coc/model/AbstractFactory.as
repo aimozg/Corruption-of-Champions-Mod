@@ -2,6 +2,8 @@
  * Coded by aimozg on 09.01.2019.
  */
 package coc.model {
+import flash.utils.Dictionary;
+
 /**
  * Abstract factory to create & patch objects of type T
  */
@@ -42,8 +44,8 @@ public class AbstractFactory {
 	public function idOf(o:Object):String {
 		throw "Abstract method invocation";
 	}
-	public function saveTo(o:Object,lib:Library):void {
-		lib.put(idOf(o),o);
+	public function saveTo(o:Object,lib:Dictionary):void {
+		lib[idOf(o)]=o;
 	}
 	public function AbstractFactory() {
 	}

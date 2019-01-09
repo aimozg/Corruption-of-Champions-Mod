@@ -2,6 +2,7 @@
  * Coded by aimozg on 28.08.2017.
  */
 package coc.xxc {
+import classes.CoC;
 import classes.ItemType;
 import classes.Modding.GameMod;
 import classes.Modding.ModEncounter;
@@ -11,6 +12,7 @@ import classes.internals.LoggerFactory;
 import classes.internals.Utils;
 
 import coc.model.ArmorTypeFactory;
+import coc.model.RefList;
 import coc.model.XmlArmorType;
 
 import coc.script.Eval;
@@ -249,6 +251,15 @@ public class StoryCompiler extends Compiler {
 				} else {
 					LOGGER.debug("New item type: "+armorType.id);
 					armorType.register();
+				}
+				return null;
+			case "reflist":
+				var refList:RefList = RefList.fromXml(x);
+				LOGGER.debug("New "+refList);
+				if (mod) {
+					mod.refListList.push(refList.id);
+				} else {
+					CoC.instance.refLists[refList.id] = refList;
 				}
 				return null;
 			default:

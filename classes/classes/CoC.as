@@ -30,6 +30,7 @@ import classes.display.SpriteDb;
 import classes.internals.Utils;
 
 import coc.lua.LuaEngine;
+import coc.model.RefList;
 
 import coc.view.MainView;
 import coc.xxc.Story;
@@ -42,6 +43,7 @@ import flash.display.Sprite;
 import flash.events.*;
 import flash.net.registerClassAlias;
 import flash.text.TextFormat;
+import flash.utils.Dictionary;
 import flash.utils.setTimeout;
 
 import mx.logging.Log;
@@ -111,12 +113,16 @@ public class CoC extends MovieClip
     public var playerInfo:PlayerInfo = new PlayerInfo();
     public var debugInfoMenu:DebugInfo = new DebugInfo();
     public var gameSettings:GameSettings = new GameSettings();
+	
+	// TODO @aimozg bundle resources of different types into container; mods can inherit/contain such container too for better management
     public var rootStory:Story = new Story("story",null,"root");
     public var compiler:StoryCompiler = new StoryCompiler("content/").attach(rootStory);
     public var mods:/*GameMod*/Array = [];
     public var monsterLib:MonsterLib;
     public var encounterPools:/*[index:string] => GroupEncounter*/Object = {};
-    public var context:StoryContext;
+	public var refLists:/*RefList*/Dictionary = new Dictionary();
+ 
+	public var context:StoryContext;
     public var lua:LuaEngine;
 
     public var perkTree:PerkTree = new PerkTree();

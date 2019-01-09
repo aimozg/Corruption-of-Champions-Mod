@@ -12,7 +12,6 @@
                 <xs:element ref="if"/>
                 <xs:element ref="switch"/>
                 <xs:element ref="xcc-content"/>
-                <xs:element ref="mod-content"/>
             </xs:choice>
         </xs:sequence>
     </xs:group>
@@ -144,7 +143,9 @@
         </xs:complexType>
     </xs:element>
     <!-- mod content -->
-    <xs:element name="mod-content" abstract="true">
+    <xs:element name="mod-content" abstract="true" substitutionGroup="xcc-named-content"/>
+    <!-- | mod-armor | fork-armor -->
+    <xs:element name="armor" substitutionGroup="mod-content">
         <xs:complexType>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element ref="short"/>
@@ -160,8 +161,6 @@
             <xs:attribute name="id" use="required"/>
         </xs:complexType>
     </xs:element>
-    <!-- | mod-armor | fork-armor -->
-    <xs:element name="armor" substitutionGroup="mod-content"/>
     <xs:element name="short" type="xs:string"/>
     <xs:element name="name" type="xs:string"/>
     <xs:element name="long" type="xs:string"/>
@@ -192,4 +191,25 @@
     <xs:element name="value2" type="xs:string"/>
     <xs:element name="value3" type="xs:string"/>
     <xs:element name="value4" type="xs:string"/>
+    <xs:element name="reflist" substitutionGroup="mod-content">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="ref"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="ItemType"/>
+                        <xs:enumeration value="PerkType"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ref">
+        <xs:complexType>
+            <xs:attribute name="id" use="required"/>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

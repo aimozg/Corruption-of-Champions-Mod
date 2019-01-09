@@ -1,6 +1,9 @@
 package classes.Scenes.Places.TelAdre {
+import classes.CoC;
 import classes.ItemType;
 import classes.StatusEffects;
+
+import coc.model.RefList;
 
 public class VictoriaTailorShop extends Shop {
     private var _clothes:Array;
@@ -9,14 +12,8 @@ public class VictoriaTailorShop extends Shop {
     public function VictoriaTailorShop() {
         sprite = 61;
         story = baseStory.locate("VictoriaTailorShop");
-        _clothes = [
-            armors.CLSSYCL, armors.RBBRCLT, armors.ADVCLTH, armors.TUBETOP, armors.OVERALL, armors.B_DRESS,
-            armors.T_BSUIT, armors.M_ROBES, armors.LTHRPNT, armors.BIMBOSK, armors.A_ROBE_
-        ];
-        _undergarments = [
-            undergarments.C_BRA,   undergarments.C_PANTY, undergarments.C_LOIN,  undergarments.FURLOIN,
-            undergarments.GARTERS, undergarments.LTX_BRA, undergarments.LTXSHRT, undergarments.LTXTHNG
-        ];
+        _clothes = (CoC.instance.refLists["VictoriaTailorShopClothes"] as RefList).toItemTypes();
+        _undergarments = (CoC.instance.refLists["VictoriaTailorShopUndergarments"] as RefList).toItemTypes();
     }
 
     //-----------------
