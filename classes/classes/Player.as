@@ -2219,9 +2219,9 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 			if(hasStatusEffect(StatusEffects.Disarmed)) {
 				removeStatusEffect(StatusEffects.Disarmed);
 				if (weapon == WeaponLib.FISTS) {
-//					weapon = ItemType.lookupItem(flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID]) as Weapon;
-//					(ItemType.lookupItem(flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID]) as Weapon).doEffect(this, false);
-					setWeapon(ItemType.lookupItem(flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID]) as Weapon);
+//					weapon = CoC.instance.gameLibrary.findItemType(flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID]) as Weapon;
+//					(CoC.instance.gameLibrary.findItemType(flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID]) as Weapon).doEffect(this, false);
+					setWeapon(CoC.instance.gameLibrary.findItemType(flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID]) as Weapon);
 				}
 				else {
 					flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] = flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID];

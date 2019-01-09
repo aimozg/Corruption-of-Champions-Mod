@@ -329,9 +329,9 @@ public function benoitsBuyMenu():void {
 		outputText("\"<i>Some may call zis junk,</i>\" says Benoit, indicating his latest wares.  \"<i>Me... I call it garbage.</i>\"");
 	}
 	outputText("\n\n<b><u>" + benoitMF("Benoit","Benoite") + "'s Prices</u></b>");
-	outputText("\n" + ItemType.lookupItem(flags[kFLAGS.BENOIT_1]).longName + ": " + Math.round(buyMod * ItemType.lookupItem(flags[kFLAGS.BENOIT_1]).value));
-	outputText("\n" + ItemType.lookupItem(flags[kFLAGS.BENOIT_2]).longName + ": " + Math.round(buyMod * ItemType.lookupItem(flags[kFLAGS.BENOIT_2]).value));
-	outputText("\n" + ItemType.lookupItem(flags[kFLAGS.BENOIT_3]).longName + ": " + Math.round(buyMod * ItemType.lookupItem(flags[kFLAGS.BENOIT_3]).value));
+	outputText("\n" + gameLibrary.findItemType(flags[kFLAGS.BENOIT_1]).longName + ": " + Math.round(buyMod * gameLibrary.findItemType(flags[kFLAGS.BENOIT_1]).value));
+	outputText("\n" + gameLibrary.findItemType(flags[kFLAGS.BENOIT_2]).longName + ": " + Math.round(buyMod * gameLibrary.findItemType(flags[kFLAGS.BENOIT_2]).value));
+	outputText("\n" + gameLibrary.findItemType(flags[kFLAGS.BENOIT_3]).longName + ": " + Math.round(buyMod * gameLibrary.findItemType(flags[kFLAGS.BENOIT_3]).value));
 	simpleChoices(flags[kFLAGS.BENOIT_1],createCallBackFunction(benoitTransactBuy,1),
 			flags[kFLAGS.BENOIT_2],createCallBackFunction(benoitTransactBuy,2),
 			flags[kFLAGS.BENOIT_3],createCallBackFunction(benoitTransactBuy,3),
@@ -372,9 +372,9 @@ private function benoitTransactBuy(slot:int = 1):void {
 	
 	if (flags[kFLAGS.BENOIT_STATUS] == 1) buyMod = 1.66;
 	
-	if(slot == 1) itype = ItemType.lookupItem(flags[kFLAGS.BENOIT_1]);
-	else if(slot == 2) itype = ItemType.lookupItem(flags[kFLAGS.BENOIT_2]);
-	else itype = ItemType.lookupItem(flags[kFLAGS.BENOIT_3]);
+	if(slot == 1) itype = gameLibrary.findItemType(flags[kFLAGS.BENOIT_1]);
+	else if(slot == 2) itype = gameLibrary.findItemType(flags[kFLAGS.BENOIT_2]);
+	else itype = gameLibrary.findItemType(flags[kFLAGS.BENOIT_3]);
 	if(player.gems < int(buyMod * itype.value)) {
 		outputText("You consider making a purchase, but you lack the gems to go through with it.");
 		doNext(benoitsBuyMenu);

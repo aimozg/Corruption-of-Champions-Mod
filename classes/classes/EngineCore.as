@@ -365,7 +365,7 @@ public class EngineCore {
         }
 
         //Get items
-        var itype:ItemType = ItemType.lookupItemByShort(buttonText) || ItemType.lookupItem(buttonText);
+        var itype:ItemType = CoC.instance.gameLibrary.findItemTypeByShort(buttonText) || CoC.instance.gameLibrary.findItemType(buttonText);
         var temp:String = "";
         if (itype != null) temp = ('name' in itype) ? itype['name'] : itype.longName;
         if (temp != "") {
@@ -396,9 +396,9 @@ public class EngineCore {
             buttonText = buttonText.split(" x")[0];
         }
 
-        var itype:ItemType = ItemType.lookupItem(buttonText);
+        var itype:ItemType = CoC.instance.gameLibrary.findItemType(buttonText);
         if (itype != null) toolTipText = itype.description;
-        itype = ItemType.lookupItemByShort(buttonText);
+        itype = CoC.instance.gameLibrary.findItemTypeByShort(buttonText);
         if (itype != null) toolTipText = itype.description;
 
         //------------

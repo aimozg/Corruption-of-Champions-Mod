@@ -11,6 +11,7 @@ import classes.internals.Utils;
 
 import coc.lua.LuaEngine;
 import coc.lua.LuaNamespace;
+import coc.model.GameLibrary;
 import coc.model.RefList;
 import coc.script.Eval;
 import coc.xxc.BoundNode;
@@ -23,19 +24,19 @@ public class GameMod implements Jsonable {
 	public var name:String;
 	public var version:int;
 	public var state:Object    = {};
-	public var initialState:Object    = {}; // Scripts to eval, not values
+	public var initialState:Object                   = {}; // Scripts to eval, not values
 	private var _lua:LuaEngine;
 	private var _ns:LuaNamespace;
-	private var _script:String = "";
-	private var _newScript:String = "";
-	private var _initialized:Boolean = false;
-	private var _compiled:Boolean = false;
+	private var _script:String                       = "";
+	private var _newScript:String                    = "";
+	private var _initialized:Boolean                 = false;
+	private var _compiled:Boolean                    = false;
 	private var _unboundNode:ModStmt;
 	public var story:BoundNode;
 	public var monsterList:/*MonsterPrototype*/Array = [];
-	public var encounterList:/*ModEncounter*/Array = [];
-	public var itemTypeList:/*ItemType*/Array = [];
-	public var refListList:/*RefList*/Array = [];
+	public var encounterList:/*ModEncounter*/Array   = [];
+	public var itemTypeList:/*ItemType*/Array        = [];
+	public const gameLibrary:GameLibrary             = new GameLibrary();
 	private var game:CoC;
 	public var context:StoryContext;
 	public function GameMod(name:String, version:int, story:ModStmt) {
@@ -100,13 +101,7 @@ public class GameMod implements Jsonable {
 		for each (var encounter:ModEncounter in encounterList) {
 			game.getEncounterPool(encounter.poolName).add(encounter);
 		}
-		for each (var itemType:ItemType in itemTypeList) {
-			itemType.register();
-		}
-		for each (var refList:RefList in refListList) {
-			// TODO remember overwritten?
-			game.refLists[refList.id] = refList;
-		}
+		game.gameLibrary.merge(gameLibrary); // TODO track patches & replacements
 		_initialized = true;
 		reset();
 	}
@@ -114,12 +109,7 @@ public class GameMod implements Jsonable {
 		for each (var encounter:ModEncounter in encounterList) {
 			game.getEncounterPool(encounter.poolName).remove(encounter);
 		}
-		for each (var itemType:ItemType in itemTypeList) {
-			itemType.unregister();
-		}
-		for each (var refList:RefList in refListList) {
-			delete game.refLists[refList.id];
-		}
+		game.gameLibrary.unmerge(gameLibrary); // TODO track patches & replacements
 	}
 	private function setupContext():void {
 		context = new StoryContext(game);

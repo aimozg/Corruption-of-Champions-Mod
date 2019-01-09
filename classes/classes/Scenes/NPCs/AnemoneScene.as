@@ -1178,7 +1178,7 @@ public class AnemoneScene extends BaseContent implements TimeAwareInterface
 			}
 			//[(if Kid A has been given a weapon)
 			if (flags[kFLAGS.ANEMONE_WEAPON_ID] != 0) {
-				outputText("She has " + ItemType.lookupItem(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " sitting next to it.  ");
+				outputText("She has " + gameLibrary.findItemType(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " sitting next to it.  ");
 				//outputText("Kid A pokes her head out and smiles at you.  What do you need from her?");
 				weaponT = "Take Weapon";
 				weaponB = takeOutOfAnemone;
@@ -1296,7 +1296,7 @@ public class AnemoneScene extends BaseContent implements TimeAwareInterface
 			clearOutput();
 			spriteSelect(71);
 			outputText("You take the item back.  ");
-			var itype:ItemType = ItemType.lookupItem(flags[kFLAGS.ANEMONE_WEAPON_ID]);
+			var itype:ItemType = gameLibrary.findItemType(flags[kFLAGS.ANEMONE_WEAPON_ID]);
 			if (flags[kFLAGS.ANEMONE_WATCH] > 0) {
 				outputText("Your anemone daughter will not be able to guard you at night without a weapon.  If you want her to guard, you'll need to give her a new weapon and tell her to watch at night again.  ");
 				flags[kFLAGS.ANEMONE_WATCH] = 0;
@@ -1342,9 +1342,9 @@ public class AnemoneScene extends BaseContent implements TimeAwareInterface
 			outputText("The anemone obediently climbs out of her barrel, ");
 			//[(KidXP < 33)]
 			if (kidAXP() < 33) {
-				outputText("holding " + ItemType.lookupItem(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " protectively across her chest.");
+				outputText("holding " + gameLibrary.findItemType(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " protectively across her chest.");
 			}
-			else outputText("taking up an attentive stance with " + ItemType.lookupItem(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " in her hands.");
+			else outputText("taking up an attentive stance with " + gameLibrary.findItemType(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " in her hands.");
 
 			outputText("  You spend some time instructing Kid A in the finer points of the equipment you've provided her with, and then finish up with a practice duel.");
 
@@ -1540,7 +1540,7 @@ public class AnemoneScene extends BaseContent implements TimeAwareInterface
 			}
 			//[Any new weapon added without text written for it, or any custom item name set by a save editor]
 			else {
-				outputText("\n\nFor the life of her, Kid A can't seem to grasp how to use the " + ItemType.lookupItem(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " you've provided her with.  You have to interrupt the practice for explanations so many times that you don't actually get to do any sparring.");
+				outputText("\n\nFor the life of her, Kid A can't seem to grasp how to use the " + gameLibrary.findItemType(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " you've provided her with.  You have to interrupt the practice for explanations so many times that you don't actually get to do any sparring.");
 				//(no effect, but you can just save edit the values you want anyway)
 			}
 			//if hp = 0 after tutor, override any other result and output new PG:
@@ -1816,7 +1816,7 @@ public class AnemoneScene extends BaseContent implements TimeAwareInterface
 
 			outputText("\n\n\"<i>...no idea why you're so shy and immature,</i>\" the cow-girl continues, no less insistent for her quieter tone.  \"<i>You're almost two feet taller than any of these kids, so why don't you stop acting like one and behave like an adult?  There's work to be done around here and not enough hands to do it!</i>\"");
 
-			outputText("\n\nMarble takes a horse-stance, awaiting an answer; the anemone considers unhappily for several minutes, then climbs out of the barrel.  Satisfied, Marble turns and herds her children off.  Kid A initially plods along in her wake, but after a moment's consideration, returns to the barrel and grabs her " + ItemType.lookupItem(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " before reluctantly joining the others in the open pasture.");
+			outputText("\n\nMarble takes a horse-stance, awaiting an answer; the anemone considers unhappily for several minutes, then climbs out of the barrel.  Satisfied, Marble turns and herds her children off.  Kid A initially plods along in her wake, but after a moment's consideration, returns to the barrel and grabs her " + gameLibrary.findItemType(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " before reluctantly joining the others in the open pasture.");
 
 			outputText("\n\n\"<i>Alright,</i>\" Marble says, as the anemone draws up to her from the rear.  The larger woman turns to face the blue girl.  \"<i>You're going to watch these kids while I sit here and patch some holes in their... why did you bring that to babysit?!</i>\"");
 
@@ -1866,7 +1866,7 @@ public class AnemoneScene extends BaseContent implements TimeAwareInterface
 			}
 			//(else KidXP < 75)
 			else if (kidAXP() < 75) {
-				outputText("\n\nThe sharks look up from their play, baring teeth at the anemone.  She steels herself, then holds her " + ItemType.lookupItem(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " menacingly in front of her as best she can while she steps into the stream and fills her waterskins.  Occasionally one of the shark-girls will feint at the anemone, who accordingly turns the weapon toward the aggressor until she retreats.  Once the skins are filled, Kid A hangs them over her shoulders and backs away, still facing the sharks with her weapon out.");
+				outputText("\n\nThe sharks look up from their play, baring teeth at the anemone.  She steels herself, then holds her " + gameLibrary.findItemType(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " menacingly in front of her as best she can while she steps into the stream and fills her waterskins.  Occasionally one of the shark-girls will feint at the anemone, who accordingly turns the weapon toward the aggressor until she retreats.  Once the skins are filled, Kid A hangs them over her shoulders and backs away, still facing the sharks with her weapon out.");
 			}
 			//(else)
 			else outputText("\n\nThe anemone doesn't hesitate, but bursts into the middle of the shark-girls like a bomb, shrieking and making huge splashes, scattering them in multiple directions.  She quickly scoops up both skins' worth of water and then runs, giggling giddily with the shark-girls dogging her heels until she's halfway back to camp.");
@@ -1880,7 +1880,7 @@ public class AnemoneScene extends BaseContent implements TimeAwareInterface
 		public function goblinNightAnemone():void
 		{
 			outputText("\n<b>That night...</b>");
-			outputText("\nA noisy clump of gabbling green in the distance awakens you and attracts your attention.  As it draws closer to your camp, you can make out tufts of shockingly-colored hair atop it, and then distinct shapes.  The blot on the landscape resolves into a glob of goblins, clearly intent on reaching your camp's perimeter.  Your anemone notices as well, and, attempting to fulfill the terms of her lease, picks up her " + ItemType.lookupItem(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " and moves to intercept them.  You follow at a good distance and tuck yourself behind some cover, already suspecting the identities of the invaders.");
+			outputText("\nA noisy clump of gabbling green in the distance awakens you and attracts your attention.  As it draws closer to your camp, you can make out tufts of shockingly-colored hair atop it, and then distinct shapes.  The blot on the landscape resolves into a glob of goblins, clearly intent on reaching your camp's perimeter.  Your anemone notices as well, and, attempting to fulfill the terms of her lease, picks up her " + gameLibrary.findItemType(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + " and moves to intercept them.  You follow at a good distance and tuck yourself behind some cover, already suspecting the identities of the invaders.");
 
 			outputText("\n\nThe goblins slow up and then stop as the anemone plants herself in their way.  The two sides size one another up for a minute, and then the glob parts to reveal its largest member.");
 
@@ -1891,7 +1891,7 @@ public class AnemoneScene extends BaseContent implements TimeAwareInterface
 
 			outputText("\n\nThe goblin looks a little surprised.  \"<i>What do you mean, getting in our way?  I'll warn you once; step aside and let us search that camp for baby batter, or I will make you regret it.</i>\"  She considers the anemone irately, then gestures to her entourage and adds, \"<i>I'd have these cunts ride your sad little willy silly to punish you for being such a slag, but we can't get goblins out of you people - only more blue bitches.</i>\"");
 
-			outputText("\n\nThough you can't see Kid A's expression from behind, she's probably steeling her face into as stern a mask as she's capable of, judging by the way she assumes an aggressive stance - albeit one that's still trying to protect her body as much as possible with " + ItemType.lookupItem(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + ".  As the anemone takes a step forward, the goblins all take a step back, except for the leader.  The two are now staring at each other; one looking up, the other down.");
+			outputText("\n\nThough you can't see Kid A's expression from behind, she's probably steeling her face into as stern a mask as she's capable of, judging by the way she assumes an aggressive stance - albeit one that's still trying to protect her body as much as possible with " + gameLibrary.findItemType(flags[kFLAGS.ANEMONE_WEAPON_ID]).longName + ".  As the anemone takes a step forward, the goblins all take a step back, except for the leader.  The two are now staring at each other; one looking up, the other down.");
 
 			outputText("\n\n\"<i>Well, we got a blue badass here,</i>\" the goblin says, raising her hands in a gesture of mock wariness.  Before anyone can react, she reaches behind her back and grabs a phial fastened there, throwing it overhand at the anemone with a grunt.  It crashes into Kid A's shoulder and shatters, dousing one gill and the side of her chest in green liquid.  The blue girl glances down at it as the goblin laughs in triumph.");
 

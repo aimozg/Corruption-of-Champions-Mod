@@ -1102,13 +1102,13 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 	player.wrath   = data.wrath || 0;
 
 
-	player.dierctSetEquipment((ItemType.lookupItem(data.weaponId)       as Weapon)       || WeaponLib.FISTS);
-	player.dierctSetEquipment((ItemType.lookupItem(data.weaponRangeId)  as WeaponRange)  || WeaponRangeLib.NOTHING);
-	player.dierctSetEquipment((ItemType.lookupItem(data.shieldId)       as Shield)       || ShieldLib.NOTHING);
-	player.dierctSetEquipment((ItemType.lookupItem(data.jewelryId)      as Jewelry)      || JewelryLib.NOTHING);
-	player.dierctSetEquipment((ItemType.lookupItem(data.upperGarmentId) as Undergarment) || UndergarmentLib.NOTHING);
-	player.dierctSetEquipment((ItemType.lookupItem(data.lowerGarmentId) as Undergarment) || UndergarmentLib.NOTHING);
-	player.dierctSetEquipment((ItemType.lookupItem(data.armorId)        as Armor)        || ArmorLib.COMFORTABLE_UNDERCLOTHES);
+	player.dierctSetEquipment((CoC.instance.gameLibrary.findItemType(data.weaponId)       as Weapon)       || WeaponLib.FISTS);
+	player.dierctSetEquipment((CoC.instance.gameLibrary.findItemType(data.weaponRangeId)  as WeaponRange)  || WeaponRangeLib.NOTHING);
+	player.dierctSetEquipment((CoC.instance.gameLibrary.findItemType(data.shieldId)       as Shield)       || ShieldLib.NOTHING);
+	player.dierctSetEquipment((CoC.instance.gameLibrary.findItemType(data.jewelryId)      as Jewelry)      || JewelryLib.NOTHING);
+	player.dierctSetEquipment((CoC.instance.gameLibrary.findItemType(data.upperGarmentId) as Undergarment) || UndergarmentLib.NOTHING);
+	player.dierctSetEquipment((CoC.instance.gameLibrary.findItemType(data.lowerGarmentId) as Undergarment) || UndergarmentLib.NOTHING);
+	player.dierctSetEquipment((CoC.instance.gameLibrary.findItemType(data.armorId)        as Armor)        || ArmorLib.COMFORTABLE_UNDERCLOTHES);
 	if (player.armor.name != data.armorName) player.modArmorName = data.armorName;
 
 	player.HP                  = data.HP;
@@ -1288,7 +1288,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		for(i = 0; i  < sizeLimit; i++){
 			var iSlot:ItemSlotClass = new ItemSlotClass();
 			if (saveArr[i] != undefined) {
-				iSlot.setItemAndQty(ItemType.lookupItem(saveArr[i].id || saveArr[i].shortName), saveArr[i].quantity);
+				iSlot.setItemAndQty(CoC.instance.gameLibrary.findItemType(saveArr[i].id || saveArr[i].shortName), saveArr[i].quantity);
 				iSlot.unlocked = saveArr[i].unlocked;
 			}
 			gameArr[i] = iSlot;
@@ -1303,7 +1303,7 @@ public function loadGameObject(saveData:Object, slot:String = "VOID"):void
 		var sSlot:* = data["itemSlot" + (i + 1)];
 		if(sSlot == undefined){break;}
 		iSlot.unlocked = sSlot.unlocked;
-		iSlot.setItemAndQty(ItemType.lookupItem(sSlot.id), sSlot.quantity);
+		iSlot.setItemAndQty(CoC.instance.gameLibrary.findItemType(sSlot.id), sSlot.quantity);
 	}
 
 	gameStateSet(data.gameState);

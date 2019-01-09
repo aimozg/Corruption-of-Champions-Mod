@@ -1700,7 +1700,7 @@ public class Holidays {
             }
             //({Any other drink}. 
             else {
-                var itype:ItemType = ItemType.lookupItem(choice);
+                var itype:ItemType = CoC.instance.gameLibrary.findItemType(choice);
                 player.consumeItem(itype, 1);
                 EngineCore.outputText("You present the drink to Pastie and she flashes you a grin as she flies up and away, leading you into an alley.  \"<i>Well, lemme at it!  A drink sure as hell sounds good right now and none of this seems like it'd be really bad.</i>\"");
                 EngineCore.menu();

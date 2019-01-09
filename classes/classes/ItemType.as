@@ -4,37 +4,15 @@
 package classes
 {
 
+import coc.model.GameLibrary;
+
 import flash.utils.Dictionary;
 
 	public class ItemType
 	{
-		private static var ITEM_LIBRARY:Dictionary = new Dictionary();
-		private static var ITEM_SHORT_LIBRARY:Dictionary = new Dictionary();
+		public static const CONST_ITEMTYPES:GameLibrary = new GameLibrary();
 		public static const NOTHING:ItemType = new ItemType("NOTHING!").register();
-
-		/**
-		 * Looks up item by <b>ID</b>.
-		 * @param	id 7-letter string that identifies an item.
-		 * @return  ItemType
-		 */
-		public static function lookupItem(id:String):ItemType{
-			return ITEM_LIBRARY[id];
-		}
-
-		/**
-		 * Looks up item by <b>shortName</b>.
-		 * @param	shortName The short name that was displayed on buttons.
-		 * @return  ItemType
-		 */
-		public static function lookupItemByShort(shortName:String):ItemType{
-			return ITEM_SHORT_LIBRARY[shortName];
-		}
-
-		public static function getItemLibrary():Dictionary
-		{
-			return ITEM_LIBRARY;
-		}
-
+		
 		private var _id:String;
 		protected var _shortName:String;
 		protected var _longName:String;
@@ -96,38 +74,11 @@ import flash.utils.Dictionary;
 			}
 
 		public function register():ItemType {
-			var prev:* = ITEM_LIBRARY[_id];
-			if (prev === this) return this;
-			if (prev != null) {
-				CoC_Settings.error("Duplicate itemid "+_id+", old item is "+prev.longName);
-			}
-			ITEM_LIBRARY[_id] = this;
-			if (ITEM_SHORT_LIBRARY[_shortName] != null){
-				trace("WARNING: Item with duplicate shortname: '"+_id+"' and '"+(ITEM_SHORT_LIBRARY[this._shortName] as ItemType)._id+"' share "+this._shortName);
-			}
-			ITEM_SHORT_LIBRARY[this._shortName] = this;
+			CONST_ITEMTYPES.addItemType(this);
 			return this;
 		}
-		public function unregister():void {
-			if (!(_id in ITEM_LIBRARY)) {
-				trace("WARNING: Wanted to unregister item type "+_id+" but already unregistered");
-			} else if (ITEM_LIBRARY[_id] !== this) {
-				trace("WARNING: Wanted to unregister item type "+_id+" but another already registered under that name");
-			} else {
-				delete ITEM_LIBRARY[_id];
-			}
-			if (ITEM_SHORT_LIBRARY[_shortName] === this) {
-				delete ITEM_SHORT_LIBRARY[_shortName];
-			}
-		}
 		public function redefineItemTypeShortName(newShortName:String):void {
-			if (_shortName == newShortName) return;
-			delete ITEM_SHORT_LIBRARY[_shortName];
 			_shortName = newShortName;
-			if (ITEM_SHORT_LIBRARY[_shortName] != null){
-				trace("WARNING: Item with duplicate shortname: '"+_id+"' and '"+(ITEM_SHORT_LIBRARY[this._shortName] as ItemType)._id+"' share "+this._shortName);
-			}
-			ITEM_SHORT_LIBRARY[this._shortName] = this;
 		}
 
 

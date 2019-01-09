@@ -13,6 +13,8 @@ import classes.Scenes.SceneLib;
 import classes.Stats.Buff;
 import classes.internals.Utils;
 
+import coc.model.GameLibrary;
+
 import coc.view.ButtonData;
 import coc.view.ButtonDataList;
 import coc.view.CoCButton;
@@ -802,6 +804,9 @@ import coc.xxc.StoryContext;
 		}
 		protected function get inventory():Inventory{
 			return SceneLib.inventory;
+		}
+		protected function get gameLibrary():GameLibrary {
+			return CoC.instance.gameLibrary;
 		}
 
 /* No longer used

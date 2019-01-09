@@ -398,7 +398,7 @@ private function nonAddictMinotaurGangBang():void {
     if (CoC.instance.inCombat) cleanupAfterCombat();
     else {
 		outputText("\n\n");
-		inventory.takeItem(ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]), camp.returnToCampUseEightHours);
+		inventory.takeItem(gameLibrary.findItemType(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]), camp.returnToCampUseEightHours);
 	}
 }
 
@@ -729,7 +729,7 @@ private function victoryMinotaurGangTitFuck():void {
     if (CoC.instance.inCombat) cleanupAfterCombat();
     else {
 		outputText("\n\n");
-		inventory.takeItem(ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]), camp.returnToCampUseOneHour);
+		inventory.takeItem(gameLibrary.findItemType(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]), camp.returnToCampUseOneHour);
 	}
 }
 

@@ -244,8 +244,8 @@ public class Combat extends CombatMechanics {
 		if (flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] == "") {
 			doNext(createCallBackFunction(camp.returnToCamp, timePasses));
 		} else {
-			outputText("  Somehow you came away from the encounter with " + ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]).longName + ".\n\n");
-			inventory.takeItem(ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]), createCallBackFunction(camp.returnToCamp, timePasses));
+			outputText("  Somehow you came away from the encounter with " + gameLibrary.findItemType(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]).longName + ".\n\n");
+			inventory.takeItem(gameLibrary.findItemType(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]), createCallBackFunction(camp.returnToCamp, timePasses));
 		}
 	}
 
@@ -2168,7 +2168,7 @@ public function dropItem(monster:Monster, nextFunc:Function = null):void {
 	}
 	//Bonus loot overrides others
 	if (flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] != "") {
-		itype = ItemType.lookupItem(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]);
+		itype = gameLibrary.findItemType(flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID]);
 	}
 	monster.handleAwardItemText(itype); //Each monster can now override the default award text
 	if (itype != null) {
@@ -2499,7 +2499,7 @@ private function combatStatusesUpdate():void {
 		if (player.statusEffectv1(StatusEffects.Hemorrhage) <= 0) {
 			player.removeStatusEffect(StatusEffects.Disarmed);
 			if (player.weapon == WeaponLib.FISTS) {
-				player.setWeapon(ItemType.lookupItem(flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID]) as Weapon);
+				player.setWeapon(gameLibrary.findItemType(flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID]) as Weapon);
 			}
 			else {
 				flags[kFLAGS.BONUS_ITEM_AFTER_COMBAT_ID] = flags[kFLAGS.PLAYER_DISARMED_WEAPON_ID];

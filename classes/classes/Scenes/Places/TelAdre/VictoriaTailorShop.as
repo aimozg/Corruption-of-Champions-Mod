@@ -3,7 +3,6 @@ import classes.CoC;
 import classes.ItemType;
 import classes.StatusEffects;
 
-import coc.model.RefList;
 
 public class VictoriaTailorShop extends Shop {
     private var _clothes:Array;
@@ -12,8 +11,8 @@ public class VictoriaTailorShop extends Shop {
     public function VictoriaTailorShop() {
         sprite = 61;
         story = baseStory.locate("VictoriaTailorShop");
-        _clothes = (CoC.instance.refLists["VictoriaTailorShopClothes"] as RefList).toItemTypes();
-        _undergarments = (CoC.instance.refLists["VictoriaTailorShopUndergarments"] as RefList).toItemTypes();
+        _clothes = gameLibrary.findRefList("VictoriaTailorShopClothes").toItemTypes(gameLibrary);
+        _undergarments = gameLibrary.findRefList("VictoriaTailorShopUndergarments").toItemTypes(gameLibrary);
     }
 
     //-----------------

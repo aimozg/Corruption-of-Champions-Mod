@@ -13,6 +13,7 @@ public class RefList {
 	private static const LOGGER:ILogger = LoggerFactory.getLogger(RefList);
 	
 	public static const Types:* = {
+		any:'any',
 		ItemType:'ItemType',
 		PerkType:'PerkType'
 	};
@@ -56,9 +57,9 @@ public class RefList {
 		}
 		return rslt;
 	}
-	public function toItemTypes():/*ItemType*/Array {
-		if (this.type != Types.ItemType) throw "Expected <ItemType>, got "+this;
-		return map(ItemType.getItemLibrary());
+	public function toItemTypes(global:GameLibrary):/*ItemType*/Array {
+		if (this.type != Types.ItemType && this.type != Types.any) throw "Expected <ItemType>, got "+this;
+		return map(global.itemTypes);
 	}
 	
 	public function toString():String {

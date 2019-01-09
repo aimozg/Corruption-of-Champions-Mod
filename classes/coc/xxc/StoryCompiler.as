@@ -12,6 +12,7 @@ import classes.internals.LoggerFactory;
 import classes.internals.Utils;
 
 import coc.model.ArmorTypeFactory;
+import coc.model.GameLibrary;
 import coc.model.RefList;
 import coc.model.XmlArmorType;
 
@@ -43,6 +44,10 @@ public class StoryCompiler extends Compiler {
 			if (stmt is ModStmt) return (stmt as ModStmt).mod;
 		}
 		return null;
+	}
+	private function currentLibrary():GameLibrary {
+		var mod:GameMod = currentMod();
+		return mod ? mod.gameLibrary : CoC.instance.gameLibrary;
 	}
 
 	public function get basedir():String {
@@ -187,6 +192,7 @@ public class StoryCompiler extends Compiler {
 	}
 	override protected function compileTag(tag:String, x:XML):Statement {
 		var mod:GameMod = currentMod();
+		var library:GameLibrary = currentLibrary();
 		var list:StmtList;
 		switch (tag) {
 			case "comment":
@@ -246,21 +252,13 @@ public class StoryCompiler extends Compiler {
 				return compileStoryBody(locate(x.@name) as Story, x);
 			case "armor":
 				var armorType:ItemType = armorTypeFactory.createArmorType(x);
-				if (mod) {
-					mod.itemTypeList.push(armorType);
-				} else {
-					LOGGER.debug("New item type: "+armorType.id);
-					armorType.register();
-				}
+				LOGGER.debug("New item type: "+armorType.id);
+				library.addItemType(armorType);
 				return null;
 			case "reflist":
 				var refList:RefList = RefList.fromXml(x);
 				LOGGER.debug("New "+refList);
-				if (mod) {
-					mod.refListList.push(refList.id);
-				} else {
-					CoC.instance.refLists[refList.id] = refList;
-				}
+				library.addRefList(refList);
 				return null;
 			default:
 				return super.compileTag(tag, x);

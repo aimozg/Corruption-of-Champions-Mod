@@ -142,7 +142,7 @@ Remember: **For each item type there should be one and only one instance of `Ite
 An error will be reported in `trace` if items with same `id`s are created.
 `ItemType` instances are usually `const` fields of item libraries (see below).
 
-Saving and loading are done using `id`. To get ItemType by `id`, use `ItemType.lookupItem(id:String):ItemType`.
+Saving and loading are done using `id`. To get ItemType by `id`, use `CoC.instance.gameLibrary.findItemType(id:String):ItemType`.
 
 **Every comparison "is it *that* item?" that looks like `shortName == "ThatItm"` should be
 replaced with `itype == library.THATITM` where `library` is item library (see below)**.

@@ -30,6 +30,7 @@ import classes.display.SpriteDb;
 import classes.internals.Utils;
 
 import coc.lua.LuaEngine;
+import coc.model.GameLibrary;
 import coc.model.RefList;
 
 import coc.view.MainView;
@@ -115,12 +116,11 @@ public class CoC extends MovieClip
     public var gameSettings:GameSettings = new GameSettings();
 	
 	// TODO @aimozg bundle resources of different types into container; mods can inherit/contain such container too for better management
-    public var rootStory:Story = new Story("story",null,"root");
-    public var compiler:StoryCompiler = new StoryCompiler("content/").attach(rootStory);
-    public var mods:/*GameMod*/Array = [];
+    public var rootStory:Story         = new Story("story",null,"root");
+    public var compiler:StoryCompiler  = new StoryCompiler("content/").attach(rootStory);
+    public var mods:/*GameMod*/Array   = [];
     public var monsterLib:MonsterLib;
-    public var encounterPools:/*[index:string] => GroupEncounter*/Object = {};
-	public var refLists:/*RefList*/Dictionary = new Dictionary();
+	public var gameLibrary:GameLibrary = new GameLibrary();
  
 	public var context:StoryContext;
     public var lua:LuaEngine;
@@ -209,6 +209,7 @@ public class CoC extends MovieClip
         context = new StoryContext(this);
 
         useables = new UseableLib();
+	    gameLibrary.merge(ItemType.CONST_ITEMTYPES);
 
         this.kFLAGS_REF = kFLAGS;
         this.kACHIEVEMENTS_REF = kACHIEVEMENTS;
@@ -391,7 +392,7 @@ public class CoC extends MovieClip
         //setTimeout(this.run,0);
     }
     public function getEncounterPool(name:String):GroupEncounter {
-        return encounterPools[name] || ((encounterPools[name] = new GroupEncounter(name,[])));
+        return gameLibrary.findEncounterPool(name,true,true);
     }
 	
 	private function loadStory():void {
