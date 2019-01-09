@@ -14,6 +14,8 @@ import mx.logging.ILogger;
 public class GameLibrary {
 	private static const LOGGER:ILogger = LoggerFactory.getLogger(GameLibrary);
 	
+	//////////////////////////////////////////////////////////////
+	
 	private var _refLists:/*RefList*/Dictionary = new Dictionary();
 	public function get refLists():Dictionary {
 		return _refLists;
@@ -32,6 +34,8 @@ public class GameLibrary {
 		return rl;
 	}
 	
+	//////////////////////////////////////////////////////////////
+	
 	private var _encounterPools:/*GroupEncounter*/Dictionary = new Dictionary();
 	public function get encounterPools():Dictionary {
 		return _encounterPools;
@@ -49,6 +53,8 @@ public class GameLibrary {
 		}
 		return ep;
 	}
+	
+	//////////////////////////////////////////////////////////////
 	
 	private var _itemTypes:/*ItemType*/Dictionary        = new Dictionary();
 	private var _itemTypesByShort:/*ItemType*/Dictionary = new Dictionary();
@@ -78,6 +84,10 @@ public class GameLibrary {
 	public function findItemTypeByShort(shortName:String):ItemType {
 		return _itemTypesByShort[shortName];
 	}
+	
+	//////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////
 	
 	public function merge(src:GameLibrary):void {
 		Utils.extend(_refLists,src._refLists);

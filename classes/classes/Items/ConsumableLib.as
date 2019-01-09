@@ -144,7 +144,7 @@ import classes.CoC;
 		public const P_PEARL:SimpleConsumable = mk("P.Pearl", "P.Pearl", "a pure pearl", 1000, "Marae gave you this pure pearl as a reward for shutting down the demonic factory.", m.purePearl);
 
 		//NON-TRANSFORMATIVE ITEMS
-		public const AGILI_E:SimpleConsumable = mk("Agil.E.", "Agility E.", "an agility elixir", 6, "This greenish elixir is supposed to increase the user’s natural swiftness and agility.", m.agilityElixir);
+		public const AGILI_E:SimpleConsumable = mk("Agil.E.", "Agility E.", "an agility elixir", 15, "This greenish elixir is supposed to increase the user’s natural swiftness and agility.", m.agilityElixir);
 		public const AKBALSL:Consumable = new AkbalSaliva();
 		public const BANGB_M:MiniBangBall = new MiniBangBall();
 		//public const BANGBM1:BngBall = new BangBll();//BangBall mark 1 - nastpne powinny mieć coś ala mk 2 itd. nazwy w kodzie :P

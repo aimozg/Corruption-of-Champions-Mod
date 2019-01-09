@@ -4,9 +4,9 @@
  */
 package classes.Scenes.NPCs 
 {
-	import classes.*;
-	import classes.GlobalFlags.kFLAGS;
-	import classes.Items.BaseUseable;
+import classes.GlobalFlags.kFLAGS;
+import classes.ItemType;
+import classes.Items.BaseUseable;
 import classes.display.SpriteDb;
 
 public class AyaneFollower extends NPCAwareContent
@@ -99,18 +99,10 @@ public function ayaneShop():void {
 			outputText("\"<i>You want to buy some nice clothes and gear to look the part and do better tricks? Sure, I’ve got a few useful items I can spare, for you that is. What do you need?</i>\"");			
 		}
 		menu();
-		addButton(0, armors.WKIMONO.shortName, sellItem, armors.WKIMONO);
-		addButton(1, armors.RKIMONO.shortName, sellItem, armors.RKIMONO);
-		addButton(2, armors.BKIMONO.shortName, sellItem, armors.BKIMONO);
-		addButton(3, armors.PKIMONO.shortName, sellItem, armors.PKIMONO);
-		addButton(4, armors.ARCBANG.shortName, sellItem, armors.ARCBANG);
-		addButton(5, shields.SPI_FOC.shortName, sellItem, shields.SPI_FOC);
-		addButton(6, jewelries.FOXHAIR.shortName, sellItem, jewelries.FOXHAIR);
-		addButton(7, consumables.FOXJEWL.shortName, sellItem, consumables.FOXJEWL);
-		addButton(10, consumables.AGILI_E.shortName, sellItem, consumables.AGILI_E, 15);
-		addButton(11, consumables.SMART_T.shortName, sellItem, consumables.SMART_T);
-		addButton(12, consumables.VIXEN_T.shortName, sellItem, consumables.VIXEN_T);
-		addButton(13, consumables.INCOINS.shortName, sellItem, consumables.INCOINS);
+		var items:/*ItemType*/Array = gameLibrary.findRefList("AyaneShop").toItemTypes(gameLibrary);
+		for each (var item:ItemType in items) {
+			button(-1).show(item.shortName,curry(sellItem,item));
+		}
 		if(atCamp){
 			addButton(14, "Back", ayaneCampMenu);
 		}

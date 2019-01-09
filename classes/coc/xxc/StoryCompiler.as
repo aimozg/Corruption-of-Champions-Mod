@@ -184,15 +184,13 @@ public class StoryCompiler extends Compiler {
 					compileModPerk(mod,item);
 					break;
 				default:
-					unknownTag(tag,item);
+					compileLibraryTag(tag,item);
 			}
 		}
 		stack.shift();
 		return stmt;
 	}
 	override protected function compileTag(tag:String, x:XML):Statement {
-		var mod:GameMod = currentMod();
-		var library:GameLibrary = currentLibrary();
 		var list:StmtList;
 		switch (tag) {
 			case "comment":
@@ -250,18 +248,26 @@ public class StoryCompiler extends Compiler {
 				return compileSet(x);
 			case "extend-story":
 				return compileStoryBody(locate(x.@name) as Story, x);
+			default:
+				compileLibraryTag(tag, x);
+		}
+	}
+	protected function compileLibraryTag(tag:String, x:XML):void {
+		var mod:GameMod = currentMod();
+		var library:GameLibrary = currentLibrary();
+		switch (tag) {
 			case "armor":
 				var armorType:ItemType = armorTypeFactory.createArmorType(x);
 				LOGGER.debug("New item type: "+armorType.id);
 				library.addItemType(armorType);
-				return null;
+				return;
 			case "reflist":
 				var refList:RefList = RefList.fromXml(x);
 				LOGGER.debug("New "+refList);
 				library.addRefList(refList);
-				return null;
+				return;
 			default:
-				return super.compileTag(tag, x);
+				super.compileTag(tag, x);
 		}
 	}
 	private function compileBattle(x:XML):BattleStmt {

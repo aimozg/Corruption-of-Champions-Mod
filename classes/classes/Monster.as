@@ -35,6 +35,7 @@ import classes.Scenes.NPCs.ChiChi;
 import classes.Scenes.Quests.UrtaQuest.MilkySuccubus;
 import classes.Scenes.SceneLib;
 import classes.internals.ChainedDrop;
+import classes.internals.LoggerFactory;
 import classes.internals.RandomDrop;
 import classes.internals.Utils;
 import classes.internals.WeightedDrop;
@@ -42,12 +43,15 @@ import classes.lists.Gender;
 
 import flash.utils.getQualifiedClassName;
 
+import mx.logging.ILogger;
+
 /**
 	 * ...
 	 * @author Yoffy, Fake-Name, aimozg
 	 */
 	public class Monster extends Creature
 	{
+		private static const LOGGER:ILogger = LoggerFactory.getLogger(Monster);
 
 		protected final function get player():Player
 		{
@@ -1391,7 +1395,11 @@ import flash.utils.getQualifiedClassName;
 
 		public function dropLoot():ItemType
 		{
-			return _drop.roll() as ItemType;
+			var loot:* = drop.roll();
+			if (loot == null || loot is ItemType) return loot;
+			if (typeof loot === 'string') return game.gameLibrary.findItemType(loot);
+			LOGGER.error("Unknown dropLoot type "+loot);
+			return null;
 		}
 
 		//fixme monster statuses need to be simplified

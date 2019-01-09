@@ -251,8 +251,7 @@ public class ModMonster extends Monster {
 					for each (var item:XML in xml.elements('item')) {
 						var weight:Number = 1;
 						if ('@weight' in item) weight = item.@weight;
-						var itemref:ItemType = CoC.instance.gameLibrary.findItemType(item.text());
-						drop.add(itemref, weight);
+						drop.add(item.text().toString(), weight);
 					}
 					break;
 				default:
