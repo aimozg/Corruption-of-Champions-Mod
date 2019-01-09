@@ -10,7 +10,7 @@ package classes.Items.Armors
 	public final class InquisitorsRobes extends Armor {
 
 		public function InquisitorsRobes() {
-			super("I.Robes", "I.Robes", "inquisitor's robes", "inquisitor's robes", 20, 2000, "These foreboding red and gold robes are embroidered with the symbols of a lost kingdom.  Wearing it will allow cast blood magic spells.", "Light", false, true, PerkLib.BloodMage, 0, 0, 0, 0);
+			super("I.Robes", "I.Robes", "inquisitor's robes", "inquisitor's robes", 20, 2000, "These foreboding red and gold robes are embroidered with the symbols of a lost kingdom.  Wearing it will allow cast blood magic spells.", "Light", true, PerkLib.BloodMage, 0, 0, 0, 0);
 		}
 
 		override public function useText(host:Creature):String {

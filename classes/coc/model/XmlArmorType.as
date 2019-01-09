@@ -42,7 +42,6 @@ public class XmlArmorType extends Armor {
 		this._sexiness = Utils.numberOr(_xml.sexiness, 0);
 		this._buffs = {};
 		this._itemPerks.splice(0,this._itemPerks.length);
-		this._supportsBulge = Utils.booleanOr(_xml.supportsBulge, false);
 		this._supportsUndergarment = Utils.booleanOr(_xml.supportsUndergarment, true);
 	}
 }

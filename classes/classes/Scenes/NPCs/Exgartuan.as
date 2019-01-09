@@ -96,33 +96,9 @@ public class Exgartuan extends NPCAwareContent implements TimeAwareInterface {
 								outputText("</b>\n");
 								needNext = true;
 							}
-							else if (rand(10) == 0 && player.armor.supportsBulge) {
-							/* Old way of doing it.
-							(armorName == "sexy black chitin armor-plating" ||
-							armorName == "glistening gel-armor plates" || 
-							player.armorName == "leather armor segments" || 
-							player.armorName == "comfortable clothes" || 
-							player.armorName == "bondage patient clothes" || 
-							player.armorName == "crotch-revealing clothes" || 
-							player.armorName == "cute servant's clothes" || 
-							player.armorName == "maid's clothes" || 
-							player.armorName == "servant's clothes" || 
-							player.armorName == "maid's clothes" || 
-							player.armorName == "practically indecent steel armor" || 
-							player.armorName == "red, high-society bodysuit" || 
-							player.armorName == "spider-silk armor" || 
-							player.armorName == "slutty swimwear" || 
-							player.armorName == "full-body chainmail" || 
-							player.armorName == "revealing chainmail bikini" || 
-							player.armorName == "full platemail" || 
-							player.armorName == "scale-mail armor" || 
-							player.armorName == "black leather armor surrounded by voluminous robes" || 
-							player.armorName == "rubber fetish clothes" || 
-							player.armorName == "green adventurer's clothes" || 
-							player.armorName == "white shirt and overalls")) {
-							*/
+							else if (rand(10) == 0 && exgartuanArmorShift(true)) {
 								outputText("\n<b>");
-								exgartuanArmorShift();
+								exgartuanArmorShift(false);
 								outputText("</b>\n");	
 								needNext = true;
 							}
@@ -634,29 +610,35 @@ public function exgartuanCombatUpdate():Boolean {
 }
 
 //(ARMOR CHANGE)
-public function exgartuanArmorShift():void {
+public function exgartuanArmorShift(testOnly:Boolean):Boolean {
+	if (testOnly && player.modArmorName != "") return false;
 	var changed:Boolean = false;
 	if(player.armor == armors.BEEARMR) {
+		if (testOnly) return true;
 		outputText("The silken loin-cloth of your chitin armor cinches up, tightening against your groin until it displays the prominent bulge of your demon-possessed dick clearly.");
 		player.modArmorName = "crotch-hugging sexy black chitin armor-plating";
 		changed = true;
 	}
 	else if(player.armor == armors.GELARMR) {
+		if (testOnly) return true;
 		outputText("The green gel-plate protecting your groin thins and presses tightly against you, molding around your [cock] in an incredibly lewd way.");
 		player.modArmorName = "crotch-hugging glistening gel-armor plates";
 		changed = true;
 	}
 	else if(player.armor == armors.LEATHRA) {
+		if (testOnly) return true;
 		outputText("Your leather armor shifts, pressing tightly against your upper [legs] and molding itself around your [cock] to prominently display it.");
 		player.modArmorName = "crotch-hugging leather armor segments";
 		changed = true;
 	}
 	else if(player.armor == armors.INDECST){
+		if (testOnly) return true;
 		outputText("The chainmail bikini of your indecent steel armor rearranges and bends its interlocking rings to best shape itself around your [cock], leaving very little else to the imagination.");
 		player.modArmorName = "crotch-hugging practically indecent steel armor";
 		changed = true;
 	}
 	else if(player.armor == armors.R_BDYST){
+		if (testOnly) return true;
 		outputText("The thin, transparent material of your red bodysuit begins to firmly press against your groin, perfectly shaping to your [cock] and every last one of its nubs and nodules.");
 		player.modArmorName = "crotch-hugging red, high-society bodysuit";
 		changed = true;
@@ -667,59 +649,71 @@ public function exgartuanArmorShift():void {
 		changed = true;
 	}
 	else if(player.armor == armors.S_SWMWR){
+		if (testOnly) return true;
 		outputText("The miniscule piece of swimwear that doubles as a tent to your [cock] begins to grow and encapsulate it, molding itself perfectly to your manhood.");
 		player.modArmorName = "crotch-hugging slutty swimwear";
 		changed = true;
 	}
 	else if(player.armor == armors.FULLCHN){
+		if (testOnly) return true;
 		outputText("You\'re taken by surprise as the binds of your chainmail begin to flatten and rearrange themselves, doing their best to match the curves of your [cock] and make its presence known.");
 		player.modArmorName = "crotch-hugging full-body chainmail";
 		changed = true;
 	}
 	else if(player.armor == armors.CHBIKNI){
+		if (testOnly) return true;
 		outputText("Your chainmail bikini rearranges and bends its interlocking rings to best shape itself around your [cock], leaving very little else to the imagination.");
 		player.modArmorName = "crotch-hugging revealing chainmail bikini";
 		changed = true;
 	}
 	else if(player.armor == armors.FULLPLT){
+		if (testOnly) return true;
 		outputText("You begin to clench your fists as your steel platemail heats up around your [legs] and crotch. Slowly it begins to press itself against your [cock] and match its every feature.");
 		player.modArmorName = "crotch-hugging full platemail";
 		changed = true;
 	}
 	else if(player.armor == armors.SCALEML){
+		if (testOnly) return true;
 		outputText("The steel scales that make up your armor begin to flap wildly around your crotch. They bend and shift as they attempt to match the profile of your [cock].");
 		player.modArmorName = "crotch-hugging scale-mail armor";
 		changed = true;
 	}
 	else if(player.armor == armors.LTHRROB){
+		if (testOnly) return true;
 		outputText("Your leather armor shifts, pressing tightly against your upper [legs] and molding itself around your [cock] to prominently display it through your robes.");
 		player.modArmorName = "crotch-hugging black leather armor surrounded by voluminous robes";
 		changed = true;
 	}
 	else if(player.armor == armors.RBBRCLT){
+		if (testOnly) return true;
 		outputText("You begin to feel your rubber outfit compressing itself against your upper [legs] and [cock], eliminating any pockets of air or wrinkles that may have existed before.");
 		player.modArmorName = "crotch-hugging rubber fetish clothes";
 		changed = true;
 	}
 	else if(player.armor == armors.ADVCLTH){
+		if (testOnly) return true;
 		outputText("The layer beneath your tunic begins to compress against your [cock], highlighting every curve and nodule while lifting your package to be clearly visible beneath your outer layers.");
 		player.modArmorName = "crotch-hugging green adventurer's clothes";
 		changed = true;
 	}
 	else if(player.armor == armors.OVERALL){
+		if (testOnly) return true;
 		outputText("The denim of your overalls begins to press tightly against your [cock], molding itself around your member and its every facet.");
 		player.modArmorName = "crotch-hugging white shirt and overalls";
 		changed = true;
 	}
 	else if(player.armor == armors.C_CLOTH) {
+		if (testOnly) return true;
 		outputText("Your clothing shifts, tightening up about your crotch until every curve and nodule of your [cock] is visible through the fabric.");
 		player.modArmorName = "crotch-hugging clothes";
 		changed = true;
-	}
-	if(player.armor == armors.DBARMOR || player.armor == armors.TBARMOR) {
+	} else if(player.armor == armors.DBARMOR || player.armor == armors.TBARMOR) {
+		if (testOnly) return true;
 		outputText("The silken loin-cloth of your magical bark armor cinches up, tightening against your groin until it displays the prominent bulge of your demon-possessed dick clearly.");
 		player.modArmorName = "crotch-hugging " + player.armor.name;
 		changed = true;
+	} else {
+		if (testOnly) return false;
 	}
 	if(player.cor < 33) outputText("  You cringe and blush bright crimson, raging against the demon inside you and wishing he would stop tormenting you!");
 	else if(player.cor < 66) outputText("  You cringe a bit at the exhibitionist outfit you're forced to wear, but spend a little time admiring just how well the changes show off your package... Maybe Exgartuan isn't all bad?");
@@ -728,6 +722,7 @@ public function exgartuanArmorShift():void {
 		//(Add perk \"Bulge Armor\" - bonus to male crotch reveal tease!) - check armor equip function – all names are hashed out in old armor names already
 		if(!player.hasPerk(PerkLib.BulgeArmor)) player.createPerk(PerkLib.BulgeArmor,0,0,0,0);
 	}
+	return true;
 }
 
 //(FORCE OUT ANY WORM INFECTION)

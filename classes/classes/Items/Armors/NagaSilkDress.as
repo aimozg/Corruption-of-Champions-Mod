@@ -13,7 +13,7 @@ public class NagaSilkDress extends Armor implements TimeAwareInterface {
     public function NagaSilkDress() {
         super("NagaDress","Naga Dress","","a desert naga silk dress",0,0,
                 "",
-        "",false,false);
+        "",false);
         setColor();
 		EventParser.timeAwareClassAdd(this);
     }

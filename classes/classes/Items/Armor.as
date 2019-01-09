@@ -17,10 +17,9 @@ package classes.Items
 		public static const MEDIUM:String = "Medium";
 		public static const HEAVY:String = "Heavy";
 
-		public function Armor(id:String, shortName:String, name:String, longName:String, def:Number, value:Number = 0, description:String = null, perk:String = "", supportsBulge:Boolean = false, supportsUndergarment:Boolean = true, ptype:PerkType = null, v1:Number = 0, v2:Number = 0, v3:Number = 0, v4:Number = 0, legacyPerkDesc:String = "") {
+		public function Armor(id:String, shortName:String, name:String, longName:String, def:Number, value:Number = 0, description:String = null, perk:String = "", supportsUndergarment:Boolean = true, ptype:PerkType = null, v1:Number = 0, v2:Number = 0, v3:Number = 0, v4:Number = 0, legacyPerkDesc:String = "") {
 			super(id, shortName, name, longName, value, perk, description);
 			this._defense = def;
-			_supportsBulge = supportsBulge;
 			_supportsUndergarment = supportsUndergarment;
 			_slot = Equipment.ARMOUR;
 
@@ -34,12 +33,7 @@ package classes.Items
 				_itemPerks.push(ptype.create(v1,v2,v3,v4));
 			}
 		}
-
-		/**
-		 * This is used by Exgartuan to determine if it can modify the armor name
-		 */
-		public function get supportsBulge():Boolean { return _supportsBulge && game.player.modArmorName == ""; }
-
+		
 		public function get supportsUndergarment():Boolean { return _supportsUndergarment; }
 		
 		override public function canUse(host:Creature):Boolean {

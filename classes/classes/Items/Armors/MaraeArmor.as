@@ -38,8 +38,6 @@ package classes.Items.Armors
 			_pure = pure
 		}
 		//każde 1 armor point kosztuje 120
-		override public function get supportsBulge():Boolean { return true; }
-		
 		override public function get defense():int { return 5 + int(game.player.cor / 2); }
 
 		override public function useText(host:Creature):String {
