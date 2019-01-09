@@ -61,17 +61,31 @@ public class Utils extends Object
 			return concat + " and " + stringList[stringList.length - 1];
 		}
 		public static function stringOr(input:*,def:String=""):String {
+			if ((input is XMLList || input is XML) && input.length()==1) input = input.text().toString();
 			return (input is String) ? input : def;
 		}
 		public static function intOr(input:*,def:int=0):int {
-			return (input is int) ? input :
-					(input is Number) ? input|0 : def;
+			if ((input is XMLList || input is XML) && input.length()==1) input = input.text().toString();
+			if (input is int) return input;
+			if (input is String) input = parseInt(input);
+			if (input is Number && isFinite(input)) return input | 0;
+			return def;
 		}
 		public static function numberOr(input:*,def:Number=0):Number {
-			return (input is Number) ? input : def;
+			if ((input is XMLList || input is XML) && input.length()==1) input = input.text().toString();
+			if (input is String) input = parseFloat(input);
+			if (input is Number && isFinite(input)) return input;
+			return def;
+		}
+		public static function booleanOr(input:*,def:Boolean=false):Boolean {
+			if ((input is XMLList || input is XML) && input.length()==1) input = input.text().toString();
+			if (input === "true") return true;
+			if (input === "false") return false;
+			if (typeof input === "boolean") return input;
+			return def;
 		}
 		public static function objectOr(input:*,def:Object=null):Object {
-			return (input is Object && input !== null) ? input : def;
+			return (typeof input === "object" && input !== null) ? input : def;
 		}
 		public static function ipow(base:Number,exp:int):Number {
 			// See wiki/Exponentiation_by_squaring

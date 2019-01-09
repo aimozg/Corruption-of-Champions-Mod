@@ -26,7 +26,7 @@ public class AbstractFactory {
 	 * @param original:T
 	 * @return deep copy of original
 	 */
-	public function clone(original:Object):Object {
+	public function clone(original:Object, newId:String):Object {
 		throw "Abstract method invocation";
 	}
 	/**
@@ -35,13 +35,16 @@ public class AbstractFactory {
 	 * @param patch to apply
 	 * @return clone:T
 	 */
-	public final function fork(original:Object, patch:XML):Object {
-		var neww:Object = clone(original);
+	public function fork(original:Object, newId:String, patch:XML):Object {
+		var neww:Object = clone(original, newId);
 		modify(neww, patch);
 		return neww;
 	}
 	public function idOf(o:Object):String {
 		throw "Abstract method invocation";
+	}
+	public function saveTo(o:Object,lib:Library):void {
+		lib.put(idOf(o),o);
 	}
 	public function AbstractFactory() {
 	}

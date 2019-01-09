@@ -6,7 +6,7 @@ import classes.internals.Utils;
 
 public class Library {
 	
-	private var _lib:Object = {};
+	private var _lib:Object;
 	
 	public function has(key:String):Boolean {
 		return key in _lib;
@@ -29,7 +29,8 @@ public class Library {
 		return Utils.entries(_lib);
 	}
 	
-	public function Library() {
+	public function Library(libObject:Object=null) {
+		this._lib = libObject || {};
 	}
 }
 }
