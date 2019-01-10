@@ -8,7 +8,7 @@ import coc.xlogic.Statement;
 import coc.xxc.StdCommands;
 
 public class CommandStmt extends Statement{
-	private var content:Eval;
+	public var content:Eval;
 	public function CommandStmt(content:String) {
 		this.content = Eval.compile(content);
 	}

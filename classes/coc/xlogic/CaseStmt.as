@@ -5,14 +5,14 @@ package coc.xlogic {
 import coc.script.Eval;
 
 public class CaseStmt extends Statement {
-	private var testExpr:Eval;
-	private var valueExpr:Eval;
-	private var valuesExpr:Eval;
-	private var ltExpr:Eval;
-	private var lteExpr:Eval;
-	private var gtExpr:Eval;
-	private var gteExpr:Eval;
-	private var neExpr:Eval;
+	public var testExpr:Eval;
+	public var valueExpr:Eval;
+	public var valuesExpr:Eval;
+	public var ltExpr:Eval;
+	public var lteExpr:Eval;
+	public var gtExpr:Eval;
+	public var gteExpr:Eval;
+	public var neExpr:Eval;
 	public var thenBlock:StmtList = new StmtList();
 	public function set testAttr(value:String):void {
 		testExpr = value ? Eval.compile(value) : null;

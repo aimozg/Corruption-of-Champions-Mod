@@ -10,7 +10,7 @@ import coc.xlogic.Statement;
 import coc.xxc.StoryContext;
 
 public class OutputStmt extends Statement{
-	private var content:Eval;
+	public var content:Eval;
 	public function OutputStmt(content:String) {
 		this.content = Eval.compile(content);
 	}

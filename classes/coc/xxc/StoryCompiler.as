@@ -17,9 +17,12 @@ import coc.model.RefList;
 import coc.model.XmlArmorType;
 
 import coc.script.Eval;
+import coc.xlogic.CaseStmt;
 import coc.xlogic.Compiler;
+import coc.xlogic.IfStmt;
 import coc.xlogic.Statement;
 import coc.xlogic.StmtList;
+import coc.xlogic.SwitchStmt;
 import coc.xxc.stmts.*;
 
 import flash.utils.setTimeout;
@@ -249,8 +252,15 @@ public class StoryCompiler extends Compiler {
 			case "extend-story":
 				return compileStoryBody(locate(x.@name) as Story, x);
 			default:
-				compileLibraryTag(tag, x);
-				return null;
+				var stmt:* = super.compileTag(tag, x);
+				if (stmt is IfStmt) {
+					StdFunctions.validate((stmt as IfStmt).expr.src);
+				} else if (stmt is SwitchStmt) {
+					if ((stmt as SwitchStmt).valueExpr) StdFunctions.validate((stmt as SwitchStmt).valueExpr.src);
+				} else if (stmt is CaseStmt) {
+					if ((stmt as CaseStmt).testExpr) StdFunctions.validate((stmt as CaseStmt).testExpr.src);
+				}
+				return stmt;
 		}
 	}
 	protected function compileLibraryTag(tag:String, x:XML):void {
@@ -368,10 +378,14 @@ public class StoryCompiler extends Compiler {
 	}
 	
 	protected function compileOutput(x:XML):OutputStmt {
-		return new OutputStmt(x.text().toString());
+		var stmt:OutputStmt = new OutputStmt(x.text().toString());
+		StdFunctions.validate(stmt.content.src);
+		return stmt;
 	}
 	protected function compileCommand(x:XML):CommandStmt {
-		return new CommandStmt(x.text().toString());
+		var stmt:CommandStmt = new CommandStmt(x.text().toString());
+		StdCommands.validate(stmt.content.src);
+		return stmt;
 	}
 	protected function compileSet(x:XML):SetStmt {
 		var attrs:* = attrMap(x);
@@ -382,7 +396,9 @@ public class StoryCompiler extends Compiler {
 		else op = '=';
 		if ('in' in attrs) inObj = attrs['in'];
 		else inObj = '';
-		return new SetStmt(attrs['var'],expr,op,inObj);
+		var stmt:SetStmt = new SetStmt(attrs['var'],expr,op,inObj);
+		StdFunctions.validate(stmt.content.src);
+		return stmt;
 	}
 	protected function compileStory(x:XML):Story {
 		return compileStoryBody(new Story(x.localName(),stack[0], x.@name), x);
