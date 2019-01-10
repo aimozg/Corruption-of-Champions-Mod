@@ -4,13 +4,57 @@
 package coc.script {
 import classes.internals.Utils;
 
+/*
+ * If this class doesn't work, use ClosureEval instead
+ */
+/**
+ * Compiles expression into list of instructions with arguments for stack-based VM
+ * [ ["opcode", "arg"], ["opcode", "arg1", ...], ... ]
+ * Instructions (number is arity):
+ * ```
+ * ["const", value]
+ *      push(value)
+ * ["id", identifier]
+ *      push(evalId(value))
+ * ["bop", operator]
+ *      a = pop(), b = pop()
+ *      push( calculateOp(a,operator,b) )
+ *      operator - any binary operations except boolean "or" and "and"
+ * ["dot"]
+ *      a = pop(), b = pop()
+ *      push( evalDot(a,b) )
+ * ["or", aList:Instruction[], bList:Instruction[]]
+ *      a = vmExecAndPop(aList)
+ *      if (a) {
+ *          push(true)
+ *      } else {
+ *          b = vmExecAndPop(bList)
+ *          push( !!b )
+ *      }
+ * ["and", aList:Instruction[], bList:Instruction[]]
+ *      a = vmExecAndPop(aList)
+ *      if (!a) {
+ *          push(false)
+ *      } else {
+ *          b = vmExecAndPop(bList)
+ *          push( !!b )
+ *      }
+ * ["!"]
+ *      a = pop(), push(!pop)
+ * ["call", N:number]
+ *      (i = 0..N-1) args[i] = pop()
+ *      func = pop()
+ *      push( func(...args) )
+ * ["array", N:number]
+ *      (i = 0..N-1) args[i] = pop()
+ *      push(args)
+ * ["if", thenList:Instruction[], elseList:Instruction[]]
+ *      test = pop()
+ *      result = vmExecAndPop(test ? thenList : elseList)
+ *      push(result)
+ * ```
+ */
 public class Eval extends AbstractExpressionParser {
-	// (condition,then,elze) => ()=>(condition()?then():elze())
-	public static function functionIf(condition:Function,then:Function,elze:Function):Function {
-		return function ():* {
-			return condition() ? then() : elze();
-		};
-	}
 	public static function calculateOp(x:*,op:String,y:*):* {
 		switch (op) {
 			case '>':
@@ -63,29 +107,26 @@ public class Eval extends AbstractExpressionParser {
 		return s.replace(/\n/g,'\n').replace(/\r/g,'\r').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\\/g,'\\\\');
 	}
 
-	private var scopes:/*Object*/Array;
-	private var _call:Function;
+	private var _code:Array;
 	public function call(...scopes:/*Object*/Array):* {
 		return vcall(scopes);
 	}
 	public function vcall(scopes:/*Object*/Array):* {
-		this.scopes = scopes;
 		try {
-			return _call();
+			return vmExecAndPop(_code,scopes);
 		} catch (e:Error){
 			throw error(e.message,false);
 		}
 	}
 
-	public function Eval(thiz:*, expr:String) {
+	public function Eval(expr:String) {
 		super(expr);
-		this.scopes = [thiz];
+		this._code = evalUntil("");
+		if (DEBUGVM) trace(JSON.stringify(src)+" -> "+JSON.stringify(_code));
 	}
 
 	public static function eval(thiz:*, expr:String):* {
-		if (expr.match(RX_INT)) return parseInt(expr);
-		else if (expr.match(RX_FLOAT)) return parseFloat(expr);
-		return new Eval(thiz, expr).evalUntil("")();
+		return evalVScoped(expr,thiz?[thiz]:[]);
 	}
 	public static function evalScoped(expr:String,...scopes:/*Object*/Array):* {
 		return evalVScoped(expr,scopes);
@@ -96,94 +137,148 @@ public class Eval extends AbstractExpressionParser {
 		return compile(expr).vcall(scopes);
 	}
 	public static function compile(expr:String):Eval {
-		var e:Eval = new Eval({}, expr);
-		e._call = e.evalUntil("");
-		return e;
+		return new Eval(expr);
 	}
-	private function calculate(x:Function, op:String, y:Function):* {
-//		trace("Evaluating " + (typeof x) + " " + x + " " + op + " " + (typeof y) + " " + y);
-		switch (op) {
-			case '||':
-			case 'or':
-				return x() || y();
-			case '&&':
-			case 'and':
-				return x() && y();
-			default:
-				try {
-					return calculateOp(x(),op,y());
-				} catch (e: Error) {
-					throw error("Unregistered operator " + op, false);
+	private static function pop(stack:Array):* {
+		if (stack.length == 0) throw "Empty stack";
+		return stack.pop();
+	}
+	public static function vmExec1(instruction:Array,stack:Array,scopes:Array):void {
+		var opcode:String = instruction[0];
+		switch (opcode) {
+			case "const":
+				stack.push(instruction[1]);
+				break;
+			case "id":
+				stack.push(evalId(instruction[1], scopes));
+				break;
+			case "bop":
+				var op:String = instruction[1];
+				var a:* = pop(stack);
+				var b:* = pop(stack);
+				stack.push(calculateOp(a,op,b));
+				break;
+			case "dot":
+				a = pop(stack);
+				b = pop(stack);
+				stack.push(evalDot(a,b));
+				break;
+			case "or":
+				var aList:Array = instruction[1];
+				a = vmExecAndPop(aList,scopes);
+				if (a) {
+					stack.push(true)
+				} else {
+					var bList:Array = instruction[2];
+					b = vmExecAndPop(bList,scopes);
+					stack.push(!!b);
 				}
-		}
-	}
-	private function evalId(id:String):* {
-		switch (id) {
-			case 'Math': return Math;
-			case 'undefined': return undefined;
-			case 'null': return null;
-			case 'int': return int;
-			case 'uint': return uint;
-			case 'String': return String;
-			case 'string': return String;
-			case 'Number': return Number;
-			case 'true': return true;
-			case 'false': return false;
+				break;
+			case "and":
+				aList = instruction[1];
+				a = vmExecAndPop(aList,scopes);
+				if (!a) {
+					stack.push(false)
+				} else {
+					bList = instruction[2];
+					b = vmExecAndPop(bList,scopes);
+					stack.push(!!b);
+				}
+				break;
+			case "call":
+				var n:int = instruction[1];
+				var args:Array = [];
+				for (var i:int = 0; i<n; i++) args[i] = pop(stack);
+				var fn:Function = pop(stack);
+				stack.push(fn.apply(null,args));
+				break;
+			case "array":
+				n = instruction[1];
+				args = [];
+				for (i = 0; i<n; i++) args[i] = pop(stack);
+				stack.push(args);
+				break;
+			case "if":
+				var test:* = pop(stack);
+				aList = instruction[1];
+				bList = instruction[2];
+				stack.push(vmExecAndPop(test ? aList : bList, scopes));
+				break;
 			default:
-				for each (var thiz:* in scopes) if (id in thiz) return thiz[id];
-				return undefined;
+				throw "Unknown opcode "+opcode;
+		}
+		if (DEBUGVM) trace("    "+JSON.stringify(instruction)+" -> "+"["+stack.join(", ")+"]");
+	}
+	public static function vmExec(instructionList:Array, scopes:Array, stack:Array):void {
+		for each(var instruction:Array in instructionList) {
+			vmExec1(instruction, stack, scopes);
 		}
 	}
-	private function evalDot(obj:Object,key:String):* {
-		if (!(key in obj)) return undefined;
-		var y:* = obj[key];
-		if (y is Function) {
-			y = Utils.bindThis(y,obj);
-		}
-		return y;
+	public static function vmExecAndPop(instructionList:Array, scopes:Array):* {
+		var stack:Array = [];
+		vmExec(instructionList, scopes, stack);
+		if (DEBUGVM) trace(JSON.stringify(instructionList)+" -> ["+stack.join(", ")+"]");
+		if (stack.length != 1) throw "Corrupt stack, expected 1 got ["+stack.join(", ")+"]";
+		return stack[0];
 	}
 	protected override function wrapId(id:String):* {
-		return function():*{ return evalId(id); };
+		return [["id",id]];
 	}
 	protected override function wrapVal(x:*):* {
-		return function ():* { return x; };
+		return [["const",x]];
 	}
-	/**
-	 * @param fn ()=>( (args)=>any )
-	 * @param args (()=>arg)[]
-	 */
-	protected override function wrapCall(fn:*,args:/*Function*/Array):* {
-		return function ():* {
-			var a:Array = [];
-			for (var i:int = 0, n:int = args.length; i < n; i++) a[i] = args[i]();
-			return (fn() as Function).apply(null, a);
-		};
+	protected override function wrapCall(fn:*,args:/*Array*/Array):* {
+		// fn = [ fn ]
+		for (var i:int = args.length-1; i>=0; i--) {
+			// fn = [ fn argN ]
+			Utils.pushMany(fn,args[i]);
+			// fn = [ fn argN argN-1 ]
+		}
+		// fn = [ fn argN ... arg1 ]
+		fn.push(["call",args.length]);
+		// fn = [ fn(arg1...argN) ]
+		return fn;
 	}
 	protected override function wrapIf(condition:*,then:*,elze:*):* {
-		return functionIf(condition,then,elze);
+		condition.push(["if",then,elze]);
+		return condition;
 	}
 	protected override function wrapDot(obj:*,index:*):* {
-		return function():* {
-			return evalDot(obj(),index());
-		};
+		Utils.pushMany(index,obj);
+		// index = [ index obj ]
+		index.push(["dot"]);
+		// index = [ index obj [dot] ] = [ (obj.index) ]
+		return index;
 	}
 	protected override function wrapOp(x:*,op:String,y:*):* {
-		return function():* {
-			return calculate(x,op,y);
-		};
+		if (op === "||" || op === "or") {
+			return ["or",x,y];
+		} else if (op === "&&" || op === "and") {
+			return ["and",x,y];
+		} else {
+			Utils.pushMany(y,x);
+			// y = [ y x ]
+			y.push(["bop",op]);
+			// y = [ y x [bop op] ] = [ (x op y) ]
+			return y;
+		}
 	}
 	protected override function wrapNot(x:*):* {
-		return function():* {
-			return !x();
-		};
+		x.push(["!"]);
+		return x;
 	}
 	protected override function wrapArray(array:Array):* {
-		return function():Array {
-			return array.map(function (el:*,id:int,arr:Array):* {
-				return el();
-			})
-		};
+		var rslt:Array = [];
+		for (var i:int = array.length-1; i>=0; i--) {
+			// rslt = [ arrayN ]
+			Utils.pushMany(rslt,array[i]);
+			// rslt = [ arrayN arrayN-1 ]
+		}
+		// rslt = [ arrayN ... array1 ]
+		rslt.push(["array",array.length]);
+		return rslt;
 	}
-
+	
+	public static const DEBUGVM:Boolean = false;
 }
 }

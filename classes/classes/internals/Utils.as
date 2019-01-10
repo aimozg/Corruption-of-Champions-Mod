@@ -125,6 +125,10 @@ public class Utils extends Object
 			if (!isFinite(x)) return min;
 			return x < min ? min : x > max ? max : x;
 		}
+		public static function pushMany(dst:Array,src:Array):Array {
+			dst.push.apply(dst,src);
+			return dst;
+		}
 		/**
 		 * Mimics JS Object.keys
 		 */

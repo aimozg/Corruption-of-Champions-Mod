@@ -250,6 +250,7 @@ public class StoryCompiler extends Compiler {
 				return compileStoryBody(locate(x.@name) as Story, x);
 			default:
 				compileLibraryTag(tag, x);
+				return null;
 		}
 	}
 	protected function compileLibraryTag(tag:String, x:XML):void {

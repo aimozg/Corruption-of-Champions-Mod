@@ -45,6 +45,31 @@ public class AbstractExpressionParser {
 	protected static function error0(src:String, expr:String, msg:String, tail:Boolean = true):Error {
 		return new Error("In expr: "+src+"\n"+msg+(tail?": "+expr:""));
 	}
+	protected static function evalId(id:String,scopes:Array):* {
+		switch (id) {
+			case 'Math': return Math;
+			case 'undefined': return undefined;
+			case 'null': return null;
+			case 'int': return int;
+			case 'uint': return uint;
+			case 'String': return String;
+			case 'string': return String;
+			case 'Number': return Number;
+			case 'true': return true;
+			case 'false': return false;
+			default:
+				for each (var thiz:* in scopes) if (id in thiz) return thiz[id];
+				return undefined;
+		}
+	}
+	protected static function evalDot(obj:Object,key:String):* {
+		if (!(key in obj)) return undefined;
+		var y:* = obj[key];
+		if (y is Function) {
+			y = Utils.bindThis(y,obj);
+		}
+		return y;
+	}
 	
 	///////////////// Instance stuff
 	
@@ -116,9 +141,9 @@ public class AbstractExpressionParser {
 		if (until) throw error("Operator or " + until + "expected");
 		throw error("Operator expected");
 	}
-	private function evalExpr(minPrio:int):Function {
+	private function evalExpr(minPrio:int):* {
 		var m:/*String*/Array;
-		var x:Function;
+		var x:*;
 		eatWs();
 		if (eatStr('(')) {
 			x = evalUntil(")");
@@ -176,9 +201,9 @@ public class AbstractExpressionParser {
 		}
 		return evalPostExpr(x,minPrio);
 	}
-	private function evalPostExpr(x:Function,minPrio:int):Function {
+	private function evalPostExpr(x:*,minPrio:int):* {
 		var m:Array;
-		var y:Function,z:Function;
+		var y:*,z:*;
 		while (true) {
 			eatWs();
 			if (eatStr('()')) {
