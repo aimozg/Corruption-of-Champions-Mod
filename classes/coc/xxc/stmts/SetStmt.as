@@ -6,7 +6,7 @@ import coc.xlogic.Statement;
 public class SetStmt extends Statement {
 	private var varname:String;
 	private var inObj:String;
-	private var content:Eval;
+	public var content:Eval;
 	private var op:String;
 	public function SetStmt(varname:String,content:String,op:String,inObj:String) {
 		this.varname = varname;

@@ -9,7 +9,27 @@ import classes.Creature;
 import classes.Player;
 import classes.display.SpriteDb;
 
+import flash.utils.describeType;
+
 public class StdCommands {
+	private static const CLASS_METADATA:XML = describeType(StdCommands);
+	public static function validate(src:String):void {
+		if (!isValid(src)) {
+			trace("[WARN] StdCommands validation failed: ",src);
+		}
+	}
+	internal static const SIMPLE_STDCALL:RegExp = /^([A-Z]\w+)\(([^()\\]*)\)$/;
+	public static function isValid(src:String):Boolean {
+		var m:/*String*/Array = src.match(SIMPLE_STDCALL);
+		if (m) {
+			var fname:String = m[1];
+			var xmlfn:XMLList = CLASS_METADATA.factory.method.(@name==fname);
+			if (xmlfn.length() != 1) return false;
+			var argc:int = m[2].split(',').length;
+			if (argc != xmlfn.parameter.length()) return false;
+		}
+		return true;
+	}
 	/* *****
 	   stats
 	   ***** */
@@ -72,10 +92,8 @@ public class StdCommands {
 	public function StretchVagina(area:Number, noDisplay:Boolean):void {
 		CoC.instance.player.cuntChange(area, noDisplay);
 	}
-	public function Orgasm(creature:Creature,type:String):void {
-		if (creature is Player) {
-			(creature as Player).orgasm(type);
-		}
+	public function Orgasm(type:String):void {
+		CoC.instance.player.orgasm(type);
 	}
 	/* ****
 	   misc

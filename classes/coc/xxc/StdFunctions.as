@@ -11,8 +11,27 @@ import classes.PerkType;
 import classes.Player;
 import classes.internals.EnumValue;
 
-public class StdFunctions {
+import flash.utils.describeType;
 
+public class StdFunctions {
+	public static function validate(src:String):void {
+		if (!isValid(src)) {
+			trace("[WARN] StdFunctions validation failed: ",src);
+		}
+	}
+	private static const CLASS_METADATA:XML = describeType(StdFunctions);
+	public static function isValid(src:String):Boolean {
+		var m:/*String*/Array = src.match(StdCommands.SIMPLE_STDCALL);
+		if (m) {
+			var fname:String = m[1];
+			var xmlfn:XMLList = CLASS_METADATA.factory.method.(@name==fname);
+			if (xmlfn.length() != 1) return false;
+			var argc:int = m[2].split(',').length;
+			if (argc != xmlfn.parameter.length()) return false;
+		}
+		return true;
+	}
+	
 	public function CreatureHasTrait(creature:Creature,trait:String):Boolean {
 		switch (trait) {
 			case 'virgin-vagina': return creature.hasVirginVagina();
