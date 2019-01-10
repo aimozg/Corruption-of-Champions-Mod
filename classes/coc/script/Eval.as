@@ -252,9 +252,9 @@ public class Eval extends AbstractExpressionParser {
 	}
 	protected override function wrapOp(x:*,op:String,y:*):* {
 		if (op === "||" || op === "or") {
-			return ["or",x,y];
+			return [["or",x,y]];
 		} else if (op === "&&" || op === "and") {
-			return ["and",x,y];
+			return [["and",x,y]];
 		} else {
 			Utils.pushMany(y,x);
 			// y = [ y x ]
@@ -279,6 +279,6 @@ public class Eval extends AbstractExpressionParser {
 		return rslt;
 	}
 	
-	public static const DEBUGVM:Boolean = false;
+	public static var DEBUGVM:Boolean = false;
 }
 }
