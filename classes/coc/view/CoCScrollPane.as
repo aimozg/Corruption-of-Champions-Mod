@@ -5,10 +5,14 @@ import classes.internals.Utils;
 import com.bit101.components.*;
 
 import flash.display.DisplayObjectContainer;
+import flash.display.Sprite;
 import flash.events.MouseEvent;
 
 //TODO @Oxdeception check some scroll issues, more customisation
 public class CoCScrollPane extends ScrollPane {
+	public function get background():Sprite {
+		return _background;
+	}
 	public function CoCScrollPane(parent:DisplayObjectContainer = null, xpos:Number = 0, ypos:Number = 0) {
 		super(parent, xpos, ypos);
 		_background.alpha = 0;

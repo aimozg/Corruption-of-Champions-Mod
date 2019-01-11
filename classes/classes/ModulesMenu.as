@@ -82,6 +82,8 @@ public class ModulesMenu extends BaseContent {
 		_scroll.y      = MainView.TEXTZONE_Y;
 		_scroll.width  = MainView.TEXTZONE_W + MainView.VSCROLLBAR_W;
 		_scroll.height = MainView.TEXTZONE_H;
+
+		_scroll.background.alpha = 0.4;
 		var _scrollContent:Block = new Block({
 			name: "scrollContent",
 			layoutConfig: {
