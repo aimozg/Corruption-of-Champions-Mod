@@ -252,7 +252,7 @@ public class StoryCompiler extends Compiler {
 			case "extend-story":
 				return compileStoryBody(locate(x.@name) as Story, x);
 			default:
-				var stmt:* = super.compileTag(tag, x);
+				var stmt:* = compileLibraryTag(tag, x);
 				if (stmt is IfStmt) {
 					StdFunctions.validate((stmt as IfStmt).expr.src);
 				} else if (stmt is SwitchStmt) {
@@ -263,7 +263,7 @@ public class StoryCompiler extends Compiler {
 				return stmt;
 		}
 	}
-	protected function compileLibraryTag(tag:String, x:XML):void {
+	protected function compileLibraryTag(tag:String, x:XML):Statement {
 		var mod:GameMod = currentMod();
 		var library:GameLibrary = currentLibrary();
 		switch (tag) {
@@ -271,14 +271,14 @@ public class StoryCompiler extends Compiler {
 				var armorType:ItemType = armorTypeFactory.createArmorType(x);
 				LOGGER.debug("New item type: "+armorType.id);
 				library.addItemType(armorType);
-				return;
+				return null;
 			case "reflist":
 				var refList:RefList = RefList.fromXml(x);
 				LOGGER.debug("New "+refList);
 				library.addRefList(refList);
-				return;
+				return null;
 			default:
-				super.compileTag(tag, x);
+				return super.compileTag(tag, x);
 		}
 	}
 	private function compileBattle(x:XML):BattleStmt {
