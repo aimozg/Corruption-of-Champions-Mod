@@ -81,7 +81,7 @@
 <if test="Sex() == 'H' and PenisCount() == 1">
 	<t>One of the heads eagerly starts licking your [cock] while the other starts working on your [vagina]. The large, flat tongues give you a rather unusual feeling, but it is definitely effective.  As you approach your peak, the head that had been licking your [cock] suddenly takes it into its mouth while the other pushes its snout into your [vagina]. The pleasure from this new arrangement quickly overwhelms you, leaving you dazed.  When your senses return to you, you look up to see the hellhound's tongues running all over their mouths, clearly very happy.  With a pair of happy barks, the hellhound turns and runs away.</t>
 </if>
-<if test="PenisCount() > 2">
+<if test="PenisCount() &gt; 1">
 	<t>One of the heads eagerly starts licking your [cock] while the other starts to work on your </t>
 	<output>cockDescript(1)</output>
 	<t>. The large, flat tongues give you a rather unusual feeling, but it is definitely effective.   As you approach your peak, the heads quickly take your [cock] and </t>
