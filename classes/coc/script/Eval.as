@@ -185,6 +185,10 @@ public class Eval extends AbstractExpressionParser {
 					stack.push(!!b);
 				}
 				break;
+			case "!":
+				a = pop(stack);
+				stack.push(!a);
+				break;
 			case "call":
 				var n:int = instruction[1];
 				var args:Array = [];

@@ -3664,7 +3664,7 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Partial scales with color changes to red, green, white, blue, or black.  Rarely: purple or silver.
-			if (!player.hasPartialCoat(Skin.SCALES) && player.lowerBody == LowerBody.NAGA && changes < changeLimit && rand(5) == 0) {
+			if (!player.hasPartialCoatOfType(Skin.SCALES) && player.lowerBody == LowerBody.NAGA && changes < changeLimit && rand(5) == 0) {
 				//(fur)
 				var color:String;
 				if (rand(10) == 0) {
@@ -3684,7 +3684,7 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Snake eyes
-			if (player.hasPartialCoat(Skin.SCALES) && player.eyes.type != Eyes.SNAKE && rand(4) == 0 && changes < changeLimit) {
+			if (player.hasPartialCoatOfType(Skin.SCALES) && player.eyes.type != Eyes.SNAKE && rand(4) == 0 && changes < changeLimit) {
 				setEyeType(Eyes.SNAKE);
 				outputText("\n\nYou suddenly feel your vision shifting. It takes a moment for you to adapt to the weird sensory changes but once you recover you go to a puddle and notice your eyes now have a slitted pupil like that of a snake.  <b>You now have snake eyes!</b>.");
 				changes++;
@@ -3784,7 +3784,7 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Partial scales with color changes to red, green, white, blue, or black.  Rarely: purple or silver.
-			if (!player.hasPartialCoat(Skin.SCALES) && player.lowerBody == LowerBody.NAGA && changes < changeLimit && rand(5) == 0) {
+			if (!player.hasPartialCoatOfType(Skin.SCALES) && player.lowerBody == LowerBody.NAGA && changes < changeLimit && rand(5) == 0) {
 				//(fur)
 				var color:String;
 				if (rand(10) == 0) {
@@ -3803,7 +3803,7 @@ public final class Mutations extends MutationsHelper
 				changes++;
 			}
 			//Snake eyes
-			if (player.hasPartialCoat(Skin.SCALES) && player.eyes.type != Eyes.SNAKE && rand(4) == 0 && changes < changeLimit) {
+			if (player.hasPartialCoatOfType(Skin.SCALES) && player.eyes.type != Eyes.SNAKE && rand(4) == 0 && changes < changeLimit) {
 				setEyeType(Eyes.SNAKE);
 				outputText("\n\nYou suddenly feel your vision shifting. It takes a moment for you to adapt to the weird sensory changes but once you recover you go to a puddle and notice your eyes now have a slitted pupil like that of a snake.  <b>You now have snake eyes!</b>.");
 				changes++;
@@ -3992,7 +3992,7 @@ public final class Mutations extends MutationsHelper
 				player.skin.growCoat(Skin.SCALES,{color:color});
 				changes++;
 			}
-			if (type == 1 && player.wings.type == Wings.DRACONIC_LARGE && player.hasPartialCoat(Skin.DRAGON_SCALES) && changes < changeLimit && rand(3) == 0) {
+			if (type == 1 && player.wings.type == Wings.DRACONIC_LARGE && player.hasPartialCoatOfType(Skin.DRAGON_SCALES) && changes < changeLimit && rand(3) == 0) {
 				outputText("\n\nPrickling discomfort suddenly erupts all over your body, like every last inch of your skin has suddenly developed pins and needles.  You scratch yourself, as new scales grew up filling the gaps. ");
 				player.skin.growCoat(Skin.DRAGON_SCALES,{},Skin.COVERAGE_COMPLETE);
 				outputText("<b>Your body is now fully covered in " + color + " shield-shaped dragon scales.</b>");
@@ -5416,7 +5416,7 @@ public final class Mutations extends MutationsHelper
 				player.skin.growCoat(Skin.SCALES,{color:"red"},Skin.COVERAGE_LOW);
 				changes++;
 			}
-			if (!player.hasPartialCoat(Skin.SCALES) && !player.isGargoyle() && rand(4) == 0) {
+			if (!player.hasPartialCoatOfType(Skin.SCALES) && !player.isGargoyle() && rand(4) == 0) {
 				humanizeSkin();
 				changes++;
 			}
@@ -5717,7 +5717,7 @@ public final class Mutations extends MutationsHelper
 				player.skin.growCoat(Skin.SCALES,{color:"red"},Skin.COVERAGE_LOW);
 				changes++;
 			}
-			if (!player.hasPartialCoat(Skin.SCALES) && rand(4) == 0) {
+			if (!player.hasPartialCoatOfType(Skin.SCALES) && rand(4) == 0) {
 				humanizeSkin();
 				changes++;
 			}
