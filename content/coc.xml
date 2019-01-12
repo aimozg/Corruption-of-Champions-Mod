@@ -258,6 +258,61 @@
             <t>[=SceneLib.celessScene.Name] helps you remove the centaur armor. Whoa, you were starting to forget what not being weighted down by heavy armor felt like.</t>
         </onUnequip>
     </armor>
+    <armor id="DB.Armr">
+        <short>DB.Armr</short>
+        <name>divine bark armor</name>
+        <long>a suit of divine bark armor</long>
+        <description>This suit of armor is finely made from the white bark you've received from Marae as a reward.</description>
+        <value>7200</value>
+        <defense>60</defense>
+        <defenseMod>0-host.cor/2</defenseMod>
+        <subType>Heavy</subType>
+        <onEquip>
+            <t>You </t>
+            <if test="not IsNaked()"><t>strip yourself naked before you </t></if>
+            <t>proceed to put on the armor. </t>
+            <t>\n\nFirst, you clamber into the breastplate. </t>
+            <if test="HasTrait('biped')">
+                <if test="LegType()=='HUMAN'">
+                    <t>Then you put your feet into your boots. With the boots fully equipped, you move on to the next piece. </t>
+                    <else/>
+                    <t>Then you attempt to put your feet into your boots. You realize that the boots are designed for someone with normal feet. You have to modify the boots to fit and when you do put on your boots, your feet are exposed. </t>
+                </if>
+            </if>
+            <t>Next, you put on your reinforced bark bracers to protect your arms.\n\n</t>
+            <if test="HasTrait('taur')">
+                <t>Last but not least, you take a silken loincloth in your hand but stop short as you examine your tauric body. There is no way you could properly conceal your genitals! </t>
+                <if test="host.cor gte 66 or flags[kFLAGS.PC_FETISH] gt 0">
+                    <t>Regardless, you are happy with what you are right now. </t>
+                    <elseif test="host.cor gte 33"/>
+                    <t>You blush a bit, not sure how you feel. </t>
+                    <else/>
+                    <t>You let out a sigh. Being a centaur surely is inconvenient! </t>
+                </if>
+                <t>You leave the silken loincloth in your possessions for the time being.</t>
+                <else/>
+                <t>Last but not least, you put your silken loincloth on to cover your groin. You thank Konstantin for that and you know that you easily have access to your [if(hascock)[cocks]][if(isherm) and ][if(hasvagina)[vagina]][if(isgenderless)groin] should you need to. </t>
+                <if test="HasTrait('penis')">
+                    <if test="host.biggestCockArea() gte 100">
+                        <t>Your manhood is too big to be concealed by your silken loincloth. Part of your [cock biggest] is visible. </t>
+                        <if test="host.cor gte 66 or flags[kFLAGS.PC_FETISH] gt 0">
+                            <t>You admire how your manhood is visible. </t>
+                            <elseif test="host.cor gte 33"/>
+                            <t>You blush a bit, not sure how you feel. </t>
+                            <else/>
+                            <t>You let out a sigh. </t>
+                        </if>
+                        <elseif test="host.biggestCockArea() gte 40"/>
+                        <t>Large bulge forms against your silken loincloth. </t>
+                    </if>
+                </if>
+                <if test="host.cor gte 66 or flags[kFLAGS.PC_FETISH] gt 0">
+                    <t>You'd love to lift your loincloth and show off whenever you want to. </t>
+                </if>
+            </if>
+            <t>You are suited up and all good to go. </t>
+        </onEquip>
+    </armor>
     <armor id="DSclArm">
         <short>D.Scale Armor</short>
         <name>dragonscale armor</name>
@@ -589,6 +644,77 @@
         <perk id="Slutty Seduction">
             <value1>7</value1>
         </perk>
+    </armor>
+    <armor id="TB.Armr">
+        <short>TB.Armr</short>
+        <name>tentacled bark armor</name>
+        <long>a suit of tentacled bark armor</long>
+        <description>This suit of armor is finely made from the white bark from corrupted Marae you've defeated. It comes with tentacles though.</description>
+        <value>6600</value>
+        <defense>5</defense>
+        <defenseMod>host.cor/2</defenseMod>
+        <subType>Heavy</subType>
+        <onEquip>
+            <t>You </t>
+            <if test="not IsNaked()"><t>strip yourself naked before you </t></if>
+            <t>proceed to put on the armor. </t>
+            <if test="host.cor gte 66">
+                <t>You are eager with the idea of wearing tentacle-infested armor. </t>
+                <elseif test="host.cor gte 33"/>
+                <t>You are not sure about the idea of armor that is infested with tentacles.</t>
+                <else/>
+                <t>You shudder at the idea of wearing armor that is infested with tentacles but you proceed anyway. </t>
+            </if>
+            <t>\n\nFirst, you clamber into the breastplate. </t>
+            <if test="HasTrait('biped')">
+                <if test="LegType()=='HUMAN'">
+                    <t>Then you put your feet into your boots. With the boots fully equipped, you move on to the next piece. </t>
+                    <else/>
+                    <t>Then you attempt to put your feet into your boots. You realize that the boots are designed for someone with normal feet. You have to modify the boots to fit and when you do put on your boots, your feet are exposed. </t>
+                </if>
+            </if>
+            <t>Next, you put on your reinforced bark bracers to protect your arms.\n\n</t>
+            <if test="HasTrait('taur')">
+                <t>Last but not least, you take a silken loincloth in your hand but stop short as you examine your tauric body. There is no way you could properly conceal your genitals! </t>
+                <if test="host.cor gte 66 or flags[kFLAGS.PC_FETISH] gt 0">
+                    <t>Regardless, you are happy with what you are right now. </t>
+                    <elseif test="host.cor gte 33"/>
+                    <t>You blush a bit, not sure how you feel. </t>
+                    <else/>
+                    <t>You let out a sigh. Being a centaur surely is inconvenient! </t>
+                </if>
+                <t>You leave the silken loincloth in your possessions for the time being.</t>
+                <else/>
+                <t>Last but not least, you put your silken loincloth on to cover your groin. You thank Konstantin for that and you know that you easily have access to your [if(hascock)[cocks]][if(isherm) and ][if(hasvagina)[vagina]][if(isgenderless)groin] should you need to. </t>
+                <if test="HasTrait('penis')">
+                    <if test="host.biggestCockArea() gte 100">
+                        <t>Your manhood is too big to be concealed by your silken loincloth. Part of your [cock biggest] is visible. </t>
+                        <if test="host.cor gte 66 or flags[kFLAGS.PC_FETISH] gt 0">
+                            <t>You admire how your manhood is visible. </t>
+                            <elseif test="host.cor gte 33"/>
+                            <t>You blush a bit, not sure how you feel. </t>
+                            <else/>
+                            <t>You let out a sigh. </t>
+                        </if>
+                        <elseif test="host.biggestCockArea() gte 40"/>
+                        <t>Large bulge forms against your silken loincloth. </t>
+                    </if>
+                </if>
+                <if test="host.cor gte 66 or flags[kFLAGS.PC_FETISH] gt 0">
+                    <t>You'd love to lift your loincloth and show off whenever you want to. </t>
+                </if>
+            </if>
+            <t>You are suited up and all good to go. </t>
+            <if test="host.lust lt 20">
+                <t>\n\nYou can feel the tentacles inside your breastplate slither their way and tease your [butt]. </t>
+                <if test="host.cor lt 60">
+                    <t> You gasp in surprise.</t>
+                    <else/>
+                    <t> You moan in pleasure.</t>
+                </if>
+                <command>ModRawStat(host,"lust",30)</command>
+            </if>
+        </onEquip>
     </armor>
     <armor id="TraSArm">
         <short>TraSArmor</short>

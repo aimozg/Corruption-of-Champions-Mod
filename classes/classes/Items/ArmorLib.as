@@ -95,7 +95,10 @@ factory.createArmorType(<armor id="$1">
 		public function get CTBGUAR():Armor {
 			return CoC.instance.gameLibrary.findItemType(CTBGUAR_ID) as Armor;
 		}
-		public const DBARMOR:Armor = new MaraeArmor(true);
+		public const DBARMOR_ID:String = "DB.Armr";
+		public function get DBARMOR():Armor {
+			return CoC.instance.gameLibrary.findItemType(DBARMOR_ID) as Armor;
+		}
 		public const DSCLARM_ID:String = "DSclArm";
 		public function get DSCLARM():Armor {
 			return CoC.instance.gameLibrary.findItemType(DSCLARM_ID) as Armor;
@@ -222,7 +225,10 @@ factory.createArmorType(<armor id="$1">
 		public function get T_BSUIT():Armor {
 			return CoC.instance.gameLibrary.findItemType(T_BSUIT_ID) as Armor;
 		}
-		public const TBARMOR:Armor = new MaraeArmor();
+		public const TBARMOR_ID:String = "TB.Armr";
+		public function get TBARMOR():Armor {
+			return CoC.instance.gameLibrary.findItemType(TBARMOR_ID) as Armor;
+		}
 		public const TRASARM_ID:String = "TraSArm";
 		public function get TRASARM():Armor {
 			return CoC.instance.gameLibrary.findItemType(TRASARM_ID) as Armor;
