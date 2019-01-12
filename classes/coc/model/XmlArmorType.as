@@ -2,10 +2,17 @@
  * Coded by aimozg on 09.01.2019.
  */
 package coc.model {
+import classes.CoC;
+import classes.Creature;
 import classes.Items.Armor;
 import classes.PerkClass;
 import classes.PerkType;
+import classes.Player;
 import classes.internals.Utils;
+
+import coc.xxc.Story;
+
+import coc.xxc.stmts.TextStmt;
 
 /**
  * XML-bound armor type declaration. Can be cloned & modified
@@ -26,11 +33,15 @@ import classes.internals.Utils;
  *         <value3>number</value3> <!-- default 0 -->
  *         <value4>number</value4> <!-- default 0 -->
  *     </perk>
+ *     <onEquip> <!-- optional -->
+ *         <!-- scene (XXC-content) -->
+ *     </onEquip>
  * </armor>
  * ```
  */
 public class XmlArmorType extends Armor {
 	private var _xml:XML;
+	private var _onEquip:Story;
 	public function get xml():XML {
 		return _xml;
 	}
@@ -75,6 +86,17 @@ public class XmlArmorType extends Armor {
 			));
 		}
 		this._supportsUndergarment = Utils.booleanOr(_xml.supportsUndergarment, true);
+		
+		this._onEquip = _xml.onEquip.length()>0 ? CoC.instance.compiler.compileDetachedStory(_xml.onEquip[0]) : null;
+	}
+	
+	override public function useText(host:Creature):String {
+		if (_onEquip && host is Player) {
+			_onEquip.execute(CoC.instance.context);
+			return "";
+		} else {
+			return super.useText(host);
+		}
 	}
 }
 }

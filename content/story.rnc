@@ -9,18 +9,32 @@ content =
 expression = text
 array-content-expression = text
 if = element if {
-    ifBody
-}
-ifBody =
     attribute test { expression },
-    (content* | attribute then { text }),
-    (elseif|else|attribute else { text })?
-elseif = element elseif {
-    ifBody
+    # (if-big | if-short)
+    content*,
+    elseif*,
+    else?
 }
-else = element else {
+if-big = (
+    content*,
+    elseif*,
+    else?
+)
+if-short = (
+    empty,
+    attribute then { text },
+    attribute else { text }?
+)
+elseif = (
+    element elseif {
+        attribute test { expression }
+    },
     content*
-}
+)
+else = (
+    element else { empty },
+    content*
+)
 switch = element switch {
     attribute value { expression }?,
     case*,
@@ -50,7 +64,8 @@ font = element font {
 xcc-named-content = Text | String | lib | scene | macro | extend-story | mod-content
 xcc-content = xcc-named-content
     | display | command | output | Include
-    | set
+    | set | t
+t = element t { text }
 namedBlock = attribute name { text }?, content*
 Text = element text { namedBlock }
 String = element string { namedBlock }
@@ -102,6 +117,7 @@ armor = element armor {
 		& element value3 { text }?
 		& element value4 { text }?
 	}*
+	& element onEquip { content* }?
 }
 reflist = element reflist {
 	attribute id { text }

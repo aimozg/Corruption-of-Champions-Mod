@@ -73,6 +73,83 @@
         <description>A long ballroom dress patterned with sequins.  Perfect for important occasions.</description>
         <subType>Medium</subType>
     </armor>
+    <armor id="BeeArmr">
+        <short>Bee Armor</short>
+        <name>sexy black chitin armor-plating</name>
+        <long>a set of chitinous armor</long>
+        <defense>18</defense>
+        <value>1080</value>
+        <description>A suit of armor cleverly fashioned from giant bee chitin. It comes with a silken loincloth to protect your modesty.</description>
+        <subType>Heavy</subType>
+        <onEquip>
+            <t>
+
+                You</t>
+            <if test="not IsNaked()">
+                <t> first strip yourself naked and </t>
+            </if>
+            <t> equip your armor, one piece at a time.
+
+            First, you clamber into the breastplate. </t>
+            <if test="HasTrait('biped')">
+                <if test="LegType() == 'HUMAN'">
+                    <t>Then you put your feet into your boots. With the boots fully equipped, you move on to the next piece. </t>
+                    <else/>
+                    <t>Then you attempt to put your feet into your boots. You realize that the boots are designed for someone with normal feet. You have to modify the boots to fit and when you do put on your boots, your feet are exposed. </t>
+                </if>
+            </if>
+            <t>Next, you put on your chitinous bracers to protect your arms.
+
+            </t>
+            <if test="not HasTrait('taur')">
+                <t>Last but not least, you put your silken loincloth on to cover your groin. You thank Rathazul for that and you know that you easily have access to your </t>
+                <if test="HasTrait('penis')">
+                    <t>[cocks]</t>
+                </if>
+                <if test="HasTrait('penis') and HasTrait('vagina')">
+                    <t> and </t>
+                </if>
+                <if test="HasTrait('vagina')">
+                    <t>[vagina]</t>
+                </if>
+                <if test="not HasTrait('vagina') and HasTrait('penis')">
+                    <t>groin</t>
+                </if>
+                <t> should you need to. </t>
+                <if test="HasTrait('penis')">
+                    <if test="player.biggestCockArea() gte 40 and player.biggestCockArea() lt 100">
+                        <t>Large bulge forms against your silken loincloth. </t>
+                    </if>
+                    <if test="player.biggestCockArea() gte 100">
+                        <t>Your manhood is too big to be concealed by your silken loincloth. Part of your [cock biggest] is visible.</t>
+                        <if test="player.cor lt 33">
+                            <t>You let out a sigh. </t>
+                            <elseif test="player.cor gte 33 and player.cor lt 66"/>
+                            <t>You blush a bit, not sure how you feel. </t>
+                            <elseif test="player.cor gte 66 or flags[kFLAGS.PC_FETISH] gt 0"/>
+                            <t>You admire how your manhood is visible. </t>
+                        </if>
+                    </if>
+                </if>
+                <if test="player.cor gte 66 or flags[kFLAGS.PC_FETISH] gt 0">
+                    <t>You'd love to lift your loincloth and show off whenever you want to. </t>
+                </if>
+                <else/>
+                <t>Last but not least, you take a silken loincloth in your hand but stop short as you examine your tauric body. There is no way you could properly conceal your genitals! </t>
+                <if test="player.cor lt 33">
+                    <t>You let out a sigh. Being a centaur surely is inconvenient! </t>
+                    <elseif test="player.cor gte 33 and player.cor lt 66"/>
+                    <t>You blush a bit, not sure how you feel. </t>
+                    <elseif test="player.cor gte 66 or flags[kFLAGS.PC_FETISH] gt 0"/>
+                    <t>Regardless, you are happy with what you are right now. </t>
+                </if>
+                <t>You leave the silken loincloth in your possessions for the time being.</t>
+            </if>
+            <t>
+
+                You admire the design of your armor. No wonder it looks so sexy!</t>
+        </onEquip>
+    </armor>
     <armor id="BimboSk">
         <short>BimboSk</short>
         <name>bimbo skirt</name>

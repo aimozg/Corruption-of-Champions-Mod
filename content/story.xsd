@@ -15,24 +15,46 @@
             </xs:choice>
         </xs:sequence>
     </xs:group>
-    <xs:element name="if" type="ifBody"/>
-    <xs:complexType name="ifBody" mixed="true">
+    <xs:element name="if">
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+                <xs:group minOccurs="0" maxOccurs="unbounded" ref="elseif"/>
+                <xs:group minOccurs="0" ref="else"/>
+            </xs:sequence>
+            <xs:attribute name="test" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:group name="if-big">
         <xs:sequence>
             <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
-            <xs:choice minOccurs="0">
-                <xs:element ref="elseif"/>
-                <xs:element ref="else"/>
-            </xs:choice>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="elseif"/>
+            <xs:group minOccurs="0" ref="else"/>
         </xs:sequence>
-        <xs:attribute name="test" use="required"/>
-        <xs:attribute name="then"/>
+    </xs:group>
+    <xs:attributeGroup name="if-short">
+        <xs:attribute name="then" use="required"/>
         <xs:attribute name="else"/>
-    </xs:complexType>
-    <xs:element name="elseif" type="ifBody"/>
-    <xs:element name="else">
-        <xs:complexType mixed="true">
+    </xs:attributeGroup>
+    <xs:group name="elseif">
+        <xs:sequence>
+            <xs:element ref="elseif"/>
             <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:element name="elseif">
+        <xs:complexType>
+            <xs:attribute name="test" use="required"/>
         </xs:complexType>
+    </xs:element>
+    <xs:group name="else">
+        <xs:sequence>
+            <xs:element ref="else"/>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:element name="else">
+        <xs:complexType/>
     </xs:element>
     <xs:element name="switch">
         <xs:complexType>
@@ -80,6 +102,7 @@
     </xs:element>
     <xs:element name="xcc-named-content" abstract="true" substitutionGroup="xcc-content"/>
     <xs:element name="xcc-content" abstract="true"/>
+    <xs:element name="t" substitutionGroup="xcc-content" type="xs:string"/>
     <xs:complexType name="namedBlock" mixed="true">
         <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
         <xs:attribute name="name"/>
@@ -157,6 +180,7 @@
                 <xs:element ref="subType"/>
                 <xs:element ref="supportsUndergarment"/>
                 <xs:element ref="perk"/>
+                <xs:element ref="onEquip"/>
             </xs:choice>
             <xs:attribute name="id" use="required"/>
         </xs:complexType>
@@ -191,6 +215,11 @@
     <xs:element name="value2" type="xs:string"/>
     <xs:element name="value3" type="xs:string"/>
     <xs:element name="value4" type="xs:string"/>
+    <xs:element name="onEquip">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="reflist" substitutionGroup="mod-content">
         <xs:complexType>
             <xs:sequence>
@@ -200,6 +229,7 @@
             <xs:attribute name="type" use="required">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
+                        <xs:enumeration value="any"/>
                         <xs:enumeration value="ItemType"/>
                         <xs:enumeration value="PerkType"/>
                     </xs:restriction>

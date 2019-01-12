@@ -403,6 +403,13 @@ public class StoryCompiler extends Compiler {
 	protected function compileStory(x:XML):Story {
 		return compileStoryBody(new Story(x.localName(),stack[0], x.@name), x);
 	}
+	public function compileDetachedStory(x:XML):Story {
+		var oldStack:Array = stack;
+		stack = [];
+		var story:Story = compileStoryBody(new Story(x.localName(),null,x.@name),x);
+		stack = oldStack;
+		return story;
+	}
 	protected function compileStoryBody(story:Story, x:XML):Story {
 		stack.unshift(story);
 		compileChildrenInto(x, story.body.stmts);

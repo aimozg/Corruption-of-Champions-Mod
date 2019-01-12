@@ -45,6 +45,10 @@ package classes.Items {
 		public function getItem(slot:String):Equipable {
 			return _slots[slot];
 		}
+		
+		public function hasItem(slot:String):Boolean {
+			return _slots[slot].id != slotDefaults[slot].id;
+		}
 
 		/**
 		 * Used to directly set equipment without calling the equipment's equip() method

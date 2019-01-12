@@ -79,6 +79,15 @@ public class StdFunctions {
 		return ['N','M','F','H'][player.gender];
 	}
 	
+	// items
+	
+	public function IsNaked():Boolean {
+		return player.isNaked();
+	}
+	public function EquipmentEmpty(slot:String):Boolean {
+		return !player.equipment.hasItem(slot);
+	}
+	
 	private static function get player():Player {
 		return CoC.instance.player;
 	}

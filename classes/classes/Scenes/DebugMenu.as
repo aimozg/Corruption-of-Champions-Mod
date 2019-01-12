@@ -22,6 +22,13 @@ package classes.Scenes
 	import classes.BodyParts.Wings;
 import classes.CoC;
 import classes.GlobalFlags.kFLAGS;
+import classes.Items.Armor;
+import classes.Items.Consumable;
+import classes.Items.Jewelry;
+import classes.Items.Shield;
+import classes.Items.Undergarment;
+import classes.Items.Weapon;
+import classes.Items.WeaponRange;
 import classes.Modding.GameMod;
 import classes.Modding.ModMonster;
 import classes.Modding.MonsterPrototype;
@@ -375,16 +382,24 @@ import flash.events.Event;
 				}
 			}
 		}
+		private function setItemList(buttons:ButtonDataList,itemClass:Class):void {
+			for each(var itype:ItemType in gameLibrary.itemTypes) {
+				if (itype is itemClass && itype.shortName!="nothing") {
+					buttons.add(itype.shortName, curry(inventory.takeItem, itype, curry(displayItems, buttons)))
+					       .hint(itype.description, itype.longName);
+				}
+			}
+		}
 
 		private function setItemArrays():void {
             if (_setLists) return; //Already set, cancel.
-            setList(_consumableButtons, consumables);
-			setList(_weaponButtons, weapons);
-			setList(_weaponButtons, weaponsrange);
-			setList(_armourButtons, armors);
-			setList(_undergarmentButtons, undergarments);
-			setList(_jewelryButtons, jewelries);
-			setList(_shieldButtons, shields);
+            setItemList(_consumableButtons, Consumable);
+			setItemList(_weaponButtons, Weapon);
+			setItemList(_weaponButtons, WeaponRange);
+			setItemList(_armourButtons, Armor);
+			setItemList(_undergarmentButtons, Undergarment);
+			setItemList(_jewelryButtons, Jewelry);
+			setItemList(_shieldButtons, Shield);
 			setList(_useableButtons, useables);
 			_setLists = true;
 		}

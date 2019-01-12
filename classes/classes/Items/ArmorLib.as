@@ -59,7 +59,10 @@ factory.createArmorType(<armor id="$1">
 		public function get B_DRESS():Armor {
 			return CoC.instance.gameLibrary.findItemType(B_DRESS_ID) as Armor;
 		}
-		public const BEEARMR:Armor = new BeeArmor();
+		public const BEEARMR_ID:String = "BeeArmr";
+		public function get BEEARMR():Armor {
+			return CoC.instance.gameLibrary.findItemType(BEEARMR_ID) as Armor;
+		}
 		public const BIMBOSK_ID:String = "BimboSk";
 		public function get BIMBOSK():Armor {
 			return CoC.instance.gameLibrary.findItemType(BIMBOSK_ID) as Armor;
