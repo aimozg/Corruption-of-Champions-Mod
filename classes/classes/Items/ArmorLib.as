@@ -87,8 +87,14 @@ factory.createArmorType(<armor id="$1">
 		public function get CLSSYCL():Armor {
 			return CoC.instance.gameLibrary.findItemType(CLSSYCL_ID) as Armor;
 		}
-		public const CTPALAD:Armor = new CentaurArmor();
-		public const CTBGUAR:Armor = new CentaurBlackguardArmor();
+		public const CTPALAD_ID:String = "TaurPAr";
+		public function get CTPALAD():Armor {
+			return CoC.instance.gameLibrary.findItemType(CTPALAD_ID) as Armor;
+		}
+		public const CTBGUAR_ID:String = "TaurBAr";
+		public function get CTBGUAR():Armor {
+			return CoC.instance.gameLibrary.findItemType(CTBGUAR_ID) as Armor;
+		}
 		public const DBARMOR:Armor = new MaraeArmor(true);
 		public const DSCLARM_ID:String = "DSclArm";
 		public function get DSCLARM():Armor {

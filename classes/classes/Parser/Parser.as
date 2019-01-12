@@ -3,7 +3,9 @@
 	import classes.CoC;
 	import classes.CoC_Settings;
 
-	public class Parser
+import coc.script.Eval;
+
+public class Parser
 	{
 		public static var mainParserDebug:Boolean = false;
 		public static var lookupParserDebug:Boolean = false;
@@ -608,6 +610,12 @@
 
 		}
 
+		private static function isEvalStatement(ret:Object,textCtnt:String,depth:Number):Boolean
+		{
+			if (textCtnt.charAt(0) != '=') return false;
+			ret.eval = Eval.compile(textCtnt.substr(1));
+			return true;
+		}
 		private static function isFormatStatement(ret:Object,textCtnt:String,depth:Number):Boolean
 		{
 			function colour(col:String):Object {
@@ -753,6 +761,10 @@
                             else if (isFormatStatement(fmtstr,tmpStr,depth))
                             {
 	                            retStr += fmtstr.text;
+                            }
+		                    else if (isEvalStatement(fmtstr,tmpStr,depth))
+                            {
+	                            retStr += fmtstr.eval.vcall(CoC.instance.context.scopes);
                             }
                             else if (tmpStr) {
                                 if (printCcntentDebug) {

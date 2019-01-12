@@ -89,7 +89,11 @@ public class SceneLib {
     public static var arianScene:ArianScene = new ArianScene();
 
     public static var ayaneFollower:AyaneFollower = new AyaneFollower();
-
+    
+    public static function get celessScene():CelessScene {
+        return CelessScene.instance;
+    }
+    
     public static var ceraphScene:CeraphScene = new CeraphScene();
 
     public static var ceraphFollowerScene:CeraphFollowerScene = new CeraphFollowerScene();

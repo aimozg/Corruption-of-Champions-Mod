@@ -177,10 +177,14 @@
                 <xs:element ref="description"/>
                 <xs:element ref="value"/>
                 <xs:element ref="defense"/>
+                <xs:element ref="defenseMod"/>
                 <xs:element ref="subType"/>
                 <xs:element ref="supportsUndergarment"/>
                 <xs:element ref="perk"/>
+                <xs:element ref="canUse"/>
                 <xs:element ref="onEquip"/>
+                <xs:element ref="onEquipFail"/>
+                <xs:element ref="onUnequip"/>
             </xs:choice>
             <xs:attribute name="id" use="required"/>
         </xs:complexType>
@@ -191,6 +195,7 @@
     <xs:element name="description" type="xs:string"/>
     <xs:element name="value" type="xs:string"/>
     <xs:element name="defense" type="xs:string"/>
+    <xs:element name="defenseMod" type="xs:string"/>
     <xs:element name="subType" type="xs:string"/>
     <xs:element name="supportsUndergarment">
         <xs:simpleType>
@@ -215,7 +220,18 @@
     <xs:element name="value2" type="xs:string"/>
     <xs:element name="value3" type="xs:string"/>
     <xs:element name="value4" type="xs:string"/>
+    <xs:element name="canUse" type="xs:string"/>
     <xs:element name="onEquip">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="onEquipFail">
+        <xs:complexType mixed="true">
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="onUnequip">
         <xs:complexType mixed="true">
             <xs:group minOccurs="0" maxOccurs="unbounded" ref="content"/>
         </xs:complexType>

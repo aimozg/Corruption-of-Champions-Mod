@@ -108,6 +108,7 @@ armor = element armor {
 	& element description { text }?
 	& element value { text }?
 	& element defense { text }?
+	& element defenseMod { text }?
 	& element subType { text }?
 	& element supportsUndergarment { "true" | "false" }?
 	& element perk {
@@ -117,7 +118,10 @@ armor = element armor {
 		& element value3 { text }?
 		& element value4 { text }?
 	}*
+	& element canUse { text }?
 	& element onEquip { content* }?
+	& element onEquipFail { content* }?
+	& element onUnequip { content* }?
 }
 reflist = element reflist {
 	attribute id { text }
