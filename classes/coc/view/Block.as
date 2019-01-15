@@ -286,22 +286,22 @@ public class Block extends Sprite {
 				break;
 		}
 		dispatchEvent(new Event(ON_LAYOUT, true, true));
-		var p:DisplayObject = parent;
-		while (p) {
-			if (p is Block) {
-				(p as Block).doLayout();
-				// To protect from (possible in theory) endless re-layouting loop TODO
-				// 1. Do not invalidate parents if my size wasn't change
-				// 2. Do not invalidate parents if they don't care about children dimensions (Grid layout)
-				// 3. Consider invalidating parents in self invalidation, not in the self layout
-				break;
-			}
-			if (p is CoCScrollPane) {
-				(p as CoCScrollPane).update();
-				break;
-			}
-			p = p.parent;
-		}
+		//var p:DisplayObject = parent;
+		//while (p) {
+		//	if (p is Block) {
+		//		(p as Block).doLayout();
+		//		// To protect from (possible in theory) endless re-layouting loop TODO
+		//		// 1. Do not invalidate parents if my size wasn't change
+		//		// 2. Do not invalidate parents if they don't care about children dimensions (Grid layout)
+		//		// 3. Consider invalidating parents in self invalidation, not in the self layout
+		//		break;
+		//	}
+		//	if (p is CoCScrollPane) {
+		//		(p as CoCScrollPane).update();
+		//		break;
+		//	}
+		//	p = p.parent;
+		//}
 	}
 
 	protected function maybeDoLayout():void {

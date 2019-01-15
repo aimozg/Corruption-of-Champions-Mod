@@ -130,6 +130,7 @@ public class GameSettings extends BaseContent implements Jsonable {
 			pane.addOrUpdateToggleSettings("Enable Realistic", [
 				["Enable", enableRealisticPrompt, "Realistic mode is already enabled.", flags[kFLAGS.HUNGER_ENABLED] >= 1]
 			]);
+			pane.update();
 		}
 		else if (pane.name == PANES_CONFIG[1][0]) { //Interface
 			pane.addOrUpdateToggleSettings("Main Background", [
@@ -194,6 +195,7 @@ public class GameSettings extends BaseContent implements Jsonable {
 				["ON", curry(settingToggle,curry(setOrUpdateSettings,pane),CoC.instance.inputManager,"showHotkeys"), "Hotkeys are displayed", CoC.instance.inputManager.showHotkeys == true],
 				["OFF", curry(settingToggle,curry(setOrUpdateSettings,pane),CoC.instance.inputManager,"showHotkeys"), "Hotkeys are disabled", CoC.instance.inputManager.showHotkeys == false]
 			]);
+			pane.update();
 		}
 		else if (pane.name == PANES_CONFIG[2][0]) { //Fetishes
 			pane.addOrUpdateToggleSettings("Watersports (Urine)", [
@@ -207,6 +209,7 @@ public class GameSettings extends BaseContent implements Jsonable {
 					["OFF", curry(setWorms, false, false), "You have chosen not to encounter worms.", player.hasStatusEffect(StatusEffects.WormsOff)],
 				]);
 			}
+			pane.update();
 		}
 	}
 

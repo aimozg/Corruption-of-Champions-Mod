@@ -67,6 +67,11 @@ import coc.view.MainView;
 				gap: 4
 			}});
 			_content.name = "controlContent";
+			_content.addEventListener(Block.ON_LAYOUT,function(e:Event):void{
+				if (content) {
+					update();
+				}
+			});
 			_contentChildren = 0;
 			
 			// Hook into some stuff so that we can fix some bugs that ScrollPane has
@@ -104,6 +109,7 @@ import coc.view.MainView;
 			}
 			
 			this.content.addChild(_content);
+			update();
 		}
 		
 		/**
