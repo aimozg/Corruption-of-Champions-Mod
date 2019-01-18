@@ -1309,7 +1309,7 @@ import classes.lists.BreastCup;
 				player.gems += 250;
 			}
 			flags[kFLAGS.HISTORY_PERK_SELECTED] = 1;
-			jobSelection();
+			completeCharacterCreation();
 		}
 
 		private function completeCharacterCreation():void {
@@ -1620,35 +1620,5 @@ import classes.lists.BreastCup;
 		private function isSpell(statusEffect:* = null):Boolean {	
 			return (statusEffect == StatusEffects.KnowsWereBeast);	//na razie jest tu tylko werebeast
 		}	//ale potem zamienić to naspecialne kiPowers z każdego z klanów
-
-		private function jobSelection():void {
-			clearOutput();
-			outputText("You've trained since being chosen as champion. What is your job?");
-
-			var jobs:Array = [
-					PerkLib.JobElementalConjurer, PerkLib.JobGuardian, PerkLib.JobRanger,
-					PerkLib.JobSeducer, PerkLib.JobSorcerer, PerkLib.JobWarrior
-			];
-			var buttons:ButtonDataList = new ButtonDataList();
-
-			for each (var pk:PerkType in jobs){
-				player.removePerk(pk);
-				buttons.add(pk.name,curry(jobSelect,pk),pk.desc(),pk.name).disableIf(player.hasPerk(pk));
-			}
-
-			buttons.submenu();
-
-			function jobSelect(pk:PerkType):void {
-				outputText("\n\n" + pk.longDesc + "\n\nIs this the job you want?");
-				doYesNo(choseYes,jobSelection);
-
-				function choseYes():void {
-					player.createPerk(pk,0,0,0,0);
-					completeCharacterCreation();
-				}
-			}
-		}
-
-
 	}
 }

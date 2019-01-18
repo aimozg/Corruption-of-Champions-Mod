@@ -44,7 +44,7 @@
         <packaging-android />
         <packaging-ios />
       </configuration>
-      <configuration name="CoC-Mobile" target-platform="Mobile" main-class="classes.CoC" output-file="CoC-AIR.swf" output-folder="$MODULE_DIR$" skip-build="true">
+      <configuration name="CoC-Mobile" target-platform="Mobile" main-class="classes.CoC" output-file="CoC-AIR.swf" output-folder="$MODULE_DIR$">
         <dependencies>
           <entries>
             <entry library-name="lib" library-level="project">
