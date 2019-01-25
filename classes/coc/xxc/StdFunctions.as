@@ -46,16 +46,22 @@ public class StdFunctions {
 	
 	public function CreatureHasTrait(creature:Creature,trait:String):Boolean {
 		switch (trait) {
-			case 'virgin-vagina': return creature.hasVirginVagina();
-			case 'vagina': return creature.hasVagina();
-			case 'penis': return creature.cocks.length > 0;
 			case 'biped': return creature.isBiped();
 			case 'taur': return creature.isTaur();
 			case 'naga': return creature.isNaga();
 			case 'goo': return creature.isGoo();
-			case 'testicles': return creature.balls > 0;
+
+			case 'beard': return creature.beardLength > 0;
+			case 'gills': return creature.gills.type != Gills.NONE;
+			case 'hair': return creature.hairLength > 0;
 			case 'horns': return creature.horns.type != Horns.NONE;
 			case 'tails': return creature.tail.type != Tail.NONE;
+			case 'wings': return creature.wings.type != Wings.NONE;
+			
+			case 'vagina': return creature.hasVagina();
+			case 'penis': return creature.cocks.length > 0;
+			case 'testicles': return creature.balls > 0;
+			case 'virgin-vagina': return creature.hasVirginVagina();
 			default:
 				warn("CreatureHasTrait",trait);
 				return false;
