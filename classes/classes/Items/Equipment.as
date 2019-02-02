@@ -46,6 +46,10 @@ package classes.Items {
 			return _slots[slot];
 		}
 
+		public function hasItem(slot:String):Boolean {
+			return _slots[slot].id != slotDefaults[slot].id;
+		}
+
 		/**
 		 * Used to directly set equipment without calling the equipment's equip() method
 		 * @param host Creature which is having the equipment set
