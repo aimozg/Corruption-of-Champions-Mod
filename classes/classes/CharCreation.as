@@ -2,7 +2,9 @@
 {
 	import classes.BodyParts.Antennae;
 	import classes.BodyParts.Arms;
+	import classes.BodyParts.Beard;
 	import classes.BodyParts.Butt;
+	import classes.BodyParts.Claws;
 	import classes.BodyParts.Ears;
 	import classes.BodyParts.Eyes;
 	import classes.BodyParts.Face;
@@ -23,14 +25,13 @@
 	import classes.Scenes.NPCs.JojoScene;
 	import classes.Scenes.NPCs.XXCNPC;
 	import classes.Scenes.SceneLib;
-import classes.Stats.PrimaryStat;
-import classes.lists.BreastCup;
+	import classes.Stats.PrimaryStat;
+	import classes.internals.EnumValue;
+	import classes.lists.BreastCup;
 	import classes.lists.Gender;
 
 	import coc.view.ButtonDataList;
 	import coc.view.MainView;
-
-//import flash.events.MouseEvent;
 
 	public class CharCreation extends BaseContent {
 		
@@ -61,18 +62,7 @@ import classes.lists.BreastCup;
 			flags[kFLAGS.NEW_GAME_PLUS_LEVEL] = 0;
 			newGameGo();
 		}
-		
-		public function newGamePlus():void {
-			flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP] = player.XP;
-			if (flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP] == 0) flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP] = 1;
-			while (player.level > 1) {
-				flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP] += player.level * 100;
-				player.level--;
-			}
-			flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_ITEMS] = player.gems;
-			newGameGo();
-		}
-		
+
 		public function newGameGo():void {
 			clearOutput();
 			CoC.instance.mainMenu.hideMainMenu();
@@ -721,14 +711,14 @@ import classes.lists.BreastCup;
 			addButton(4, "Gray", setHair, "gray");
 			addButton(5, "White", setHair, "white");
 			addButton(6, "Auburn", setHair, "auburn");
-		}
 
-		private function setHair(choice:String):void {
-			player.hairColor = choice;
-			clearOutput();
-			outputText("You have " + hairDescript() + ".\n\nYou will proceed to customization.");
-			//chooseEndowment(false);
-			chooseEyesColor();
+			function setHair(choice:String):void {
+				player.hairColor = choice;
+				clearOutput();
+				outputText("You have " + hairDescript() + ".\n\nYou will proceed to customization.");
+				//chooseEndowment(false);
+				chooseEyesColor();
+			}
 		}
 		
 		private function chooseEyesColor():void {
@@ -746,14 +736,14 @@ import classes.lists.BreastCup;
 			addButton(8, "Purple", setEyesColor, "purple");
 			addButton(10, "Silver", setEyesColor, "silver");
 			addButton(11, "Golden", setEyesColor, "golden");
-		}
 
-		private function setEyesColor(choice:String):void { //And choose hair
-			player.eyes.colour = choice;
-			clearOutput();
-			outputText("You selected a " + choice + " eyes color.\n\nYou will proceed to customization.");
-			//chooseEndowment(false);
-			genericStyleCustomizeMenu();
+			function setEyesColor(choice:String):void { //And choose hair
+				player.eyes.colour = choice;
+				clearOutput();
+				outputText("You selected a " + choice + " eyes color.\n\nYou will proceed to customization.");
+				//chooseEndowment(false);
+				genericStyleCustomizeMenu();
+			}
 		}
 
 		//-----------------
@@ -787,6 +777,7 @@ import classes.lists.BreastCup;
 			addButton(4, "Set Height", setHeight);
 			if (player.hasCock()) addButton(5, "Cock Size", menuCockLength);
 			addButton(6, "Breast Size", menuBreastSize);
+			addButton(7, "Race", detailedRaceSetup, genericStyleCustomizeMenu);
 			addButton(9, "Done", chooseEndowment, true);
 		}
 
@@ -805,10 +796,11 @@ import classes.lists.BreastCup;
 			addButton(5, "Mahogany", confirmComplexion, "mahogany");
 			addButton(6, "Russet", confirmComplexion, "russet");
 			addButton(14, "Back", genericStyleCustomizeMenu);
-		}	
-		private function confirmComplexion(complexion:String):void {
-			player.skinTone = complexion;
-			genericStyleCustomizeMenu();
+
+			function confirmComplexion(complexion:String):void {
+				player.skinTone = complexion;
+				genericStyleCustomizeMenu();
+			}
 		}
 
 		//-----------------
@@ -826,11 +818,11 @@ import classes.lists.BreastCup;
 			addButton(5, "White", chooseHairColor, "white");
 			addButton(6, "Auburn", chooseHairColor, "auburn");
 			addButton(14, "Back", genericStyleCustomizeMenu);
-		}
 
-		private function chooseHairColor(color:String = ""):void {
-			player.hairColor = color;
-			genericStyleCustomizeMenu();
+			function chooseHairColor(color:String = ""):void {
+				player.hairColor = color;
+				genericStyleCustomizeMenu();
+			}
 		}
 
 		//-----------------
@@ -849,10 +841,10 @@ import classes.lists.BreastCup;
 			clearOutput();
 			outputText("What beard style would you like?");
 			menu();
-			addButton(0, "Normal", chooseBeardStyle, 0);
-			addButton(1, "Goatee", chooseBeardStyle, 1);
-			addButton(2, "Clean-cut", chooseBeardStyle, 2);
-			addButton(3, "Mountainman", chooseBeardStyle, 3);
+			addButton(0, "Normal", chooseBeardStyle, Beard.NORMAL);
+			addButton(1, "Goatee", chooseBeardStyle, Beard.GOATEE);
+			addButton(2, "Clean-cut", chooseBeardStyle, Beard.CLEANCUT);
+			addButton(3, "Mountainman", chooseBeardStyle, Beard.MOUNTAINMAN);
 			addButton(14, "Back", menuBeardSettings);
 		}
 		private function chooseBeardStyle(choiceStyle:int = 0):void {
@@ -982,21 +974,17 @@ import classes.lists.BreastCup;
 			clearOutput();
 			outputText("You can choose a cock length between 4 and 8 inches. Your starting cock length will also affect starting cock thickness. \n\nCock type and size can be altered later in the game through certain items.");
 			menu();
-			addButton(0, "4\"", chooseCockLength, 4);
-			addButton(1, "4.5\"", chooseCockLength, 4.5);
-			addButton(2, "5\"", chooseCockLength, 5);
-			addButton(3, "5.5\"", chooseCockLength, 5.5);
-			addButton(4, "6\"", chooseCockLength, 6);
-			addButton(5, "6.5\"", chooseCockLength, 6.5);
-			addButton(6, "7\"", chooseCockLength, 7);
-			addButton(7, "7.5\"", chooseCockLength, 7.5);
-			addButton(8, "8\"", chooseCockLength, 8);
-			addButton(14, "Back", genericStyleCustomizeMenu);
-		}
-		private function chooseCockLength(length:Number):void {
-			player.cocks[0].cockLength = length;
-			player.cocks[0].cockThickness = Math.floor(((length / 5) - 0.1) * 10) / 10;
-			genericStyleCustomizeMenu();
+			var buttons:ButtonDataList = new ButtonDataList();
+			for(var i:Number = 4; i <= 8; i+= 0.5){
+				buttons.add(i+"\"", curry(chooseCockLength, i));
+			}
+			buttons.submenu(genericStyleCustomizeMenu, 0, false);
+
+			function chooseCockLength(length:Number):void {
+				player.cocks[0].cockLength = length;
+				player.cocks[0].cockThickness = Math.floor(((length / 5) - 0.1) * 10) / 10;
+				genericStyleCustomizeMenu();
+			}
 		}
 
 		//-----------------
@@ -1006,253 +994,91 @@ import classes.lists.BreastCup;
 			clearOutput();
 			outputText("You can choose a breast size. Breast size may be altered later in the game.");
 			menu();
-			if (player.femininity < 50 || player.isMale()) addButton(0, "Flat", chooseBreastSize, 0);
-			if (player.femininity < 60) addButton(1, "A-cup", chooseBreastSize, 1);
-			if (player.femininity >= 40) addButton(2, "B-cup", chooseBreastSize, 2);
-			if (player.femininity >= 50) addButton(3, "C-cup", chooseBreastSize, 3);
-			if (player.femininity >= 60) addButton(4, "D-cup", chooseBreastSize, 4);
-			if (player.femininity >= 70) addButton(5, "DD-cup", chooseBreastSize, 5);
-			addButton(14, "Back", genericStyleCustomizeMenu);
-		}
-		private function chooseBreastSize(size:int):void {
-			player.breastRows[0].breastRating = size;
-			genericStyleCustomizeMenu();
+			addButton( 0, "Flat",   chooseBreastSize, BreastCup.FLAT);
+			addButton( 1, "A-cup",  chooseBreastSize, BreastCup.A);
+			addButton( 2, "B-cup",  chooseBreastSize, BreastCup.B);
+			addButton( 3, "C-cup",  chooseBreastSize, BreastCup.C);
+			addButton( 4, "D-cup",  chooseBreastSize, BreastCup.D);
+			addButton( 5, "DD-cup", chooseBreastSize, BreastCup.DD);
+			addButton(14, "Back",   genericStyleCustomizeMenu);
+
+			function chooseBreastSize(size:int):void {
+				player.breastRows[0].breastRating = size;
+				genericStyleCustomizeMenu();
+			}
 		}
 
 		//-----------------
 		//-- STARTER PERKS
 		//-----------------
 		private function chooseEndowment(clear:Boolean):void {
+			const endowments:Array = [
+				[true, "Strength", PerkLib.Strong, 0.25, "Are you stronger than normal? (+5 Strength)\n\nStrength increases your combat damage, and your ability to hold on to an enemy or pull yourself away."],
+				[true, "Toughness", PerkLib.Tough, 0.25, "Are you unusually tough? (+5 Toughness)\n\nToughness gives you more HP and increases the chances an attack against you will fail to wound you."],
+				[true, "Speed", PerkLib.Fast, 0.25, "Are you very quick?  (+5 Speed)\n\nSpeed makes it easier to escape combat and grapples.  It also boosts your chances of evading an enemy attack and successfully catching up to enemies who try to run."],
+				[true, "Smarts", PerkLib.Smart, 0.25, "Are you a quick learner?  (+5 Intellect)\n\nIntellect can help you avoid dangerous monsters or work with machinery.  It will also boost the power of any spells you may learn in your travels."],
+				[true, "Libido", PerkLib.Lusty, 0.25, "Do you have an unusually high sex-drive?  (+5 Libido)\n\nLibido affects how quickly your lust builds over time.  You may find a high libido to be more trouble than it's worth..."],
+				[true, "Touch", PerkLib.Sensitive, 0.25, "Is your skin unusually sensitive?  (+5 Sensitivity)\n\nSensitivity affects how easily touches and certain magics will raise your lust.  Very low sensitivity will make it difficult to orgasm."],
+				[true, "Perversion", PerkLib.Pervert, 0.25, "Are you unusually perverted?  (+5 Corruption)\n\nCorruption affects certain scenes and having a higher corruption makes you more prone to Bad Ends.\n"],
+				[player.hasCock(), "Big Cock", PerkLib.BigCock, 1.25, "Do you have a big cock?  (+2\" Cock Length)\n\nA bigger cock will make it easier to get off any sexual partners, but only if they can take your size."],
+				[player.hasCock(), "Lots of Jizz", PerkLib.MessyOrgasms, 1.25, "Are your orgasms particularly messy?  (+50% Cum Multiplier)\n\nA higher cum multiplier will cause your orgasms to be messier."],
+				[player.hasVagina(), "Big Clit", PerkLib.BigClit, 1.25, "Do you have a big clit?  (1\" Long)\n\nA large enough clit may eventually become as large as a cock.  It also makes you gain lust much faster during oral or manual stimulation."],
+				[player.hasVagina(), "Fertile", PerkLib.Fertile, 1.5, "Is your family particularly fertile?  (+15% Fertility)\n\nA high fertility will cause you to become pregnant much more easily.  Pregnancy may result in: Strange children, larger bust, larger hips, a bigger ass, and other weirdness."],
+				[player.hasVagina(), "Wet Vagina", PerkLib.WetPussy, 2.0, "Does your pussy get particularly wet?  (+1 Vaginal Wetness)\n\nVaginal wetness will make it easier to take larger cocks, in turn helping you bring the well-endowed to orgasm quicker."],
+				[player.hasBreasts(), "Big Breasts", PerkLib.BigTits, 1.5, "Are your breasts bigger than average? (DD cups)\n\nLarger breasts will allow you to lactate greater amounts, tit-fuck larger cocks, and generally be a sexy bitch."]
+			];
+			var buttons:ButtonDataList = new ButtonDataList();
+			for each (var endowment:Array in endowments) {
+				if(endowment[0]){
+					buttons.add(endowment[1], curry(confirmEndowment, endowment[2], endowment[3], endowment[4]));
+				}
+			}
 			if (clear) clearOutput();
 			outputText("Every person is born with a gift.  What's yours?");
-			menu();
-			addButton(0, "Strength", confirmEndowmentStrength);
-			addButton(1, "Toughness", confirmEndowmentThoughness);
-			addButton(2, "Speed", confirmEndowmentSpeed);
-			addButton(3, "Smarts", confirmEndowmentSmarts);
-			addButton(4, "Libido", confirmEndowmentLibido);
-			addButton(5, "Touch", confirmEndowmentTouch);
-			addButton(6, "Perversion", confirmEndowmentPerversion);
-			if (player.hasCock()) {
-				addButton(7, "Big Cock", confirmEndowmentBigCock);
-				addButton(8, "Lots of Jizz", confirmEndowmentMessyOrgasms);
+			buttons.submenu();
+
+			function confirmEndowment(pk:PerkType, v1:Number, text:String):void {
+				clearOutput();
+				outputText(text);
+				menu();
+				addButton(0, "Yes", setEndowment, pk, v1);
+				addButton(1, "No", chooseEndowment, true);
 			}
-			else {
-				addButton(7, "Big Breasts", confirmEndowmentBigBreasts);
-				addButton(8, "Big Clit", confirmEndowmentBigClit);
-				addButton(9, "Fertile", confirmEndowmentFertile);
-				addButton(10, "Wet Vagina", confirmEndowmentWetVagina);
+			function setEndowment(pk:PerkType, v1:Number): void {
+				switch (pk) {
+					case PerkLib.Strong       : player.strStat.core.value += 5; break;
+					case PerkLib.Tough        : player.touStat.core.value += 5; break;
+					case PerkLib.Fast         : player.speStat.core.value += 5; break;
+					case PerkLib.Smart        : player.intStat.core.value += 5; break;
+					case PerkLib.Lusty        : player.libStat.core.value += 5; break;
+					case PerkLib.Pervert      :
+					case PerkLib.Sensitive    : player.sens += 5; break;
+					case PerkLib.BigCock      : {
+						player.cocks[0].cockLength = 8;
+						player.cocks[0].cockThickness = 1.5;
+						break;
+					}
+					case PerkLib.MessyOrgasms : player.cumMultiplier += 1.5; break;
+					case PerkLib.BigTits      : player.breastRows[0].breastRating += 2; break;
+					case PerkLib.BigClit      : player.clitLength += 1; break;
+					case PerkLib.Fertile      : {
+						player.fertility += 25;
+						player.hips.type += 2;
+						break;
+					}
+					case PerkLib.WetPussy     : player.vaginas[0].vaginalWetness = VaginaClass.WETNESS_WET; break;
+					default                   : {
+						trace("Switch error");
+						return chooseEndowment(true);
+					}
+				}
+				if (!player.hasPerk(pk)) {
+					player.createPerk(pk, v1, 0, 0, 0);
+				}
+				chooseHistory();
 			}
-			if (player.gender == Gender.GENDER_HERM)
-			{
-				addButton(7, "Big Cock", confirmEndowmentBigCock);
-				addButton(8, "Lots of Jizz", confirmEndowmentMessyOrgasms);
-				addButton(9, "Big Breasts", confirmEndowmentBigBreasts);
-				addButton(10, "Big Clit", confirmEndowmentBigClit);
-				addButton(11, "Fertile", confirmEndowmentFertile);
-				addButton(12, "Wet Vagina", confirmEndowmentWetVagina);
-			}
 		}
 
-		private function confirmEndowmentStrength():void {
-			clearOutput();
-			outputText("Are you stronger than normal? (+5 Strength)\n\nStrength increases your combat damage, and your ability to hold on to an enemy or pull yourself away.");
-			menu();
-			addButton(0, "Yes", setEndowmentStrength);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentThoughness():void {
-			clearOutput();
-			outputText("Are you unusually tough? (+5 Toughness)\n\nToughness gives you more HP and increases the chances an attack against you will fail to wound you.");
-			menu();
-			addButton(0, "Yes", setEndowmentToughness);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentSpeed():void {
-			clearOutput();
-			outputText("Are you very quick?  (+5 Speed)\n\nSpeed makes it easier to escape combat and grapples.  It also boosts your chances of evading an enemy attack and successfully catching up to enemies who try to run.");
-			menu();
-			addButton(0, "Yes", setEndowmentSpeed);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentSmarts():void {
-			clearOutput();
-			outputText("Are you a quick learner?  (+5 Intellect)\n\nIntellect can help you avoid dangerous monsters or work with machinery.  It will also boost the power of any spells you may learn in your travels.");
-			menu();
-			addButton(0, "Yes", setEndowmentSmarts);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentLibido():void {
-			clearOutput();
-			outputText("Do you have an unusually high sex-drive?  (+5 Libido)\n\nLibido affects how quickly your lust builds over time.  You may find a high libido to be more trouble than it's worth...");
-			menu();
-			addButton(0, "Yes", setEndowmentLibido);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentTouch():void {
-			clearOutput();
-			outputText("Is your skin unusually sensitive?  (+5 Sensitivity)\n\nSensitivity affects how easily touches and certain magics will raise your lust.  Very low sensitivity will make it difficult to orgasm.");
-			menu();
-			addButton(0, "Yes", setEndowmentTouch);
-			addButton(1, "No", chooseEndowment, true);
-		}
-		
-		private function confirmEndowmentPerversion():void {
-			clearOutput();
-			clearOutput();
-			outputText("Are you unusually perverted?  (+5 Corruption)\n\Corruption affects certain scenes and having a higher corruption makes you more prone to Bad Ends.\n");
-			menu();
-			addButton(0, "Yes", setEndowmentPerversion);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentBigCock():void {
-			clearOutput();
-			outputText("Do you have a big cock?  (+2\" Cock Length)\n\nA bigger cock will make it easier to get off any sexual partners, but only if they can take your size.");
-			menu();
-			addButton(0, "Yes", setEndowmentBigCock);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentMessyOrgasms():void {
-			clearOutput();
-			outputText("Are your orgasms particularly messy?  (+50% Cum Multiplier)\n\nA higher cum multiplier will cause your orgasms to be messier.");
-			menu();
-			addButton(0, "Yes", setEndowmentMessyOrgasms);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentBigBreasts():void {
-			clearOutput();
-			outputText("Are your breasts bigger than average? (DD cups)\n\nLarger breasts will allow you to lactate greater amounts, tit-fuck larger cocks, and generally be a sexy bitch.");
-			menu();
-			addButton(0, "Yes", setEndowmentBigBreasts);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentBigClit():void {
-			clearOutput();
-			outputText("Do you have a big clit?  (1\" Long)\n\nA large enough clit may eventually become as large as a cock.  It also makes you gain lust much faster during oral or manual stimulation.");
-			menu();
-			addButton(0, "Yes", setEndowmentBigClit);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentFertile():void {
-			clearOutput();
-			outputText("Is your family particularly fertile?  (+15% Fertility)\n\nA high fertility will cause you to become pregnant much more easily.  Pregnancy may result in: Strange children, larger bust, larger hips, a bigger ass, and other weirdness.");
-			menu();
-			addButton(0, "Yes", setEndowmentFertile);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function confirmEndowmentWetVagina():void {
-			clearOutput();
-			outputText("Does your pussy get particularly wet?  (+1 Vaginal Wetness)\n\nVaginal wetness will make it easier to take larger cocks, in turn helping you bring the well-endowed to orgasm quicker.");
-			menu();
-			addButton(0, "Yes", setEndowmentWetVagina);
-			addButton(1, "No", chooseEndowment, true);
-		}
-
-		private function setEndowmentStrength():void {
-			player.strStat.core.value += 5;
-			player.tone += 7;
-			player.thickness += 3;
-			//Add bonus +25% strength gain
-			if (!player.hasPerk(PerkLib.Strong)) player.createPerk(PerkLib.Strong, 0.25, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentToughness():void {
-			player.touStat.core.value += 5;
-			player.tone += 5;
-			player.thickness += 5;
-			if (!player.hasPerk(PerkLib.Tough)) player.createPerk(PerkLib.Tough, 0.25, 0, 0, 0);
-			player.HP = EngineCore.maxHP();
-			chooseHistory();
-		}
-		
-		private function setEndowmentSpeed():void {
-			player.speStat.core.value += 5;
-			player.tone += 10;
-			if (!player.hasPerk(PerkLib.Fast)) player.createPerk(PerkLib.Fast, 0.25, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentSmarts():void {
-			player.intStat.core.value += 5;
-			player.thickness -= 5;
-			if (!player.hasPerk(PerkLib.Smart)) player.createPerk(PerkLib.Smart, 0.25, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentLibido():void {
-			player.libStat.core.value += 5;
-			if (!player.hasPerk(PerkLib.Lusty)) player.createPerk(PerkLib.Lusty, 0.25, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentTouch():void {
-			player.sens += 5;
-			if (!player.hasPerk(PerkLib.Sensitive)) player.createPerk(PerkLib.Sensitive, 0.25, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentPerversion():void {
-			player.sens += 5;
-			if (!player.hasPerk(PerkLib.Pervert)) player.createPerk(PerkLib.Pervert, 0.25, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentBigCock():void {
-			player.femininity -= 5;
-			player.cocks[0].cockLength = 8;
-			player.cocks[0].cockThickness = 1.5;
-			trace("Creation - cock modded to 8inches");
-			if (!player.hasPerk(PerkLib.BigCock)) player.createPerk(PerkLib.BigCock, 1.25, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentMessyOrgasms():void {
-			player.femininity -= 2;
-			player.cumMultiplier = 1.5;
-			if (!player.hasPerk(PerkLib.MessyOrgasms)) player.createPerk(PerkLib.MessyOrgasms, 1.25, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentBigBreasts():void {
-			player.femininity += 5;
-			player.breastRows[0].breastRating += 2;
-			if (!player.hasPerk(PerkLib.BigTits)) player.createPerk(PerkLib.BigTits, 1.5, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentBigClit():void {
-			player.femininity -= 5;
-			player.clitLength = 1;
-			if (!player.hasPerk(PerkLib.BigClit)) player.createPerk(PerkLib.BigClit, 1.25, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentFertile():void {
-			player.femininity += 5;
-			player.fertility += 25;
-			player.hips.type += 2;
-			if (!player.hasPerk(PerkLib.Fertile)) player.createPerk(PerkLib.Fertile, 1.5, 0, 0, 0);
-			chooseHistory();
-		}
-		
-		private function setEndowmentWetVagina():void {
-			player.femininity += 7;
-			player.vaginas[0].vaginalWetness = VaginaClass.WETNESS_WET;
-			if (!player.hasPerk(PerkLib.WetPussy)) player.createPerk(PerkLib.WetPussy, 2, 0, 0, 0);
-			chooseHistory();
-		}
 		
 		//-----------------
 		//-- HISTORY PERKS
@@ -1291,36 +1117,36 @@ import classes.lists.BreastCup;
 				addButton(0, "Yes", setHistory, choice);
 				addButton(1, "No", chooseHistory);
 			}
-		}
 
-		private function setHistory(choice:PerkType):void {
-			player.createPerk(choice, 0, 0, 0, 0);
-			if (choice == PerkLib.HistorySlut || choice == PerkLib.HistoryWhore) {
-				if (player.hasVagina()) {
-					player.vaginas[0].virgin = false;
-					player.vaginas[0].vaginalLooseness = VaginaClass.LOOSENESS_LOOSE;
+			function setHistory(choice:PerkType):void {
+				player.createPerk(choice, 0, 0, 0, 0);
+				if (choice == PerkLib.HistorySlut || choice == PerkLib.HistoryWhore) {
+					if (player.hasVagina()) {
+						player.vaginas[0].virgin = false;
+						player.vaginas[0].vaginalLooseness = VaginaClass.LOOSENESS_LOOSE;
+					}
+					player.ass.analLooseness = 1;
 				}
-				player.ass.analLooseness = 1;
+				if (choice == PerkLib.HistoryFighter || choice == PerkLib.HistoryWhore || choice == PerkLib.HistoryScout) {
+					player.gems += 50;
+				}
+				if (choice == PerkLib.HistoryFortune) {
+					player.gems += 250;
+				}
+				flags[kFLAGS.HISTORY_PERK_SELECTED] = 1;
+				completeCharacterCreation();
 			}
-			if (choice == PerkLib.HistoryFighter || choice == PerkLib.HistoryWhore || choice == PerkLib.HistoryScout) {
-				player.gems += 50;
-			}
-			if (choice == PerkLib.HistoryFortune) {
-				player.gems += 250;
-			}
-			flags[kFLAGS.HISTORY_PERK_SELECTED] = 1;
-			completeCharacterCreation();
 		}
 
 		private function completeCharacterCreation():void {
 			clearOutput();
 			if (customPlayerProfile != null) {
 				customPlayerProfile();
-				if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) doNext(chooseGameModes);
+				if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) doNext(setupGameMode);
 				else doNext(startTheGame);
 				return;
 			}
-			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) chooseGameModes();
+			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) setupGameMode();
 			else startTheGame();
 		}
 
@@ -1376,100 +1202,68 @@ import classes.lists.BreastCup;
 		//-----------------
 		//-- GAME MODES
 		//-----------------
-		private function chooseModeNormal():void {
+		private function setupGameMode():void {
 			clearOutput();
-			outputText("You have chosen Normal Mode. This is a classic gameplay mode. \n\n<b>Difficulty can be adjusted at any time.</b>");
-			flags[kFLAGS.HARDCORE_MODE] = 0;
-			flags[kFLAGS.HUNGER_ENABLED] = 0;
-			flags[kFLAGS.GAME_DIFFICULTY] = 0;
-			doNext(startTheGame);
-		}	
-
-		private function chooseModeSurvival():void {
-			clearOutput();
-			outputText("You have chosen Survival Mode. This is similar to the normal mode but with hunger enabled. \n\n<b>Difficulty can be adjusted at any time.</b>");
-			flags[kFLAGS.HARDCORE_MODE] = 0;
-			flags[kFLAGS.HUNGER_ENABLED] = 0.5;
-			flags[kFLAGS.GAME_DIFFICULTY] = 0;
-			player.hunger = 80;
-			doNext(startTheGame);
-		}	
-
-		private function chooseModeRealistic():void {
-			clearOutput();
-			outputText("You have chosen Realistic Mode. In this mode, hunger is enabled so you have to eat periodically. Also, your cum production is capped and having oversized parts will weigh you down. \n\n<b>Difficulty can be adjusted at any time.</b>");
-			flags[kFLAGS.HARDCORE_MODE] = 0;
-			flags[kFLAGS.HUNGER_ENABLED] = 1;
-			flags[kFLAGS.GAME_DIFFICULTY] = 0;
-			player.hunger = 80;
-			doNext(startTheGame);
-		}	
-
-		private function chooseModeHardcore():void {
-			clearOutput();
-			outputText("You have chosen Hardcore Mode. In this mode, hunger is enabled so you have to eat periodically. In addition, the game forces autosave and if you encounter a Bad End, your save file is <b>DELETED</b>! \n\nDebug Mode and Easy Mode are disabled in this game mode. \n\nPlease choose a slot to save in. You may not make multiple copies of saves. \n\n<b>Difficulty is locked to hard.</b>");
-			flags[kFLAGS.HARDCORE_MODE] = 1;
-			flags[kFLAGS.HUNGER_ENABLED] = 1;
-			flags[kFLAGS.GAME_DIFFICULTY] = 1;
-			player.hunger = 80;
-			menu();
-			for (var i:int = 0; i < 14; i++) {
-				addButton(i, "Slot " + (i + 1), chooseSlotHardcore, (i + 1));
+			var screen:String = "[u: Current difficulty settings:]\n";
+			screen += "\n[b: Hardcore mode: ]" + (flags[kFLAGS.HARDCORE_MODE] > 0 ? "ON" : "OFF");
+			screen += "\n\tIf enabled: The game autosaves, debug and easy modes are disabled, and there is no continuing from bad ends. Can not be turned off after starting.";
+			screen += "\n\n[b: Hunger: ]";
+			switch (flags[kFLAGS.HUNGER_ENABLED]){
+				case 1: screen += "Realistic"; break;
+				case 0.5: screen += "On"; break;
+				default: screen += "Off";
 			}
-			addButton(14, "Back", chooseGameModes);
-		}
-
-		private function chooseModeBrutalHardcore():void {
-			clearOutput();
-			outputText("You have chosen Brutal Hardcore Mode. This is the HARDEST mode of all. \n\n<b>Difficulty is locked to <i>EXTREME</i>.</b>");
-			flags[kFLAGS.HARDCORE_MODE] = 1;
-			flags[kFLAGS.HUNGER_ENABLED] = 1;
-			flags[kFLAGS.GAME_DIFFICULTY] = 3;
-			player.hunger = 80;
-			menu();
-			for (var i:int = 0; i < 14; i++) {
-				addButton(i, "Slot " + (i + 1), chooseSlotHardcore, (i + 1));
+			screen += "\n\tIf enabled: You will need to eat food periodically. With this set to realistic your cum production is capped and having oversized parts will weigh you down. Can not be turned off after starting.";
+			var difficulty:int = flags[kFLAGS.GAME_DIFFICULTY];
+			var names:Array = ["Normal", "Hard", "Nightmare", "Brutal", "Extreme"];
+			screen += "\n\n[b: Difficulty: ]";
+			if (difficulty < names.length){
+				screen += difficulty + " " + names[difficulty];
+			} else {
+				screen += "Endless + " + difficulty;
 			}
-			addButton(14, "Back", chooseGameModes);
-		}	
-
-		private function chooseModeEndlessJourney():void {
-			clearOutput();
-			outputText("You have chosen Endless Journey Mode. \n\n<b>Difficulty is locked to <i>ENDLESS</i>.</b>");
-			flags[kFLAGS.HARDCORE_MODE] = 1;
-			flags[kFLAGS.HUNGER_ENABLED] = 1;
-			flags[kFLAGS.GAME_DIFFICULTY] = 4;
-			player.hunger = 80;
+			outputText(screen);
 			menu();
-			for (var i:int = 0; i < 14; i++) {
-				addButton(i, "Slot " + (i + 1), chooseSlotHardcore, (i + 1));
+			addButton(0, "Finish", finalizeGameMode);
+			addButton(1, "Difficulty +", changeDifficulty, 1);
+			addButton(6, "Difficulty -", changeDifficulty, -1);
+			addButton(2, "Hunger", changeHunger);
+			addButton(3, "Hardcore", changeHardcore);
+
+
+			function finalizeGameMode():void {
+				if (flags[kFLAGS.HUNGER_ENABLED]){
+					player.hunger = 80;
+				}
+				if (flags[kFLAGS.HARDCORE_MODE] < 0) {
+					outputText("\n\n[b: Difficulty can be adjusted at any time.]");
+					doNext(startTheGame);
+				} else {
+					outputText("\n\nDebug Mode and Easy Mode are disabled in this game mode. \n\nPlease choose a slot to save in. You may not make multiple copies of saves. \n\n[b: Difficulty is locked.]");
+					menu();
+					for (var i:int = 0; i < 14; i++) {
+						addButton(i, "Slot " + (i + 1), chooseSlotHardcore, (i + 1));
+					}
+					addButton(14, "Back", setupGameMode);
+				}
 			}
-			addButton(14, "Back", chooseGameModes);
-		}
-
-		//Choose Hardcore slot.
-		private function chooseSlotHardcore(num:int):void {
-			flags[kFLAGS.HARDCORE_SLOT] = "CoC_" + num;
-			startTheGame();
-		}	
-
-		//Choose the game mode when called!
-		private function chooseGameModes():void {
-			clearOutput();
-			outputText("Choose a game mode.\n\n");
-			outputText("<b>Normal mode:</b> Classic Corruption of Champions gameplay.\n");
-			outputText("<b>Survival mode:</b> Like normal but with hunger enabled.\n");
-			outputText("<b>Realistic mode:</b> You get hungry from time to time and cum production is capped. In addition, it's a bad idea to have oversized parts. \n");
-			outputText("<b>Hardcore mode:</b> In addition to Realistic mode, the game forces save and if you get a Bad End, your save file is deleted. For the veteran CoC players only.\n");
-			outputText("<b>Brutal Hardcore mode:</b> The hardest game mode ever. Like hardcore mode, but the difficulty is locked to extreme! How long can you survive?\n");
-			outputText("[b: Endless Journey mode: WARNING:] This game mode is extremely difficult. You are considerably underpowered, hunger is constant, and enemies [b: WILL] rape you. Prepare to lose. A lot.\n");
-			menu();
-			addButton(0, "Normal", chooseModeNormal);
-			addButton(1, "Survival", chooseModeSurvival);
-			addButton(2, "Realistic", chooseModeRealistic);
-			addButton(3, "Hardcore", chooseModeHardcore);
-			addButton(5, "Brutal HC", chooseModeBrutalHardcore);
-			addButton(6, "Endless", chooseModeEndlessJourney);
+			function changeHunger():void {
+				flags[kFLAGS.HUNGER_ENABLED] += 0.5;
+				flags[kFLAGS.HUNGER_ENABLED] = flags[kFLAGS.HUNGER_ENABLED] % 1.5;
+				setupGameMode();
+			}
+			function changeHardcore():void {
+				flags[kFLAGS.HARDCORE_MODE] = !flags[kFLAGS.HARDCORE_MODE];
+				setupGameMode();
+			}
+			function changeDifficulty(by:int = 1):void {
+				flags[kFLAGS.GAME_DIFFICULTY] = Math.max(flags[kFLAGS.GAME_DIFFICULTY] += by, 0);
+				setupGameMode();
+			}
+			function chooseSlotHardcore(num:int):void {
+				flags[kFLAGS.HARDCORE_SLOT] = "CoC_" + num;
+				startTheGame();
+			}
 		}
 
 		private function startTheGame():void {
@@ -1482,7 +1276,6 @@ import classes.lists.BreastCup;
 			flags[kFLAGS.MOD_SAVE_VERSION] = CoC.instance.modSaveVersion;
 			statScreenRefresh();
 			chooseToPlay();
-			return;
 		}
 
 		public function chooseToPlay():void {
@@ -1620,5 +1413,61 @@ import classes.lists.BreastCup;
 		private function isSpell(statusEffect:* = null):Boolean {	
 			return (statusEffect == StatusEffects.KnowsWereBeast);	//na razie jest tu tylko werebeast
 		}	//ale potem zamienić to naspecialne kiPowers z każdego z klanów
+
+
+		// [Button Name, Name of part on player, list of enum values]
+		private const raceParts:Array = [
+			["Antennae" , "antennae"     , Antennae.Types   ],
+			["Arms"     , "arms"         , Arms.Types       ],
+			["Beard"    , "beardStyle"   , Beard.Types      ],
+			["Claws"    , "clawsPart"    , Claws.Types      ],
+			["Ears"     , "ears"         , Ears.Types       ],
+			["Eyes"     , "eyes"         , Eyes.Types       ],
+			["Face"     , "faceType"     , Face.Types       ],
+			["Gills"    , "gills"        , Gills.Types      ],
+			["Hair"     , "hairType"     , Hair.Types       ],
+			["Horns"    , "horns"        , Horns.Types      ],
+			["LowerBody", "lowerBodyPart", LowerBody.Types  ],
+			["RearBody" , "rearBody"     , RearBody.Types   ],
+			//["Skin"     , Skin.Types],  TODO: Skin is special (skin.base/skin.coat)
+			["Tail"     , "tail"         , Tail.Types       ],
+			["Tongue"   , "tongue"       , Tongue.Types     ],
+			["Wings"    , "wings"        , Wings.Types      ]
+		];
+		public function detailedRaceSetup(returnTo:Function):void {
+			if(returnTo == null) {
+				returnTo = genericStyleCustomizeMenu; // Allows debug menu access to prevent redoing character creation
+			}
+			CoC.instance.playerAppearance.appearance(); //TODO: Change this? Not sure if this is fine for this purpose
+			var buttons:ButtonDataList = new ButtonDataList();
+			for each (var part:Array in raceParts){
+				buttons.add(part[0], curry(detailedRaceSubmenu, part[1], part[2], returnTo));
+			}
+			buttons.submenu(returnTo);
+		}
+
+		private function detailedRaceSubmenu(partLoc:String, enumVals:Array, returnTo:Function):void {
+			var pattern:RegExp = /\b\w/g; //Matches first character of every word
+			var buttons:ButtonDataList = new ButtonDataList();
+			for each(var val:EnumValue in enumVals) {
+				buttons.add(
+					val.id.split("_").join(" ").toLowerCase().replace(pattern, caps), // Change "PART_ID_STRING" to "Part Id String"
+					curry(applySelected, partLoc, val, returnTo)
+				);
+			}
+			buttons.submenu(curry(detailedRaceSetup, returnTo));
+
+			function caps(...args):String {
+				return args[0].toUpperCase();
+			}
+			function applySelected(loc:String, selected:EnumValue, returnTo:Function):void {
+				if(player[loc] is int){
+					player[loc] = selected.value;
+				} else {
+					player[loc].type = selected.value;
+				}
+				detailedRaceSetup(returnTo)
+			}
+		}
 	}
 }

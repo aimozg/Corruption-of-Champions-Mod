@@ -1561,9 +1561,9 @@ public class PlayerAppearance extends BaseContent {
 			}
 			// ANEMONE are handled below
 			if(player.antennae.type == Antennae.MANTIS)
-				outputText("  Long prehensile antennae.type also appear on your skull, bouncing and swaying in the breeze.");
+				outputText("  Long prehensile antennae also appear on your skull, bouncing and swaying in the breeze.");
 			if(player.antennae.type == Antennae.BEE)
-				outputText("  Floppy antennae.type also appear on your skull, bouncing and swaying in the breeze.");
+				outputText("  Floppy antennae also appear on your skull, bouncing and swaying in the breeze.");
 		}
 		//not bald
 		else
@@ -1644,14 +1644,14 @@ public class PlayerAppearance extends BaseContent {
 			if(player.antennae.type == Antennae.MANTIS)
 			{
 				if(earType == Ears.BUNNY)
-					outputText("  Long prehensile antennae.type also grow from just behind your hairline, waving and swaying in the breeze with your ears.");
-				else outputText("  Long prehensile antennae.type also grow from just behind your hairline, bouncing and swaying in the breeze.");
+					outputText("  Long prehensile antennae also grow from just behind your hairline, waving and swaying in the breeze with your ears.");
+				else outputText("  Long prehensile antennae also grow from just behind your hairline, bouncing and swaying in the breeze.");
 			}
 			if(player.antennae.type == Antennae.BEE)
 			{
 				if(earType == Ears.BUNNY)
-					outputText("  Limp antennae.type also grow from just behind your hairline, waving and swaying in the breeze with your ears.");
-				else outputText("  Floppy antennae.type also grow from just behind your hairline, bouncing and swaying in the breeze.");
+					outputText("  Limp antennae also grow from just behind your hairline, waving and swaying in the breeze with your ears.");
+				else outputText("  Floppy antennae also grow from just behind your hairline, bouncing and swaying in the breeze.");
 			}
 		}
 	}

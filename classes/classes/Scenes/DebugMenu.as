@@ -91,6 +91,7 @@ import flash.events.Event;
 				addButton(7, "HACK STUFFZ", styleHackMenu).hint("H4X0RZ");
 	            addButton(8, "Test Scene", testScene).hint("Select a scene.  Don't use unless you are trying to test something.");
 				addButton(9, "Echo", echo).hint("Paste text into box to have it echo back.");
+	            addButton(10, "RaceSetup", CoC.instance.charCreation.detailedRaceSetup, accessDebugMenu);
 				addButton(14, "Exit", playerMenu);
 			}
             if (CoC.instance.inCombat) {
