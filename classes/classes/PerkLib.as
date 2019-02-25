@@ -528,7 +528,15 @@ public class PerkLib
 			id   : "Hidden Momentum",
 			name : "Hidden Momentum",
 			short: "You've trained in using your speed to enhance power of your single large weapons swings.",
-			long : "You choose 'Hidden Momentum' perk, allowing to use your speed to enhance power of your attacks with single large weapons."
+			long : "You choose 'Hidden Momentum' perk, allowing to use your speed to enhance power of your attacks with single large weapons.",
+			buffs: [
+					[StatNames.WEAPON_ATTACK, function(host:Creature):Number {
+						if (host.weaponPerk == "Large" && host.str >= 75 && host.spe >= 50) {
+							return ((host.str + host.spe) - 100) * 0.1;
+						}
+						return 0;
+					}]
+			]
 		});
 		public static const HoldWithBothHands:PerkType              = jmk({
 			id   : "Hold With Both Hands",
@@ -714,13 +722,23 @@ public class PerkLib
 				([StatNames.WIS_MULT]): +0.05
 			}
 		});
-		public static const LightningStrikes:PerkType               = mk("Lightning Strikes", "Lightning Strikes",
-				"[if(player.spe>=60)" +
-				"Increases the attack damage for non-heavy weapons." +
-				"|" +
-				"<b>You are too slow to benefit from this perk.</b>" +
-				"]",
-				"You choose the 'Lightning Strikes' perk, increasing the attack damage for non-heavy weapons.");
+		public static const LightningStrikes:PerkType = jmk({
+			id   : "Lightning Strikes",
+			name : "Lightning Strikes",
+			short: "Increases the attack damage for ranged and non-heavy weapons.",
+			long : "You choose the 'Lightning Strikes' perk, increasing the attack damage for ranged and non-heavy weapons.",
+			buffs: [
+				[StatNames.WEAPON_ATTACK,
+					function (host:Creature):Number {
+						if (host.weaponPerk != "Large" && host.weaponPerk != "Dual Large") {
+							return host.spe * 0.05
+						}
+						return 0;
+					}
+				],
+				[StatNames.WEAPON_RANGE_ATTACK, function (host:Creature):Number {return host.spe * 0.05}]
+			]
+		});
 		public static const LizanMarrow:PerkType                    = jmk({
 			id   : "Lizan Marrow",
 			name : "Lizan Marrow",
@@ -842,10 +860,14 @@ public class PerkLib
 			name : "Prestige Job: Ki Art Master",
 			short: "You've trained in prestige art of combine Ki with physical attacks to various deadly effect.",
 			long : "You choose 'Prestige Job: Ki Art Master' perk, training yourself to became Ki Art Master.",
-			buffs: {
-				([StatNames.STR_MULT]): +0.40,
-				([StatNames.WIS_MULT]): +0.40
-			}
+			buffs: [
+				[StatNames.STR_MULT, +0.40],
+				[StatNames.WIS_MULT, +0.40],
+				[StatNames.UNARMED_ATTACK, function(host:Creature):Number{
+					if (host.wis >= 200) return 10;
+					return 0;
+				}]
+			]
 		});
 		public static const PrimalFury:PerkType                     = jmk({
 			id   : "Primal Fury",
@@ -976,7 +998,12 @@ public class PerkLib
 			id   : "Steel Impact",
 			name : "Steel Impact",
 			short: "Add a part of your toughness to your weapon and shield damage.",
-			long : "You choose the 'Steel Impact' perk. Increasing damage of your weapon and shield."
+			long : "You choose the 'Steel Impact' perk. Increasing damage of your weapon and shield.",
+			buffs: [
+					[StatNames.WEAPON_ATTACK, function(host:Creature):Number {
+						return (host.tou - 50) * 0.3;
+					}]
+			]
 		});
 		public static const StrongElementalBond:PerkType            = jmk({
 			id   : "Strong Elemental Bond",
@@ -1128,9 +1155,13 @@ public class PerkLib
 			name : "Advanced Job: Monk",
 			short: "You've trained in unarmed, Ki based combat.",
 			long : "You choose 'Advanced Job: Monk' perk, training yourself to became a Monk.",
-			buffs: {
-				([StatNames.WIS_MULT]): +0.15
-			}
+			buffs: [
+				[StatNames.WIS_MULT, +0.15],
+				[StatNames.UNARMED_ATTACK, function (host:Creature):Number {
+					if (host.wis >= 60) return 10;
+					return 0;
+				}]
+			]
 		});
 		public static const AdvancedJobSage:PerkType    = jmk({
 			id   : "Advanced Job: Sage",
@@ -1197,7 +1228,15 @@ public class PerkLib
 			id   : "Iron Fists",
 			name : "Iron Fists",
 			short: "Hardens your fists to increase attack rating by 10.",
-			long : "You choose the 'Iron Fists' perk, hardening your fists. This increases attack power by 10."
+			long : "You choose the 'Iron Fists' perk, hardening your fists. This increases attack power by 10.",
+			buffs: [
+					[StatNames.WEAPON_ATTACK, function(host:Creature):Number {
+						if (host.isFistOrFistWeapon() && host.str >= 50) {
+							return 10;
+						}
+						return 0;
+					}]
+			]
 		});
 		public static const ImprovedKiRecovery:PerkType = jmk({
 			id   : "Improved Ki Recovery",
@@ -1683,7 +1722,10 @@ public class PerkLib
 		public static const Lycanthropy:PerkType               = jmk({
 			id   : "Lycanthropy",
 			name : "Lycanthropy",
-			short: "Your strength and urges are directly tied to the cycle of the moon. Furthermore, your skin is resistant to normal damage and your claws are sharper than normal."
+			short: "Your strength and urges are directly tied to the cycle of the moon. Furthermore, your skin is resistant to normal damage and your claws are sharper than normal.",
+			buffs:[
+					[StatNames.UNARMED_ATTACK, 8]
+			]
 		});
 		public static const LycanthropyDormant:PerkType        = jmk({
 			id   : "Dormant Lycanthropy",
@@ -1901,7 +1943,15 @@ public class PerkLib
 		public static const MightyFist:PerkType             = jmk({
 			id   : "Mighty Fist",
 			name : "Mighty Fist",
-			short: "Regular fist attacks now have a chance to cause stun and fist damage is increased by 5 (x NG tier)."
+			short: "Regular fist attacks now have a chance to cause stun and fist damage is increased by 5 (x NG tier).",
+			buffs: [
+				[StatNames.WEAPON_ATTACK, function(host:Creature):Number {
+					if (host.isFistOrFistWeapon()) {
+						return 5;
+					}
+					return 0;
+				}]
+			]
 		});
 		public static const Misdirection:PerkType           = jmk({
 			id   : "Misdirection",

@@ -28,6 +28,7 @@ public class BuffableStat implements IStat, Jsonable {
 	private var _max:Number = +Infinity;
 	private var _value:Number = 0.0; // Aggregate of buffs ONLY
 	private var _buffs:/*Buff*/Array = [];
+	private var _dynamicBuffs:int = 0;
 	
 	public function get base():Number {
 		return (_baseFn != null) ? _baseFn() : _base;
@@ -65,8 +66,23 @@ public class BuffableStat implements IStat, Jsonable {
 		this._max       = options['max'];
 		recalculate();
 	}
+	public function get isDynamic():Boolean {
+		return _dynamicBuffs > 0;
+	}
+	private var _calculating:Boolean = false;
 	public function get value():Number {
+		if (_calculating) {
+			var db:Array = [];
+			for each (var buff:Buff in _buffs) {
+				if (buff.isDynamic) db.push(buff.tag);
+			}
+			_calculating = false;
+			throw new Error("Circular dependency in stat calculation. Dynamic buffs: "+db.join(', '));
+		}
+		_calculating = true;
+		if (isDynamic) _value = calculate();
 		var x:Number = aggregateStep(this.base, _value);
+		_calculating = false;
 		if (x < min) return min;
 		if (x > max) return max;
 		return x;
@@ -115,7 +131,9 @@ public class BuffableStat implements IStat, Jsonable {
 		return value;
 	}
 	public function recalculate():void {
-		_value = calculate();
+		if (!isDynamic) {
+			_value = calculate();
+		}
 	}
 	private function indexOfBuff(tag:String):int {
 		for (var i:int = 0; i < _buffs.length; i++) {
@@ -139,50 +157,70 @@ public class BuffableStat implements IStat, Jsonable {
 		if (i == -1) return defaultValue;
 		return _buffs[i].value;
 	}
-	public function addOrIncreaseBuff(tag:String, buffValue:Number, newOptions:Object = null):void {
+	public function addOrIncreaseBuff(tag:String, buffValue:*, newOptions:Object = null):void {
 		var i:int = indexOfBuff(tag);
 		if (i == -1) {
-			_buffs.push(new Buff(this, buffValue, tag).withOptions(newOptions));
+			var buff:Buff = new Buff(this, buffValue, tag).withOptions(newOptions);
+			_buffs.push(buff);
+			if (buff.isDynamic) _dynamicBuffs++;
 		} else {
-			_buffs[i].rawValue += buffValue;
-			if (newOptions !== null) _buffs[i].options = newOptions;
+			buff = _buffs[i];
+			if (newOptions !== null) buff.options = newOptions;
+			if (buffValue is Function) {
+				if (!buff.isDynamic) _dynamicBuffs++;
+				buff.rawValue = buffValue;
+				return;
+			} else {
+				buff.rawValue += buffValue;
+			}
 		}
 		if (_aggregate == AGGREGATE_SUM) {
 			_value += buffValue;
 		} else if (_aggregate == AGGREGATE_PROD) {
 			_value *= buffValue;
 		} else {
-			_value = calculate();
+			recalculate();
 		}
 	}
-	public function addOrReplaceBuff(tag:String, buffValue:Number, newOptions:Object = null):void {
+	public function addOrReplaceBuff(tag:String, buffValue:*, newOptions:Object = null):void {
 		var i:int = indexOfBuff(tag);
 		if (i == -1) {
-			_buffs.push(new Buff(this, buffValue, tag).withOptions(newOptions));
+			var buff:Buff = new Buff(this, buffValue, tag).withOptions(newOptions);
+			_buffs.push(buff);
+			if (buff.isDynamic) _dynamicBuffs++;
 		} else {
-			_buffs[i].rawValue = buffValue;
-			if (newOptions !== null) _buffs[i].options = newOptions;
+			buff = _buffs[i];
+			if (buff.isDynamic && buffValue is Number) _dynamicBuffs--;
+			if (!buff.isDynamic && buffValue is Function) _dynamicBuffs++;
+			buff.rawValue = buffValue;
+			if (newOptions !== null) buff.options = newOptions;
 		}
-		_value = calculate();
+		recalculate()
 	}
 	public function removeBuff(tag:String):void {
 		var i:int = indexOfBuff(tag);
 		if (i == -1) return;
-		var buffValue:Number = _buffs[i].value;
+		doRemoveBuffAt(i);
+	}
+	private function doRemoveBuffAt(i:int):void {
+		var buff:Buff = _buffs[i];
+		var buffValue:Number = buff.value;
 		_buffs.splice(i, 1);
 		if (_aggregate == AGGREGATE_SUM) {
 			_value -= buffValue;
 		} else if (_aggregate == AGGREGATE_PROD && buffValue != 0) {
 			_value /= buffValue;
-		} else {
+		} else if (!isDynamic) {
 			_value = calculate();
 		}
+		if (buff.isDynamic) _dynamicBuffs--;
 	}
 	public function listBuffs():/*Buff*/Array {
 		return _buffs.slice();
 	}
 	public function removeAllBuffs():void {
 		this._buffs = [];
+		this._dynamicBuffs = 0;
 		this._value = aggregateBase();
 	}
 	/**
@@ -199,7 +237,7 @@ public class BuffableStat implements IStat, Jsonable {
 			if (buff.rate == rate) {
 				buff.tick-=ticks;
 				if (buff.tick < 0) {
-					_buffs.splice(i,1);
+					doRemoveBuffAt(i);
 					changed = true;
 				}
 			}
@@ -210,7 +248,7 @@ public class BuffableStat implements IStat, Jsonable {
 		var changed:Boolean = false;
 		for (var i:int = _buffs.length-1; i>=0; i--) {
 			if (_buffs[i].rate == Buff.RATE_ROUNDS) {
-				_buffs.splice(i,1);
+				doRemoveBuffAt(i);
 				changed = true;
 			}
 		}

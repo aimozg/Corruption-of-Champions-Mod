@@ -117,7 +117,7 @@ public class CombatKiPowers extends BaseCombatContent {
 				if (host.hasStatusEffect(StatusEffects.Overlimit)) damage *= 2;
 				break;
 			case UNARMED:
-				damage = combat.unarmedAttack();
+				damage = host.unarmedAttack;
 				damage += host.str + host.scalingBonusStrength();
 				damage += host.wis + host.scalingBonusWisdom();
 				break;

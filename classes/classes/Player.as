@@ -311,27 +311,10 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 		override public function get weaponVerb():String {
 			return weapon.verb;
 		}
-		override public function get weaponAttack():Number {
+		override public function weaponAttackBase():Number {
 			var attack:Number = weapon.attack;
-			if (hasPerk(PerkLib.HiddenMomentum) && weaponPerk == "Large" && str >= 75 && spe >= 50) {
-				attack += (((str + spe) - 100) * 0.1);
-			}//30-70-110
-			if (hasPerk(PerkLib.LightningStrikes) && spe >= 60 && (weaponPerk != "Large" || weaponPerk != "Dual Large" || !isFistOrFistWeapon())) {
-				attack += ((spe - 50) * 0.3);//wyjątek potem dodać dla daggers i innych assasins weapons i dać im lepszy przelicznik
-			}//45-105-165
-			if (hasPerk(PerkLib.SteelImpact)) {
-				attack += ((tou - 50) * 0.3);
-			}
 			if (isFistOrFistWeapon()) {
-				if (hasPerk(PerkLib.IronFists) && str >= 50) {
-					attack += 10;
-				}
-				if (hasPerk(PerkLib.MightyFist)) {
-					attack += 5;
-				}
-				if (combat.unarmedAttack() > 0) {
-					attack += combat.unarmedAttack();
-				}
+				attack += Math.max(0,unarmedAttack);
 			}
 			if (arms.type == Arms.MANTIS && weaponName == "fists") {
 				attack += 15;
@@ -349,11 +332,16 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 				if (( weaponName != "fists") && weaponPerk != "Large" && weaponPerk != "Dual Large") attack += Math.round(statusEffectv1(StatusEffects.ChargeWeapon));
 				if (weaponPerk == "Large" || weaponPerk == "Dual Large") attack += Math.round(statusEffectv1(StatusEffects.ChargeWeapon));
 			}
-			attack = Math.round(attack);
 			return attack;
 		}
-		public function get weaponBaseAttack():Number {
-			return weapon.attack;
+		override public function get unarmedAttack():Number {
+			var unarmed:Number = 0;
+			if (hasStatusEffect(StatusEffects.MetalSkin)) {
+				if (statusEffectv2(StatusEffects.SummonedElementalsMetal) >= 6) unarmed += 4 * statusEffectv2(StatusEffects.SummonedElementalsMetal);
+				else unarmed += 2 * statusEffectv2(StatusEffects.SummonedElementalsMetal);
+			}
+			if (hasStatusEffect(StatusEffects.CrinosShape)) unarmed *= 1.1;
+			return unarmed;
 		}
 		override public function get weaponPerk():String {
 			return weapon.perk || "";
@@ -375,12 +363,7 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 		override public function get weaponRangeVerb():String {
 			return weaponRange.verb;
 		}
-		override public function get weaponRangeAttack():Number {
-			var rangeattack:Number = weaponRange.attack;
-			rangeattack = Math.round(rangeattack);
-			return rangeattack;
-		}
-		public function get weaponRangeBaseAttack():Number {
+		override public function weaponRangeAttackBase():Number {
 			return weaponRange.attack;
 		}
 		override public function get weaponRangePerk():String {

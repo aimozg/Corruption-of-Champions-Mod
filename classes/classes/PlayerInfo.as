@@ -97,7 +97,7 @@ public class PlayerInfo extends BaseContent {
 		combatStats += "<b>Magical Ki Power Effect Multiplier:</b> " + Math.round(100 * player.kiPowerMod()) + "%\n";
 		combatStats += "<b>Ki Power Cost:</b> " + Math.round(100 * player.kiPowerCostMod()) + "%\n";
 
-		combatStats += "<b>Unarmed:</b> +" + combat.unarmedAttack() + "\n";
+		combatStats += "<b>Unarmed:</b> +" + player.unarmedAttack + "\n";
 
 		if (flags[kFLAGS.RAPHAEL_RAPIER_TRANING] > 0)
 			combatStats += "<b>Rapier Skill:</b> " + flags[kFLAGS.RAPHAEL_RAPIER_TRANING] + " / 4\n";

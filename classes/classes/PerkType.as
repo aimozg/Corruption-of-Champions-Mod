@@ -83,6 +83,8 @@ public class PerkType
 		 * @param id Unique perk id; should persist between game version
 		 * @param clazz Class to create instances of
 		 * @param arity Class constructor arity: 0: new clazz(), 1: new clazz(ptype:PerkType)
+		 * @param buffs object or array of pairs; key = stat name, value = buff value; number, string for eval, or
+		 * Function(host:Creature):Number
 		 */
 		public function PerkType(id:String,name:String,desc:String,clazz:Class=null,arity:int=1,longDesc:String = null, buffs:Object = null)
 		{
@@ -96,8 +98,13 @@ public class PerkType
 				this._longDesc = new XMLList(longDesc || desc);
 				this.arity     = arity;
 				this._secClazz = clazz || PerkClass;
-				this._buffs    = Utils.shallowCopy(buffs || {});
-				
+				if (!buffs) {
+					this._buffs = {};
+				} else if (buffs is Array) {
+					this._buffs = Utils.createMapFromPairs(buffs as Array);
+				} else {
+					this._buffs    = Utils.shallowCopy(buffs);
+				}
 				if (PERK_LIBRARY[id] != null) {
 					CoC_Settings.error("Duplicate perk id " + id + ", old perk is " + (PERK_LIBRARY[id] as PerkType)._name);
 				}

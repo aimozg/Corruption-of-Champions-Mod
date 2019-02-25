@@ -7,7 +7,8 @@ import classes.internals.Utils;
 
 public class Buff implements Jsonable {
 	private var _tag:String;
-	public var rawValue:Number;
+	public var rawValue:*;
+	private var _isDynamic:Boolean;
 	public var save:Boolean;
 	public var text:String;
 	public var show:Boolean;
@@ -23,12 +24,14 @@ public class Buff implements Jsonable {
 	public function get stat():BuffableStat {
 		return _stat;
 	}
-	public function Buff(stat:BuffableStat, value:Number,tag:String,save:Boolean=true,show:Boolean=true,text:String=null) {
+	public function Buff(stat:BuffableStat, value:*,tag:String,save:Boolean=true,show:Boolean=true,text:String=null) {
 		this._stat    = stat;
 		this.rawValue = value;
+		this._isDynamic = rawValue is Function;
 		this._tag     = tag;
 		this.save     = save;
 		this.show     = show;
+		if (_isDynamic && save) throw new Error("Cannot create saveable dynamic buff tagged "+tag);
 		this.text     = (text === null) ? Utils.capitalizeFirstLetter(tag) : text;
 		this.rate     = RATE_PERMANENT;
 		this.tick     = 0;
@@ -68,11 +71,15 @@ public class Buff implements Jsonable {
 		return _tag;
 	}
 	public function get value():Number {
-		return rawValue;
+		return _isDynamic ? rawValue() : rawValue;
 	}
 	public function set value(value:Number):void {
 		rawValue = value;
+		_isDynamic = false;
 		_stat.recalculate();
+	}
+	public function get isDynamic():Boolean {
+		return _isDynamic;
 	}
 }
 }

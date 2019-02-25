@@ -47,9 +47,6 @@ public class BaseCombatContent extends CombatMechanics {
 	protected function combatBlock(doFatigue:Boolean = false):Boolean {
 		return combat.combatBlock(doFatigue);
 	}
-	protected function unarmedAttack():Number {
-		return combat.unarmedAttack();
-	}
 	// =================
 	// CHECKS
 	// =================

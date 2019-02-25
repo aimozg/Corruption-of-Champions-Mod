@@ -4,6 +4,7 @@ import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
 import classes.Stats.PrimaryStat;
 import classes.Stats.StatUtils;
+import classes.internals.Utils;
 
 public class PerkClass
 	{
@@ -86,8 +87,15 @@ public class PerkClass
 		}
 		public function addedToHostList(host:Creature,fireEvent:Boolean):void {
 			_host = host;
+			var buffs:Object = Utils.shallowCopy(ptype.buffs);
+			for (var k:String in buffs) {
+				var v:* = buffs[k];
+				if (v is Function && v.length == 1) {
+					buffs[k] = Utils.curry(v, host);
+				}
+			}
 			host.statStore.addBuffObject(
-					ptype.buffs,
+					buffs,
 					ptype.tagForBuffs,
 					{save:false,text:ptype.name},
 					this

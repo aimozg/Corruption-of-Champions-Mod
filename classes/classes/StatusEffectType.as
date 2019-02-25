@@ -4,6 +4,7 @@
 package classes
 {
 import classes.Scenes.Combat.CombatAction.ActionRoll;
+import classes.internals.Utils;
 
 import flash.utils.Dictionary;
 
@@ -95,6 +96,7 @@ public class StatusEffectType
 		return this;
 	}
 	public function withBuffs(buffs:Object):StatusEffectType {
+		if (buffs is Array) buffs = Utils.createMapFromPairs(buffs as Array);
 		this._buffs = buffs;
 		return this;
 	}

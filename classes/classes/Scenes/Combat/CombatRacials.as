@@ -419,7 +419,7 @@ package classes.Scenes.Combat {
 			doNext(combatMenu);
 //This is now automatic - newRound arg defaults to true:	menuLoc = 0;
 			fatigue(50, USEFATG_MAGIC);
-			var damage:Number = unarmedAttack();
+			var damage:Number = player.unarmedAttack;
 			damage += player.str;
 			damage += player.spe * 2;
 			if (player.hasStatusEffect(StatusEffects.OniRampage)) damage *= 3;

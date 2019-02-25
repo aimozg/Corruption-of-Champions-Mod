@@ -438,20 +438,6 @@ public function stopChanneledSpecial():void {
 	combatRoundOver();
 }
 
-public function unarmedAttack():Number {
-	var unarmed:Number = 0;
-	if (player.hasPerk(PerkLib.AdvancedJobMonk) && player.wis >= 60) unarmed += 10;
-	if (player.hasPerk(PerkLib.PrestigeJobKiArtMaster) && player.wis >= 200) unarmed += 10;
-	if (player.hasStatusEffect(StatusEffects.MetalSkin)) {
-		if (player.statusEffectv2(StatusEffects.SummonedElementalsMetal) >= 6) unarmed += 4 * player.statusEffectv2(StatusEffects.SummonedElementalsMetal);
-		else unarmed += 2 * player.statusEffectv2(StatusEffects.SummonedElementalsMetal);
-	}
-	if (player.hasStatusEffect(StatusEffects.CrinosShape)) unarmed *= 1.1;
-	if (player.hasPerk(PerkLib.Lycanthropy)) unarmed += 8;
-//	if (player.jewelryName == "fox hairpin") unarmed += .2;
-	unarmed = Math.round(unarmed);
-	return unarmed;
-}
 
 public function baseelementalattacks(elementType:int = -1):void {
 	if(elementType == -1){

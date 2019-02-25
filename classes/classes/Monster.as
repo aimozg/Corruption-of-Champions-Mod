@@ -62,7 +62,7 @@ import flash.utils.getQualifiedClassName;
 		private var _weaponValue:Number = 0;
 		override public function get weaponName():String { return _weaponName; }
 		override public function get weaponVerb():String { return _weaponVerb; }
-		override public function get weaponAttack():Number { return _weaponAttack; }
+		override public function weaponAttackBase():Number { return _weaponAttack; }
 		override public function get weaponPerk():String { return _weaponPerk; }
 		override public function get weaponValue():Number { return _weaponValue; }
 		public function set weaponName(value:String):void { _weaponName = value; }
@@ -78,7 +78,7 @@ import flash.utils.getQualifiedClassName;
 		private var _weaponRangeValue:Number = 0;
 		override public function get weaponRangeName():String { return _weaponRangeName; }
 		override public function get weaponRangeVerb():String { return _weaponRangeVerb; }
-		override public function get weaponRangeAttack():Number { return _weaponRangeAttack; }
+		override public function weaponRangeAttackBase():Number { return _weaponRangeAttack; }
 		override public function get weaponRangePerk():String { return _weaponRangePerk; }
 		override public function get weaponRangeValue():Number { return _weaponRangeValue; }
 		public function set weaponRangeName(value:String):void { _weaponRangeName = value; }

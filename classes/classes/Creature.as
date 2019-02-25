@@ -96,13 +96,28 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		//Weapon melee
 		public function get weaponName():String { return ""; }
 		public function get weaponVerb():String { return ""; }
-		public function get weaponAttack():Number { return 0; }
+		public function get weaponAttack():Number {
+			return Math.round(weaponAttackStat.value);
+		}
+		public function weaponAttackBase():Number {
+			if (isFistOrFistWeapon()) {
+				return Math.max(0,unarmedAttack);
+			}
+			return 0;
+		}
 		public function get weaponPerk():String { return ""; }
 		public function get weaponValue():Number { return 0; }
+		public function unarmedAttackBase():Number { return 0; }
+		public function get unarmedAttack():Number {
+			return Math.round(unarmedAttackStat.value);
+		}
 		//Weapon range
 		public function get weaponRangeName():String { return ""; }
 		public function get weaponRangeVerb():String { return ""; }
-		public function get weaponRangeAttack():Number { return 0; }
+		public function get weaponRangeAttack():Number {
+			return Math.round(weaponRangeAttackStat.value);
+		}
+		public function weaponRangeAttackBase():Number { return 0; }
 		public function get weaponRangePerk():String { return ""; }
 		public function get weaponRangeValue():Number { return 0; }
 		//Clothing/Armor
@@ -135,35 +150,43 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		   [   S T A T S   ]
 		
 		 */
-		protected var _stats:StatStore = new StatStore({
-			([StatNames.STR]): new PrimaryStat(),
-			([StatNames.TOU]): new PrimaryStat(),
-			([StatNames.SPE]): new PrimaryStat(),
-			([StatNames.INT]): new PrimaryStat(),
-			([StatNames.WIS]): new PrimaryStat(),
-			([StatNames.LIB]): new PrimaryStat(),
-			
-			([StatNames.SENS_MIN]): new BuffableStat({base:10}),
-			([StatNames.SENS_MAX]): new BuffableStat(),
-			([StatNames.LUST_MIN]): new BuffableStat(),
-			([StatNames.LUST_MAX]): new BuffableStat({base:100}),
-			([StatNames.HP_MAX]): new BuffableStat({base:50}),
-			([StatNames.STAMINA_MAX]): new BuffableStat({base:100}),
-			([StatNames.KI_MAX]): new BuffableStat({base:50}),
-			
-			([StatNames.DEFENSE])       : new BuffableStat(),
-			([StatNames.SPELLPOWER])    :new BuffableStat({base:1.0,min:0.0}),
-			([StatNames.HP_PER_TOU])    :new BuffableStat({base:2, min:0.1}),
-			([StatNames.ATTACK_RATING]) :new BuffableStat({
-				base: curry(CombatMechanics.attackRatingBase, this)
-			}),
-			([StatNames.DEFENSE_RATING]):new BuffableStat({
-				base: curry(CombatMechanics.defenseRatingBase, this)
-				// this doesn't work because it doesn't properly capture Creature.this
-				// 		base: function():Number { return 15 + (spe + 3 * level)/2; }
-				// so argument should be non-inline function
-			})
-		});
+		public const unarmedAttackStat:BuffableStat      = new BuffableStat({base:unarmedAttackBase});
+		public const weaponAttackStat:BuffableStat       = new BuffableStat({base:weaponAttackBase});
+		public const weaponRangeAttackStat:BuffableStat  = new BuffableStat({base:weaponRangeAttackBase});
+		protected var _stats:StatStore                   = new StatStore(
+				createMapFromPairs([
+					[StatNames.STR, new PrimaryStat()],
+					[StatNames.TOU, new PrimaryStat()],
+					[StatNames.SPE, new PrimaryStat()],
+					[StatNames.INT, new PrimaryStat()],
+					[StatNames.WIS, new PrimaryStat()],
+					[StatNames.LIB, new PrimaryStat()],
+					
+					[StatNames.SENS_MIN, new BuffableStat({base: 10})],
+					[StatNames.SENS_MAX, new BuffableStat()],
+					[StatNames.LUST_MIN, new BuffableStat()],
+					[StatNames.LUST_MAX, new BuffableStat({base: 100})],
+					[StatNames.HP_MAX, new BuffableStat({base: 50})],
+					[StatNames.STAMINA_MAX, new BuffableStat({base: 100})],
+					[StatNames.KI_MAX, new BuffableStat({base: 50})],
+					
+					[StatNames.DEFENSE, new BuffableStat()],
+					[StatNames.SPELLPOWER, new BuffableStat({base: 1.0, min: 0.0})],
+					[StatNames.HP_PER_TOU, new BuffableStat({base: 2, min: 0.1})],
+					[StatNames.ATTACK_RATING, new BuffableStat({
+						base: curry(CombatMechanics.attackRatingBase, this)
+					})],
+					[StatNames.DEFENSE_RATING, new BuffableStat({
+						base: curry(CombatMechanics.defenseRatingBase, this)
+						// this doesn't work because it doesn't properly capture Creature.this
+						// 		base: function():Number { return 15 + (spe + 3 * level)/2; }
+						// so argument should be non-inline function
+					})],
+					[StatNames.UNARMED_ATTACK, unarmedAttackStat],
+					[StatNames.WEAPON_ATTACK, weaponAttackStat],
+					[StatNames.WEAPON_RANGE_ATTACK, weaponRangeAttackStat]
+				])
+		);
 		public function get statStore():StatStore {
 			return _stats;
 		}

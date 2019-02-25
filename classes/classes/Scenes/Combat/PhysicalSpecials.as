@@ -26,8 +26,6 @@ package classes.Scenes.Combat {
 
 	public class PhysicalSpecials extends BaseCombatContent {
 
-	public var winionsMaker:CampMakeWinions = new CampMakeWinions();
-	
 	//------------
 	// P. SPECIALS
 	//------------
@@ -442,7 +440,7 @@ package classes.Scenes.Combat {
 		if (dodgeRoll()) {return afterPlayerAction();}
 		fatigue(50, USEFATG_PHYSICAL);
 		var damage:Number = 0;
-		damage += (scalingBonusStrength() * 0.3) + ((player.str + unarmedAttack()) * 1.5);
+		damage += (scalingBonusStrength() * 0.3) + ((player.str + player.unarmedAttack) * 1.5);
 		if (damage < 15) damage = 15;
 		//weapon bonus
 		if (player.weaponAttack < 101) damage *= (1 + (player.weaponAttack * 0.02));
@@ -563,7 +561,7 @@ package classes.Scenes.Combat {
 		else {
 			if(!monster.plural) outputText("  Twirling like a top, you bat your opponent with your tail.");
 			else outputText("  Twirling like a top, you bat your opponents with your tail.");
-			var damage:Number = unarmedAttack();
+			var damage:Number = player.unarmedAttack;
 			damage += player.str;
 			if (monster.plural == true) damage *= 5;
 			if (player.hasStatusEffect(StatusEffects.OniRampage)) damage *= 3;
@@ -1346,7 +1344,7 @@ package classes.Scenes.Combat {
 			var horns:Number = player.horns.count;
 			if (player.horns.count > 40) player.horns.count = 40;
 			//Determine damage - str modified by enemy toughness!
-			damage = int((unarmedAttack() + player.str + player.spe + horns) * 2 * (monster.damagePercent() / 100));
+			damage = int((player.unarmedAttack + player.str + player.spe + horns) * 2 * (monster.damagePercent() / 100));
 			if (!monster.hasStatusEffect(StatusEffects.GoreBleed)) monster.createStatusEffect(StatusEffects.GoreBleed,16,0,0,0);
 			else {
 				monster.removeStatusEffect(StatusEffects.GoreBleed);
@@ -1560,7 +1558,7 @@ package classes.Scenes.Combat {
 		//Sting successful!
 		outputText("You drop on all fours, flinging your tail forward and shooting an envenomed spike at [monster a][monster name].");
 		//Phys dmg!
-		var damage:Number = unarmedAttack();
+		var damage:Number = player.unarmedAttack;
 		damage += player.spe;
 		damage += scalingBonusSpeed() * 0.2;
 		if (damage < 10) damage = 10;
@@ -1811,7 +1809,7 @@ package classes.Scenes.Combat {
 		}
 		//Determine damage
 		//Base:
-		var damage:Number = unarmedAttack();
+		var damage:Number = player.unarmedAttack;
 		damage += scalingBonusStrength() * 0.5;
 		damage += scalingBonusSpeed() * 0.5;
 		//Leg bonus

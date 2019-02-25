@@ -36,5 +36,9 @@ public class StatNames {
 	public static const HP_PER_TOU:String  = "hpPerTou";
 	public static const ATTACK_RATING:String  = "attackRating";
 	public static const DEFENSE_RATING:String = "defenseRating";
+	
+	public static const UNARMED_ATTACK:String = "unarmedAttack";
+	public static const WEAPON_ATTACK:String = "weaponAttack";
+	public static const WEAPON_RANGE_ATTACK:String = "weaponRangeAttack";
 }
 }
