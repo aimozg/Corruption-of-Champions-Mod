@@ -99,7 +99,7 @@ public class StatStore implements IStatHolder {
 		applyBuffObject(buffs, tag, options, evalContext, false);
 	}
 	private function applyBuffObject(buffs:Object, tag:String, options:*, evalContext:*, replaceMode:Boolean=false):void {
-		if (buffs is Array) buffs = Utils.createMapFromPairs(buffs);
+		if (buffs is Array) buffs = Utils.createMapFromPairs(buffs as Array);
 		for (var statname:String in buffs) {
 			var buff:* = buffs[statname];
 			var value:*;
