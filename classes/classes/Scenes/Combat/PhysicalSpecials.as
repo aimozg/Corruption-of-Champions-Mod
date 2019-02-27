@@ -1084,13 +1084,12 @@ package classes.Scenes.Combat {
 			if (player.hasPerk(PerkLib.Heroism) && (monster.hasPerk(PerkLib.EnemyBossType) || monster.hasPerk(PerkLib.EnemyGigantType))) damage *= 2;
 			//Determine if critical hit!
 			var crit:Boolean   = false;
-			var critChance:int = 5;
+			var critChance:int = critPercent(player,monster);
 			if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
 				if (player.inte <= 100) critChance += (player.inte - 50) / 5;
 				if (player.inte > 100) critChance += 10;
 			}
 			if (player.hasPerk(PerkLib.Blademaster)) critChance += 5;
-			if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
 			if (monster.isImmuneToCrits()) critChance = 0;
 			if (rand(100) < critChance) {
 				crit = true;
@@ -1454,7 +1453,7 @@ package classes.Scenes.Combat {
 			//Normal
 			outputText("You hurl yourself towards [enemy] with your head low and jerk your head upward, every muscle flexing as you send [enemy] flying. ");
 			//Critical
-			if (combatCritical()) {
+			if (randomChance(critPercent(player,monster))) {
 				outputText("<b>Critical hit! </b>");
 				damage *= 1.75;
 			}

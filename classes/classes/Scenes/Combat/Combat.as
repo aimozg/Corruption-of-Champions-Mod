@@ -493,11 +493,7 @@ public function elementalattacks(elementType:int, summonedElementals:int):void {
 	elementalDamage *= elementalamplification;
 	//Determine if critical hit!
 	var crit:Boolean = false;
-	var critChance:int = 5;
-	if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-		if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-		if (player.inte > 100) critChance += 10;
-	}
+	var critChance:int = critPercent(player,monster,{type:'other'});
 	if (elementType == AIR || elementType == WATER || elementType == METAL || elementType == ETHER) critChance += 10;
 	if (monster.isImmuneToCrits()) critChance = 0;
 	if (rand(100) < critChance) {
@@ -812,12 +808,7 @@ public function multiArrowsStrike():void {
 		}
 		//Determine if critical hit!
 		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasPerk(PerkLib.VitalShot) && player.inte >= 50) critChance += 10;
+		var critChance:int = critPercent(player,monster,{type:'ranged'});
 		if (monster.isImmuneToCrits()) critChance = 0;
 		if (rand(100) < critChance) {
 			crit = true;
@@ -1093,14 +1084,8 @@ public function throwWeapon():void {
 		}
 		//Determine if critical hit!
 		var crit:Boolean = false;
-		var critChance:int = 5;
+		var critChance:int = critPercent(player,monster,{type:'ranged'});
 		if (player.weaponRangeName == "gnoll throwing axes") critChance += 10;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (player.hasPerk(PerkLib.VitalShot) && player.inte >= 50) critChance += 10;
-		if (monster.isImmuneToCrits()) critChance = 0;
 		if (rand(100) < critChance) {
 			crit = true;
 			damage *= 1.75;
@@ -1212,20 +1197,9 @@ public function shootWeapon():void {
 		}
 		//Determine if critical hit!
 		var crit: Boolean = false;
-		var critChance: int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) {
-				critChance += (player.inte - 50) / 5;
-			}
-			if (player.inte > 100) {
-				critChance += 10;
-			}
-		}
+		var critChance: int = critPercent(player,monster,{type:'ranged'});
 		if (player.hasPerk(PerkLib.VitalShot) && player.inte >= 50) {
 			critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) {
-			critChance = 0;
 		}
 		if (rand(100) < critChance) {
 			crit = true;
@@ -1585,15 +1559,9 @@ public function meleeDamageAcc(roll:ActionRoll):void {
 	if (player.weapon == weapons.FRTAXE && monster.isFlying()) damage *= 1.5;
 	//Determine if critical hit!
 	var crit:Boolean = false;
-	var critChance:int = 5;
 	var critDamage:Number = 1.75;
-	if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-		if (player.inte <= 100) critChance += (player.inte - 50) / 5;
-		if (player.inte > 100) critChance += 10;
-	}
-	if (player.hasPerk(PerkLib.JobDervish) && (player.weaponPerk != "Large" || player.weaponPerk != "Staff")) critChance += 10;
+	var critChance:int = critPercent(player,monster);
 	if (player.hasPerk(PerkLib.WeaponMastery) && player.weaponPerk == "Large" && player.str >= 100) critChance += 10;
-	if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
 	if (player.weapon == weapons.MASAMUN || (player.weapon == weapons.WG_GAXE && monster.cor > 66) || ((player.weapon == weapons.DE_GAXE || player.weapon == weapons.YAMARG) && monster.cor < 33)) critChance += 10;
 	if (monster.isImmuneToCrits()) critChance = 0;
 	if (rand(100) < critChance) {
@@ -1686,7 +1654,7 @@ public function meleeDamageAcc(roll:ActionRoll):void {
 		else outputText("You hit [monster a] [monster name]! ");
 		if (crit == true) {
 			outputText("<b>Critical! </b>");
-			if (player.hasStatusEffect(StatusEffects.Rage)) player.removeStatusEffect(StatusEffects.Rage);
+			player.removeStatusEffect(StatusEffects.Rage);
 		}
 		if (crit == false && player.hasPerk(PerkLib.Rage) && (player.hasStatusEffect(StatusEffects.Berzerking) || player.hasStatusEffect(StatusEffects.Lustzerking))) {
 			if (player.hasStatusEffect(StatusEffects.Rage) && player.statusEffectv1(StatusEffects.Rage) > 5 && player.statusEffectv1(StatusEffects.Rage) < 50) player.addStatusValue(StatusEffects.Rage, 1, 10);
@@ -1891,15 +1859,6 @@ public function combatParry():Boolean {
 	if (player.hasPerk(PerkLib.CatchTheBlade) && player.spe >= 50 && player.shieldName == "nothing" && player.isFistOrFistWeapon()) parryChance += 15;
 	return rand(100) <= parryChance;
 //	trace("Parried!");
-}
-public function combatCritical():Boolean {
-	var critChance:int = 4;
-	if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-		if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-		if (player.inte > 100) critChance += 1;
-	}
-	if (player.hasPerk(PerkLib.Blademaster) && (player.weaponVerb == "slash" || player.weaponVerb == "cleave" || player.weaponVerb == "keen cut")) critChance += 5;
-	return rand(100) <= critChance;
 }
 
 public function combatBlock(doFatigue:Boolean = false):Boolean {

@@ -41,9 +41,6 @@ public class BaseCombatContent extends CombatMechanics {
 	protected function combatParry():Boolean {
 		return combat.combatParry();
 	}
-	protected function combatCritical():Boolean {
-		return combat.combatCritical();
-	}
 	protected function combatBlock(doFatigue:Boolean = false):Boolean {
 		return combat.combatBlock(doFatigue);
 	}

@@ -502,11 +502,7 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 			
 			//Opponents can critical too!
 			var crit:Boolean = false;
-			var critChanceMonster:int = 5;
-			if (CoC.instance.monster.hasPerk(PerkLib.Tactician) && CoC.instance.monster.inte >= 50) {
-				if (CoC.instance.monster.inte <= 100) critChanceMonster += (CoC.instance.monster.inte - 50) / 5;
-				if (CoC.instance.monster.inte > 100) critChanceMonster += 10;
-			}
+			var critChanceMonster:int = CombatMechanics.critPercent(CoC.instance.monster,this);
 			if (CoC.instance.monster.hasPerk(PerkLib.VitalShot) && CoC.instance.monster.inte >= 50) critChanceMonster += 10;
 			if (rand(100) < critChanceMonster) {
 				crit = true;
@@ -2862,9 +2858,6 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 				max += 10;
 			}
 			if (hasPerk(PerkLib.FeralArmor)) {
-				max += 20;
-			}
-			if (hasPerk(PerkLib.JobDervish)) {
 				max += 20;
 			}
 			if (hasPerk(PerkLib.JobWarrior)) {

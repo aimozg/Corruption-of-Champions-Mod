@@ -15,10 +15,10 @@ package classes.Scenes.Combat {
 	import classes.Scenes.SceneLib;
 	import classes.StatusEffects.VampireThirstEffect;
 	import classes.internals.Utils;
-
+	
 	import coc.view.ButtonData;
 	import coc.view.ButtonDataList;
-
+	
 	public class MagicSpecials extends BaseCombatContent {
 	public function MagicSpecials() {}
 	//------------
@@ -1255,13 +1255,7 @@ package classes.Scenes.Combat {
 		}
 		//Determine if critical hit!
 		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
+		if (rand(100) < critPercent(player, monster, {type: 'magic'})) {
 			crit = true;
 			damage *= 1.75;
 		}
@@ -1394,13 +1388,7 @@ package classes.Scenes.Combat {
 		var damage:Number = (scalingBonusIntelligence() * 0.8) * spellMod();
 		//Determine if critical hit!
 		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
+		if (rand(100) < critPercent(player, monster, {type: 'magic'})) {
 			crit = true;
 			damage *= 1.75;
 		}
@@ -1470,13 +1458,7 @@ package classes.Scenes.Combat {
 		var damage:Number = (scalingBonusWisdom() * 0.5) + (scalingBonusIntelligence() * 0.5);
 		//Determine if critical hit!
 		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
+		if (rand(100) < critPercent(player, monster, {type: 'magic'})) {
 			crit = true;
 			damage *= 1.75;
 		}
@@ -1548,13 +1530,7 @@ package classes.Scenes.Combat {
 		var damage:Number = (scalingBonusWisdom() * 0.5) + (scalingBonusIntelligence() * 0.5);
 		//Determine if critical hit!
 		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
+		if (rand(100) < critPercent(player, monster, {type: 'magic'})) {
 			crit = true;
 			damage *= 1.75;
 		}
@@ -1617,13 +1593,7 @@ package classes.Scenes.Combat {
 		var damage:Number = (scalingBonusIntelligence() * 0.5) + (scalingBonusWisdom() * 0.5);
 		//Determine if critical hit!
 		var crit:Boolean = false;
-		var critChance:int = 5;
-		if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) critChance += (player.inte - 50) / 50;
-			if (player.inte > 100) critChance += 10;
-		}
-		if (monster.isImmuneToCrits()) critChance = 0;
-		if (rand(100) < critChance) {
+		if (rand(100) < critPercent(player, monster, {type: 'magic'})) {
 			crit = true;
 			damage *= 1.75;
 		}
@@ -1795,19 +1765,7 @@ package classes.Scenes.Combat {
 				var damage:Number = ((scalingBonusWisdom() * 0.5) + scalingBonusIntelligence()) * spellMod();
 				//Determine if critical hit!
 				var crit:Boolean = false;
-				var critChance:int = 5;
-				if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-					if (player.inte <= 100) {
-						critChance += (player.inte - 50) / 50;
-					}
-					if (player.inte > 100) {
-						critChance += 10;
-					}
-				}
-				if (monster.isImmuneToCrits()) {
-					critChance = 0;
-				}
-				if (rand(100) < critChance) {
+				if (rand(100) < critPercent(player, monster, {type: 'magic'})) {
 					crit = true;
 					damage *= 1.75;
 				}

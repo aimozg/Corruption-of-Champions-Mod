@@ -4,6 +4,9 @@
 package classes.Scenes.Combat {
 import classes.BaseContent;
 import classes.Creature;
+import classes.PerkLib;
+import classes.StatusEffects;
+import classes.internals.Utils;
 
 public class CombatMechanics extends BaseContent {
 	public function CombatMechanics() {
@@ -38,6 +41,43 @@ public class CombatMechanics extends BaseContent {
 	}
 	public static function basicMeleeDamage(attacker:Creature, random:Number):Number {
 		return meleeDamageFormula(attacker.str, attacker.weaponAttack, random);
+	}
+	/**
+	 * @param options `{base:5, type:'melee'|'magic'|'ranged'|'tease'|'other', buffs:true}`
+	 */
+	public static function basicCritPercent(attacker:Creature,options:Object=null):Number {
+		options = extend({
+			base:5,
+			type:'melee',
+			buffs:true
+		},options);
+		var cc:Number = options.base;
+		if (options.buffs) cc += attacker.criticalChanceStat.value;
+		switch (options.type) {
+			case 'melee':
+				if (attacker.hasPerk(PerkLib.Blademaster) &&
+				    (attacker.weaponVerb == "slash" ||
+				     attacker.weaponVerb == "cleave" ||
+				     attacker.weaponVerb == "keen cut")) cc += 5;
+				cc += attacker.statusEffectv1(StatusEffects.Rage);
+				break;
+			case 'ranged':
+				if (attacker.hasPerk(PerkLib.VitalShot) && attacker.inte >= 50) cc += 10;
+				break;
+			case 'magic':
+				break;
+			case 'tease':
+				if (attacker.hasPerk(PerkLib.CriticalPerformance)) {
+					cc += attacker.lib / 5;
+				}
+				break;
+		}
+		return boundFloat(0,Math.floor(cc),100);
+	}
+	public static function critPercent(attacker:Creature,defender:Creature,options:Object=null):Number {
+		if (defender.isImmuneToCrits()) return 0;
+		var cc:Number = basicCritPercent(attacker,options);
+		return boundFloat(0,Math.floor(cc),100);
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////

@@ -866,21 +866,7 @@ public class CombatMagic extends BaseCombatContent {
 
 	private function critRoll(tease:Boolean = false):Boolean{
 		if (monster.isImmuneToCrits()) return false;
-		var critChance:int = 5;
-		if(tease){
-			if (player.hasPerk(PerkLib.CriticalPerformance)) {
-				if (player.lib <= 100) critChance += player.lib / 5;
-				if (player.lib > 100) critChance += 20;
-			}
-		}
-		else if (player.hasPerk(PerkLib.Tactician) && player.inte >= 50) {
-			if (player.inte <= 100) {
-				critChance += (player.inte - 50) / 50;
-			}
-			if (player.inte > 100) {
-				critChance += 10;
-			}
-		}
+		var critChance:int = critPercent(player,monster,{type:tease?'tease':'magic',buffs:!tease});
 		return randomChance(critChance);
 	}
 

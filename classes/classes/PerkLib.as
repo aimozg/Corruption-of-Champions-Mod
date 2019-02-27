@@ -594,15 +594,6 @@ public class PerkLib
 				([StatNames.TOU_MULT]): +0.15
 			}
 		});
-		public static const JobDervish:PerkType                     = jmk({
-			id   : "Job: Dervish",
-			name : "Job: Dervish",
-			short: "You've trained in multi meele attacks combat and using of medium sized dual weapons.",
-			long : "You choose 'Job: Dervish' perk, training yourself to became Dervish.",
-			buffs: {
-				([StatNames.SPE_MULT]): +0.10
-			}
-		});
 		public static const JobElementalConjurer:PerkType           = jmk({
 			id   : "Job: Elemental Conjurer",
 			name : "Job: Elemental Conjurer",
@@ -1029,13 +1020,21 @@ public class PerkLib
 			short: "Basic attack with wizard's staff is replaced with ranged magic bolt.",
 			long : "You choose the 'Staff Channeling' perk. Basic attack with wizard's staff is replaced with ranged magic bolt."
 		});
-		public static const Tactician:PerkType                      = mk("Tactician", "Tactician",
-				"[if(player.inte>=50)" +
-				"Increases critical hit chance by up to 10% (Intelligence-based)." +
+		public static const Tactician:PerkType                      = jmk({
+			id  :  "Tactician",
+			name:  "Tactician",
+			short: "[if(player.inte>=50)" +
+				"Increases critical hit chance by 1% per 10 Intelligence." +
 				"|" +
 				"<b>You are too dumb to gain benefit from this perk.</b>" +
 				"]",
-				"You choose the 'Tactician' perk, increasing critical hit chance by up to 10% (Intelligence-based).");
+			long: "You choose the 'Tactician' perk, increasing critical hit chance by 1% per 10 Intelligence.",
+			buffs: [
+					[StatNames.CRITICAL_CHANCE, function(host:Creature):Number {
+						return host.inte >= 50 ? Math.floor(host.inte/10) : 0;
+					}]
+			]
+		});
 		public static const Tank:PerkType                           = jmk({
 			id   : "Tank",
 			name : "Tank",

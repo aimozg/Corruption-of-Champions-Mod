@@ -24,21 +24,17 @@ public class Buff implements Jsonable {
 	public function get stat():BuffableStat {
 		return _stat;
 	}
-	public function Buff(stat:BuffableStat, value:*,tag:String,save:Boolean=true,show:Boolean=true,text:String=null) {
+	public function Buff(stat:BuffableStat, value:*,tag:String,options:Object=null) {
 		this._stat    = stat;
 		this.rawValue = value;
 		this._isDynamic = rawValue is Function;
 		this._tag     = tag;
-		this.save     = save;
-		this.show     = show;
+		this.save     = (options && 'save' in options) ? options.save : true;
+		this.show     = (options && 'show' in options) ? options.show : true;
+		this.text     = (options && 'text' in options) ? options.text : Utils.capitalizeFirstLetter(tag);
+		this.rate     = (options && 'rate' in options) ? options.rate : RATE_PERMANENT;
+		this.tick     = (options && 'tick' in options) ? options.tick : 0;
 		if (_isDynamic && save) throw new Error("Cannot create saveable dynamic buff tagged "+tag);
-		this.text     = (text === null) ? Utils.capitalizeFirstLetter(tag) : text;
-		this.rate     = RATE_PERMANENT;
-		this.tick     = 0;
-	}
-	public function withOptions(options:Object):Buff {
-		this.options = options;
-		return this;
 	}
 	public function get options():Object {
 		return {save:save,show:show,text:text,rate:rate,tick:tick};

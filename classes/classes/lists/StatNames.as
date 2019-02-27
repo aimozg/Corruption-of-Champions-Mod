@@ -40,5 +40,6 @@ public class StatNames {
 	public static const UNARMED_ATTACK:String = "unarmedAttack";
 	public static const WEAPON_ATTACK:String = "weaponAttack";
 	public static const WEAPON_RANGE_ATTACK:String = "weaponRangeAttack";
+	public static const CRITICAL_CHANCE:String = "criticalChance";
 }
 }

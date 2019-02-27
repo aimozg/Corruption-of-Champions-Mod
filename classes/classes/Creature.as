@@ -153,6 +153,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		public const unarmedAttackStat:BuffableStat      = new BuffableStat({base:unarmedAttackBase});
 		public const weaponAttackStat:BuffableStat       = new BuffableStat({base:weaponAttackBase});
 		public const weaponRangeAttackStat:BuffableStat  = new BuffableStat({base:weaponRangeAttackBase});
+		public const criticalChanceStat:BuffableStat     = new BuffableStat();
 		protected var _stats:StatStore                   = new StatStore(
 				createMapFromPairs([
 					[StatNames.STR, new PrimaryStat()],
@@ -184,7 +185,8 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 					})],
 					[StatNames.UNARMED_ATTACK, unarmedAttackStat],
 					[StatNames.WEAPON_ATTACK, weaponAttackStat],
-					[StatNames.WEAPON_RANGE_ATTACK, weaponRangeAttackStat]
+					[StatNames.WEAPON_RANGE_ATTACK, weaponRangeAttackStat],
+					[StatNames.CRITICAL_CHANCE, criticalChanceStat],
 				])
 		);
 		public function get statStore():StatStore {

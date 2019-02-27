@@ -353,7 +353,6 @@ import flash.utils.getQualifiedClassName;
 			var temp:Number = 250 + this.bonusWrath;
 			if (hasPerk(PerkLib.PrimalFury)) temp += 10;
 			if (hasPerk(PerkLib.FeralArmor)) temp += 20;
-			if (hasPerk(PerkLib.JobDervish)) temp += 20;
 			if (hasPerk(PerkLib.JobWarrior)) temp += 10;
 			if (hasPerk(PerkLib.Berzerker)) temp += 100;
 			if (hasPerk(PerkLib.Lustzerker)) temp += 100;

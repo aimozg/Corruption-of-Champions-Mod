@@ -160,7 +160,7 @@ public class BuffableStat implements IStat, Jsonable {
 	public function addOrIncreaseBuff(tag:String, buffValue:*, newOptions:Object = null):void {
 		var i:int = indexOfBuff(tag);
 		if (i == -1) {
-			var buff:Buff = new Buff(this, buffValue, tag).withOptions(newOptions);
+			var buff:Buff = new Buff(this, buffValue, tag, newOptions);
 			_buffs.push(buff);
 			if (buff.isDynamic) _dynamicBuffs++;
 		} else {
@@ -185,7 +185,7 @@ public class BuffableStat implements IStat, Jsonable {
 	public function addOrReplaceBuff(tag:String, buffValue:*, newOptions:Object = null):void {
 		var i:int = indexOfBuff(tag);
 		if (i == -1) {
-			var buff:Buff = new Buff(this, buffValue, tag).withOptions(newOptions);
+			var buff:Buff = new Buff(this, buffValue, tag, newOptions);
 			_buffs.push(buff);
 			if (buff.isDynamic) _dynamicBuffs++;
 		} else {

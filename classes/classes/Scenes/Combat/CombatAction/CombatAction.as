@@ -344,7 +344,7 @@ package classes.Scenes.Combat.CombatAction {
 		private function critRoll(host:Creature, target:Creature):Boolean {
 			var critChance:int = _critChance;
 			for each(var mod:Function in _critChanceMods) {
-				_critChance += mod(host, target);
+				critChance += mod(host, target);
 			}
 			if (host.hasPerk(PerkLib.Tactician) && host.inte >= 50) {
 				if (host.inte <= 100) {

@@ -92,6 +92,10 @@ public class StatUtils {
 		[StatNames.HP_PER_TOU, 'HP per Toughness'],
 		[StatNames.ATTACK_RATING, 'Attack Rating'],
 		[StatNames.DEFENSE_RATING, 'Defense Rating'],
+		
+		[StatNames.WEAPON_ATTACK, 'Melee Attack'],
+		[StatNames.WEAPON_RANGE_ATTACK, 'Ranged Attack'],
+		[StatNames.UNARMED_ATTACK, 'Unarmed Attack'],
 	]);
 	public static const PercentageStats:Object = Utils.createMapFromPairs([
 		[StatNames.STR_MULT, 'Strength'],
@@ -100,7 +104,8 @@ public class StatUtils {
 		[StatNames.INT_MULT, 'Intellect'],
 		[StatNames.WIS_MULT, 'Wisdom'],
 		[StatNames.LIB_MULT, 'Libido'],
-		[StatNames.SPELLPOWER, 'Spellpower']
+		[StatNames.SPELLPOWER, 'Spellpower'],
+		[StatNames.CRITICAL_CHANCE, 'Critical Chance'],
 	]);
 }
 }

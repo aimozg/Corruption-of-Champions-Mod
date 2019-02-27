@@ -6,6 +6,7 @@ import classes.BodyParts.LowerBody;
 import classes.BodyParts.Tail;
 import classes.GlobalFlags.kFLAGS;
 import classes.Scenes.Areas.Plains.GnollSpearThrower;
+import classes.Scenes.Combat.CombatMechanics;
 import classes.Scenes.NPCs.NPCAwareContent;
 import classes.Scenes.Quests.UrtaQuest.*;
 import classes.Scenes.SceneLib;
@@ -1077,7 +1078,7 @@ private function urtaComboAttack():void {
 	else damage *= (3.5 + ((player.weaponAttack - 50) * 0.04));
 	//Determine if critical hit!
 	var crit:Boolean = false;
-	if(rand(100) <= 4 || (player.hasPerk(PerkLib.Tactician) && player.inte >= 50 && (player.inte - 50)/5 > rand(100))) {
+	if(randomChance(CombatMechanics.critPercent(player,monster))) {
 		crit = true;
 		damage *= 2;
 	}
@@ -1230,7 +1231,7 @@ private function urtaSidewinder():void {
 	damage *= .7;
 	//Determine if critical hit!
 	var crit:Boolean = false;
-	if(rand(100) <= 4 || (player.hasPerk(PerkLib.Tactician) && player.inte >= 50 && (player.inte - 50)/5 > rand(100))) {
+	if(randomChance(CombatMechanics.critPercent(player,monster))) {
 		crit = true;
 		damage *= 1.75;
 	}
@@ -1368,7 +1369,7 @@ private function urtaVaultAttack():void {
 	damage *= 1.25;
 	//Determine if critical hit!
 	var crit:Boolean = false;
-	if(monster.hasStatusEffect(StatusEffects.Stunned) || rand(100) <= 4 || (player.hasPerk(PerkLib.Tactician) && player.inte >= 50 && (player.inte - 50) / 5 > rand(100))) {
+	if(monster.hasStatusEffect(StatusEffects.Stunned) || randomChance(CombatMechanics.critPercent(player,monster))) {
 		crit = true;
 		damage *= 2;
 	}
