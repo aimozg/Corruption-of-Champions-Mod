@@ -883,7 +883,12 @@ package classes.Scenes
 						doNext(stash);
 					});
 				}
+				return;
 			}
+			close(function():void{
+				outputText("You do not have anywhere with space that you can put that item.");
+				doNext(stash);
+			})
 		}
 		private function showStorage(back:Function, storage:Array, range:Object, text:String):void{
 			var base:Block = new Block({

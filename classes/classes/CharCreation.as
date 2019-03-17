@@ -1235,7 +1235,7 @@
 				if (flags[kFLAGS.HUNGER_ENABLED]){
 					player.hunger = 80;
 				}
-				if (flags[kFLAGS.HARDCORE_MODE] < 0) {
+				if (flags[kFLAGS.HARDCORE_MODE] <= 0) {
 					outputText("\n\n[b: Difficulty can be adjusted at any time.]");
 					doNext(startTheGame);
 				} else {
