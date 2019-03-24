@@ -1,39 +1,42 @@
 ﻿package classes 
 {
-	import classes.BodyParts.Antennae;
-	import classes.BodyParts.Arms;
-	import classes.BodyParts.Beard;
-	import classes.BodyParts.Butt;
-	import classes.BodyParts.Claws;
-	import classes.BodyParts.Ears;
-	import classes.BodyParts.Eyes;
-	import classes.BodyParts.Face;
-	import classes.BodyParts.Gills;
-	import classes.BodyParts.Hair;
-	import classes.BodyParts.Hips;
-	import classes.BodyParts.Horns;
-	import classes.BodyParts.LowerBody;
-	import classes.BodyParts.RearBody;
-	import classes.BodyParts.Tail;
-	import classes.BodyParts.Tongue;
-	import classes.BodyParts.Wings;
-	import classes.GlobalFlags.kACHIEVEMENTS;
-	import classes.GlobalFlags.kFLAGS;
-	import classes.Items.*;
-	import classes.Scenes.Areas.Desert.SandWitchScene;
-	import classes.Scenes.Dungeons.DungeonAbstractContent;
-	import classes.Scenes.NPCs.JojoScene;
-	import classes.Scenes.NPCs.XXCNPC;
-	import classes.Scenes.SceneLib;
-	import classes.Stats.PrimaryStat;
-	import classes.internals.EnumValue;
-	import classes.lists.BreastCup;
-	import classes.lists.Gender;
 
-	import coc.view.ButtonDataList;
-	import coc.view.MainView;
+import classes.BodyParts.Antennae;
+import classes.BodyParts.Arms;
+import classes.BodyParts.Beard;
+import classes.BodyParts.Butt;
+import classes.BodyParts.Claws;
+import classes.BodyParts.Ears;
+import classes.BodyParts.Eyes;
+import classes.BodyParts.Face;
+import classes.BodyParts.Gills;
+import classes.BodyParts.Hair;
+import classes.BodyParts.Hips;
+import classes.BodyParts.Horns;
+import classes.BodyParts.LowerBody;
+import classes.BodyParts.RearBody;
+import classes.BodyParts.Tail;
+import classes.BodyParts.Tongue;
+import classes.BodyParts.Wings;
+import classes.GlobalFlags.kACHIEVEMENTS;
+import classes.GlobalFlags.kFLAGS;
+import classes.Items.*;
+import classes.Scenes.Areas.Desert.SandWitchScene;
+import classes.Scenes.Dungeons.DungeonAbstractContent;
+import classes.Scenes.NPCs.JojoScene;
+import classes.Scenes.NPCs.XXCNPC;
+import classes.Scenes.SceneLib;
+import classes.Stats.PrimaryStat;
+import classes.internals.EnumValue;
+import classes.lists.BreastCup;
+import classes.lists.Gender;
 
-	public class CharCreation extends BaseContent {
+import coc.view.ButtonDataList;
+import coc.view.MainView;
+
+import mx.utils.StringUtil;
+
+public class CharCreation extends BaseContent {
 		
 		public const MAX_TOLERANCE_LEVEL:int = 10;				//40 AP
 		public const MAX_MORALSHIFTER_LEVEL:int = 10;			//40 AP
@@ -72,59 +75,26 @@
 			mainView.eventTestInput.y = -1055.1;
 			hideStats();
 			hideUpDown();
-			mainView.nameBox.visible = true;
-			mainView.nameBox.width = 165;
-			mainView.hideMenuButton( MainView.MENU_NEW_MAIN );
-			mainView.hideMenuButton( MainView.MENU_DATA );
-			mainView.hideMenuButton( MainView.MENU_LEVEL );
-			mainView.hideMenuButton( MainView.MENU_PERKS );
-			//Hide perk boxes
-			mainView.hideComboBox();
-			//If first PC, track status of EZ mode and other such nonsense.
-//			var silly:Boolean = flags[kFLAGS.SILLY_MODE_ENABLE_FLAG];
-//			var easy:Boolean = flags[kFLAGS.EASY_MODE_ENABLE_FLAG];
-//			var sprite:Boolean = flags[kFLAGS.SHOW_SPRITES_FLAG];
+			mainView.hideAllMenuButtons();
 			mainView.setButtonText(0, "Newgame"); // b1Text.text = "Newgame";
-			//flags[kFLAGS.CUSTOM_PC_ENABLED] = 0;
-			
-			var showSpecialNames:Boolean = true; // achievements[kACHIEVEMENTS.STORY_FINALBOSS] > 0;			
+			var showSpecialNames:Boolean = true;
 			
 
 			outputText("You grew up in the small village of Ingnam, a remote village with rich traditions, buried deep in the wilds.  Every year for as long as you can remember, your village has chosen a champion to send to the cursed Demon Realm.  Legend has it that in years Ingnam has failed to produce a champion, chaos has reigned over the countryside.  Children disappear, crops wilt, and disease spreads like wildfire.  This year, <b>you</b> have been selected to be the champion.\n\n");
-			//if (showSpecialNames) outputText("\n\n\n\n");			
 			outputText("What is your name?");
-		
-			/*CODE FROM CMACLOAD HERE
-			Multiple line case. A text field GeneralTextField, positioning a movieclip AskQuestions below it
-			GeneralTextField.wordWrap = true;
-			GeneralTextField.autoSize = true;
-			GeneralTextField.htmlText = &quot;whatevevr.......&quot;;
-			AskQuestions._x = GeneralTextField._x;
-			AskQuestions._y = GeneralTextField._y + 3 + GeneralTextField._height;
-			again replace _x, _y, _width with x, y, width*/
-			//mainView.mainText.autoSize = true;
-		
-			//mainView.mainText.autoSize = TextFieldAutoSize.LEFT;
+
 			menu();
 			addButton(0, "OK", chooseName);
-		//	simpleChoices("OK",10034,"",0,"",0,"",0,"",0);
-			mainView.nameBox.x = mainView.mainText.x + 5;
-			mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
-		
-			//OLD
-			//mainView.nameBox.x = 510;
-			//mainView.nameBox.y = 265;
-			mainView.nameBox.text = "";
-			mainView.nameBox.maxChars = 16;
-			mainView.nameBox.restrict = null;
+			mainViewManager.showTextInput("",null,16);
 			
 			var preList:Array = [];
-			//function _add(element:Array):void{preList.push({label: element[0], data:element});}
-			//if (CoC_Settings.debugBuild) preList.push( { label: "TestChar", data: [ "TestChar", customTestChar, true, "For debug." ]} );			
-			for (var t:int = 0; t < specialCharacters.customs.length; t++) preList.push( { label: specialCharacters.customs[t][0], data:specialCharacters.customs[t] } );
+			for (var t:int = 0; t < specialCharacters.customs.length; t++) {
+				preList.push( { label: specialCharacters.customs[t][0], data:specialCharacters.customs[t] } );
+			}
 
 			if (showSpecialNames) {
 				CoC.instance.showComboBox(preList,"Pre-defined characters",selectName);
+				//FIXME @Oxdeception There should be no references to the nameBox in this class
 				mainView.placeComboBox(mainView.nameBox.x + mainView.nameBox.width + 10,mainView.nameBox.y);
 			}
 
@@ -158,7 +128,7 @@
 			if (flags[kFLAGS.NEW_GAME_PLUS_LEVEL] == 0) {
 				player.XP = flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP];
 				player.level = 1;
-				
+
 				player.gems = flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_ITEMS];
 			}
 			player.hairLength = 5;
@@ -370,46 +340,43 @@
 		}
 		
 		private function chooseName():void {
-			if (CoC.instance.testingBlockExiting) {
-				// We're running under the testing script.
-				// Stuff a name in the box and go go go
-				mainView.nameBox.text = "Derpy";
-				return;
-			}
-			if (mainView.nameBox.text == "") {
+			var name:String = mainViewManager.getTextInput();
+			if (StringUtil.trim(name) == "") {
 				//If part of newgame+, don't fully wipe.
 				if (player.XP > 0 && player.explored == 0) {
 					flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP] = player.XP;
-					if (flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP] == 0) flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP] = 1;
+					if (flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP] == 0) {
+						flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP] = 1;
+					}
 					while (player.level > 1) {
 						flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_XP] += player.level * 100;
 						player.level--;
 					}
 					flags[kFLAGS.NEW_GAME_PLUS_BONUS_STORED_ITEMS] = player.gems;
 				}
-				if (flags[kFLAGS.LETHICE_DEFEATED] > 0) renamePrompt();
-				else newGameGo();
+				if (flags[kFLAGS.LETHICE_DEFEATED] > 0){
+					renamePrompt();
+				} else {
+					newGameGo();
+				}
 				outputText("\n\n\n<b>You must select a name.</b>");
 				return;
 			}
 			clearOutput();
-			mainView.hideComboBox();
-			mainView.nameBox.visible = false;
-			player.short = mainView.nameBox.text;
+			player.short = name;
 			if (flags[kFLAGS.LETHICE_DEFEATED] > 0) { //Dirty checking as the NG+ flag is incremented after reincarnating.
 				clearOutput();
 				outputText("You shall be known as [name] now.");
 				ascensionMenu();
 				return;
 			}
-			customPlayerProfile = customName(mainView.nameBox.text);
+			customPlayerProfile = customName(name);
 			menu();
 			if (customPlayerProfile != null) {
 				outputText("This name, like you, is special.  Do you live up to your name or continue on, assuming it to be coincidence?");
 				addButton(0, "SpecialName", useCustomProfile);
 				addButton(1, "Continue On", noCustomProfile);
-			}
-			else { //Proceed with normal character creation
+			} else { //Proceed with normal character creation
 				genericGenderChoice();
 			}
 		}
@@ -452,19 +419,19 @@
 		}
 		
 		private function selectName(selectedItem:*):void {
-			if (selectedItem.data[0].length > 16) // not a name
+			if (selectedItem.data[0].length > 16) {
 				return;
-			
+			}
 			clearOutput();
-			
 			outputText("<b>" + selectedItem.data[0] + ":</b> " + selectedItem.data[3]);
-			if(selectedItem.data[2])
-				outputText("\n\nThis character have pre-defined history.");
-			else
-				outputText("\n\nThis character have no pre-defined history.");
+			if(selectedItem.data[2]) {
+				outputText("\n\nThis character has a pre-defined history.");
+			} else {
+				outputText("\n\nThis character has no pre-defined history.");
+			}
 				
-			flushOutputTextToGUI();	
-			mainView.nameBox.text = selectedItem.data[0];
+			flushOutputTextToGUI();
+			mainViewManager.showTextInput(selectedItem.data[0],null,16);
 		}
 		
 		//Determines if has character creation bonuses
@@ -686,7 +653,7 @@
 			chooseComplexion();
 		}
 
-		private function chooseComplexion():void {
+		private function chooseComplexion(first:Boolean = false):void {
 			clearOutput();
 			outputText("What is your complexion?");
 			menu();
@@ -697,12 +664,20 @@
 			addButton(4, "Ebony", setComplexion, "ebony");
 			addButton(5, "Mahogany", setComplexion, "mahogany");
 			addButton(6, "Russet", setComplexion, "russet");
+
+			function setComplexion(choice:String):void {
+				player.skinTone = choice;
+				if(first){
+					chooseHair(true);
+				} else {
+					genericStyleCustomizeMenu();
+				}
+			}
 		}
 
-		private function setComplexion(choice:String):void { //And choose hair
-			player.skinTone = choice;
+		private function chooseHair(first:Boolean = false):void { //And choose hair
 			clearOutput();
-			outputText("You selected a " + choice + " complexion.\n\nWhat color is your hair?");
+			outputText("What color is your hair?");
 			menu();
 			addButton(0, "Blonde", setHair, "blonde");
 			addButton(1, "Brown", setHair, "brown");
@@ -714,35 +689,11 @@
 
 			function setHair(choice:String):void {
 				player.hairColor = choice;
-				clearOutput();
-				outputText("You have " + hairDescript() + ".\n\nYou will proceed to customization.");
-				//chooseEndowment(false);
-				chooseEyesColor();
-			}
-		}
-		
-		private function chooseEyesColor():void {
-			clearOutput();
-			outputText("What is your eyes color?");
-			menu();
-			addButton(0, "Black", setEyesColor, "black");
-			addButton(1, "Green", setEyesColor, "green");
-			addButton(2, "Blue", setEyesColor, "blue");
-			addButton(3, "Red", setEyesColor, "red");
-			addButton(4, "White", setEyesColor, "white");
-			addButton(5, "Brown", setEyesColor, "brown");
-			addButton(6, "Yellow", setEyesColor, "yellow");
-			addButton(7, "Grey", setEyesColor, "grey");
-			addButton(8, "Purple", setEyesColor, "purple");
-			addButton(10, "Silver", setEyesColor, "silver");
-			addButton(11, "Golden", setEyesColor, "golden");
-
-			function setEyesColor(choice:String):void { //And choose hair
-				player.eyes.colour = choice;
-				clearOutput();
-				outputText("You selected a " + choice + " eyes color.\n\nYou will proceed to customization.");
-				//chooseEndowment(false);
-				genericStyleCustomizeMenu();
+				if(first){
+					menuEyesColor(true);
+				} else {
+					genericStyleCustomizeMenu()
+				}
 			}
 		}
 
@@ -751,10 +702,6 @@
 		//-----------------
 		private function genericStyleCustomizeMenu():void {
 			clearOutput();
-			mainView.nameBox.visible = false;
-			mainView.nameBox.maxChars = 16;
-			mainView.nameBox.restrict = null;
-			
 			outputText("You can finalize your appearance customization before you proceed to perk selection. You will be able to alter your appearance through the usage of certain items.\n\n");
 			outputText("Height: " + Math.floor(player.tallness / 12) + "'" + player.tallness % 12 + "\"\n");
 			outputText("Skin tone: " + player.skinTone + "\n");
@@ -765,8 +712,8 @@
 			}
 			outputText("Breast size: " + player.breastCup(0) + "\n");
 			menu();
-			addButton(0, "Complexion", menuSkinComplexion);
-			addButton(1, "Hair Color", menuHairColor);
+			addButton(0, "Complexion", chooseComplexion);
+			addButton(1, "Hair Color", chooseHair);
 			if (player.mf("m", "f") == "m") {
 				if (player.hasBeard()) {
 					outputText("Beard: " + player.beardDescript() + "\n");
@@ -779,50 +726,6 @@
 			addButton(6, "Breast Size", menuBreastSize);
 			addButton(7, "Race", detailedRaceSetup, genericStyleCustomizeMenu);
 			addButton(9, "Done", chooseEndowment, true);
-		}
-
-		//-----------------
-		//-- SKIN COLOURS
-		//-----------------
-		private function menuSkinComplexion():void {
-			clearOutput();
-			outputText("What is your complexion?");
-			menu();
-			addButton(0, "Light", confirmComplexion, "light");
-			addButton(1, "Fair", confirmComplexion, "fair");
-			addButton(2, "Olive", confirmComplexion, "olive");
-			addButton(3, "Dark", confirmComplexion, "dark");
-			addButton(4, "Ebony", confirmComplexion, "ebony");
-			addButton(5, "Mahogany", confirmComplexion, "mahogany");
-			addButton(6, "Russet", confirmComplexion, "russet");
-			addButton(14, "Back", genericStyleCustomizeMenu);
-
-			function confirmComplexion(complexion:String):void {
-				player.skinTone = complexion;
-				genericStyleCustomizeMenu();
-			}
-		}
-
-		//-----------------
-		//-- HAIR COLOURS
-		//-----------------
-		private function menuHairColor():void {
-			clearOutput();
-			outputText("What is your hair color?");
-			menu();
-			addButton(0, "Blonde", chooseHairColor, "blonde");
-			addButton(1, "Brown", chooseHairColor, "brown");
-			addButton(2, "Black", chooseHairColor, "black");
-			addButton(3, "Red", chooseHairColor, "red");
-			addButton(4, "Gray", chooseHairColor, "gray");
-			addButton(5, "White", chooseHairColor, "white");
-			addButton(6, "Auburn", chooseHairColor, "auburn");
-			addButton(14, "Back", genericStyleCustomizeMenu);
-
-			function chooseHairColor(color:String = ""):void {
-				player.hairColor = color;
-				genericStyleCustomizeMenu();
-			}
 		}
 
 		//-----------------
@@ -872,7 +775,7 @@
 		//-----------------
 		//-- EYES COLOURS
 		//-----------------
-		private function menuEyesColor():void {
+		private function menuEyesColor(first:Boolean = false):void {
 			clearOutput();
 			outputText("What is your eyes color?");
 			menu();
@@ -887,12 +790,14 @@
 			addButton(8, "Purple", pickEyesColor, "purple");
 			addButton(10, "Golden", pickEyesColor, "golden");
 			addButton(11, "Silver", pickEyesColor, "silver");
-			addButton(14, "Back", genericStyleCustomizeMenu);
-		}
+			if(!first){
+				addButton(14, "Back", genericStyleCustomizeMenu);
+			}
 
-		private function pickEyesColor(color:String = ""):void {
-			player.eyes.colour = color;
-			genericStyleCustomizeMenu();
+			function pickEyesColor(color:String = ""):void {
+				player.eyes.colour = color;
+				genericStyleCustomizeMenu();
+			}
 		}
 
 		//-----------------
@@ -900,71 +805,47 @@
 		//-----------------
 		private function setHeight():void {
 			clearOutput();
-			if (CoC.instance.testingBlockExiting)
-			{
-				// We're running under the testing script.
-				// Stuff a number in the box and go go go
-				mainView.nameBox.text = "69";
-			}
 			outputText("Set your height in inches.");
 			outputText("\nYou can choose any height between 4 feet (48 inches) and 8 feet (96 inches).");
-			mainView.nameBox.visible = true;
-			mainView.nameBox.maxChars = 2;
-			mainView.nameBox.restrict = "0-9";
-			if (player.gender == 0)
-			{
-				mainView.nameBox.text = "69";
-			}
-			if (player.gender == 1)
-			{
-				mainView.nameBox.text = "71";
-			}
-			if (player.gender == 2)
-			{
-				mainView.nameBox.text = "67";
-			}	
-			if (player.gender == 3)
-			{
-				mainView.nameBox.text = "69";
+			var text:String;
+			switch (player.gender) {
+				case Gender.GENDER_MALE:
+					text = "71";
+					break;
+				case Gender.GENDER_FEMALE:
+					text = "67";
+					break;
+				case Gender.GENDER_NONE:
+				case Gender.GENDER_HERM:
+				default:
+					text = "69";
+					break;
 			}
 			menu();
 			addButton(0, "OK", confirmHeight);
 			addButton(4, "Back", genericStyleCustomizeMenu);
-			mainView.nameBox.x = mainView.mainText.x + 5;
-			mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
+			mainViewManager.showTextInput(text, "0-9", 2);
 		}
 		private function confirmHeight():void {
-			mainView.nameBox.visible = false;
-			if (int(mainView.nameBox.text) < 48)
-			{
-				clearOutput();
-				outputText("That is below your minimum height choices!");
-				//Off to the height selection!
-				doNext(setHeight);
-				return;
-			}
-			if (int(mainView.nameBox.text) > 96)
-			{
-				clearOutput();
-				outputText("That is above your maximum height choices!");
-				//Off to the height selection!
-				doNext(setHeight);
-				return;
-			}
-			if (mainView.nameBox.text == "")
-			{
-				clearOutput();
-				outputText("Please input your height. Off you go to the height selection!");
-				//Off to the height selection!
-				doNext(setHeight);
-				return;
-			}
-			player.tallness = int(mainView.nameBox.text);
-			mainView.nameBox.maxChars = 16;
-			mainView.nameBox.restrict = null;
+			var text:String = mainViewManager.getTextInput();
+			var asInt:int = int(text);
 			clearOutput();
-			outputText("You'll be " + Math.floor(player.tallness / 12) + " feet and " + player.tallness % 12 + " inches tall. Is this okay with you?");
-			doYesNo(genericStyleCustomizeMenu, setHeight);
+			if (asInt >= 48 && asInt <= 96) {
+				player.tallness = asInt;
+				outputText("You'll be " + Measurements.footInchOrMetres(player.tallness) + " tall. Is this okay with you?");
+				doYesNo(genericStyleCustomizeMenu, setHeight);
+				return;
+			}
+			if (asInt < 48) {
+				outputText("That is below your minimum height choices!");
+			}
+			else if (asInt > 96) {
+				outputText("That is above your maximum height choices!");
+			}
+			else {
+				outputText("Please input your height. Off you go to the height selection!");
+			}
+			doNext(setHeight);
 		}
 
 		//-----------------
@@ -1306,7 +1187,6 @@
 			hideStats();
 			clearOutput();
 			hideMenus();
-			mainView.nameBox.visible = false;
 			EngineCore.displayHeader("Ascension");
 			outputText("The world you have departed is irrelevant and you are in an endless black void dotted with tens of thousands of stars. You encompass everything and everything encompasses you.");
 			outputText("\n\nAscension Perk Points: " + player.ascensionPerkPoints);
@@ -1319,17 +1199,10 @@
 		private function renamePrompt():void {
 			clearOutput();
 			outputText("You may choose to change your name.");
-			mainView.nameBox.visible = true;
-			mainView.nameBox.width = 165;
-			mainView.nameBox.text = player.short;
-			mainView.nameBox.maxChars = 16;
-			mainView.nameBox.restrict = null;
 			menu();
 			addButton(0, "OK", chooseName);
 			addButton(4, "Back", ascensionMenu);
-			//Workaround
-			mainView.nameBox.x = mainView.mainText.x + 5;
-			mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
+			mainViewManager.showTextInput(player.short,null,16);
 		}
 		
 		private function reincarnatePrompt():void {
@@ -1342,8 +1215,6 @@
 			customPlayerProfile = null;
 			newGameGo();
 			clearOutput();
-			mainView.nameBox.visible = false;
-			mainView.hideComboBox();
 			outputText("Everything fades to white and finally... black. You can feel yourself being whisked back to reality as you slowly awaken in your room. You survey your surroundings and recognize almost immediately; you are in your room inside the inn in Ingnam! You get up and look around. ");
 			if (player.hasKeyItem("Sky Poison Pearl") >= 0) {
 				outputText("\n\nYou soon noticing a circular green imprint at the palm of your left hand. When you trying to figure out it meaning something clicks in your mind. It's a strange artifact that fused with your body that allow storing many things inside. Artifact that fused with your body? You are unable to recall when did yo... Wait a second there are few almost fully faded away memory fragments of you been somewhere underwater fearlessly facing some huge monster with tentacles as it legs... Doing you utermost efforts no other memories even slightest fragments apprear in your mind. Resigned you try to concentrate on remembering how to use this thing but those memories are still too blurred. Maybe with time you remember all about this... 'thing'.")
@@ -1380,16 +1251,11 @@
 			inventory.clearGearStorage();
 			inventory.initializeGearStorage();
 			//Inventory clear
-			player.itemSlot1.unlocked = true;
-			player.itemSlot1.emptySlot();
-			player.itemSlot2.unlocked = true;
-			player.itemSlot2.emptySlot();
-			player.itemSlot3.unlocked = true;
-			player.itemSlot3.emptySlot();
-			player.itemSlot4.unlocked = true;
-			player.itemSlot4.emptySlot();
-			player.itemSlot5.unlocked = true;
-			player.itemSlot5.emptySlot();
+			for (var i:int = 0; i < player.itemSlots.length; i++) {
+				var itemSlot:ItemSlotClass = player.itemSlots[i];
+				itemSlot.emptySlot();
+				itemSlot.unlocked = i <= 4; // 1 - 5 unlocked by default
+			}
 			doNext(removeLevelPerks);
 		}
 		

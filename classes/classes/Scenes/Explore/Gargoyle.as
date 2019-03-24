@@ -109,43 +109,27 @@ private function breakZeChains():void {
 	outputText("\n\nThat raised more questions than it answered.  Taking things slow for now, you ask her name.\n\n\"<i>I... I am... I simply am.  What would Master call me?</i>\"");
 	
 	//[Display a textbox, into which the player can type in a name. This new value will be called " + flags[kFLAGS.GAR_NAME] + ", henceforth. ] (Confidence +10)
-	mainView.nameBox.text = "";
+	mainViewManager.getTextInput(); // Clear any previous text in the input box;
 	menu();
 	addButton(0,"Next",nameZeGargoyle);
 }
 
 private function nameZeGargoyle():void {
-	if (CoC.instance.testingBlockExiting)
-	{
-		// We're running under the testing script.
-		// Stuff a name in the box and go go go
-		mainView.nameBox.text = "Derpgoyle";
-	}
-	else if (mainView.nameBox.text == "" || mainView.nameBox.text == "0") {
+	var name:String = mainViewManager.getTextInput();
+	clearOutput();
+	if (name == "" || name == "0") {
 		// Name flag is used to track access into Gargoyles content. Default is "0" so somewhere the "0" string is coalescing to integer 0.
 		// Solution? Fuck you for naming your Gargoyle "0".
-		clearOutput();
 		outputText("<b>You must name her.</b>");
-		mainView.nameBox.text = "";
-		mainView.nameBox.visible = true;
-		mainView.nameBox.width = 165;
 		menu();
-		mainView.nameBox.x = mainView.mainText.x + 5;
-		
-		mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
-		
+		mainViewManager.showTextInput();
 		addButton(0,"Next",nameZeGargoyle);
 		return;
 	}
-	flags[kFLAGS.GAR_NAME] = mainView.nameBox.text;
-	mainView.nameBox.text = "";
-	mainView.nameBox.visible = false;
-	clearOutput();
-	outputText("\"<i>" + flags[kFLAGS.GAR_NAME] + ",</i>\" she purrs, \"<i>" + flags[kFLAGS.GAR_NAME] + ", " + flags[kFLAGS.GAR_NAME] + ".  Master has interesting taste.</i>\"");
-	
+	flags[kFLAGS.GAR_NAME] = name;
+	outputText("\"<i>" + name + ",</i>\" she purrs, \"<i>" + name + ", " + name + ".  Master has interesting taste.</i>\"");
 	outputText("\n\nShe continues to kneel before you expectantly.  You suppose you could give her an order – perhaps something humorous, or perhaps something carnal – or maybe just talk to her, though as yet she seems a bit... odd.");
-	
-	gargoyleStarterMenu();	
+	gargoyleStarterMenu();
 }
 
 private function gargoyleStarterMenu():void {

@@ -11,6 +11,8 @@ import classes.StatusEffects;
 
 import flash.net.SharedObject;
 
+import mx.utils.StringUtil;
+
 public class LethiceScenes extends BaseContent
 	{
 		public static const GAME_END_REDEMPTION:uint = 1;
@@ -515,54 +517,33 @@ public class LethiceScenes extends BaseContent
 		private function redemptionIII():void
 		{
 			clearOutput();
-
 			outputText("What name do you give the new woman you and Marae have made?");
-			mainView.nameBox.text = "";
-			mainView.nameBox.visible = true;
-			mainView.nameBox.width = 165;
-			mainView.nameBox.x = mainView.mainText.x + 5;
-			mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
-
+			mainViewManager.showTextInput();
 			menu();
 			addButton(0, "Next", redemptionIIIGoName);
 		}
 
 		private function redemptionIIIGoName():void
 		{
-			if(mainView.nameBox.text == "") 
-			{
-				clearOutput();
+			var name:String = mainViewManager.getTextInput();
+			clearOutput();
+			menu();
+			if(StringUtil.trim(name) == "") {
 				outputText("<b>You must select a name.</b>");
-				mainView.nameBox.x = mainView.mainText.x + 5;
-				mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
-				menu();
-				addButton(0,"Next",redemptionIII);
+				doNext(redemptionIII);
 				return;
 			}
 
-			flags[kFLAGS.LETHICE_NAME] = mainView.nameBox.text;
-			mainView.nameBox.visible = false;
-
-			clearOutput();
-
-			if (flags[kFLAGS.LETHICE_NAME] == "Lethice")
-			{
+			flags[kFLAGS.LETHICE_NAME] = name;
+			if (name == "Lethice") {
 				outputText("You decide to tell her the truth - to give her back the name she bore as the Demon Queen. Trying to hide who and what she was from her - and from the world - will do you no good. The rest of the demons, and those who fight against them, deserve to see that there is hope. That even the Demon Queen could be made whole again.");
-				
 				outputText("\n\nAt least, that’s what you hope. So you tell her that, slowly and in great detail explaining to the confused-looking girl that she is Lethice, the ruler of the demons who even now plague the realm of Mareth. Though she and her minions have committed atrocities beyond imagining, brought ruin to the world, you showed her mercy. You’re giving her a second chance.");
-				
 				outputText("\n\nEven before you finish your explanation, the poor thing bursts into tears, clutching at you and insisting she has no idea - that she’s so, so sorry for what she’s done, but that she remembers nothing. That, you think, might just be for the best.");
-			}
-			else
-			{
+			} else {
 				outputText("You decide it’s better not to tell the erstwhile Demon Queen who she was, and what she’s done. If she doesn’t remember anything, then... well, you did intend to give her a second chance, didn’t you? Reminding her of what her horde has done to the world can only lead to misery, and her drawing the ire of those she’s hurt.");
-
-				outputText("\n\nSo you give her the name of " +flags[kFLAGS.LETHICE_NAME] +
-						   ", and tell her that she’s a creation of the goddess Marae, a redeemed soul made manifest. She stares at you with wide eyes as you half-explain and half-lie about her origins, who she is now and what world she’s been born into. The very mention of demons, creatures running wild across the tainted realm, sends shivers through her, and recounting their deeds to destroy her <i>“mother”</i> and the pure beings of Mareth brings tears to her eyes.");
+				outputText("\n\nSo you give her the name of " + name + ", and tell her that she’s a creation of the goddess Marae, a redeemed soul made manifest. She stares at you with wide eyes as you half-explain and half-lie about her origins, who she is now and what world she’s been born into. The very mention of demons, creatures running wild across the tainted realm, sends shivers through her, and recounting their deeds to destroy her <i>“mother”</i> and the pure beings of Mareth brings tears to her eyes.");
 			}
-
-			menu();
-			addButton(0, "Next", redemptionIV);
+			doNext(redemptionIV);
 		}
 
 		private function redemptionIV():void

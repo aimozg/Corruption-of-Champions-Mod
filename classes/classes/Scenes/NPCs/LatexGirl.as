@@ -208,34 +208,18 @@ private function PCCarriedGooBackHomeII():void {
 	outputText("\n\nWhat will you name her?");
 	menu();
 	addButton(0,"Next",nameZeLatexGoo);
-	mainView.nameBox.text = "";
-	mainView.nameBox.visible = true;
-	mainView.nameBox.width = 165;
-	mainView.nameBox.x = mainView.mainText.x + 5;
-	mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
+	mainViewManager.showTextInput();
 }
-private function nameZeLatexGoo():void 
-{
-	if (CoC.instance.testingBlockExiting)
-	{
-		// We're running under the testing script.
-		// Stuff a name in the box and go go go
-		mainView.nameBox.text = "Derptexy";
-	}
-	else if(mainView.nameBox.text == "") 
-	{
-		clearOutput();
+private function nameZeLatexGoo():void {
+	var name:String = mainViewManager.getTextInput();
+	clearOutput();
+	if(name == "") {
 		outputText("<b>You must select a name.</b>");
-		mainView.nameBox.x = mainView.mainText.x + 5;
-		mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
-		menu();
-		addButton(0,"Next",nameZeLatexGoo);
+		doNext(nameZeLatexGoo);
+		mainViewManager.showTextInput();
 		return;
 	}
-	flags[kFLAGS.GOO_NAME] = mainView.nameBox.text;
-	mainView.nameBox.visible = false;
-	//After Naming Her:
-	clearOutput();
+	flags[kFLAGS.GOO_NAME] = name;
 	outputText("\"<i>");
 	if(flags[kFLAGS.GOO_NAME] == "Cattleya") outputText("Cattleya, huh?  I don't know if my tits are big enough to live up to that name,");
 	else if(flags[kFLAGS.GOO_NAME] == "Helia") outputText("Helia, huh?  I don't know if I like anal enough for that!");
@@ -318,11 +302,7 @@ private function encounterLeftBehindGooSlaveII():void {
 	//{To standard name prompts}
 	menu();
 	addButton(0,"Next",nameZeLatexGoo);
-	mainView.nameBox.text = "";
-	mainView.nameBox.visible = true;
-	mainView.nameBox.width = 165;
-	mainView.nameBox.x = mainView.mainText.x + 5;
-	mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
+	mainViewManager.showTextInput();
 }
 
 //Pure Characters Intro(F):
@@ -404,30 +384,21 @@ private function pureGooGalRecruitAftermathII():void {
 	clearOutput();
 	outputText("\"<i>Call me what you want, my name doesn't matter.</i>\"");
 	outputText("\n\nWhat will you name her?");
-	menu();
-	addButton(0,"Next",nameZeLatexGooNice);
-	mainView.nameBox.text = "";
-	mainView.nameBox.visible = true;
-	mainView.nameBox.width = 165;
-	mainView.nameBox.x = mainView.mainText.x + 5;
-	mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
-
+	doNext(nameZeLatexGooNice);
+	mainViewManager.showTextInput();
 }
 
 //After Naming Latexy(F):
 private function nameZeLatexGooNice():void {
-	if(mainView.nameBox.text == "") {
-		clearOutput();
+	var name:String = mainViewManager.getTextInput();
+	clearOutput();
+	if(name == "") {
 		outputText("<b>You must select a name.</b>");
-		mainView.nameBox.x = mainView.mainText.x + 5;
-		mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
-		menu();
-		addButton(0,"Next",nameZeLatexGoo);
+		doNext(nameZeLatexGooNice);
+		mainViewManager.showTextInput();
 		return;
 	}
-	flags[kFLAGS.GOO_NAME] = mainView.nameBox.text;
-	mainView.nameBox.visible = false;
-	clearOutput();
+	flags[kFLAGS.GOO_NAME] = name;
 	outputText("\"<i>");
 	if(flags[kFLAGS.GOO_NAME] == "Cattleya") outputText("Cattleya, huh?  I don't know if my tits are big enough to live up to that name,");
 	else if(flags[kFLAGS.GOO_NAME] == "Helia") outputText("Helia, huh?  I don't know if I like anal enough for that!");

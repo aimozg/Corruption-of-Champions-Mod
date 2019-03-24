@@ -31,40 +31,26 @@ public function arriveWithLacticWaifuAtCamp():void {
 	
 	outputText("\n\nSpeaking of which, you don't really have anything to call this dusky beauty.  You suppose you could just keep calling her \"Bath Slut,\" but that's hardly a fitting name for a free girl...");
 	
-	//[Name Field.  If left empty, defaults to "Bath Slut"]
-	menu();
-	addButton(0, "Next", nameZeMilkBath);
-	mainView.nameBox.text = "";
+	doNext(nameZeMilkBath);
+	mainViewManager.getTextInput(); // Clear any existing text in the input
 }
 
 
 private function nameZeMilkBath():void 
 {
-	if (CoC.instance.testingBlockExiting)
+	var name:String = mainViewManager.getTextInput();
+	clearOutput();
+	if(name == "" || name is Number)
 	{
-		// We're running under the testing script.
-		// Stuff a name in the box and go go go
-		mainView.nameBox.text = "Milkderp";
-	}
-	else if(mainView.nameBox.text == "" || mainView.nameBox.text is Number) 
-	{
-		clearOutput();
 		outputText("<b>You must give her a name.</b>");
-		menu();
-		addButton(0,"Next",nameZeMilkBath);
-		mainView.nameBox.visible = true;
-		mainView.nameBox.text = "Bath Slut";
-		mainView.nameBox.x = mainView.mainText.x + 5;
-		mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
+		doNext(nameZeMilkBath);
+		mainViewManager.showTextInput("Bath Slut");
 		return;
 	}
-	clearOutput();
-	flags[kFLAGS.MILK_NAME] = mainView.nameBox.text;
-	mainView.nameBox.text = "";
-	mainView.nameBox.visible = false;
+	flags[kFLAGS.MILK_NAME] = name;
 	//Call her Bath Slut (You Asshole)
-	if(mainView.nameBox.text == "Bath Slut") outputText("Fuck it, Bath Slut it is.  At least she won't get confused.");
-	else if(mainView.nameBox.text == "Biscuit") outputText("Fuck it, you may as well butter her buns!");
+	if(name == "Bath Slut") outputText("Fuck it, Bath Slut it is.  At least she won't get confused.");
+	else if(name == "Biscuit") outputText("Fuck it, you may as well butter her buns!");
 	//Variable: " + flags[kFLAGS.MILK_NAME] + "
 	//Having Named the Girl (Didn't name her Bath Slut)
 	else {

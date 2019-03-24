@@ -21,7 +21,7 @@ package classes
 				var slotX:String = Saves.sharedDir + "CoC_" + slot;
 				if (flags[kFLAGS.HARDCORE_MODE] > 0) slotX = flags[kFLAGS.HARDCORE_SLOT];
 				var doQuickSave:Function = function():void {
-					game.mainView.nameBox.text = "";
+					game.mainViewManager.getTextInput(); // Clear any input left in the text input
 					game.saves.saveGame(slotX);
 					EngineCore.clearOutput();
 					EngineCore.outputText("Game saved to " + slotX + "!");

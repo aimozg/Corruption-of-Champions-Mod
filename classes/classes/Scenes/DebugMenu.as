@@ -70,11 +70,6 @@ import flash.events.Event;
 			//buildArray();
             if (!CoC.instance.inCombat) {
                 hideMenus();
-				mainView.nameBox.visible = false;
-				mainView.nameBox.text = "";
-				mainView.nameBox.maxChars = 16;
-				mainView.nameBox.restrict = null;
-				mainView.nameBox.width = 140;
 				clearOutput();
 				outputText("Welcome to the super secret debug menu!");
 				menu();
@@ -1185,41 +1180,30 @@ import flash.events.Event;
 			menu();
 			outputText("This is the Flag Editor.  You can edit flags from here.  For flags reference, look at kFLAGS.as class file.  Please input any number from 0 to 2999.");
 			outputText("\n\n<b>WARNING: This might screw up your save file so backup your saves before using this!</b>");
-			mainView.nameBox.visible = true;
-			mainView.nameBox.width = 165;
-			mainView.nameBox.text = "";
-			mainView.nameBox.maxChars = 4;
-			mainView.nameBox.restrict = "0-9";
 			addButton(0, "OK", editFlag);
 			addButton(4, "Done", accessDebugMenu);
-			mainView.nameBox.x = mainView.mainText.x + 5;
-			mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
+			mainViewManager.showTextInput("", "0-9", 4);
 		}
 		
 		private function editFlag():void {
-			var flagId:int = int(mainView.nameBox.text);
+			var flagId:int = int(mainViewManager.getTextInput());
 			clearOutput();
 			menu();
 			if (flagId < 0 || flagId >= 3000) {
-				mainView.nameBox.visible = false;
 				outputText("That flag does not exist!");
 				doNext(flagEditor);
 				return;
 			}
-			mainView.nameBox.visible = true;
-			mainView.nameBox.x = mainView.mainText.x + 5;
-			mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
-			mainView.nameBox.maxChars = 127;
-			mainView.nameBox.restrict = null;
-			mainView.nameBox.text = flags[flagId];
 			addButton(0, "Save", saveFlag, flagId);
 			addButton(1, "Discard", flagEditor);
+			mainViewManager.showTextInput(flags[flagId],null,127);
 		}
 		
 		private function saveFlag(flagId:int = 0):void {
-			var temp:* = Number(mainView.nameBox.text);
+			var text:String = mainViewManager.getTextInput();
+			var temp:* = Number(text);
 			if (temp is Number || temp is int) flags[flagId] = temp;
-			else flags[flagId] = mainView.nameBox.text;
+			else flags[flagId] = text;
 			flagEditor();
 		}
 

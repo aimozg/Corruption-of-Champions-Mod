@@ -8,7 +8,6 @@ import coc.view.BoundClip;
 import coc.view.MainView;
 import coc.view.StatsView;
 
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
@@ -271,6 +270,38 @@ public class MainViewManager extends BaseContent {
 		}
         var obj:Stage = CoC.instance.stage;
         return chdump(obj, 0, obj.alpha, obj.visible, obj.scaleX, obj.scaleY);
+	}
+
+	/**
+	 * Shows a text input box after the text on screen
+	 * @param text A default value to be entered into the text box.
+	 * @param restrict The set of characters the user can enter into the text box. Value of null means any character, while empty string means no characters.
+	 * @param maxChars How many characters may be entered into the text box.
+	 * @param width How wide the text box should be.
+	 */
+	public function showTextInput(text:String = "", restrict:String = null, maxChars:int = 0, width:int = 165):void {
+		var nameBox:TextField  = mainView.nameBox;
+		var mainText:TextField = mainView.mainText;
+		flushOutputTextToGUI();
+		nameBox.visible        = true;
+		nameBox.text           = text;
+		nameBox.maxChars       = maxChars;
+		nameBox.restrict       = restrict;
+
+		nameBox.x = mainText.x + 5;
+		nameBox.y = mainText.y + 3 + mainText.textHeight;
+		nameBox.width = width;
+	}
+
+	/**
+	 * Gets the text currently in the text input box, and clears the input by setting it to "".
+	 * @return String that was entered into the text box. This may be the default value if the user did not enter text.
+	 */
+	public function getTextInput():String {
+		var text:String = mainView.nameBox.text;
+		mainView.nameBox.visible = false;
+		mainView.nameBox.text = "";
+		return text;
 	}
 }
 }

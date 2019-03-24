@@ -112,13 +112,8 @@ public var notes:String = "";
 				doNext(playerMenu);
 				return;
 			}
-			mainView.nameBox.x = 210;
-			mainView.nameBox.y = 620;
-			mainView.nameBox.width = 550;
-			mainView.nameBox.text = "";
-			mainView.nameBox.maxChars = 54;
-			mainView.nameBox.visible = true;
 			outputText("<b>Leave the notes box blank if you don't wish to change notes.\r<u>NOTES:</u></b>");
+			mainViewManager.showTextInput("",null,54,550);
 		}
 
 		addButton(12, "Previous", newSaveScreen, screenType,page-1, dir);
@@ -181,7 +176,6 @@ public function saveLoad(e:MouseEvent = null):void
 	mainView.eventTestInput.y = -1055.1;
 	//Hide the name box in case of backing up from save
 	//screen so it doesnt overlap everything.
-	mainView.nameBox.visible = false;
 	var autoSaveSuffix:String = "";
 	if (player && player.autoSave) autoSaveSuffix = "ON";
 	else autoSaveSuffix = "OFF";
@@ -267,7 +261,6 @@ public function purgeTheMutant(slot:String):void
 }
 
 public function confirmOverwrite(slot:String):void {
-	mainView.nameBox.visible = false;
 	clearOutput();
 	outputText("You are about to overwrite the following save slot: " + slot + ".");
 	outputText("\n\n<i>If you choose to overwrite a save file from the original CoC, it will no longer be playable on the original version. I recommend you use slots 10-14 for saving on the mod.</i>");
@@ -476,15 +469,12 @@ public function saveGameObject(slot:String, isFile:Boolean):void
 	saveFile.data.a = player.a;
 	
 	//Notes
-	if (mainView.nameBox.text != "")
-	{
-		saveFile.data.notes = mainView.nameBox.text;
-		notes = mainView.nameBox.text;
-	}
-	else
-	{
+	var text:String = mainViewManager.getTextInput();
+	if (text != "") {
+		saveFile.data.notes = text;
+		notes = text;
+	} else {
 		saveFile.data.notes = notes;
-		mainView.nameBox.visible = false;
 	}
 	if (flags[kFLAGS.HARDCORE_MODE] > 0)
 	{

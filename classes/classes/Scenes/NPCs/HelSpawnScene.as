@@ -656,62 +656,49 @@ private function nameDatHelspawn():void {
 	outputText("\n\n\"<i>So... what do we name her, love?  I honestly hadn't put that much thought into girl names.  Kind of expected a boy, I guess, but... it's up to you, [name].  What do you think?</i>\"");
 	menu();
 	addButton(0,"Next",applyHelspawnName);
-	mainView.nameBox.text = "";
-	mainView.nameBox.visible = true;
-	mainView.nameBox.width = 165;
-	mainView.nameBox.x = mainView.mainText.x + 5;
-	mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
+	mainViewManager.showTextInput();
 }
 private function applyHelspawnName():void {
 	spriteSelect(68);
+	clearOutput();
 	//Easter Egg Names Hel WILL NOT ALLOW:
-	if (CoC.instance.testingBlockExiting)
-	{
-		// We're running under the testing script.
-		// Stuff a name in the box and go go go
-		mainView.nameBox.text = "Kiderp";
-	}
-	else if(mainView.nameBox.text == "" 
-			|| mainView.nameBox.text == "Hellgirl" 
-			|| mainView.nameBox.text == "Kid" 
-			|| mainView.nameBox.text == "Phoenix" 
-			|| mainView.nameBox.text == "Savin" 
-			|| mainView.nameBox.text == "Helia" 
-			|| mainView.nameBox.text == "Mini-doofus") 
-	{
-		clearOutput();
-		if(mainView.nameBox.text == "") outputText("<b>You must select a name.</b>");
-		else if(mainView.nameBox.text == "Hellgirl") outputText("\"<i>Hey, that's copyright infringement.  Probably.</i>\"");
-		else if(mainView.nameBox.text == "Kid") outputText("\"<i>Wow, what are you, five?</i>\"");
-		else if(mainView.nameBox.text == "Phoenix") outputText("\"<i>Oh hell no.  You're not naming my little girl after one of those... things!  Sorry Kiri, but still!</i>\"");
-		else if(mainView.nameBox.text == "Savin") outputText("\"<i>That's a boy's name, dumbass.</i>\"");
-		else if(mainView.nameBox.text == "Helia") outputText("\"<i>My favorite name!  Except it's kinda taken, love.  Don't want things to get too confusing around here, do you?</i>\"");
-		else if(mainView.nameBox.text == "Mini-doofus") outputText("\"<i>Oh yeah, Kiha'll get a laugh out of that.  You ass.</i>\"");
-		//[Back to the name field you go!]
+	var name:String = mainViewManager.getTextInput();
+	var forbidden:/*String*/Array = ["", "Hellgirl", "Kid", "Phoenix", "Savin", "Helia", "Mini-doofus"];
+	if (forbidden.indexOf(name) >= 0){
+		switch (name) {
+			case "Hellgirl": outputText("\"<i>Hey, that's copyright infringement.  Probably.</i>\""); break;
+			case "Kid": outputText("\"<i>Wow, what are you, five?</i>\""); break;
+			case "Phoenix": outputText("\"<i>Oh hell no.  You're not naming my little girl after one of those... things!  Sorry Kiri, but still!</i>\""); break;
+			case "Savin":outputText("\"<i>That's a boy's name, dumbass.</i>\""); break;
+			case "Helia": outputText("\"<i>My favorite name!  Except it's kinda taken, love.  Don't want things to get too confusing around here, do you?</i>\"");break;
+			case "Mini-doofus":outputText("\"<i>Oh yeah, Kiha'll get a laugh out of that.  You ass.</i>\""); break;
+			default: outputText("<b>You must select a name.</b>");
+		}
 		menu();
-		mainView.nameBox.x = mainView.mainText.x + 5;
-		mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
+		mainViewManager.showTextInput(name);
 		addButton(0,"Next",applyHelspawnName);
 		return;
 	}
-	flags[kFLAGS.HELSPAWN_NAME] = mainView.nameBox.text;
-	mainView.nameBox.visible = false;
+	flags[kFLAGS.HELSPAWN_NAME] = name;
 	//[Name Field]
 	//Easter Egg Names:
-	clearOutput();
-	if(flags[kFLAGS.HELSPAWN_NAME] == "Helspawn") outputText("\"<i>That's what I was gonna call her!  Except not at all.  God dammit, seriously, [name]?</i>\"\n\n");
-	if(flags[kFLAGS.HELSPAWN_NAME] == "Jayne") outputText("\"<i>That sounds like a hero's name... I like it.  A name that demands respect!</i>\"\n\n");
-	if(flags[kFLAGS.HELSPAWN_NAME] == "Hesper") outputText("\"<i>Ah, the Evening Star.  She'll be the star of my life, alright...</i>\"\n\n");
-	if(flags[kFLAGS.HELSPAWN_NAME] == "Kiri") outputText("\"<i>Aw, that's great, lover.  Sis'll shit her pants when she hears her niece is named after her!  Gonna get confusing, though...</i>\"\n\n");
-	if(flags[kFLAGS.HELSPAWN_NAME] == "Mai") outputText("\"<i>Aw, that's great, lover.  Mai'll be honored, I know it.  And it is a great name...</i>\"\n\n");
-	if(flags[kFLAGS.HELSPAWN_NAME] == "Tanis") outputText("\<i>I don't... I don't know if I want her to have that name, lover.  It's got a lot of baggage, but... but it does my mother an honor.  More than I could ever give her.</i>\"\n\n");
-	//Syn: 
-	if(flags[kFLAGS.HELSPAWN_NAME] == "Syn") outputText("\"Awesome.  I was hoping you'd choose that one, lover mine.</i>\"\n\n");
-	if(flags[kFLAGS.HELSPAWN_NAME] == "Chara") outputText("\"<i>Awesome.  You liked my ideas, after all!</i>\"\n\n");
-	
-	outputText("\"<i>So... " + flags[kFLAGS.HELSPAWN_NAME] + " it is.  That's a good name, my love.  A strong name.  ");
-	if(flags[kFLAGS.HELSPAWN_DADDY] == 0) outputText("Our");
-	else outputText("my");
+	switch (name) {
+		case "Helspawn": outputText("\"<i>That's what I was gonna call her!  Except not at all.  God dammit, seriously, [name]?</i>\"\n\n"); break;
+		case "Jayne":    outputText("\"<i>That sounds like a hero's name... I like it.  A name that demands respect!</i>\"\n\n"); break;
+		case "Hesper":   outputText("\"<i>Ah, the Evening Star.  She'll be the star of my life, alright...</i>\"\n\n"); break;
+		case "Kiri":     outputText("\"<i>Aw, that's great, lover.  Sis'll shit her pants when she hears her niece is named after her!  Gonna get confusing, though...</i>\"\n\n"); break;
+		case "Mai":      outputText("\"<i>Aw, that's great, lover.  Mai'll be honored, I know it.  And it is a great name...</i>\"\n\n"); break;
+		case "Tanis":    outputText("\"<i>I don't... I don't know if I want her to have that name, lover.  It's got a lot of baggage, but... but it does my mother an honor.  More than I could ever give her.</i>\"\n\n"); break;
+		case "Syn":      outputText("\"Awesome.  I was hoping you'd choose that one, lover mine.</i>\"\n\n"); break;
+		case "Chara":    outputText("\"<i>Awesome.  You liked my ideas, after all!</i>\"\n\n"); break;
+	}
+
+	outputText("\"<i>So... " + name + " it is.  That's a good name, my love.  A strong name.  ");
+	if(flags[kFLAGS.HELSPAWN_DADDY] == 0) {
+		outputText("Our");
+	} else {
+		outputText("my");
+	}
 	outputText(" little girl's going to grow up big and strong with a name like that... and with you around to guide her,</i>\" Hel says, kissing your cheek.  \"<i>Why don't you give me a minute to catch my breath and get the little one situated, and let's talk.  Alright?</i>\"");
 	
 	outputText("\n\nYou nod and help Helia to her feet, still holding " + flags[kFLAGS.HELSPAWN_NAME] + " to her breast.  Your lover gives you a wink before walking bow-legged back toward her part of camp, and the little crib she's built beside her hammock.");

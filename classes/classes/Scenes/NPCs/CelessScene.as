@@ -204,32 +204,27 @@ public class CelessScene extends XXCNPC implements TimeAwareInterface {
 	public function birthScene():void {
 		if (_age == _ageDidPregnancy) {
 			_age = _ageShouldDoBirth;
-		}
-		else {
-			mainView.nameBox.text = "";
+		} else {
+			mainViewManager.getTextInput(); // Clear any text left in the input box
 			scene("strings/birth/intro", null, nameScene);
 		}
 
 		function nameScene():void {
-			if (mainView.nameBox.text == "") {
+			var name:String = mainViewManager.getTextInput();
+			if (name == "") {
 				clearOutput();
 				outputText("<b>You must name her.</b>");
-				mainView.nameBox.text = "Celess";
-				mainView.nameBox.visible = true;
-				mainView.nameBox.width = 165;
-				mainView.nameBox.x = mainView.mainText.x + 5;
-				mainView.nameBox.y = mainView.mainText.y + 3 + mainView.mainText.textHeight;
+				mainViewManager.showTextInput("Celess");
 				doNext(nameScene);
 				return;
 			}
 			_age = 1;
-			_name = mainView.nameBox.text;
+			_name = name;
 			_corruption = 0;
 			if (player.cor > ((100 + player.corruptionTolerance()) / 2)) {
 				_corruption = 30;
 			}
 
-			mainView.nameBox.visible = false;
 			scene("strings/birth/nameScene", myLocals, camp.returnToCampUseFourHours);
 		}
 	}
