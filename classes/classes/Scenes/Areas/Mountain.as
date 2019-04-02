@@ -149,13 +149,12 @@ public class Mountain extends BaseContent
 						},
 						call:hellHoundScene.HellHoundMasterEncounter
 					}, SceneLib.electraScene.mountainsEncounter, {
-					/*
 						name: "diva",
-						when: function():Boolean {
+						when: function ():Boolean {
 							return flags[kFLAGS.FACTORY_SHUTDOWN] > 0 && DivaScene.instance.status >= 0;
 						},
 						call: DivaScene.encounter
-					,{ */
+					},{
 						name:"darkelf",
 						call:darkelfScene.introDarkELfScout
 					},{
