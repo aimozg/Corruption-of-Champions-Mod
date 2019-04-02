@@ -613,23 +613,45 @@
 			function colour(col:String):Object {
 				return {pre:"<font color='"+col+"'>",post:"</font>"}
 			}
+			var stmt:Object;
 			var dark:Boolean = CoC.instance.mainViewManager.isDarkTheme();
 
 			var formatStatements:Object = {
-				"say: "    : {pre: "\u201c<i>", post: "</i>\u201d"},
-				"b: "      : {pre: "<b>", post: "</b>"},
-				"i: "      : {pre: "<i>", post: "</i>"},
-				"u: "      : {pre: "<u>", post: "</u>"},
-				"red: "    : colour(dark ? '#ff4444' : '#aa2222'),
-				"yellow: " : colour(dark ? '#ffcc44' : '#cdab22'),
-				"green: "  : colour(dark ? '#44cc44' : '#228822'),
-				"blue: "   : colour(dark ? "#0000fe" : "#000080")
+				"say"    : {pre: "\u201c<i>", post: "</i>\u201d"},
+				"red"    : colour(dark ? '#ff4444' : '#aa2222'),
+				"yellow" : colour(dark ? '#ffcc44' : '#cdab22'),
+				"green"  : colour(dark ? '#44cc44' : '#228822'),
+				"blue"   : colour(dark ? "#0000fe" : "#000080")
 			};
-			for (var k:String in formatStatements) {
-				if (textCtnt.indexOf(k) == 0) {
-					var stmt:Object = formatStatements[k];
-					ret.text = stmt.pre + recParser(textCtnt.substr(k.length), depth) + stmt.post;
-					return true;
+
+			var formatChars:Object = {
+				"b" : {pre: "<b>", post: "</b>"},
+				"i" : {pre: "<i>", post: "</i>"},
+				"u" : {pre: "<u>", post: "</u>"}
+			};
+
+			if(!textCtnt.match(':')){return false;}
+
+			var tag:String = textCtnt.split(':')[0];
+			var rem:String = textCtnt.substr(tag.length + 1);
+
+			if(tag in formatStatements) {
+				stmt = formatStatements[tag];
+				ret.text = stmt.pre + recParser(rem, depth) + stmt.post;
+				return true;
+			} else {
+				var preText:String = "";
+				var postText:String = "";
+				for (var c:String in formatChars) {
+					if (tag.indexOf(c) >= 0){
+						stmt = formatChars[c];
+						preText += stmt.pre;
+						postText += stmt.post;
+					}
+				}
+				if (preText.length + postText.length > 0) {
+					ret.text = preText + recParser(rem, depth) + postText;
+					return true
 				}
 			}
 			return false;
