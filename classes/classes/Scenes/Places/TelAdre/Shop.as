@@ -2,6 +2,7 @@ package classes.Scenes.Places.TelAdre {
 
 import classes.CoC;
 import classes.ItemType;
+import classes.internals.Utils;
 
 import coc.view.ButtonDataList;
 import coc.view.CoCButton;
@@ -116,7 +117,7 @@ public class Shop extends TelAdreAbstractContent {
 			if (button.visible) {menu.add(button.labelText, button.callback, button.toolTipText, button.toolTipHeader)}
 		}
 		for each(var item:ItemType in itemArr) {
-			menu.add(item.shortName, curry(confirmBuy, item))
+			menu.add(item.shortName, curry(confirmBuy, item), item.description, Utils.capitalizeFirstLetter(item.longName));
 		}
 		menu.submenu(back, 0, false);
 	}
