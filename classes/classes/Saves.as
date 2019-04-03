@@ -90,13 +90,14 @@ public var notes:String = "";
 			default: return saveLoad();
 		}
 		clearOutput();
+		menu();
 		if (player && player.slotName != "VOID") {
 			outputText("<b>Last saved or loaded from: " + player.slotName + "</b>\r\r");
 		}
 		outputText("<b><u>Slot: Sex,  Game Days Played</u></b>\r");
 
-		var start:int = 1 + (page * 12);
-		for(var i:int = 0; i < 12; i++){
+		var start:int = 1 + (page * 10);
+		for(var i:int = 0; i < 10; i++){
 			var slot:int = start+i;
 			var test:Object = SharedObject.getLocal(dir+savePrefix+slot, "/");
 			outputText(loadSaveDisplay(test, String(slot)));
