@@ -58,8 +58,9 @@ public class CoCButton extends Block {
 			height : MainView.BTN_H
 		});
 		_labelField        = addTextField({
-			width            : MainView.BTN_W,
+			width            : MainView.BTN_W - 10,
 			embedFonts       : true,
+			x                : 4,
 			y                : 8,
 			height           : MainView.BTN_H - 8,
 			defaultTextFormat: {
@@ -145,7 +146,17 @@ public class CoCButton extends Block {
 	}
 
 	public function set labelText(value:String):void {
-		this._labelField.text = value;
+		var lbl:TextField = this._labelField;
+		var fmt:TextFormat = lbl.defaultTextFormat;
+		lbl.text = value;
+		lbl.setTextFormat(fmt);
+		while (lbl.textWidth > lbl.width - 4) { // Textfield has 2px padding on both sides by default
+			fmt.size = int(fmt.size) - 1;
+			lbl.setTextFormat(fmt);
+		}
+		var diff:Number = (18 - int(fmt.size))/2;
+		lbl.y = 8 + diff; // Move the field down to keep the text relatively centred
+		lbl.height = (MainView.BTN_H - 8) - diff; // Resize to fit since the field is clickable
 	}
 
 	public function get key1text():String {
