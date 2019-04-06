@@ -169,7 +169,6 @@ public class SandMother extends Monster
 			this.level = 12;
 			this.gems = rand(30) + 70;
 			this.createPerk(PerkLib.Resolute,0,0,0,0);
-			this.createPerk(PerkLib.Focused,0,0,0,0);
 			this.createPerk(PerkLib.EnemyBossType, 0, 0, 0, 0);
 			this.drop = NO_DROP;
 			checkMonster();

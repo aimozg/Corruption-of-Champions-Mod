@@ -328,11 +328,6 @@ package classes.Scenes.Combat {
 		}
 		fatigue(10, USEFATG_MAGIC_NOBM);
 		if (handleShell()) {return;}
-		if (monster.hasPerk(PerkLib.Focused)) {
-			if (!monster.plural) outputText(monster.capitalA + monster.short + " is too focused for your whispers to influence!\n\n");
-			afterPlayerAction();
-			return;
-		}
 		//Enemy too strong or multiplesI think you
 		if (player.inte < monster.inte || monster.plural) {
 			outputText("You reach for your enemy's mind, but can't break through.\n");

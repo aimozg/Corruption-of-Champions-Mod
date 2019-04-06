@@ -10,12 +10,6 @@ import classes.lists.StatNames;
 
 public class PerkLib
 	{
-
-		// UNSORTED perks TODO these are mostly incorrect perks: tested but never created
-		public static const Buttslut:PerkType = mk("Buttslut", "Buttslut",
-				"");
-		public static const Focused:PerkType = mk("Focused", "Focused",
-				"");
 		// Player creation perks
 		public static const Fast:PerkType = mk("Fast", "Fast",
 				"Gains speed 25% faster.", null);
