@@ -151,6 +151,14 @@ public class EventParser {
             }
             timeAwareLargeLastEntry = -1;
         }
+        var minutesToPass:Number = (time - Math.floor(time)) * 60;
+        minutesToPass = Math.round(minutesToPass);
+        CoC.instance.model.time.minutes += minutesToPass;
+        while (CoC.instance.model.time.minutes > 59) {
+            CoC.instance.timeQ++;
+            CoC.instance.model.time.minutes -= 60;
+        }
+        time = Math.floor(time);
         while (CoC.instance.timeQ > 0) {
             CoC.instance.timeQ--;
             CoC.instance.model.time.hours++;
@@ -531,7 +539,7 @@ public class EventParser {
 
     public static function cheatTime(time:Number, needNext:Boolean = false):void {
         //Advance minutes
-        var minutesToPass:Number = (time -= Math.floor(time)) * 60;
+        var minutesToPass:Number = (time - Math.floor(time)) * 60;
         minutesToPass = Math.round(minutesToPass);
         CoC.instance.model.time.minutes += minutesToPass;
         if (CoC.instance.model.time.minutes > 59) {
