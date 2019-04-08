@@ -147,7 +147,7 @@ package classes {
 			miniCredit.x = Math.floor(MainView.SCREEN_W / 2) - (miniCredit.width / 2);
 			miniCredit.y = Math.floor(MainView.SCREEN_H / 2) + 10;
 			miniCredit.defaultTextFormat = new TextFormat("Palatino Linotype, serif", 16, mainViewManager.isDarkText() ? 0xc0c0c0 : 0, null, null, null, null, null, "center", null, null, null, -2);
-			miniCredit.htmlText = "Created by Fenoxo, Game Mod by Liadri\n";
+			miniCredit.htmlText = "Created by Fenoxo, Modified by the Mods Community\n";
 			miniCredit.htmlText += "<b>Edited by:</b> Tulvir, Ashi, SoS, Prisoner416, Zeikfried, et al";
 			miniCredit.htmlText += "<b>Open-source contributions by:</b> aimozg, Ormael, Amygdala, Cmacleod42, Enterprise2001, Fake-Name, Gedan, Yoffy, et al";
 			var disclaimerInfo:TextField = new TextField();
@@ -173,7 +173,7 @@ package classes {
 			versionInfo.selectable = false;
 			versionInfo.defaultTextFormat = new TextFormat("Palatino Linotype, serif", 16, mainViewManager.isDarkText() ? 0xc0c0c0 : 0, true, null, null, null, null, "right");
 			versionInfo.htmlText = CoC.instance.version + ", " + (CoC_Settings.debugBuild ? "Debug" : "Release") + " Build";
-			versionInfo.htmlText += "Original Game by Fenoxo\nGame Mod by Liadri";
+			versionInfo.htmlText += "Original Game by Fenoxo\nA Community Created Game Mod";
 			var websiteInfo:TextField = new TextField();
 			websiteInfo.name = "websiteInfo";
 			websiteInfo.height = 40;
@@ -306,7 +306,7 @@ package classes {
 			outputText("</ul>");
 			outputText("<b>Game Mod:</b>\n");
 			outputText("<ul>");
-			outputText("<li> Liadri</li>");
+			outputText("<li> Various</li>");
 			outputText("</ul>");
 			outputText("<b>Game Mod Angels:</b>\n");
 			outputText("<ul>");
