@@ -41,8 +41,8 @@
         </lib>
         <!-- logic -->
         <display ref="ss/intro"/>
-        <if test="rand(2)==0">
-            <if test="rand(2)==0 and player.str lt 50">
+        <if test="RandomChance(1,2)">
+            <if test="RandomChance(1,2) and player.str lt 50">
                 <display ref="ss/str"/>
                 <command>BuffOrRecover('str',5,'desert/walk','Desert walk',36,2)</command>
                 <elseif test="player.tou lt 50">
