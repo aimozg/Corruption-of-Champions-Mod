@@ -334,7 +334,7 @@ public class Lethice extends Monster
 			
 			if (hasStatusEffect(StatusEffects.PhysicalDisabled)) removeStatusEffect(StatusEffects.PhysicalDisabled);
 			if (hasStatusEffect(StatusEffects.AttackDisabled)) removeStatusEffect(StatusEffects.AttackDisabled);
-			
+			combat.afterMonsterAction();
 		}
 
 		private function phase2():void
