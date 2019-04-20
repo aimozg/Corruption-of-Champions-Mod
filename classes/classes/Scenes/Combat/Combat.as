@@ -162,25 +162,19 @@ public class Combat extends CombatMechanics {
 	}
 
 	public function spellPerkUnlock():void {
-		if(flags[kFLAGS.SPELLS_CAST] >= 10 && !player.hasPerk(PerkLib.SpellcastingAffinity)) {
-			outputText("<b>You've become more comfortable with your spells, unlocking the Spellcasting Affinity perk and reducing mana cost of spells by 10%!</b>\n\n");
-			player.createPerk(PerkLib.SpellcastingAffinity,10,0,0,0);
-		}
-		if(flags[kFLAGS.SPELLS_CAST] >= 30 && player.perkv1(PerkLib.SpellcastingAffinity) < 20) {
-			outputText("<b>You've become more comfortable with your spells, further reducing your spell costs by an additional 10%!</b>\n\n");
-			player.setPerkValue(PerkLib.SpellcastingAffinity,1,20);
-		}
-		if(flags[kFLAGS.SPELLS_CAST] >= 70 && player.perkv1(PerkLib.SpellcastingAffinity) < 30) {
-			outputText("<b>You've become more comfortable with your spells, further reducing your spell costs by an additional 10%!</b>\n\n");
-			player.setPerkValue(PerkLib.SpellcastingAffinity,1,30);
-		}
-		if(flags[kFLAGS.SPELLS_CAST] >= 150 && player.perkv1(PerkLib.SpellcastingAffinity) < 40) {
-			outputText("<b>You've become more comfortable with your spells, further reducing your spell costs by an additional 10%!</b>\n\n");
-			player.setPerkValue(PerkLib.SpellcastingAffinity,1,40);
-		}
-		if(flags[kFLAGS.SPELLS_CAST] >= 310 && player.perkv1(PerkLib.SpellcastingAffinity) < 50) {
-			outputText("<b>You've become more comfortable with your spells, further reducing your spell costs by an additional 10%!</b>\n\n");
-			player.setPerkValue(PerkLib.SpellcastingAffinity,1,50);
+		const currentAffin:int = player.perkv1(PerkLib.SpellcastingAffinity);
+		const reqSpells:/*int*/Array = [10, 30, 70, 150, 310];
+
+		if(currentAffin >= 50){return;}
+
+		var neededSpells:int = reqSpells[currentAffin/10];
+		if(flags[kFLAGS.SPELLS_CAST] >= neededSpells){
+			if(currentAffin == 0){
+				outputText("<b>You've become more comfortable with your spells, unlocking the Spellcasting Affinity perk and reducing mana cost of spells by 10%!</b>\n\n");
+			} else {
+				outputText("<b>You've become more comfortable with your spells, further reducing your spell costs by an additional 10%!</b>\n\n");
+			}
+			player.createPerk(PerkLib.SpellcastingAffinity, currentAffin+10, 0, 0, 0);
 		}
 	}
 
