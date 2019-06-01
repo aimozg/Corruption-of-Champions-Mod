@@ -18,11 +18,11 @@
     <renderMode>gpu</renderMode>
   </initialWindow>
   <icon>
-    <image29x29>devTools/icons/icon_29.png</image29x29>
-    <image57x57>devTools/icons/icon_57.png</image57x57>
-    <image72x72>devTools/icons/icon_72.png</image72x72>
-    <image144x144>devTools/icons/icon_144.png</image144x144>
-    <image512x512>devTools/icons/icon_512.png</image512x512>
+    <image29x29>icons/icon_29.png</image29x29>
+    <image57x57>icons/icon_57.png</image57x57>
+    <image72x72>icons/icon_72.png</image72x72>
+    <image144x144>icons/icon_144.png</image144x144>
+    <image512x512>icons/icon_512.png</image512x512>
   </icon>
   <customUpdateUI>false</customUpdateUI>
   <allowBrowserInvocation>false</allowBrowserInvocation>
