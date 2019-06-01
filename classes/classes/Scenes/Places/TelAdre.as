@@ -1312,24 +1312,10 @@ private function goJogging():void {
 			outputText("\n\nYour " + buttDescript() + " seems to have gotten a little bit more compact from the work out.");
 			player.butt.type--;
 		}
-	}//If hips is over 15 guaranteed reduction
-	if(player.hips.type >= 15) {
+	}
+	if(randomChance((player.hips.type / 15) * 100)){
 		outputText("\n\nIt feels like your " + hipDescript() + " have shed some pounds and narrowed.");
 		player.hips.type--;
-	}
-	else {
-		if(player.hips.type >= 10 && rand(3) == 0) {
-			outputText("\n\nIt feels like your " + hipDescript() + " have shed some pounds and narrowed.");
-			player.hips.type--;
-		}
-		else if(player.hips.type >= 5 && rand(3) == 0) {
-			outputText("\n\nIt feels like your " + hipDescript() + " have shed some pounds and narrowed.");
-			player.hips.type--;
-		}
-		else if(player.hips.type > 1 && rand(4) == 0) {
-			outputText("\n\nIt feels like your " + hipDescript() + " have shed some pounds and narrowed.");
-			player.hips.type--;
-		}
 	}
 
 	//Thickness decrease!

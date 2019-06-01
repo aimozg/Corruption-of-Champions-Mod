@@ -2,6 +2,7 @@
 import classes.*;
 import classes.BodyParts.Face;
 import classes.GlobalFlags.kFLAGS;
+import classes.internals.Utils;
 
 public class Dominika extends TelAdreAbstractContent {
 public function Dominika(){
@@ -135,127 +136,38 @@ private function acceptDominikasKnowledge():void {
 		flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00155] = 7 + rand(3);
 		outputText("\"<i>Now then,</i>\" she says. Her hands glow with a brief sense of power, and many of the tattoos shine with equal illumination. She gestures with her hand and the lamps all acquire an unearthly light, as green glowing circles appear interlinked on the floor. \"<i>How much do you know about magic?</i>\"\n\n");
 
+		var spells:/*StatusEffectType*/Array = [
+			StatusEffects.KnowsMight,    StatusEffects.KnowsBlink,         StatusEffects.KnowsRegenerate,
+			StatusEffects.KnowsArouse,   StatusEffects.KnowsCharge,        StatusEffects.KnowsChargeA,
+			StatusEffects.KnowsHeal,     StatusEffects.KnowsBlind,         StatusEffects.KnowsWhitefire,
+			StatusEffects.KnowsIceSpike, StatusEffects.KnowsLightningBolt, StatusEffects.KnowsDarknessShard,
+			StatusEffects.KnowsBlizzard
+		].filter(function(item:*, index:int, arr:Array):Boolean{
+			return !player.hasStatusEffect(item);
+		});
 		//[If player knows all spells]
-		if(player.spellCount() == 12) {
+		if(spells.length == 0) {
 			if(flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00154] == 0) {
 				flags[kFLAGS.UNKNOWN_FLAG_NUMBER_00154]++;
 				outputText("You blink, then casually mention that you actually know quite a bit about magic. Dominika listens to you explain your skill in white and black magic, then coughs awkwardly and glances to the side. \"<i>O-oh,</i>\" she says, \"<i>Well. Uhm. I guess we can talk about magical theory, maybe?</i>\"\n\n");
+			} else {
+				outputText("You blink, then casually mention that you actually know quite a bit about magic. Dominika smiles, curling those glistening black lips into an even more erotic shape as she replies, \"<i>Oh I know sweety.  Why don't we discuss the theory behind it all?</i>\"\n\n");
 			}
-			else outputText("You blink, then casually mention that you actually know quite a bit about magic. Dominika smiles, curling those glistening black lips into an even more erotic shape as she replies, \"<i>Oh I know sweety.  Why don't we discuss the theory behind it all?</i>\"\n\n");
 			outputText("Magical theory is not very interesting, but you do feel smarter for discussing it.");
 				//(Player receives Intelligence.)
 			dynStats("int", 1+rand(4));
-		}
-		//[If player knows some spells]
-		else if(player.spellCount() > 0) {
-			outputText("You take a step backwards in surprise, but your experience with magic makes you realize that she's not doing anything dangerous. You explain that you've learned a bit of sorcery from books, and she nods thoughtfully. \"<i>I see,</i>\" she muses, stroking her chin. \"<i>I think I may be able to show you a thing or two. Let's see here...</i>\"\n\n");
-
-			outputText("Dominika seems to be quite good at magic, and you find yourself picking up the spell she demonstrates fairly quickly.");
-			//(Player receives random unlearned spell.)
-			if(!player.hasStatusEffect(StatusEffects.KnowsMight)) {
-				player.createStatusEffect(StatusEffects.KnowsMight,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Might</b>");
+		} else {
+			if(player.spellCount() > 0) { //[If player knows some spells]
+				outputText("You take a step backwards in surprise, but your experience with magic makes you realize that she's not doing anything dangerous. You explain that you've learned a bit of sorcery from books, and she nods thoughtfully. \"<i>I see,</i>\" she muses, stroking her chin. \"<i>I think I may be able to show you a thing or two. Let's see here...</i>\"\n\n");
+				outputText("Dominika seems to be quite good at magic, and you find yourself picking up the spell she demonstrates fairly quickly.");
+			} else { //[If player knows no spells]
+				outputText("You nearly fall on your " + buttDescript() + " in surprise, fumbling to defend yourself from an attack, but Dominika laughs helplessly and tries to collect herself. \"<i>Oh goodness, oh I'm sorry, I'm sorry, this isn't anything. This is just flashy lights and constellation circles. This isn't going to hurt you, I'm sorry.</i>\" She walks over to you and extends a hand, helping you get to your feet and hugging you.\n\n");
+				outputText("\"<i>So sorry, again,</i>\" she says, those black lips curving into a big smile. \"<i>I guess I'll take that to mean 'not much', so, here. Let me show you some things.</i>\"\n\n");
+				outputText("Even with your inexperience, you find Dominika to be a good teacher. She helps you focus and train your mind, and you quickly find your first spell to be easy to perform.");
 			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsBlink)) {
-				player.createStatusEffect(StatusEffects.KnowsBlink,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Blink</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsRegenerate)) {
-				player.createStatusEffect(StatusEffects.KnowsRegenerate,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Regenerate</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsArouse)) {
-				player.createStatusEffect(StatusEffects.KnowsArouse,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Arouse</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsCharge)) {
-				player.createStatusEffect(StatusEffects.KnowsCharge,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Charge Weapon</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsChargeA)) {
-				player.createStatusEffect(StatusEffects.KnowsChargeA,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Charge Armor</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsHeal)) {
-				player.createStatusEffect(StatusEffects.KnowsHeal,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Heal</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsBlind)) {
-				player.createStatusEffect(StatusEffects.KnowsBlind,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Blind</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsWhitefire)) {
-				player.createStatusEffect(StatusEffects.KnowsWhitefire,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Whitefire</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsIceSpike)) {
-				player.createStatusEffect(StatusEffects.KnowsIceSpike,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Ice Spike</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsLightningBolt)) {
-				player.createStatusEffect(StatusEffects.KnowsLightningBolt,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Lightning Bolt</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsDarknessShard)) {
-				player.createStatusEffect(StatusEffects.KnowsDarknessShard,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Darkness Shard</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsBlizzard)) {
-				player.createStatusEffect(StatusEffects.KnowsBlizzard,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Blizzard</b>");
-			}
-			else outputText("==SOMETHING FUCKED UP.  TELL ORMAEL VIA DISCORD (link to it in Fenoxo forum mod thread first post)==");
-			dynStats("int", 2);
-		}
-		//[If player knows no spells]
-		else {
-			outputText("You nearly fall on your " + buttDescript() + " in surprise, fumbling to defend yourself from an attack, but Dominika laughs helplessly and tries to collect herself. \"<i>Oh goodness, oh I'm sorry, I'm sorry, this isn't anything. This is just flashy lights and constellation circles. This isn't going to hurt you, I'm sorry.</i>\" She walks over to you and extends a hand, helping you get to your feet and hugging you.\n\n");
-
-			outputText("\"<i>So sorry, again,</i>\" she says, those black lips curving into a big smile. \"<i>I guess I'll take that to mean 'not much', so, here. Let me show you some things.</i>\"\n\n");
-
-			outputText("Even with your inexperience, you find Dominika to be a good teacher. She helps you focus and train your mind, and you quickly find your first spell to be easy to perform.");
-			//(Player receives random unlearned spell.)
-			if(!player.hasStatusEffect(StatusEffects.KnowsBlizzard)) {
-				player.createStatusEffect(StatusEffects.KnowsBlizzard,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Blizzard</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsBlink)) {
-				player.createStatusEffect(StatusEffects.KnowsBlink,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Blink</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsMight)) {
-				player.createStatusEffect(StatusEffects.KnowsMight,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Might</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsHeal)) {
-				player.createStatusEffect(StatusEffects.KnowsHeal,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Heal</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsArouse)) {
-				player.createStatusEffect(StatusEffects.KnowsArouse,0,0,0,0);
-				outputText("\n\n<b>New Black Magic Spell Learned: Arouse</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsCharge)) {
-				player.createStatusEffect(StatusEffects.KnowsCharge,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Charge Weapon</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsChargeA)) {
-				player.createStatusEffect(StatusEffects.KnowsChargeA,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Charge Armor</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsBlind)) {
-				player.createStatusEffect(StatusEffects.KnowsBlind,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Blind</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsWhitefire)) {
-				player.createStatusEffect(StatusEffects.KnowsWhitefire,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Whitefire</b>");
-			}
-			else if(!player.hasStatusEffect(StatusEffects.KnowsIceSpike)) {
-				player.createStatusEffect(StatusEffects.KnowsIceSpike,0,0,0,0);
-				outputText("\n\n<b>New White Magic Spell Learned: Ice Rain</b>");
-			}
-			else outputText("==SOMETHING FUCKED UP.  TELL FEN VIA DICORD (link to it in first post of fen forum mod thread)==");
+			var sel:StatusEffectType = Utils.randomChoice(spells);
+			player.createStatusEffect(sel,0,0,0,0);
+			outputText("\n\n<b>New Spell Learned: " + sel.id.replace("Knows","")+"</b>");
 			dynStats("int", 2);
 		}
 	}
