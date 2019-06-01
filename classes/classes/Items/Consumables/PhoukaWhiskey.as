@@ -19,23 +19,19 @@ package classes.Items.Consumables
 			super("P_Whsky", "Ph. Whiskey", "a small bottle of whiskey", 20, "A small, corked glass bottle with a dark amber liquid inside.  The whiskey smells strongly of peat.");
 		}
 		
-        override public function canUse(host:Creature):Boolean {
+        override public function canUse(host:Creature):String {
 			switch (phoukaWhiskeyAcceptable(game.player)) {
 				case -4:
-					outputText("You stare at the bottle for a moment, but decide not to risk harming one of the children growing inside you.\n\n");
-					return false;
+					return "You stare at the bottle for a moment, but decide not to risk harming one of the children growing inside you.\n\n";
 				case -3:
-					outputText("You stare at the bottle for a moment, but decide not to risk harming either of the children growing inside you.\n\n");
-					return false;
+					return "You stare at the bottle for a moment, but decide not to risk harming either of the children growing inside you.\n\n";
 				case -2:
-					outputText("You stare at the bottle for a moment, but decide not to risk harming the child growing inside your colon.\n\n");
-					return false;
+					return "You stare at the bottle for a moment, but decide not to risk harming the child growing inside your colon.\n\n";
 				case -1:
-					outputText("You stare at the bottle for a moment, but decide not to risk harming the child growing inside your womb.\n\n");
-					return false;
+					return "You stare at the bottle for a moment, but decide not to risk harming the child growing inside your womb.\n\n";
 				default:
+					return super.canUse(host);
 			}
-            return true; //Zero and up will return true
         }
 		
 		override public function useItem(host:Creature):Boolean {

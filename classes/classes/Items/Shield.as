@@ -8,9 +8,6 @@ package classes.Items
 	 * @author Kitteh6660
 	 */
 
-	import classes.Creature;
-	import classes.PerkClass;
-	import classes.PerkLib;
 	import classes.PerkType;
 
 	public class Shield extends BaseEquipable
@@ -24,14 +21,6 @@ package classes.Items
 				_itemPerks.push(ptype.create(v1,v2,v3,v4));
 			}
 			_slot = Equipment.SHIELD;
-		}
-		
-		override public function canUse(host:Creature):Boolean {
-			if ((host.weaponPerk == "Large" && !host.hasPerk(PerkLib.TitanGrip)) || host.weaponPerk == "Dual" || host.weaponPerk == "Dual Large") {
-				outputText("Your current weapon requires two hands. Unequip your current weapon or switch to one-handed before equipping this shield. ");
-				return false;
-			}
-			return super.canUse(host);
 		}
 	}
 }

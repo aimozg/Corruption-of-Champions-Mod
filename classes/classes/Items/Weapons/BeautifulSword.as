@@ -5,6 +5,7 @@ package classes.Items.Weapons {
 	import classes.Creature;
 	import classes.Items.Weapon;
 	import classes.Items.WeaponBuilder;
+import classes.Player;
 
 	public class BeautifulSword extends Weapon {
 
@@ -20,12 +21,11 @@ package classes.Items.Weapons {
 			return Math.max(5, 7 + (10 - game.player.cor / 3));
 		}
 
-		override public function canUse(host:Creature):Boolean {
-			if (game.player.cor < (33 + game.player.corruptionTolerance())) {
-				return true;
+		override public function canUse(host:Creature):String {
+			if (host.cor >= (33 + (host as Player).corruptionTolerance())) {
+				return "You grab hold of the handle of the sword only to have it grow burning hot.  You're forced to let it go lest you burn yourself.  Something within the sword must be displeased. ";
 			}
-			outputText("You grab hold of the handle of the sword only to have it grow burning hot.  You're forced to let it go lest you burn yourself.  Something within the sword must be displeased.  ");
-			return false;
+			return super.canUse(host);
 		}
 	}
 }

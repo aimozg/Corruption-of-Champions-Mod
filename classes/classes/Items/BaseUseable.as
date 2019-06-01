@@ -37,10 +37,11 @@ import classes.Scenes.SceneLib;
 
 		/**
 		 * If an item cannot be used it should provide some description of why not
+		 * Returns null if the item can be used
 		 * @param host
-		 * @return
+		 * @return String description of why the item can not be used or null
 		 */
-		public function canUse(host:Creature):Boolean { return true; }
+		public function canUse(host:Creature):String { return null; }
 
 		public function useItem(host:Creature):Boolean {
 			CoC_Settings.errorAMC("BaseUseable", "useItem", id);

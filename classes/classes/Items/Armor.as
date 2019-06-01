@@ -44,7 +44,7 @@ package classes.Items
 
 		public function get supportsUndergarment():Boolean { return _supportsUndergarment; }
 		
-		override public function canUse(host:Creature):Boolean {
+		override public function canUse(host:Creature):String {
 			if (this.supportsUndergarment == false && (game.player.upperGarment != UndergarmentLib.NOTHING || game.player.lowerGarment != UndergarmentLib.NOTHING)) {
 				var output:String = "";
 				var wornUpper:Boolean = false;
@@ -64,8 +64,7 @@ package classes.Items
 
 				output += ". You should consider removing them. You put it back into your inventory.";
 
-				outputText(output);
-				return false;
+				return output;
 			}
 			return super.canUse(host);
 		}

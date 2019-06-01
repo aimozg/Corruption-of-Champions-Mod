@@ -21,10 +21,11 @@ package classes.Items.Consumables
 				return "This draft is concocted from five scholar's teas and who knows what else.  Supposedly it will correct the stupifying effects of Bimbo Liqueur. \n\nType: Consumable";
 		}
 		
-		override public function canUse(host:Creature):Boolean {
-			if (host.hasPerk(PerkLib.BimboBrains) || host.hasPerk(PerkLib.FutaFaculties) || host.hasPerk(PerkLib.BroBrains)) return true;
-			outputText("You can't use this right now, and it's too expensive to waste!\n\n");
-			return false;
+		override public function canUse(host:Creature):String {
+			if (!(host.hasPerk(PerkLib.BimboBrains) || host.hasPerk(PerkLib.FutaFaculties) || host.hasPerk(PerkLib.BroBrains))) {
+				return "You can't use this right now, and it's too expensive to waste!\n\n";
+			}
+			return super.canUse(host);
 		}
 		
 		override public function useItem(host:Creature):Boolean {

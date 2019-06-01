@@ -22,10 +22,12 @@ package classes.Items.Weapons
 			return temp; 
 		}
 		
-		override public function canUse(host:Creature):Boolean {
-			if (game.player.cor >= (66 - game.player.corruptionTolerance())) return true;
-			SceneLib.sheilaScene.rebellingScarredBlade(true);
-			return false;
+		override public function canUse(host:Creature):String {
+			if (game.player.cor < (66 - game.player.corruptionTolerance())) {
+				SceneLib.sheilaScene.rebellingScarredBlade(true);
+				return "<Remind Ox to fix this if you see it>";
+			}
+			return super.canUse(host);
 		}
 	}
 }

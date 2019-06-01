@@ -584,7 +584,10 @@ package classes.Scenes
 					deleteItemPrompt(item, slotNum);
 					return;
 				}
-				if (item.canUse(CoC.instance.player)) { //If an item cannot be used then canUse should provide a description of why the item cannot be used
+				var canUse:String = item.canUse(CoC.instance.player);
+				if (canUse != null) { //If an item cannot be used then canUse should provide a description of why the item cannot be used
+					outputText(canUse);
+				} else {
 					if (!debug) player.itemSlots[slotNum].removeOneItem();
 					useItem(item, player.itemSlots[slotNum]);
 					return;
@@ -653,10 +656,11 @@ package classes.Scenes
 		
 		private function useItemNow(item:BaseUseable, source:ItemSlotClass):void {
 			clearOutput();
-			if (item.canUse(CoC.instance.player)) { //If an item cannot be used then canUse should provide a description of why the item cannot be used
+			var canUse:String = item.canUse(CoC.instance.player);
+			if (canUse == null) { //If an item cannot be used then canUse should provide a description of why the item cannot be used
 				useItem(item, source);
-			}
-			else {
+			} else {
+				outputText(canUse);
 				takeItemFull(item, false, source); //Give the player another chance to take this item
 			}
 		}

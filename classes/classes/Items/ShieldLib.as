@@ -4,10 +4,11 @@ package classes.Items
 	 * ...
 	 * @author Kitteh6660
 	 */
+
+	import classes.Creature;
 	import classes.Items.Shields.*;
 	import classes.PerkLib;
-	import classes.PerkType;
-	
+
 	public final class ShieldLib 
 	{
 		public static const NOTHING:Nothing = new Nothing();
@@ -25,8 +26,27 @@ package classes.Items
 		public const SANCTYL:Shield = new Sanctuary();
 		public const SANCTYD:Shield = new DarkAegis();
 		
-		public function ShieldLib() 
+		public function ShieldLib()
 		{
+			BLASPHE._canUse = canUse;
+			BUCKLER._canUse = canUse;
+			GREATSH._canUse = canUse;
+			KITE_SH._canUse = canUse;
+			MABRACE._canUse = canUse;
+			SPI_FOC._canUse = canUse;
+			TRASBUC._canUse = canUse;
+			TOWERSH._canUse = canUse;
+			DRGNSHL._canUse = canUse;
+			SANCTYN._canUse = canUse;
+			SANCTYL._canUse = canUse;
+			SANCTYD._canUse = canUse;
+		}
+
+		internal function canUse(thisItem:BaseEquipable, host:Creature):String {
+			if ((host.weaponPerk == "Large" && !host.hasPerk(PerkLib.TitanGrip)) || host.weaponPerk == "Dual" || host.weaponPerk == "Dual Large") {
+				return "Your current weapon requires two hands. Unequip your current weapon or switch to one-handed before equipping this shield. ";
+			}
+			return null;
 		}
 	}
 

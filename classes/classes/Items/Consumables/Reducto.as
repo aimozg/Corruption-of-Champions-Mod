@@ -15,10 +15,6 @@ package classes.Items.Consumables
 		public function Reducto() {
 			super("Reducto", "Reducto", "a salve marked as 'Reducto'", 30, "This container full of paste can be used to shrink a body part down by a significant amount.");
 		}
-
-		override public function canUse(host:Creature):Boolean {
-			return true;
-		}
 		
 //		override public function hasSubMenu():Boolean { return true; } //Only GroPlus and Reducto use this.
 		

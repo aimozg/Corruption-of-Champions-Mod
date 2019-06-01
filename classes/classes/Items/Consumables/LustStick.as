@@ -16,12 +16,11 @@ package classes.Items.Consumables
 			super("LustStk", "LustStk", "a tube of golden lipstick", ConsumableLib.DEFAULT_VALUE, "This tube of golden lipstick is used by harpies to keep males aroused.  It has aphrodisiac properties on anyone with male genitalia and is most effective when applied to the lips or groin.");
 		}
 
-		override public function canUse(host:Creature):Boolean {
-			if (game.player.hasCock() && !game.player.hasPerk(PerkLib.LuststickAdapted)) {
-				outputText("You look at the tube of lipstick, but get the idea it would be a pretty bad idea to smear a thick coating of cock-hardening aphrodisiacs over your own lips.  ");
-				return false;
+		override public function canUse(host:Creature):String {
+			if (host.hasCock() && !host.hasPerk(PerkLib.LuststickAdapted)) {
+				return "You look at the tube of lipstick, but get the idea it would be a pretty bad idea to smear a thick coating of cock-hardening aphrodisiacs over your own lips.  ";
 			}
-			return true;
+			return super.canUse(host);
 		}
 		
 		override public function useItem(host:Creature):Boolean {

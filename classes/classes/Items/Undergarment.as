@@ -2,6 +2,7 @@ package classes.Items
 {
 	import classes.Creature;
 	import classes.PerkType;
+	import classes.Player;
 
 	/**
 	 * @author Kitteh6660
@@ -17,33 +18,26 @@ package classes.Items
 			this._subType = undergarmentType;
 			this._name = name;
 			this._perk = perk;
-			switch(undergarmentType){
-				case TYPE_LOWERWEAR: _slot = Equipment.LOWER_GARMENT; break;
-				default: _slot = Equipment.UPPER_GARMENT // \shrug
+			if (undergarmentType === TYPE_LOWERWEAR) {
+				_slot = Equipment.LOWER_GARMENT;
+			} else {
+				_slot = Equipment.UPPER_GARMENT;
 			}
 			if (ptype) {
 				_itemPerks.push(ptype.create(v1, v2, v3, v4));
 			}
 		}
 		
-		override public function canUse(host:Creature):Boolean {
-			if (!game.player.armor.supportsUndergarment) {
-				outputText("It would be awkward to put on undergarments when you're currently wearing your type of clothing. You should consider switching to different clothes. You put it back into your inventory.");
-				return false;
+		override public function canUse(host:Creature):String {
+			if (!(host as Player).armor.supportsUndergarment) {
+				return "It would be awkward to put on undergarments when you're currently wearing your type of clothing. You should consider switching to different clothes. You put it back into your inventory.";
 			}
-			if (_subType != TYPE_LOWERWEAR) {return true;}
-			if (game.player.isBiped() || game.player.isGoo()) {
-				return true; //It doesn't matter what leg type you have as long as you're biped.
-			}
-			if (game.player.isTaur() || game.player.isDrider()) {
-				outputText("Your form makes it impossible to put on any form of lower undergarments. You put it back into your inventory.");
-				return false;
-			}
-			if (game.player.isNaga()) {
-				if (perk == "NagaWearable") { return true; }
-				else {
-					outputText("It's impossible to put on this undergarment as it's designed for someone with two legs. You put it back into your inventory.");
-					return false;
+			if (_subType == TYPE_LOWERWEAR){
+				if (host.isTaur() || host.isDrider()) {
+					return "Your form makes it impossible to put on any form of lower undergarments. You put it back into your inventory.";
+				}
+				if (host.isNaga() && perk != "NagaWearable") {
+					return "It's impossible to put on this undergarment as it's designed for someone with two legs. You put it back into your inventory.";
 				}
 			}
 			return super.canUse(host);

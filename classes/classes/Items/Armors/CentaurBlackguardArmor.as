@@ -15,10 +15,11 @@ package classes.Items.Armors
 		{
 			super("TaurBAr","Taur B. Armor","some taur blackguard armor","a set of taur blackguard armor",23,1698,"A suit of blackguard's armor for centaurs.","Heavy")
 		}
-		override public function canUse(host:Creature):Boolean{
-			if (game.player.isTaur()){return true}
-			outputText("The blackguard's armor is designed for centaurs, so it doesn't really fit you. You place the armor back in your inventory");
-			return false;
+		override public function canUse(host:Creature):String{
+			if (host.isTaur()){
+				return "The blackguard's armor is designed for centaurs, so it doesn't really fit you. You place the armor back in your inventory";
+			}
+			return super.canUse(host)
 		}
 		
 		override public function useText(host:Creature):String {

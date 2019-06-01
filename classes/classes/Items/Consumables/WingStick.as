@@ -13,10 +13,11 @@ package classes.Items.Consumables
 			super("W.Stick", "Wingstick", "a wingstick", 10, "A tri-bladed throwing weapon.  Though good for only a single use, it's guaranteed to do high damage if it hits.  Inflicts 40 to 100 base damage, affected by strength.");
 		}
 		
-		override public function canUse(host:Creature):Boolean {
-			if (game.inCombat) return true;
-			outputText("There's no one to throw it at!");
-			return false;
+		override public function canUse(host:Creature):String {
+			if (!game.inCombat) {
+				return "There's no one to throw it at!";
+			}
+			return super.canUse(host);
 		}
 		
 		override public function useItem(host:Creature):Boolean {

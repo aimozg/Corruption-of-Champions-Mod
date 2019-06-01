@@ -36,10 +36,11 @@ package classes.Items.Weapons
 			return (base + boost); 
 		}
 		
-		override public function canUse(host:Creature):Boolean {
-			if (game.player.hasPerk(PerkLib.TitanGrip)) return true;
-			outputText("You aren't skilled in handling large weapons with one hand yet to effectively use this whip. Unless you want to hurt yourself instead enemies when trying to use it...  ");
-			return false;
+		override public function canUse(host:Creature):String {
+			if (!game.player.hasPerk(PerkLib.TitanGrip)) {
+				return "You aren't skilled in handling large weapons with one hand yet to effectively use this whip. Unless you want to hurt yourself instead enemies when trying to use it...  ";
+			}
+			return super.canUse(host);
 		}
 	}
 }

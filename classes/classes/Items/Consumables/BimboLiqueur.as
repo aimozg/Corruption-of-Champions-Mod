@@ -15,10 +15,11 @@ package classes.Items.Consumables
 			super("BimboLq", "BimboLq", "a potent bottle of 'Bimbo Liqueur'", 1000, "This small bottle of liqueur is labelled 'Bimbo Liqueur'.  There's a HUGE warning label about the effects being strong and usually permanent, so you should handle this with care.");
 		}
 		
-		override public function canUse(host:Creature):Boolean {
-			if (!game.player.hasPerk(PerkLib.FutaForm)) return true;
-			outputText("Ugh.  This stuff is so, like... last year.  Maybe you can find someone else to feed it to?\n\n");
-			return false;
+		override public function canUse(host:Creature):String {
+			if (host.hasPerk(PerkLib.FutaForm)) {
+				return "Ugh.  This stuff is so, like... last year.  Maybe you can find someone else to feed it to?\n\n";
+			}
+			return super.canUse(host);
 		}
 
 		override public function useItem(host:Creature):Boolean {

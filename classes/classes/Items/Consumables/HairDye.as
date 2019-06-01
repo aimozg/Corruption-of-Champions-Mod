@@ -20,10 +20,6 @@ package classes.Items.Consumables
 			super(id, shortName, longName, value, description);
 		}
 		
-		override public function canUse(host:Creature):Boolean {
-			return true;
-		}
-		
 		override public function useItem(host:Creature):Boolean {
 			clearOutput();
 			EngineCore.menu();

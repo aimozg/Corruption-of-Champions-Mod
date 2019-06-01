@@ -13,10 +13,11 @@ package classes.Items.Consumables
 			super("ExtSerm", "ExtSerm", "a bottle of hair extension serum", 6, "This is a bottle of foamy pink liquid, purported by the label to increase the speed at which the user's hair grows.");
 		}
 		
-		override public function canUse(host:Creature):Boolean {
-			if (game.flags[kFLAGS.INCREASED_HAIR_GROWTH_SERUM_TIMES_APPLIED] <= 2) return true;
-			outputText("<b>No way!</b>  Your head itches like mad from using the rest of these, and you will NOT use another.\n");
-			return false;
+		override public function canUse(host:Creature):String {
+			if (game.flags[kFLAGS.INCREASED_HAIR_GROWTH_SERUM_TIMES_APPLIED] > 2) {
+				return "<b>No way!</b>  Your head itches like mad from using the rest of these, and you will NOT use another.\n";
+			}
+			return super.canUse(host)
 		}
 		
 		override public function useItem(host:Creature):Boolean {

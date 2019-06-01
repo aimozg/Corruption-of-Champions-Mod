@@ -2131,6 +2131,47 @@ public class PerkLib
                     .requireInt(90)
                     .requireStatusEffect(StatusEffects.KnowsChargeA, "Charge Armor spell");
             TraditionalMage.requireInt(80);
+	        //------------
+	        // WISDOM
+	        //------------
+	        ElementalConjurerResolve.requireWis(20);
+	        ElementalContractRank1.requireWis(25);
+	        ElementsOfTheOrtodoxPath.requireWis(30);
+	        ElementsOfMarethBasics.requirePerk(ElementsOfTheOrtodoxPath)
+		        .requireWis(35);
+	        //Tier 1 Wisdom perks
+	        ElementalBondFlesh
+		        .requireWis(50)
+		        .requireLevel(6);
+	        //Tier 2 Wisdom perks
+	        ElementalBondUrges
+		        .requireWis(75)
+		        .requireLevel(12);
+	        StrongElementalBond
+		        .requireWis(75)
+		        .requireLevel(12);
+	        //Tier 3 Wisdom perks
+	        //Tier 4 Wisdom perks
+	        StrongerElementalBond.requirePerk(StrongElementalBond)
+		        .requireWis(125)
+		        .requireLevel(24);
+	        ElementalConjurerDedication.requirePerk(ElementalConjurerResolve)
+		        .requireWis(120)
+		        .requireLevel(24);
+	        FirstAttackElementals.requirePerk(StrongElementalBond)
+		        .requireLevel(24);
+	        //Tier 5 Wisdom perks
+	        //Tier 6 Wisdom perks
+	        StrongestElementalBond.requirePerk(StrongerElementalBond)
+		        .requireWis(175)
+		        .requireLevel(36);
+	        //Tier 7 Wisdom perks
+	        //Tier 8 Wisdom perks
+	        ElementalConjurerSacrifice.requirePerk(ElementalConjurerDedication)
+		        .requireWis(220)
+		        .requireLevel(48);
+	        //Tier 9 Wisdom perks
+	        //Tier 10 Wisdom perks
             //------------
             // LIBIDO
             //------------

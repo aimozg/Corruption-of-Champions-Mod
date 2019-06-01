@@ -20,6 +20,8 @@ package classes.Items {
 		protected var _buffs:Object;
 		protected var _itemPerks:Vector.<PerkClass> = new Vector.<PerkClass>();
 
+		internal var _canUse:Function;
+
 		public function BaseEquipable(id:String, shortName:String, name:String,  longName:String, value:Number = 0, perk:String = "", description:String = null) {
 			super(id, shortName, longName, value, description);
 			this._perk = perk;
@@ -113,6 +115,13 @@ package classes.Items {
 
 		public function saveLoaded(host:Creature):void {
 			applyBuffs(host);
+		}
+
+		override public function canUse(host:Creature):String {
+			if(_canUse != null){
+				return _canUse(this, host);
+			}
+			return super.canUse(host);
 		}
 	}
 }

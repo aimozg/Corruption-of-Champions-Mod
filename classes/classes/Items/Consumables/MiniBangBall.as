@@ -16,10 +16,11 @@ package classes.Items.Consumables
 			super("BangB.", "MiniBangB", "a mini bang ball", 10, "A mini ball-shaped throwing weapon.  Though good for only a single use, it's guaranteed to do medium to high damage to solo or weak group of enemies if it hits.  Inflicts 60 to 80 base damage.");
 		}
 		
-		override public function canUse(host:Creature):Boolean {
-			if (game.inCombat) return true;
-			outputText("There's no one to throw it at!");
-			return false;
+		override public function canUse(host:Creature):String {
+			if (!game.inCombat) {
+				return "There's no one to throw it at!";
+			}
+			return super.canUse(host);
 		}
 		
 		override public function useItem(host:Creature):Boolean {

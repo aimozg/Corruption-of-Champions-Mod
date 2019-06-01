@@ -14,10 +14,6 @@ package classes.Items.Consumables
 		public function GroPlus() {
 			super("GroPlus", "GroPlus", "a needle filled with Gro+", 50, "This is a small needle with a reservoir full of blue liquid.  A faded label marks it as 'GroPlus'.  Its purpose seems obvious.");
 		}
-
-		override public function canUse(host:Creature):Boolean {
-			return true;
-		}
 		
 //		override public function hasSubMenu():Boolean { return true; } //Only GroPlus and Reducto use this.
 		
