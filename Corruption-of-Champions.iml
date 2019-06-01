@@ -13,7 +13,7 @@
         </dependencies>
         <compiler-options>
           <map>
-            <entry key="compiler.define" value="CONFIG::debug&#9;true&#10;CONFIG::release&#9;false&#10;CONFIG::AIR&#9;false&#10;CONFIG::STANDALONE&#9;true" />
+            <entry key="compiler.define" value="CONFIG::debug&#9;true&#10;CONFIG::release&#9;false&#10;CONFIG::AIR&#9;false&#10;CONFIG::STANDALONE&#9;true&#10;CONFIG::VERSION&#9;&quot;DEBUG&quot;" />
             <entry key="compiler.keep-generated-actionscript" value="true" />
           </map>
           <option name="resourceFilesMode" value="None" />
@@ -35,7 +35,7 @@
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="false" />
-            <entry key="compiler.define" value="CONFIG::debug&#9;false&#10;CONFIG::release&#9;true&#10;CONFIG::AIR&#9;false&#10;CONFIG::STANDALONE&#9;true" />
+            <entry key="compiler.define" value="CONFIG::debug&#9;false&#10;CONFIG::release&#9;true&#10;CONFIG::AIR&#9;false&#10;CONFIG::STANDALONE&#9;true&#10;CONFIG::VERSION&#9;&quot;RELEASE&quot;" />
           </map>
           <option name="resourceFilesMode" value="None" />
           <option name="additionalOptions" value="-use-network=false -keep-as3-metadata Embed" />
@@ -51,21 +51,22 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="4.6.0" />
+          <sdk name="Apache Flex SDK" />
         </dependencies>
         <compiler-options>
           <map>
             <entry key="compiler.debug.swf" value="false" />
-            <entry key="compiler.define" value="CONFIG::AIR&#9;true&#10;CONFIG::STANDALONE&#9;false&#10;CONFIG::debug&#9;false&#10;CONFIG::release&#9;true" />
+            <entry key="compiler.define" value="CONFIG::AIR&#9;true&#10;CONFIG::STANDALONE&#9;false&#10;CONFIG::debug&#9;false&#10;CONFIG::release&#9;true&#10;CONFIG::VERSION&#9;&quot;MOBILE&quot;" />
           </map>
           <option name="resourceFilesMode" value="None" />
           <option name="additionalOptions" value="-use-network=false -keep-as3-metadata Embed" />
         </compiler-options>
         <packaging-air-desktop />
-        <packaging-android enabled="true" package-file-name="CoC-Mobile">
+        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/devTools/APK/EndlessJourney.xml" package-file-name="CoC-Mobile">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/devTools/icons" path-in-package="icons" />
           </files-to-package>
+          <AirSigningOptions keystore-path="$MODULE_DIR$/devTools/APK/cert.p12" use-temp-certificate="false" />
         </packaging-android>
         <packaging-ios package-file-name="CoC-Mobile" />
       </configuration>
@@ -83,8 +84,9 @@
       <excludeFolder url="file://$MODULE_DIR$/bin" />
       <excludeFolder url="file://$MODULE_DIR$/generated" />
       <excludeFolder url="file://$MODULE_DIR$/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="jdk" jdkName="4.6.0" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="Apache Flex SDK&#9;4.6.0" jdkType="__CompositeFlexSdk__" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="lib" level="project" />
   </component>

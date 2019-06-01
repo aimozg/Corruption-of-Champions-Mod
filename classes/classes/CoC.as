@@ -262,8 +262,8 @@ public class CoC extends MovieClip
         //model.debug = debug; // TODO: Set on model?
 
 			//Version NUMBER
-			ver = "Endless Journey 0.0.1";
-			version = ver + " (Initial)";
+			ver = "Endless Journey";
+			version = ver +" "+ CONFIG::VERSION;
 
         this.images = new ImageManager(stage, mainView);
         this.inputManager = new InputManager(stage, mainView, false);

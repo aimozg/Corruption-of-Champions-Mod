@@ -22,3 +22,5 @@ desktop.ini
 CoC-AIR-app.xml
 CoC-AIR.airi
 .DS_Store
+/target/
+/EndlessJourney.xml
