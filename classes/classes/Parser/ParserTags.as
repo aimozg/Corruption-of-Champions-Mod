@@ -217,6 +217,7 @@ public class ParserTags {
         "cock"                  : function ():* { return CoC.instance.monster.cockDescript(0); },
         "cockhead"              : function ():* { return CoC.instance.monster.cockHead(0); },
         "cocks"                 : function ():* { return CoC.instance.monster.multiCockDescriptLight(); },
+        "cockshort"             : function ():* { return CoC.instance.monster.cockDescriptShort(0)},
         "cunt"                  : function ():* { return CoC.instance.monster.vaginaDescript(); },
         "eachcock"              : function ():* { return CoC.instance.monster.oMultiCockDesc(); },
         "eyes"                  : function ():* { return CoC.instance.monster.eyesDescript(); },

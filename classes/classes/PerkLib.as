@@ -46,11 +46,6 @@ public class PerkLib
 			name : "History: Alchemist",
 			short: "Alchemical experience makes items more reactive to your body."
 		});
-		public static const HistoryCultivator:PerkType = jmk({
-			id   : "History: Cultivator",
-			name : "History: Cultivator",
-			short: "Ki is easier to kept giving you 10% increase to it maximum amount."
-		});
 		public static const HistoryFighter:PerkType    = jmk({
 			id   : "History: Fighter",
 			name : "History: Fighter",
