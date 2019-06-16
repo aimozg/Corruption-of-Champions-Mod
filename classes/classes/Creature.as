@@ -2715,6 +2715,7 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		public function hasMostlyPlainSkin():Boolean { return skin.hasMostlyPlainSkin(); }
 		public function hasPlainSkinOnly():Boolean { return skin.hasPlainSkinOnly(); }
 		public function hasPartialCoat(coat_type:int):Boolean { return skin.hasPartialCoat(coat_type); }
+		public function hasPartialCoatOfType(...types:Array):Boolean {return skin.hasPartialCoatOfType(types)}
 		public function hasPlainSkin():Boolean { return skin.hasPlainSkin(); }
 		public function hasGooSkin():Boolean { return skin.hasGooSkin(); }
 		public function isGargoyle():Boolean { return skin.hasBaseOnly(Skin.STONE); }

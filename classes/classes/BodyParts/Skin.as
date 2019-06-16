@@ -240,6 +240,11 @@ public class Skin extends SaveableBodyPart {
 	public function hasPartialCoat(coat_type:int):Boolean {
 		return coverage == COVERAGE_LOW && coat.type == coat_type;
 	}
+	public function hasPartialCoatOfType(...types:Array):Boolean {
+		return types.some(function(e:*, i:int, a:Array):Boolean{
+			return hasPartialCoat(e);
+		});
+	}
 	public function hasFur():Boolean {
 		return hasCoatOfType(FUR);
 	}
