@@ -76,7 +76,7 @@ public class Compiler {
 					if (hasElse) {
 						throw new Error("Duplicate <else> element");
 					}
-					if (item.children() > 0) {
+					if (item.children().length() > 0) {
 						iff.elseBlock = compileChildren(item);
 						hasElse = true;
 						versionLock = 1;
@@ -91,7 +91,7 @@ public class Compiler {
 					if (hasElse) {
 						throw new Error("<elseif> after <else>");
 					}
-					if (item.children() > 0) {
+					if (item.children().length() > 0) {
 						if (versionLock == 2) {
 							throw new Error("Inconsistent <elseif> versions (v2 after v1)")
 						}
