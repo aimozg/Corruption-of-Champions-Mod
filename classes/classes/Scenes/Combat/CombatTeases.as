@@ -140,7 +140,7 @@ package classes.Scenes.Combat {
 				break;
 		}
 		//slutty simplicity bonus
-		if (player.hasPerk(PerkLib.SluttySimplicity) && player.armorName == "nothing") {
+		if (player.hasPerk(PerkLib.SluttySimplicity) && player.meetUnhinderedReq()) {
 			damage *= (1 + ((10 + rand(11)) / 100));
 		}
 		damage = Math.round(damage);

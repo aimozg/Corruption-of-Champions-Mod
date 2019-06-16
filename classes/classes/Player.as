@@ -313,12 +313,19 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 		}
 		override public function get weaponAttack():Number {
 			var attack:Number = weapon.attack;
-			if (hasPerk(PerkLib.HiddenMomentum) && weaponPerk == "Large" && str >= 75 && spe >= 50) {
-				attack += (((str + spe) - 100) * 0.1);
-			}//30-70-110
-			if (hasPerk(PerkLib.LightningStrikes) && spe >= 60 && (weaponPerk != "Large" || weaponPerk != "Dual Large" || !isFistOrFistWeapon())) {
-				attack += ((spe - 50) * 0.3);//wyjątek potem dodać dla daggers i innych assasins weapons i dać im lepszy przelicznik
-			}//45-105-165
+			if (!weapon.isLarge()) {
+				if (hasPerk(PerkLib.LightningStrikes) && spe >= 60 && !isFistOrFistWeapon()) {
+					attack += ((spe - 50) * 0.3);
+				}
+			} else {
+				if (hasPerk(PerkLib.HiddenMomentum) && str >= 50 && spe >= 50) {
+					attack += (((str + spe) - 70) * 0.1);
+				}
+				if (hasPerk(PerkLib.WeaponMastery) && str >= 90) {
+					attack *= 1.5;
+				}
+			}
+
 			if (hasPerk(PerkLib.SteelImpact)) {
 				attack += ((tou - 50) * 0.3);
 			}

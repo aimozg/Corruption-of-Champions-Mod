@@ -1600,7 +1600,7 @@ public function meleeDamageAcc(roll:ActionRoll):void {
 		if (player.inte > 100) critChance += 10;
 	}
 	if (player.hasPerk(PerkLib.JobDervish) && (player.weaponPerk != "Large" || player.weaponPerk != "Staff")) critChance += 10;
-	if (player.hasPerk(PerkLib.WeaponMastery) && player.weaponPerk == "Large" && player.str >= 100) critChance += 10;
+	if (player.hasPerk(PerkLib.WeaponMastery) && player.weaponPerk == "Large" && player.str >= 90) critChance += 10;
 	if (player.hasStatusEffect(StatusEffects.Rage)) critChance += player.statusEffectv1(StatusEffects.Rage);
 	if (player.weapon == weapons.MASAMUN || (player.weapon == weapons.WG_GAXE && monster.cor > 66) || ((player.weapon == weapons.DE_GAXE || player.weapon == weapons.YAMARG) && monster.cor < 33)) critChance += 10;
 	if (monster.isImmuneToCrits()) critChance = 0;
@@ -1891,9 +1891,8 @@ public function combatMiss():Boolean {
 }
 public function combatParry():Boolean {
 	var parryChance:int = 0;
-	if (player.hasPerk(PerkLib.Parry) && player.spe >= 50 && player.str >= 50 && player.weapon != WeaponLib.FISTS) {
-		if (player.spe <= 100) parryChance += (player.spe - 50) / 5;
-		else parryChance += 10;
+	if (player.hasPerk(PerkLib.Parry) && player.spe >= 30 && player.str >= 30 && player.weapon != WeaponLib.FISTS) {
+		parryChance += Math.min((player.spe - 20) / 5,10);
 	}
 	if (player.hasPerk(PerkLib.DexterousSwordsmanship)) parryChance += 10;
 	if (player.hasPerk(PerkLib.CatchTheBlade) && player.spe >= 50 && player.shieldName == "nothing" && player.isFistOrFistWeapon()) parryChance += 15;

@@ -3420,13 +3420,13 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			if (hasPerk(PerkLib.Juggernaut) && tou >= 100 && armorPerk == "Heavy") {
 				mult -= 0.1;
 			}
-			if (hasPerk(PerkLib.ImmovableObject) && tou >= 75) {
+			if (hasPerk(PerkLib.ImmovableObject) && tou >= 50) {
 				mult -= 0.1;
 			}
 			if (hasPerk(PerkLib.HeavyArmorProficiency) && tou >= 75 && armorPerk == "Heavy") {
 				mult -= 0.1;
 			}
-			if (hasPerk(PerkLib.NakedTruth) && spe >= 75 && lib >= 60 && (armorName == "arcane bangles" || armorName == "practically indecent steel armor" || armorName == "revealing chainmail bikini" || armorName == "slutty swimwear" || armorName == "barely-decent bondage straps" || armorName == "nothing")) {
+			if (hasPerk(PerkLib.NakedTruth) && (armorName == "arcane bangles" || armorName == "practically indecent steel armor" || armorName == "revealing chainmail bikini" || armorName == "slutty swimwear" || armorName == "barely-decent bondage straps" || armorName == "nothing")) {
 				mult -= 0.1;
 			}
 			//--STATUS AFFECTS--
@@ -3462,9 +3462,8 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 				mult -= damageWisdomModifier();
 				if (mult < 70) mult = 70;
 			}
-			if (hasPerk(PerkLib.NakedTruth)) mult -= 0.45;
 			//--PERKS--
-			if (hasPerk(PerkLib.NakedTruth) && spe >= 75 && lib >= 60 && (armorName == "arcane bangles" || armorName == "practically indecent steel armor" || armorName == "revealing chainmail bikini" || armorName == "slutty swimwear" || armorName == "barely-decent bondage straps" || armorName == "nothing")) {
+			if (hasPerk(PerkLib.NakedTruth) && (armorName == "arcane bangles" || armorName == "practically indecent steel armor" || armorName == "revealing chainmail bikini" || armorName == "slutty swimwear" || armorName == "barely-decent bondage straps" || armorName == "nothing")) {
 				mult -= 0.1;
 			}
 			//--STATUS AFFECTS--

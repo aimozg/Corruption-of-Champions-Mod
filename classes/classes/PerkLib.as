@@ -141,11 +141,7 @@ public class PerkLib
 			long : "You choose the 'Battlemage' perk. You start every battle with Might effect, as long as your Lust is sufficient to cast it before battle."
 		});
 		public static const Berzerker:PerkType                      = mk("Berzerker", "Berserker",
-				"[if(player.str>=75)" +
-				"Grants 'Berserk' ability." +
-				"|" +
-				"<b>You aren't strong enough to benefit from this anymore.</b>" +
-				"]",
+				"Grants 'Berserk' ability.",
 				"You choose the 'Berserker' perk, which unlocks the 'Berserk' magical ability.  Berserking increases attack and lust resistance but reduces physical defenses.");
 		public static const BlackHeart:PerkType                     = jmk({
 			id   : "Black Heart",
@@ -381,6 +377,7 @@ public class PerkLib
 				([StatNames.WIS_MULT]): +0.90
 			}
 		});
+		//todo @Oxdeception: Fix these perks, fix summon menu to no longer require summoner job
 		public static const ElementalContractRank1:PerkType         = jmk({
 			id   : "Elemental Contract Rank 1",
 			name : "Elemental Contract Rank 1",
@@ -532,7 +529,7 @@ public class PerkLib
 			long : "You choose the 'Hot Blooded' perk.  As a result of your enhanced libido, your lust no longer drops below 20!"
 		});
 		public static const ImmovableObject:PerkType                = mk("Immovable Object", "Immovable Object",
-				"[if(player.tou>=75)" +
+				"[if(player.tou>=50)" +
 				"Grants 10% physical damage reduction." +
 				"|" +
 				"<b>You aren't tough enough to benefit from this anymore.</b>" +
@@ -784,7 +781,7 @@ public class PerkLib
 			long : "You've chosen the 'Nymphomania' perk.  Due to the incredible amount of corruption you've been exposed to, you've begun to live in a state of minor constant arousal.  Your minimum lust will be increased by 30."
 		});
 		public static const Parry:PerkType                          = mk("Parry", "Parry",
-				"[if(player.spe>=50)" +
+				"[if(player.spe>=30)" +
 				"Increases deflect chance by up to 10% while wielding a weapon. (Speed-based)." +
 				"|" +
 				"<b>You are not fast enough to gain benefit from this perk.</b>" +
@@ -1082,7 +1079,7 @@ public class PerkLib
 		public static const WeaponMastery:PerkType                  = jmk({
 			id   : "Weapon Mastery",
 			name : "Weapon Mastery",
-			short: "[if(player.str>99)" +
+			short: "[if(player.str>=90)" +
 				   "One and half damage bonus of weapons classified as 'Large'. Additionaly 10% higher chance to crit with those weapons." +
 				   "|" +
 				   "<b>You aren't strong enough to benefit from this anymore.</b>" +
@@ -1997,118 +1994,77 @@ public class PerkLib
 			//------------
             // STRENGTH
             //------------
-            //Tier 1 Strength Perks
-            ThunderousStrikes.requireStr(80);
-            BrutalBlows.requireStr(75);
-            Parry.requireStr(50)
-                    .requireSpe(50);
-            ThirstForBlood.requireStr(75);
-            //Tier 2 Strength Perks
-            Berzerker.requireStr(75);
-            HoldWithBothHands.requireStr(80);
-            ShieldSlam.requireStr(80)
-                    .requireTou(60);
-            WeaponMastery.requireStr(100);
-            //Tier 3 Strength Perks
-            ColdFury.requirePerk(Berzerker)
-                    .requireStr(75);
-            TitanGrip.requirePerk(WeaponMastery)
-                    .requireStr(100);
-            HiddenMomentum.requireStr(75)
-                    .requireSpe(50);
-            //Tier 4 Strength Perks
-            //Tier 5 Strength Perks
-            //Tier 6 Strength Perks
-            //Tier 7 Strength Perks
-            //Tier 8 Strength Perks
-            Rage.requireStr(80);
-            //------------
+            ThirstForBlood.requireStr(10); // Bleed damage done = 150%
+            HoldWithBothHands.requireStr(20); // + 20% damage with empty offhand
+            Parry.requireStr(30).requireSpe(30); // + Lower of ((spe-20)/5 or 10)% chance to parry
+            ShieldSlam.requireStr(30).requireTou(40); // additional .5% chance to stun per bash (max 10%), Sheild bash damage = 120%
+            Berzerker.requireStr(40); // Ability Status -> +15 base damage, 60% lust received, Armour = 0 + Magical Armor
+            HiddenMomentum.requireStr(50).requireSpe(50); // Large weapon base attack += ((str + spe) - 70) * 0.1; (13 @ 100str 100spe)
+            Rage.requireStr(60); // While using beserker -> Every non crit adds +10% chance to crit (max 50%, resets on crit)
+            BrutalBlows.requireStr(75); // Reduces target base defense by 5 every hit
+            ThunderousStrikes.requireStr(80); // Base damage = 120%
+            WeaponMastery.requireStr(90); // While str >= 90: Large weapon base attack = 150% (stacks after hidden momentum) and + 10% to crit
+
+	        ColdFury.requirePerk(Berzerker); // Prevents beserker's armour loss
+	        TitanGrip.requirePerk(WeaponMastery); // Large weapons become single hand weapons
+
+
+	        //------------
             // TOUGHNESS
             //------------
-            Regeneration.requireTou(50);
-            //Tier 1 Toughness Perks
-            Tank.requireTou(60);
-            ShieldMastery.requireTou(50);
-            //Tier 2 Toughness Perks
-            ImmovableObject.requireTou(75);
-            Resolute.requireTou(75);
+            ShieldMastery.requireTou(10);
+            Tank.requireTou(20);
+            SecondWind.requireTou(30);
+            SteelImpact.requireTou(40);
+	        IronMan.requireTou(50);
+            ImmovableObject.requireTou(50);
+            Regeneration.requireTou(60);
             HeavyArmorProficiency.requireTou(75);
-            IronMan.requireTou(60);
-            //Tier 3 Toughness Perks
-            Juggernaut.requireTou(100)
-                    .requirePerk(HeavyArmorProficiency);
-            //Tier 4 Toughness Perks
-            //Tier 5 Toughness Perks
-            //Tier 6 Toughness Perks
-            //Tier 7 Toughness Perks
-            //Tier 8 Toughness Perks
-            SteelImpact.requireTou(60);
-            //Tier 9 Toughness Perks
-            //Tier 10 Toughness Perks
-            SecondWind.requireTou(75);
-            //------------
+            Resolute.requireTou(80);
+            Juggernaut.requireTou(100).requirePerk(HeavyArmorProficiency);
+
+
+	        //------------
             // SPEED
             //------------
-            Runner.requireSpe(20);
-            //slot 3 - speed perk
-            Evade.requireSpe(20);
-            //Tier 1 Speed Perks
-            //Agility - A small portion of your speed is applied to your defense rating when wearing light armors.
-            Agility.requireSpe(75)
-                    .requirePerk(Runner);
-            //slot 3 - Double Attack perk
-            Unhindered.requireSpe(75)
-                    .requirePerk(Evade)
-                    .requirePerk(Agility);
-            LightningStrikes.requireSpe(60);
-            Naturaljouster.requireSpe(60);
-            VitalShot.requireSpe(60)
-                    .requirePerk(Tactician);
-            DeadlyAim.requireSpe(60)
-                    .requirePerk(Precision);
-            //Tier 2 Speed Perks
-            LungingAttacks.requireSpe(75);
-            Blademaster.requireSpe(80)
-                    .requireStr(60);
-            SluttySimplicity.requireSpe(80)
-                    .requireLib(50)
-                    .requirePerk(Unhindered);
-            NakedTruth.requireSpe(80)
-                    .requireLib(50)
-                    .requirePerk(Unhindered);
-            //Tier 3 Speed Perks
-            Manyshot.requireSpe(100);
-            EnvenomedBolt.requireLevel(1)
+            Runner.requireSpe(10); // + additional 50% run succeed roll
+            Agility.requireSpe(20); // + spe/10 to armor def for light/none, + spe/25 to medium
+            Evade.requireSpe(30); // + additional 10% roll to evade attacks, + additional 50% roll to evade reflected
+            Blademaster.requireSpe(40); // + 5% crit chance
+            LightningStrikes.requireSpe(60); // Non large weapons: Base attack += (spe-50) * 0.3  (= 15 @ spe 100)
+            LungingAttacks.requireSpe(75); // Target armor = 50%
+
+	        Unhindered.requireSpe(30).requirePerk(Evade).requirePerk(Agility); // Current is Placebo (Unused method shows +10% evade chance)
+	        SluttySimplicity.requireLib(50).requirePerk(Unhindered); // 110% to 120% tease base damage when unhindered
+            NakedTruth.requireLib(50).requirePerk(Unhindered); // +10% damage reduction when unhindered
+
+            Naturaljouster.requireSpe(60); // Lances: Damage * 3 when spe > 60 as taur/drider, spe > 150 else
+	        Impale.requirePerk(Naturaljouster).requireSpe(100); // Lances: crit damage + 75%
+	        NaturaljousterMastergrade.requirePerk(Naturaljouster).requireSpe(180); // Lances: Damage * 5 (stacks after Natural Jouster) when Spe > 180 as taur/drider, spe > 450 else (is that possible?)
+
+
+            DeadlyAim.requireSpe(60).requirePerk(Precision); // arrows ignore target damage reduction
+            VitalShot.requireSpe(40).requirePerk(Tactician); // +10% crit chance with arrows when inte >= 50 (applies Tactician to arrows)
+            //Manyshot.requireSpe(100); //fixme Not implemented
+	        EnvenomedBolt.requireLevel(1)
                     .requireCustomFunction(function (player:Player):Boolean {
                         return player.tail.isAny(Tail.BEE_ABDOMEN, Tail.SCORPION, Tail.MANTICORE_PUSSYTAIL)
                                 || player.facePart.isAny(Face.SNAKE_FANGS, Face.SPIDER_FANGS);
                     }, "Venom-producing tail, abdomen, or fangs");
-            Impale.requirePerk(Naturaljouster)
-                    .requireSpe(100);
-            //Tier 4 Speed Perks
-            //Tier 5 Speed Perks
-            //Tier 6 Speed Perks
-            NaturaljousterMastergrade.requirePerk(Naturaljouster)
-                    .requireSpe(180);
-            //Tier 7 Speed Perks
-            //Tier 8 Speed Perks
             ElementalArrows.requireLevel(1)
                     .requireCustomFunction(function (player:Player):Boolean {
                         return player.hasStatusEffect(StatusEffects.KnowsWhitefire) || player.hasStatusEffect(StatusEffects.KnowsIceSpike);
                     }, "Whitefire or Ice Spike spell");
-            //Tier 9 Speed Perks
             Cupid.requireStatusEffect(StatusEffects.KnowsArouse, "Arouse spell");
             //------------
             // INTELLIGENCE
             //------------
-            //Slot 4 - precision - -10 enemy toughness for damage calc
             Precision.requireInt(25);
-            //Spellpower - boosts spell power
             Spellpower.requireInt(50);
-            //Tier 1 Intelligence Perks
             Tactician.requireInt(50);
             StaffChanneling.requireInt(60);
-            //Tier 2 Intelligence perks
+
+
             // Spell-boosting perks
             // Battlemage: auto-use Might
             Battlemage.requireInt(80)
@@ -2129,44 +2085,36 @@ public class PerkLib
 	        //------------
 	        // WISDOM
 	        //------------
-	        ElementalConjurerResolve.requireWis(20);
-	        ElementalContractRank1.requireWis(25);
-	        ElementsOfTheOrtodoxPath.requireWis(30);
-	        ElementsOfMarethBasics.requirePerk(ElementsOfTheOrtodoxPath)
-		        .requireWis(35);
-	        //Tier 1 Wisdom perks
-	        ElementalBondFlesh
-		        .requireWis(50)
-		        .requireLevel(6);
-	        //Tier 2 Wisdom perks
-	        ElementalBondUrges
-		        .requireWis(75)
-		        .requireLevel(12);
-	        StrongElementalBond
-		        .requireWis(75)
-		        .requireLevel(12);
-	        //Tier 3 Wisdom perks
-	        //Tier 4 Wisdom perks
-	        StrongerElementalBond.requirePerk(StrongElementalBond)
-		        .requireWis(125)
-		        .requireLevel(24);
-	        ElementalConjurerDedication.requirePerk(ElementalConjurerResolve)
-		        .requireWis(120)
-		        .requireLevel(24);
-	        FirstAttackElementals.requirePerk(StrongElementalBond)
-		        .requireLevel(24);
-	        //Tier 5 Wisdom perks
-	        //Tier 6 Wisdom perks
-	        StrongestElementalBond.requirePerk(StrongerElementalBond)
-		        .requireWis(175)
-		        .requireLevel(36);
-	        //Tier 7 Wisdom perks
-	        //Tier 8 Wisdom perks
-	        ElementalConjurerSacrifice.requirePerk(ElementalConjurerDedication)
-		        .requireWis(220)
-		        .requireLevel(48);
-	        //Tier 9 Wisdom perks
-	        //Tier 10 Wisdom perks
+	        // These do not currently function due to summoning menu being locked by job
+	        // Pending redesign
+	        //ElementalConjurerResolve.requireWis(20);
+	        //ElementalContractRank1.requireWis(25);
+	        //ElementsOfTheOrtodoxPath.requireWis(30);
+	        //ElementsOfMarethBasics.requirePerk(ElementsOfTheOrtodoxPath)
+		    //    .requireWis(35);
+	        //ElementalBondFlesh
+		    //    .requireWis(50)
+		    //    .requireLevel(6);
+	        //ElementalBondUrges
+		    //    .requireWis(75)
+		    //    .requireLevel(12);
+	        //StrongElementalBond
+		    //    .requireWis(75)
+		    //    .requireLevel(12);
+	        //StrongerElementalBond.requirePerk(StrongElementalBond)
+		    //    .requireWis(125)
+		    //    .requireLevel(24);
+	        //ElementalConjurerDedication.requirePerk(ElementalConjurerResolve)
+		    //    .requireWis(120)
+		    //    .requireLevel(24);
+	        //FirstAttackElementals.requirePerk(StrongElementalBond)
+		    //    .requireLevel(24);
+	        //StrongestElementalBond.requirePerk(StrongerElementalBond)
+		    //    .requireWis(175)
+		    //    .requireLevel(36);
+	        //ElementalConjurerSacrifice.requirePerk(ElementalConjurerDedication)
+		    //    .requireWis(220)
+		    //    .requireLevel(48);
             //------------
             // LIBIDO
             //------------

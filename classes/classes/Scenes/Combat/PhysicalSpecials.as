@@ -284,7 +284,7 @@ package classes.Scenes.Combat {
 		outputText("You lift your [weapon] with all of your strenght and smash it on your foe head. ");
 		var damage:Number = powerfistspoweeeeer() * attacks;
 		var critChance:int = 0;
-		if (player.hasPerk(PerkLib.WeaponMastery) && player.weaponPerk == "Large" && player.str >= 100) critChance += 10;
+		if (player.hasPerk(PerkLib.WeaponMastery) && player.weaponPerk == "Large" && player.str >= 90) critChance += 10;
 		var crit:Boolean = critRoll({rage:true}, critChance);
 		if (crit) {
 			damage *= 1.75;
