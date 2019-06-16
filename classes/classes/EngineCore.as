@@ -246,7 +246,6 @@ public class EngineCore {
      * Clear the text on screen.
      */
     public static function clearOutput():void {
-        CoC.instance.forceUpdate();
         clearOutputTextOnly();
         if (CoC.instance.gameState != 3) CoC.instance.mainView.hideMenuButton(MainView.MENU_DATA);
         CoC.instance.mainView.hideMenuButton(MainView.MENU_APPEARANCE);

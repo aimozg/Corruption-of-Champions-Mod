@@ -103,10 +103,6 @@ public class CoC extends MovieClip
     public var jewelries:JewelryLib = new JewelryLib();
     public var shields:ShieldLib = new ShieldLib();
 
-
-    // Force updates in Pepper Flash ahuehue
-    private var _updateHack:Sprite = new Sprite();
-
     public var mainViewManager:MainViewManager = new MainViewManager();
     public var mainMenu:MainMenu = new MainMenu();
     public var perkMenu:PerkMenu = new PerkMenu();
@@ -500,34 +496,6 @@ public class CoC extends MovieClip
 	    mainView.setTextBackground(flags[kFLAGS.TEXT_BACKGROUND_STYLE]);
 		loadStory();
         this.stop();
-
-        if (_updateHack) {
-            _updateHack.name = "wtf";
-            _updateHack.graphics.beginFill(0xFF0000, 1);
-            _updateHack.graphics.drawRect(0, 0, 2, 2);
-            _updateHack.graphics.endFill();
-
-            stage.addChild(_updateHack);
-            _updateHack.x = 999;
-            _updateHack.y = 799;
-        }
-    }
-
-    public function forceUpdate():void
-    {
-        _updateHack.x = 999;
-        _updateHack.addEventListener(Event.ENTER_FRAME, moveHackUpdate);
-    }
-
-    public function moveHackUpdate(e:Event):void
-    {
-        _updateHack.x -= 84;
-
-        if (_updateHack.x < 0)
-        {
-            _updateHack.x = 0;
-            _updateHack.removeEventListener(Event.ENTER_FRAME, moveHackUpdate);
-        }
     }
 
     public function spriteSelect(choice:Object = 0):void {
