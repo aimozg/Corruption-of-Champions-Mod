@@ -55,6 +55,7 @@ public class CharCreation extends BaseContent {
 		public const MAX_FERTILITY_LEVEL:int = 10;				//40 AP
 		
 		private var specialCharacters:CharSpecial = new CharSpecial();
+		private var _specialArr:Array;
 		private var customPlayerProfile:Function;
 		
 //		private var boxNames:ComboBox;
@@ -64,6 +65,17 @@ public class CharCreation extends BaseContent {
 		public function newGameFromScratch():void {
 			flags[kFLAGS.NEW_GAME_PLUS_LEVEL] = 0;
 			newGameGo();
+		}
+
+		private function showNameCombo():void {
+			if(!_specialArr){
+				_specialArr = [];
+				for each(var ch:Array in specialCharacters.customs){
+					_specialArr.push({label:ch[0], data:ch});
+				}
+			}
+			CoC.instance.showComboBox(_specialArr,"Pre-defined characters",selectName);
+			mainView.placeComboAfterTextInput();
 		}
 
 		public function newGameGo():void {
@@ -77,8 +89,6 @@ public class CharCreation extends BaseContent {
 			hideUpDown();
 			mainView.hideAllMenuButtons();
 			mainView.setButtonText(0, "Newgame"); // b1Text.text = "Newgame";
-			var showSpecialNames:Boolean = true;
-			
 
 			outputText("You grew up in the small village of Ingnam, a remote village with rich traditions, buried deep in the wilds.  Every year for as long as you can remember, your village has chosen a champion to send to the cursed Demon Realm.  Legend has it that in years Ingnam has failed to produce a champion, chaos has reigned over the countryside.  Children disappear, crops wilt, and disease spreads like wildfire.  This year, <b>you</b> have been selected to be the champion.\n\n");
 			outputText("What is your name?");
@@ -86,18 +96,7 @@ public class CharCreation extends BaseContent {
 			menu();
 			addButton(0, "OK", chooseName);
 			mainViewManager.showTextInput("",null,16);
-			
-			var preList:Array = [];
-			for (var t:int = 0; t < specialCharacters.customs.length; t++) {
-				preList.push( { label: specialCharacters.customs[t][0], data:specialCharacters.customs[t] } );
-			}
-
-			if (showSpecialNames) {
-				CoC.instance.showComboBox(preList,"Pre-defined characters",selectName);
-				//FIXME @Oxdeception There should be no references to the nameBox in this class
-				mainView.placeComboBox(mainView.nameBox.x + mainView.nameBox.width + 10,mainView.nameBox.y);
-			}
-
+			showNameCombo();
 			//RESET DUNGEON
 			DungeonAbstractContent.inDungeon = false;
 			DungeonAbstractContent.dungeonLoc = 0;
@@ -432,6 +431,7 @@ public class CharCreation extends BaseContent {
 				
 			flushOutputTextToGUI();
 			mainViewManager.showTextInput(selectedItem.data[0],null,16);
+			showNameCombo();
 		}
 		
 		//Determines if has character creation bonuses

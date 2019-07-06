@@ -837,6 +837,9 @@ import flash.text.TextFormat;
 	public function placeComboBox(x:Number,y:Number):void {
 		aCb.move(x,y);
 	}
+	public function placeComboAfterTextInput():void {
+		placeComboBox(nameBox.x + nameBox.width + 10, nameBox.y);
+	}
 	private var _mainFocus:DisplayObject;
 	public function setMainFocus(e:DisplayObject, hideTextBackground:Boolean = false,  resize:Boolean = false):void {
 		if (resize) {
