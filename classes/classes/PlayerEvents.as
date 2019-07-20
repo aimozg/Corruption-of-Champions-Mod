@@ -663,7 +663,6 @@ if (CoC.instance.model.time.hours > 23) { //Once per day
 				if (player.hasPerk(PerkLib.ManticoreCumAddict)) multiplier *= 2;
 				//Hunger drain rate. If above 50, 1.5 per hour. Between 25 and 50, 1 per hour. Below 25, 0.5 per hour.
 				//So it takes 100 hours to fully starve from 100/100 to 0/100 hunger. Can be increased to 125 then 166 hours with Survivalist perks.
-				if (player.internalChimeraRating() >= 1) player.hunger -= (0.5 * player.internalChimeraRating());
 				if (player.hunger > 80) player.hunger -= (0.5 * multiplier); //If satiated, depletes at 2 points per hour.
 				if (player.hunger > 50) player.hunger -= (0.5 * multiplier);
 				if (player.hunger > 25) player.hunger -= (0.5 * multiplier);
