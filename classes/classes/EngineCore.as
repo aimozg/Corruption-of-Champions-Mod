@@ -49,59 +49,46 @@ public class EngineCore {
      * @return  effective delta
      */
     public static function HPChange(changeNum:Number, display:Boolean):Number {
-        var before:Number = CoC.instance.player.HP;
+        const player:Player = CoC.instance.player;
+        var before:Number = player.HP;
         if (changeNum == 0) return 0;
-        if (changeNum > 0) {
-            //Increase by 20%!
-            if (CoC.instance.player.hasPerk(PerkLib.HistoryHealer)) changeNum *= 1.2;
-            if (CoC.instance.player.HP + int(changeNum) > maxHP()) {
-                if (CoC.instance.player.HP >= maxHP()) {
-                    if (display) HPChangeNotify(changeNum);
-                    return CoC.instance.player.HP - before;
-                }
-                if (display) HPChangeNotify(changeNum);
-                CoC.instance.player.HP = maxHP();
-            }
-            else {
-                if (display) HPChangeNotify(changeNum);
-                CoC.instance.player.HP += int(changeNum);
-                CoC.instance.mainView.statsView.showStatUp('hp');
-                // hpUp.visible = true;
-            }
+        //Increase by 20%!
+        if (changeNum > 0 && player.hasPerk(PerkLib.HistoryHealer)) {
+            changeNum *= 1.2;
         }
-        //Negative HP
-        else {
-            if (CoC.instance.player.HP + changeNum <= 0) {
-                if (display) HPChangeNotify(changeNum);
-                CoC.instance.player.HP = 0;
-                CoC.instance.mainView.statsView.showStatDown('hp');
-            }
-            else {
-                if (display) HPChangeNotify(changeNum);
-                CoC.instance.player.HP += changeNum;
-                CoC.instance.mainView.statsView.showStatDown('hp');
-            }
+        if (display) HPChangeNotify(changeNum);
+
+        player.HP = Utils.boundInt(0, player.HP + int(changeNum), player.maxHP());
+
+        if(player.HP > before) {
+            CoC.instance.mainView.statsView.showStatUp('hp');
         }
-        CoC.instance.player.dynStats("lust", 0, "scale", false); //Workaround to showing the arrow.
+        else if(player.HP < before) {
+            CoC.instance.mainView.statsView.showStatDown('hp');
+        }
+        player.dynStats("lust", 0, "scale", false); //Workaround to showing the arrow.
         statScreenRefresh();
-        return CoC.instance.player.HP - before;
+        return player.HP - before;
     }
 
     public static function HPChangeNotify(changeNum:Number):void {
-        if (changeNum == 0) {
-            if (CoC.instance.player.HP >= maxHP())
-                outputText("You're as healthy as you can be.\n");
-        }
-        else if (changeNum > 0) {
-            if (CoC.instance.player.HP >= maxHP())
+        const hp:Number = CoC.instance.player.HP;
+        const max:Number = CoC.instance.player.maxHP();
+        switch (true) {
+            case (changeNum == 0):
+                if(hp >= max) {outputText("You're as healthy as you can be.\n");}
+                break;
+            case (hp >= max):
                 outputText("Your HP maxes out at " + maxHP() + ".\n");
-            else
-                outputText("You gain <b><font color=\"#008000\">" + int(changeNum) + "</font></b> HP.\n");
-        }
-        else {
-            if (CoC.instance.player.HP <= 0)
+                break;
+            case (hp <= 0):
                 outputText("You take <b><font color=\"#800000\">" + int(changeNum * -1) + "</font></b> damage, dropping your HP to 0.\n");
-            else
+                break;
+            case (changeNum > 0):
+                outputText("You gain <b><font color=\"#008000\">" + int(changeNum) + "</font></b> HP.\n");
+                break;
+            case (changeNum < 0):
+            default:
                 outputText("You take <b><font color=\"#800000\">" + int(changeNum * -1) + "</font></b> damage.\n");
         }
     }
