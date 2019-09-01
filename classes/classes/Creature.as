@@ -2,57 +2,54 @@
 package classes
 {
 
-	import classes.BodyParts.Antennae;
-	import classes.BodyParts.Arms;
-	import classes.BodyParts.Beard;
-	import classes.BodyParts.Butt;
-	import classes.BodyParts.Claws;
-	import classes.BodyParts.Ears;
-	import classes.BodyParts.Eyes;
-	import classes.BodyParts.Face;
-	import classes.BodyParts.Gills;
-	import classes.BodyParts.Hair;
-	import classes.BodyParts.Hips;
-	import classes.BodyParts.Horns;
-	import classes.BodyParts.IOrifice;
-	import classes.BodyParts.LowerBody;
-	import classes.BodyParts.RearBody;
-	import classes.BodyParts.Skin;
-	import classes.BodyParts.Tail;
-	import classes.BodyParts.Tongue;
-	import classes.BodyParts.UnderBody;
-	import classes.BodyParts.Wings;
-	import classes.GlobalFlags.kFLAGS;
-	import classes.Items.Jewelry;
-	import classes.Items.JewelryLib;
-	import classes.Items.WeaponLib;
-	import classes.Scenes.Camp.CampMakeWinions;
+import classes.BodyParts.Antennae;
+import classes.BodyParts.Arms;
+import classes.BodyParts.Beard;
+import classes.BodyParts.Butt;
+import classes.BodyParts.Claws;
+import classes.BodyParts.Ears;
+import classes.BodyParts.Eyes;
+import classes.BodyParts.Face;
+import classes.BodyParts.Gills;
+import classes.BodyParts.Hair;
+import classes.BodyParts.Hips;
+import classes.BodyParts.Horns;
+import classes.BodyParts.IOrifice;
+import classes.BodyParts.LowerBody;
+import classes.BodyParts.RearBody;
+import classes.BodyParts.Skin;
+import classes.BodyParts.Tail;
+import classes.BodyParts.Tongue;
+import classes.BodyParts.UnderBody;
+import classes.BodyParts.Wings;
+import classes.GlobalFlags.kFLAGS;
+import classes.Items.JewelryLib;
+import classes.Items.WeaponLib;
+import classes.Scenes.Camp.CampMakeWinions;
 import classes.Scenes.Combat.Combat;
 import classes.Scenes.Combat.CombatAction.ACombatAction;
 import classes.Scenes.Combat.CombatMechanics;
 import classes.Scenes.Places.TelAdre.UmasShop;
 import classes.Scenes.SceneLib;
 import classes.Stats.Buff;
-import classes.lists.BuffTags;
 import classes.Stats.BuffableStat;
 import classes.Stats.IStat;
-import classes.Stats.IStatHolder;
 import classes.Stats.PrimaryStat;
-import classes.lists.StatNames;
 import classes.Stats.StatStore;
-import classes.Stats.StatUtils;
 import classes.StatusEffects.Combat.CombatInteBuff;
-	import classes.StatusEffects.Combat.CombatSpeBuff;
-	import classes.StatusEffects.Combat.CombatStrBuff;
-	import classes.StatusEffects.Combat.CombatTouBuff;
-	import classes.StatusEffects.Combat.CombatWisBuff;
-	import classes.internals.Utils;
-	import classes.lists.BreastCup;
-	import classes.lists.Gender;
+import classes.StatusEffects.Combat.CombatSpeBuff;
+import classes.StatusEffects.Combat.CombatStrBuff;
+import classes.StatusEffects.Combat.CombatTouBuff;
+import classes.StatusEffects.Combat.CombatWisBuff;
+import classes.internals.Utils;
+import classes.lists.BreastCup;
+import classes.lists.BuffTags;
+import classes.lists.Gender;
+import classes.lists.StatNames;
 
-	import flash.errors.IllegalOperationError;
+import flash.errors.IllegalOperationError;
 
-	public class Creature extends Utils
+public class Creature extends Utils
 	{
 
 
@@ -938,22 +935,15 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 
 		private var _femininity:Number = 50;
 		public function get femininity():Number {
-			var fem:Number                 = _femininity;
-			const effect:StatusEffectClass = statusEffectByType(StatusEffects.UmasMassage);
-			if (effect != null && effect.value1 == UmasShop.MASSAGE_MODELLING_BONUS) {
-				fem += effect.value2;
+			var fem:Number = _femininity;
+			if (this.statusEffectv1(StatusEffects.UmasMassage) == UmasShop.MASSAGE_MODELLING_BONUS) {
+				fem += statusEffectv2(StatusEffects.UmasMassage);
 			}
-			if (fem > 100)
-				fem = 100;
-			return fem;
+			return Math.min(fem, 100);
 		}
-		public function set femininity(value:Number):void
-		{
-			if (value > 100)
-				value = 100;
-			else if (value < 0)
-				value = 0;
-			_femininity = value;
+
+		public function set femininity(value:Number):void {
+			_femininity = boundFloat(0, value, 100);
 		}
 
 		public function validate():String
@@ -2224,62 +2214,11 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 			return 0;
 		}
 
-		/*public function findFirstCockType(type:Number = 0):Number
-		{
-			var index:Number = 0;
-			if (cocks[index].cockType == type)
-				return index;
-			while (index < cocks.length)
-			{
-				index++;
-				if (cocks[index].cockType == type)
-					return index;
-			}
-			//trace("Creature.findFirstCockType ERROR - searched for cocktype: " + type + " and could not find it.");
-			return 0;
-		}*/
-
 		//Change first normal cock to horsecock!
 		//Return number of affected cock, otherwise -1
-		public function addHorseCock():Number
-		{
-			var counter:Number = cocks.length;
-			while (counter > 0)
-			{
-				counter--;
-				//Human - > horse
-				if (cocks[counter].cockType == CockTypesEnum.HUMAN)
-				{
-					cocks[counter].cockType = CockTypesEnum.HORSE;
-					return counter;
-				}
-				//Dog - > horse
-				if (cocks[counter].cockType == CockTypesEnum.DOG)
-				{
-					cocks[counter].cockType = CockTypesEnum.HORSE;
-					return counter;
-				}
-				//Wolf - > horse
-				if (cocks[counter].cockType == CockTypesEnum.WOLF)
-				{
-					cocks[counter].cockType = CockTypesEnum.HORSE;
-					return counter;
-				}
-				//Tentacle - > horse
-				if (cocks[counter].cockType == CockTypesEnum.TENTACLE)
-				{
-					cocks[counter].cockType = CockTypesEnum.HORSE;
-					return counter;
-				}
-				//Demon -> horse
-				if (cocks[counter].cockType == CockTypesEnum.DEMON)
-				{
-					cocks[counter].cockType = CockTypesEnum.HORSE;
-					return counter;
-				}
-				//Catch-all
-				if (cocks[counter].cockType.Index > 4)
-				{
+		public function addHorseCock():Number {
+			for (var counter:int = 0; counter < cocks.length; counter++) {
+				if (cocks[counter].cockType != CockTypesEnum.HORSE) {
 					cocks[counter].cockType = CockTypesEnum.HORSE;
 					return counter;
 				}
@@ -2422,34 +2361,41 @@ import classes.StatusEffects.Combat.CombatInteBuff;
 		}
 
 		public function looksFemale():Boolean {
-			var tits:Number = biggestTitSize();
+			switch (flags[kFLAGS.MALE_OR_FEMALE]) {
+				case 1: return false;
+				case 2: return true;
+			}
+			const fem:Number = femininity + (Math.max(0, biggestTitSize()) * 30);
 			switch (gender) {
 				case Gender.GENDER_HERM:
 				case Gender.GENDER_NONE:
-					return ((tits >= 3 || tits == 2 && femininity >= 15 || tits == 1 && femininity >= 40 || femininity >= 65) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
+					return fem >= 65;
 				case Gender.GENDER_MALE:
-					return ((tits >= 3 && femininity >= 5 || tits == 2 && femininity >= 35 || tits == 1 && femininity >= 65 || femininity >= 95) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
+					return fem >= 95;
 				case Gender.GENDER_FEMALE:
-					return ((tits > 1 || tits == 1 && femininity >= 15 || femininity >= 45) && (flags[kFLAGS.MALE_OR_FEMALE] == 0 || flags[kFLAGS.MALE_OR_FEMALE] == 2));
+					return fem >= 45;
 				default:
 					return false;
 			}
 		}
-		//Rewritten!
-		public function mf(male:String, female:String):String
-		{
+
+		public function mf(male:String, female:String):String {
 			return looksMale() ? male : female;
 		}
 		
-		public function maleFemaleHerm(caps:Boolean = false):String
-		{
+		public function maleFemaleHerm(caps:Boolean = false):String {
+			var text:String;
 			switch (gender) {
-				case Gender.GENDER_NONE:   return caps ? mf("Genderless", "Fem-genderless") : mf("genderless", "fem-genderless");
-				case Gender.GENDER_MALE:   return caps ? mf("Male", biggestTitSize() > BreastCup.A ? "Shemale" : "Femboy")             : mf("male", biggestTitSize() > BreastCup.A ? "shemale" : "femboy");
-				case Gender.GENDER_FEMALE: return caps ? mf("Cuntboy", "Female")            : mf("cuntboy", "female");
-				case Gender.GENDER_HERM:   return caps ? mf("Maleherm", "Hermaphrodite")    : mf("maleherm", "hermaphrodite");
+				case Gender.GENDER_NONE:   text = mf("genderless", "fem-genderless"); break;
+				case Gender.GENDER_MALE:   text = mf("male", biggestTitSize() > BreastCup.A ? "shemale" : "femboy"); break;
+				case Gender.GENDER_FEMALE: text = mf("cuntboy", "female"); break;
+				case Gender.GENDER_HERM:   text = mf("maleherm", "hermaphrodite"); break;
 				default: return "<b>Gender error!</b>";
 			}
+			if (caps) {
+				text = text.charAt(0).toUpperCase() + text.slice(1)
+			}
+			return text;
 		}
 
 		/**
