@@ -5,7 +5,6 @@ import classes.BodyParts.LowerBody;
 import classes.BodyParts.Tail;
 import classes.GlobalFlags.kFLAGS;
 import classes.Items.Armors.LustyMaidensArmor;
-import classes.Scenes.SceneLib;
 import classes.Scenes.UniqueSexScenes;
 import classes.internals.ChainedDrop;
 
@@ -493,31 +492,12 @@ public function getRapedByMinotaur(autoRape:Boolean = false):void {
 	//====================================================================
 	//((This would be a Minotaur Loss Rape if the PC fulfills either of the following conditions.))
 	//{CHECK: If male PC with big butt (Over... I have no idea what butt numbers are), use this}
-	//{CHECK: If female or herm PC with big butt and vagina too small to fit minotaur cock, use this}		
-	if (!autoRape)
-	{
-		if (doSFWloss()) { //No rape in SFW mode.
-			cleanupAfterCombat();
-			return;
-		}
-		if(rand(2) == 0 && player.butt.type >= 15 && player.vaginalCapacity() < monster.biggestCockArea() && player.tone < 60) {
-			getMinoHawtDawged();
-			return;
-		}
-		//Oral rape chance
-		if(rand(2) == 0 && !player.isTaur()) {
-			getOralRapedByMinotaur();
-			return;
-		}
-	}
-	else
-	{
+	//{CHECK: If female or herm PC with big butt and vagina too small to fit minotaur cock, use this}
+	if (autoRape) {
 		outputText("As you take the winding path up through the rocky trail, you come upon the opening to a cave. Peering inside, the stench of an overpowering musk washes over you. The primal scent excites you, causing you to become aroused almost immediately.  Not thinking as clearly as you normally might, you slowly sneak your way into the cave. Signs of life litter the cave floor.\n\n");
 		dynStats("lus", 10 + player.lib / 5);
-		
 		//Detect minotaur coming
-		if (rand(30) + player.inte / 5 > 18 || flags[kFLAGS.SFW_MODE] > 0)
-		{
+		if (rand(30) + player.inte / 5 > 18 || flags[kFLAGS.SFW_MODE] > 0) {
 			outputText("You spot a shadow moving and spin around to see a minotaur lumbering after you from the back of the cave!");
 			if (flags[kFLAGS.CODEX_ENTRY_MINOTAURS] <= 0) {
 				flags[kFLAGS.CODEX_ENTRY_MINOTAURS] = 1;
@@ -526,31 +506,31 @@ public function getRapedByMinotaur(autoRape:Boolean = false):void {
 			startCombat(new Minotaur());
 			return;
 		}
-		
 		outputText("Suddenly you're grabbed from behind, your arms held together by a single massive, furry hand. A heavy, snorting breath brushes the top of your head. You turn your neck to see a massive bull-man. His impressive dick presses ");
-		
-		if (player.isTaur())
-		{
-			outputText("against your buttocks");
-		}
-		else
-		{
-			
-			outputText("into the small of your back");
-		}
-		
+		outputText("[if(istaur)against your buttocks|into the small of your back]");
 		outputText(" as it grows larger and harder, smearing its pre-cum into your skin and making you shiver.  ");
-		//High str escape
-		if (rand(20) + player.str / 3 > 18 || flags[kFLAGS.SFW_MODE])
-		{
-			outputText("\n\nYou twist around using the additional lubrication and squirm free!  Rolling away, you come up in a crouch, ready to fight!");
-			startCombat(new Minotaur());
-			return;
-		}
-	
+		outputText("\n\nYou twist around using the additional lubrication and squirm free!  Rolling away, you come up in a crouch, ready to fight!");
+		startCombat(new Minotaur());
+		return;
 	}
 
-if (doSFWloss() && CoC.instance.inCombat) { //No rape in SFW mode.
+	if (doSFWloss()) { //No rape in SFW mode.
+		cleanupAfterCombat();
+		return;
+	}
+	if (rand(2) == 0 && player.butt.type >= 15 && player.vaginalCapacity() < monster.biggestCockArea() && player.tone < 60) {
+		getMinoHawtDawged();
+		return;
+	}
+
+//Oral rape chance
+	if (rand(2) == 0 && !player.isTaur()) {
+		getOralRapedByMinotaur();
+		return;
+	}
+
+
+	if (doSFWloss() && CoC.instance.inCombat) { //No rape in SFW mode.
         cleanupAfterCombat();
 		return;
 	}
