@@ -384,20 +384,19 @@ public class Giacomo extends BaseContent implements TimeAwareInterface {
 		private function pitchWhiteBook():void {
 			spriteSelect(23);
 			clearOutput();
-			outputText("Giacomo holds up a white book.  \"<i>While you may not find value in this as a simple book,</i>\", Giacomo opens, \"<i>you never know what you may learn from it!  Maybe even some usefull spell!  I will offer the super-cheap price of 100 gem!</i>\"");
+			outputText("Giacomo holds up a white book.  \"<i>While you may not find value in this as a simple book,</i>\", Giacomo opens, \"<i>you never know what you may learn from it!  Maybe even some usefull spell!  I will offer the super-cheap price of 75 gem!</i>\"");
 			doYesNo(buyWhiteBook, bookMenu);
 		}
 		
 		private function buyWhiteBook():void {
 			spriteSelect(23);
 			clearOutput();
-			if (player.gems < 100) {
-				outputText("\n\nGiacomo sighs, indicating you need 100 gem to purchase this item.");
+			if (player.gems < 75) {
+				outputText("\n\nGiacomo sighs, indicating you need 75 gems to purchase this item.");
 				doNext(bookMenu);
-			}
-			else {
-				outputText("\n\nThe crazy merchant nods satisfied when you hand him over a hundred gems and in exchange gives you a white book.");
-				player.gems -= 100;
+			} else {
+				outputText("\n\nThe crazy merchant nods satisfied when you hand him over the gems and in exchange gives you a white book.");
+				player.gems -= 75;
 				statScreenRefresh();
 				inventory.takeItem(consumables.W__BOOK, bookMenu);
 			}
@@ -428,20 +427,20 @@ public class Giacomo extends BaseContent implements TimeAwareInterface {
 		private function pitchBlackBook():void {
 			spriteSelect(23);
 			clearOutput();
-			outputText("Giacomo holds up a black book.  \"<i>While you may not find value in this as a simple book,</i>\", Giacomo opens, \"<i>you never know what you may learn from it!  Maybe even some usefull spell!  I will offer the super-cheap price of 100 gem!</i>\"");
+			outputText("Giacomo holds up a black book.  \"<i>While you may not find value in this as a simple book,</i>\", Giacomo opens, \"<i>you never know what you may learn from it!  Maybe even some usefull spell!  I will offer the super-cheap price of 75 gems!</i>\"");
 			doYesNo(buyBlackBook, bookMenu);
 		}
 		
 		private function buyBlackBook():void {
 			spriteSelect(23);
 			clearOutput();
-			if (player.gems < 100) {
-				outputText("\n\nGiacomo sighs, indicating you need 100 gem to purchase this item.");
+			if (player.gems < 75) {
+				outputText("\n\nGiacomo sighs, indicating you need 75 gems to purchase this item.");
 				doNext(bookMenu);
 			}
 			else {
-				outputText("\n\nThe crazy merchant nods satisfied when you hand him over a hundred gems and in exchange gives you a black book.");
-				player.gems -= 100;
+				outputText("\n\nThe crazy merchant nods satisfied when you hand him over the gems and in exchange gives you a black book.");
+				player.gems -= 75;
 				statScreenRefresh();
 				inventory.takeItem(consumables.B__BOOK, bookMenu);
 			}
