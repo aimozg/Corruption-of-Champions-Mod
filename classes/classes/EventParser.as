@@ -164,7 +164,7 @@ public class EventParser {
             CoC.instance.model.time.hours++;
             player.statStore.advanceTime(Buff.RATE_HOURS, 1);
             SceneLib.combat.regeneration(false);
-            if (player.hasPerk(PerkLib.JobSorcerer)) SceneLib.combat.manaRegeneration(false);
+            SceneLib.combat.manaRegeneration(false);
             SceneLib.combat.wrathRegeneration(false);
             //Inform all time aware classes that a new hour has arrived
             for (var tac:int = 0; tac < _timeAwareClassList.length; tac++) {
