@@ -343,8 +343,14 @@ public class Creature extends Utils
 		public function maxFatigue():Number {
 			return staminaMaxStat.value;
 		}
-		public function maxWrath():Number {
-			return 250;
+		public function maxWrath(): Number {
+			var max: Number = 100;
+			if (hasPerk(PerkLib.PrimalFury)) {max +=  10;}
+			if (hasPerk(PerkLib.FeralArmor)) {max +=  20;}
+			if (hasPerk(PerkLib.Berzerker )) {max += 100;}
+			if (hasPerk(PerkLib.Lustzerker)) {max += 100;}
+			if (hasPerk(PerkLib.Rage      )) {max += 300;}
+			return max;
 		}
 		public function maxKi():Number {
 			return kiMaxStat.value;
@@ -3658,6 +3664,7 @@ public class Creature extends Utils
 		}
 
 		private function touSpeStrScale(stat:int):Number{
+			//$y = 1.832168 - (0.8906371 * $i) + (0.03473193 * [math]::Pow($i, 2)) - (0.00005778943 * [math]::Pow($i, 3));
 			var scale:Number = 0;
 			for(var i:int = 20; (i <= 80) && (i <= stat); i += 20){
 				scale += stat - i;
@@ -3771,7 +3778,7 @@ public class Creature extends Utils
 			var mod:Number = spellPower;
 			if(!heal) {
 				if(hasPerk(PerkLib.JobSorcerer) && inte >= 25) mod += .1;
-				if(hasPerk(PerkLib.Spellpower) && inte >= 50) mod += .1;
+				if(hasPerk(PerkLib.Spellpower) && inte >= 40) mod += .1;
 				if(hasPerk(PerkLib.TraditionalMage) && weaponPerk == "Staff" && isUsingTome()) mod += 1;
 			}
 			if(!white) {

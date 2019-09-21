@@ -946,7 +946,7 @@ public class PerkLib
 			long : "You choose the 'Spellarmor' perk. You start every battle with Charge Armor effect, as long as your Lust is not preventing you from casting it before battle."
 		});
 		public static const Spellpower:PerkType                     = mk("Spellpower", "Spellpower",
-				"[if (player.inte>=50)" +
+				"[if (player.inte>=40)" +
 				"Increases base spell strength by 10% and mana pool by 15." +
 				"|" +
 				"<b>You are too dumb to gain benefit from this perk.</b>" +
@@ -2060,28 +2060,17 @@ public class PerkLib
             // INTELLIGENCE
             //------------
             Precision.requireInt(25);
-            Spellpower.requireInt(50);
-            Tactician.requireInt(50);
-            StaffChanneling.requireInt(60);
+	        Tactician.requireInt(50);
 
-
-            // Spell-boosting perks
-            // Battlemage: auto-use Might
-            Battlemage.requireInt(80)
-                    .requireStatusEffect(StatusEffects.KnowsMight, "Might spell");
-            // Spellsword: auto-use Charge Weapon
-            Spellsword.requireInt(80)
-                    .requireStatusEffect(StatusEffects.KnowsCharge, "Charge spell");
-            //Tier 3 Intelligence perks
-            // Battleflash: auto-use Blink
-            Battleflash.requirePerk(Battlemage)
-                    .requireInt(90)
-                    .requireStatusEffect(StatusEffects.KnowsBlink, "Blink spell");
-            // Spellarmor: auto-use Charge Armor
-            Spellarmor.requirePerk(Spellsword)
-                    .requireInt(90)
-                    .requireStatusEffect(StatusEffects.KnowsChargeA, "Charge Armor spell");
-            TraditionalMage.requireInt(80);
+	        // Magic Perks
+	        Spellpower.requireInt(40);
+	        StaffChanneling.requireInt(50);
+	        TraditionalMage.requireInt(70);
+	        // Spell AutoCasts
+            Battlemage.requireStatusEffect(StatusEffects.KnowsMight, "Might spell");
+	        Spellsword.requireStatusEffect(StatusEffects.KnowsCharge, "Charge spell");
+	        Battleflash.requireStatusEffect(StatusEffects.KnowsBlink, "Blink spell");
+	        Spellarmor.requireStatusEffect(StatusEffects.KnowsChargeA, "Charge Armor spell");
 	        //------------
 	        // WISDOM
 	        //------------

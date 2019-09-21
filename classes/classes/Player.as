@@ -666,12 +666,12 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 				}
 				else {
 					damage = reduceDamage(damage);
+
 					//Wrath
-					var gainedWrath:Number = 0;
-					gainedWrath += damage / 10;
-					gainedWrath = Math.round(gainedWrath);
+					var gainedWrath:Number = Math.round(damage / 4);
 					wrath += gainedWrath;
-					if (wrath > maxWrath()) wrath = maxWrath();
+					wrath = Utils.boundInt(0, wrath, maxWrath());
+
 					//game.HPChange(-damage, display);
 					HP -= damage;
 					if (display) {
@@ -710,11 +710,8 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 				else {
 					damage = reduceMagicDamage(damage);
 					//Wrath
-					var gainedWrath:Number = 0;
-					gainedWrath += damage / 10;
-					gainedWrath = Math.round(gainedWrath);
-					wrath += gainedWrath;
-					if (wrath > maxWrath()) wrath = maxWrath();
+					wrath += Math.round(damage / 4);
+					wrath = Utils.boundInt(0, wrath, maxWrath());
 					//game.HPChange(-damage, display);
 					HP -= damage;
 					if (display) {
@@ -2867,48 +2864,10 @@ import classes.Scenes.Places.TelAdre.UmasShop;
 
 		public override function maxMana(): Number {
 			var max: Number = 200;
-			if (hasPerk(PerkLib.Spellpower) && inte >= 50) {
-				max += 15;
-			}
-			if (hasPerk(PerkLib.JobSorcerer)) {
+			if (hasPerk(PerkLib.Spellpower) && inte >= 40) {
 				max += 15;
 			}
 			max = Math.round(max);
-			if (max > 184999) {
-				max = 184999;
-			}
-			return max;
-		}
-
-		public override function maxWrath(): Number {
-			var max: Number = 250;
-			if (hasPerk(PerkLib.PrimalFury)) {
-				max += 10;
-			}
-			if (hasPerk(PerkLib.FeralArmor)) {
-				max += 20;
-			}
-			if (hasPerk(PerkLib.JobDervish)) {
-				max += 20;
-			}
-			if (hasPerk(PerkLib.JobWarrior)) {
-				max += 10;
-			}
-			if (hasPerk(PerkLib.Berzerker)) {
-				max += 100;
-			}
-			if (hasPerk(PerkLib.Lustzerker)) {
-				max += 100;
-			}
-			if (hasPerk(PerkLib.PrestigeJobBerserker)) {
-				max += 200;
-			}
-			if (hasPerk(PerkLib.Rage)) {
-				max += 300;
-			}
-			if (max > 20899) {
-				max = 20899;
-			}//obecnie max to 20890
 			return max;
 		}
 

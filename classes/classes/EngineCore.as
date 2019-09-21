@@ -30,10 +30,6 @@ public class EngineCore {
         return CoC.instance.player.maxKi();
     }
 
-    public static function maxWrath():Number {
-        return CoC.instance.player.maxWrath();
-    }
-
     public static function maxMana():Number {
         return CoC.instance.player.maxMana();
     }
@@ -172,42 +168,13 @@ public class EngineCore {
     }
 
     public static function WrathChange(changeNum:Number, display:Boolean):Number {
-        var before:Number = CoC.instance.player.wrath;
+        var player:Player = CoC.instance.player;
+        var before:Number = player.wrath;
         if (changeNum == 0) return 0;
-        if (changeNum > 0) {
-            if (CoC.instance.player.wrath + int(changeNum) > maxWrath()) {
-                //	if(CoC.instance.player.HP >= maxHP()) {
-                //	if (display) HPChangeNotify(changeNum);
-                //		return CoC.instance.player.HP - before;
-                //	}
-                //	if (display) HPChangeNotify(changeNum);
-                CoC.instance.player.wrath = maxWrath();
-            }
-            else {
-                //	if (display) HPChangeNotify(changeNum);
-                CoC.instance.player.wrath += int(changeNum);
-                //	CoC.instance.mainView.statsView.showStatUp( 'hp' );
-                // hpUp.visible = true;
-            }
-        }
-        //Negative Wrath
-        /*	else
-            {
-                if(CoC.instance.player.HP + changeNum <= 0) {
-                    if (display) HPChangeNotify(changeNum);
-                    CoC.instance.player.HP = 0;
-                    CoC.instance.mainView.statsView.showStatDown( 'hp' );
-                }
-                else {
-                    if (display) HPChangeNotify(changeNum);
-                    CoC.instance.player.HP += changeNum;
-                    CoC.instance.mainView.statsView.showStatDown( 'hp' );
-                }
-            }
-            dynStats("lust", 0, "scale", false) //Workaround to showing the arrow.
-        */
+        player.wrath += int(changeNum);
+        player.wrath = Utils.boundInt(0, player.wrath, player.maxWrath());
         statScreenRefresh();
-        return CoC.instance.player.wrath - before;
+        return player.wrath - before;
     }
 
     public static function clone(source:Object):* {

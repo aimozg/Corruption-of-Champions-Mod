@@ -26,11 +26,13 @@ package classes.Scenes.Combat {
 	//------------
 	internal function buildMenu(buttons:ButtonDataList):void {
 		var bd:ButtonData;
-		if (player.hasPerk(PerkLib.JobSorcerer)) {
-			bd = buttons.add("M.Bolt", magicbolt);
-			if (player.hasPerk(PerkLib.StaffChanneling) && player.weaponPerk == "Staff") bd.hint("Attempt to attack the enemy with magic bolt from your [weapon].  Damage done is determined by your intelligence and weapon.", "Magic Bolt");
-			else bd.hint("Attempt to attack the enemy with magic bolt.  Damage done is determined by your intelligence.", "Magic Bolt");
+		bd = buttons.add("M.Bolt", magicbolt);
+		if (player.hasPerk(PerkLib.StaffChanneling) && player.weaponPerk == "Staff") {
+			bd.hint("Attempt to attack the enemy with magic bolt from your [weapon].  Damage done is determined by your intelligence and weapon.", "Magic Bolt");
+		} else {
+			bd.hint("Attempt to attack the enemy with magic bolt.  Damage done is determined by your intelligence.", "Magic Bolt");
 		}
+
 		if (player.harpyScore() >= 8 || player.sirenScore() >= 10) {
 			bd = buttons.add("Compelling Aria", singCompellingAria, "Sing for a moment.");
 			bd.requireFatigue(spellCost(50));

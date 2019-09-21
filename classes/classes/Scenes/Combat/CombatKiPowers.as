@@ -173,7 +173,7 @@ public class CombatKiPowers extends BaseCombatContent {
 		outputText("You focus the power of your mind and soul, letting the mystic energy fill you. Your [skin] begins to crystalize as the power within you takes form. The power whirls within you like a hurricane, the force of it lifting you off your feet. This power...  You will use it to reach victory!\n");
 		var TranceBoost:Number = 10;
 		if (player.hasPerk(PerkLib.JobSorcerer) && player.inte >= 25) TranceBoost += 5;
-		if (player.hasPerk(PerkLib.Spellpower) && player.inte >= 50) TranceBoost += 5;
+		if (player.hasPerk(PerkLib.Spellpower) && player.inte >= 40) TranceBoost += 5;
 		if (player.hasPerk(PerkLib.JobEnchanter) && player.inte >= 50) TranceBoost += 5;
 		if (player.hasPerk(PerkLib.Battleflash) && player.inte >= 50) TranceBoost += 15;
 		if (player.hasPerk(PerkLib.JobDervish)) TranceBoost -= 10;

@@ -347,26 +347,15 @@ import flash.utils.getQualifiedClassName;
 			return temp;
 		}
 		
-		public override function maxWrath():Number
-		{
-			//Base wrath
-			var temp:Number = 250 + this.bonusWrath;
-			if (hasPerk(PerkLib.PrimalFury)) temp += 10;
-			if (hasPerk(PerkLib.FeralArmor)) temp += 20;
-			if (hasPerk(PerkLib.JobDervish)) temp += 20;
-			if (hasPerk(PerkLib.JobWarrior)) temp += 10;
-			if (hasPerk(PerkLib.Berzerker)) temp += 100;
-			if (hasPerk(PerkLib.Lustzerker)) temp += 100;
-			if (hasPerk(PerkLib.PrestigeJobBerserker)) temp += 200;
-			if (hasPerk(PerkLib.Rage)) temp += 300;
-			return temp;
+		public override function maxWrath():Number {
+			return super.maxWrath() + this.bonusWrath;
 		}
 		
 		public override function maxMana():Number
 		{
 			//Base mana
 			var temp:Number = 100 + this.level * 10 + this.bonusMana;
-			if (hasPerk(PerkLib.Spellpower) && inte >= 50) temp += 15;
+			if (hasPerk(PerkLib.Spellpower) && inte >= 40) temp += 15;
 			if (hasPerk(PerkLib.JobSorcerer)) temp += 15;
 			return temp;
 		}
