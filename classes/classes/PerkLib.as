@@ -1918,7 +1918,7 @@ public class PerkLib
 			short: "Minimum libido increased by <eval>value1</eval>, minimum corruption increased by <eval>value2</eval>, cum production (if applicable) increased by <eval>value3</eval>mL, and milk production (if applicable) increased by <eval>value4</eval>mL.",
 			long : "The drugs from the factory significantly increase your minimum libido, minimum corruption, and fluid production.",
 			buffs: {
-				([StatNames.LIB_MULT]): '+value1'
+				([StatNames.LIB_MULT]): 'value1'
 			}
 		});
 		public static const PureAndLoving:PerkType          = jmk({
