@@ -1,0 +1,16 @@
+Mod "CoC"
+
+Encounter "trip" [
+	pool: "forest"
+	scene: "forest/trip"
+]
+
+Scene "forest/trip"
+
+p "You trip on an exposed root, scraping yourself somewhat, but otherwise the hour is uneventful."
+TakePhysDamage 10
+
+Next -> return
+
+End Scene
+
