@@ -6,6 +6,7 @@ public class ModScene {
 	public var id:String;
 	public var body:/*SceneStmt*/Array = [];
 	public var dynamicMenu:Boolean = false;
+	public var choices:/*ChoiceDecl*/Array = [];
 	
 	public function ModScene(id:String) {
 		this.id = id;

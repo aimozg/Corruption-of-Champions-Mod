@@ -8,12 +8,16 @@ import coc.data.ModEncounter;
 import coc.data.ModScene;
 import coc.data.SceneExpr;
 import coc.data.SceneStmt;
+import coc.data.scene.ChoiceDecl;
 import coc.data.scene.SceneCallStmt;
+import coc.data.scene.SceneTransition;
 
 import coc.lang.lexer.Lexer;
 import coc.lang.lexer.Token;
 import coc.lang.lexer.impl.StoryLexer;
 import coc.lang.lexer.impl.TokenTypes;
+
+import flash.display.Scene;
 
 public class ModParser {
 	
@@ -237,18 +241,52 @@ public class ModParser {
 		expectOperator(OPK_COLON,"E500 Expected ':'");
 		skipEol();
 		var endOfScene:Boolean = false;
+		var choice:ChoiceDecl;
 		while (!endOfScene) {
 			// load scene statement
 			var tWord:Token = expectT(TokenTypes.TOKEN_TYPE_WORD,"E500 Expected scene statement or 'End Scene'");
 			
 			switch (tWord.value) {
 				case 'End':
-					expectTS(TokenTypes.TOKEN_TYPE_WORD,"Scene","E500 Expected 'End Scene' at this level");
+					throw errorAtToken(tWord,"E501 Missing menu");
+				case 'Next':
+					choice = new ChoiceDecl("Next",loadTransition());
+					expectEol("E500 Expected EOL after 'Next' block");
+					scene.choices.push(choice);
+					expectTS(TokenTypes.TOKEN_TYPE_WORD,"End","E500 Expected 'End Scene' after menu");
+					expectTS(TokenTypes.TOKEN_TYPE_WORD,"Scene","E500 Expected 'End Scene'after menu");
+					expectEol("E500 Expected EOL after 'End Scene'");
 					endOfScene = true;
 					break;
-				case 'Next':
 				case 'Menu':
-					throw errorAtToken(tWord,"E003 This feature is not implemented yet (scene menu)"); // TODO
+					expectOperator(OPK_COLON,"E500 Expected ':'");
+					expectEol("E500 Expected EOL before menu choices");
+					while (!endOfScene) {
+						tWord = expectT(TokenTypes.TOKEN_TYPE_WORD,"E500 Expected 'choice' or 'End menu'");
+						switch (tWord.value) {
+							case 'choice':
+								var tLabel:Token = expectT(TokenTypes.TOKEN_TYPE_STRING,"E500 Expected choice label");
+								var label:String = unwrapString(tLabel);
+								choice = new ChoiceDecl(label,loadTransition());
+								scene.choices.push(choice);
+								expectEol("E500 Expected EOL after choice");
+								break;
+							case 'End':
+								expectTS(TokenTypes.TOKEN_TYPE_WORD, "Scene", "E500 Expected 'End Menu' at this level");
+								if (scene.choices.length == 0) {
+									throw errorAtToken(tWord,"E503 Empty menu");
+								}
+								expectEol("E500 Expected EOL after 'End Menu'");
+								endOfScene = true;
+								break;
+							default:
+								throw errorAtToken(tWord,"E500 Expected 'choice' or 'End Menu'");
+						}
+						expectTS(TokenTypes.TOKEN_TYPE_WORD, "End", "E500 Expected 'End Scene' after menu");
+						expectTS(TokenTypes.TOKEN_TYPE_WORD, "Scene", "E500 Expected 'End Scene' after menu");
+						expectEol("E500 Expected EOL after 'End Scene'");
+					}
+					break;
 				default:
 					// Call statement
 					var stmt:SceneStmt = loadStatement(tWord);
@@ -257,6 +295,18 @@ public class ModParser {
 					break;
 			}
 			skipEol();
+		}
+		scenes[sceneId] = scene;
+	}
+	
+	private function loadTransition():SceneTransition {
+		expectOperator(OPK_ARROW,"E500 Expected '->' arrow and transition");
+		if (tryPopTS(TokenTypes.TOKEN_TYPE_WORD,"return")) {
+			return new SceneTransition(SceneTransition.TRANSITION_TYPE_RETURN,"");
+		} else if (tryPopT(TokenTypes.TOKEN_TYPE_STRING)) {
+			return new SceneTransition(SceneTransition.TRANSITION_TYPE_SCENE,unwrapString(prevToken));
+		} else {
+			throw errorAtToken(peek(),"E502 Incorrect transition "+peek().debugValue());
 		}
 	}
 	
@@ -317,6 +367,8 @@ public class ModParser {
 	public static const OPK_R_BRACKET:int     = TokenTypes.OperatorKind("]");
 	public static const OPK_L_PARENTHESIS:int = TokenTypes.OperatorKind("(");
 	public static const OPK_R_PARENTHESIS:int = TokenTypes.OperatorKind(")");
+	// 2-char
+	public static const OPK_ARROW:int         = TokenTypes.OperatorKind("->");
 }
 }
 

@@ -85,11 +85,7 @@ A list of available commands and their arguments will be provided in separate fi
 ##### Flow control
 
 #### Scene menu
-Short version:
-```
-Next -> transition
-```
-Long version:
+
 ```
 Menu:
 
@@ -99,17 +95,34 @@ choice choice_properties "Label" -> transition
 
 End Menu
 ```
-where optional choice_properties can be:
+where optional choice_properties can be: (TODO)
+
+Shortcut for single "Next" button is
+```
+Next -> transition
+```
 
 ##### Menu transitions
 ```
-Next -> return
+-> return
 ```
 Return to camp, use 1 hour.
 ```
-Next -> "scene_ref"
+-> "scene_ref"
 ```
 Continue to scene "scene_ref"
+```
+-> battle
+```
+TODO
+
+##### Goto
+
+Can be used instead of Next/Menu.
+```
+Goto "scene_ref"
+```
+will imediately call scene `"scene_ref"`, without clearing screen
 
 ### Expression syntax
 

@@ -35,9 +35,18 @@ public class OperatorTokenBuilder implements TokenBuilder {
 			case '%':
 			case '^':
 			case '*':
-			case '-':
 			case '+':
 				context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR, TokenTypes.OperatorKind(c1));
+				return true;
+			case '-':
+				c2 = context.peek(+1);
+				if (c2 == '>') {
+					context.flushAndStart(this, 2, TokenTypes.TOKEN_TYPE_OPERATOR,
+							TokenTypes.OperatorKind(c1 + c2));
+				} else {
+					context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR,
+							TokenTypes.OperatorKind(c1));
+				}
 				return true;
 			case '/':
 				c2 = context.peek(+1);

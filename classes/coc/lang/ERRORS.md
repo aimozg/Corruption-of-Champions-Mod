@@ -54,3 +54,9 @@ Incorrect Encounter structure. See docs on Encounter.
 ### Scene errors (E500-E599)
 #### E500 Expected *something*
 Incorrect Scene strucure. See docs on Scene.
+#### E501 Missing menu
+Scene should have either a `Menu`, `Next`, or `Goto`. See docs on Scene menus.
+#### E502 Incorrect transition
+Incorrect transition (choice action). See docs on Scene menus.
+#### E503 Empty menu
+Scene menu should have at least one choice. See docs on Scene menus.
