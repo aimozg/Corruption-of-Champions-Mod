@@ -28,7 +28,7 @@ public class TokenTypes {
 	// operator kind is its char code; for multi-char operators it is big-endian composition
 	// e.g. '!=' is ('!'<<8) | '='
 	public static function OperatorKind(operator:String):int {
-		if (operator.length==0 || operator.length>4) throw new Error("Incorrect operator string <{"+operator+'}>');
+		if (operator.length==0 || operator.length>4) throw new Error("E001 Internal error - Incorrect operator string <{"+operator+'}>');
 		var kind:int = 0;
 		for (var i:int = 0; i<operator.length; i++) {
 			kind <<= 8;

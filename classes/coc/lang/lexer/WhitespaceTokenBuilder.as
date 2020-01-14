@@ -32,7 +32,7 @@ public class WhitespaceTokenBuilder implements TokenBuilder {
 			for each (var builder:TokenBuilder in builders) {
 				if (builder.tryStart(context,c1)) return;
 			}
-			throw context.lexicError("Bad character '"+c1+"' - not a start of any token")
+			throw context.lexicError("E002 Bad character '"+c1+"' - not a start of any token")
 		}
 	}
 	public function isTerminatedAtEof(context:LexerContext):Boolean {

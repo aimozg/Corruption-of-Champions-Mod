@@ -38,7 +38,7 @@ public class Lexer {
 			var lastState:TokenBuilder = context.state;
 			context.state.continueBuilding(context, c1, context.tokenKind);
 			if (context.state == lastState && context.index == lastIndex) {
-				throw context.lexicError("Internal error - endless loop; context is "+context);
+				throw context.lexicError("E001 Internal error - endless loop; context is "+context);
 			}
 			nextToken = context.pop();
 		}

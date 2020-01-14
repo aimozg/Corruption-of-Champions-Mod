@@ -105,8 +105,8 @@ public class ModParser {
 		pop();
 		return token;
 	}
-	public function expectEol():void {
-		expectTK(TokenTypes.TOKEN_TYPE_WHITESPACE,TokenTypes.WHITESPACE_KIND_EOL,"Expected end-of-line");
+	public function expectEol(errorMessage:String):void {
+		expectTK(TokenTypes.TOKEN_TYPE_WHITESPACE,TokenTypes.WHITESPACE_KIND_EOL,errorMessage);
 	}
 	public function isEol():Boolean {
 		var token:Token = peek();
@@ -114,7 +114,7 @@ public class ModParser {
 	}
 	public function unwrapString(s:Token):String {
 		if (s.type != TokenTypes.TOKEN_TYPE_STRING) {
-			throw errorAtToken(s, "Expected token of type string, got "+s.type);
+			throw errorAtToken(s, "E001 Expected token of type string, got "+s.type);
 		}
 		switch (s.kind) {
 			case TokenTypes.STRING_KIND_Q:
@@ -124,7 +124,7 @@ public class ModParser {
 			case TokenTypes.STRING_KIND_AAA:
 				return s.value.substring(3,s.value.length-5);
 			default:
-				throw errorAtToken(s,"Unknown string token kind "+s.kind);
+				throw errorAtToken(s,"E001 Unknown string token kind "+s.kind);
 		}
 	}
 	
@@ -142,16 +142,16 @@ public class ModParser {
 	
 	public function execute():void {
 		// lang version directive
-		expectOperator(OPK_HASH, 'Expected language version directive');
-		expectTS(TokenTypes.TOKEN_TYPE_WORD, 'version', 'Expected language version directive');
-		var version:Token = expectT(TokenTypes.TOKEN_TYPE_NUMBER,"Expected language version number");
-		expectEol();
+		expectOperator(OPK_HASH, 'E100 Expected language version directive');
+		expectTS(TokenTypes.TOKEN_TYPE_WORD, 'version', 'E100 Expected language version directive');
+		var version:Token = expectT(TokenTypes.TOKEN_TYPE_NUMBER,"E100 Expected language version number");
+		expectEol("E100 Expected EOL after language version");
 		switch (version.value) {
 			case '1':
 				loadModV1();
 				break;
 			default:
-				throw errorAtToken(version,"Not supported language version "+version.value);
+				throw errorAtToken(version,"E101 Not supported language version "+version.value);
 		}
 	}
 	
@@ -159,14 +159,14 @@ public class ModParser {
 		skipEol();
 		
 		// Load mod header
-		expectTS(TokenTypes.TOKEN_TYPE_WORD,"Mod","Expected Mod header block");
-		var tModName:Token = expectT(TokenTypes.TOKEN_TYPE_STRING,"Expected Mod name string");
-		modName = unwrapString(tModName);
+		expectTS(TokenTypes.TOKEN_TYPE_WORD,"Mod","E107 Expected Mod header block");
+		var tModId:Token = expectT(TokenTypes.TOKEN_TYPE_STRING,"E108 Expected Mod ID string");
+		modId            = unwrapString(tModId);
 		skipEol();
 		
 		// Load mod content
 		while (!lexer.eof) {
-			var tContentType:Token = expectT(TokenTypes.TOKEN_TYPE_WORD,"Expected content start");
+			var tContentType:Token = expectT(TokenTypes.TOKEN_TYPE_WORD,"E004 Expected content start");
 			switch (tContentType.value) {
 				case "Encounter":
 					loadEncounter();
@@ -175,21 +175,21 @@ public class ModParser {
 					loadScene();
 					break;
 				default:
-					throw errorAtToken(tContentType,"Expected content start")
+					throw errorAtToken(tContentType,"E102 Expected content start")
 			}
 			skipEol();
 		}
 	}
 	
 	private function loadEncounter():void {
-		var tEncounterId:Token = expectT(TokenTypes.TOKEN_TYPE_STRING,"Expected encounter ID");
+		var tEncounterId:Token = expectT(TokenTypes.TOKEN_TYPE_STRING,"E400 Expected encounter ID");
 		var encounterId:String       = tEncounterId.value;
 		if (encounterId in encounters) {
-			throw errorAtToken(tEncounterId,"Duplicate encounter id='"+tEncounterId+"'");
+			throw errorAtToken(tEncounterId,"E103 Duplicate encounter id='"+tEncounterId+"'");
 		}
-		expectOperator(OPK_EQUALS,"Expected '='");
+		expectOperator(OPK_EQUALS,"E400 Expected '='");
 		skipEol();
-		expectOperator(OPK_L_BRACKET,"Expected '['");
+		expectOperator(OPK_L_BRACKET,"E400 Expected '['");
 		var poolRef:String = "";
 		var sceneRef:String = "";
 		// TODO chance, condition
@@ -198,60 +198,61 @@ public class ModParser {
 			if (tryPopTK(TokenTypes.TOKEN_TYPE_OPERATOR,OPK_R_BRACKET)) {
 				break;
 			}
-			var tPropName:Token = expectT(TokenTypes.TOKEN_TYPE_WORD,"Expected encounter property name or ']'");
-			expectOperator(OPK_COLON,"Expected ':' between property name and value");
+			var tPropName:Token = expectT(TokenTypes.TOKEN_TYPE_WORD,"E400 Expected encounter property name or ']'");
+			expectOperator(OPK_COLON,"E400 Expected ':' between property name and value");
 			var tPropValue: Token;
 			switch (tPropName.value) {
 				case "pool":
 					if (poolRef != "") {
-						throw errorAtToken(tPropName,"Duplicate encounter property 'pool'");
+						throw errorAtToken(tPropName,"E104 Duplicate encounter property 'pool'");
 					}
-					tPropValue = expectT(TokenTypes.TOKEN_TYPE_STRING,"Expected pool name as string");
+					tPropValue = expectT(TokenTypes.TOKEN_TYPE_STRING,"E400 Expected pool name as string");
 					poolRef = tPropValue.value;
 					break;
 				case "scene":
 					if (sceneRef != "") {
-						throw errorAtToken(tPropName,"Duplicate encounter property 'scene'");
+						throw errorAtToken(tPropName,"E104 Duplicate encounter property 'scene'");
 					}
-					tPropValue = expectT(TokenTypes.TOKEN_TYPE_STRING,"Expected scene ref as string");
+					tPropValue = expectT(TokenTypes.TOKEN_TYPE_STRING,"E400 Expected scene ref as string");
 					sceneRef = tPropValue.value;
 					break;
 				default:
-					throw errorAtToken(tPropName,"Unknown encounter property "+tPropName.value+", supported: pool, scene");
+					throw errorAtToken(tPropName,"E105 Unknown encounter property "+tPropName.value+", supported: pool, scene");
 			}
 		}
-		if (poolRef == "") throw errorAtToken(tEncounterId, "Encounter '"+encounterId+"' missing 'pool' property");
-		if (sceneRef == "") throw errorAtToken(tEncounterId, "Encounter '"+encounterId+"' missing 'scene' property");
+		if (poolRef == "") throw errorAtToken(tEncounterId, "E106 Encounter '"+encounterId+"' missing 'pool' property");
+		if (sceneRef == "") throw errorAtToken(tEncounterId, "E106 Encounter '"+encounterId+"' missing 'scene' property");
+		expectEol("E400 Expected EOL after the encounter");
 		var encounter:ModEncounter = new ModEncounter(encounterId,poolRef,sceneRef);
 		encounters[encounterId] = encounter;
 	}
 	
 	private function loadScene():void {
-		var tSceneId:Token = expectT(TokenTypes.TOKEN_TYPE_STRING, "Expected scene ID");
+		var tSceneId:Token = expectT(TokenTypes.TOKEN_TYPE_STRING, "E500 Expected scene ID");
 		var sceneId:String = tSceneId.value;
 		if (sceneId in scenes) {
-			throw errorAtToken(tSceneId,"Duplicate scene id='"+tSceneId+"'");
+			throw errorAtToken(tSceneId,"E103 Duplicate scene id='"+tSceneId+"'");
 		}
 		var scene: ModScene = new ModScene(sceneId);
-		expectOperator(OPK_COLON,"Expected ':'");
+		expectOperator(OPK_COLON,"E500 Expected ':'");
 		skipEol();
 		var endOfScene:Boolean = false;
 		while (!endOfScene) {
 			// load scene statement
-			var tWord:Token = expectT(TokenTypes.TOKEN_TYPE_WORD,"Expected scene statement or 'End Scene'");
+			var tWord:Token = expectT(TokenTypes.TOKEN_TYPE_WORD,"E500 Expected scene statement or 'End Scene'");
 			
 			switch (tWord.value) {
 				case 'End':
-					expectTS(TokenTypes.TOKEN_TYPE_WORD,"Scene","Expected 'End Scene'");
+					expectTS(TokenTypes.TOKEN_TYPE_WORD,"Scene","E500 Expected 'End Scene' at this level");
 					endOfScene = true;
 					break;
 				case 'Next':
 				case 'Menu':
-					throw errorAtToken(tWord,"This feature is not implemented yet (scene menu)"); // TODO
+					throw errorAtToken(tWord,"E003 This feature is not implemented yet (scene menu)"); // TODO
 				default:
 					// Call statement
 					var stmt:SceneStmt = loadStatement(tWord);
-					expectEol();
+					expectEol("E500 Expected EOL after call");
 					scene.body.push(stmt);
 					break;
 			}
@@ -265,7 +266,7 @@ public class ModParser {
 			case 'switch':
 			case 'for':
 			case 'while':
-				throw errorAtToken(tWord,"This feature is not implemented yet"); // TODO
+				throw errorAtToken(tWord,"E003 This feature is not implemented yet ("+tWord.value+" stmt)"); // TODO
 			default:
 				var callStmt:SceneCallStmt = new SceneCallStmt(
 						lexer.sourceName,
@@ -274,35 +275,35 @@ public class ModParser {
 						tWord.value
 				);
 				while (!isEol()) {
-					var argument:SceneExpr = loadExpression();
+					var argument:SceneExpr = loadExpression("Expected argument");
 					callStmt.arguments.push(argument);
 				}
 				return callStmt;
 		}
 	}
 	
-	private function loadExpression():SceneExpr {
+	private function loadExpression(orThrowMsg:String):SceneExpr {
 		var token:Token = pop();
 		switch (token.type) {
 			case TokenTypes.TOKEN_TYPE_WORD: // variable reference
 			case TokenTypes.TOKEN_TYPE_STRING: // string literal
 			case TokenTypes.TOKEN_TYPE_NUMBER: // number literal
-				// string literal
+				// TODO check next token and throw if it looks like operator
 				return new SceneExpr(token);
 			case TokenTypes.TOKEN_TYPE_OPERATOR:
 				if (token.kind == OPK_L_PARENTHESIS) {
-					throw errorAtToken(token,"This feature (complex expression) is not implemented yet"); // TODO
+					throw errorAtToken(token,"E003 This feature is not implemented yet (complex expression)"); // TODO
 				} else {
-					throw errorAtToken(token,"Complex expression must be wrapped in ()");
+					throw errorAtToken(token,"E107 Complex expression must be wrapped in ()");
 				}
 			default:
-				throw errorAtToken(token,"Missing expression");
+				throw errorAtToken(token,orThrowMsg);
 		}
 	}
 	
 	////////////////////////////////////////
 	
-	public var modName: String;
+	public var modId: String;
 	public var encounters: /* { [key:string]: ModEncounter }*/Object = {};
 	public var scenes: /* { [key:string]: ModScene }*/Object = {};
 	

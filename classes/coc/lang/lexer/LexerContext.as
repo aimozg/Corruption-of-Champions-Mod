@@ -54,7 +54,7 @@ public class LexerContext {
 	}
 	
 	internal function flush():void {
-		if (token != null) throw lexicError("Internal error - duplicate flush");
+		if (token != null) throw lexicError("E001 Internal error - duplicate flush");
 		if (isBuildingToken()) {
 			token = new Token(
 					tokenType,
