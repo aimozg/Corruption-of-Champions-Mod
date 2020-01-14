@@ -68,6 +68,9 @@ public class CoCLoader {
 
     [Embed(source="../../../content/coc/NPC/teladreshops.xml", mimeType="application/octet-stream")]
     public static var BUNDLE_CONTENT_COC_NPC_TELADRESHOPS_XML:Class;
+
+    [Embed(source="../../../content/coc2.txt", mimeType="application/octet-stream")]
+    public static var BUNDLE_CONTENT_COC2_TXT:Class;
 	
 	public static function bundleText(key:String,c:Class):void {
 		if (c) TEXT_BUNDLE[key] = new c();

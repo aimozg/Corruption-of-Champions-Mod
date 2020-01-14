@@ -15,6 +15,7 @@ import coc.lang.lexer.TokenBuilder;
 public class OperatorTokenBuilder implements TokenBuilder {
 	
 	public function tryStart(context:LexerContext, c1:String):Boolean {
+		var c2:String;
 		switch (c1) {
 			case '(':
 			case ')':
@@ -36,12 +37,12 @@ public class OperatorTokenBuilder implements TokenBuilder {
 			case '*':
 			case '-':
 			case '+':
-				context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR, 0);
+				context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR, TokenTypes.OperatorKind(c1));
 				return true;
 			case '/':
-				var c2:String = context.peek(+1);
+				c2 = context.peek(+1);
 				if (c2 != '/' && c2 != '*') {
-					context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR, 0);
+					context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR, TokenTypes.OperatorKind(c1));
 					return true;
 				} else {
 					return false;
@@ -50,16 +51,26 @@ public class OperatorTokenBuilder implements TokenBuilder {
 			case '>':
 			case '<':
 			case '=':
-				context.flushAndStart(this,
-						(context.peek(+1) == '=') ? 2 : 1,
-						TokenTypes.TOKEN_TYPE_OPERATOR, 0);
+				c2 = context.peek(+1);
+				if (c2 == '=') {
+					context.flushAndStart(this, 2, TokenTypes.TOKEN_TYPE_OPERATOR,
+							TokenTypes.OperatorKind(c1 + c2));
+				} else {
+					context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR,
+							TokenTypes.OperatorKind(c1));
+				}
 				return true;
 			
 			case '&':
 			case '|':
-				context.flushAndStart(this,
-						(context.peek(+1) == c1) ? 2 : 1,
-						TokenTypes.TOKEN_TYPE_OPERATOR, 0);
+				c2 = context.peek(+1);
+				if (c2 == c1) {
+					context.flushAndStart(this, 2, TokenTypes.TOKEN_TYPE_OPERATOR,
+							TokenTypes.OperatorKind(c1+c2));
+				} else {
+					context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR,
+							TokenTypes.OperatorKind(c1));
+				}
 				return true;
 		}
 		return false;

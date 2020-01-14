@@ -9,6 +9,10 @@ public class TokenTypes {
 	public static const TOKEN_TYPE_STRING:int     = 3;
 	public static const TOKEN_TYPE_WORD:int       = 4;
 	public static const TOKEN_TYPE_OPERATOR:int   = 5;
+	public static const TOKEN_TYPE_EOF:int        = 6;
+	// whitespace token kinds
+	public static const WHITESPACE_KIND_NOEOL:int = 0;
+	public static const WHITESPACE_KIND_EOL:int   = 1;
 	// number kinds
 	public static const NUMBER_KIND_INT:int       = 1;
 	public static const NUMBER_KIND_FLOAT:int     = 2;

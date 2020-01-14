@@ -23,5 +23,11 @@ public class Token {
 		this.line  = line;
 		this.col   = col;
 	}
+	
+	public function debugValue():String {
+		var s:String = value.replace(/[\r\n]/g,' ');
+		if (s.length>30) s = s.substring(0,27)+'...';
+		return s;
+	}
 }
 }

@@ -13,8 +13,8 @@ public class LexerContext {
 	public var tokenStart: int     = 0;
 	public var tokenStartLine: int = 1;
 	public var tokenStartCol: int  = 1;
-	private var currentCol: int    = 1;
-	private var currentLine: int   = 1;
+	public var currentCol: int    = 1;
+	public var currentLine: int   = 1;
 	
 	public function LexerContext(lexer: Lexer) {
 		this.lexer = lexer;
@@ -45,6 +45,9 @@ public class LexerContext {
 	
 	public function isBuildingToken():Boolean {
 		return index > tokenStart;
+	}
+	public function isEof():Boolean {
+		return index >= source.length;
 	}
 	public function tokenReady():Boolean {
 		return token != null;

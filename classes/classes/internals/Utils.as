@@ -517,6 +517,27 @@ public class Utils extends Object
 		public static function trimSides(s:String):String {
 			return trimLeft(trimRight(s));
 		}
+		/**
+		 * Replaces backslash-escapes with actual characters.
+		 * Supports \r \n \t and \uXXXX
+		 * All unknown escapes replaced with 2nd character
+		 */
+		public static function unescapeString(s:String):String {
+			return s.replace(/\\(?:u[0-9A-Za-z]{4}|.)/g,function(match:String):String {
+				switch (match.charAt(1)) {
+					case 'r':
+						return '\r';
+					case 'n':
+						return '\n';
+					case 't':
+						return '\t';
+					case 'u':
+						return String.fromCharCode(parseInt(match.substring(2),16));
+					default:
+						return match.charAt(1);
+				}
+			});
+		}
 
 		private static var PF_NAME:Array      = []; // stack: classname+'.'+methodname
 		private static var PF_START:Array     = []; // stack: start time

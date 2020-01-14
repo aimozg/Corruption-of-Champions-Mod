@@ -1,12 +1,15 @@
+# version 1
 Mod "CoC"
 
-Encounter "trip" [
+Encounter "trip" = [
 	pool: "forest"
 	scene: "forest/trip"
 ]
 
-Scene "forest/trip"
-
+Scene "forest/trip":
+// comment
+/* another
+comment */
 p "You trip on an exposed root, scraping yourself somewhat, but otherwise the hour is uneventful."
 TakePhysDamage 10
 

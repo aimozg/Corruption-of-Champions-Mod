@@ -11,25 +11,27 @@ public class Lexer {
 	private var nextToken: Token = null;
 	public var eof: Boolean = false;
 	public var lastTokenTerminated: Boolean;
+	public var eofTokenType: int;
 	
 	public function Lexer(
 			sourceName: String,
 			source: String,
 			builders: /*TokenBuilder*/Array,
-			whitespaceTokenType: int
+			whitespaceTokenType: int,
+			eofTokenType: int
 	) {
 		this.sourceName = sourceName;
 		this.source = source;
 		this.builders = builders;
 		this.whitespaceBuilder = new WhitespaceTokenBuilder(this, whitespaceTokenType);
 		this.context = new LexerContext(this);
+		this.eofTokenType = eofTokenType;
 	}
 	
 	private function forward():void {
-		while(!eof && nextToken == null) {
+		while(!context.isEof() && nextToken == null) {
 			var c1:String = context.peek(0);
 			if (c1 == '\u0000') {
-				eof = true;
 				break;
 			}
 			var lastIndex:int = context.index;
@@ -40,10 +42,16 @@ public class Lexer {
 			}
 			nextToken = context.pop();
 		}
-		if (eof && nextToken == null && context.isBuildingToken()) {
-			context.flush();
-			nextToken = context.pop();
-			lastTokenTerminated = context.state.isTerminatedAtEof(context);
+		if (nextToken == null && context.isEof()) {
+			if (context.isBuildingToken()) {
+				context.flush();
+				nextToken           = context.pop();
+				lastTokenTerminated = context.state.isTerminatedAtEof(context);
+			}
+			if (nextToken == null) {
+				nextToken = new Token(eofTokenType,0,source,source.length,source.length,context.currentLine,context.currentCol);
+				eof = true;
+			}
 		}
 	}
 	
@@ -52,10 +60,6 @@ public class Lexer {
 		var token:Token = nextToken;
 		nextToken = null;
 		return token;
-	}
-	public function hasNext():Boolean {
-		if (nextToken == null) forward();
-		return nextToken != null;
 	}
 }
 }
