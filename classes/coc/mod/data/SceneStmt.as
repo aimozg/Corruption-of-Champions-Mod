@@ -1,7 +1,9 @@
 /**
  * Coded by aimozg on 14.01.2020.
  */
-package coc.data {
+package coc.mod.data {
+import coc.mod.SourcedError;
+
 public class SceneStmt {
 	public var sourceFile:String;
 	public var sourceLine:int;
@@ -14,6 +16,10 @@ public class SceneStmt {
 		this.sourceFile = sourceFile;
 		this.sourceLine = sourceLine;
 		this.sourceCol = sourceCol;
+	}
+	
+	public function errorAtStmt(msg:String):Error {
+		return new SourcedError(sourceFile,sourceLine,sourceCol,msg);
 	}
 }
 }

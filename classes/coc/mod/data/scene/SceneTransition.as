@@ -1,7 +1,7 @@
 /**
  * Coded by aimozg on 15.01.2020.
  */
-package coc.data.scene {
+package coc.mod.data.scene {
 public class SceneTransition {
 	public static const TRANSITION_TYPE_RETURN:int = 1;
 	public static const TRANSITION_TYPE_SCENE:int  = 2;

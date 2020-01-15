@@ -538,6 +538,18 @@ public class Utils extends Object
 				}
 			});
 		}
+		public static function escapeXml(s:String):String {
+			return s.replace(/[<>"'&]/g,function():String{
+				switch (arguments[0]) {
+					case '<': return '&lt;';
+					case '>': return '&gt;';
+					case '&': return '&amp;';
+					case '"': return '&quot;';
+					case "'": return '&apos;';
+					default: return arguments[0];
+				}
+			})
+		}
 
 		private static var PF_NAME:Array      = []; // stack: classname+'.'+methodname
 		private static var PF_START:Array     = []; // stack: start time

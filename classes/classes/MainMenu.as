@@ -5,11 +5,14 @@ package classes {
 	import classes.Scenes.Changelog;
 	import classes.Scenes.SceneLib;
 
-import coc.lang.lexer.Token;
+import coc.mod.data.GameModule;
+import coc.mod.ModPlayer;
 
-import coc.lang.lexer.impl.StoryLexer;
-import coc.lang.lexer.impl.TokenTypes;
-import coc.lang.parser.ModParser;
+import coc.mod.lang.lexer.Token;
+
+import coc.mod.lang.lexer.impl.StoryLexer;
+import coc.mod.lang.lexer.impl.Tokens;
+import coc.mod.lang.parser.ModParser;
 
 import coc.view.BitmapDataSprite;
 
@@ -84,19 +87,6 @@ import flash.text.TextField;
 			trace(value);
 		}
 		private function configureMainMenu():void{
-			CoCLoader.loadText('content/coc2.txt',
-					function(success:Boolean, content:String, event:Event):void{
-						/*
-						var lexer:StoryLexer = new StoryLexer("content/coc2.txt",content);
-						while (true) {
-							var token:Token = lexer.next();
-							trace(token.type,token.kind,'<{',token.value.replace(/\r?\n/g,' '),'}>');
-							if (token.type == TokenTypes.TOKEN_TYPE_EOF) break;
-						}
-						*/
-						var parser:ModParser = new ModParser("content/coc2.txt",content);
-						parser.execute();
-					});
 			
 			var achievements:Achievements = new Achievements();
 			var resume:Function = playerMenu;

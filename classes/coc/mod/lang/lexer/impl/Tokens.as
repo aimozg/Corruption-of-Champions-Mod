@@ -1,8 +1,12 @@
 /**
  * Coded by aimozg on 12.01.2020.
  */
-package coc.lang.lexer.impl {
-public class TokenTypes {
+package coc.mod.lang.lexer.impl {
+import classes.internals.Utils;
+
+import coc.mod.lang.lexer.Token;
+
+public class Tokens {
 	public static const TOKEN_TYPE_WHITESPACE:int = 0;
 	public static const TOKEN_TYPE_NUMBER:int     = 1;
 	public static const TOKEN_TYPE_COMMENT:int    = 2;
@@ -37,8 +41,38 @@ public class TokenTypes {
 		return kind;
 	}
 	
-	public function TokenTypes() {
+	public function Tokens() {
 		throw new Error("This class should not be instantiated");
+	}
+	
+	public static function unwrapString(s:Token):String {
+		if (s.type != TOKEN_TYPE_STRING) {
+			throw s.errorAtToken("E001 Expected token of type string, got "+s.type);
+		}
+		switch (s.kind) {
+			case STRING_KIND_Q:
+			case STRING_KIND_A:
+				return Utils.unescapeString(s.value.substring(1,s.value.length-1));
+			case STRING_KIND_QQQ:
+			case STRING_KIND_AAA:
+				return s.value.substring(3,s.value.length-5);
+			default:
+				throw s.errorAtToken("E001 Unknown string token kind "+s.kind);
+		}
+	}
+	public static function unwrapNumber(n:Token):Number {
+		if (n.type != TOKEN_TYPE_NUMBER) {
+			throw n.errorAtToken("E001 Expected token of type number, got "+n.type);
+		}
+		switch (n.kind) {
+			case NUMBER_KIND_INT:
+				return parseInt(n.value);
+			case NUMBER_KIND_FLOAT:
+			case NUMBER_KIND_FLOAT_EXP:
+				return parseFloat(n.value);
+			default:
+				throw n.errorAtToken("E001 Unknown number token kind "+n.kind);
+		}
 	}
 }
 }

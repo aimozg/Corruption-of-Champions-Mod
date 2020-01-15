@@ -1,7 +1,7 @@
 /**
  * Coded by aimozg on 13.01.2020.
  */
-package coc.data {
+package coc.mod.data {
 public class ModEncounter {
 	public var id: String;
 	public var poolRef: String;

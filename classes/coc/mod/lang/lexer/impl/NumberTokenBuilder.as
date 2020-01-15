@@ -1,9 +1,9 @@
 /**
  * Coded by aimozg on 12.01.2020.
  */
-package coc.lang.lexer.impl {
-import coc.lang.lexer.LexerContext;
-import coc.lang.lexer.TokenBuilder;
+package coc.mod.lang.lexer.impl {
+import coc.mod.lang.lexer.LexerContext;
+import coc.mod.lang.lexer.TokenBuilder;
 
 /**
  * A Number (int & float) token builder
@@ -16,12 +16,12 @@ public class NumberTokenBuilder implements TokenBuilder {
 	
 	public function tryStart(context:LexerContext, c1:String):Boolean {
 		if (c1 >= '0' && c1 <= '9') {
-			context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_NUMBER, TokenTypes.NUMBER_KIND_INT);
+			context.flushAndStart(this, 1, Tokens.TOKEN_TYPE_NUMBER, Tokens.NUMBER_KIND_INT);
 			return true;
 		} else if (c1 == '+' || c1 == '-') {
 			var c2:String = context.peek(+1);
 			if (c2 >= '0' && c2 <= '9') {
-				context.flushAndStart(this, 2, TokenTypes.TOKEN_TYPE_NUMBER, TokenTypes.NUMBER_KIND_INT);
+				context.flushAndStart(this, 2, Tokens.TOKEN_TYPE_NUMBER, Tokens.NUMBER_KIND_INT);
 				return true;
 			}
 		}
@@ -32,17 +32,17 @@ public class NumberTokenBuilder implements TokenBuilder {
 			context.forward(1);
 		} else {
 			var c2:String = context.peek(+1);
-			if (kind == TokenTypes.NUMBER_KIND_INT && c1 == '.' && c2 >= '0' && c2 <= '9') {
-				context.tokenKind = TokenTypes.NUMBER_KIND_FLOAT;
+			if (kind == Tokens.NUMBER_KIND_INT && c1 == '.' && c2 >= '0' && c2 <= '9') {
+				context.tokenKind = Tokens.NUMBER_KIND_FLOAT;
 				context.forward(2);
-			} else if (kind == TokenTypes.NUMBER_KIND_FLOAT && (c1 == 'e' || c1 == 'E')) {
+			} else if (kind == Tokens.NUMBER_KIND_FLOAT && (c1 == 'e' || c1 == 'E')) {
 				if (c2 >= '0' && c2 <= '9') {
-					context.tokenKind = TokenTypes.NUMBER_KIND_FLOAT_EXP;
+					context.tokenKind = Tokens.NUMBER_KIND_FLOAT_EXP;
 					context.forward(2);
 				} else if (c2 == '-' || c2 == '+'){
 					var c3:String = context.peek(+2);
 					if (c3 >= '0' && c3 <= '9') {
-						context.tokenKind = TokenTypes.NUMBER_KIND_FLOAT_EXP;
+						context.tokenKind = Tokens.NUMBER_KIND_FLOAT_EXP;
 						context.forward(3);
 					} else {
 						context.flushAndEnd();

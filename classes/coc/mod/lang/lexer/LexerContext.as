@@ -1,7 +1,9 @@
 /**
  * Coded by aimozg on 12.01.2020.
  */
-package coc.lang.lexer {
+package coc.mod.lang.lexer {
+import coc.mod.SourcedError;
+
 public class LexerContext {
 	private var lexer: Lexer;
 	private var source: String;
@@ -23,7 +25,7 @@ public class LexerContext {
 	}
 	
 	public function lexicError(msg:String):Error {
-		return new Error(lexer.sourceName+"("+currentLine+", "+currentCol+"): "+msg);
+		return new SourcedError(lexer.sourceName,currentLine,currentCol,msg);
 	}
 	
 	public function toString():String {
@@ -62,6 +64,7 @@ public class LexerContext {
 					source,
 					tokenStart,
 					index,
+					lexer.sourceName,
 					tokenStartLine,
 					tokenStartCol);
 			tokenStart = index;

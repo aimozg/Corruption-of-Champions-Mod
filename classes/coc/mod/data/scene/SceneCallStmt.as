@@ -1,8 +1,8 @@
 /**
  * Coded by aimozg on 13.01.2020.
  */
-package coc.data.scene {
-import coc.data.SceneStmt;
+package coc.mod.data.scene {
+import coc.mod.data.SceneStmt;
 
 public class SceneCallStmt extends SceneStmt {
 	public var funcName:String;

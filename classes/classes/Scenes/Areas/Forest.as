@@ -352,9 +352,7 @@ use namespace CoC;
 		}
 
 		public function tripOnARoot():void {
-			forestStory.display("strings/trip");
-			player.takePhysDamage(10);
-			doNext(camp.returnToCampUseOneHour);
+			CoC.instance.modPlayer.findAndPlayScene("forest/trip");
 		}
 		public function findTruffle():void {
 			forestStory.display("strings/truffle");

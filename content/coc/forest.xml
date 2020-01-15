@@ -3,9 +3,6 @@
 	<include path="forest/erlking.xml"/>
 	<extend-story name="forest">
 		<lib name = "strings">
-			<text name="trip">
-                You trip on an exposed root, scraping yourself somewhat, but otherwise the hour is uneventful.
-            </text>
             <text name="truffle">
                 You spot something unusual. Taking a closer look, it's definitely a truffle of some sort.
             </text>

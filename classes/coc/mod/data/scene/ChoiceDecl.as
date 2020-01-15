@@ -1,7 +1,7 @@
 /**
  * Coded by aimozg on 15.01.2020.
  */
-package coc.data.scene {
+package coc.mod.data.scene {
 public class ChoiceDecl {
 	
 	public var label:String;
@@ -11,6 +11,7 @@ public class ChoiceDecl {
 			transition:SceneTransition
 	) {
 		this.label = label;
+		this.transition = transition;
 	}
 }
 }

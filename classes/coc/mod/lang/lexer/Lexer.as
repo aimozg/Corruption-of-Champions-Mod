@@ -1,7 +1,7 @@
 /**
  * Coded by aimozg on 12.01.2020.
  */
-package coc.lang.lexer {
+package coc.mod.lang.lexer {
 public class Lexer {
 	public var sourceName: String;
 	public var source: String;
@@ -49,7 +49,8 @@ public class Lexer {
 				lastTokenTerminated = context.state.isTerminatedAtEof(context);
 			}
 			if (nextToken == null) {
-				nextToken = new Token(eofTokenType,0,source,source.length,source.length,context.currentLine,context.currentCol);
+				nextToken = new Token(eofTokenType,0,source,source.length,source.length,
+						sourceName, context.currentLine,context.currentCol);
 				eof = true;
 			}
 		}

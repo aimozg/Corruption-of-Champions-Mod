@@ -1,9 +1,9 @@
 /**
  * Coded by aimozg on 12.01.2020.
  */
-package coc.lang.lexer.impl {
-import coc.lang.lexer.LexerContext;
-import coc.lang.lexer.TokenBuilder;
+package coc.mod.lang.lexer.impl {
+import coc.mod.lang.lexer.LexerContext;
+import coc.mod.lang.lexer.TokenBuilder;
 
 /**
  * Token builder for operators, parentheses, and other symbols
@@ -36,22 +36,22 @@ public class OperatorTokenBuilder implements TokenBuilder {
 			case '^':
 			case '*':
 			case '+':
-				context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR, TokenTypes.OperatorKind(c1));
+				context.flushAndStart(this, 1, Tokens.TOKEN_TYPE_OPERATOR, Tokens.OperatorKind(c1));
 				return true;
 			case '-':
 				c2 = context.peek(+1);
 				if (c2 == '>') {
-					context.flushAndStart(this, 2, TokenTypes.TOKEN_TYPE_OPERATOR,
-							TokenTypes.OperatorKind(c1 + c2));
+					context.flushAndStart(this, 2, Tokens.TOKEN_TYPE_OPERATOR,
+							Tokens.OperatorKind(c1 + c2));
 				} else {
-					context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR,
-							TokenTypes.OperatorKind(c1));
+					context.flushAndStart(this, 1, Tokens.TOKEN_TYPE_OPERATOR,
+							Tokens.OperatorKind(c1));
 				}
 				return true;
 			case '/':
 				c2 = context.peek(+1);
 				if (c2 != '/' && c2 != '*') {
-					context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR, TokenTypes.OperatorKind(c1));
+					context.flushAndStart(this, 1, Tokens.TOKEN_TYPE_OPERATOR, Tokens.OperatorKind(c1));
 					return true;
 				} else {
 					return false;
@@ -62,11 +62,11 @@ public class OperatorTokenBuilder implements TokenBuilder {
 			case '=':
 				c2 = context.peek(+1);
 				if (c2 == '=') {
-					context.flushAndStart(this, 2, TokenTypes.TOKEN_TYPE_OPERATOR,
-							TokenTypes.OperatorKind(c1 + c2));
+					context.flushAndStart(this, 2, Tokens.TOKEN_TYPE_OPERATOR,
+							Tokens.OperatorKind(c1 + c2));
 				} else {
-					context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR,
-							TokenTypes.OperatorKind(c1));
+					context.flushAndStart(this, 1, Tokens.TOKEN_TYPE_OPERATOR,
+							Tokens.OperatorKind(c1));
 				}
 				return true;
 			
@@ -74,11 +74,11 @@ public class OperatorTokenBuilder implements TokenBuilder {
 			case '|':
 				c2 = context.peek(+1);
 				if (c2 == c1) {
-					context.flushAndStart(this, 2, TokenTypes.TOKEN_TYPE_OPERATOR,
-							TokenTypes.OperatorKind(c1+c2));
+					context.flushAndStart(this, 2, Tokens.TOKEN_TYPE_OPERATOR,
+							Tokens.OperatorKind(c1 + c2));
 				} else {
-					context.flushAndStart(this, 1, TokenTypes.TOKEN_TYPE_OPERATOR,
-							TokenTypes.OperatorKind(c1));
+					context.flushAndStart(this, 1, Tokens.TOKEN_TYPE_OPERATOR,
+							Tokens.OperatorKind(c1));
 				}
 				return true;
 		}

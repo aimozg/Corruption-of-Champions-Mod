@@ -30,9 +30,13 @@ import classes.display.SpriteDb;
 import classes.internals.Utils;
 
 import coc.lua.LuaEngine;
+import coc.mod.ModPlayer;
+import coc.mod.data.GameModule;
+import coc.mod.lang.parser.ModParser;
 
 import coc.model.GameModel;
 import coc.model.TimeModel;
+import coc.view.CoCLoader;
 import coc.view.MainView;
 import coc.xxc.Story;
 import coc.xxc.StoryCompiler;
@@ -113,6 +117,8 @@ public class CoC extends MovieClip
     public var compiler:StoryCompiler = new StoryCompiler("content/").attach(rootStory);
     public var mods:/*GameMod*/Array = [];
     public var monsterLib:MonsterLib;
+    public var coremod:GameModule;
+    public var modPlayer:ModPlayer;
     public var encounterPools:/*[index:string] => GroupEncounter*/Object = {};
     public var context:StoryContext;
     public var lua:LuaEngine;
@@ -386,6 +392,16 @@ public class CoC extends MovieClip
         return encounterPools[name] || ((encounterPools[name] = new GroupEncounter(name,[])));
     }
 	
+	private function loadMods():void {
+		var game:CoC = this;
+		CoCLoader.loadText('content/coc2.txt',
+			function(success:Boolean, content:String, event:Event):void{
+				var parser:ModParser = new ModParser();
+				game.coremod = parser.loadMod("content/coc2.txt",content);
+				game.modPlayer = new ModPlayer(coremod);
+			});
+		
+	}
 	private function loadStory():void {
 		mainMenu.progressText = "Loading content files...";
 		compiler.onLoad       = initMods;
@@ -495,6 +511,7 @@ public class CoC extends MovieClip
     {
 	    mainView.setTextBackground(flags[kFLAGS.TEXT_BACKGROUND_STYLE]);
 		loadStory();
+	    loadMods();
         this.stop();
     }
 

@@ -1,7 +1,7 @@
 /**
  * Coded by aimozg on 12.01.2020.
  */
-package coc.lang.lexer {
+package coc.mod.lang.lexer {
 public interface TokenBuilder {
 	/**
 	 * Try to start building token of this type.
