@@ -7,13 +7,18 @@ Encounter "trip" = [
 ]
 
 Scene "forest/trip":
-// comment
-/* another
-comment */
-p "You trip on an exposed root, scraping yourself somewhat, but otherwise the hour is uneventful."
-TakePhysDamage 10
-
-Next -> return
-
+	p "You trip on an exposed root, scraping yourself somewhat, but otherwise the hour is uneventful."
+	TakePhysDamage 10
+	Next -> return
 End Scene
 
+Encounter "truffle" = [
+	pool: "truffle"
+	scene: "forest/truffle"
+]
+
+Scene "forest/truffle":
+	p "You spot something unusual. Taking a closer look, it's definitely a truffle of some sort."
+	GiveItem "PigTruf"
+	Next -> return
+End Scene

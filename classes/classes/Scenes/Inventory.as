@@ -403,7 +403,7 @@ package classes.Scenes
 			addButton(14, "Back", playerMenu);
 		}
 		
-		public function takeItem(itype:ItemType, nextAction:Function, overrideAbandon:Function = null, source:ItemSlotClass = null):void {
+		public function takeItem(itype:ItemType, nextAction:Function, overrideAbandon:Function = null, source:ItemSlotClass = null, callNextImmediately:Boolean = false):void {
 			if (itype == null) {
 				CoC_Settings.error("takeItem(null)");
 				return;
@@ -417,7 +417,11 @@ package classes.Scenes
 			if (temp >= 0) { //First slot go!
 				player.itemSlots[temp].quantity++;
 				outputText("You place " + itype.longName + " in your " + inventorySlotName[temp] + " pouch, giving you " + player.itemSlots[temp].quantity + " of them.");
-				itemGoNext();
+				if (callNextImmediately) {
+					nextAction();
+				} else {
+					itemGoNext();
+				}
 				return;
 			}
 			//If not done, then put it in an empty spot!
@@ -426,7 +430,11 @@ package classes.Scenes
 			if (temp >= 0) {
 				player.itemSlots[temp].setItemAndQty(itype, 1);
 				outputText("You place " + itype.longName + " in your " + inventorySlotName[temp] + " pouch.");
-				itemGoNext();
+				if (callNextImmediately) {
+					nextAction();
+				} else {
+					itemGoNext();
+				}
 				return;
 			}
 			if (overrideAbandon != null) //callOnAbandon only becomes important if the inventory is full

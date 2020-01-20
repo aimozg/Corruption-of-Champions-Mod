@@ -98,3 +98,14 @@ A scene with that ID does not exist in any loaded module.
 #### E900 Internal error
 Can be caused by bug in a game as well as error in a mod that wasn't properly handled and designated a error code (which is also likely bug in a game).
 
+#### E901 No such *something*: *ID*
+A game object (item, perk, ...) referenced by ID does not exist.
+
+Can be caused by typo, missing mod, or removed content.
+
+### Mod loading errors (E1000-E1099)
+
+### E1000 Redeclaration of *something* *ID* by mod *ID*
+A mod tries to add game object with ID already present in another mod.
+
+If the intent was to patch, use patch game object type. Otherwise, consider using local namespace or change the id any other way.

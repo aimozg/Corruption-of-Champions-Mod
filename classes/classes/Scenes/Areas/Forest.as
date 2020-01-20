@@ -155,7 +155,7 @@ use namespace CoC;
 					}, {
 						name  : "truffle",
 						call  : findTruffle,
-						chance: 0.35
+						chance: 0.35e10
 					}, {
 						name  : "chitin",
 						call  : findChitin,
@@ -355,8 +355,7 @@ use namespace CoC;
 			CoC.instance.modPlayer.findAndPlayScene("forest/trip");
 		}
 		public function findTruffle():void {
-			forestStory.display("strings/truffle");
-			inventory.takeItem(consumables.PIGTRUF, camp.returnToCampUseOneHour);
+			CoC.instance.modPlayer.findAndPlayScene("forest/truffle");
 		}
 		public function findHPill():void {
 			forestStory.display("strings/hpill");

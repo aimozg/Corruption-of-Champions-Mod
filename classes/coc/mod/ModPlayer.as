@@ -3,26 +3,26 @@
  */
 package coc.mod {
 import classes.Scenes.SceneLib;
+import classes.internals.Future;
+import classes.internals.Promise;
 
 import coc.mod.data.*;
 
 import classes.CoC;
 import classes.EngineCore;
-import classes.Modding.GameMod;
 import classes.internals.Utils;
 
 import coc.mod.data.scene.ChoiceDecl;
 
 import coc.mod.data.scene.SceneCallStmt;
 import coc.mod.data.scene.SceneTransition;
-import coc.mod.SourcedError;
 import coc.mod.lang.lexer.Token;
 import coc.mod.lang.lexer.impl.Tokens;
 
 public class ModPlayer {
 	public var mod:GameModule;
 	private var currentScene:ModScene;
-	private var commands:Commands;
+	private var commands:Object;
 	
 	public function ModPlayer(mod:GameModule) {
 		this.mod = mod;
@@ -37,49 +37,77 @@ public class ModPlayer {
 		}
 		playScene(scene);
 	}
+	// TODO maybe make ModPlayer continuable (store state in itself) instead of stacking futures? If call returns incomplete future, attach this.continueExecution to it.
+	private function executeStatements(statements:/*SceneStmt*/Array,startIndex:int=0):Future {
+		for (var i:int = startIndex; i<statements.length; i++) {
+			var statement:SceneStmt = statements[i];
+			if (statement is SceneCallStmt) {
+				var f:Future = executeCall(SceneCallStmt(statement));
+				// If call is async, we execute statements i+1..n when call completes
+				if (!f.isSuccess()) {
+					const p:Promise = new Promise();
+					const j:int = i+1;
+					f.Then(function():void{
+						executeStatements(statements,j).Always(
+								function(f2:Future):void {
+									if (f2.isSuccess()) p.resolve(null);
+									else p.reject(f2.getCause());
+								}
+						)
+					});
+					return p;
+				}
+			} else {
+				throw statement.errorAtStmt("E003 Feature not implemented: statement " + statement);
+			}
+		}
+		return Promise.Succeeded(null);
+	}
 	public function playScene(scene:ModScene):void {
 		try {
 			currentScene = scene;
-			// Scene
-			for each (var statement:SceneStmt in scene.body) {
-				if (statement is SceneCallStmt) {
-					executeCall(SceneCallStmt(statement));
-				} else {
-					throw statement.errorAtStmt("E003 Feature not implemented: statement " + statement);
-				}
-			}
-			flushParagraph();
-			flushOutput();
-			// Menu
-			startBuildingMenu();
-			if (scene.choices.length == 0) throw new SourcedError(scene.sourceFile, scene.sourceCol, scene.sourceLine, "E800 Illegal state: Empty scene menu");
-			for each(var choice:ChoiceDecl in scene.choices) {
-				addButton(choice);
-			}
-			doneBuildingMenu();
+			executeStatements(scene.body)
+					.Catch(function(cause:Error,future:Future):void {
+						reportError(cause);
+					})
+					.Always(
+							function ():void {
+								flushParagraph();
+								flushOutput();
+								// Menu
+								startBuildingMenu();
+								if (scene.choices.length == 0) throw new SourcedError(scene.sourceFile, scene.sourceCol, scene.sourceLine, "E800 Illegal state: Empty scene menu");
+								for each(var choice:ChoiceDecl in scene.choices) {
+									addButton(choice);
+								}
+								doneBuildingMenu();
+							}
+					);
+			
 		} catch (e:Error) {
 			reportError(e);
 		}
 	}
 	
-	private function executeCall(stmt:SceneCallStmt):void {
+	private function executeCall(stmt:SceneCallStmt):Future {
 		var fnName:String = stmt.funcName;
 		var args:Array;
+		var fn:Function;
 		switch(fnName) {
 			case 'p':
 			case 'cont':
 				args = evaluateFixedArguments(stmt.arguments, ["string"], stmt);
 				textOutputFn(args[0],fnName=='cont');
-				break;
+				return Promise.Succeeded(null);
 			default:
+				flushParagraph();
 				if (fnName in commands) {
-					var fn:Function = commands[fnName];
 					// TODO type check
-					args = [];
-					for (var i:int=0;i<stmt.arguments.length;i++) {
-						args[i] = evaluateExpr(stmt.arguments[i]);
-					}
-					fn.apply(null,args);
+					fn = commands[fnName];
+					args = evaluateArguments(stmt.arguments);
+					var result:* = fn.apply(null,args);
+					if (result is Future) return result;
+					return Promise.Succeeded(null);
 				} else {
 					throw stmt.errorAtStmt("E801 Unknown command " + fnName);
 				}
@@ -129,6 +157,13 @@ public class ModPlayer {
 		return value;
 	}
 	
+	private function evaluateArguments(arguments:/*SceneExpr*/Array):Array {
+		var result:Array = [];
+		for (var i:int = 0; i<arguments.length; i++) {
+			result[i] = evaluateExpr(arguments[i]);
+		}
+		return result;
+	}
 	private function evaluateFixedArguments(arguments:/*SceneExpr*/Array, types:/*String*/Array, stmt:SceneStmt):Array {
 		if (arguments.length != types.length) {
 			throw stmt.errorAtStmt("E802 Wrong number of arguments: expected "+types.length+", got "+arguments.length);

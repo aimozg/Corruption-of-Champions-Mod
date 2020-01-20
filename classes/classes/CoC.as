@@ -30,6 +30,7 @@ import classes.display.SpriteDb;
 import classes.internals.Utils;
 
 import coc.lua.LuaEngine;
+import coc.mod.ModMerger;
 import coc.mod.ModPlayer;
 import coc.mod.data.GameModule;
 import coc.mod.lang.parser.ModParser;
@@ -118,6 +119,7 @@ public class CoC extends MovieClip
     public var mods:/*GameMod*/Array = [];
     public var monsterLib:MonsterLib;
     public var coremod:GameModule;
+    public var modMerger:ModMerger;
     public var modPlayer:ModPlayer;
     public var encounterPools:/*[index:string] => GroupEncounter*/Object = {};
     public var context:StoryContext;
@@ -393,12 +395,14 @@ public class CoC extends MovieClip
     }
 	
 	private function loadMods():void {
-		var game:CoC = this;
+		modMerger = new ModMerger();
+		coremod = modMerger.mod;
+		modPlayer = new ModPlayer(coremod);
 		CoCLoader.loadText('content/coc2.txt',
 			function(success:Boolean, content:String, event:Event):void{
 				var parser:ModParser = new ModParser();
-				game.coremod = parser.loadMod("content/coc2.txt",content);
-				game.modPlayer = new ModPlayer(coremod);
+				var mod:GameModule = parser.loadMod("content/coc2.txt",content);
+				modMerger.add(mod);
 			});
 		
 	}

@@ -3,9 +3,6 @@
 	<include path="forest/erlking.xml"/>
 	<extend-story name="forest">
 		<lib name = "strings">
-            <text name="truffle">
-                You spot something unusual. Taking a closer look, it's definitely a truffle of some sort.
-            </text>
             <text name="hpill">
                 You find a pill stamped with the letter 'H' discarded on the ground.
             </text>
