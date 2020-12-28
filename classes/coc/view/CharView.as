@@ -3,7 +3,7 @@
  */
 package coc.view {
 import coc.view.charview.CharViewCompiler;
-import coc.view.charview.CharViewContext;
+import coc.view.charview.CharViewLogic;
 import coc.view.charview.CharViewSprite;
 import coc.view.charview.Palette;
 import coc.xlogic.Statement;
@@ -178,7 +178,8 @@ public class CharView extends Sprite {
 
 		// Mark visible layers
 		composite.hideAll();
-		parts.execute(new CharViewContext(this,_character));
+		new CharViewLogic(this).display(_character);
+		// parts.execute(new CharViewContext(this,_character));
 
 		var keyColors:Object = _palette.calcKeyColors(_character);
 		var bd:BitmapData    = composite.draw(keyColors);
