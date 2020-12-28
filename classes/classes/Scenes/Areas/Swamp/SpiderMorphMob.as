@@ -135,7 +135,7 @@ public class SpiderMorphMob extends Monster
 			this.gems = rand(50)+100;
 			this.special1 = SceneLib.combat.packAttack;
 			this.special2 = SceneLib.combat.lustAttack;
-			this.tailType = Tail.SPIDER_ADBOMEN;
+			this.tailType = Tail.SPIDER_ABDOMEN;
 			this.drop = NO_DROP;
 			this.createPerk(PerkLib.EnemyLargeGroupType, 0, 0, 0, 0);
 			checkMonster();

@@ -784,7 +784,7 @@ import classes.BodyParts.Wings;
 		[Tail.SALAMANDER, StatusEffects.UnlockedSalamanderTail],
 		[Tail.SCORPION, StatusEffects.UnlockedScorpionTail],
 		[Tail.SHARK, StatusEffects.UnlockedSharkTail],
-		[Tail.SPIDER_ADBOMEN, StatusEffects.UnlockedSpiderTail],
+		[Tail.SPIDER_ABDOMEN, StatusEffects.UnlockedSpiderTail],
 		[Tail.SQUIRREL, null],
 		[Tail.THUNDERBIRD, null],
 		[Tail.TWINKASHA, null],

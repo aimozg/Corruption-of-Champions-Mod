@@ -44,12 +44,12 @@ public class PlayerInfo extends BaseContent {
 			bodyStats += ")\n";
 		}
 		bodyStats += "<b>Times Transformed:</b> " + flags[kFLAGS.TIMES_TRANSFORMED] + "\n";
-		if (player.tailType == Tail.BEE_ABDOMEN || player.tailType == Tail.SCORPION || player.tailType == Tail.MANTICORE_PUSSYTAIL || player.tailType == Tail.SPIDER_ADBOMEN || player.faceType == Face.SNAKE_FANGS || player.faceType == Face.SPIDER_FANGS) {
-			if (player.tailType == Tail.SPIDER_ADBOMEN && player.faceType != Face.SNAKE_FANGS && player.faceType != Face.SPIDER_FANGS)
+		if (player.tailType == Tail.BEE_ABDOMEN || player.tailType == Tail.SCORPION || player.tailType == Tail.MANTICORE_PUSSYTAIL || player.tailType == Tail.SPIDER_ABDOMEN || player.faceType == Face.SNAKE_FANGS || player.faceType == Face.SPIDER_FANGS) {
+			if (player.tailType == Tail.SPIDER_ABDOMEN && player.faceType != Face.SNAKE_FANGS && player.faceType != Face.SPIDER_FANGS)
 				bodyStats += "<b>Web:</b> " + player.tailVenom + "/" + player.maxVenom() + "\n";
-			else if (player.tailType == Tail.SPIDER_ADBOMEN && (player.faceType == Face.SNAKE_FANGS || player.faceType == Face.SPIDER_FANGS))
+			else if (player.tailType == Tail.SPIDER_ABDOMEN && (player.faceType == Face.SNAKE_FANGS || player.faceType == Face.SPIDER_FANGS))
 				bodyStats += "<b>Venom/Web:</b> " + player.tailVenom + "/" + player.maxVenom() + "\n";
-			else if (player.tailType != Tail.SPIDER_ADBOMEN)
+			else if (player.tailType != Tail.SPIDER_ABDOMEN)
 				bodyStats += "<b>Venom:</b> " + player.tailVenom + "/" + player.maxVenom() + "\n";
 		}
 		bodyStats += "<b>Tone:</b> " + player.tone + " / " + player.maxToneCap() + "\n";
@@ -523,7 +523,7 @@ public class PlayerInfo extends BaseContent {
 
 		// Begin Interpersonal Stats
 		var interpersonStats:String = "";
-			
+		
 		if (flags[kFLAGS.AIKO_TIMES_MET] > 0) {
 			interpersonStats  += "<b>Aiko Affection:</b> "+flags[kFLAGS.AIKO_AFFECTION]+"\n";
 			if (flags[kFLAGS.AIKO_CORRUPTION_ACTIVE] > 0)
@@ -538,7 +538,7 @@ public class PlayerInfo extends BaseContent {
 			interpersonStats += "<b>Anzu's Affection:</b> " + flags[kFLAGS.ANZU_AFFECTION] + "%\n";
 			interpersonStats += "<b>Anzu's Relationship Level:</b> " + (flags[kFLAGS.ANZU_RELATIONSHIP_LEVEL] == 1 ? "Acquaintances" : flags[kFLAGS.ANZU_RELATIONSHIP_LEVEL] == 2 ? "Friend" : flags[kFLAGS.ANZU_RELATIONSHIP_LEVEL] == 3 ? "Close Friend" : flags[kFLAGS.ANZU_RELATIONSHIP_LEVEL] == 4 ? "Lover" : "Undefined") + "\n";
 		}
-			
+		
 		if (flags[kFLAGS.ARIAN_PARK] > 0)
             interpersonStats += "<b>Arian's Health:</b> " + Math.round(SceneLib.arianScene.arianHealth()) + "\n";
         if (flags[kFLAGS.ARIAN_VIRGIN] > 0)
@@ -561,7 +561,7 @@ public class PlayerInfo extends BaseContent {
 			if (flags[kFLAGS.AURORA_LVL] == 2) interpersonStats += "<b>Aurora lvl:</b> 7\n";
 			if (flags[kFLAGS.AURORA_LVL] == 1) interpersonStats += "<b>Aurora lvl:</b> 1\n";
 		}
-			
+		
 		if (SceneLib.bazaar.benoit.benoitAffection() > 0)
             interpersonStats += "<b>" + SceneLib.bazaar.benoit.benoitMF("Benoit", "Benoite") + " Affection:</b> " + Math.round(SceneLib.bazaar.benoit.benoitAffection()) + "%\n";
         if (flags[kFLAGS.BROOKE_MET] > 0)
@@ -1549,7 +1549,7 @@ public class PlayerInfo extends BaseContent {
 		}
 		if (page == 2) {
 			if (player.superPerkPoints > 0) {
-				
+			
 			}
 			addButton(14, "Back", playerMenu);
 		}

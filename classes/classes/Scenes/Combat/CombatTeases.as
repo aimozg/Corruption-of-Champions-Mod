@@ -403,7 +403,7 @@ public class CombatTeases extends BaseCombatContent {
 			choices[choices.length] = 21;
 		}
 		//22 SPOIDAH SILK
-		if (player.tailType == Tail.SPIDER_ADBOMEN) {
+		if (player.tailType == Tail.SPIDER_ABDOMEN) {
 			choices[choices.length] = 22;
 			choices[choices.length] = 22;
 			choices[choices.length] = 22;

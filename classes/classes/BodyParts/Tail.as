@@ -18,7 +18,7 @@ public class Tail extends SaveableBodyPart {
 	public static const DOG:int                 = 2;
 	public static const DEMONIC:int             = 3;
 	public static const COW:int                 = 4;
-	public static const SPIDER_ADBOMEN:int      = 5;
+	public static const SPIDER_ABDOMEN:int      = 5;
 	public static const BEE_ABDOMEN:int         = 6;
 	public static const SHARK:int               = 7;
 	public static const CAT:int                 = 8;

@@ -79,7 +79,7 @@ use namespace CoC;
 				if (player.cockThatFits(monster.vaginalCapacity()) >= 0) {
 					outputText("\nYou could fuck her pussy, though you'd be within easy reach of her lips.  If she gets any crazy ideas, it'd be hard to stop her.");
 					vagFuck = winDriderPCDickInSpiderCunt;
-					if (player.tailType == Tail.SPIDER_ADBOMEN || player.hasItem(useables.T_SSILK)) {
+					if (player.tailType == Tail.SPIDER_ABDOMEN || player.hasItem(useables.T_SSILK)) {
 						outputText("\nYou could bind her up with some webbing for some bondage.  Her lips are dangerous, after all.");
 						careful = driderVagSmartFuck;
 					}
@@ -149,8 +149,8 @@ use namespace CoC;
 			var x:int = player.cockThatFits(monster.vaginalCapacity());
 			spriteSelect(77);
 			clearOutput();
-			//*Summary: Fuck her cunt with a wang that fits it, lose control of the 
-			//situation when she kisses you with potent, envenomed lips.  Get 
+			//*Summary: Fuck her cunt with a wang that fits it, lose control of the
+			//situation when she kisses you with potent, envenomed lips.  Get
 			//moderately hypno'ed into cumming into her over and over again?
 			outputText("Eager to plumb the depths of this greedy spider's snatch, you practically tear your way out of your [armor] in your hurry to get naked.  Through it all ");
 			if (monster.lust >= monster.maxLust()) {
@@ -352,7 +352,7 @@ use namespace CoC;
 		{
 			spriteSelect(77);
 			clearOutput();
-			//*Summary:  Roll the drider over and squat on an ovipositor - reuse anal intro? (fuck you bitch, i'm taking your shitty kids to the lake and turning them pink)	
+			//*Summary:  Roll the drider over and squat on an ovipositor - reuse anal intro? (fuck you bitch, i'm taking your shitty kids to the lake and turning them pink)
 			player.slimeFeed();
 			outputText("Eyeing the small lump of the spider's retracted ovipositor, you resolve to have a little fun with it, even if it means giving the spider exactly what she wants in a way that she doesn't.  You tear off your [armor] while the drider watches with ");
 			if (monster.HP < 1) outputText("hate");
@@ -859,7 +859,7 @@ use namespace CoC;
 			outputText("You're pleased to see the drider's tongue loll out of her mouth, her eyes rolled up into her head. Clearly she's enjoying this!  Encouraged, you start to fuck her butt harder, hammering into her ass with every bit of force your powerful muscles can summon up.  You're rewarded with a sharp, high moan from the drider.  Once she starts, she doesn't stop.  A symphony of moans, grunts, and pleasured screams erupt from the spider-girl, all in concert with your rough anal ravishing.\n\n");
 
 			outputText("Without warning, the drider cums.  She cries out and grabs her fully-engaged corrupted cock, hosing down the trees in front of her with spider-cum as her butt squeezes down on your " + cockDescript(x) + ", milking your dick with her anal passage.  You pick up the tempo of your fucking to break-pelvis speeds, ramming your cock into her backdoor and letting loose a torrent of your spunk, shooting it deep inside her");
-			//(if Vagina: 
+			//(if Vagina:
 			if (player.hasVagina()) {
 				outputText(" while your unused cunt spurts girlcum across her carapace");
 				if (player.cockTotal() > 1) outputText(" and");
@@ -896,7 +896,7 @@ use namespace CoC;
 			else outputText("stuffed with her fingers, femcum streaming down the front of her spider-half as she desperately plays with herself.");
 			outputText("  The need to bury your aching length inside that puffy snatch is almost unbearable, but you don't want to risk exposing yourself to any of her tricks, especially considering how close you'd be to her mouth as you take her.  Racking your brain for a solution, the mass of webbing that covers the canopy around this area catches your eye.");
 
-			if (player.tailType == Tail.SPIDER_ADBOMEN) {
+			if (player.tailType == Tail.SPIDER_ABDOMEN) {
 				outputText("\n\nA plan quickly forms in your mind and you feel your spinnerets twitch with anticipation as you ");
 				if (player.isDrider()) outputText("scuttle");
 				else outputText("saunter");
@@ -911,7 +911,7 @@ use namespace CoC;
 			}
 		}
 
-//[No] 
+//[No]
 		private function dontSilkRapeDrider():void
 		{
 			spriteSelect(77);

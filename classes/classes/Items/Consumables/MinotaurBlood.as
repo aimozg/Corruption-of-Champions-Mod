@@ -297,11 +297,11 @@ public class MinotaurBlood extends Consumable {
 		if (changes < changeLimit && rand(2) == 0 && player.tailType != Tail.COW && player.tailType != Tail.GARGOYLE) {
 			if (player.tailType == Tail.NONE) outputText("\n\nYou feel the flesh above your " + Appearance.buttDescription(player) + " knotting and growing.  It twists and writhes around itself before flopping straight down, now shaped into a distinctly bovine form.  You have a <b>cow tail</b>.");
 			else {
-				if (player.tailType < Tail.SPIDER_ADBOMEN || player.tailType > Tail.BEE_ABDOMEN) {
+				if (player.tailType < Tail.SPIDER_ABDOMEN || player.tailType > Tail.BEE_ABDOMEN) {
 					outputText("\n\nYour tail bunches uncomfortably, twisting and writhing around itself before flopping straight down, now shaped into a distinctly bovine form.  You have a <b>cow tail</b>.");
 				}
 				//insect
-				if (player.tailType == Tail.SPIDER_ADBOMEN || player.tailType == Tail.BEE_ABDOMEN) {
+				if (player.tailType == Tail.SPIDER_ABDOMEN || player.tailType == Tail.BEE_ABDOMEN) {
 					outputText("\n\nYour insect-like abdomen tingles pleasantly as it begins shrinking and softening, chitin morphing and reshaping until it looks exactly like a <b>cow tail</b>.");
 				}
 			}

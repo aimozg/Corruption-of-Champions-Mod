@@ -1234,7 +1234,7 @@ public class PlayerAppearance extends BaseContent {
 			outputText("  A narrow tail ending in a spaded tip curls down from your " + buttDescript() + ", wrapping around your [leg] sensually at every opportunity.");
 		if (player.tailType == Tail.COW)
 			outputText("  A long cowtail with a puffy tip swishes back and forth as if swatting at flies.");
-		if (player.tailType == Tail.SPIDER_ADBOMEN) {
+		if (player.tailType == Tail.SPIDER_ABDOMEN) {
 			outputText("  A large, spherical spider-abdomen has grown out from your backside, covered in shiny black chitin.  Though it's heavy and bobs with every motion, it doesn't seem to slow you down.");
 			if (player.tailVenom > 50 && player.tailVenom < 80)
 				outputText("  Your bulging arachnid posterior feels fairly full of webbing.");

@@ -2,7 +2,7 @@
  * ...
  * @author Ormael
  */
-package classes.Scenes 
+package classes.Scenes
 {
 import classes.*;
 import classes.BodyParts.Antennae;
@@ -26,9 +26,9 @@ use namespace CoC;
 	public class Metamorph extends BaseContent
 	{
 		
-		public function Metamorph() 
+		public function Metamorph()
 		{
-			
+		
 		}
 	
 public function accessMetamorphMenu():void {
@@ -742,10 +742,10 @@ private function accessPage2LegsMenu():void {
 	else if (player.hasStatusEffect(StatusEffects.UnlockedSpiderLegs) && player.lowerBody == LowerBody.CHITINOUS_SPIDER_LEGS) addButtonDisabled(0, "Spider", "You already have spider lower body.");
 	else if (player.hasStatusEffect(StatusEffects.UnlockedSpiderLegs) && player.lowerBody != LowerBody.CHITINOUS_SPIDER_LEGS && player.soulforce < 100) addButtonDisabled(0, "Spider", "You not have enough Soulforce for this metamorphosis.");
 	else addButtonDisabled(0, "???", "You not yet unlocked this metamorphosis!");
-	if (player.hasStatusEffect(StatusEffects.UnlockedDriderLegs) && player.lowerBody == LowerBody.CHITINOUS_SPIDER_LEGS && player.tailType == Tail.SPIDER_ADBOMEN && player.soulforce >= 300) addButton(1, "Drider", metamorphDriderLegs);
+	if (player.hasStatusEffect(StatusEffects.UnlockedDriderLegs) && player.lowerBody == LowerBody.CHITINOUS_SPIDER_LEGS && player.tailType == Tail.SPIDER_ABDOMEN && player.soulforce >= 300) addButton(1, "Drider", metamorphDriderLegs);
 	else if (player.hasStatusEffect(StatusEffects.UnlockedDriderLegs) && player.lowerBody == LowerBody.DRIDER) addButtonDisabled(1, "Drider", "You already have drider lower body.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedDriderLegs) && player.lowerBody == LowerBody.CHITINOUS_SPIDER_LEGS && player.tailType == Tail.SPIDER_ADBOMEN && player.soulforce < 300) addButtonDisabled(1, "Drider", "You not have enough Soulforce for this metamorphosis.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedDriderLegs) && player.lowerBody == LowerBody.CHITINOUS_SPIDER_LEGS && player.tailType != Tail.SPIDER_ADBOMEN) addButtonDisabled(1, "Drider", "You have proper type of legs but have wrong type of tail for this metamorphosis.");
+	else if (player.hasStatusEffect(StatusEffects.UnlockedDriderLegs) && player.lowerBody == LowerBody.CHITINOUS_SPIDER_LEGS && player.tailType == Tail.SPIDER_ABDOMEN && player.soulforce < 300) addButtonDisabled(1, "Drider", "You not have enough Soulforce for this metamorphosis.");
+	else if (player.hasStatusEffect(StatusEffects.UnlockedDriderLegs) && player.lowerBody == LowerBody.CHITINOUS_SPIDER_LEGS && player.tailType != Tail.SPIDER_ABDOMEN) addButtonDisabled(1, "Drider", "You have proper type of legs but have wrong type of tail for this metamorphosis.");
 	else if (player.hasStatusEffect(StatusEffects.UnlockedDriderLegs) && player.lowerBody != LowerBody.CHITINOUS_SPIDER_LEGS) addButtonDisabled(1, "Drider", "You not have proper type of legs and/or tail for this metamorphosis.");
 	else addButtonDisabled(1, "???", "You not yet unlocked this metamorphosis!");
 	if (player.hasStatusEffect(StatusEffects.UnlockedFoxLowerBody) && player.lowerBody != LowerBody.FOX && player.soulforce >= 100) addButton(2, "Fox", metamorphLowerBodyFox);
@@ -963,9 +963,9 @@ private function accessPage1TailMenu():void {
 	else if (player.hasStatusEffect(StatusEffects.UnlockedCowTail) && player.tailType == Tail.COW) addButtonDisabled(4, "Cow", "You already have cow tail.");
 	else if (player.hasStatusEffect(StatusEffects.UnlockedCowTail) && player.tailType != Tail.COW && player.soulforce < 100) addButtonDisabled(4, "Cow", "You not have enough Soulforce for this metamorphosis.");
 	else addButtonDisabled(4, "???", "You not yet unlocked this metamorphosis!");
-	if (player.hasStatusEffect(StatusEffects.UnlockedSpiderTail) && player.tailType != Tail.SPIDER_ADBOMEN && player.soulforce >= 100) addButton(5, "Spider", metamorphSpiderTail);
-	else if (player.hasStatusEffect(StatusEffects.UnlockedSpiderTail) && player.tailType == Tail.SPIDER_ADBOMEN) addButtonDisabled(5, "Spider", "You already have spider abdomen.");
-	else if (player.hasStatusEffect(StatusEffects.UnlockedSpiderTail) && player.tailType != Tail.SPIDER_ADBOMEN && player.soulforce < 100) addButtonDisabled(5, "Spider", "You not have enough Soulforce for this metamorphosis.");
+	if (player.hasStatusEffect(StatusEffects.UnlockedSpiderTail) && player.tailType != Tail.SPIDER_ABDOMEN && player.soulforce >= 100) addButton(5, "Spider", metamorphSpiderTail);
+	else if (player.hasStatusEffect(StatusEffects.UnlockedSpiderTail) && player.tailType == Tail.SPIDER_ABDOMEN) addButtonDisabled(5, "Spider", "You already have spider abdomen.");
+	else if (player.hasStatusEffect(StatusEffects.UnlockedSpiderTail) && player.tailType != Tail.SPIDER_ABDOMEN && player.soulforce < 100) addButtonDisabled(5, "Spider", "You not have enough Soulforce for this metamorphosis.");
 	else addButtonDisabled(5, "???", "You not yet unlocked this metamorphosis!");
 	if (player.hasStatusEffect(StatusEffects.UnlockedBeeTail) && player.tailType != Tail.BEE_ABDOMEN && player.soulforce >= 100) addButton(6, "Bee", metamorphBeeTail);
 	else if (player.hasStatusEffect(StatusEffects.UnlockedBeeTail) && player.tailType == Tail.BEE_ABDOMEN) addButtonDisabled(6, "Bee", "You already have bee tail.");
@@ -1698,7 +1698,7 @@ private function metamorphRedPandaTail():void {
 		outputText("\n\nShortly after, the feel of that spicy root returns, but now the heat is felt only in your tail, which shakes wildly while it elongates and becomes more bushy. Soon it has become almost as long as you. A very thick mass of soft, fluffy furs covers it in a matter of seconds. It acquires a lovely ringed pattern of red-russet and copperish-orange.");
 		outputText("\n\nWhen the effects finally subside, you decide to test the tail, making it coil around your body, realizing soon that you can control its movements with ease, and that its fur feels wonderful at the touch. Anyways, <b>you now have a long, bushy, red-panda tail!</b>");
 	}
-	else if (player.tailType == Tail.BEE_ABDOMEN || player.tailType == Tail.SPIDER_ADBOMEN || player.tailType == Tail.MANTIS_ABDOMEN) {
+	else if (player.tailType == Tail.BEE_ABDOMEN || player.tailType == Tail.SPIDER_ABDOMEN || player.tailType == Tail.MANTIS_ABDOMEN) {
 		outputText("Your insectile backside seems affected by the root properties, as your venom production suddenly stops. The flesh within the abdomen retracts into your backside, the chiting covering falling, leaving exposed a layer of soft, bare skin. When the abdomen disappears, your left with a comically sized butt, that soon reverts to its usual size.");
 		outputText("\n\nThe root keeps doing its thing, as you feel an uncomfortable sensation on your butt. A burning sensation runs through your body, similar to the one that you had after eating the root. When it migrates to your back, your attention goes to a mass of fluff that has erupted from your backside. Before you can check it properly, it seems to move on its own, following the heated sensation that now pulsates through your body, and when the heated pulses  seem to have stopped, it has become a long, fluffy tube, quite different from your former abdomen.");
 		outputText("\n\nShortly after, the feel of that spicy root returns, but now the heat is felt only in your tail, which shakes wildly while it elongates and becomes more bushy. Soon it has become almost as long as you. A very thick mass of soft, fluffy furs covers it in a matter of seconds. It acquires a lovely ringed pattern of red-russet and copperish-orange.");
@@ -2504,11 +2504,11 @@ private function metamorphCowTail():void {
 	player.soulforce -= 100;
 	if (player.tailType == Tail.NONE) outputText("\n\nYou feel the flesh above your " + buttDescript() + " knotting and growing.  It twists and writhes around itself before flopping straight down, now shaped into a distinctly bovine form.  You have a <b>cow tail</b>.");
 	else {
-		if (player.tailType < Tail.SPIDER_ADBOMEN || player.tailType > Tail.BEE_ABDOMEN) {
+		if (player.tailType < Tail.SPIDER_ABDOMEN || player.tailType > Tail.BEE_ABDOMEN) {
 			outputText("\n\nYour tail bunches uncomfortably, twisting and writhing around itself before flopping straight down, now shaped into a distinctly bovine form.  You have a <b>cow tail</b>.");
 		}
 		//insect
-		if (player.tailType == Tail.SPIDER_ADBOMEN || player.tailType == Tail.BEE_ABDOMEN || player.tailType == Tail.SCORPION || player.tailType == Tail.MANTIS_ABDOMEN) {
+		if (player.tailType == Tail.SPIDER_ABDOMEN || player.tailType == Tail.BEE_ABDOMEN || player.tailType == Tail.SCORPION || player.tailType == Tail.MANTIS_ABDOMEN) {
 			outputText("\n\nYour insect-like abdomen tingles pleasantly as it begins shrinking and softening, chitin morphing and reshaping until it looks exactly like a <b>cow tail</b>.");
 		}
 	}
@@ -2837,7 +2837,7 @@ private function metamorphSpiderTail():void {
 	outputText("\n\n");
 	if (player.tailType > Tail.NONE) outputText("Your tail shudders as heat races through it, twitching violently until it feels almost as if it's on fire.  You jump from the pain at your " + buttDescript() + " and grab at it with your hands.  It's huge... and you can feel it hardening under your touches, firming up until the whole tail has become rock-hard and spherical in shape.  The heat fades, leaving behind a gentle warmth, and you realize your tail has become a spider's abdomen!  With one experimental clench, you even discover that it can shoot webs from some of its spinnerets, both sticky and non-adhesive ones.  That may prove useful.  <b>You now have a spider's abdomen hanging from above your " + buttDescript() + "!</b>\n\n");
 	else outputText("A burst of pain hits you just above your " + buttDescript() + ", coupled with a sensation of burning heat and pressure.  You can feel your " + player.skinFurScales() + " tearing as something forces its way out of your body.  Reaching back, you grab at it with your hands.  It's huge... and you can feel it hardening under your touches, firming up until the whole tail has become rock-hard and spherical in shape.  The heat fades, leaving behind a gentle warmth, and you realize your tail has become a spider's abdomen!  With one experimental clench, you even discover that it can shoot webs from some of its spinnerets, both sticky and non-adhesive ones.  That may prove useful.  <b>You now have a spider's abdomen hanging from above your " + buttDescript() + "!</b>");
-	player.tailType = Tail.SPIDER_ADBOMEN;
+	player.tailType = Tail.SPIDER_ABDOMEN;
 	player.tailVenom = 5;
 	player.tailRecharge = 5;
 	doNext(accessPage1TailMenu);
@@ -3127,7 +3127,7 @@ private function metamorphTailDemonic():void {
 	player.soulforce -= 100;
 	if (player.tailType != Tail.NONE) {
 		outputText("\n\n");
-		if (player.tailType == Tail.SPIDER_ADBOMEN || player.tailType == Tail.BEE_ABDOMEN) outputText("You feel a tingling in your insectile abdomen as it stretches, narrowing, the exoskeleton flaking off as it transforms into a flexible demon-tail, complete with a round spaded tip.  ");
+		if (player.tailType == Tail.SPIDER_ABDOMEN || player.tailType == Tail.BEE_ABDOMEN) outputText("You feel a tingling in your insectile abdomen as it stretches, narrowing, the exoskeleton flaking off as it transforms into a flexible demon-tail, complete with a round spaded tip.  ");
 		else outputText("You feel a tingling in your tail.  You are amazed to discover it has shifted into a flexible demon-tail, complete with a round spaded tip.  ");
 		outputText("<b>Your tail is now demonic in appearance.</b>");
 	}

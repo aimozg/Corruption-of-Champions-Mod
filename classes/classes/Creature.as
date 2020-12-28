@@ -935,6 +935,7 @@ public class Creature extends Utils
 		public function coatType():int { return skin.coatType(); }
 		public function hasCoatOfType(...types:Array):Boolean { return skin.hasCoatOfType.apply(skin,types); }
 		public function hasFullCoatOfType(...types:Array):Boolean { return skin.hasFullCoatOfType.apply(skin,types); }
+		public function hasPartialCoatOfType(...types:Array):Boolean { return skin.hasPartialCoatOfType.apply(skin,types); }
 	//	[Deprecated]
 		public function set skinTone(value:String):void {
 			trace("[DEPRECATED] set skinTone");
@@ -3430,7 +3431,7 @@ public class Creature extends Utils
 
 		public function canOvipositSpider():Boolean
 		{
-			return eggs() >= 10 && findPerk(PerkLib.SpiderOvipositor) >= 0 && isDrider() && tail.type == Tail.SPIDER_ADBOMEN;
+			return eggs() >= 10 && findPerk(PerkLib.SpiderOvipositor) >= 0 && isDrider() && tail.type == Tail.SPIDER_ABDOMEN;
 		}
 
 		public function canOvipositBee():Boolean

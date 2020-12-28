@@ -250,7 +250,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 					} else if (combat.isEnnemyInvisible) bd.disable("You cannot use offensive skills against an opponent you cannot see or target.");
 				}*/
 			}
-			if (player.tailType == Tail.SPIDER_ADBOMEN) {
+			if (player.tailType == Tail.SPIDER_ABDOMEN) {
 				bd = buttons.add("Web", PCWebAttack).hint("Attempt to use your abdomen to spray sticky webs at an enemy and greatly slow them down.  Be aware it takes a while for your webbing to build up.  \n\nWeb Amount: " + Math.floor(player.tailVenom) + "/" + player.maxVenom());
 				if (player.tailVenom < 30) {
 					bd.disable("You do not have enough webbing to shoot right now!");
@@ -505,7 +505,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 			}
 		}
 		if (player.vehicles == vehicles.HB_MECH) {
-			
+		
 		}
 	}
 	internal function buildMenuForFlying(buttons:ButtonDataList):void {
@@ -521,7 +521,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 			if (player.canPounce() && !monster.hasPerk(PerkLib.EnemyGroupType) && !monster.hasPerk(PerkLib.EnemyLargeGroupType)) {
 				bd = buttons.add("Skyrend", skyPounce).hint("Land into your enemy dealing damage and initiate a grapple combo. End flight.");
 				if (combat.isEnnemyInvisible) bd.disable("You cannot use offensive skills against an opponent you cannot see or target.");
-			}				
+			}
 			//Tornado Strike
 			if (player.couatlScore() >= 11) {
 				bd = buttons.add("Tornado Strike", TornadoStrike).hint("Use wind to forcefully lift a foe in the air and deal damage.  \n\nWould go into cooldown after use for: 8 rounds");
@@ -594,7 +594,7 @@ public class PhysicalSpecials extends BaseCombatContent {
 			}
 		}
 		if (player.vehicles == vehicles.HB_MECH) {
-			
+		
 		}
 	}
 

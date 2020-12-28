@@ -1,4 +1,4 @@
-﻿package classes 
+﻿package classes
 {
 import classes.BodyParts.Face;
 import classes.BodyParts.Tail;
@@ -1092,7 +1092,7 @@ import classes.Items.JewelryLib;
 			if (game.player.faceType == Face.SNAKE_FANGS) maxven += 100;
 			if (game.player.faceType == Face.SPIDER_FANGS) maxven += 100;
 			if (game.player.tailType == Tail.BEE_ABDOMEN) maxven += 150;
-			if (game.player.tailType == Tail.SPIDER_ADBOMEN) maxven += 150;
+			if (game.player.tailType == Tail.SPIDER_ABDOMEN) maxven += 150;
 			if (game.player.tailType == Tail.SCORPION) maxven += 150;
 			if (game.player.tailType == Tail.MANTICORE_PUSSYTAIL) maxven += 200;
 			if (findPerk(PerkLib.ImprovedVenomGland) >= 0) maxven += 100;

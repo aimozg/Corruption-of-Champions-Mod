@@ -2278,7 +2278,7 @@ public class Appearance extends Utils
 			ANAL_TIGHTNESS_DESCRIPTORS[AssClass.LOOSENESS_GAPING]    = "gaping ";
 			
 			//25% tightness description
-			if (forceDesc || rand(4) == 0 || (i_creature.ass.analLooseness <= 1 && rand(4) <= 2)) 
+			if (forceDesc || rand(4) == 0 || (i_creature.ass.analLooseness <= 1 && rand(4) <= 2))
 			{
 				description += ANAL_TIGHTNESS_DESCRIPTORS[i_creature.ass.analLooseness];
 			}
@@ -2287,7 +2287,7 @@ public class Appearance extends Utils
 			if (CoC.instance.flags[kFLAGS.SFW_MODE] > 0) {
 			description += randomChoice("rear end",
 					"backdoor");
-			} 
+			}
 			else {
 			description += randomChoice("ass",
 					"anus",
@@ -2784,7 +2784,7 @@ public class Appearance extends Utils
 					[Tail.DOG, "dog"],
 					[Tail.DEMONIC, "demonic"],
 					[Tail.COW, "cow"],
-					[Tail.SPIDER_ADBOMEN, "spider abdomen"],
+					[Tail.SPIDER_ABDOMEN, "spider abdomen"],
 					[Tail.BEE_ABDOMEN, "bee abdomen"],
 					[Tail.SHARK, "shark"],
 					[Tail.CAT, "cat"],

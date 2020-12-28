@@ -534,7 +534,7 @@ use namespace CoC;
 			if (arms.type == Arms.SPIDER || arms.type == Arms.MANTIS || arms.type == Arms.BEE || arms.type == Arms.SALAMANDER) armorDef += (2 * newGamePlusMod);
 			if (arms.type == Arms.DRAGON || arms.type == Arms.FROSTWYRM) armorDef += (3 * newGamePlusMod);
 			if (arms.type == Arms.HYDRA) armorDef += (4 * newGamePlusMod);
-			if (tailType == Tail.SPIDER_ADBOMEN || tailType == Tail.MANTIS_ABDOMEN || tailType == Tail.BEE_ABDOMEN) armorDef += (2 * newGamePlusMod);
+			if (tailType == Tail.SPIDER_ABDOMEN || tailType == Tail.MANTIS_ABDOMEN || tailType == Tail.BEE_ABDOMEN) armorDef += (2 * newGamePlusMod);
 			if (tailType == Tail.DRACONIC) armorDef += (3 * newGamePlusMod);
 			if (lowerBody == LowerBody.FROSTWYRM) armorDef += (6 * newGamePlusMod);
 			if (lowerBody == LowerBody.YETI) armorDef += (1 * newGamePlusMod);
@@ -739,7 +739,7 @@ use namespace CoC;
 			if (arms.type == Arms.SPIDER || arms.type == Arms.MANTIS || arms.type == Arms.BEE || arms.type == Arms.SALAMANDER) armorMDef += (2 * newGamePlusMod);
 			if (arms.type == Arms.DRAGON || arms.type == Arms.FROSTWYRM) armorMDef += (3 * newGamePlusMod);
 			if (arms.type == Arms.HYDRA) armorMDef += (4 * newGamePlusMod);
-			if (tailType == Tail.SPIDER_ADBOMEN || tailType == Tail.MANTIS_ABDOMEN || tailType == Tail.BEE_ABDOMEN) armorMDef += (2 * newGamePlusMod);
+			if (tailType == Tail.SPIDER_ABDOMEN || tailType == Tail.MANTIS_ABDOMEN || tailType == Tail.BEE_ABDOMEN) armorMDef += (2 * newGamePlusMod);
 			if (tailType == Tail.DRACONIC) armorMDef += (3 * newGamePlusMod);
 			if (tailType == LowerBody.FROSTWYRM) armorMDef += (6 * newGamePlusMod);
 			if (lowerBody == LowerBody.YETI) armorMDef += (1 * newGamePlusMod);
@@ -924,7 +924,7 @@ use namespace CoC;
 		public function isGoblinoid():Boolean { return (goblinScore() > 9 || gremlinScore() > 12); }
 		public function isWerewolf():Boolean { return (werewolfScore() >= 12); }
 		public function isNightCreature():Boolean { return (vampireScore() >= 10 || batScore() >= 6 || jiangshiScore() >= 20); }
-		public function isHavingEnhancedHearing():Boolean { return (ears.type == Ears.ELVEN); }	
+		public function isHavingEnhancedHearing():Boolean { return (ears.type == Ears.ELVEN); }
 		//Weapons for Whirlwind
 		public function isWeaponForWhirlwind():Boolean
 		{
@@ -5549,7 +5549,7 @@ use namespace CoC;
 				spiderCounter++;
 			if (lowerBody == LowerBody.DRIDER)
 				spiderCounter += 2;
-			if (tailType == Tail.SPIDER_ADBOMEN)
+			if (tailType == Tail.SPIDER_ABDOMEN)
 				spiderCounter++;
 			if (!hasPartialCoat(Skin.CHITIN) && spiderCounter > 0)
 				spiderCounter--;

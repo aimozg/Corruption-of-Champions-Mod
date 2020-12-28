@@ -24,11 +24,11 @@ public class GoblinShamanScene extends BaseContent
 		 Appendages: Their arms and legs look like a human's, although they are scaled down to fit the goblin's smaller frames.
 		 Appearance: Goblins are normally lithe little creatures with somewhat elfin faces.  Their ears are pointed, though their unusual (and very punk rock) haircuts can sometimes hide them.   A goblins age can usually be determined by the size of her bust and hips.  Very young goblins have relatively small chests and hips, though as they age and give birth, their endowments will grow ludicrous sizes.  It is rumored that somewhere there is a goblin Queen who has so many children that she has become immobile.
 
-		 They often dress themselves in tight fitting leather harnesses to display their chests.  A goblin's crotch will ALWAYS be exposed.  They favor piercings in multiple locations, and most have jewelry in their nipples, clit, and both pairs of lips.  
+		 They often dress themselves in tight fitting leather harnesses to display their chests.  A goblin's crotch will ALWAYS be exposed.  They favor piercings in multiple locations, and most have jewelry in their nipples, clit, and both pairs of lips.
 		 Aging: Goblins do not get 'old' like other races, and do not get lines or wrinkles.  They will not die from age alone, though should a goblin be successful enough to immobilize herself, she may die if she does not have family that keeps her fed.
 		 Sex Life: Goblins are ALWAYS horny and ready to copulate.  They have large juicy vulva that ache for penetration, and despite their small size can take many of the larger members out there (in moderation).  They will always seek to have sex with any willing participant, and in those rare cases where they are too small, they will be sure to take as much cum inside them as possible.  Thanks to the wide array of psychology altering chemicals in their body, goblins get off on the act of giving birth.
 		 Life Cycle: The life of a young goblin is likely to end in the jaws of a hellhound, impaled on a minotaur's dick, or drowned tentacle-cum.  Due to the special properties of their wombs (any pregnancy ALWAYS results in a goblin), they are considered worthless to most monsters and demons, and due to their small size, they often end up dying after an encounter with a minotaur or similar creature. Despite the high fatality rate of young goblins, those who survive beyond their first pregnancy will often live a very long time, and will dedicate themselves to birthing their broods (4+ goblins per pregnancy) and perfecting alchemical recipes they can use to 'seduce' more 'fathers'.
-		 History: Goblins were once the technological leaders of what is now known as the Demon-Realm.  When the demons came, they signed a treaty guaranteeing peace and freedom to the goblin people.  The peace was a lie.  That night, a team of demons tunneled into the goblins water supply and began tainting with ever increasing levels of corruption.  Over the next few days, the goblins spent less and less time working, and more and more time fucking.  
+		 History: Goblins were once the technological leaders of what is now known as the Demon-Realm.  When the demons came, they signed a treaty guaranteeing peace and freedom to the goblin people.  The peace was a lie.  That night, a team of demons tunneled into the goblins water supply and began tainting with ever increasing levels of corruption.  Over the next few days, the goblins spent less and less time working, and more and more time fucking.
 
 		 Within a week, their greatest minds were spending all their time eating pussies and developing new aphrodisiacs.  Within a month the goblins were permanently turned on by the strongest of drugs and fucking nonstop in the streets of their once-great city.  A few did not partake of the tainted water, and locked themselves inside their dwellings for as long as they dared.  Some gave in to thirst or loneliness.  Others stayed indoors until the demons walked in and easily assumed control.  They put the few sane goblins left to work building the machines that run their empire to this day.  No one has seen those few survivors since, and most goblins don't waste time thinking about them.
 		 Social Structure: Goblins live in groups of 100-300, typically lead by an elder female with a direct bloodline to every goblin under her.
@@ -66,7 +66,7 @@ public class GoblinShamanScene extends BaseContent
 			var x:int;
 			if(player.lust <= 99) outputText("You collapse, utterly beaten. To make sure you'll be easier to handle, the victorious shaman saunters up, pink arousing flames glow in her left hand. She exposes your nether regions and throws the pink flames right into your groin! You are unable to fight back. \n\n");
 
-			if(player.cockThatFits(monster.vaginalCapacity()) >= 0 && player.hasCock() && (!player.hasVagina() || rand(2) == 0)) 
+			if(player.cockThatFits(monster.vaginalCapacity()) >= 0 && player.hasCock() && (!player.hasVagina() || rand(2) == 0))
 			{
 				x = player.cockThatFits(monster.vaginalCapacity());
 				if(x < 0) x = player.smallestCockIndex();
@@ -223,7 +223,7 @@ public class GoblinShamanScene extends BaseContent
 				//Buttsex toggle
 				if (player.cockThatFits(monster.analCapacity()) >= 0 && player.cor > 70 - player.corruptionTolerance()) buttseks = gobboButtSecks;
 				//Spidercondom
-				if (player.tailType == Tail.SPIDER_ADBOMEN && player.cockThatFits(monster.vaginalCapacity()) >= 0)
+				if (player.tailType == Tail.SPIDER_ABDOMEN && player.cockThatFits(monster.vaginalCapacity()) >= 0)
 					spiderCondom = goblinCondomed;
 			}
 			//Breastfeed adds an option
@@ -240,8 +240,8 @@ public class GoblinShamanScene extends BaseContent
 				if (buttseks != null) addButton(3, "Dick In Ass", buttseks);
 				if (jog != null) addButton(4, "Jog Fuck", jog);
 				if (player.hasStatusEffect(StatusEffects.Feeder)) addButton(5, "Breastfeed", feeder);
-				if ((player.tailType == Tail.SPIDER_ADBOMEN || player.hasItem(useables.CONDOM)) && player.cockThatFits(monster.vaginalCapacity()) >= 0) {
-					if (player.tailType == Tail.SPIDER_ADBOMEN) addButton(6, "Web Condom", goblinCondomed, 0);
+				if ((player.tailType == Tail.SPIDER_ABDOMEN || player.hasItem(useables.CONDOM)) && player.cockThatFits(monster.vaginalCapacity()) >= 0) {
+					if (player.tailType == Tail.SPIDER_ABDOMEN) addButton(6, "Web Condom", goblinCondomed, 0);
 					if (player.hasItem(useables.CONDOM)) addButton(11, "Use Condom", goblinCondomed, 1);
 				}
 				if (player.hasVagina()) addButton(7, "Pussies", cuntFuck);
@@ -257,7 +257,7 @@ public class GoblinShamanScene extends BaseContent
 				simpleChoices("Feed", feeder, "Lay Eggs", eggs, "", null, "", null, "Leave", cleanupAfterCombat);
 				//doYesNo(feeder,cleanupAfterCombat);
 			}
-			else 
+			else
 			{
 				cleanupAfterCombat();
 			}
@@ -335,7 +335,7 @@ public class GoblinShamanScene extends BaseContent
 				outputText("You slither over to the helpless goblin, who watches you half in fear, half in curiosity. ");
 				//[Has fangs:
 				if (player.faceType == Face.SNAKE_FANGS) outputText("You bare your fangs at her and the curiosity disappears. She turns to run, but your tail is faster than she is.");
-				//[No fangs: 
+				//[No fangs:
 				else outputText("You smile at her and the fear disappears. She's still wary though, and you make sure to grab her with your tail before she changes her mind about you.");
 				outputText("\n\n");
 
@@ -706,7 +706,7 @@ public class GoblinShamanScene extends BaseContent
 
 			//[if (femininity > 50)
 			if (player.femininity > 50) outputText("\n\n\"<i>W-what?  You- I haven't got any, you stupid bitch!  This your idea of fun, jackass?  Kicking people when they're down?!</i>\"");
-			//[if (femininity < 51) 
+			//[if (femininity < 51)
 			else outputText("\n\n\"<i>W-what?  You- I haven't got any, you stupid bastard!  This your idea of fun, jackass?  Kicking people when they're down?!</i>\"");
 			outputText("  She lashes out with her feet, but there's no strength behind it, and her pout deepens as tears begin to gather at the corners of her eyes.");
 

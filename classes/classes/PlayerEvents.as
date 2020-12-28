@@ -1354,7 +1354,7 @@ public class PlayerEvents extends BaseContent implements TimeAwareInterface {
 				needNext = true;
 			}
 			//Recharge tail
-			if (player.tailType == Tail.BEE_ABDOMEN || player.tailType == Tail.SPIDER_ADBOMEN || player.tailType == Tail.SCORPION || player.tailType == Tail.MANTICORE_PUSSYTAIL || player.faceType == Face.SNAKE_FANGS || player.faceType == Face.SPIDER_FANGS) { //Spider, Bee, Scorpion, Manticore and Naga Venom Recharge
+			if (player.tailType == Tail.BEE_ABDOMEN || player.tailType == Tail.SPIDER_ABDOMEN || player.tailType == Tail.SCORPION || player.tailType == Tail.MANTICORE_PUSSYTAIL || player.faceType == Face.SNAKE_FANGS || player.faceType == Face.SPIDER_FANGS) { //Spider, Bee, Scorpion, Manticore and Naga Venom Recharge
 				if (player.tailRecharge < 5) player.tailRecharge = 5;
 				player.tailVenom += player.tailRecharge;
 				if (player.findPerk(PerkLib.ImprovedVenomGland) >= 0) player.tailVenom += 5;
@@ -2245,7 +2245,7 @@ public class PlayerEvents extends BaseContent implements TimeAwareInterface {
 				}
 			}
 			if (player.findPerk(PerkLib.SpiderOvipositor) >= 0 || player.findPerk(PerkLib.BeeOvipositor) >= 0 || player.findPerk(PerkLib.MantisOvipositor) >= 0) { //Spider, Bee and Mantis ovipositor updates
-				if (player.findPerk(PerkLib.SpiderOvipositor) >= 0 && (!player.isDrider() || player.tailType != Tail.SPIDER_ADBOMEN)) { //Remove dat shit!
+				if (player.findPerk(PerkLib.SpiderOvipositor) >= 0 && (!player.isDrider() || player.tailType != Tail.SPIDER_ABDOMEN)) { //Remove dat shit!
 					outputText("\n<b>Your ovipositor (and eggs) vanish since your body has become less spider-like.</b>\n");
 					player.removePerk(PerkLib.SpiderOvipositor);
 					needNext = true;

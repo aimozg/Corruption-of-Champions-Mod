@@ -1,4 +1,4 @@
-package classes.Scenes 
+package classes.Scenes
 {
 import classes.*;
 import classes.BodyParts.Antennae;
@@ -52,8 +52,8 @@ public class DebugMenu extends BaseContent
 		public var testArray:Array = [];
 		
 		
-		public function DebugMenu() 
-		{	
+		public function DebugMenu()
+		{
 		}
 		
 		public function accessDebugMenu():void {
@@ -417,11 +417,11 @@ public class DebugMenu extends BaseContent
 			weaponArray.push(weapons.L_STAFF);
 			weaponArray.push(weapons.MACE);
 			weaponArray.push(weapons.PIPE);
-			weaponArray.push(weapons.PTCHFRK);			
+			weaponArray.push(weapons.PTCHFRK);
 			weaponArray.push(weapons.RIDINGC);
 			weaponArray.push(weapons.RRAPIER);
 			weaponArray.push(weapons.S_BLADE);
-			weaponArray.push(weapons.S_GAUNT);			
+			weaponArray.push(weapons.S_GAUNT);
 			weaponArray.push(weapons.SCARBLD);
 			weaponArray.push(weapons.SCIMITR);
 			weaponArray.push(weapons.SPEAR);
@@ -1402,7 +1402,7 @@ public class DebugMenu extends BaseContent
 			[Tail.DOG, "2 DOG"],
 			[Tail.DEMONIC, "3 DEMONIC"],
 			[Tail.COW, "4 COW"],
-			[Tail.SPIDER_ADBOMEN, "5 SPIDER_ADBOMEN"],
+			[Tail.SPIDER_ABDOMEN, "5 SPIDER_ABDOMEN"],
 			[Tail.BEE_ABDOMEN, "6 BEE_ABDOMEN"],
 			[Tail.SHARK, "7 SHARK"],
 			[Tail.CAT, "8 CAT"],
@@ -1953,7 +1953,7 @@ public class DebugMenu extends BaseContent
 		{
 			lightsArray[slot] = !lightsArray[slot];
 			
-			if (lightsArray[slot]) 
+			if (lightsArray[slot])
 			{
 				//userInterface.setButtonPurple(slot);
 				mainView.setButtonText(slot, "XXXXXXXX");

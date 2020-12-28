@@ -68,7 +68,7 @@ public class MaleSpiderMorph extends AbstractSpiderMorph
 			this.drop = new WeightedDrop().add(consumables.S_GOSSR,5)
 					.add(useables.T_SSILK,1)
 					.add(null,4);
-			this.tailType = Tail.SPIDER_ADBOMEN;
+			this.tailType = Tail.SPIDER_ABDOMEN;
 			this.tailRecharge = 0;
 			checkMonster();
 		}
