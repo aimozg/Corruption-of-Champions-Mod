@@ -4,7 +4,7 @@
 package coc.view {
 import flash.display.BitmapData;
 
-internal class CompositeLayer {
+public class CompositeLayer {
 	private var _name:String;
 	private var src:BitmapData;
 	private var dst:BitmapData;
@@ -12,6 +12,10 @@ internal class CompositeLayer {
 	private var dirty:Boolean = true;
 	public var dx:int;
 	public var dy:int;
+	public var z:int;
+	private var originalDx:int;
+	private var originalDy:int;
+	private var originalZ:int;
 
 	public function get width():int {
 		return src.width;
@@ -20,16 +24,25 @@ internal class CompositeLayer {
 		return src.height;
 	}
 
-	public function CompositeLayer(name:String, src:BitmapData, dx:int, dy:int) {
-		this._name     = name;
-		this.src       = src;
-		this.dx = dx;
-		this.dy = dy;
-		this.dst       = new BitmapData(src.width, src.height,true,0);
+	public function CompositeLayer(name:String, src:BitmapData, z:int, dx:int, dy:int) {
+		this._name      = name;
+		this.src        = src;
+		this.z          = z;
+		this.dx         = dx;
+		this.dy         = dy;
+		this.originalZ  = z;
+		this.originalDx = dx;
+		this.originalDy = dy;
+		this.dst       = new BitmapData(src.width, src.height, true, 0);
 		this.keyColors = {};
 		this.dst.draw(src);
 	}
-
+	
+	public function reset():void {
+		originalZ = z;
+		originalDx = dx;
+		originalDy = dy;
+	}
 
 	public function get name():String {
 		return _name;
@@ -47,6 +60,15 @@ internal class CompositeLayer {
 				keyColors[kc] = newKeyColors[kc];
 			}
 		}
+	}
+	public function shift(dx:int, dy:int):CompositeLayer {
+		this.dx += dx;
+		this.dy += dy;
+		return this;
+	}
+	public function setZ(z:int):CompositeLayer {
+		this.z = z;
+		return this;
 	}
 
 	public function draw():BitmapData {

@@ -22,6 +22,7 @@ import classes.internals.Utils;
 import classes.lists.BreastCup;
 
 import coc.view.CharView;
+import coc.view.CompositeLayer;
 
 public class CharViewLogic extends Utils {
 	
@@ -1850,160 +1851,80 @@ public class CharViewLogic extends Utils {
 				break;
 			case Tail.HORSE:
 			case Tail.WENDIGO:
-				if (player.isTaur()) {
-					show("tail", "horse_taur");
-				} else {
-					show("tail", "horse");
-				}
+				show("tail", "horse");
 				break;
 			case Tail.DEMONIC:
-				if (player.isTaur()) {
-					show("tail", "demon_taur");
-				} else {
-					show("tail", "demon");
-				}
+				show("tail", "demon");
 				break;
 			case Tail.SPIDER_ABDOMEN:
-				if (player.isTaur()) {
-					show("tail", "spider_taur");
-				} else {
-					show("tail", "spider");
-				}
+				show("tail", "spider");
 				break;
 			case Tail.BEE_ABDOMEN:
-				if (player.isTaur()) {
-					show("tail", "bee_abdomen_taur");
-				} else {
-					show("tail", "bee_abdomen");
-				}
+				show("tail", "bee_abdomen");
 				break;
 			case Tail.MANTIS_ABDOMEN:
-				if (player.isTaur()) {
-					show("tail", "mantis_taur");
-				} else {
-					show("tail", "mantis");
-				}
+				show("tail", "mantis");
 				break;
 			case Tail.SQUIRREL:
-				if (player.isTaur()) {
-					show("tail", "ratatoskr_taur");
-				} else {
-					show("tail", "ratatoskr");
-				}
+				show("tail", "ratatoskr");
 				break;
 			case Tail.CAT:
 				switch (player.tailCount) {
 					case 1:
-						if (player.isTaur()) {
-							show("tail", "cat_taur");
-						} else {
-							show("tail", "cat");
-						}
+						show("tail", "cat");
 						break;
 					case 2:
-						if (player.isTaur()) {
-							show("tail", "cat2_taur");
-						} else {
-							show("tail", "cat2");
-						}
+						show("tail", "cat2");
 						break;
 					default:
-						if (player.isTaur()) {
-							show("tail", "cat2_taur");
-						} else {
-							show("tail", "cat2");
-						}
+						show("tail", "cat2");
 				}
 				break;
 			case Tail.BURNING:
-				if (player.isTaur()) {
-					show("tail", "hellcat_taur");
-				} else {
-					show("tail", "hellcat");
-				}
+				show("tail", "hellcat");
 				break;
 			case Tail.TWINKASHA:
-				if (player.isTaur()) {
-					show("tail", "kasha_taur");
-				} else {
-					show("tail", "kasha");
-				}
+				show("tail", "kasha");
 				break;
 			case Tail.LIZARD:
 			case Tail.DRACONIC:
 			case Tail.CAVE_WYRM:
-				if (player.isTaur()) {
-					show("tail", "reptile_taur");
-				} else {
-					show("tail", "reptile");
-				}
+				show("tail", "reptile");
 				break;
 			case Tail.RABBIT:
-				if (player.isTaur()) {
-					show("tail", "bunny_taur");
-					if (player.ears.type == Ears.PANDA) {
-						hide("tail", "bunny_taur");
-						show("tail", "panda_taur");
-					}
+				if (player.ears.type == Ears.PANDA) {
+					show("tail", "panda");
 				} else {
 					show("tail", "bunny");
-					if (player.ears.type == Ears.PANDA) {
-						hide("tail", "bunny");
-						show("tail", "panda");
-					}
 				}
 				break;
 			case Tail.HARPY:
-				if (player.isTaur()) {
-					show("tail", "harpy_taur");
-				} else {
-					show("tail", "harpy");
-				}
+				show("tail", "harpy");
 				break;
 			case Tail.FOX:
 			case Tail.WOLF:
 			case Tail.DOG:
-				show("tail", "fox" + player.tailCount + taur);
+				show("tail", "fox" + player.tailCount);
 				break;
 			case Tail.KANGAROO:
 				// TODO Kangaroo tail defaults to "cat"
 				show("tail", "cat");
 				break;
 			case Tail.MOUSE:
-				if (player.isTaur()) {
-					show("tail", "mouse_taur");
-				} else {
-					show("tail", "mouse");
-				}
+				show("tail", "mouse");
 				break;
 			case Tail.HINEZUMI:
-				if (player.isTaur()) {
-					show("tail", "mouse_fire_taur");
-				} else {
-					show("tail", "mouse_fire");
-				}
+				show("tail", "mouse_fire");
 				break;
 			case Tail.COW:
-				if (player.isTaur()) {
-					show("tail", "cow_taur");
-				} else {
-					show("tail", "cow");
-				}
+				show("tail", "cow");
 				break;
 			case Tail.WEASEL:
-				if (player.isTaur()) {
-					show("tail", "kamaitachi_taur");
-				} else {
-					show("tail", "kamaitachi");
-				}
+				show("tail", "kamaitachi");
 				break;
 			case Tail.BEHEMOTH:
 				// TODO BEHEMOTH tail defaults to "reptile"
-				if (player.isTaur()) {
-					show("tail", "reptile_taur");
-				} else {
-					show("tail", "reptile");
-				}
+				show("tail", "reptile");
 				break;
 			case Tail.PIG:
 				break;
@@ -2011,11 +1932,7 @@ public class CharViewLogic extends Utils {
 				// TODO no scorpion tail sprite
 				break;
 			case Tail.GOAT:
-				if (player.isTaur()) {
-					show("tail", "goat_taur");
-				} else {
-					show("tail", "goat");
-				}
+				show("tail", "goat");
 				break;
 			case Tail.RHINO:
 				break;
@@ -2024,13 +1941,8 @@ public class CharViewLogic extends Utils {
 			case Tail.DEER:
 				break;
 			case Tail.SALAMANDER:
-				if (player.isTaur()) {
-					show("tail", "reptile_taur");
-					show("tail_fg", "reptile_fire_taur");
-				} else {
-					show("tail", "reptile");
-					show("tail_fg", "reptile_fire");
-				}
+				show("tail", "reptile");
+				show("tail_fg", "reptile_fire");
 				break;
 			case Tail.KITSHOO:
 				// TODO no kitshoo tail sprite
@@ -2050,66 +1962,43 @@ public class CharViewLogic extends Utils {
 				show("tail", "gargoyle_axe");
 				break;
 			case Tail.ORCA:
-				if (player.isTaur()) {
-					show("tail", "orca_taur");
-				} else {
-					show("tail", "orca");
-				}
+				show("tail", "orca");
 				break;
 			case Tail.SHARK:
-				if (player.isTaur()) {
-					show("tail", "shark_taur");
-				} else {
-					show("tail", "shark");
-				}
+				show("tail", "shark");
 				break;
 			case Tail.RAIJU:
-				if (player.isTaur()) {
-					show("tail", "weasel_taur");
-				} else {
-					show("tail", "weasel");
-				}
+				show("tail", "weasel");
 				break;
 			case Tail.THUNDERBIRD:
-				if (player.isTaur()) {
-					show("tail", "thunderbird_taur");
-				} else {
-					show("tail", "thunderbird");
-				}
+				show("tail", "thunderbird");
 				break;
 			case Tail.RACCOON:
 			case Tail.FERRET:
-				if (player.isTaur()) {
-					show("tail", "raccoon_taur");
-				} else {
-					show("tail", "raccoon");
-				}
+				show("tail", "raccoon");
 				break;
 			case Tail.BEAR:
-				if (player.isTaur()) {
-					show("tail", "bear_taur");
-				} else {
-					show("tail", "bear");
-				}
+				show("tail", "bear");
 				break;
 				/* TODO!! Tail.PANDA - no such constant
 				case Tail.PANDA:
-					if (player.isTaur()) {
-						show("tail", "panda_taur");
-					} else {
-						show("tail", "panda");
-					}
+					show("tail", "panda" + taur);
+					break;
 				 */
 			case Tail.YGGDRASIL:
 				// TODO Yggdrasil tail
 				break;
-			case 'never':
-				// TODO mouse fire taur
-				if (player.isTaur()) {
-					show("tail", "mouse_fire_taur");
-				} else {
-					show("tail", "mouse_fire");
-				}
+		}
+		if (player.isTaur()) {
+			// Shift tail part - TODO depend on tauric body type
+			var dx:int = 47;
+			var dy:int = 12;
+			if (player.tailType === Tail.MANTICORE_PUSSYTAIL) {
+				dx = 0;
+				dy = 0;
+			}
+			shiftGroup("tail", dx, dy);
+			shiftGroup("tail_fg", dx, dy);
 		}
 		//  Penis AREA
 		if (player.hasCock()) {
@@ -3400,15 +3289,29 @@ public class CharViewLogic extends Utils {
 		this.charview = charview;
 	}
 	
-	public function show(layer:String, part:String):void {
-		charview.composite.setVisibility(layer + "/" + part, true);
+	public function shiftGroup(group: String, dx:int, dy:int):void {
+		var layers:/*CompositeLayer*/Array = charview.composite.findLayers(group+"/");
+		for each (var layer:CompositeLayer in layers) {
+			layer.shift(dx, dy);
+		}
 	}
 	
-	public function hide(layer:String, part:String = null):void {
+	public function moveGroup(group: String, targetGroup: String, dz:int = 0):void {
+		var layers:/*CompositeLayer*/Array = charview.composite.findLayers(group+"/");
+		for each (var layer:CompositeLayer in layers) {
+			layer.setZ(charview.zIndex(targetGroup)+dz);
+		}
+	}
+	
+	public function show(group:String, part:String):CompositeLayer {
+		return charview.composite.showLayer(group + "/" + part);
+	}
+	
+	public function hide(group:String, part:String = null):void {
 		if (part == null) {
-			charview.composite.setMultiVisibility(layer + "/", false);
+			charview.composite.hideMultipleLayers(group+"/");
 		} else {
-			charview.composite.setVisibility(layer + "/" + part, false);
+			charview.composite.hideLayer(group+"/"+part);
 		}
 	}
 }

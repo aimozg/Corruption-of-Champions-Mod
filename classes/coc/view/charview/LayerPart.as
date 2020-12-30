@@ -33,10 +33,12 @@ public class LayerPart extends Statement {
 			});
 		}
 		context.debug(this,name);
-		if (_prefix) {
-			image.setMultiVisibility(name,visible);
+		if (_prefix && !visible) {
+			image.hideMultipleLayers(name);
+		} else if (visible) {
+			image.showLayer(name);
 		} else {
-			image.setVisibility(name, visible);
+			image.hideLayer(name);
 		}
 	}
 	

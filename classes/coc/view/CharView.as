@@ -20,6 +20,7 @@ public class CharView extends Sprite {
 
 	private var loading:Boolean;
 	private var sprites:Object = {}; // spritesheet/spritemap -> CharViewSprite
+	private var zindices:Object = {}; // layer -> int
 	public var composite:CompositeImage;
 	private var ss_total:int;
 	private var ss_loaded:int;
@@ -148,18 +149,23 @@ public class CharView extends Sprite {
 		var item:XML;
 		var n:int   = 0;
 		file_total  = -1;
+		this.zindices = {};
+		var z:int = 0;
 		for each(item in xml.layers..layer) {
-			var lpfx:String = item.@name + "/";
-			for (var sname:String in sprites) {
-				if (sname.indexOf(lpfx) == 0) {
-					var sprite:CharViewSprite = sprites[sname];
-					composite.addLayer(sname, sprite.bmp,
-							sprite.dx - _originX, sprite.dy - _originY, false);
-				}
-			}
+			this.zindices[item.@name] = z;
+			z += 10;
+		}
+		for (var sname:String in sprites) {
+			var lpfx:String = sname.split("/")[0];
+			var sprite:CharViewSprite = sprites[sname];
+			composite.addLayer(sname, sprite.bmp, zindices[lpfx],
+						sprite.dx - _originX, sprite.dy - _originY);
 		}
 		file_total = n;
 		if (pendingRedraw) redraw();
+	}
+	public function zIndex(group:String):int {
+		return zindices[group];
 	}
 	private var _character:Object = {};
 	public function setCharacter(value:Object):void {
