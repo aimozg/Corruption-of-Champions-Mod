@@ -47,14 +47,14 @@ public class TransformationUtils {
      * their effects.
      * @return Number of effects applied
      */
-    public static function pickAndRunMultipleEffects(effects: /*PossibleEffect*/Array, count:int, allowDuplicates:Boolean, doOutput:Boolean, textSeparator:String = '\n\n'):int {
+    public static function pickAndRunMultipleEffects(effects: /*PossibleEffect*/Array, count:int, allowDuplicates:Boolean, doOutput:Boolean, variant:String = 'generic', textSeparator:String = '\n\n'):int {
         if (!allowDuplicates) effects = effects.slice();
         var result:int = 0;
         while (count --> 0) {
             var tf:PossibleEffect = randomPossibleEffect(effects);
             if (!tf) break;
             if (doOutput) EngineCore.outputText(textSeparator);
-            tf.applyEffect(doOutput);
+            tf.applyEffect(doOutput, variant);
             if (!allowDuplicates) effects.splice(effects.indexOf(tf), 1);
             result++;
         }

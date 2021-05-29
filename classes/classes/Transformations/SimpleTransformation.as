@@ -21,11 +21,11 @@ public class SimpleTransformation extends Transformation {
 	}
 	
 	override public function isPossible():Boolean {
-		return isPossibleFn ? isPossibleFn() : !isPresentFn();
+		return isPossibleFn != null ? isPossibleFn() : !isPresentFn();
 	}
 	
-	override public function applyEffect(doOutput:Boolean = true):void {
-		applyTfFn(doOutput);
+	override public function applyEffect(doOutput:Boolean = true, textFlavor:String = "generic"):void {
+		applyTfFn(doOutput, textFlavor);
 	}
 }
 }

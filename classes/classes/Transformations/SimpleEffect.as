@@ -14,11 +14,11 @@ public class SimpleEffect extends PossibleEffect {
 	}
 	
 	override public function isPossible():Boolean {
-		return isPossibleFn ? isPossibleFn() : true;
+		return isPossibleFn != null ? isPossibleFn() : true;
 	}
 	
-	override public function applyEffect(doOutput:Boolean = true):void {
-		applyTfFn(doOutput);
+	override public function applyEffect(doOutput:Boolean = true, variant:String = "generic"):void {
+		applyTfFn(doOutput, variant);
 	}
 }
 }

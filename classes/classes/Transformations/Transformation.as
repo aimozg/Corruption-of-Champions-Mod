@@ -1,5 +1,4 @@
 package classes.Transformations {
-import classes.BaseContent;
 
 /**
  * Base class for transformation events.
@@ -41,9 +40,9 @@ public class Transformation extends PossibleEffect {
 	public function copyWithExtraEffect(newName:String, extraEffectFn:Function):Transformation {
 		var thiz:Transformation = this;
 		return new SimpleTransformation(newName,
-				function (doOutput:Boolean):void {
-					thiz.applyEffect(doOutput);
-					extraEffectFn(doOutput);
+				function (doOutput:Boolean, variant:String):void {
+					thiz.applyEffect(doOutput, variant);
+					extraEffectFn(doOutput, variant);
 				},
 				isPresent,
 				isPossible

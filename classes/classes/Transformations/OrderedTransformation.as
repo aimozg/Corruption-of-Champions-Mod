@@ -59,13 +59,13 @@ public class OrderedTransformation extends Transformation {
         return tf && tf.isPossible();
     }
     
-    override public function applyEffect(doOutput:Boolean = true):void {
+    override public function applyEffect(doOutput:Boolean = true, variant:String = "generic"):void {
         var tf:Transformation = nextTierTf();
         if (!tf) {
             trace("ERROR: Ordered TF "+name+" apply called at max tier");
             return;
         }
-        tf.applyEffect(doOutput);
+        tf.applyEffect(doOutput, variant);
     }
     
     public function toString():String {

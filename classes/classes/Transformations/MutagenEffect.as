@@ -21,7 +21,7 @@ public class MutagenEffect extends PossibleEffect {
 		return true;
 	}
 	
-	override public function applyEffect(doOutput:Boolean = true):void {
+	override public function applyEffect(doOutput:Boolean = true, variant:String = "generic"):void {
 		if (doOutput) {
 			outputText(text);
 		}

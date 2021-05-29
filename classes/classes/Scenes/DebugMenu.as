@@ -26,7 +26,9 @@ import classes.Scenes.NPCs.JojoScene;
 import classes.Transformations.PossibleEffect;
 import classes.Transformations.Transformation;
 import classes.Transformations.Transformation;
+import classes.Transformations.TransformationUtils;
 import classes.internals.EnumValue;
+import classes.internals.Utils;
 
 import coc.view.Block;
 
@@ -166,16 +168,22 @@ public class DebugMenu extends BaseContent
 			var list:/*String*/Array = keys(transformations, true).sort();
 			for each (var key:String in list) {
 				var tf:PossibleEffect = transformations[key] as PossibleEffect;
-				if (!tf) continue;
-				outputText("\n");
-				if (tf.isPossible()) outputText("<u>");
-				outputText('<a href="event:'+key+'">'+key+"</a>");
-				if (tf.isPossible()) outputText("</u>");
-				outputText(" / "+tf.name);
-				if (tf is Transformation && (tf as Transformation).isPresent()) {
-					outputText(" <font color='#008000'>present</font>");
-				} else if (!tf.isPossible()) {
-					outputText(" <font color='#800000'>impossible</font>");
+				var tflist:Array = transformations[key] as Array;
+				if (tf) {
+					outputText("\n");
+					if (tf.isPossible()) outputText("<u>");
+					outputText('<a href="event:' + key + '">' + key + "</a>");
+					if (tf.isPossible()) outputText("</u>");
+					outputText(" / " + tf.name);
+					if (tf is Transformation && (tf as Transformation).isPresent()) {
+						outputText(" <font color='#008000'>present</font>");
+					} else if (!tf.isPossible()) {
+						outputText(" <font color='#800000'>impossible</font>");
+					}
+				} else if (tflist) {
+					outputText("\n");
+					outputText("(List) ")
+					outputText('<u><a href="event:' + key + '">' + key + "</a></u>");
 				}
 			}
 			outputText("\n\n");
@@ -185,11 +193,24 @@ public class DebugMenu extends BaseContent
 			function linkhandler(e:TextEvent):void {
 				mainView.mainText.removeEventListener(TextEvent.LINK, linkhandler);
 				var tf:PossibleEffect = (e.text in transformations) ? transformations[e.text] as PossibleEffect : null;
-				if (e.text == "-1" || !tf) {
+				var tflist:/*PossibleEffect*/Array = (e.text in transformations) ? transformations[e.text] as Array : null;
+				if (e.text == "-1" || (!tf && !tflist)) {
 					accessDebugMenu();
 				} else {
 					CoC.instance.currentText = "";
-					tf.applyEffect();
+					if (tf) {
+						tf.applyEffect();
+					} else if (tflist) {
+						tflist = TransformationUtils.possibleEffects(tflist);
+						if (tflist.length === 0) {
+							outputText("<b>No possible effects!</b>")
+						} else {
+							outputText("<b>Possible</b>: "+mapOneProp(tflist,'name').join(", ")+"\n");
+							tf = randomChoice(tflist);
+							outputText("<b>Picked</b> "+tf.name+"\n\n");
+							tf.applyEffect();
+						}
+					}
 					var text:String = CoC.instance.currentText;
 					mainViewManager.updateCharviewIfNeeded();
 					testTfMenu();

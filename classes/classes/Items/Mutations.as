@@ -9050,8 +9050,8 @@ public final class Mutations extends MutationsHelper {
         }
         //[Increase to Breast Size] - up to Large DD
         if (player.smallestTitSize() < 6 && changes < changeLimit && rand(4) == 0) {
-			outputText("\n\nAfter eating it, your chest aches and tingles, and your hands reach up to scratch at it unthinkingly.  Silently, you hope that you aren't allergic to it.  Just as you start to scratch at your " + breastDescript(player.smallestTitRow()) + ", your chest pushes out in slight but sudden growth.");
-            transformations.BreastsGrowUpToDD.applyEffect(false); // better not mention eating in generic TF tet
+			outputText("\n\n");
+            transformations.BreastsGrowUpToDD.applyEffect(true, 'consumable');
             changes++;
         }
         //[Increase to Ass Size] - to 11
