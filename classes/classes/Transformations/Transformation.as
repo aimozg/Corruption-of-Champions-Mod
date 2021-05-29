@@ -4,6 +4,12 @@ package classes.Transformations {
  * Base class for transformation events.
  */
 public class Transformation extends PossibleEffect {
+	
+	/**
+	 * Disabled by player.blockingBodyTransformations()
+	 */
+	public var blockable:Boolean = true;
+	
 	public function Transformation(name:String) {
 		super(name);
 	}
@@ -21,6 +27,11 @@ public class Transformation extends PossibleEffect {
 	 */
 	public override function isPossible():Boolean {
 		return !isPresent();
+	}
+	
+	
+	override public function isPossibleAndNotBlocked():Boolean {
+		return isPossible() && !(blockable && player.blockingBodyTransformations())
 	}
 	
 	/**

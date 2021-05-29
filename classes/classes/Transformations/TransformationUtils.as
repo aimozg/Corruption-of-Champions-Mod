@@ -1,4 +1,5 @@
 package classes.Transformations {
+import classes.CoC;
 import classes.EngineCore;
 import classes.internals.Utils;
 
@@ -18,7 +19,7 @@ public class TransformationUtils {
     }
     public static function anyPossible(transformations: /*PossibleEffect*/Array): Boolean {
         return transformations.some(function(tf:PossibleEffect, ...args):Boolean {
-            return tf.isPossible();
+            return tf.isPossibleAndNotBlocked();
         })
     }
     public static function missingTfs(transformations: /*Transformation*/Array): /*Transformation*/Array {
@@ -28,7 +29,7 @@ public class TransformationUtils {
     }
     public static function possibleEffects(transformations: /*PossibleEffect*/Array): /*PossibleEffect*/Array {
         return transformations.filter(function(tf:PossibleEffect, ...args):Boolean {
-            return tf.isPossible();
+            return tf.isPossibleAndNotBlocked();
         })
     }
     public static function randomPossibleEffect(transformations: /*PossibleEffect*/Array): PossibleEffect {

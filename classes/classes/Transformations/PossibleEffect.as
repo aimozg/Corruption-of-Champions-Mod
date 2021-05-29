@@ -18,6 +18,9 @@ public class PossibleEffect extends MutationsHelper {
 	public function isPossible():Boolean {
 		return true;
 	}
+	public function isPossibleAndNotBlocked():Boolean {
+		return isPossible();
+	}
 	
 	/**
 	 * Apply effect the effect to player.

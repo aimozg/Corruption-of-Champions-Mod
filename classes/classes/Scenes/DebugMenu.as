@@ -171,9 +171,9 @@ public class DebugMenu extends BaseContent
 				var tflist:Array = transformations[key] as Array;
 				if (tf) {
 					outputText("\n");
-					if (tf.isPossible()) outputText("<u>");
+					if (tf.isPossibleAndNotBlocked()) outputText("<u>");
 					outputText('<a href="event:' + key + '">' + key + "</a>");
-					if (tf.isPossible()) outputText("</u>");
+					if (tf.isPossibleAndNotBlocked()) outputText("</u>");
 					outputText(" / " + tf.name);
 					if (tf is Transformation && (tf as Transformation).isPresent()) {
 						outputText(" <font color='#008000'>present</font>");
